@@ -1,10 +1,10 @@
 <% unless @person.new_record? || mobile_request? %>
   <%= link_to(person_versions_path(@person), :class => "btn btn-link") do %>
-    <% if @person.created_at.present? %>Created <%= time_ago_in_words(@person.created_at, true) + " ago" %><% end %>
+    <% if @person.created_at.present? %>Created <%= time_ago_in_words(@person.created_at, include_seconds: true) + " ago" %><% end %>
     <% if @person.created_by %>by <%= truncate_from_end(@person.created_by.name) %><% end %>
   <% end -%>
   <%= link_to(person_versions_path(@person), :class => "btn btn-link") do %>
-    <% if @person.updated_at %>Updated <%= time_ago_in_words(@person.updated_at, true) + " ago" %><% end %>
+    <% if @person.updated_at %>Updated <%= time_ago_in_words(@person.updated_at, include_seconds: true) + " ago" %><% end %>
     <% if @person.updated_by_person.present? %>by <%= truncate_from_end(@person.updated_by_person_name) %><% end %>
   <% end -%>
 <% end %>

@@ -3,7 +3,7 @@ module Names
   module Nameable
     def self.included(base)
       base.before_save :add_name
-      base.has_many :names, :order => "year", :as => :nameable
+      base.has_many :names, -> { order(:year) }, :as => :nameable
     end
   
     def name(date_or_year = nil)

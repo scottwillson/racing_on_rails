@@ -227,7 +227,7 @@ module Schedule
         end
       end
 
-      Schedule.new(params[:year], query.all)
+      Schedule.new(params[:year], query)
     end
 
     def initialize(year, events)

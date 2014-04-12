@@ -19,12 +19,12 @@ function autoComplete(model, attribute, path) {
       results: function() {}
     },
     focus: function(event, ui) {
-      jQuery('#promoter_auto_complete').val(ui.item.person.first_name + ' ' + ui.item.person.last_name);
+      jQuery('#promoter_auto_complete').val(ui.item.first_name + ' ' + ui.item.last_name);
       return false;
     },
     select: function(event, ui) {
-      jQuery('#promoter_auto_complete').val(ui.item.person.first_name + ' ' + ui.item.person.last_name);
-      jQuery('#event_promoter_id').val(ui.item.person.id);
+      jQuery('#promoter_auto_complete').val(ui.item.first_name + ' ' + ui.item.last_name);
+      jQuery('#event_promoter_id').val(ui.item.id);
       jQuery('#event_promoter_id').change();
       return false;
     }
@@ -32,23 +32,23 @@ function autoComplete(model, attribute, path) {
   .data("ui-autocomplete")
   ._renderItem = function(ul, item) {
       var description = [];
-      if (item.person.team !== undefined && item.person.team.name !== undefined) {
-        description.push(item.person.team.name);
+      if (item !== undefined && item.name !== undefined) {
+        description.push(item.name);
       }
-      if (item.person.city !== undefined) {
-        description.push(item.person.city);
+      if (item.city !== undefined) {
+        description.push(item.city);
       }
-      if (item.person.state !== undefined) {
-        description.push(item.person.state);
+      if (item.state !== undefined) {
+        description.push(item.state);
       }
-        
-      return jQuery('<li id="person_' + item.person.id + '"></li>')
+
+      return jQuery('<li id="person_' + item.id + '"></li>')
         .data( "item.autocomplete", item )
-        .append('<a>' + item.person.first_name + ' ' + item.person.last_name + '<div class="informal">' + description + "</div></a>")
+        .append('<a>' + item.first_name + ' ' + item.last_name + '<div class="informal">' + description + "</div></a>")
         .appendTo( ul );
     };
   ;
-}    
+}
 
 function autoCompleteTeam(model, attribute, path) {
   jQuery(document).ready(function() {
@@ -63,25 +63,25 @@ function autoCompleteTeam(model, attribute, path) {
         results: function() {}
       },
       focus: function(event, ui) {
-        jQuery('#team_auto_complete').val(ui.item.team.name);
+        jQuery('#team_auto_complete').val(ui.item.name);
         return false;
       },
       select: function(event, ui) {
-        jQuery('#team_auto_complete').val(ui.item.team.name);
-        jQuery('#event_team_id').val(ui.item.team.id);
+        jQuery('#team_auto_complete').val(ui.item.name);
+        jQuery('#event_team_id').val(ui.item.id);
         return false;
       }
     })
     .data("ui-autocomplete")
     ._renderItem = function(ul, item) {
-        return jQuery('<li id="team_' + item.team.id + '"></li>')
+        return jQuery('<li id="team_' + item.id + '"></li>')
           .data( "item.autocomplete", item )
-          .append('<a>' + item.team.name + '</a>')
+          .append('<a>' + item.name + '</a>')
           .appendTo( ul );
       };
     ;
-  });  
-}    
+  });
+}
 
 function makeEditable() {
   jQuery('.editable').editable(
@@ -89,11 +89,11 @@ function makeEditable() {
       var element = jQuery(this);
       element.addClass('saving');
       var ajaxoptions = {
-        type    : 'PUT',
+        type    : 'PATCH',
         data    : {
-          '_method': 'PUT',
+          '_method': 'PATCH',
           name: element.data('attribute'),
-          value: value            
+          value: value
         },
         dataType: 'html',
         url     : element.data('url'),
@@ -123,7 +123,7 @@ function makeEditable() {
     },
     {
       cssclass: 'editor_field',
-      method: 'PUT',
+      method: 'PATCH',
       placeholder: '',
       select: true,
       onblur: 'ignore',

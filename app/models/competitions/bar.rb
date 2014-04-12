@@ -94,13 +94,14 @@ class Bar < Competition
             or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (:disciplines))", 
             :disciplines => disciplines_for(race)).
       where("coalesce(races.bar_points, events.bar_points, parents_events.bar_points, parents_events_2.bar_points) > 0").
-      where("results.year = ?", year)
+      where("results.year = ?", year).
+      references(:results, :events, :categories)
 
     Result.connection.select_all query
   end
   
   def source_event_types
-    %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries Competitions::TaborOverall }
+    %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries TaborOverall }
   end
 
   def create_races

@@ -8,7 +8,7 @@ module Admin
       if params[:parent_id].present?
         @category = Category.includes(:children).where(:id => params[:parent_id]).first
       else
-        @category = Category.find_or_create_by_name(RacingAssociation.current.short_name)
+        @category = Category.find_or_create_by(:name => RacingAssociation.current.short_name)
         @unknowns = Category.find_all_unknowns
       end
     end

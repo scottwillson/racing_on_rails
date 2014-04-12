@@ -1,7 +1,7 @@
-require File.expand_path("../../test_helper", __FILE__)
+require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
-class PeopleTest < ActionController::IntegrationTest
+class PeopleTest < RacingOnRails::IntegrationTest
   def test_index
     FactoryGirl.create(:person, :first_name => "Ryan", :last_name => "Weaver")
     get "/people"

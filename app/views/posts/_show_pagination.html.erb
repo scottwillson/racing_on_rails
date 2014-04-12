@@ -1,7 +1,7 @@
-<div class="row-fluid">
-  <div class="span12">
+<div class="row">
+  <div class="col-sm-12">
     <div class="pagination">
-      <ul>
+      <ul class="pagination">
         <% if post.newer %>
         <li class="prev"><%= link_to "&larr; Newer".html_safe, post_path(post.newer), :rel => "previous" %></li>
         <% else %>

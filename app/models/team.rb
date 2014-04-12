@@ -41,18 +41,17 @@ class Team < ActiveRecord::Base
   
   def self.find_all_by_name_like(name, limit = 100)
     name_like = "%#{name}%"
-    Team.all(
-      :conditions => ['teams.name like ? or aliases.name like ?', name_like, name_like], 
-      :include => :aliases,
-      :limit => limit,
-      :order => 'teams.name'
-    )
+    Team.
+      where('teams.name like ? or aliases.name like ?', name_like, name_like).
+      includes(:aliases).
+      references(:aliases).
+      limit(limit).
+      order("teams.name")
   end
   
   def teams_with_same_name
-    teams = Team.find_all_by_name(self.name) | Alias.find_all_teams_by_name(self.name)
-    teams.reject! { |team| team == self }
-    teams
+    teams = Team.where(name: name) | Alias.find_all_teams_by_name(name)
+    teams.reject { |team| team == self }
   end
 
   def ensure_no_results
@@ -95,25 +94,22 @@ class Team < ActiveRecord::Base
     return false if team == self
 
     Team.transaction do
+      reload
+      team.reload
       events_with_results = team.results.collect do |result|
-        event = result.event
-        event.disable_notification!
-        event
+        result.event
       end || []
       
       team.create_team_for_historical_results!
       
       aliases << team.aliases
       events << team.events
-      results << team.results(true)
+      results(true) << team.results(true)
       people << team.people
       Team.delete(team.id)
       existing_alias = aliases.detect{ |a| a.name.casecmp(team.name) == 0 }
-      if existing_alias.nil? && Team.find_all_by_name(team.name).empty?
+      if existing_alias.nil? && !Team.where(:name => team.name).exists?
         aliases.create(:name => team.name) 
-      end
-      events_with_results.each do |event|
-        event.enable_notification!
       end
     end
   end
@@ -127,14 +123,14 @@ class Team < ActiveRecord::Base
     name = names.sort_by(&:year).reverse!.first
     
     if name
-      team = Team.find_or_create_by_name(name.name)
-      results.each do |result|
-        team.results << result if result.date.year <= name.year
+      team = Team.find_or_create_by(:name => name.name)
+      results.each do |r|
+        team.results << r if r.date.year <= name.year
       end
       
       name.destroy
-      names.each do |name|
-        team.names << name unless name == name
+      names.each do |n|
+        team.names << n unless name == n
       end
     end
   end

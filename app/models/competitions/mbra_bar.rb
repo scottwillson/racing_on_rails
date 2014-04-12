@@ -94,6 +94,7 @@ class MbraBar < Competition
           or (races.bar_points is null and events.bar_points is null and parents_events.bar_points is null and parents_events_2.bar_points > 0))
         and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'
     }).
+    references(:events, :parent, :race).
     order(:person_id)
   end
 
@@ -120,8 +121,7 @@ class MbraBar < Competition
     race.results.each do |result|
       # Don't bother sorting scores unless we need to drop some
       if result.scores.size > @threshold_number_of_races
-        result.scores.sort! { |x, y| y.points <=> x.points }
-        for lowest_score in result.scores[@threshold_number_of_races..(result.scores.size - 1)]
+        for lowest_score in result.scores.sort_by(&:points).reverse[@threshold_number_of_races..(result.scores.size - 1)]
           result.scores.destroy(lowest_score)
         end
         # Rails destroys Score in database, but doesn't update the current association

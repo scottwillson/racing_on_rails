@@ -5,22 +5,25 @@
 
 <h2><%= @person.name %></h2>
 
-  <%= form_for @person, :html => { :class => "form-horizontal" } do |f| -%>
-    <div class="row-fluid">
-      <div class="span6">
-        <%= f.labelled_text_field :first_name %>
+  <%= form_for @person, :html => { :class => "form-horizontal", :role => "form" } do |f| -%>
+    <div class="row">
+      <div class="col-sm-6">
+        <%= f.labelled_text_field :first_name, nil, :class => @person.new_record? ? "wants_focus col-sm-12 form-control" : "col-sm-12 form-control" %>
         <%= f.labelled_text_field :last_name %>
         <%= f.labelled_text_field :team_name %>
       </div>
-      <div class="span6">
-        <div class="control-group">
-          <%= f.label :date_of_birth, "Date of Birth", :class => "control-label" %>
-          <div class="controls">
-            <%= date_select :person, :date_of_birth, 
-                  :order => [:month, :day, :year], 
-                  :start_year => 1900, 
-                  :end_year => Time.zone.today.year, 
-                  :include_blank => true %>
+      <div class="col-sm-6">
+        <div class="form-group form-inline">
+          <%= f.label :date_of_birth, "Date of Birth", :class => "control-label col-sm-4" %>
+          <div class="col-sm-8">
+            <%= f.date_select :date_of_birth,
+                {
+                  :order => [:month, :day, :year],
+                  :start_year => 1900,
+                  :end_year => Time.zone.today.year,
+                  :include_blank => true
+                },
+                { :class => "form-control"} %>
           </div>
         </div>
 
@@ -34,8 +37,8 @@
     </div>
   </div>
 
-  <div class="row-fluid">
-    <div class="span6">
+  <div class="row">
+    <div class="col-sm-6">
       <%= f.labelled_text_field :email %>
       <%= f.labelled_text_field :home_phone %>
       <%= f.labelled_text_field :work_phone %>
@@ -47,14 +50,9 @@
         <%= f.labelled_check_box :wants_email, "It's OK to email me" %>
       </div>
     </div>
-    <div class="span6">
+    <div class="col-sm-6">
       <%= f.labelled_text_field :street %>
-      <div class="control-group">
-        <%= f.label :city, "City, State ZIP", :class => "control-label" %>
-        <div class="controls">
-          <%= f.text_field :city, :class => "city" %> <%= f.text_field :state, :class => "state" %> <%= f.text_field :zip, :class => "zip" %>
-        </div>
-      </div>
+      <%= render "shared/city_state_zip", :f => f %>
       <%= f.labelled_text_field :occupation %>
 
       <h3>Interests</h3>
@@ -67,59 +65,59 @@
     </div>
   </div>
 
-  <div class="row-fluid">
-    <div class="span6 membership">
+  <div class="row">
+    <div class="col-sm-6 membership">
       <%= f.labelled_text :member_from, @person.member_from %>
       <%= f.labelled_text :member_to, @person.member_to %>
-  
+
       <%= f.labelled_text(:member, "Current", nil, :class => "current") if @person.member? -%>
       <%= f.labelled_text(:usa_cycling, "Current (#{@person.license})", nil, :class => "current") if @person.member_usac_to && @person.member_usac_to >= Time.zone.today -%>
       <%= f.labelled_text(:member, "Renewed", nil, :class => "renewed") if @person.renewed? -%>
-      <%= f.labelled_text(:member, "Not current", nil, :class => "not_current") if !@person.member? && !@person.renewed? -%>  
+      <%= f.labelled_text(:member, "Not current", nil, :class => "not_current") if !@person.member? && !@person.renewed? -%>
       <%= f.labelled_check_box :official, "Official", :editable => false %>
     </div>
 
-    <div class="span6">
-      <%= f.labelled_text_field :login, nil, :autocomplete => "off", :class => "span12" %>
-      <%= f.labelled_password_field :password, nil, :autocomplete => "off", :class => "span12" %>
-      <%= f.labelled_password_field :password_confirmation, "Confirm Password", :autocomplete => "off", :class => "span12" %>
+    <div class="col-sm-6">
+      <%= f.labelled_text_field :login, nil, :autocomplete => "off", :class => "form-control col-sm-12" %>
+      <%= f.labelled_password_field :password, nil, :autocomplete => "off", :class => "form-control col-sm-12" %>
+      <%= f.labelled_password_field :password_confirmation, "Confirm Password", :autocomplete => "off", :class => "form-control col-sm-12" %>
     </div>
   </div>
-  
+
   <hr/>
 
-  <div class="row-fluid">
-    <div class="span4">
+  <div class="row">
+    <div class="col-sm-4">
       <%= render "numbers", :person => @person %>
     </div>
-    <div class="span4">
-      <%= render "categories", :person => @person%>
+    <div class="col-sm-4">
+      <%= render "categories", :person => @person %>
     </div>
-    <div class="span4">
+    <div class="col-sm-4">
       <%= render "people/events", :events => @person.administrator? ? @person.events.current_year : Event.editable_by(@person).current_year %>
     </div>
   </div>
 
-  <div class="row-fluid">
-    <div class="span12">
-    
-      <%= render "people/account_permissions", 
-            :person => @person, 
-            :account_permissions => @person.account_permissions, 
+  <div class="row">
+    <div class="col-sm-12">
+
+      <%= render "people/account_permissions",
+            :person => @person,
+            :account_permissions => @person.account_permissions,
             :return_to => @person.new_record? ? nil : edit_person_path(@person)
       %>
     </div>
   </div>
-  
-  <div class="row-fluid">
-    <div class="span12">
+
+  <div class="row">
+    <div class="col-sm-12">
       <%= render "people/orders", :person => @person %>
     </div>
   </div>
-  
-  <div class="row-fluid control-group">
-    <div class="span12">
-      <%= submit_tag "Save", :class => "btn btn-primary", :id => "save" %>
+
+  <div class="row form-group">
+    <div class="col-sm-12">
+      <%= submit_tag "Save", :class => "btn btn-default", :id => "save" %>
       <%= link_to "Results", person_results_path(@person), :class => "btn btn-link" %>
       <div class="pull-right created_updated"><%= render :partial => "people/created_updated" %></div>
     </div>

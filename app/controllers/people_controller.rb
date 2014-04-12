@@ -1,6 +1,6 @@
 class PeopleController < ApplicationController
   force_https :except => [ :index, :list, :show ]
-  
+
   before_filter :require_current_person, :only => [ :edit, :update, :card ]
   before_filter :assign_person, :only => [ :edit, :update, :card ]
   before_filter :require_same_person_or_administrator_or_editor, :only => [ :edit, :update, :card ]
@@ -10,7 +10,7 @@ class PeopleController < ApplicationController
       format.html { find_people }
       format.js { find_people }
       format.xml { render :xml => find_people.to_xml(:only => [ :id, :first_name, :last_name ]) }
-      format.json { render :json => find_people.to_json(:only => [ :id, :first_name, :last_name ]) }
+      format.json { render :json => find_people.as_json(:only => [ :id, :first_name, :last_name, :name, :city ], :methods => [ :team_name ] ) }
     end
   end
 
@@ -30,7 +30,7 @@ class PeopleController < ApplicationController
       redirect_to new_person_session_url(secure_redirect_options)
     end
   end
-  
+
   def update
     if @person.update_attributes(person_params)
       flash[:notice] = "Updated #{@person.name}"
@@ -39,18 +39,18 @@ class PeopleController < ApplicationController
       render :edit
     end
   end
-  
+
   # Print membership card
   def card
     respond_to do |format|
       format.pdf do
-        send_data Card.new.to_pdf(@person), 
-                  :filename => "card.pdf", 
+        send_data Card.new.to_pdf(@person),
+                  :filename => "card.pdf",
                   :type => "application/pdf"
       end
     end
   end
-  
+
   # Page to create a new login
   def new_login
     if current_person && current_person.login.present?
@@ -83,7 +83,7 @@ class PeopleController < ApplicationController
         flash[:notice] = "You already have a login of '#{@person.login}'. <a href=\"/password_resets/new\" class=\"obvious\">Forgot your password?</a>"
         return redirect_to(login_path)
       end
-      
+
       if @person.update_attributes(person_params)
         @person.reset_perishable_token!
         flash[:notice] = "Created your new login"
@@ -93,14 +93,14 @@ class PeopleController < ApplicationController
         return render(:new_login)
       end
     end
-    
+
     license = person_params[:license].try(:strip)
     if license.present? && person_params[:name].blank?
       @person = Person.new(person_params)
       @person.errors.add :name, "can't be blank if license is present"
       return render(:new_login)
     end
-    
+
     if license.present?
       @person = Person.find_all_by_name_like(person_params[:name]).detect do |person|
         person.license == license ||
@@ -112,7 +112,7 @@ class PeopleController < ApplicationController
         @person = Person.new(person_params)
         return render(:new_login)
       end
-      
+
       if @person.nil?
         @person = Person.new(person_params)
         @person.errors.add :base, "Didn't match your name and number. Please check your #{RacingAssociation.current.short_name} membership card."
@@ -120,27 +120,27 @@ class PeopleController < ApplicationController
     end
     @person = Person.new if @person.nil?
     @person.attributes = person_params
-    
+
     if person_params[:password].blank?
       @person.errors.add :password, "can't be blank"
     end
-    
+
     if person_params[:email].blank?
       @person.errors.add :email, "can't be blank"
     end
-    
+
     if person_params[:email].blank? || !person_params[:email][Authlogic::Regex.email]
       @person.errors.add :email, "must been email address"
     end
-    
+
     if person_params[:login].blank?
       @person.errors.add :login, "can't be blank"
     end
-    
+
     if person_params[:license].present? && person_params[:license].strip[/\D+/]
       @person.errors.add :license, "should only be numbers"
     end
-    
+
     if person_params[:name].present? && person_params[:name].strip[/^\d+$/]
       @person.errors.add :name, "is a number. Did you accidently type your license in the name field?"
     end
@@ -148,7 +148,7 @@ class PeopleController < ApplicationController
     if @person.errors.any?
       return render(:new_login)
     end
-    
+
     if @person.update_attributes(person_params)
       flash[:notice] = "Created your new login"
       PersonSession.create @person
@@ -165,7 +165,7 @@ class PeopleController < ApplicationController
     end
   end
 
-  
+
   private
 
   def find_people

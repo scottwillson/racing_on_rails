@@ -1,17 +1,16 @@
 <% @show_tabs = (promoter? || administrator? || official?) -%>
+<% @page_title = "Versions: #{@person.name}" %>
 
 <h2><%= @person.name %></h2>
 
-<p>
-  <% if @person.versions.empty? %>
-    <strong>No other versions</strong>
-  <% end -%>
-</p>
+<% if @person.versions.empty? %>
+  <div class="alert alert-info">No other versions</div>
+<% end -%>
 
 <%= render :partial => "version", :collection => @person.versions.sort_by(&:updated_at).reverse %>
 
-<div class="row-fluid control-group">
-  <div class="span12">
+<div class="row form-group">
+  <div class="col-sm-12">
     <%= link_to("Edit Account", edit_admin_person_path(@person), :class => "obvious") if administrator? %>
     <%= link_to("Edit Account", edit_person_path(@person), :class => "obvious") unless administrator? %>
     <div class="pull-right created_updated"><%= render :partial => "people/created_updated" %></div>

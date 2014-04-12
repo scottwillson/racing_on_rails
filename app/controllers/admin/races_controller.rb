@@ -20,7 +20,7 @@ module Admin
           end
         }
         format.js {
-          @race.category = Category.find_or_create_by_name("New Category")
+          @race.category = Category.find_or_create_by(:name => "New Category")
           @race.save!
         }
       end
@@ -30,7 +30,7 @@ module Admin
       @disciplines = [''] + Discipline.all.collect do |discipline|
         discipline.name
       end
-      @disciplines.sort!
+      @disciplines = @disciplines.sort
     end
   
     # Update existing Race
@@ -55,7 +55,7 @@ module Admin
         format.js {
           @race.update_attributes! params[:name] => params[:value]
           expire_cache
-          render :text => @race.send(params[:name]), :content_type => "text/html"
+          render :plain => @race.send(params[:name])
         }
       end
     end

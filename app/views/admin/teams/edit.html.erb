@@ -9,10 +9,10 @@
 
 <h2><%= @team.name %></h2>
 
-<%= form_for [ :admin, @team ], :html => { :class => "form-horizontal" } do |f| -%>
-<div class="row-fluid">
-  <div class="span6">
-    <%= f.labelled_text_field :name, nil, :class => @team.new_record? ? "wants_focus span12" : "span12" %>
+<%= form_for [ :admin, @team ], :html => { :class => "form-horizontal", :role => "form" } do |f| -%>
+<div class="row">
+  <div class="col-sm-6">
+    <%= f.labelled_text_field :name, nil, :class => @team.new_record? ? "wants_focus col-sm-12 form-control" : "col-sm-12 form-control" %>
     <%= f.labelled_text_field :contact_name %>
     <%= f.labelled_text_field :contact_email %>
     <%= f.labelled_text_field :contact_phone %>
@@ -22,12 +22,12 @@
       <%= f.labelled_check_box :show_on_public_page, "Show on public teams page" %>
     </div>
   </div>
-  <div class="span6">
+  <div class="col-sm-6">
     <%= f.labelled_text_area :sponsors %>
   </div>
 </div>
-<div class="row-fluid">
-  <div class="span4">
+<div class="row">
+  <div class="col-sm-4">
     <h3>People</h3>
     <%= table :insert_header => true, :collection => @team.people do %>
       <%- @team.people.sort { |x, y| x.last_name <=> y.last_name || x.first_name <=> y.first_name }.each do |person| -%>
@@ -37,7 +37,7 @@
       <%- end -%>
     <% end -%>
   </div>      
-  <div class="span4">
+  <div class="col-sm-4">
     <h3>Aliases</h3>
     <%= table :insert_header => true, :columns => 2, :collection => @team.aliases do %>
     <%- @team.aliases.sort_by(&:name).each do |name_alias| -%>
@@ -49,14 +49,14 @@
                :method => "delete",
                :remote => true,
                :class => "icon") do %>
-             <i class="icon-minus-sign"></i>
+             <span class="glyphicon glyphicon-minus-sign"></span>
            <% end %>
         </td>
       </tr>
       <%- end -%>
     <% end -%>
   </div>      
-  <div class="span4">
+  <div class="col-sm-4">
     <h3>Historical Names</h3>
     <%= table :insert_header => true, :columns => 3, :collection => @team.names do %>
       <%- @team.names.sort_by(&:year).reverse.each do |name| -%>
@@ -68,7 +68,7 @@
                :url => { :action => "destroy_name", :id => @team.id, :name_id => name.id},
                :remote => true
                ) do %>
-             <i class="icon-minus-sign"></i>
+             <span class="glyphicon glyphicon-minus-sign"></span>
            <% end %>
         </td>
       </tr>
@@ -77,18 +77,18 @@
     </div>
   </div>
   
-  <div class="row-fluid">
-    <div class="span12">
-      <%= submit_tag "Save", :class => "btn btn-primary", :id => "save" %>
-      <%= link_to("Delete", admin_team_path(@team), :method => :delete, :class => "btn", :id => 'delete') unless @team.new_record? %>
+  <div class="row">
+    <div class="col-sm-12">
+      <%= submit_tag "Save", :class => "btn btn-default", :id => "save" %>
+      <%= link_to("Delete", admin_team_path(@team), :method => :delete, :class => "btn btn-default", :id => 'delete') unless @team.new_record? %>
       <%= link_to("Results", team_path(@team), :class => "btn btn-link") unless @team.new_record? %>
       <% unless mobile_request? %>
       <div class="pull-right created_updated">
         <span class="created_at">
-          <% if @team.created_at %>Created <%= time_ago_in_words(@team.created_at, true) + " ago" %><% end %>
+          <% if @team.created_at %>Created <%= time_ago_in_words(@team.created_at, include_seconds: true) + " ago" %><% end %>
           <% if @team.created_by %>by <%= truncate_from_end(@team.created_by.name) %><% end %>
         </span>
-        <% if @team.updated_at %>Updated <%= time_ago_in_words(@team.updated_at, true) + " ago" %><% end %>
+        <% if @team.updated_at %>Updated <%= time_ago_in_words(@team.updated_at, include_seconds: true) + " ago" %><% end %>
         <% if @team.updated_by_person %>by <%= truncate_from_end(@team.updated_by_person_name) %><% end %>
       </div>
       <% end %>

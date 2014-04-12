@@ -42,7 +42,7 @@ module Admin
         flash[:notice] = "Created #{@team.name}"
         redirect_to(edit_admin_team_path(@team))
       else
-        render :action => "edit"
+        render :edit
       end
     end
   
@@ -67,7 +67,7 @@ module Admin
           if @other_teams.empty?
             @team.save!
             expire_cache
-            render :text => @team[params[:name]], :content_type => "text/html"
+            render :plain => @team[params[:name]]
           else
             render "merge_confirm"
           end

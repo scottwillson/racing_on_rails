@@ -39,7 +39,7 @@ module Admin
       assign_new_event
     
       respond_to do |format|
-        format.html { render :action => :edit }
+        format.html { render :edit }
         format.js { render(:update) { |page| page.redirect_to(:action => :new, :event => event_params) } }
       end
     end
@@ -108,7 +108,7 @@ module Admin
           @event = Event.find(params[:id])
           @event.update_attributes! params[:name] => params[:value]
           expire_cache
-          render :text => @event.send(params[:name]), :content_type => "text/html"
+          render :plain => @event.send(params[:name])
         }
       end
     end
@@ -226,7 +226,7 @@ module Admin
           @races = @event.races.dup
           @combined_results = @event.combined_results
           @event.destroy_races
-          @races.reject! { |race| Race.exists?(race.id) }
+          @races = @races.reject { |race| Race.exists?(race.id) }
           expire_cache
         }
       end

@@ -14,8 +14,8 @@ end %>
 <p class="created_updated">Updated <%= @ironman.updated_at.to_s(:long) %></p>
 <% end %>
 
-<%= will_paginate @results, :renderer => BootstrapPagination::Rails, :page_links => !mobile_request? %>
+<%= will_paginate @results %>
 
 <%= results_table @ironman.races.first, @results %>
 
-<%= will_paginate @results, :renderer => BootstrapPagination::Rails, :page_links => !mobile_request? %>
+<%= will_paginate @results %>

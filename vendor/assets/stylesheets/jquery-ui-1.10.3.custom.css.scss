@@ -193,6 +193,10 @@
 	left: 0;
 	cursor: default;
 }
+
+.ui-autocomplete li {
+  border-top: 1px solid $light-gray;
+}
 .ui-button {
 	display: inline-block;
 	position: relative;
@@ -840,10 +844,10 @@ body .ui-tooltip {
 .ui-state-focus,
 .ui-widget-content .ui-state-focus,
 .ui-widget-header .ui-state-focus {
-	border: 1px solid darken($highlight-color, 30);
+	border: 1px solid $light-gray;
 	background-color: $highlight-color;
 	font-weight: normal;
-	color: $linkColorHover;
+	color: $link-color-hover;
 }
 .ui-state-hover a,
 .ui-state-hover a:hover,
@@ -854,7 +858,7 @@ body .ui-tooltip {
 }
 
 .ui-state-hover a:hover {
-  color: $linkColorHover;
+  color: $link-color-hover;
 }
 .ui-state-active,
 .ui-widget-content .ui-state-active,

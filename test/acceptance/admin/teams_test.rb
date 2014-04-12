@@ -5,7 +5,7 @@ class TeamsTest < AcceptanceTest
   setup :javascript!
 
   def test_edit
-    kona = FactoryGirl.create(:team, :name => "Kona")
+    FactoryGirl.create(:team, :name => "Kona")
     vanilla = FactoryGirl.create(:team, :name => "Vanilla")
     vanilla.aliases.create!(:name => "Vanilla Bicycles")
     gl = FactoryGirl.create(:team, :name => "Gentle Lovers")
@@ -37,6 +37,8 @@ class TeamsTest < AcceptanceTest
     assert has_checked_field?("team_member_#{vanilla.id}")
     assert has_checked_field?("team_member_#{gl.id}")
     uncheck "team_member_#{gl.id}"
+    wait_for_no :field, "team_member_#{gl.id}", { :checked => true }
+    
     visit "/admin/teams"
     assert !has_checked_field?("team_member_#{gl.id}")
 
@@ -64,7 +66,7 @@ class TeamsTest < AcceptanceTest
           sleep 0.25
         end
       end
-    rescue Timeout::Error => e
+    rescue Timeout::Error
       raise Timeout::Error, "Should update team name after second inline edit"
     end
   end
@@ -97,7 +99,7 @@ class TeamsTest < AcceptanceTest
   end
   
   def test_merge_confirm
-    kona = FactoryGirl.create(:team, :name => "Kona")
+    FactoryGirl.create(:team, :name => "Kona")
     vanilla = FactoryGirl.create(:team, :name => "Vanilla")
     vanilla.aliases.create!(:name => "Vanilla Bicycles")
     FactoryGirl.create(:team, :name => "Chocolate")
@@ -127,7 +129,7 @@ class TeamsTest < AcceptanceTest
           sleep 0.25
         end
       end
-    rescue Timeout::Error => e
+    rescue Timeout::Error
       raise Timeout::Error, "Should have merged Vanilla"
     end
 

@@ -1,7 +1,7 @@
-require File.expand_path("../../test_helper", __FILE__)
+require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
-class EventsTest < ActionController::IntegrationTest
+class EventsTest < RacingOnRails::IntegrationTest
   def test_index
     Timecop.freeze(Time.zone.local(2013, 3)) do
       FactoryGirl.create(:event)

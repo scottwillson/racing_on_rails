@@ -7,7 +7,7 @@ module Admin
   
     def new
       @velodrome = Velodrome.new
-      render :action => "edit"
+      render :edit
     end
   
     def create
@@ -42,7 +42,7 @@ module Admin
           @velodrome = Velodrome.find(params[:id])
           @velodrome.update_attributes! params[:name] => params[:value]
           expire_cache
-          render :text => @velodrome.send(params[:name]), :content_type => "text/html"
+          render :plain => @velodrome.send(params[:name])
         }
       end
     end

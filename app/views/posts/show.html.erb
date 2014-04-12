@@ -5,8 +5,8 @@
 <%= render :collection => @post.replies.sort_by(&:position).reverse.to_a << @post, :partial => "posts/reply" %>
 <%= render "show_pagination", :post => @post %>
 
-<div class="row-fluid">
-  <div class="span12">
+<div class="row">
+  <div class="col-sm-12">
     <%= render "mailing_lists/links", :mailing_list => @post.mailing_list %>
   </div>
 </div>

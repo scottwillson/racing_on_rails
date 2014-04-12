@@ -14,7 +14,7 @@ module Admin
     def find_person
       people = Person.find_all_by_name_like(params[:name], 20)
       ignore_id = params[:ignore_id]
-      people.reject! {|r| r.id.to_s == ignore_id}
+      people = people.reject { |r| r.id.to_s == ignore_id }
       if people.size == 1
         person = people.first
         results = Result.find_all_for(person)
@@ -61,7 +61,7 @@ module Admin
             text = @result.send(params[:name])
           end
         
-          render :text => text, :content_type => "text/html"
+          render :plain => text
         end
       end
     end
@@ -87,7 +87,6 @@ module Admin
       @result = Result.includes(:race).find(params[:id])
       @race = @result.race
       @race.destroy_result @result
-      @race.results true
     end
 
     protected

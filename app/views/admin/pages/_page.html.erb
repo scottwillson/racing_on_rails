@@ -1,6 +1,6 @@
 <%= content_tag :tr, :id => "page_#{page.id}_row" do %>
-  <td style="padding-left: <%= 16 + page.depth * 16 %>px"><i class="icon-file"></td>
-  <td class="title"></i> <%= editable page, :title %></td>
+  <td style="padding-left: <%= 16 + page.depth * 16 %>px"><span class="glyphicon glyphicon-file"></td>
+  <td class="title"></span> <%= editable page, :title %></td>
   <td class="updated not_editable">
     <%= updated page %>
   </td>

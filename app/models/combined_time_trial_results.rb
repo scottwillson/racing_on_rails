@@ -83,7 +83,7 @@ class CombinedTimeTrialResults < Event
 
   def calculate!
     destroy_races
-    combined_race = races.create!(:category => Category.find_or_create_by_name("Combined"))
+    combined_race = races.create!(:category => Category.find_or_create_by(:name => "Combined"))
     parent.races.each do |race|
       race.results.each do |result|
         if result.place.to_i > 0 && result.time && result.time > 0
@@ -96,7 +96,7 @@ class CombinedTimeTrialResults < Event
         end
       end
     end
-    combined_race.results.sort! do |x, y|
+    _results = combined_race.results.to_a.sort do |x, y|
       if x.time
         if y.time
           x.time <=> y.time
@@ -108,7 +108,7 @@ class CombinedTimeTrialResults < Event
       end
     end
     place = 1
-    combined_race.results.each do |result|
+    _results.each do |result|
       result.update_attributes(:place => place.to_s)
       place = place + 1
     end

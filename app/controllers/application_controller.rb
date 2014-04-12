@@ -126,11 +126,21 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def page
+    begin
+      if params[:page].to_i > 0
+        params[:page].to_i
+      end
+    rescue
+      nil
+    end
+  end
+
   private
 
   def secure_redirect_options
     if RacingAssociation.current.ssl?
-      { :protocol => "https", :host => request.host }
+      { :protocol => "https", :host => request.host, :port => 443 }
     else
       {}
     end

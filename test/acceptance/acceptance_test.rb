@@ -3,7 +3,7 @@ ENV["RAILS_ENV"] = "acceptance"
 require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
 require "capybara/rails"
 require "minitest/autorun"
- 
+
 # Capybara supports a number of drivers/browsers. AcceptanceTest default is RackTest for non-JavaScript tests
 # and Firefox for JS test. Note that most tests require JS.
 #
@@ -23,10 +23,10 @@ class AcceptanceTest < ActiveSupport::TestCase
   # Selenium tests start the Rails server in a separate process. If test data is wrapped in a
   # transaction, the server won't see it.
   DatabaseCleaner.strategy = :truncation
-  
-  setup :clean_database, :clear_downloads
-  teardown :reset_session, :reset_capybara_driver
-  
+
+  setup :clean_database, :clear_downloads, :set_capybara_driver
+  teardown :reset_session
+
   def self.javascript_driver
     if ENV["JAVASCRIPT_DRIVER"].present?
       ENV["JAVASCRIPT_DRIVER"].to_sym
@@ -34,7 +34,7 @@ class AcceptanceTest < ActiveSupport::TestCase
       :firefox
     end
   end
-  
+
   def self.default_driver
     if ENV["DEFAULT_DRIVER"].present?
       ENV["DEFAULT_DRIVER"].to_sym
@@ -42,7 +42,7 @@ class AcceptanceTest < ActiveSupport::TestCase
       :rack_test
     end
   end
-  
+
   def self.download_directory
     if AcceptanceTest.javascript_driver == :chrome
       File.expand_path "~/Downloads"
@@ -50,24 +50,24 @@ class AcceptanceTest < ActiveSupport::TestCase
       "/tmp/webdriver-downloads"
     end
   end
-  
+
   def assert_page_has_content(text)
     unless page.has_content?(text)
       fail "Expected '#{text}' in page source"
     end
   end
-  
+
   def assert_page_has_no_content(text)
     unless page.has_no_content?(text)
       fail "Did not expect '#{text}' in html"
     end
   end
-  
+
   def assert_table(table_id, row, column, expected)
     assert page.has_table?(table_id), "Expected table with id '#{table_id}'"
     within find(:xpath, "//table[@id='#{table_id}']//tr[#{row}]/td[#{column}]") do
-      assert page.has_content?(expected), -> { 
-        "Expected '#{expected}' in row #{row} column #{column} of table #{table_id} in table ID #{table_id}, but was #{text}" 
+      assert page.has_content?(expected), -> {
+        "Expected '#{expected}' in row #{row} column #{column} of table #{table_id} in table ID #{table_id}, but was #{text}"
       }
     end
   end
@@ -112,7 +112,7 @@ class AcceptanceTest < ActiveSupport::TestCase
       fail "'#{text}' in page source after 10 seconds"
     end
   end
-  
+
   def wait_for_select(id, options)
     raise ArgumentError if id.blank?
 
@@ -127,26 +127,26 @@ class AcceptanceTest < ActiveSupport::TestCase
     end
   end
 
-  def wait_for(locator)
+  def wait_for(*locator)
     raise ArgumentError if locator.blank?
 
     begin
       Timeout::timeout(10) do
-        until page.has_selector?(locator)
+        until page.has_selector?(*locator)
           sleep 0.25
         end
       end
     rescue Timeout::Error
-      fail "'#{locator}' did not appear in page source within 10 seconds"
+      fail "'#{locator}' did not appear within 10 seconds"
     end
   end
-  
-  def wait_for_no(locator)
+
+  def wait_for_no(*locator)
     raise ArgumentError if locator.blank?
 
     begin
       Timeout::timeout(10) do
-        while page.has_selector?(locator)
+        while page.has_selector?(*locator)
           sleep 0.25
         end
       end
@@ -177,6 +177,10 @@ class AcceptanceTest < ActiveSupport::TestCase
       fill_in "value", options
       press_return "value"
     end
+    within locator do
+      assert page.has_content?(text)
+    end
+
     wait_for_no ".editing"
   end
 
@@ -194,9 +198,11 @@ class AcceptanceTest < ActiveSupport::TestCase
       find_field(field).native.send_keys(key)
     end
   end
-  
+
   def key_code(key)
     case key
+    when :down
+      40
     when :enter
       13
     when :return
@@ -207,7 +213,7 @@ class AcceptanceTest < ActiveSupport::TestCase
       raise "No code for #{key}"
     end
   end
-  
+
   def click_ok_on_alert_dialog
     page.evaluate_script "window.alert = function(msg){return true;};"
   end
@@ -224,7 +230,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     fill_in "person_session_password", :with => "secret"
     click_button "login_button"
   end
-  
+
   def logout
     visit "/logout"
   end
@@ -242,19 +248,17 @@ class AcceptanceTest < ActiveSupport::TestCase
     DatabaseCleaner.clean
     Discipline.reset
   end
-  
+
   def remove_download(filename)
     FileUtils.rm_f "#{AcceptanceTest.download_directory}/#{filename}"
   end
-  
+
   def javascript!
     Capybara.current_driver = AcceptanceTest.javascript_driver
   end
-  
-  def reset_capybara_driver
-    unless Capybara.current_driver == AcceptanceTest.default_driver
-      Capybara.current_driver = AcceptanceTest.default_driver
-    end
+
+  def set_capybara_driver
+    Capybara.current_driver = AcceptanceTest.default_driver
   end
 
   def clear_downloads
@@ -268,14 +272,22 @@ class AcceptanceTest < ActiveSupport::TestCase
       FileUtils.mkdir_p AcceptanceTest.download_directory
     end
   end
-  
+
   def reset_session
-    Capybara.reset_sessions!
+    begin
+      Capybara.reset_sessions!
+    rescue Net::ReadTimeout => e
+      Rails.logger.debug "Timeout resetting Capybara session: #{e}."
+    end
   end
-  
+
   def before_teardown
     unless @passed
-      save_page
+      begin
+        save_page
+      rescue Exception => e
+        Rails.logger.error "Test did not pass. Could not save page: #{e}."
+      end
     end
   end
 
@@ -284,19 +296,19 @@ class AcceptanceTest < ActiveSupport::TestCase
       puts text
     end
   end
-  
+
   Capybara.register_driver :chrome do |app|
     if Dir.exists?("#{Rails.root}/tmp/chrome-profile")
       FileUtils.rm_rf "#{Rails.root}/tmp/chrome-profile"
     end
-    
+
     unless Dir.exists?("#{Rails.root}/tmp/chrome-profile")
       FileUtils.mkdir "#{Rails.root}/tmp/chrome-profile"
     end
 
     Capybara::Selenium::Driver.new(
-      app, 
-      :browser => :chrome, 
+      app,
+      :browser => :chrome,
       :switches => ["--user-data-dir=#{Rails.root}/tmp/chrome-profile", "--ignore-certificate-errors", "--silent"]
     )
   end
@@ -307,7 +319,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     profile['browser.download.dir']                   = AcceptanceTest.download_directory
     profile['browser.helperApps.neverAsk.saveToDisk'] = "application/vnd.ms-excel,application/vnd.ms-excel; charset=utf-8"
 
-    Capybara::Selenium::Driver.new(app, :browser => :firefox, :profile => profile) 
+    Capybara::Selenium::Driver.new(app, :browser => :firefox, :profile => profile)
   end
 
   Capybara.configure do |config|

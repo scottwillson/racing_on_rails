@@ -18,7 +18,7 @@ module ActionController
           if !request.ssl? && RacingAssociation.current.ssl?
             redirect_to "https://#{request.host}#{request.original_fullpath}", :status => :moved_permanently
             flash.keep
-            return false
+            false
           end
         end
       end

@@ -222,7 +222,7 @@ module Admin
     # Unresolved duplicates after import
     def duplicates
       @duplicates = Duplicate.all
-      @duplicates.sort! do |x, y|
+      @duplicates = @duplicates.sort do |x, y|
         diff = (x.person.last_name || '') <=> y.person.last_name
         if diff == 0
           (x.person.first_name || '') <=> y.person.first_name
@@ -263,7 +263,7 @@ module Admin
           else
             @person.update_attributes! params[:name] => params[:value]
             expire_cache
-            render :text => @person.send(params[:name]), :content_type => "text/html"
+            render :plain => @person.send(params[:name])
           end
         }
       end
@@ -358,7 +358,7 @@ module Admin
       if @other_people.empty?
         @person.save
         expire_cache
-        render :text => @person.name, :content_type => "text/html"
+        render :plain => @person.name
       else
         render "merge_confirm"
       end

@@ -45,34 +45,18 @@ class ResultsTest < AcceptanceTest
     visit "/admin/races/#{race.id}/edit"
     assert_page_has_content "River City"
     
-    if RacingAssociation.current.competitions.include? :bar
+    if RacingAssociation.current.competitions.include?(:bar)
       assert_equal true, result.reload.bar?, "bar?"
-      assert has_checked_field?("result_#{result.id}_bar")
-      uncheck("result_#{result.id}_bar")
-
-      begin
-        Timeout::timeout(10) do
-          until !result.reload.bar?
-            sleep 0.25
-          end
-        end
-      rescue Timeout::Error => e
-        raise Timeout::Error, "result.bar? did not change to 'false'"
-      end
+      assert has_checked_field? "result_#{result.id}_bar"
+      uncheck "result_#{result.id}_bar"
+      
+      assert_bar_toggled result
 
       visit "/admin/races/#{race.id}/edit"
       assert !has_checked_field?("result_#{result.id}_bar")
     
       check("result_#{result.id}_bar")
-      begin
-        Timeout::timeout(10) do
-          until result.reload.bar?
-            sleep 0.25
-          end
-        end
-      rescue Timeout::Error => e
-        raise Timeout::Error, "result.bar? did not change to 'true'"
-      end
+      assert_bar_toggled result
 
       visit "/admin/races/#{race.id}/edit"
       assert has_checked_field?("result_#{result.id}_bar")
@@ -80,13 +64,17 @@ class ResultsTest < AcceptanceTest
     
     assert page.has_no_selector? :xpath, "//table[@id='results_table']//tr[4]"
     click_link "result_#{result.id}_add"
-    sleep 0.3
+    wait_for :xpath, "//table[@id='results_table']//tr[4]"
     find("#result_#{result.id}_destroy").click
+    wait_for_no :xpath, "//table[@id='results_table']//tr[4]"
     visit "/admin/races/#{race.id}/edit"
     assert_page_has_no_content "Megan Weaver"
     assert_page_has_content "DNF"
 
+    assert page.has_no_selector? :xpath, "//table[@id='results_table']//tr[4]"
     click_link "result__add"
+    wait_for :xpath, "//table[@id='results_table']//tr[4]"
+    
     visit "/admin/races/#{race.id}/edit"
     assert_page_has_content "Field Size (2)"
 
@@ -94,5 +82,18 @@ class ResultsTest < AcceptanceTest
     fill_in "race_laps", :with => "12"
     click_button "Save"
     assert_equal "12", find_field("race_laps").value
+  end
+    
+  def assert_bar_toggled(result)
+    bar_was = result.bar?
+    begin
+      Timeout::timeout(10) do
+        while result.reload.bar? == bar_was
+          sleep 0.25
+        end
+      end
+    rescue Timeout::Error
+      raise Timeout::Error, "result.bar? did not change from '#{bar_was}'"
+    end
   end
 end

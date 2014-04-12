@@ -1,16 +1,17 @@
 <% @page_title = "Mailing Lists" %>
 
 <% @mailing_lists.each do |mailing_list| %>
-<div class="row-fluid">
-  <div class="span3"><b><%= link_to mailing_list.friendly_name, mailing_list_posts_path(mailing_list) %></b></div>
-  <div class="span5"><%= mailing_list.description %></div>
-  <div class="span4">
-    <a href="/mailman/listinfo/<%= mailing_list.name %>">Subscribe</a> |
-    <a href="/mailman/listinfo/<%= mailing_list.name %>#subscribers">Subscription Options</a> |
-    <%= link_to "New Post", new_mailing_list_post_path(mailing_list) %> |
-    <%= link_to_unless_current "View Posts", mailing_list_posts_path(mailing_list) %>
+<div class="row">
+  <div class="col-sm-12">
+    <h4><%= link_to mailing_list.friendly_name, mailing_list_posts_path(mailing_list) %></h4>
+    <p><%= mailing_list.description %></p>
+    <ul class="list-inline">
+      <li><a href="/mailman/listinfo/<%= mailing_list.name %>">Subscribe</a></li>
+      <li><a href="/mailman/listinfo/<%= mailing_list.name %>#subscribers">Subscription Options</a></li>
+      <li><%= link_to "New Post", new_mailing_list_post_path(mailing_list) %></li>
+      <li><%= link_to_unless_current "View Posts", mailing_list_posts_path(mailing_list) %></li>
+    </ul>
   </div>
-  <hr/>
 </div>
 <% end %>
 

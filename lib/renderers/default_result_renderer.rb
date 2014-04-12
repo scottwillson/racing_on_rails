@@ -52,7 +52,7 @@ module Renderers
       when :race_name
         "category"
       when :event_date_range_s
-        "date hidden-phone"
+        "date hidden-xs"
       else
         key(column).to_s
       end

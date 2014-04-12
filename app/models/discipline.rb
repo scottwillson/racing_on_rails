@@ -8,7 +8,7 @@ class Discipline < ActiveRecord::Base
   @@all_aliases = nil
   @@names = nil
   
-  scope :numbers, where(:numbers => true)
+  scope :numbers, -> { where(:numbers => true) }
   
   # Look up Discipline by name or alias. Caches Disciplines in memory
   def self.[](name)
@@ -32,7 +32,7 @@ class Discipline < ActiveRecord::Base
 
   def self.load_aliases
     @@all_aliases = {}
-    connection.select_all("SELECT discipline_id, alias FROM discipline_aliases").each do |result|
+    Discipline.connection.select_all("SELECT discipline_id, alias FROM discipline_aliases").each do |result|
       @@all_aliases[result["alias"].underscore.gsub(' ', '_').to_sym] = Discipline.find(result["discipline_id"].to_i)
     end
     Discipline.all.each do |discipline|

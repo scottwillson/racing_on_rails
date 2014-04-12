@@ -221,11 +221,11 @@ module Results
 
     def find_or_create_race(row)
       if usac_results_format?
-        category = Category.find_or_create_by_name(construct_usac_category(row))
+        category = Category.find_or_create_by(:name => construct_usac_category(row))
       else
-        category = Category.find_or_create_by_name(row.first)
+        category = Category.find_or_create_by(:name => row.first)
       end
-      race = event.races.detect { |race| race.category == category }
+      race = event.races.detect { |r| r.category == category }
       if race
         race.results.clear
       else
@@ -233,7 +233,6 @@ module Results
       end
       race.result_columns = columns
       race.custom_columns = race_custom_columns.to_a
-      race_custom_columns = Set.new
       race.save!
       Rails.logger.info("Results::ResultsFile #{Time.zone.now} create race #{category}")
       race
@@ -274,11 +273,11 @@ module Results
 
         if result.place.to_i > 0
           result.place = result.place.to_i
-            if race?(row) && result.place != 1
-              self.import_warnings << "First racer #{row[:first_name]} #{row[:last_name]} should be 1st place racer. "
+          if race?(row) && result.place != 1
+            self.import_warnings << "First racer #{row[:first_name]} #{row[:last_name]} should be 1st place racer. "
             # if we have a previous rov and the current place is not one more than the previous place, then sequence error.
           elsif !race?(row) && row.previous && row.previous[:place].present? && row.previous[:place].to_i != (result.place - 1)
-              self.import_warnings << "Non-sequential placings detected for racer: #{row[:first_name]} #{row[:last_name]}. " unless row[:category_name].to_s.downcase.include?("tandem") # or event is TTT or ???
+            self.import_warnings << "Non-sequential placings detected for racer: #{row[:first_name]} #{row[:last_name]}. " unless row[:category_name].to_s.downcase.include?("tandem") # or event is TTT or ???
           end
         elsif result.place.present?
           result.place = result.place.upcase rescue result.place

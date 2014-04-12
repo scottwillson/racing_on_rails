@@ -8,19 +8,20 @@
   <%= csrf_meta_tags %>
 
   <%= render "layouts/stylesheets" %>
- 
+
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <%= render "layouts/javascripts" %>
 
-  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <%= favicon_link_tag %>
+  <%= favicon_link_tag "apple-touch-icon.png", rel: "apple-touch-icon", type: "image/png" %>
   <%= yield :head %>
   <%= render "shared/google" %>
 </head>
 <body>
   <%= render "layouts/nav" %>
-  <div class="container-fluid">
+  <div class="container">
     <div class="flash_messages">
       <% [ :warn, :notice ].each do |key| %>
         <% if flash[key] %>
@@ -34,10 +35,10 @@
       <%= yield %>
     </div>
   </div>
-  <div class="container-fluid page-nav">
+  <div class="container page-nav">
     <footer>
       <ul>
-        <li><%= link_to "Account", account_path, :class => "account_link" %></li><li><%= 
+        <li><%= link_to "Account", account_path, :class => "account_link" %></li><li><%=
           link_to "Login", new_person_session_path, :class => "login_link" %></li>
       </ul>
     </footer>

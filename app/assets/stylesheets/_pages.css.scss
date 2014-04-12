@@ -3,7 +3,7 @@
 /* Home */
 .home {
   img.hero_photo {
-    margin-bottom: $baseLineHeight / 2;
+    margin-bottom: $line-height-computed / 2;
     width: 100%;
   }
 
@@ -12,13 +12,13 @@
   }
 
   .associated {
-    margin-bottom: $baseLineHeight;
+    margin-bottom: $line-height-computed;
     text-align: center;
     vertical-align: middle;
   }
 
   .ad {
-    padding-bottom: $baseLineHeight;
+    padding-bottom: $line-height-computed;
     width: 100%;
   }
 }
@@ -36,11 +36,11 @@ th.name {
   padding-top: 0px;
 }
 
-.edit_event .control-group.name {
+.edit_event .form-group.name {
   margin-bottom: 6px;
 }
 
-.edit_event .control-group.promoter {
+.edit_event .form-group.promoter {
   margin-bottom: 6px;
 }
 
@@ -58,14 +58,13 @@ table td.delete_all_races {
 }
 
 #event_notes {
-  height: $baseLineHeight * 4;
+  height: $line-height-computed * 4;
 }
 
 /* Calendar of events */
 table.calendar {
   border-collapse: separate;
   padding: 0px;
-  width: 100%;
   margin-bottom: 36px;
 }
 
@@ -81,7 +80,7 @@ tr.month {
   height: 100px;
   width: 14%;
   min-width: 14%;
-  background-color: $grayLighter;
+  background-color: $gray-lighter;
   border: 1px solid white;
   text-align: left;
 }
@@ -93,6 +92,7 @@ td.day div.event {
 
 .day .event.beginner-friendly {
   padding-left: 16px;
+  text-indent: -8px;
 }
 
 .day .event i {
@@ -108,14 +108,13 @@ td.day div.number {
   text-align: right;
 }
 
-td.day_from_other_month
-{
-  height: 100px;
-  width: 14%;
-  min-width: 14%;
+.table > tbody > tr > td.day_from_other_month, table.calendar tbody tr:hover td.day_from_other_month {
+  background-color: lighten($warm-gray, 8);
   border: 1px solid white;
-  background: white;
+  height: 100px;
+  min-width: 14%;
   padding: 4px 4px;
+  width: 14%;
 }
 
 td.day_from_other_month div.number {
@@ -178,23 +177,22 @@ p.list_link, p.atra_ncs {
   cursor: pointer;
   display: inline-block;
   float: left;
-  height: 14px;
+  height: 16px;
   margin-right: 8px;
-  margin-top: 5px;
+  margin-top: 0px;
   text-align: center;
   vertical-align: middle;
-  width: 14px;
+  width: 16px;
 }
 
-.collapsed {
-  background-image: image-url("glyphicons-halflings.png");
-  background-position: -264px -72px;
+.disclosure.collapsed:before {
+  content: "\e369";
+  font-size: 20px;
 }
 
-.expanded {
-  background-image: image-url("glyphicons-halflings.png");
-  background-position: -264px -72px;
-  @include rotate(90deg);
+.disclosure.expanded:before {
+  content: "\e368";
+  font-size: 20px;
 }
 
 .category .icon-list {
@@ -241,6 +239,7 @@ table.results .drag {
 table.results td.place,
 table.results th.points,
 table.results td.points,
+table.results th.age,
 table.results td.age {
   text-align: right;
 }
@@ -248,12 +247,6 @@ table.results td.age {
 table.results td.result .event {
   float: left;
   margin-left: 8px;
-}
-
-#left_person td.page_links,
-#right_person td.page_links {
-  min-width: 40px;
-  width: 40px;
 }
 
 .find-progress {
@@ -288,10 +281,6 @@ table.base td.name a.cancel {
   background-color: transparent;
 }
 
-table.person_categories td input[type=text] {
-  width: 120px;
-}
-
 /* public teams page */
 table.base#teams_table td.club_name {
   width: 30%;
@@ -305,16 +294,23 @@ table.base a.preliminary {
   font-style: italic;
 }
 
-input.state {
-  width: 32px;
+.form-inline input.city {
+  min-width: 32px;
+  width: 55%;
 }
 
-input.state_no_zip {
+.form-inline input.state {
+  min-width: 32px;
   width: 10%;
 }
 
-input.zip {
-  width: 56px;
+.form-inline input.state_no_zip {
+  width: 10%;
+}
+
+.form-inline input.zip {
+  min-width: 56px;
+  width: 25%;
 }
 
 .current, .renewed {
@@ -343,6 +339,10 @@ td.delete_all_races {
   margin-bottom: 8px;
 }
 
+.post div.reply {
+  text-align: right;
+}
+
 /* Results */
 table.base td.total_points span.total
 {
@@ -359,7 +359,7 @@ table.base td.total_points {
 }
 
 .event_info {
-  padding-bottom: $baseLineHeight;
+  padding-bottom: $line-height-computed;
   text-align: center;
 }
 
@@ -377,7 +377,7 @@ table.base td.total_points {
 }
 
 .event_races .race:first-child {
-  padding-right: $baseLineHeight;
+  padding-right: $line-height-computed;
 }
 
 table.child_single_day_events {
@@ -428,7 +428,7 @@ table.first_aid_providers td.name {
 }
 
 table.results {
-  margin-bottom: $baseLineHeight * 2;
+  margin-bottom: $line-height-computed * 2;
 }
 
 table.results td.laps,
@@ -468,7 +468,7 @@ table.results th.place,
 table.results th.laps,
 table.results th.state,
 table.results th.age {
-  width: 24px;
+  width: 40px;
 }
 
 table.results th.time_bonus_penalty,
@@ -526,7 +526,7 @@ table.results.scores tr:last-child {
 }
 
 #person_notes {
-  height: $baseLineHeight * 8;
+  height: $line-height-computed * 8;
 }
 
 .table-striped th.bar,
@@ -555,10 +555,6 @@ table.results.scores tr:last-child {
   margin-left: 8px;
 }
 
-.pagination {
-  text-align: center;
-}
-
 .promoted_events .name,
 .promoted_events .link {
   white-space: nowrap;
@@ -574,18 +570,18 @@ table.results.scores tr:last-child {
 }
 
 select#person_date_of_birth_2i, select#person_member_from_2i, select#person_member_to_2i {
-	width: 100px;
+  width: 100px;
 }
 
 select#person_date_of_birth_1i, select#person_member_from_1i, select#person_member_to_1i {
-	width: 70px;
+  width: 70px;
 }
 
 select#person_date_of_birth_3i, select#person_member_from_3i, select#person_member_to_3i {
-	width: 50px;
+  width: 50px;
 }
 
-.form-horizontal .membership .control-group {
+.form-horizontal .membership .form-group {
   margin-bottom: 0px;
 }
 
@@ -613,12 +609,6 @@ table.people div.aliases {
   background-color: lighten($highlight-color, 33);
 }
 
-table.numbers.form-inline {
-  input, select {
-    width: auto;
-  }
-}
-
 /* Versions */
 .version .what,
 .version .from,
@@ -642,7 +632,7 @@ td.right, th.right {
 
 .owps img.obra-logo {
   height: 70px;
-  width: 248px;
+  width: 167px;
 }
 
 .owps .giant-logo {
@@ -664,8 +654,8 @@ td.right, th.right {
 }
 
 .owps img.lets-race-bikes-logo {
-  height: 50px;
-  width: 513px;
+  height: 70px;
+  width: 422px;
 }
 
 .owps img {

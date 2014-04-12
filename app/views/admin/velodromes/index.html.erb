@@ -4,21 +4,23 @@
 
 <%= render "shared/search", :name => @name, :placeholder => "Enter name to search"%>
 
-<div class="row-fluid">
-  <%= table :class => :velodromes, :id => :velodromes, :collection => @velodromes, :columns => 4 do %>
-    <tr>
-      <th class="icon"/>
-      <th class="name">Name</th>
-      <th>Website</th>
-      <th class="actions"></th>
-    </tr>
-    <%= render :partial => "velodrome", :collection => @velodromes %>
-  <% end -%>
+<div class="row">
+  <div class="col-sm-12">
+    <%= table :class => :velodromes, :id => :velodromes, :collection => @velodromes, :columns => 4 do %>
+      <tr>
+        <th class="icon"></th>
+        <th class="name">Name</th>
+        <th>Website</th>
+        <th class="actions"></th>
+      </tr>
+      <%= render :partial => "velodrome", :collection => @velodromes %>
+    <% end -%>
+  </div>
 </div>
-<div class="row-fluid">
-  <div class="span12">
-    <%= link_to new_admin_velodrome_path, :class => "btn", :id => "new_velodrome" do %>
-      <i class="icon-flag"></i> New Velodrome
+<div class="row">
+  <div class="col-sm-12">
+    <%= link_to new_admin_velodrome_path, :class => "btn btn-default", :id => "new_velodrome" do %>
+      <span class="glyphicon glyphicon-flag"></span> New Velodrome
     <% end %>
   </div>
 </div>

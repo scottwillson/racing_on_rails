@@ -1,7 +1,7 @@
 <tr id="result_<%= result.id %>_row">
   <td>
     <% if result.competition_result? %>
-      <i class="disclosure collapsed" id="disclosure_<%= result.id %>"></i>
+      <span class="disclosure glyphicon collapsed" id="disclosure_<%= result.id %>"></span>
     <% end %>
   </td>
   <td class="place"><%= result.place %></td>
@@ -13,14 +13,16 @@
   <td><%= result.race.name %></td>
   <td class="date"><%= result.event_date_range_s %></td>
   <td class="points"><%= number_with_precision(result.points, :precision => 0) if result.points > 0 %></td>
-  <td class="page_links">
-    <%= link_to event_results_path(result.event, :anchor => "race_#{result.race.id}"), 
-               :title => 'View public results web page' do %>
-      <i class="icon-list"></i>
+  <td>
+    <%= link_to event_results_path(result.event, :anchor => "race_#{result.race.id}"),
+                :class => "btn btn-link btn-xs",
+                :title => 'View public results web page' do %>
+      <span class="glyphicon glyphicon-list"></span>
     <% end %>
     <%= link_to edit_admin_race_path(result.race),
-    :title => 'Edit race results' do %>
-      <i class="icon-edit"></i>
+                :class => "btn btn-link btn-xs",
+                :title => 'Edit race results' do %>
+      <span class="glyphicon glyphicon-edit"></span>
     <% end %>
   </td>
 </tr>

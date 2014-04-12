@@ -1,3 +1,27 @@
+-- MySQL dump 10.13  Distrib 5.5.30, for osx10.9 (i386)
+--
+-- Host: localhost    Database: racing_on_rails_development_4
+-- ------------------------------------------------------
+-- Server version	5.5.30
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `aliases`
+--
+
+DROP TABLE IF EXISTS `aliases`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `aliases` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `alias` varchar(255) DEFAULT NULL,
@@ -14,7 +38,15 @@ CREATE TABLE `aliases` (
   CONSTRAINT `aliases_person_id` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
   CONSTRAINT `aliases_team_id_fk` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `article_categories`
+--
+
+DROP TABLE IF EXISTS `article_categories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `article_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -25,7 +57,15 @@ CREATE TABLE `article_categories` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `articles`
+--
+
+DROP TABLE IF EXISTS `articles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `articles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -39,7 +79,15 @@ CREATE TABLE `articles` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `bids`
+--
+
+DROP TABLE IF EXISTS `bids`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bids` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -51,7 +99,15 @@ CREATE TABLE `bids` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `categories`
+--
+
+DROP TABLE IF EXISTS `categories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `position` int(11) NOT NULL DEFAULT '0',
@@ -68,7 +124,15 @@ CREATE TABLE `categories` (
   KEY `index_categories_on_friendly_param` (`friendly_param`),
   CONSTRAINT `categories_categories_id_fk` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `competition_event_memberships`
+--
+
+DROP TABLE IF EXISTS `competition_event_memberships`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `competition_event_memberships` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `competition_id` int(11) NOT NULL,
@@ -81,7 +145,15 @@ CREATE TABLE `competition_event_memberships` (
   CONSTRAINT `competition_event_memberships_competitions_id_fk` FOREIGN KEY (`competition_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
   CONSTRAINT `competition_event_memberships_events_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `discipline_aliases`
+--
+
+DROP TABLE IF EXISTS `discipline_aliases`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `discipline_aliases` (
   `discipline_id` int(11) NOT NULL DEFAULT '0',
   `alias` varchar(64) NOT NULL DEFAULT '',
@@ -91,7 +163,15 @@ CREATE TABLE `discipline_aliases` (
   KEY `idx_discipline_id` (`discipline_id`),
   CONSTRAINT `discipline_aliases_disciplines_id_fk` FOREIGN KEY (`discipline_id`) REFERENCES `disciplines` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `discipline_bar_categories`
+--
+
+DROP TABLE IF EXISTS `discipline_bar_categories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `discipline_bar_categories` (
   `category_id` int(11) NOT NULL DEFAULT '0',
   `discipline_id` int(11) NOT NULL DEFAULT '0',
@@ -101,7 +181,15 @@ CREATE TABLE `discipline_bar_categories` (
   CONSTRAINT `discipline_bar_categories_categories_id_fk` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
   CONSTRAINT `discipline_bar_categories_disciplines_id_fk` FOREIGN KEY (`discipline_id`) REFERENCES `disciplines` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `disciplines`
+--
+
+DROP TABLE IF EXISTS `disciplines`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `disciplines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL DEFAULT '',
@@ -112,13 +200,29 @@ CREATE TABLE `disciplines` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_disciplines_on_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `duplicates`
+--
+
+DROP TABLE IF EXISTS `duplicates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `duplicates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `new_attributes` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `duplicates_people`
+--
+
+DROP TABLE IF EXISTS `duplicates_people`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `duplicates_people` (
   `person_id` int(11) DEFAULT NULL,
   `duplicate_id` int(11) DEFAULT NULL,
@@ -128,7 +232,15 @@ CREATE TABLE `duplicates_people` (
   CONSTRAINT `duplicates_people_person_id` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
   CONSTRAINT `duplicates_racers_duplicates_id_fk` FOREIGN KEY (`duplicate_id`) REFERENCES `duplicates` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `editor_requests`
+--
+
+DROP TABLE IF EXISTS `editor_requests`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `editor_requests` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `person_id` int(11) NOT NULL,
@@ -147,14 +259,30 @@ CREATE TABLE `editor_requests` (
   CONSTRAINT `editor_requests_ibfk_1` FOREIGN KEY (`editor_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
   CONSTRAINT `editor_requests_ibfk_2` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `editors_events`
+--
+
+DROP TABLE IF EXISTS `editors_events`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `editors_events` (
   `event_id` int(11) NOT NULL,
   `editor_id` int(11) NOT NULL,
   KEY `index_editors_events_on_event_id` (`event_id`),
   KEY `index_editors_events_on_editor_id` (`editor_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `events`
+--
+
+DROP TABLE IF EXISTS `events`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
@@ -215,7 +343,15 @@ CREATE TABLE `events` (
   CONSTRAINT `events_promoter_id` FOREIGN KEY (`promoter_id`) REFERENCES `people` (`id`) ON DELETE SET NULL,
   CONSTRAINT `events_velodrome_id_fk` FOREIGN KEY (`velodrome_id`) REFERENCES `velodromes` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `homes`
+--
+
+DROP TABLE IF EXISTS `homes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `homes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `photo_id` int(11) DEFAULT NULL,
@@ -225,7 +361,15 @@ CREATE TABLE `homes` (
   `weeks_of_upcoming_events` int(11) NOT NULL DEFAULT '2',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `import_files`
+--
+
+DROP TABLE IF EXISTS `import_files`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `import_files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -233,7 +377,15 @@ CREATE TABLE `import_files` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `mailing_lists`
+--
+
+DROP TABLE IF EXISTS `mailing_lists`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mailing_lists` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
@@ -245,7 +397,15 @@ CREATE TABLE `mailing_lists` (
   PRIMARY KEY (`id`),
   KEY `idx_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `names`
+--
+
+DROP TABLE IF EXISTS `names`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `names` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nameable_id` int(11) NOT NULL,
@@ -262,7 +422,15 @@ CREATE TABLE `names` (
   KEY `index_names_on_year` (`year`),
   KEY `index_names_on_nameable_type` (`nameable_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `number_issuers`
+--
+
+DROP TABLE IF EXISTS `number_issuers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `number_issuers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
@@ -271,7 +439,15 @@ CREATE TABLE `number_issuers` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `number_issuers_name_index` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `pages`
+--
+
+DROP TABLE IF EXISTS `pages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
@@ -287,7 +463,15 @@ CREATE TABLE `pages` (
   KEY `index_pages_on_slug` (`slug`),
   CONSTRAINT `pages_parent_id_fk` FOREIGN KEY (`parent_id`) REFERENCES `pages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `people`
+--
+
+DROP TABLE IF EXISTS `people`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `people` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `first_name` varchar(64) DEFAULT NULL,
@@ -328,7 +512,7 @@ CREATE TABLE `people` (
   `status` varchar(255) DEFAULT NULL,
   `crypted_password` varchar(255) DEFAULT NULL,
   `password_salt` varchar(255) DEFAULT NULL,
-  `persistence_token` varchar(255) NOT NULL,
+  `persistence_token` varchar(255) DEFAULT NULL,
   `single_access_token` varchar(255) DEFAULT NULL,
   `perishable_token` varchar(255) DEFAULT NULL,
   `login_count` int(11) NOT NULL DEFAULT '0',
@@ -366,7 +550,15 @@ CREATE TABLE `people` (
   KEY `index_people_on_name` (`name`),
   CONSTRAINT `people_team_id_fk` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `people_people`
+--
+
+DROP TABLE IF EXISTS `people_people`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `people_people` (
   `person_id` int(11) NOT NULL,
   `editor_id` int(11) NOT NULL,
@@ -376,7 +568,15 @@ CREATE TABLE `people_people` (
   CONSTRAINT `people_people_ibfk_1` FOREIGN KEY (`editor_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
   CONSTRAINT `people_people_ibfk_2` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `people_roles`
+--
+
+DROP TABLE IF EXISTS `people_roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `people_roles` (
   `role_id` int(11) NOT NULL,
   `person_id` int(11) NOT NULL,
@@ -385,7 +585,15 @@ CREATE TABLE `people_roles` (
   CONSTRAINT `people_roles_person_id` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
   CONSTRAINT `roles_users_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `photos`
+--
+
+DROP TABLE IF EXISTS `photos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `photos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `caption` text COLLATE utf8_unicode_ci,
@@ -398,7 +606,15 @@ CREATE TABLE `photos` (
   `link` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `post_texts`
+--
+
+DROP TABLE IF EXISTS `post_texts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `post_texts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `post_id` int(11) NOT NULL,
@@ -409,7 +625,15 @@ CREATE TABLE `post_texts` (
   KEY `index_post_texts_on_post_id` (`post_id`),
   FULLTEXT KEY `post_text` (`text`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `posts`
+--
+
+DROP TABLE IF EXISTS `posts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `body` text NOT NULL,
@@ -437,7 +661,15 @@ CREATE TABLE `posts` (
   KEY `index_posts_on_last_reply_at` (`last_reply_at`),
   CONSTRAINT `posts_mailing_list_id_fk` FOREIGN KEY (`mailing_list_id`) REFERENCES `mailing_lists` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `race_numbers`
+--
+
+DROP TABLE IF EXISTS `race_numbers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `race_numbers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `person_id` int(11) NOT NULL DEFAULT '0',
@@ -457,7 +689,15 @@ CREATE TABLE `race_numbers` (
   CONSTRAINT `race_numbers_number_issuer_id_fk` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
   CONSTRAINT `race_numbers_person_id` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `races`
+--
+
+DROP TABLE IF EXISTS `races`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `races` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) NOT NULL,
@@ -483,7 +723,15 @@ CREATE TABLE `races` (
   CONSTRAINT `races_category_id_fk` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
   CONSTRAINT `races_event_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `racing_associations`
+--
+
+DROP TABLE IF EXISTS `racing_associations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `racing_associations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `add_members_from_results` tinyint(1) NOT NULL DEFAULT '1',
@@ -538,7 +786,15 @@ CREATE TABLE `racing_associations` (
   `default_region_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `regions`
+--
+
+DROP TABLE IF EXISTS `regions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `regions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -549,7 +805,15 @@ CREATE TABLE `regions` (
   UNIQUE KEY `index_regions_on_name` (`name`),
   UNIQUE KEY `index_regions_on_friendly_param` (`friendly_param`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `results`
+--
+
+DROP TABLE IF EXISTS `results`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `results` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) DEFAULT NULL,
@@ -619,7 +883,15 @@ CREATE TABLE `results` (
   CONSTRAINT `results_race_id_fk` FOREIGN KEY (`race_id`) REFERENCES `races` (`id`) ON DELETE CASCADE,
   CONSTRAINT `results_team_id_fk` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
@@ -627,12 +899,28 @@ CREATE TABLE `roles` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `schema_migrations`
+--
+
+DROP TABLE IF EXISTS `schema_migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `schema_migrations` (
   `version` varchar(255) NOT NULL,
   UNIQUE KEY `unique_schema_migrations` (`version`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `scores`
+--
+
+DROP TABLE IF EXISTS `scores`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `scores` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `competition_result_id` int(11) DEFAULT NULL,
@@ -649,7 +937,15 @@ CREATE TABLE `scores` (
   CONSTRAINT `scores_competition_result_id_fk` FOREIGN KEY (`competition_result_id`) REFERENCES `results` (`id`) ON DELETE CASCADE,
   CONSTRAINT `scores_source_result_id_fk` FOREIGN KEY (`source_result_id`) REFERENCES `results` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `teams`
+--
+
+DROP TABLE IF EXISTS `teams`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `teams` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
@@ -668,7 +964,15 @@ CREATE TABLE `teams` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `topic_texts`
+--
+
+DROP TABLE IF EXISTS `topic_texts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `topic_texts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic_id` int(11) DEFAULT NULL,
@@ -678,7 +982,15 @@ CREATE TABLE `topic_texts` (
   PRIMARY KEY (`id`),
   FULLTEXT KEY `index_topic_texts_on_text` (`text`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `topics`
+--
+
+DROP TABLE IF EXISTS `topics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `topics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `mailing_list_id` int(11) DEFAULT NULL,
@@ -691,7 +1003,15 @@ CREATE TABLE `topics` (
   PRIMARY KEY (`id`),
   KEY `index_topics_on_position` (`position`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `velodromes`
+--
+
+DROP TABLE IF EXISTS `velodromes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `velodromes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
@@ -701,7 +1021,15 @@ CREATE TABLE `velodromes` (
   PRIMARY KEY (`id`),
   KEY `index_velodromes_on_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `versions`
+--
+
+DROP TABLE IF EXISTS `versions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `versions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `versioned_id` int(11) DEFAULT NULL,
@@ -723,7 +1051,18 @@ CREATE TABLE `versions` (
   KEY `index_versions_on_tag` (`tag`),
   KEY `index_versions_on_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2014-04-08 12:48:57
 INSERT INTO schema_migrations (version) VALUES ('1');
 
 INSERT INTO schema_migrations (version) VALUES ('10');
@@ -1008,6 +1347,8 @@ INSERT INTO schema_migrations (version) VALUES ('20140330010812');
 
 INSERT INTO schema_migrations (version) VALUES ('20140330145224');
 
+INSERT INTO schema_migrations (version) VALUES ('20140401041601');
+
 INSERT INTO schema_migrations (version) VALUES ('20140403051211');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
@@ -1097,3 +1438,4 @@ INSERT INTO schema_migrations (version) VALUES ('7');
 INSERT INTO schema_migrations (version) VALUES ('8');
 
 INSERT INTO schema_migrations (version) VALUES ('9');
+

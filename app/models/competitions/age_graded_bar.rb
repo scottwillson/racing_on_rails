@@ -7,14 +7,26 @@ class AgeGradedBar < Competition
 
   def source_results(race)
     query = Result.
-      select(["results.id as id", "year", "person_id as participant_id", "people.member_from", "people.member_to", "place", "results.event_id", "race_id", "events.date", "points" ]).
+      select([
+        "events.date", 
+        "people.member_from", 
+        "people.member_to", 
+        "person_id as participant_id", 
+        "place", 
+        "points",
+        "race_id", 
+        "results.event_id", 
+        "results.id as id", 
+        "year"
+      ]).
       joins(:race => :event).
       joins("left outer join people on people.id = results.person_id").
       where("events.type" => "OverallBar").
       where(:bar => true).
       where("races.category_id" => race.category.parent(true).id).
       where("people.date_of_birth between ? and ?", race.dates_of_birth.begin, race.dates_of_birth.end).
-      where("year = ?", year)
+      where("year = ?", year).
+      references(:results, :events, :categories)
 
     Result.connection.select_all query
   end
@@ -49,7 +61,7 @@ class AgeGradedBar < Competition
     template_categories << Category.new(:name => "Junior Women 15-16", :ages => 15..16, :position => position = position.next, :parent => Category.new(:name => 'Junior Women'))
     template_categories << Category.new(:name => "Junior Women 17-18", :ages => 17..18, :position => position = position.next, :parent => Category.new(:name => 'Junior Women'))
 
-    age_graded_categories = Discipline.find_or_create_by_name("Age Graded").bar_categories
+    age_graded_categories = Discipline.find_or_create_by(:name => "Age Graded").bar_categories
     categories = []
     template_categories.each do |template_category|
       if Category.exists?(:name => template_category.parent.name)

@@ -9,9 +9,9 @@
   tabs.add "Records", "http://#{RacingAssociation.current.static_host}/track/records/index.html"
 end %>
 
-<div class="span12">
+<div class="col-sm-12">
   <h3><%= link_to "Upcoming Races", "/track/schedule" %></h3>
-  <%= table :id => "upcoming_events", :columns => 5 do %>
+  <%= table :id => "upcoming_events", :columns => 5, :collection => @events do %>
     <thead>
       <tr>
         <th class="date">Date</th>
@@ -33,7 +33,7 @@ end %>
             <% if event.beginner_friendly? %>
               <%= link_to("http://www.obra.org/beginner_friendly.html", 
                           :class => "beginner_friendly", :title => "Beginner friendly event") do %>
-                <i class="icon-ok-circle"></i>
+                <span class="glyphicon glyphicon-ok-circle"></span>
               <% end %>
             <% end %>
           </td>
@@ -62,8 +62,8 @@ end %>
              :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && e.practice? } %>
 </div>
 
-<div class="row-fluid">
-  <div class="span12 associated">
+<div class="row">
+  <div class="col-sm-12 associated">
     <%= image_tag "http://#{RacingAssociation.current.static_host}/track/images/logos/alpenrose_logo.gif", :size => "200x65", :title => "Alpenrose" %>
   </div>
 </div>

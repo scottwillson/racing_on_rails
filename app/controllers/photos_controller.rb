@@ -2,26 +2,26 @@ class PhotosController < Admin::AdminController
   before_filter :assign_current_admin_tab
 
   def index
-    @photos = Photo.all
+    @photos = Photo.order("updated_at desc").paginate(:page => page)
   end
 
   def new
     @photo = Photo.new
-    
+
     render :edit
   end
-  
+
   def create
     expire_cache
     @photo = Photo.create(photo_params)
-    
+
     if @photo.errors.empty?
       flash[:notice] = "Created photo"
       return redirect_to(edit_photo_path(@photo))
     end
     render :edit
   end
-  
+
   def edit
     @photo = Photo.find(params[:id])
   end
@@ -29,14 +29,14 @@ class PhotosController < Admin::AdminController
   def update
     expire_cache
     @photo = Photo.find(params[:id])
-    
+
     if @photo.update_attributes(photo_params)
       flash[:notice] = "Updated photo"
       return redirect_to(edit_photo_path(@photo))
     end
     render :edit
   end
-  
+
 
   protected
 
@@ -47,7 +47,7 @@ class PhotosController < Admin::AdminController
 
 
   private
-  
+
   def photo_params
     params_without_mobile.require(:photo).permit(:caption, :height, :image, :image_cache, :link, :title, :width)
   end

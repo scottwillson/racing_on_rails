@@ -3,7 +3,7 @@ class Cat4WomensRaceSeries < Competition
   include Concerns::Cat4WomensRaceSeries::Points
   
   def friendly_name
-    "Cat 4 Womens Race Series"
+    "Cat 4 Women's Race Series"
   end
 
   def source_results(race)
@@ -18,7 +18,8 @@ class Cat4WomensRaceSeries < Competition
       where("(events.type = 'SingleDayEvent' or events.type is null or events.id in (?))", source_events.map(&:id)).
       where("(events.ironman is true or events.id in (?))", source_events.map(&:id)).
       where("events.date between ? and ?", _start_date, _end_date).
-      order(:person_id)
+      order(:person_id).
+      references(:category, :event)
   end
   
   def participation_points?
@@ -42,6 +43,8 @@ class Cat4WomensRaceSeries < Competition
   end
   
   def category
-    @category ||= RacingAssociation.current.cat4_womens_race_series_category || Category.find_or_create_by_name("Women Cat 4")
+    @category ||= 
+      RacingAssociation.current.cat4_womens_race_series_category || 
+      Category.find_or_create_by(:name => "Women Cat 4")
   end
 end

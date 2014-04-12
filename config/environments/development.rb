@@ -1,10 +1,14 @@
 RacingOnRails::Application.configure do
   config.action_controller.perform_caching   = false
   config.action_mailer.raise_delivery_errors = false
+  config.active_record.migration_error       = :page_load
   config.active_support.deprecation          = :log
   config.assets.compress                     = false
   config.assets.debug                        = true
+  config.assets.precompile                  += %w( admin.js racing_association.js )
+  config.assets.raise_runtime_errors         = true
   config.cache_classes                       = false
   config.consider_all_requests_local         = true
-  config.whiny_nils                          = true
+  config.eager_load                          = false
+  config.middleware.use                        Rack::LiveReload
 end

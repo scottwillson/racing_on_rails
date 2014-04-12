@@ -3,66 +3,69 @@
 <%= render "shared/years", :year => @year, :discipline => nil %>
 <%= render "shared/months" %>
 
-<div class="row-fluid control-group">
-  <div class="span12">
-    <%= link_to 'New Event', new_admin_event_path(:event => { :date => Time.zone.local(@year).to_date.to_s(:db) }), {:class => "btn btn-primary", :id => "new_event"} %>
+<div class="row form-group">
+  <div class="col-sm-12">
+    <%= link_to 'New Event', new_admin_event_path(:event => { :date => Time.zone.local(@year).to_date.to_s(:db) }), {:class => "btn btn-default", :id => "new_event"} %>
   </div>
 </div>
 
-<div class="row-fluid">
 <%- @schedule.months.each do |month| -%>
-<h3 class="month"><a id='<%= month.name.downcase %>'><%= month.name %> <%= @year %></a></h3>
-  <table class="calendar table">
-    <thead>
-      <tr>
-        <th>Sunday</th>
-        <th>Monday</th>
-        <th>Tuesday</th>
-        <th>Wednesday</th>
-        <th>Thursday</th>
-        <th>Friday</th>
-        <th>Saturday</th>
-      </tr>
-    </thead>
-    <tbody>
-      <%- month.weeks.each do |week| -%>
-      <tr class="month">
-        <%- week.days.each do |day| -%>
-          <%- if day.other_month? -%>
-        <td class="day_from_other_month"><div class="number"><%= day.day_of_month -%></div>
-          <%- else -%>
-        <td class="day">
-          <div class="number"><%= day.day_of_month -%></div>
-            <%- day.events.each do |event| -%>
-          <div class="event"><%= link_to event.full_name, edit_admin_event_path(event) %></div>
+<div class="row">
+  <div class="col-sm-12">
+    <h3 class="month"><a id='<%= month.name.downcase %>'><%= month.name %> <%= @year %></a></h3>
+    <table class="calendar table">
+      <thead>
+        <tr>
+          <th>Sunday</th>
+          <th>Monday</th>
+          <th>Tuesday</th>
+          <th>Wednesday</th>
+          <th>Thursday</th>
+          <th>Friday</th>
+          <th>Saturday</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%- month.weeks.each do |week| -%>
+        <tr class="month">
+          <%- week.days.each do |day| -%>
+            <%- if day.other_month? -%>
+          <td class="day_from_other_month"><div class="number"><%= day.day_of_month -%></div>
+            <%- else -%>
+          <td class="day">
+            <div class="number"><%= day.day_of_month -%></div>
+              <%- day.events.each do |event| -%>
+            <div class="event"><%= link_to event.full_name, edit_admin_event_path(event) %></div>
+              <%- end -%>
             <%- end -%>
+          </td>
           <%- end -%>
-        </td>
+        </tr>
         <%- end -%>
-      </tr>
-      <%- end -%>
-    </tbody>
-  </table>
-    <% end -%>
+      </tbody>
+    </table>
+  </div>
 </div>
+<% end -%>
 
 <% if @competitions.present? %>
-<div class="row-fluid">
-  <h3>Competitions</h3>
-  <% @competitions.sort_by(&:name).each do |competition| -%>
-    <%= link_to competition.name, edit_admin_event_path(competition) %><br />
-  <% end -%>
+<div class="row">
+  <div class="col-sm-12">
+    <h3>Competitions</h3>
+    <% @competitions.sort_by(&:name).each do |competition| -%>
+      <%= link_to competition.name, edit_admin_event_path(competition) %><br />
+    <% end -%>
+  </div>
 </div>
 <% end %>
 
 <hr/>
 
-<div class="row-fluid">
-  <div class="span12 import_schedule">
+<div class="row">
+  <div class="col-sm-12 import_schedule">
   <%= form_tag upload_schedule_admin_events_path, :multipart => true, :class => "form-horizontal", :id => "upload_form" do %>
     <label for="schedule_file">Import Schedule</label>
     <%= file_field_tag "schedule_file", :onchange => "$('#upload_form').submit();" %>
   <% end %>
   </div>
 </div>
-

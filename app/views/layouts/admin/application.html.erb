@@ -14,17 +14,15 @@
   <![endif]-->
   <%= render "layouts/javascripts" %>
   <%= javascript_include_tag "admin" %>
-  
-  <link rel="shortcut icon" href="/assets/favicon.ico">
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="/assets/apple-touch-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="/assets/apple-touch-icon-114x114.png">
+
+  <%= favicon_link_tag %>
+  <%= favicon_link_tag "apple-touch-icon.png", rel: "apple-touch-icon", type: "image/png" %>
   <%= yield :head %>
   <%= render "shared/google" %>
 </head>
 <body>
   <%= render "layouts/nav" %>
-  <div class="container-fluid">
+  <div class="container">
     <div class="flash_messages">
       <% [ :warn, :notice ].each do |key| %>
         <% if flash[key] %>
@@ -39,10 +37,10 @@
 </div>
 
   </div>
-  <div class="container-fluid nav">
+  <div class="container nav">
     <footer>
       <ul>
-        <li><%= link_to "Account", account_path, :class => "account_link" %></li><li><%= 
+        <li><%= link_to "Account", account_path, :class => "account_link" %></li><li><%=
                 link_to "Login", new_person_session_path, :class => "login_link" %></li>
       </ul>
     </footer>

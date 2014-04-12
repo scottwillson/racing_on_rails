@@ -30,14 +30,14 @@ class OregonJuniorCyclocrossSeries < Competition
   end
 
   def create_races
-    races.create! :category => Category.find_or_create_by_name("Junior Men 10-12")
-    races.create! :category => Category.find_or_create_by_name("Junior Men 13-14")
-    races.create! :category => Category.find_or_create_by_name("Junior Men 15-16")
-    races.create! :category => Category.find_or_create_by_name("Junior Men 17-18")
-    races.create! :category => Category.find_or_create_by_name("Junior Women 10-12")
-    races.create! :category => Category.find_or_create_by_name("Junior Women 13-14")
-    races.create! :category => Category.find_or_create_by_name("Junior Women 15-16")
-    races.create! :category => Category.find_or_create_by_name("Junior Women 17-18")
+    races.create! :category => Category.find_or_create_by(:name => "Junior Men 10-12")
+    races.create! :category => Category.find_or_create_by(:name => "Junior Men 13-14")
+    races.create! :category => Category.find_or_create_by(:name => "Junior Men 15-16")
+    races.create! :category => Category.find_or_create_by(:name => "Junior Men 17-18")
+    races.create! :category => Category.find_or_create_by(:name => "Junior Women 10-12")
+    races.create! :category => Category.find_or_create_by(:name => "Junior Women 13-14")
+    races.create! :category => Category.find_or_create_by(:name => "Junior Women 15-16")
+    races.create! :category => Category.find_or_create_by(:name => "Junior Women 17-18")
   end
 
   def maximum_events(race)

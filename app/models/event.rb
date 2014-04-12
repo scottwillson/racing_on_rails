@@ -47,26 +47,26 @@ class Event < ActiveRecord::Base
 
   belongs_to :parent, :foreign_key => "parent_id", :class_name => "Event"
   has_many :children,
+           -> { order :date },
            :class_name => "Event",
            :foreign_key => "parent_id",
            :dependent => :destroy,
-           :order => "date",
            :after_add => :children_changed,
            :after_remove => :children_changed
 
   has_many :child_competitions,
+           -> { order :date },
            :class_name => "Competition",
            :foreign_key => "parent_id",
            :dependent => :destroy,
-           :order => "date",
            :after_add => :children_changed,
            :after_remove => :children_changed 
 
   has_many :children_and_child_competitions,
+           -> { order :date },
            :class_name => "Event",
            :foreign_key => "parent_id",
-           :dependent => :destroy,
-           :order => "date"
+           :dependent => :destroy
 
   has_one :overall, :foreign_key => "parent_id", :dependent => :destroy
   has_one :combined_results, :class_name => "CombinedTimeTrialResults", :foreign_key => "parent_id", :dependent => :destroy
@@ -79,6 +79,7 @@ class Event < ActiveRecord::Base
   belongs_to :team
 
   has_many   :races,
+             :inverse_of => :event,
              :dependent => :destroy,
              :after_add => :children_changed,
              :after_remove => :children_changed 
@@ -160,7 +161,7 @@ class Event < ActiveRecord::Base
       events = events.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
     end
     
-    events.map!(&:root).uniq!
+    events = events.to_a.map(&:root).uniq
     
     weekly_series, events = events.partition { |event| event.is_a?(WeeklySeries) }
     competitions, events = events.partition { |event| event.is_a?(Competition) }
@@ -169,19 +170,9 @@ class Event < ActiveRecord::Base
   end
 
   def self.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
-    first_of_year = Date.new(year, 1, 1)
-    last_of_year = Date.new(year + 1, 1, 1) - 1
-      discipline_names = [discipline]
-      discipline_names << 'Circuit' if discipline.downcase == 'road'
-      Set.new(Event.all(
-          :select => "distinct events.id, events.*",
-          :conditions => [%Q{
-              events.date between ? and ?
-              and events.discipline in (?)
-              and bar_points > 0
-              }, first_of_year, last_of_year, discipline_names]
-      ))
-
+    discipline_names = [discipline]
+    discipline_names << 'Circuit' if discipline.downcase == 'road'
+    Event.distinct.year(year).where(:discipline => discipline_names).where("bar_points > 0")
   end
   
   def self.upcoming(weeks = 2)
@@ -217,7 +208,7 @@ class Event < ActiveRecord::Base
       series_child_events = series_child_events.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
     end
 
-    single_day_events.all + multi_day_events.all + series_child_events.all
+    (single_day_events.load + multi_day_events.load + series_child_events.load)
   end
     
   # Defaults state to RacingAssociation.current.state, date to today, name to Untitled
@@ -344,14 +335,22 @@ class Event < ActiveRecord::Base
   def destroy_races
     ActiveRecord::Base.lock_optimistically = false
     disable_notification!
-    if combined_results
-      combined_results.destroy_races
-      combined_results.destroy
+    transaction do
+      if combined_results
+        combined_results.destroy_races
+        combined_results.destroy
+      end
+      races.each do |race|
+        # Call to destroy won't remove destroyed records from association
+        # Call to clear won't invoke all before_destroy callbacks
+        race.results.each(&:destroy)
+        race.results.delete(race.results.select(&:destroyed?))
+      end
+      # Call to destroy won't remove destroyed records from association
+      # Call to clear won't invoke all before_destroy callbacks
+      races.each(&:destroy)
+      races.delete(races.select(&:destroyed?))
     end
-    races.each do |race|
-      race.results.clear
-    end
-    races.clear
     enable_notification!
     ActiveRecord::Base.lock_optimistically = true
   end
@@ -424,7 +423,7 @@ class Event < ActiveRecord::Base
   # and CombinedTimeTrialResults recalcs
   # Check database to ensure most recent value is used, and not a association's out-of-date cached value
   def notification_enabled?
-    connection.select_value("select notification from events where id = #{id}") == 1
+    Event.connection.select_value("select notification from events where id = #{id}") == 1
   end
 
   # Set point value/factor for this Competition. Convenience method to hide CompetitionEventMembership complexity.
@@ -469,7 +468,7 @@ class Event < ActiveRecord::Base
   
   def velodrome_name=(value)
     if value.present?
-      self.velodrome = Velodrome.find_or_create_by_name(value.strip)
+      self.velodrome = Velodrome.find_or_create_by(:name => value.strip)
     end
   end
 

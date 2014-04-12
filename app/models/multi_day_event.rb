@@ -23,12 +23,14 @@ class MultiDayEvent < Event
   # TODO Default first child event date to start date, next child to first child date + 1, additional children to next day if adjacent, 
   # same day of next week if not adjacent (Series/WeeklySeries)
   has_many :children, 
+           -> { 
+             where("type is null or type = 'SingleDayEvent'").
+             order(:date) 
+           },
            :class_name => "Event",
            :foreign_key => "parent_id",
-           :conditions => "type is null or type = 'SingleDayEvent'", 
            :after_add => [ :children_changed, :update_date ],
-           :after_remove => [ :children_changed, :update_date ],
-           :order => "date" do
+           :after_remove => [ :children_changed, :update_date ] do
              def create!(attributes = {})
                owner = proxy_association.owner
                attributes[:parent_id] = owner.id

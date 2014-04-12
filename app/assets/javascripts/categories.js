@@ -8,7 +8,7 @@ function bindCategoryEvents() {
     drop: function(ev, ui) {
       var droppedOn = jQuery(this);
       jQuery.ajax({
-        type: 'PUT',
+        type: 'PATCH',
         url: '/admin/categories/' + encodeURIComponent(jQuery(ui.draggable).attr('data-id')) + '.js',
         data: { category: { parent_id: jQuery(this).attr('data-id') } }
       });
@@ -22,7 +22,7 @@ function bindCategoryEvents() {
     opacity: 0.7,
     zIndex: 10000,
     helper: function(event) {
-      return jQuery('<div class="category"><i class="icon-star"></i>' + jQuery(this).text() + '</div>');
+      return jQuery('<div class="category"><span class="glyphicon glyphicon-star"></span>' + jQuery(this).text() + '</div>');
     }
   });
 

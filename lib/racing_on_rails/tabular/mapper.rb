@@ -16,7 +16,7 @@ module RacingOnRails
         end
 
         @custom_columns.each do |name|
-          hash[name] = result.send(name)
+          hash[name] = result.custom_attribute(name)
         end
 
         @columns_after_custom_columns.each do |name|

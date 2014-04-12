@@ -51,7 +51,7 @@ class Result < ActiveRecord::Base
 
   validates_presence_of :race
 
-  scope :competition, where(:competition_result => true)
+  scope :competition, -> { where(:competition_result => true) }
 
   attr_accessor :updated_by
 
@@ -61,11 +61,7 @@ class Result < ActiveRecord::Base
     else
       person_id = person
     end
-    Result.find(
-      :all,
-      :include => [:team, :person, :scores, :category, {:race => [:event, :category]}],
-      :conditions => ['people.id = ?', person_id]
-    )
+    Result.includes(:team, :person, :scores, :category, {:race => [:event, :category]}).where(:person_id => person_id)
   end
 
   # Replace any new +person+, or +team+ with one that already exists if name matches
@@ -123,7 +119,7 @@ class Result < ActiveRecord::Base
     
     #license first if present and source is reliable (USAC)
     if RacingAssociation.current.eager_match_on_license? && license.present?
-      matches = matches + Person.find_all_by_license(license)
+      matches = matches + Person.where(:license => license)
       return matches if matches.size == 1
     end
     
@@ -282,7 +278,7 @@ class Result < ActiveRecord::Base
     if name.blank?
       self.category = nil
     else
-      self.category = Category.find_or_create_by_name(name)
+      self.category = Category.find_or_create_by(:name => name)
     end
     self[:category_name] = name.try(:to_s)
   end
@@ -306,7 +302,7 @@ class Result < ActiveRecord::Base
   # TODO Cache this, too
   def team_size
     if race_id
-      @team_size ||= Result.count(:conditions => ["race_id =? and place = ?", race_id, place])
+      @team_size ||= Result.where(:race_id => race_id, :place => place).count
     else
       @team_size ||= 1
     end
@@ -442,19 +438,14 @@ class Result < ActiveRecord::Base
     self[:team_name] = value
   end
   
-  def method_missing(sym, *args, &block)
-    # Performance fix for results page. :to_ary would be called and trigger a load of race to get custom_attributes
-    # May want to denormalize custom_attributes in Result.
-    if sym == :to_ary
-      return super
-    end
-
-    if sym != :custom_attributes && custom_attributes && custom_attributes.has_key?(sym)
-      custom_attributes[sym]
-    elsif race && race.custom_columns && race.custom_columns.include?(sym)
+  def custom_attribute(sym)
+    _sym = sym.to_sym
+    if custom_attributes && custom_attributes.has_key?(_sym)
+      custom_attributes[_sym]
+    elsif race && race.custom_columns && race.custom_columns.include?(_sym)
       nil
     else
-      super
+      raise NoMethodError, "No custom attribute '#{sym}' for race"
     end
   end
 

@@ -1,7 +1,7 @@
-require File.expand_path("../../test_helper", __FILE__)
+require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
-class BarResultsTest < ActionController::IntegrationTest
+class BarResultsTest < RacingOnRails::IntegrationTest
 
   # make sure all discipline pages come up with defaults
   def test_all_disciplines_empty_results

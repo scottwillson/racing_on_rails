@@ -7,9 +7,9 @@
       <% unless mobile_request? %>
       <td class="beginner_friendly icon">
         <% if event.beginner_friendly? %>
-          <%= link_to("http://www.obra.org/beginner_friendly.html", 
+          <%= link_to("http://www.obra.org/beginner_friendly.html",
                       :class => "beginner_friendly", :title => "Beginner friendly event") do %>
-            <i class="icon-ok-circle"></i>
+            <span class="glyphicon glyphicon-ok-circle"></span>
           <% end %>
         <% end %>
       </td>
@@ -19,9 +19,9 @@
 
       <% unless mobile_request? %>
       <td class="discipline">
-        <%= link_to event.discipline, 
+        <%= link_to event.discipline,
             schedule_index_path(
-              :year => RacingAssociation.current.effective_year, 
+              :year => RacingAssociation.current.effective_year,
               :discipline => Discipline[event.discipline].to_param,
               :anchor => event.date.strftime("%B").downcase
             ) %>

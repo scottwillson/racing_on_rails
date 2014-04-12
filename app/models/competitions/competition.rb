@@ -42,7 +42,10 @@ class Competition < Event
   after_save    :expire_cache
 
   has_many :competition_event_memberships
-  has_many :source_events, :through => :competition_event_memberships, :source => :event
+  has_many :source_events,
+           :through => :competition_event_memberships,
+           :source => :event,
+           :class_name => "::Event"
 
   def self.find_for_year(year = RacingAssociation.current.year)
     self.where("date between ? and ?", Time.zone.local(year).beginning_of_year.to_date, Time.zone.local(year).end_of_year.to_date).first
@@ -99,7 +102,7 @@ class Competition < Event
 
   def create_races
     category_names.each do |name|
-      category = Category.find_or_create_by_name(name)
+      category = Category.find_or_create_by(:name => (name))
       self.races.create(:category => category)
     end
   end
@@ -117,6 +120,7 @@ class Competition < Event
         where("events.type != ?", self.class.name.demodulize).
         year(year).
         where("events.updated_at > ? || races.updated_at > ?", 1.week.ago, 1.week.ago).
+        references(:events).
         find_each do |r|
           r.calculate_members_only_places!
         end
@@ -127,10 +131,10 @@ class Competition < Event
   def calculate!
     races.each do |race|
       results = source_results_with_benchmark(race)
-      create_competition_results_for(results, race)
-      after_create_competition_results_for(race)
+      create_competition_results_for results, race
+      after_create_competition_results_for race
       race.results.each(&:update_points!)
-      race.place_results_by_points(break_ties?, ascending_points?)
+      race.place_results_by_points break_ties?, ascending_points?
     end
 
     after_calculate
@@ -302,7 +306,7 @@ class Competition < Event
     }
     if logger.debug?
       if results.respond_to?(:rows)
-        logger.debug("#{self.class.name} Found #{results.rows} source results for '#{race.name}'")
+        logger.debug("#{self.class.name} Found #{results.rows.size} source results for '#{race.name}'")
       else
         logger.debug("#{self.class.name} Found #{results.size} source results for '#{race.name}'")
       end

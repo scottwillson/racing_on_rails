@@ -3,27 +3,27 @@
   <%- if RacingAssociation.current.bmx_numbers? -%>
   <tr>
     <td>BMX</td>
-    <td><%= text_field 'person', 'bmx_category' %></td>
+    <td><%= f.text_field :bmx_category, :class => "form-control" %></td>
   </tr>
   <%- end -%>
   <tr>
     <td>Cyclocross</td>
-    <td><%= text_field 'person', 'ccx_category' %></td>
+    <td><%= f.text_field :ccx_category, :class => "form-control" %></td>
   </tr>
   <tr>
     <td>Downhill</td>
-    <td><%= text_field 'person', 'dh_category' %></td>
+    <td><%= f.text_field :dh_category, :class => "form-control" %></td>
   </tr>
   <tr>
     <td>Mountain Bike</td>
-    <td><%= text_field 'person', 'mtb_category' %></td>
+    <td><%= f.text_field :mtb_category, :class => "form-control" %></td>
   </tr>
   <tr>
     <td>Road</td>
-    <td><%= text_field 'person', 'road_category' %></td>
+    <td><%= f.text_field :road_category, :class => "form-control" %></td>
   </tr>
   <tr>
     <td>Track</td>
-    <td><%= text_field 'person', 'track_category' %></td>
+    <td><%= f.text_field :track_category, :class => "form-control" %></td>
   </tr>
 <% end -%>

@@ -21,7 +21,7 @@ class WsbaBarr < Competition
       "Women Cat 3",
       "Women Cat 4"
     ].each do |category_name|
-      category = Category.find_or_create_by_name(category_name)
+      category = Category.find_or_create_by(:name => category_name)
       races.create!(:category => category)
     end
   end
@@ -54,7 +54,7 @@ class WsbaBarr < Competition
   def points_for(source_result, team_size = nil)
     points = 0
     WsbaBarr.benchmark('points_for', :level => "debug") {
-      results_in_place = Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
+      results_in_place = Result.where(:race_id => source_result.race.id, :place => source_result.place).count
       if team_size.nil?
         # assume this is a TTT, score divided by 4 regardless of # of riders
         team_size = (results_in_place > 1) ? 4 : 1 
@@ -73,6 +73,6 @@ class WsbaBarr < Competition
   end
   
   def place_members_only?
-     true
-   end
+    true
+  end
 end

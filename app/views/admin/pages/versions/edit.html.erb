@@ -1,6 +1,6 @@
 <% @page_title = "Admin: Pages: #{@page.title}: #{@version.number}" %>
 
-<div class="span4">
+<div class="col-sm-4">
   <%= labelled_text :page, :title, "Title", @page.title, {:class => "left"} %>
   <%= labelled_text :page, :slug, "Slug", @page.slug, {:class => "left"} %>
   <%= labelled_text :page, :parent_id, "Parent", ("#{@parent.title} (#{@parent.path})" if @parent), {:class => "left"} %>
@@ -13,19 +13,19 @@
   <% end -%>
 </div>
 
-<div class="span8">
+<div class="col-sm-8">
   <textarea readonly="true" id="page_body"><%= @page.body.html_safe %></textarea>
 </div>
 
 <div class="page_buttons clear full_width>
-  <div class="created_updated span6"><%= "Updated: #{updated(@page)}".html_safe if @page.updated_at %></div>
+  <div class="created_updated col-sm-6"><%= "Updated: #{updated(@page)}".html_safe if @page.updated_at %></div>
   <div class="right full_width>
     <%= link_to("Preview", admin_pages_version_path(@version), :target => "_new", :class => "obvious", :id => "preview") %>
     <%= link_to("Delete", 
                 admin_pages_version_path(@version),
                 :data => { :confirm => "Really delete this version?" }, 
                 :method => :delete, 
-                :class => "btn", 
+                :class => "btn btn-default", 
                 :id => "delete") %>
     <%= link_to "Revert", revert_admin_pages_version_path(@version), :data => { :confirm => "Really revert the current page to this version?" } %>
   </div>

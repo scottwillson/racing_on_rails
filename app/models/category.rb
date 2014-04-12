@@ -7,15 +7,16 @@
 #
 # +friendly_param+ is used for friendly links on BAR pages. Example: senior_men
 class Category < ActiveRecord::Base
+  acts_as_tree
+  include Concerns::TreeExtensions
+  include Concerns::TreeValidation
+
   include Ages
   include Comparable
   include Concerns::Category::FriendlyParam
-  include Concerns::TreeExtensions
-  include Concerns::TreeValidation
   include Export::Categories
 
   acts_as_list
-  acts_as_tree
   
   has_many :results
   has_many :races

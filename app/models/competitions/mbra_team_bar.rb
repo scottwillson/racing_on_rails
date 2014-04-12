@@ -67,6 +67,7 @@ class MbraTeamBar < Competition
           or (races.bar_points is null and events.bar_points is null and parents_events.bar_points is null and parents_events_2.bar_points > 0))
         and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'
     }).
+    references(:events, :parent, :race).
     order("results.team_id, race_id")
   end
   

@@ -1,7 +1,5 @@
 class ImageUploader < CarrierWave::Uploader::Base
   include CarrierWave::RMagick
-  include Sprockets::Helpers::RailsHelper
-  include Sprockets::Helpers::IsolatedHelper
 
   storage :file
   process :resize_to_limit => [ 2880, 1800 ]

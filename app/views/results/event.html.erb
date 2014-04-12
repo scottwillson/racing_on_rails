@@ -2,7 +2,7 @@
 
 <h2><%= public_link_to_flyer @event %></h2>
 
-<div class="row-fluid event_info">
+<div class="row event_info">
   <%= @event.city_state %><br/>
   <%- if @event.multiple_days? -%>
     <%= @event.date_range_long_s %>
@@ -16,7 +16,7 @@
 </div>
 
 <% unless @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.empty? -%>
-<div class="row-fluid event_info">  
+<div class="row event_info">  
   <table class="child_single_day_events">
     <% @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.each do |child| -%>
     <tr>
@@ -37,7 +37,7 @@
   <%= render :partial => "results/races", :locals => { :event => @event } %>
 
   <%- if @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.present? -%>
-<div class="row-fluid event_info child_events">
+<div class="row event_info child_events">
   <%- @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.each do |child| -%>
   <%= link_to child.name, event_results_path(child), { :class => "obvious" } %><br/>
   <%- end -%>

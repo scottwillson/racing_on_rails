@@ -4,9 +4,9 @@
 
 <%= display_categories(@article_categories, 0) %>
 
-<div class="row-fluid">
-  <div class="span12">
-    <%= link_to new_admin_article_category_path, :class => "btn", :id => "new_article_category" do %>
+<div class="row">
+  <div class="col-sm-12">
+    <%= link_to new_admin_article_category_path, :class => "btn btn-default", :id => "new_article_category" do %>
       New Article Category
     <% end %>
   </div>
@@ -34,7 +34,7 @@
       <td><%=h article_category.id %></td>
       <td><%=h article_category.parent_id %></td>
       <td><%= link_to 'Edit', edit_admin_article_category_path(article_category) %></td>
-      <td><%= link_to 'Destroy', [:admin, article_category], :confirm => 'Are you sure?', :method => :delete, :class => "btn" %></td>
+      <td><%= link_to 'Destroy', [:admin, article_category], :confirm => 'Are you sure?', :method => :delete, :class => "btn btn-default" %></td>
     </tr>
   <% end %>
 <% end %>

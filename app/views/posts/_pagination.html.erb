@@ -1,10 +1,11 @@
-<div class="row-fluid posts">
-  <div class="span3">
-    <%= link_to new_mailing_list_post_path(mailing_list), :class => "btn new" do %>New Post<% end %>
+<div class="row posts">
+  <div class="col-sm-3">
+    <%= link_to new_mailing_list_post_path(mailing_list), :class => "btn btn-default" do %>
+      <span class="glyphicon glyphicon-envelope"></span> New Post
+    <% end %>
   </div>
-  <div class="span6">
+  <div class="col-sm-6">
     <%= will_paginate posts,
-                      :renderer => BootstrapPagination::Rails,
                       :page_links => false,
                       :previous_label => "&larr; Newer",
                       :next_label => "Older &rarr;" %>

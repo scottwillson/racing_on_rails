@@ -1,16 +1,19 @@
 #! /usr/bin/env ruby
 
-# Skip NABRA
-[ "", "aba", "atra", "mbra", "obra", "wsba" ].shuffle.each do |association|
+[ "", "aba", "atra", "mbra", "nabra", "obra", "wsba" ].shuffle.each do |association|
   if association.nil?
+    puts "*************************"
     puts "Run racing_on_rails tests"
+    puts "*************************"
   else
+    puts "*" * "Run #{association} tests".size
     puts "Run #{association} tests"
+    puts "*" * "Run #{association} tests".size
   end
-  
+
   `script/local #{association}`
-  
-  puts `bundle exec rake db:migrate; bundle exec rake; bundle exec rake test:acceptance`
+
+  puts `bundle exec rake db:migrate; bundle exec rake db:structure:dump; bundle exec rake; bundle exec rake test:acceptance`
 
   if association == "obra" || association == "nabra"
     puts `bundle exec rake registration_engine:test; bundle exec rake registration_engine:test:acceptance`

@@ -1,7 +1,7 @@
-require File.expand_path("../../test_helper", __FILE__)
+require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
-class PagesTest < ActionController::IntegrationTest
+class PagesTest < RacingOnRails::IntegrationTest
   def test_render_dynamic_page_from_db
     FactoryGirl.create(:page)
     get "/plain"

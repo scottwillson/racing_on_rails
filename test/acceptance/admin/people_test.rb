@@ -115,7 +115,7 @@ class PeopleTest < AcceptanceTest
     find("#person_#{alice.id}").drag_to(find("#person_#{molly.id}_row"))
     wait_for_page_content "Merged A Penn into Molly Cameron"
     assert page.has_selector?(".alert-info")
-    assert page.has_no_selector?(".alert-error")
+    assert page.has_no_selector?(".alert-danger")
     assert !Person.exists?(alice.id), "Alice should be merged"
     assert Person.exists?(molly.id), "Molly still exist after merge"
   end

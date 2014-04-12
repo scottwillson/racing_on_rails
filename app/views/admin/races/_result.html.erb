@@ -22,7 +22,7 @@
           :class => "icon",
           :id => "result_#{result.id}_add", 
           :method => "post") do %>
-      <i class="icon-plus-sign"></i>
+      <span class="glyphicon glyphicon-plus-sign"></span>
     <% end %>
     <% unless result.new_record? %>
       <%= link_to(
@@ -31,7 +31,7 @@
             :class => "icon",
             :id => "result_#{result.id}_destroy", 
             :method => "delete") do %>
-        <i class="icon-minus-sign"></i>
+        <span class="glyphicon glyphicon-minus-sign"></span>
       <% end %>
     <% end %>
   </td>

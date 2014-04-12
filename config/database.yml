@@ -1,6 +1,6 @@
 development:
   adapter: mysql2
-  database: racing_on_rails_development
+  database: racing_on_rails_development_4
   username: ror_development
   host: localhost
   encoding: utf8
@@ -9,7 +9,7 @@ development:
 
 acceptance:
   adapter: mysql2
-  database: racing_on_rails_test
+  database: racing_on_rails_test_4
   <% if ENV["TRAVIS"] %>
   username: travis
   <% else %>
@@ -22,7 +22,7 @@ acceptance:
 
 test:
   adapter: mysql2
-  database: racing_on_rails_test
+  database: racing_on_rails_test_4
   <% if ENV["TRAVIS"] %>
   username: travis
   <% else %>
@@ -35,7 +35,7 @@ test:
 
 staging:
   adapter: mysql2
-  database: racing_on_rails_staging
+  database: racing_on_rails_staging_4
   username: root
   encoding: utf8
   host: localhost
@@ -44,7 +44,7 @@ staging:
 
 production:
   adapter: mysql2
-  database: racing_on_rails_production
+  database: racing_on_rails_production_4
   username: root
   encoding: utf8
   host: localhost

@@ -32,12 +32,12 @@ module Admin::EventsHelper
     html.html_safe
   end
   
-  # Choose POST or PUT. Not sure why we need this.
+  # Choose POST or PATCH. Not sure why we need this.
   def form_method_for(event)
     if event.new_record?
       :post
     else
-      :put
+      :patch
     end
   end
 end

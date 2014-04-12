@@ -6,7 +6,7 @@ require "active_support/concern"
 require "mocha/setup"
 
 module Ruby
-  class TestCase < MiniTest::Unit::TestCase
+  class TestCase < Minitest::Test
     include Test::EnumerableAssertions
   end
 end

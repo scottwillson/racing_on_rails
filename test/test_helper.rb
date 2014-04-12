@@ -1,5 +1,5 @@
 ENV["RAILS_ENV"] = "test"
-require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
+require File.expand_path('../../config/environment', __FILE__)
 require "rails/test_help"
 require "action_view/test_case"
 require "authlogic/test_case"
@@ -8,22 +8,20 @@ require "authlogic/test_case"
 class ActiveSupport::TestCase
   make_my_diffs_pretty!
 
-  self.use_transactional_fixtures = true
+  self.use_transactional_fixtures = false
   self.use_instantiated_fixtures  = false
   self.pre_loaded_fixtures  = false
 
-  include Test::EscapingAssertions
+  include Authlogic::TestCase
   include Test::EnumerableAssertions
+
+  DatabaseCleaner.strategy = :truncation
   
-  setup :activate_authlogic, :reset_association
+  setup :clean_database, :activate_authlogic, :reset_association, :reset_disciplines, :reset_person_current
 
-  # Discipline class may have loaded earlier with no aliases in database
-  teardown :reset_disciplines, :reset_person_current, :reset_association
-  teardown lambda { |t| no_angle_brackets(t) }
-
-  # Ensure that test database transaction rollsback before we assert_no_angle_brackets.
-  # Otherwise, if no_angle_brackets fails, test data is left in the database.
-  set_callback(:teardown, :before, :teardown_fixtures)
+  def clean_database
+    DatabaseCleaner.clean
+  end
 
   def reset_association
     RacingAssociation.current = nil
@@ -108,41 +106,6 @@ class ActiveSupport::TestCase
     end
   end
 
-  # Automatically removes the "layout/" prefix.
-  # Example: test for default layout: assert_layout("application")
-  def assert_layout(expected)
-    if expected
-      assert @layouts.include?("layouts/#{expected}"), "Expected layout #{expected} in #{@layouts.keys.join(", ")}"
-    else
-      assert @layouts.keys.all? { |k| k.nil? }, "Expected no layout, but had #{@layouts.inspect}"
-    end
-  end
-
-  # Detect HTML escaping screw-ups
-  # Eats RAM if there are many errors. Set VERBOSE_HTML_SOURCE to see page source.
-  def no_angle_brackets(test_case)
-    unless self.no_angle_brackets_exceptions.include?(test_case.method_name.to_sym) || self.no_angle_brackets_exceptions.include?(:all)
-      if @response && @response.present?
-        body_string = @response.body.to_s
-        if ENV["VERBOSE_HTML_SOURCE"]
-          if body_string["&lt;"]
-            flunk "Found escaped left angle bracket in #{body_string}"
-          end
-          if body_string["&rt;"]
-            flunk "Found escaped right angle bracket in #{body_string}"
-          end
-        else
-          if body_string["&lt;"]
-            flunk "Found escaped left angle bracket"
-          end
-          if body_string["&rt;"]
-            flunk "Found escaped right angle bracket"
-          end
-        end
-      end
-    end
-  end
-
   def create_administrator_session
     @administrator = Person.find_by_login("admin@example.com") || FactoryGirl.create(:administrator)
     PersonSession.create(@administrator)
@@ -161,19 +124,19 @@ class ActiveSupport::TestCase
   end
 
   def print_all_events
-    Event.all( :order => :date).each {|event|
+    Event.order(:date).each {|event|
       p "#{event.date} #{event.name} id: #{event.id} parent: #{event.parent_id} #{event.class} #{event.sanctioned_by} #{event.discipline}"
     }.size
   end
   
   def print_all_results
-    Result.all( :order => :person_id).each {|result|
+    Result.order(:person_id).each {|result|
       p "#{result.place} (#{result.members_only_place}) #{result.name} #{result.team} #{result.event.name} #{result.race.name} #{result.date} BAR: #{result.bar}"
     }.size
   end
   
   def print_all_categories
-    Category.all( :order => 'parent_id, name').each {|category|
+    Category.order('parent_id, name').each {|category|
       p "#{category.id} #{category.parent_id} #{category.name}"
       }.size
   end
@@ -183,8 +146,7 @@ class ActiveSupport::TestCase
     Result.all.group_by(&:race).each do |race, results|
        all_results = results.collect(&:place)
        # important to get last place in last
-       results.sort! { |a,b| a.place.to_i <=> b.place.to_i }
-       (1..results.last.place.to_i).reverse_each { |res|
+       (1..results.sort.last.place.to_i).reverse_each { |res|
          unless all_results.include?(res.to_s)
            # we need a result, there is a gap here
            race.results.create!(:place => res)

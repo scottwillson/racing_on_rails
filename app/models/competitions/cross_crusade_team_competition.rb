@@ -30,7 +30,7 @@ class CrossCrusadeTeamCompetition < Competition
   end
 
   def create_races
-    races.create!(:category => Category.find_or_create_by_name("Team"), :result_columns => %W{ place team_name points })
+    races.create!(:category => Category.find_or_create_by(:name => "Team"), :result_columns => %W{ place team_name points })
   end
 
   def add_source_events
@@ -58,6 +58,7 @@ class CrossCrusadeTeamCompetition < Competition
       includes(:race => :event).
       where("results.team_id is not null").
       where("events.id" => event_ids).
+      references(:events).
       order("results.team_id")
   end
 
@@ -108,8 +109,7 @@ class CrossCrusadeTeamCompetition < Competition
           )
         else
           scores_for_event = competition_result.scores.select { |s| s.source_result.event == source_event }
-          scores_for_event.sort! { |x, y| x.points <=> y.points }
-          lowest_scores = scores_for_event[10, scores_for_event.count - 10]
+          lowest_scores = scores_for_event.sort_by(&:points)[10, scores_for_event.count - 10]
           lowest_scores.each do |lowest_score|
             competition_result.scores.destroy lowest_score
           end

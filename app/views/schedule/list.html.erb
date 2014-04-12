@@ -25,7 +25,7 @@
     <td class="date">
       <%= event.date.strftime("%a %-m/%-d") if event.date -%>
     </td>
-    <td class="beginner_friendly"><% if event.beginner_friendly? %><i class="icon-ok-circle"></i><% end %></td>
+    <td class="beginner_friendly"><% if event.beginner_friendly? %><span class="glyphicon glyphicon-ok-circle"></span><% end %></td>
     <%- if event.cancelled %>
     <td><span class="cancelled"><%= event.full_name -%></span> <em>cancelled</em></td>
     <%- elsif event.postponed? %>

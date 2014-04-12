@@ -1,6 +1,6 @@
-/*! Raygun4js - v1.3.0 - 2013-11-01
+/*! Raygun4js - v1.8.0 - 2014-04-02
 * https://github.com/MindscapeHQ/raygun4js
-* Copyright (c) 2013 MindscapeHQ; Licensed MIT */
+* Copyright (c) 2014 MindscapeHQ; Licensed MIT */
 ;(function(window, undefined) {
 
 
@@ -104,7 +104,6 @@ TraceKit.report = (function reportModuleWrapper() {
      * @param {Function} handler
      */
     function subscribe(handler) {
-        installGlobalHandler();
         handlers.push(handler);
     }
 
@@ -144,7 +143,7 @@ TraceKit.report = (function reportModuleWrapper() {
         }
     }
 
-    var _oldOnerrorHandler, _onErrorHandlerInstalled;
+    var _oldOnerrorHandler = window.onerror;
 
     /**
      * Ensures all global unhandled exceptions are recorded.
@@ -154,9 +153,14 @@ TraceKit.report = (function reportModuleWrapper() {
      * @param {(number|string)} lineNo The line number at which the error
      * occurred.
      */
-    function traceKitWindowOnError(message, url, lineNo) {
+    window.onerror = function traceKitWindowOnError(message, url, lineNo, columnNo, errorObj) {
         var stack = null;
 
+        if (errorObj) {
+          stack = TraceKit.computeStackTrace(errorObj);
+        }
+        else
+        {
         if (lastExceptionStack) {
             TraceKit.computeStackTrace.augmentStackTraceWithInitialElement(lastExceptionStack, url, lineNo, message);
             stack = lastExceptionStack;
@@ -165,7 +169,8 @@ TraceKit.report = (function reportModuleWrapper() {
         } else {
             var location = {
                 'url': url,
-                'line': lineNo
+                'line': lineNo,
+                'column': columnNo
             };
             location.func = TraceKit.computeStackTrace.guessFunctionName(location.url, location.line);
             location.context = TraceKit.computeStackTrace.gatherContext(location.url, location.line);
@@ -177,6 +182,7 @@ TraceKit.report = (function reportModuleWrapper() {
                 'useragent': navigator.userAgent
             };
         }
+        }
 
         notifyHandlers(stack, 'from window.onerror');
 
@@ -185,17 +191,7 @@ TraceKit.report = (function reportModuleWrapper() {
         }
 
         return false;
-    }
-
-    function installGlobalHandler ()
-    {
-        if (_onErrorHandlerInstalled === true) {
-            return;
-        }
-        _oldOnerrorHandler = window.onerror;
-        window.onerror = traceKitWindowOnError;
-        _onErrorHandlerInstalled = true;
-    }
+    };
 
     /**
      * Reports an unhandled Error to TraceKit.
@@ -608,6 +604,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
     /**
      * Computes stack trace information from the stack property.
      * Chrome and Gecko use this property.
+     * Added WinJS regex for Raygun4JS's offline caching support
      * @param {Error} ex
      * @return {?Object.<string, *>} Stack trace information.
      */
@@ -618,6 +615,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
 
         var chrome = /^\s*at (?:((?:\[object object\])?\S+) )?\(?((?:file|http|https):.*?):(\d+)(?::(\d+))?\)?\s*$/i,
             gecko = /^\s*(\S*)(?:\((.*?)\))?@((?:file|http|https).*?):(\d+)(?::(\d+))?\s*$/i,
+            winjs = /^\s*at (?:((?:\[object object\])?.+) )?\(?((?:ms-appx|http|https):.*?):(\d+)(?::(\d+))?\)?\s*$/i,
             lines = ex.stack.split('\n'),
             stack = [],
             parts,
@@ -640,6 +638,13 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
                     'line': +parts[3],
                     'column': parts[4] ? +parts[4] : null
                 };
+            } else if ((parts = winjs.exec(lines[i]))) {
+              element = {
+                'url': parts[2],
+                'func': parts[1] || UNKNOWN_FUNCTION,
+                'line': +parts[3],
+                'column': parts[4] ? +parts[4] : null
+              };
             } else {
                 continue;
             }
@@ -1092,6 +1097,67 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
     _helper('setInterval');
 }());
 
+/**
+ * Extended support for backtraces and global error handling for most
+ * asynchronous jQuery functions.
+ */
+(function traceKitAsyncForjQuery($) {
+
+    // quit if jQuery isn't on the page
+    if (!$) {
+        return;
+    }
+
+    var _oldEventAdd = $.event.add;
+    $.event.add = function traceKitEventAdd(elem, types, handler, data, selector) {
+        var _handler;
+
+        if (handler.handler) {
+            _handler = handler.handler;
+            handler.handler = TraceKit.wrap(handler.handler);
+        } else {
+            _handler = handler;
+            handler = TraceKit.wrap(handler);
+        }
+
+        // If the handler we are attaching doesn’t have the same guid as
+        // the original, it will never be removed when someone tries to
+        // unbind the original function later. Technically as a result of
+        // this our guids are no longer globally unique, but whatever, that
+        // never hurt anybody RIGHT?!
+        if (_handler.guid) {
+            handler.guid = _handler.guid;
+        } else {
+            handler.guid = _handler.guid = $.guid++;
+        }
+
+        return _oldEventAdd.call(this, elem, types, handler, data, selector);
+    };
+
+    var _oldReady = $.fn.ready;
+    $.fn.ready = function traceKitjQueryReadyWrapper(fn) {
+        return _oldReady.call(this, TraceKit.wrap(fn));
+    };
+
+    var _oldAjax = $.ajax;
+    $.ajax = function traceKitAjaxWrapper(s) {
+        var keys = ['complete', 'error', 'success'], key;
+        while(key = keys.pop()) {
+            if ($.isFunction(s[key])) {
+                s[key] = TraceKit.wrap(s[key]);
+            }
+        }
+
+        try {
+            return _oldAjax.call(this, s);
+        } catch (e) {
+            TraceKit.report(e);
+            throw e;
+        }
+    };
+
+}(window.jQuery));
+
 //Default options:
 if (!TraceKit.remoteFetching) {
   TraceKit.remoteFetching = true;
@@ -1150,16 +1216,23 @@ window.TraceKit = TraceKit;
   };
 
   var _oldAjax = $.ajax;
-  $.ajax = function traceKitAjaxWrapper(s) {
+  $.ajax = function traceKitAjaxWrapper(url, options) {
+    if (typeof url === "object") {
+      options = url;
+      url = undefined;
+    }
+
+    options = options || {};
+
     var keys = ['complete', 'error', 'success'], key;
     while(key = keys.pop()) {
-      if ($.isFunction(s[key])) {
-        s[key] = TraceKit.wrap(s[key]);
+      if ($.isFunction(options[key])) {
+        options[key] = TraceKit.wrap(options[key]);
       }
     }
 
     try {
-      return _oldAjax.call(this, s);
+      return (url) ? _oldAjax.call(this, url, options) : _oldAjax.call(this, options);
     } catch (e) {
       TraceKit.report(e);
       throw e;
@@ -1168,15 +1241,19 @@ window.TraceKit = TraceKit;
 
 }(window.jQuery, window.TraceKit));
 
-(function (window, $) {
+(function (window, $, undefined) {
   // pull local copy of TraceKit to handle stack trace collection
   var _traceKit = TraceKit.noConflict(),
       _raygun = window.Raygun,
       _raygunApiKey,
       _debugMode = false,
+      _allowInsecureSubmissions = false,
+      _enableOfflineSave = false,
       _customData = {},
+      _tags = [],
       _user,
       _version,
+      _raygunApiUrl = 'https://api.raygun.io',
       $document;
 
   if ($) {
@@ -1197,11 +1274,14 @@ window.TraceKit = TraceKit;
 
       if (options)
       {
+        _allowInsecureSubmissions = options.allowInsecureSubmissions || false;
         if (options.debugMode)
         {
           _debugMode = options.debugMode;
         }
       }
+
+      sendSavedErrors();
 
       return Raygun;
     },
@@ -1209,6 +1289,10 @@ window.TraceKit = TraceKit;
     withCustomData: function (customdata) {
       _customData = customdata;
       return Raygun;
+    },
+
+    withTags: function (tags) {
+      _tags = tags;
     },
 
     attach: function () {
@@ -1230,9 +1314,12 @@ window.TraceKit = TraceKit;
       return Raygun;
     },
 
-    send: function (ex, customData) {
+    send: function (ex, customData, tags) {
       try {
-        processUnhandledException(_traceKit.computeStackTrace(ex), merge(_customData, customData));        
+        processUnhandledException(_traceKit.computeStackTrace(ex), {
+          customData: merge(_customData, customData),
+          tags: mergeArray(_tags, tags)
+        });
       }
       catch (traceKitException) {
         if (ex !== traceKitException) {
@@ -1250,6 +1337,14 @@ window.TraceKit = TraceKit;
     setVersion: function (version) {
       _version = version;
       return Raygun;
+    },
+
+    saveIfOffline: function (enableOffline) {
+      if (typeof enableOffline !== 'undefined' && typeof enableOffline === 'boolean') {
+        _enableOfflineSave = enableOffline;
+      }
+
+      return Raygun;
     }
   };
 
@@ -1261,7 +1356,8 @@ window.TraceKit = TraceKit;
       statusText: jqXHR.statusText,
       type: ajaxSettings.type,
       url: ajaxSettings.url,
-      contentType: ajaxSettings.contentType });
+      contentType: ajaxSettings.contentType,
+      data: ajaxSettings.data ? ajaxSettings.data.slice(0, 10240) : undefined });
   }
 
   function log(message) {
@@ -1285,6 +1381,13 @@ window.TraceKit = TraceKit;
     return o3;
   }
 
+  function mergeArray(t0, t1) {
+    if (t1 != null) {
+      return t0.concat(t1);
+    }
+    return t0;
+  }
+
   function forEach(set, func) {
     for (var i = 0; i < set.length; i++) {
       func.call(null, i, set[i]);
@@ -1300,12 +1403,40 @@ window.TraceKit = TraceKit;
     return true;
   }
 
+  function getRandomInt() {
+    return Math.floor(Math.random() * 9007199254740993);
+  }
+
   function getViewPort() {
     var e = document.documentElement,
     g = document.getElementsByTagName('body')[0],
     x = window.innerWidth || e.clientWidth || g.clientWidth,
     y = window.innerHeight || e.clientHeight || g.clientHeight;
     return { width: x, height: y };
+  }
+
+  function offlineSave (data) {
+    var dateTime = new Date().toJSON();
+
+    try {
+      var key = 'raygunjs=' + dateTime + '=' + getRandomInt();
+
+      if (typeof localStorage[key] === 'undefined') {
+        localStorage[key] = data;
+      }
+    } catch (e) {
+      log('Raygun4JS: LocalStorage full, cannot save exception');
+    }
+  }
+
+  function sendSavedErrors() {
+    for (var key in localStorage) {
+      if (key.substring(0, 9) === 'raygunjs=') {
+        sendToRaygun(JSON.parse(localStorage[key]));
+
+        localStorage.removeItem(key);
+      }
+    }
   }
 
   function processUnhandledException(stackTrace, options) {
@@ -1316,6 +1447,7 @@ window.TraceKit = TraceKit;
       forEach(stackTrace.stack, function (i, frame) {
         stack.push({
           'LineNumber': frame.line,
+          'ColumnNumber': frame.column,
           'ClassName': 'line ' + frame.line + ', column ' + frame.column,
           'FileName': frame.url,
           'MethodName': frame.func || '[anonymous]'
@@ -1330,10 +1462,18 @@ window.TraceKit = TraceKit;
           qs[decodeURIComponent(parts[0])] = parts[1];
         }
       });
-    }    
+    }
 
-    if (isEmpty(options)) {
-      options = _customData;
+    if (options === undefined) {
+      options = {};
+    }
+
+    if (isEmpty(options.customData)) {
+      options.customData = _customData;
+    }
+
+    if (isEmpty(options.tags)) {
+      options.tags = _tags;
     }
 
     var screen = window.screen || { width: getViewPort().width, height: getViewPort().height, colorDepth: 8 };
@@ -1343,7 +1483,7 @@ window.TraceKit = TraceKit;
       'Details': {
         'Error': {
           'ClassName': stackTrace.name,
-          'Message': stackTrace.message || 'Script error',
+          'Message': stackTrace.message || options.status || 'Script error',
           'StackTrace': stack
         },
         'Environment': {
@@ -1362,9 +1502,10 @@ window.TraceKit = TraceKit;
         },
         'Client': {
           'Name': 'raygun-js',
-          'Version': '1.2.1'
+          'Version': '1.8.0'
         },
-        'UserCustomData': options,
+        'UserCustomData': options.customData,
+        'Tags': options.tags,
         'Request': {
           'Url': document.location.href,
           'QueryString': qs,
@@ -1374,13 +1515,14 @@ window.TraceKit = TraceKit;
             'Host': document.domain
           }
         },
-        'Version': _version || 'Not supplied'        
+        'Version': _version || 'Not supplied'
       }
     };
 
     if (_user) {
       payload.Details.User = _user;
     }
+
     sendToRaygun(payload);
   }
 
@@ -1388,9 +1530,10 @@ window.TraceKit = TraceKit;
     if (!isApiKeyConfigured()) {
       return;
     }
+
     log('Sending exception data to Raygun:', data);
-    var url = 'https://api.raygun.io/entries?apikey=' + encodeURIComponent(_raygunApiKey);
-    makeCorsRequest(url, JSON.stringify(data));
+    var url = _raygunApiUrl + '/entries?apikey=' + encodeURIComponent(_raygunApiKey);
+    makePostCorsRequest(url, JSON.stringify(data));
   }
 
   // Create the XHR object.
@@ -1401,25 +1544,65 @@ window.TraceKit = TraceKit;
     if ("withCredentials" in xhr) {
       // XHR for Chrome/Firefox/Opera/Safari.
       xhr.open(method, url, true);
+
     } else if (window.XDomainRequest) {
       // XDomainRequest for IE.
+      if (_allowInsecureSubmissions) {
+        // remove 'https:' and use relative protocol
+        // this allows IE8 to post messages when running
+        // on http
+        url = url.slice(6);
+      }
+
       xhr = new window.XDomainRequest();
       xhr.open(method, url);
     }
 
-    xhr.onload = function () {
-      log('logged error to Raygun');
-    };
-    xhr.onerror = function () {
-      log('failed to log error to Raygun');
-    };
+    xhr.timeout = 10000;
 
     return xhr;
   }
 
   // Make the actual CORS request.
-  function makeCorsRequest(url, data) {
-    var xhr = createCORSRequest('POST', url);
+  function makePostCorsRequest(url, data) {
+    var xhr = createCORSRequest('POST', url, data);
+
+    if ('withCredentials' in xhr) {
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState !== 4) {
+          return;
+        }
+
+        if (xhr.status === 202) {
+          sendSavedErrors();
+        } else if (_enableOfflineSave && xhr.status !== 403 && xhr.status !== 400) {
+          offlineSave(data);
+        }
+      };
+
+      xhr.onload = function () {
+        log('logged error to Raygun');
+      };
+
+    } else if (window.XDomainRequest) {
+      xhr.ontimeout = function () {
+        if (_enableOfflineSave) {
+          log('Raygun: saved error locally');
+          offlineSave(data);
+        }
+      };
+
+      xhr.onload = function () {
+        log('logged error to Raygun');
+        sendSavedErrors();
+      };
+    }
+
+    xhr.onerror = function () {
+      log('failed to log error to Raygun');
+    };
+
     if (!xhr) {
       log('CORS not supported');
       return;

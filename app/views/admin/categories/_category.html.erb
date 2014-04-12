@@ -1,10 +1,10 @@
 <div class="category" id="category_<%= category.id %>_row" data-id="<%= category.id %>">
-  <i class="disclosure <%= "collapsed" if category.children.present? %>" 
-     id="disclosure_<%= category.id %>" 
-     data-id="<%= category.id%>"></i>
-  <div class="category_name" id="category_<%= category.id %>" data-id="<%= category.id %>"><i class="icon-star"></i> <%= category.name %></div>
-  <%= link_to(category_races_path(category), :title => 'View races') do %>
-    <i class="icon-list"></i> 
+  <span class="disclosure glyphicon <%= "collapsed" if category.children.present? %>"
+     id="disclosure_<%= category.id %>"
+     data-id="<%= category.id%>"></span>
+  <div class="category_name" id="category_<%= category.id %>" data-id="<%= category.id %>"><span class="glyphicon glyphicon-star"></span> <%= category.name %></div>
+  <%= link_to(category_races_path(category), :title => "#{category.races.count} races") do %>
+    <span class="glyphicon glyphicon-list"></span>
   <% end if category.races.present? %>
   <div class="children" id="category_<%= category.id %>_children"></div>
 </div>

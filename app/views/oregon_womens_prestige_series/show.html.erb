@@ -1,49 +1,49 @@
 
 <div class="owps">
-  <div class="row-fluid logos">
-    <div class="span12">
+  <div class="row logos">
+    <div class="col-sm-12">
       <img src="http://www.obra.org/images/logos/WPS.fullcolor.logo.jpg" height="150" width="228" class="logo">
       <h2>OBRA Women's Prestige Series</h2>
     </div>
   </div>
 
-  <div class="row-fluid logos">
-    <div class="span3"></div>
-    <div class="span6">
+  <div class="row logos">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
       <p>
-        The OBRA Women’s Prestige Race Series is a five month long series, run by the OBRA Oregon Cup committee. 
+        The OBRA Women’s Prestige Race Series is a five month long series, run by the OBRA Oregon Cup committee.
         The series replaces and expands the previous Oregon Cup Women’s competition and OBRA Cat 4-5 race series.
       </p>
-      <p><img src="http://www.obra.org/images/logos/obra.png" height="70" width="248" class="obra-logo"></p>
+      <p><img src="http://www.obra.org/images/logos/obra.png" height="70" width="167" class="obra-logo"></p>
     </div>
   </div>
 
-  <div class="row-fluid logos">
-    <div class="span6 giant-logo">
+  <div class="row logos">
+    <div class="col-sm-6 giant-logo">
       <a class="image" href="http://www.giant-bicycles.com/en-us/livgiant/"><img src="http://www.obra.org/images/logos/liv-giant.png" height="70" width="239"></a>
     </div>
-    <div class="span6 rapha-logo">
+    <div class="col-sm-6 rapha-logo">
       <a class="image" href="http://www.rapha.cc/"><img src="http://www.obra.org/images/logos/rapha.png" height="70" width="153"></a>
     </div>
   </div>
-  
-  <div class="row-fluid logos">
-    <div class="span12">
-      <a class="image" href="http://letsracebikes.com/"><img src="http://letsracebikes.com/wp-content/uploads/2012/11/letsracebikes_logo3.png" height="50" width="513" class="lets-race-bikes-logo"></a>
+
+  <div class="row logos">
+    <div class="col-sm-12">
+      <a class="image" href="http://letsracebikes.com/"><img src="http://letsracebikes.com/wp-content/uploads/2012/11/letsracebikes_logo3.png" height="70" width="422" class="lets-race-bikes-logo"></a>
     </div>
   </div>
 
-  <div class="row-fluid">
-    <div class="span6">
+  <div class="row">
+    <div class="col-sm-6">
       <h3>Series Details</h3>
 
       <p>
-        The race series will consist of 10 races and three different competitions. Races will consist of road races, criteriums, time trials 
-        and one stage race. The competitions will include a Cat 1/2/3 series, a Cat 4 series and an overall team competition. The Oregon Cup 
+        The race series will consist of 10 races and three different competitions. Races will consist of road races, criteriums, time trials
+        and one stage race. The competitions will include a Cat 1/2/3 series, a Cat 4 series and an overall team competition. The Oregon Cup
         committee will select the races and work directly with race promoters to ensure that the races provide the highest quality event possible.
       </p>
     </div>
-    <div class="span6">
+    <div class="col-sm-6">
       <h3>Goals</h3>
 
       <ul>
@@ -55,9 +55,9 @@
       </ul>
     </div>
   </div>
-  <div class="row-fluid">
-    <div class="span2"></div>
-    <div class="span8">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
       <h3>Schedule</h3>
       <table class="base table table-striped">
       <tbody>
@@ -78,26 +78,26 @@
       </table>
     </div>
   </div>
-  <div class="row-fluid">
-    <div class="span12">
+  <div class="row">
+    <div class="col-sm-12">
       <h3>Standings</h3>
       <% unless @event.new_record? %>
       <% @event.races.each do |race| %>
       <h3><%= race.name %></h3>
       <%= results_table race %>
       <% end %>
-      <% end %>  
+      <% end %>
 
       <% unless @team_event.new_record? %>
       <% @team_event.races.each do |race| %>
       <h3><%= race.name %></h3>
       <%= results_table race %>
       <% end %>
-      <% end %>  
+      <% end %>
     </div>
   </div>
-  <div class="row-fluid">
-    <div class="span6">
+  <div class="row">
+    <div class="col-sm-6">
       <h4>Individual Competition Points</h4>
 
       <ol>
@@ -108,7 +108,7 @@
         <li>In a team time trial, individual points will be calculated by dividing the points awarded for the team placing by the number of riders that started on the team. For example, if four riders start on a team and the team places 1st, each rider receives 25 points for the individual series standings.</li>
       </ol>
     </div>
-    <div class="span6">
+    <div class="col-sm-6">
       <h4>Team Competition Points</h4>
 
       <ol>
@@ -120,9 +120,9 @@
       </ol>
     </div>
   </div>
-  
-  <div class="row-fluid">
-    <div class="span6">
+
+  <div class="row">
+    <div class="col-sm-6">
       <h4>Points Table</h4>
       <table class=" points">
         <thead>
@@ -180,7 +180,7 @@
       </table>
     </div>
 
-    <div class="span6">
+    <div class="col-sm-6">
       <h4>Points Table</h4>
       <table class=" points">
         <thead>

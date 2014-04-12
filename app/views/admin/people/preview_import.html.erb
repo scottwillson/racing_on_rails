@@ -3,21 +3,21 @@
 
 <h2>Preview Import</h2>
 
-<div class="row-fluid">
-  <div class="span12">
+<div class="row">
+  <div class="col-sm-12">
     <%= form_tag import_admin_people_path, :class => "form-inline" %>
       <label class="checkbox">
         <%= check_box_tag 'update_membership', true, true %> Make all imported people current members for
       </label>
       <select name="year" id="import_year"><%= options_for_select @years, @year %></select>
-      <%= submit_tag 'Import', :class => "btn btn-primary" %>
-      <%= submit_tag 'Cancel', :class => "btn" %>
+      <%= submit_tag 'Import', :class => "btn btn-default" %>
+      <%= submit_tag 'Cancel', :class => "btn btn-default" %>
     </form>
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span12">
+<div class="row">
+  <div class="col-sm-12">
 <%= table :class => "preview_import", :id => "preview_import", :columns =>  @people_file.columns.size do %>
     <tr id="original">
     <%- @people_file.columns.each do |column| -%>

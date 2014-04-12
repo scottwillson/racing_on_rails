@@ -20,7 +20,7 @@ RacingOnRails::Application.routes.draw do
         member do
           get     :create_from_children
           delete  :destroy_races
-          put     :update_attribute
+          patch   :update_attribute
           post    :upload
         end
         resources :races do
@@ -38,7 +38,11 @@ RacingOnRails::Application.routes.draw do
         end
       end
       resources :multi_day_events
-      resources :pages
+      resources :pages do
+        member do
+          patch :update_attribute
+        end
+      end
       namespace :pages do
         resources :versions do
           member do
@@ -67,14 +71,16 @@ RacingOnRails::Application.routes.draw do
         end
         resources :scores
       end
-      match "/people/:id/merge/:other_person_id" => "people#merge", :constraints => { :id => /\d+/, :other_person_id => /\d+/ }, :via => :post, :as => :merge_person
+      post "/people/:id/merge/:other_person_id" => "people#merge", :constraints => { :id => /\d+/, :other_person_id => /\d+/ }, :as => :merge_person
 
       resources :races do
         member do
-          put :update_attribute
+          patch :update_attribute
         end
         resources :results
       end
+
+      resources :race_numbers
 
       resources :results do
         collection do
@@ -82,7 +88,7 @@ RacingOnRails::Application.routes.draw do
           post :results
         end
         member do
-          put :update_attribute
+          patch :update_attribute
         end
         resources :races
       end
@@ -93,17 +99,17 @@ RacingOnRails::Application.routes.draw do
       resources :teams do
         resources :aliases
         member do
-          post :cancel_in_place_edit
-          post :destroy_name
-          post :toggle_member
-          put  :update_attribute
+          post  :cancel_in_place_edit
+          post  :destroy_name
+          post  :toggle_member
+          patch :update_attribute
         end
       end
-      match "/teams/:id/merge/:other_team_id" => "teams#merge", :constraints => { :id => /\d+/, :other_team_id => /\d+/ }, :via => :post, :as => :merge_team
+      post "/teams/:id/merge/:other_team_id" => "teams#merge", :constraints => { :id => /\d+/, :other_team_id => /\d+/ }, :as => :merge_team
 
       resources :velodromes do
         member do
-          put  :update_attribute
+          patch :update_attribute
         end
       end
       resources :weekly_series
@@ -114,25 +120,21 @@ RacingOnRails::Application.routes.draw do
     resources :categories do
       resources :races
     end
-    match ':controller/:id/aliases/:alias_id/destroy' => '#destroy_alias', :constraints => { :id => /\d+/ }
-    match '/admin/results/:id/scores' => 'admin/results#scores'
-    match '/admin/racers' => 'admin/racers#index'
-    match '/admin/persons/:action/:id' => 'admin/people#index', :as => :admin_persons
-    match '/admin' => 'admin/home#index', :as => :admin_home
-    match '/bar' => 'bar#index', :as => "bar_root"
-    match "/bar/:year/:discipline/:category" => "bar#show",
-          :as => "bar_full"
-    match "/bar(/:year(/:discipline(/:category)))" => "bar#show",
-          :as => "bar",
-          :defaults => { :discipline => "overall", :category => "senior_men" }
-
-    match '/cat4_womens_race_series/:year' => 'competitions#show', :as => :cat4_womens_race_series, :type => 'cat4_womens_race_series', :constraints => { :year => /\d{4}/ }
-    match '/cat4_womens_race_series' => 'competitions#show', :type => 'cat4_womens_race_series'
-    match '/events/:event_id/results' => 'results#event'
-    match '/events/:event_id/people/:person_id/results' => 'results#person_event'
-    match '/events/:event_id/teams/:team_id/results' => 'results#team_event'
-    match '/events/:event_id/teams/:team_id/results/:race_id' => 'results#team_event'
-    match '/events/:event_id' => 'results#event'
+    get ':controller/:id/aliases/:alias_id/destroy' => '#destroy_alias', :constraints => { :id => /\d+/ }
+    get '/admin/results/:id/scores' => 'admin/results#scores'
+    get '/admin/racers' => 'admin/racers#index'
+    patch '/admin/persons/update_attribute/:id' => 'admin/people#update_attribute'
+    get '/admin' => 'admin/home#index', :as => :admin_home
+    get '/bar' => 'bar#index', :as => "bar_root"
+    get "/bar/:year/:discipline/:category" => "bar#show", :as => "bar_full"
+    get "/bar(/:year(/:discipline(/:category)))" => "bar#show", :as => "bar", :defaults => { :discipline => "overall", :category => "senior_men" }
+    get '/cat4_womens_race_series/:year' => 'competitions#show', :as => :cat4_womens_race_series, :type => 'cat4_womens_race_series', :constraints => { :year => /\d{4}/ }
+    get '/cat4_womens_race_series' => 'competitions#show', :type => 'cat4_womens_race_series'
+    get '/events/:event_id/results' => 'results#event'
+    get '/events/:event_id/people/:person_id/results' => 'results#person_event'
+    get '/events/:event_id/teams/:team_id/results' => 'results#team_event'
+    get '/events/:event_id/teams/:team_id/results/:race_id' => 'results#team_event'
+    get '/events/:event_id' => 'results#event'
 
     resources :events do
       resources :results
@@ -145,23 +147,23 @@ RacingOnRails::Application.routes.draw do
       end
     end
 
-    match "/human_dates/:date" => "human_dates#show", :constraints => { :date => /.*/ }
+    get "/human_dates/:date" => "human_dates#show", :constraints => { :date => /.*/ }
 
     resources :photos
 
     resources :races
-    match '/rider_rankings/:year' => 'competitions#show', :as => :rider_rankings, :type => 'rider_rankings', :constraints => { :year => /\d{4}/ }
-    match '/rider_rankings' => 'competitions#show', :as => :rider_rankings_root, :type => 'rider_rankings'
-    match '/ironman(/:year)' => 'ironman#index', :as => :ironman
+    get '/rider_rankings/:year' => 'competitions#show', :as => :rider_rankings, :type => 'rider_rankings', :constraints => { :year => /\d{4}/ }
+    get '/rider_rankings' => 'competitions#show', :as => :rider_rankings_root, :type => 'rider_rankings'
+    get '/ironman(/:year)' => 'ironman#index', :as => :ironman
 
-    match '/oregon_cup/rules' => 'oregon_cup#rules'
-    match '/oregon_cup/races' => 'oregon_cup#races'
-    match '/oregon_cup/:year' => 'oregon_cup#index', :as => :oregon_cup
-    match '/oregon_cup' => 'oregon_cup#index', :as => :oregon_cup_root
 
-    match '/oregon_womens_prestige_series' => 'oregon_womens_prestige_series#show'
-    match '/owps' => 'oregon_womens_prestige_series#show'
-    match "/oregon_tt_cup" => "competitions#show", :type => "oregon_tt_cup"
+    get '/oregon_cup/rules' => 'oregon_cup#rules'
+    get '/oregon_cup/races' => 'oregon_cup#races'
+    get '/oregon_cup/:year' => 'oregon_cup#index', :as => :oregon_cup
+    get '/oregon_cup' => 'oregon_cup#index', :as => :oregon_cup_root
+    get "/oregon_tt_cup" => "competitions#show", :type => "oregon_tt_cup"
+    get '/oregon_womens_prestige_series' => 'oregon_womens_prestige_series#show'
+    get '/owps' => 'oregon_womens_prestige_series#show'
 
     resources :password_resets
 
@@ -173,18 +175,17 @@ RacingOnRails::Application.routes.draw do
 
     resources :posts
 
-    match '/people/:person_id/results' => 'results#person', :constraints => { :person_id => /\d+/ }
-    match '/people/:person_id/:year' => 'results#person', :constraints => { :person_id => /\d+/, :year => /\d\d\d\d/ }, :as => :person_results_year
-    match '/people/:person_id' => 'results#person', :constraints => { :person_id => /\d+/ }, :via => :get
-    match '/people/list' => 'people#list'
-    match '/people/new_login' => 'people#new_login'
-    match '/people/:id/new_login' => 'people#new_login'
-    match "/people/:id/account" => redirect("/people/%{id}/edit"), :constraints => { :person_id => /\d+/ }, :as => :account_person
-
-    match "/people/:id/editors/:editor_id/create" => "editors#create", :constraints => { :id => /\d+/, :editor_id => /\d+/ }, :via => :get, :as => :create_person_editor
-    match "/people/:id/editors/:editor_id/destroy" => "editors#destroy", :constraints => { :id => /\d+/, :editor_id => /\d+/ }, :via => :get, :as => :destroy_person_editor
-    match "/people/:id/editor_requests/:editor_id/create" => "editor_requests#create", :constraints => { :id => /\d+/, :editor_id => /\d+/ }, :via => :get, :as => :create_person_editor_request
-    match "/people/:id/editor_requests/:editor_id/destroy" => "editor_requests#destroy", :constraints => { :id => /\d+/, :editor_id => /\d+/ }, :via => :get, :as => :destroy_person_editor_request
+    get '/people/:person_id/results' => 'results#person', :constraints => { :person_id => /\d+/ }
+    get '/people/:person_id/:year' => 'results#person', :constraints => { :person_id => /\d+/, :year => /\d\d\d\d/ }, :as => :person_results_year
+    get '/people/:person_id' => 'results#person', :constraints => { :person_id => /\d+/ }
+    get '/people/list' => 'people#list'
+    get '/people/new_login' => 'people#new_login'
+    get '/people/:id/new_login' => 'people#new_login'
+    get "/people/:id/account" => redirect("/people/%{id}/edit"), :constraints => { :person_id => /\d+/ }, :as => :account_person
+    get "/people/:id/editors/:editor_id/create" => "editors#create", :constraints => { :id => /\d+/, :editor_id => /\d+/ }, :as => :create_person_editor
+    get "/people/:id/editors/:editor_id/destroy" => "editors#destroy", :constraints => { :id => /\d+/, :editor_id => /\d+/ }, :as => :destroy_person_editor
+    get "/people/:id/editor_requests/:editor_id/create" => "editor_requests#create", :constraints => { :id => /\d+/, :editor_id => /\d+/ }, :as => :create_person_editor_request
+    get "/people/:id/editor_requests/:editor_id/destroy" => "editor_requests#destroy", :constraints => { :id => /\d+/, :editor_id => /\d+/ }, :as => :destroy_person_editor_request
 
     resources :people do
       post :create_login, :on => :collection
@@ -201,49 +202,53 @@ RacingOnRails::Application.routes.draw do
     end
 
     resources :racing_associations
-    match '/results/:year/:discipline' => 'results#index', :constraints => { :year => /(19|20)\d\d/ }, :as => :results_year_discipline
-    match '/results/:year' => 'results#index', :constraints => { :year => /(19|20)\d\d/ }, :as => :results_year
-    match '/results/:discipline' => 'results#index'
-    resources :results
-    match '/schedule/:year/calendar' => 'schedule#calendar', :constraints => { :year => /\d\d\d\d/ }
-    match '/schedule/calendar' => 'schedule#calendar'
-    match '/schedule/list/:discipline' => 'schedule#list'
-    match '/schedule/:year/list/:discipline' => 'schedule#list', :constraints => { :year => /\d\d\d\d/ }
-    match '/schedule/:year/list' => 'schedule#list', :constraints => { :year => /\d\d\d\d/ }
-    match '/schedule/:year(/:discipline)' => 'schedule#index', :constraints => { :year => /\d\d\d\d/ }, :as => :schedule_index
-    match '/schedule/:year' => 'schedule#index', :constraints => { :year => /\d\d\d\d/ }
-    match '/schedule/list' => 'schedule#list'
-    match '/schedule/:discipline' => 'schedule#index', :constraints => { :discipline => /[^\d]+/ }
-    match '/sanctioning_organization/:sanctioning_organization/schedule' => 'schedule#index', :as => "schedule_sanctioning_organization"
-    match '/schedule' => 'schedule#index', :as => :schedule
-    match '/region/:region(/:year)/schedule' => 'schedule#index', :as => "schedule_region", :constraints => { :year => /\d\d\d\d/ }
+    get '/results/:year/:discipline' => 'results#index', :constraints => { :year => /(19|20)\d\d/ }, :as => :results_year_discipline
+    get '/results/:year' => 'results#index', :constraints => { :year => /(19|20)\d\d/ }, :as => :results_year
+    get '/results/:discipline' => 'results#index'
+    resources :results do
+      member do
+        patch :update_attribute
+      end
+    end
+    get '/schedule/:year/calendar' => 'schedule#index', :constraints => { :year => /\d\d\d\d/ }
+    get '/schedule/:year/calendar' => 'schedule#calendar', :constraints => { :year => /\d\d\d\d/ }
+    get '/schedule/calendar' => 'schedule#calendar'
+    get '/schedule/list/:discipline' => 'schedule#list'
+    get '/schedule/:year/list/:discipline' => 'schedule#list', :constraints => { :year => /\d\d\d\d/ }
+    get '/schedule/:year/list' => 'schedule#list', :constraints => { :year => /\d\d\d\d/ }
+    get '/schedule/:year(/:discipline)' => 'schedule#index', :constraints => { :year => /\d\d\d\d/ }, :as => :schedule_index
+    get '/schedule/:year' => 'schedule#index', :constraints => { :year => /\d\d\d\d/ }
+    get '/schedule/list' => 'schedule#list'
+    get '/schedule/:discipline' => 'schedule#index', :constraints => { :discipline => /[^\d]+/ }
+    get '/sanctioning_organization/:sanctioning_organization/schedule' => 'schedule#index', :as => "schedule_sanctioning_organization"
+    get '/schedule' => 'schedule#index', :as => :schedule
+    get '/region/:region(/:year)/schedule' => 'schedule#index', :as => "schedule_region", :constraints => { :year => /\d\d\d\d/ }
     resources :single_day_events
-    match '/teams/:team_id/results' => 'results#team'
-    match '/teams/:team_id/:year' => 'results#team', :constraints => { :person_id => /\d+/, :year => /\d\d\d\d/ }, :as => :team_results_year
-    match '/teams/:team_id' => 'results#team'
+    get '/teams/:team_id/results' => 'results#team'
+    get '/teams/:team_id/:year' => 'results#team', :constraints => { :person_id => /\d+/, :year => /\d\d\d\d/ }, :as => :team_results_year
+    get '/teams/:team_id' => 'results#team'
     resources :teams do
       resources :results
     end
-    match '/track' => 'track#index', :as => :track
-    match '/track/schedule' => 'track#schedule', :as => :track_schedule
+    get '/track' => 'track#index', :as => :track
+    get '/track/schedule' => 'track#schedule', :as => :track_schedule
     resource :person_session
-    match '/unauthorized' => 'person_sessions#unauthorized', :as => :unauthorized
-    match '/logout' => 'person_sessions#destroy', :as => :logout
-    match '/login' => 'person_sessions#new', :as => :login
-    match '/account/logout' => 'person_sessions#destroy'
-    match '/account/login' => 'person_sessions#new'
-    match '/account' => 'people#account', :as => :account
+    get '/unauthorized' => 'person_sessions#unauthorized', :as => :unauthorized
+    get '/logout' => 'person_sessions#destroy', :as => :logout
+    get '/login' => 'person_sessions#new', :as => :login
+    get '/account/logout' => 'person_sessions#destroy'
+    get '/account/login' => 'person_sessions#new'
+    get '/account' => 'people#account', :as => :account
 
-    match '/wsba_barr' => 'competitions#show', :as => :wsba_barr_root, :type => 'wsba_barr'
-    match '/wsba_barr/:year' => 'competitions#show', :as => :wsba_barr, :type => 'wsba_barr', :constraints => { :year => /\d{4}/ }
-    match '/wsba_masters_barr' => 'competitions#show', :as => :wsba_masters_barr_root, :type => 'wsba_masters_barr'
-    match '/wsba_masters_barr/:year' => 'competitions#show', :as => :wsba_masters_barr, :type => 'wsba_masters_barr', :constraints => { :year => /\d{4}/ }
+    get '/wsba_barr' => 'competitions#show', :as => :wsba_barr_root, :type => 'wsba_barr'
+    get '/wsba_barr/:year' => 'competitions#show', :as => :wsba_barr, :type => 'wsba_barr', :constraints => { :year => /\d{4}/ }
+    get '/wsba_masters_barr' => 'competitions#show', :as => :wsba_masters_barr_root, :type => 'wsba_masters_barr'
+    get '/wsba_masters_barr/:year' => 'competitions#show', :as => :wsba_masters_barr, :type => 'wsba_masters_barr', :constraints => { :year => /\d{4}/ }
 
-    match '/:mobile' => 'home#index', :as => :root
-    match '/' => 'home#index', :as => :root
+    get '/' => 'home#index', :as => :root
     resource :home, :controller => :home
 
-    match '*path', :to => 'pages#show', :constraints => PageConstraint.new
+    get '*path', :to => 'pages#show', :constraints => PageConstraint.new
 
     if Rails.env.test?
       resources :fake do

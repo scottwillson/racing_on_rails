@@ -14,9 +14,9 @@
 <%= scores_table competition_result %>
 <% end %>
 
-<div class="form-horizontal">
-  <div class="row-fluid">
-    <div class="span6">
+<form class="form-horizontal" role="form">
+  <div class="row">
+    <div class="col-sm-6">
       <%= labelled_text :person, :racing_age %>
       <%= labelled_text :person, :city_state, "City, State" %>
       <% if @person.team %>
@@ -29,7 +29,7 @@
       <%= labelled_text :person, :road_number %>
       <%= labelled_text :person, :ccx_number, "Cross Number" %>
     </div>
-    <div class="span6">
+    <div class="col-sm-6">
       <%= labelled_text :person, :mtb_category, "MTB Category" %>
       <%= labelled_text :person, :dh_category, "DH Category" %>
       <%= labelled_text :person, :ccx_category, "Cross Category" %>
@@ -43,4 +43,4 @@
       <% end %>
     </div>
   </div>
-</div>
+</form>

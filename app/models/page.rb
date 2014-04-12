@@ -3,14 +3,14 @@
 # Pages uses ERb and can execute Ruby code just like a template, so admin users can
 # do things like <% Person.destroy_all %>!
 class Page < ActiveRecord::Base
-  include Concerns::Page::Paths
+  acts_as_tree
   include Concerns::TreeExtensions
   include Concerns::TreeValidation
+
+  include Concerns::Page::Paths
   include Concerns::Versioned
   include SentientUser
 
-  acts_as_tree  
-  
   before_validation :set_slug, :set_path, :set_body
   validates_uniqueness_of :path, :message => "'%{value}' has already been taken"
   
@@ -39,7 +39,7 @@ class Page < ActiveRecord::Base
   end
 
   def valid_parents
-    Page.all.delete_if { |page|
+    Page.all.to_a.delete_if { |page|
       page == self || descendants.include?(page)
     }
   end

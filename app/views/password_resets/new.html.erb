@@ -1,16 +1,18 @@
 <% @page_title = "Reset Password" %>
 <% @show_tabs = false %>
 
-<%= form_tag password_resets_path do %>
-  <div class="row-fluid">
-    <div class="span3"></div>
-    <div class="span6">
-      <%= label_tag :email, "Send password reset instructions to email address" %>
-      <%= email_field_tag :email, @email, :class =>  "wants_focus span12" %>
+<%= form_tag password_resets_path, :class => "form-horizontal", :role => "form" do %>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group">
+        <%= label_tag :email, "Send password reset instructions to email address", :class => "control-label col-sm-4" %>
+        <div class="col-sm-8">
+          <%= email_field_tag :email, @email, :class =>  "wants_focus form-control" %>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8"><%= submit_tag "Reset My Password", :class => "btn btn-default" %></div>
+      </div>
     </div>
-  </div>
-  <div class="row-fluid">
-    <div class="span3"></div>
-    <div class="span6"><%= submit_tag "Reset My Password", :class => "btn btn-primary" %></div>
   </div>
 <% end %>

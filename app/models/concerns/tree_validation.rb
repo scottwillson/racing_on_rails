@@ -7,12 +7,13 @@ module Concerns
     end
   
     def valid_parent
-      if parent == self || descendants.include?(parent)
+      if parent == self || descendants.include?(self) || ancestors.include?(self)
         errors.add :parent, "can't include self"
         false
       else
         true
       end
+      true
     end
   end
 end

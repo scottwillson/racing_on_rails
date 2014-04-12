@@ -1,13 +1,19 @@
 <% @page_title = "#{@person.name}: Events" %>
 <% @show_tabs = (promoter? || administrator?) -%>
 
-<div class="row-fluid span4">
-  <h3>Promoted Events</h3>
-  <%= table :columns => 2, :collection => @events do %>
-    <tr>
-      <th>Date</th>
-      <th>Name</th>
-    </tr>
-    <%= render :partial => "event", :collection => @events.sort_by(&:date) %>
-  <% end -%>
+<div class="row">
+  <div class="col-sm-4">
+    <h3>Promoted Events</h3>
+    <%= table :columns => 2, :collection => @events do %>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render :partial => "event", :collection => @events.sort_by(&:date) %>
+      </tbody>
+    <% end -%>
+  </div>
 </div>

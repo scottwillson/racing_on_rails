@@ -1,7 +1,9 @@
+<% @page_title = "Unauthorized" %>
+
 <div class="error_page">
-  <div class="row-fluid">
-    <div class="span12">
-      <div class="alert alert-info">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="alert alert-warning">
         Sorry, you're not allowed to look at that page.
 
         <%= "You are logged-in as #{current_person.login}." if current_person %>

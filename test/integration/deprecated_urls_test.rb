@@ -1,8 +1,8 @@
-require File.expand_path("../../test_helper", __FILE__)
+require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
 # Replacements for deprecated URLs.
-class DeprecatedURLsTest < ActionController::IntegrationTest
+class DeprecatedURLsTest < RacingOnRails::IntegrationTest
   def test_event_results
     event = FactoryGirl.create(:event)
 

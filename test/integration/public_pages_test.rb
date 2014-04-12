@@ -1,9 +1,7 @@
-require File.expand_path("../../test_helper", __FILE__)
+require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
-class PublicPagesTest < ActionController::IntegrationTest
-  assert_no_angle_brackets :except => [ :test_mailing_lists ]
-  
+class PublicPagesTest < RacingOnRails::IntegrationTest
   def test_redirect_event
     get "/events/"
     assert_redirected_to schedule_url
@@ -125,20 +123,5 @@ class PublicPagesTest < ActionController::IntegrationTest
       assert_response :success
       assert_equal event, assigns(:event), "@event"
     end
-  end
-
-  private
-  
-  def go_to_login
-    https! if RacingAssociation.current.ssl?
-    get new_person_session_path
-    assert_response :success
-    assert_template("person_sessions/new")
-  end
-
-  def login(options)
-    https! if RacingAssociation.current.ssl?
-    post person_session_path, options
-    assert_response :redirect
   end
 end

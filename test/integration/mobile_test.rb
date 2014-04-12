@@ -1,9 +1,7 @@
-require_relative "../test_helper"
+require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
-class MobileTest < ActionController::IntegrationTest
-  assert_no_angle_brackets :except => [ :test_mailing_list ]
-  
+class MobileTest < RacingOnRails::IntegrationTest
   # In theory, there are 256 combinations, but just test combinations of 2
   test "no mobile" do
     get "/"

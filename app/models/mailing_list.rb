@@ -10,9 +10,9 @@ class MailingList < ActiveRecord::Base
   # but 50+ times faster
   def dates
     if @dates.nil?
-      first_post = connection.select_value("select min(date) from posts")
+      first_post = MailingList.connection.select_value("select min(date) from posts")
       if first_post
-        last_post = connection.select_value("select max(date) from posts")
+        last_post = MailingList.connection.select_value("select max(date) from posts")
         @dates = first_post..last_post
       end
     end

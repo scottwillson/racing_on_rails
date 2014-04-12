@@ -6,32 +6,32 @@
 <h2>Edit Article</h2>
 <% end %>
 
-<%= form_for([:admin, @article], :html => { :class => "form-horizontal" }) do |f| %>
-  <div class="row-fluid">
-    <div class="span6">
+<%= form_for([:admin, @article], :html => { :class => "form-horizontal", :role => "form" }) do |f| %>
+  <div class="row">
+    <div class="col-sm-6">
       <%= f.labelled_text_field :title %>
 
-      <div class="control-group">
-        <%= f.label :category, :class => "control-label" %>
-        <div class="controls">
-          <%= tree_select(ArticleCategory.all( :conditions => "parent_id = 0"), 'article', 'article_category_id', @article, false) %>
+      <div class="form-group">
+        <%= f.label :category, :class => "control-label col-sm-4" %>
+        <div class="col-sm-8">
+          <%= tree_select(ArticleCategory.where(:parent_id => 0), 'article', 'article_category_id', @article, false) %>
         </div>
       </div>
     </div>
-    <div class="span6">
+    <div class="col-sm-6">
       <%= f.labelled_text_field :position %>
       <%= f.labelled_check_box :display %>
     </div>
-    <div class="span12">
-      <%= f.labelled_text_area :body, :toolbarSet => 'Simple', :height => '400px', :class => 'ckeditor span12' %>
+    <div class="col-sm-12">
+      <%= f.labelled_text_area :body, :toolbarSet => 'Simple', :height => '400px', :class => 'ckeditor col-sm-12' %>
     </div>
   </div>
 
   <hr />
   
-  <div class="row-fluid">
-    <div class="span12">
-      <%= f.submit "Save", :class => 'btn btn-primary' %>
+  <div class="row">
+    <div class="col-sm-12">
+      <%= f.submit "Save", :class => 'btn btn-default' %>
       <%= link_to('Delete', [:admin, @article], :confirm => 'Are you sure?', :class => 'btn', :method => :delete) unless @article.new_record? %>
       <%= link_to 'Back', admin_articles_path, :class => 'btn btn-link' %>
     </div>

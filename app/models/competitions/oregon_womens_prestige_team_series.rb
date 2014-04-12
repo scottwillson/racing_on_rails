@@ -86,7 +86,7 @@ class OregonWomensPrestigeTeamSeries < Competition
 
   def category_ids_for(race)
     if OregonWomensPrestigeSeries.find_for_year
-      categories = Category.where("name in (?)", OregonWomensPrestigeSeries.find_for_year.category_names).all
+      categories = Category.where("name in (?)", OregonWomensPrestigeSeries.find_for_year.category_names)
       categories.map(&:id) + categories.map(&:descendants).to_a.flatten.map(&:id)
     else
       []
@@ -99,7 +99,7 @@ class OregonWomensPrestigeTeamSeries < Competition
   
   def cat_4_category_ids
     if @cat_4_category_ids.nil?
-      categories = Category.where(:name => "Category 4 Women").all
+      categories = Category.where(:name => "Category 4 Women")
       @cat_4_category_ids = categories.map(&:id) + categories.map(&:descendants).to_a.flatten.map(&:id)
     end
     @cat_4_category_ids

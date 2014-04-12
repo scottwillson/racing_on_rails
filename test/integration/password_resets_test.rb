@@ -1,7 +1,7 @@
-require File.expand_path("../../test_helper", __FILE__)
+require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
-class PasswordResetsTest < ActionController::IntegrationTest
+class PasswordResetsTest < RacingOnRails::IntegrationTest
   def test_shared_email_address
     person = FactoryGirl.create(:person_with_login)
 

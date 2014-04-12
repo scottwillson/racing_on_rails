@@ -9,7 +9,7 @@
       <th class="actions">
         <% if @event.has_results_including_children? %>
         <%= link_to event_results_path(@event), :class => "icon", :title => 'View public results web page' do %>
-            <i class="icon-list"></i>
+            <span class="glyphicon glyphicon-list"></span>
           <% end %>
         <% end %>
       </th>
@@ -24,13 +24,13 @@
     <% end -%>
     <% unless @event.new_record? || @event.races.present? %>
     <tr>
-      <td colspan="5" class="empty">No races. Click [+] to add a race.</td>
+      <td colspan="5" class="empty">No races. Click [+] button to add a race.</td>
     </tr>
     <% end %>
     <% unless @event.new_record? -%>
     <tr id="create_race_row">
       <td colspan="3">
-        <i class="icon-refresh rotate" id="propagate_races_progress" style="display: none"></i>
+        <span class="icon-refresh rotate" id="propagate_races_progress" style="display: none"></span>
         <%= link_to("Copy to child events", 
                     propagate_admin_event_races_path(@event),
                     :remote => true,
@@ -53,7 +53,7 @@
         ) if @event.races.any? && administrator?
         # Lame workaround for Safari
         %>
-        <i class="icon-refresh rotate" id="destroy_races_progress" style="display: none"></i>
+        <span class="icon-refresh rotate" id="destroy_races_progress" style="display: none"></span>
       </td>
       <td class="actions">
         <%= link_to(
@@ -63,22 +63,22 @@
               :id => "create_race", 
               :title => "Add race"
             ) do %>
-          <i class="icon-plus-sign"></i>
+          <span class="glyphicon glyphicon-plus-sign"></span>
         <% end %>
       </td>
     </tr>
     <tr>
       <td colspan="5">
        <% if administrator? -%>
-        <div class="control-group">
+        <div class="form-group">
           <%= label_tag :results_file, "Import Results", :class => "control-label", :id => "upload_form_label" %>
           <%= form_tag upload_admin_event_path(@event), :multipart => true, :id => "upload_form" do %>
-            <div class="controls">
+            <div class="form-group">
               <%= file_field_tag "results_file",:style => "width: 250px;" %>
             </div>
           <% end -%>
         </div>
-        <div id="upload_progress" style="display: none;"><em>Importing Results</em>&nbsp;<i class="icon-refresh rotate"></i></div>
+        <div id="upload_progress" style="display: none;"><em>Importing Results</em>&nbsp;<span class="glyphicon glyphicon-refresh rotate"></span></div>
         <% end -%>
       </td>
     </tr>

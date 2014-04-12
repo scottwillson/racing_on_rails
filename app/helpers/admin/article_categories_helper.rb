@@ -25,7 +25,7 @@ module Admin::ArticleCategoriesHelper
   def tree_select(categories, model, name, selected=0, allow_root = true, level = 0, init = true)
     html = ""
     if init
-      html << "<select name=\"#{model}[#{name}]\" id=\"#{model}_#{name}\">\n"
+      html << "<select class=\"form-control\" name=\"#{model}[#{name}]\" id=\"#{model}_#{name}\">\n"
       if allow_root
         # The "Root" option is added
         # so the user can choose a parent_id of 0

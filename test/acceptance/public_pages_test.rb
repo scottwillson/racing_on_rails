@@ -63,7 +63,7 @@ class PublicPagesTest < AcceptanceTest
 
     visit "/track/schedule"
   end
-  
+
   def test_results_page
     javascript!
 
@@ -78,7 +78,7 @@ class PublicPagesTest < AcceptanceTest
     assert_page_has_content "Senior Women 1/2/3"
 
     if page.has_content?("Montana")
-      wait_for ".accordion"
+      wait_for ".panel-default"
       click_link "Senior Women 1/2/3"
       wait_for "table.results a"
     end
@@ -92,7 +92,7 @@ class PublicPagesTest < AcceptanceTest
     assert_page_has_content "Jack Frost"
     assert_page_has_content "January 17, 2002"
     if page.has_content?("Montana")
-      wait_for ".accordion"
+      wait_for ".panel-default"
       click_link "Senior Men"
       wait_for "table.results a"
       assert_page_has_content "Weaver"
@@ -101,7 +101,7 @@ class PublicPagesTest < AcceptanceTest
       assert_page_has_content "Pennington"
     end
   end
-  
+
   def test_people
     javascript!
 
@@ -113,10 +113,10 @@ class PublicPagesTest < AcceptanceTest
     unless page.has_content?("Montana")
       fill_in "name", :with => "Penn"
       press_return "name"
-      assert_page_has_content "Pennington"      
+      assert_page_has_content "Pennington"
     end
   end
-  
+
   def test_bar
     overall = FactoryGirl.create(:discipline, :name => "Overall")
     age_graded = FactoryGirl.create(:discipline, :name => "Age Graded")
@@ -144,27 +144,27 @@ class PublicPagesTest < AcceptanceTest
     Bar.calculate!
     OverallBar.calculate!
     AgeGradedBar.calculate!
-    
+
     visit "/bar"
     assert_page_has_content "BAR"
     assert_page_has_content "Oregon Best All-Around Rider"
-  
+
     visit "/bar/2009"
     page.has_css?("title", :text => /BAR/)
 
     visit "/bar/2009/age_graded"
     assert_page_has_content "Masters Men 30-34"
-  
+
     visit "/bar/#{Time.zone.today.year}"
     assert_page_has_content "Overall"
-  
+
     visit "/bar/#{Time.zone.today.year}/age_graded"
     page.has_css?("title", :text => /Age Graded/)
   end
-  
+
 
   private
-  
+
   def create_results
     FactoryGirl.create(:discipline, :name => "Road")
     FactoryGirl.create(:discipline, :name => "Track")
@@ -174,19 +174,19 @@ class PublicPagesTest < AcceptanceTest
     promoter = FactoryGirl.create(:person, :name => "Brad Ross", :home_phone => "(503) 555-1212")
     @new_event = FactoryGirl.create(:event, :promoter => promoter, :date => Date.new(RacingAssociation.current.effective_year, 5))
     @alice = FactoryGirl.create(:person, :name => "Alice Pennington")
-    Timecop.freeze(Date.new(RacingAssociation.current.effective_year, 5, 2)) do 
+    Timecop.freeze(Date.new(RacingAssociation.current.effective_year, 5, 2)) do
       FactoryGirl.create(:result, :event => @new_event)
     end
 
     FactoryGirl.create(:event, :name => "Kings Valley Road Race", :date => Time.zone.local(2004).end_of_year.to_date).
       races.create!(:category => FactoryGirl.create(:category, :name => "Senior Women 1/2/3")).
       results.create!(:place => "2", :person => @alice)
-    
+
     event = FactoryGirl.create(:event, :name => "Jack Frost", :date => Time.zone.local(2002, 1, 17), :discipline => "Time Trial")
     event.races.create!(:category => FactoryGirl.create(:category, :name => "Senior Women")).results.create!(:place => "1", :person => @alice)
     weaver = FactoryGirl.create(:person, :name => "Ryan Weaver")
     event.races.create!(:category => FactoryGirl.create(:category, :name => "Senior Men")).results.create!(:place => "2", :person => weaver)
-    
+
     FactoryGirl.create(:team, :name => "Gentle Lovers")
     FactoryGirl.create(:team, :name => "Vanilla")
   end

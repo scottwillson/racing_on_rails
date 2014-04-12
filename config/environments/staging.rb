@@ -15,7 +15,7 @@ RacingOnRails::Application.configure do
   )
   config.cache_classes                       = true
   config.consider_all_requests_local         = true
+  config.eager_load                          = true
   config.i18n.fallbacks                      = true
   config.serve_static_assets                 = false
-  config.whiny_nils                          = true
 end

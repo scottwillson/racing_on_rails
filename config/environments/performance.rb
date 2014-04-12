@@ -1,5 +1,5 @@
 config.cache_classes = true
-config.whiny_nils = true
+config.eager_load = true
 
 # Show full error reports and disable caching
 config.consider_all_requests_local = false

@@ -8,7 +8,7 @@
         <%= link_to event_results_path(@event), 
               :class => "icon", 
               :title => 'View public results web page' do %>
-            <i class="icon-list"></i>
+            <span class="glyphicon glyphicon-list"></span>
           <% end %>
         <% end %>
       </th>
@@ -33,7 +33,7 @@
                 :id => "destroy_event_#{single_day_event.id}", 
                 :title => "Delete event",
                 :method => :delete) do %>
-            <i class="icon-minus-sign"></i>
+            <span class="glyphicon glyphicon-minus-sign"></span>
           <% end %>
         <% end %>
       </td>
@@ -42,7 +42,7 @@
     <tr>
       <td class='nowrap'>
         <% if @event.children_and_child_competitions.empty? && administrator? && !@event.new_record? -%>
-        <span class="weak">No events. Click button to add a new child event.</span>
+        <span class="weak">No events. Click [+] button to add a new child event.</span>
         <% end -%>
       </td>
       <td class='link'></td>
@@ -54,7 +54,7 @@
             :title => "Add child event",
             :id => "new_event"
           ) do %>
-            <i class="icon-plus-sign"></i>
+            <span class="glyphicon glyphicon-plus-sign"></span>
           <% end %>
         <% end %>
       </td>

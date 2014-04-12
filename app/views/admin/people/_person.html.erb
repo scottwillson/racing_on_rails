@@ -1,5 +1,5 @@
 <%= content_tag :tr, :class => "person_row", :id => "person_#{person.id}_row", "data-id" => person.id do %>
-  <td class="icon"><i class="icon-user person_icon" id="person_<%= person.id %>" data-name="<%= person.name %>" data-id="<%= person.id %>"></i></td>
+  <td class="icon"><div class="person_icon" id="person_<%= person.id %>" data-name="<%= person.name %>" data-id="<%= person.id %>"><span class="glyphicon glyphicon-user"></span></div></td>
   <td class="name">
     <%= editable person, :name %>
   </td>

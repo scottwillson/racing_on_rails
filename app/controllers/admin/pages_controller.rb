@@ -49,7 +49,7 @@ module Admin
           @page = Page.find(params[:id])
           @page.update_attributes! params[:name] => params[:value]
           expire_cache
-          render :text => @page.send(params[:name]), :content_type => "text/html"
+          render :plain => @page.send(params[:name])
         }
       end
     end

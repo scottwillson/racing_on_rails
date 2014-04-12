@@ -16,7 +16,7 @@
   <%= th(:promoter_name, :title => "Promoter", :sort_params => { :past_events => @past_events }) %>
   <%= th(:location, :sort_params => { :past_events => @past_events }) %>
 </tr>
-<%= render :partial => "event", :collection => sort_rows(@events, @sort_by, params[:sort_direction]) %>
+<%= render :partial => "event", :collection => sort_rows(@events.to_a, @sort_by, params[:sort_direction]) %>
 <% end -%>
 
 <ul class="page-links">

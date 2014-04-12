@@ -2,23 +2,30 @@
 
 <h2>Photos</h2>
 
-<div class="row-fluid">
-  <%= table :class => "photos", :collection => @photos, :columns => 3, :id => :people do %>
-    <thead>
-      <tr>
-        <th class="icon"/>
-        <th class="title">Title</th>
-        <th class="actions"></th>
-      </tr>
-    </thead>
-    <%= render :partial => "photo", :collection => @photos %>
-  <% end -%>
+<%= will_paginate @photos,
+                  :page_links => false,
+                  :previous_label => "&larr; Newer",
+                  :next_label => "Older &rarr;" %>
+
+<div class="row">
+  <div class="col-sm-12">
+    <%= table :class => "photos", :collection => @photos, :columns => 3, :id => :people do %>
+      <thead>
+        <tr>
+          <th class="icon"></th>
+          <th class="name">Title</th>
+          <th class="actions"></th>
+        </tr>
+      </thead>
+      <%= render :partial => "photo", :collection => @photos %>
+    <% end -%>
+  </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span4">
-    <%= link_to new_photo_path, :class => "btn", :id => "new_photo" do %>
-      <i class="icon-picture"></i> New Photo
+<div class="row">
+  <div class="col-sm-12">
+    <%= link_to new_photo_path, :class => "btn btn-default", :id => "new_photo" do %>
+      <span class="glyphicon glyphicon-picture"></span> New Photo
     <% end %>
   </div>
 </div>

@@ -1,7 +1,7 @@
-require File.expand_path("../../test_helper", __FILE__)
+require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
-class ResultsTest < ActionController::IntegrationTest
+class ResultsTest < RacingOnRails::IntegrationTest
   def test_custom_columns
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:discipline, :name => "Downhill")

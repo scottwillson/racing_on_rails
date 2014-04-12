@@ -11,7 +11,7 @@ class PersonObserver < ActiveRecord::Observer
 
   def after_update(person)
     if person.first_name_changed? || person.last_name_changed?
-      person.results.all.each do |result|
+      person.results.each do |result|
         if result[:name] != person.name(result.year)
           result.cache_attributes! :non_event
         end

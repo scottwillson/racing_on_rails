@@ -26,7 +26,7 @@ class RacingAssociation < ActiveRecord::Base
   end
   
   default_value_for :cat4_womens_race_series_category do
-    Category.find_or_create_by_name "Category 4 Women"
+    Category.find_or_create_by(:name => "Category 4 Women")
   end
   
   default_value_for :competitions do
@@ -56,7 +56,7 @@ class RacingAssociation < ActiveRecord::Base
   
   # Person record for RacingAssociation
   def person
-    @person ||= Person.find_or_create_by_name(short_name)
+    @person ||= Person.find_or_create_by(:name => short_name)
   end
   
   def person_id
@@ -99,7 +99,7 @@ class RacingAssociation < ActiveRecord::Base
     if effective_year == Time.zone.now.year
       Time.zone.today
     else
-      Time.zone.now.beginning_of_year.to_date
+      Time.zone.local(effective_year).beginning_of_year.to_date
     end
   end
   
@@ -141,8 +141,8 @@ class RacingAssociation < ActiveRecord::Base
       self.rental_numbers_start = nil
       self.rental_numbers_end = nil
     else
-      self.rental_numbers_start = rental_numbers.first
-      self.rental_numbers_end = rental_numbers.last
+      self.rental_numbers_start = value.first
+      self.rental_numbers_end = value.last
     end
   end
   

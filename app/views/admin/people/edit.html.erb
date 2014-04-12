@@ -16,24 +16,27 @@
   </p>
 <% end -%>
 
-<%= form_for [ :admin, @person ], :html => { :class => "form-horizontal" } do |f| -%>
+<%= form_for [ :admin, @person ], :html => { :class => "form-horizontal", :role => "form" } do |f| -%>
 <%= hidden_field_tag("event_id", @event.id) if @event %>
-<div class="row-fluid">
-  <div class="span6">
-    <%= f.labelled_text_field :first_name, nil, :class => @person.new_record? ? "wants_focus span12" : "span12" %>
+<div class="row">
+  <div class="col-sm-6">
+    <%= f.labelled_text_field :first_name, nil, :class => @person.new_record? ? "wants_focus col-sm-12 form-control" : "col-sm-12 form-control" %>
     <%= f.labelled_text_field :last_name %>
     <%= f.labelled_text_field :team_name %>
     <%= f.labelled_text_field :status %>
   </div>
-  <div class="span6">
-    <div class="control-group">
-      <%= f.label :date_of_birth, "Date of Birth", :class => "control-label" %>
-      <div class="controls">
-        <%= date_select :person, :date_of_birth, 
+  <div class="col-sm-6">
+    <div class="form-group form-inline">
+      <%= f.label :date_of_birth, "Date of Birth", :class => "control-label col-sm-4" %>
+      <div class="col-sm-8">
+        <%= f.date_select :date_of_birth, 
+            {
               :order => [:month, :day, :year], 
               :start_year => 1900, 
               :end_year => Time.zone.today.year, 
-              :include_blank => true %>
+              :include_blank => true
+            },
+            { :class => "form-control"} %>
       </div>
     </div>
 
@@ -47,8 +50,8 @@
   </div>
 </div>
 
-<div class="row-fluid">  
-  <div class="span6">
+<div class="row">  
+  <div class="col-sm-6">
     <%= f.labelled_text_field :email %>
     <%= f.labelled_text_field :home_phone %>
     <%= f.labelled_text_field :work_phone %>
@@ -60,7 +63,7 @@
       <%= f.labelled_check_box :wants_email, "Wants email?" %>
     </div>
   </div>
-  <div class="span6">
+  <div class="col-sm-6">
     <%= f.labelled_text_field :street %>
     <%= render "shared/city_state_zip", :f => f %>
     <%= f.labelled_text_field :occupation %>
@@ -72,9 +75,9 @@
       <%= f.labelled_check_box :team_interest, "Team Interest" %>
     </div>
     
-    <%= f.labelled_text_field :login, nil, :autocomplete => "off", :class => "span12" %>
-    <%= f.labelled_password_field :password, nil, :autocomplete => "off", :class => "span12" %>
-    <%= f.labelled_password_field :password_confirmation, "Confirm Password", :autocomplete => "off", :class => "span12" %>
+    <%= f.labelled_text_field :login, nil, :autocomplete => "off", :class => "form-control col-sm-12" %>
+    <%= f.labelled_password_field :password, nil, :autocomplete => "off", :class => "form-control col-sm-12" %>
+    <%= f.labelled_password_field :password_confirmation, "Confirm Password", :autocomplete => "off", :class => "form-control col-sm-12" %>
     <% if @person.last_login_at -%>
     <%= f.labelled_text :last_login_at, 
                         link_to(@person.last_login_at.to_s(:long_and_friendly_date_and_time), 
@@ -87,24 +90,30 @@
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span6">
-    <div class="control-group">
-      <%= f.label :member_from, "Member From", :class => "control-label" %>
-      <div class="controls">
-        <%= date_select 'person', 'member_from', 
-            :order => [:month, :day, :year],
-            :start_year => 1999, :end_year => Time.zone.today.year + 1, 
-            :include_blank => true %>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="form-group form-inline">
+      <%= f.label :member_from, "Member From", :class => "control-label col-sm-4" %>
+      <div class="col-sm-8">
+        <%= f.date_select :member_from, 
+            {
+              :order => [:month, :day, :year],
+              :start_year => 1999, :end_year => Time.zone.today.year + 1, 
+              :include_blank => true
+            },
+            { :class => "form-control"} %>
       </div>
     </div>
-    <div class="control-group">
-    <%= f.label :member_to, "To", :class => "control-label" %>
-      <div class="controls">
-        <%= date_select 'person', 'member_to', 
-            :order => [:month, :day, :year],
-            :end_year => Time.zone.today.year + 1, 
-            :include_blank => true %>
+    <div class="form-group form-inline">
+      <%= f.label :member_from, "Member To", :class => "control-label col-sm-4" %>
+      <div class="col-sm-8">
+        <%= f.date_select :member_to, 
+            {
+              :order => [:month, :day, :year],
+              :end_year => Time.zone.today.year + 1, 
+              :include_blank => true
+            },
+            { :class => "form-control"} %>
       </div>
     </div>
 
@@ -125,51 +134,51 @@
     </div>
   </div>
 
-  <div class="span6">
+  <div class="col-sm-6">
     <%= f.labelled_text_area :notes %>
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span6" id="numbers-span">
+<div class="row">
+  <div class="col-sm-6" id="numbers-span">
     <%= render "numbers", :year => @year, :years => @years, :person => @person, :number_issuers => @number_issuers, :disciplines => @disciplines, :f => f %>
   </div>
-  <div class="span6">
-    <%= render 'categories', :person => @person %>
+  <div class="col-sm-6">
+    <%= render 'categories', :f => f %>
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span6">
+<div class="row">
+  <div class="col-sm-6">
     <%= render "aliases", :person => @person %>
   </div>
-  <div class="span6">
+  <div class="col-sm-6">
     <%= render "names", :names => @person.names %>
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span6">
+<div class="row">
+  <div class="col-sm-6">
     <%= render "people/account_permissions", 
                 :person => @person, 
                              :account_permissions => @person.account_permissions, 
                              :return_to => @person.new_record? ? nil : edit_admin_person_path(@person)
     %>
   </div>
-  <div class="span6">
+  <div class="col-sm-6">
     <%= render "people/events", :events => @person.administrator? ? @person.events.current_year : Event.editable_by(@person).current_year %>
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span12">
+<div class="row">
+  <div class="col-sm-12">
     <%= render "people/orders", :person => @person %>
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span12">
-    <%= submit_tag "Save", :class => "btn btn-primary", :id => "save" %>
+<div class="row">
+  <div class="col-sm-12">
+    <%= submit_tag "Save", :class => "btn btn-default", :id => "save" %>
     <%= link_to("Delete", admin_person_path(@person), :method => :delete, :class => 'btn', :id => 'delete') unless @person.new_record? %>
     <%= link_to("Edit Results", admin_person_results_path(@person), :class => "btn btn-link") unless @person.new_record? %>
     <%= link_to("View Results", person_results_path(@person), :class => "btn btn-link") unless @person.new_record? %>

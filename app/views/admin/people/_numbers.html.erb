@@ -3,7 +3,7 @@
   <tbody>
     <tr>
       <td class="number_year" colspan="3">
-        <select name="number_year" data-person-id="<%= person.id %>" class="input-small" id="number_year">
+        <select name="number_year" data-person-id="<%= person.id %>" class="form-control" id="number_year">
           <%= options_for_select years, year %>
         </select>
       </td>
@@ -11,7 +11,7 @@
     <% if RacingAssociation.current.show_license? %>
     <tr>
       <td class="number_issuer8"><%= RacingAssociation.current.short_name %> Membership</td>
-      <td class="number"><%= text_field :person, :license, :class => "input-small" %></td>
+      <td class="number"><%= text_field :person, :license, :class => "form-control" %></td>
       <td></td>
     </tr>
     <% end %>
@@ -21,10 +21,10 @@
     <tr class="new_number">
       <td colspan="2">
         <%= f.fields_for :race_numbers, race_number do |race_number_fields| %>
-          <%= race_number_fields.select :number_issuer_id, number_issuers.sort_by(&:name).map { |i| [ i.name, i.id ]} %>
-          <%= race_number_fields.select :discipline_id, disciplines.sort_by(&:name).map { |d| [ d.name, d.id ]} %>
+          <%= race_number_fields.select :number_issuer_id, number_issuers.sort_by(&:name).map { |i| [ i.name, i.id ]}, :class => "form-control" %>
+          <%= race_number_fields.select :discipline_id, disciplines.sort_by(&:name).map { |d| [ d.name, d.id ]}, :class => "form-control" %>
           <%= race_number_fields.hidden_field :year, :id => "new_number_year" %>
-          <%= race_number_fields.text_field :value, :class => "number input-small" %>
+          <%= race_number_fields.text_field :value, :class => "number form-control" %>
         <% end %>
       </td>
       <td class="actions"></td>
@@ -40,7 +40,7 @@
       </td>
       <td>
         <%= f.fields_for :race_numbers, race_number do |race_number_fields| %>
-          <%= race_number_fields.text_field :value, :class => "number input-small" %>
+          <%= race_number_fields.text_field :value, :class => "number form-control" %>
         <% end %>
       </td>
       <td class="actions">
@@ -49,14 +49,14 @@
               :rel => "tooltip",
               :title => "Updated #{time_ago_in_words(race_number.updated_at, include_seconds: true)} ago #{"by #{race_number.updated_by_person_name}"}", 
               :class => "icon"
-            ) do %><i class="icon-info-sign"></i><% end %>
+            ) do %><span class="glyphicon glyphicon-info-sign"></span><% end %>
         <%= link_to(
           admin_person_race_number_path(person, race_number),
             :remote => true,
             :method => :delete,
             :id => "destroy_number_#{race_number.id}", 
             :class => "icon"
-          ) do %><i class="icon-minus-sign"></i><% end %>
+          ) do %><span class="glyphicon glyphicon-minus-sign"></span><% end %>
       </td>
       <% end %>
     <% end %>

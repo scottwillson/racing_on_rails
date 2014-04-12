@@ -12,38 +12,42 @@ class Race < ActiveRecord::Base
   include Export::Races
 
   DEFAULT_RESULT_COLUMNS = %W{ place number last_name first_name team_name points time }.freeze
-  RESULT_COLUMNS = %W{age age_group category_class category_name city date_of_birth first_name gender laps last_name license notes number place points points_bonus points_bonus_penalty points_from_place points_penalty points_total state team_name time time_bonus_penalty time_gap_to_leader time_gap_to_previous time_gap_to_winner time_total }.freeze
-  
+  RESULT_COLUMNS = %W{
+    age age_group category_class category_name city date_of_birth first_name gender laps last_name license notes
+    number place points points_bonus points_bonus_penalty points_from_place points_penalty points_total state
+    team_name time time_bonus_penalty time_gap_to_leader time_gap_to_previous time_gap_to_winner time_total
+  }.freeze
+
   validates_presence_of :event, :category
   validate :inclusion_of_sanctioned_by
 
   before_validation :find_associated_records
-  
+
   before_save :symbolize_custom_columns
-  
+
   belongs_to :category
   serialize :result_columns, Array
   serialize :custom_columns, Array
-  belongs_to :event
+  belongs_to :event, :inverse_of => :races
   has_one :promoter, :through => :event
   has_many :results, :dependent => :destroy
 
-  scope :year, lambda { |year| 
+  scope :year, lambda { |year|
     where(
-      "date between ? and ?", 
-      Time.zone.local(year).beginning_of_year.to_date, 
+      "date between ? and ?",
+      Time.zone.local(year).beginning_of_year.to_date,
       Time.zone.local(year).end_of_year.to_date
     )
   }
 
   default_value_for(:result_columns) { DEFAULT_RESULT_COLUMNS.dup }
   default_value_for :custom_columns, []
-  
+
   # Defaults to Event's BAR points
   def bar_points
     self[:bar_points] || event.bar_points
   end
-  
+
   # 0..3
   def bar_points=(value)
     if value.nil? || value == event.try(:bar_points)
@@ -63,23 +67,23 @@ class Race < ActiveRecord::Base
     end
     category.try :name
   end
-  
+
   def discipline
     self.event.discipline if event
   end
-  
+
   def category_name
     category.try :name
   end
-  
+
   def category_friendly_param
     category.try :friendly_param
   end
-  
+
   def name
     self.category_name
   end
-  
+
   # Combine with event name
   def full_name
     if name == event.full_name
@@ -96,15 +100,15 @@ class Race < ActiveRecord::Base
     raise(ArgumentError, 'Need category to calculate dates of birth') unless category
     Date.new(date.year - category.ages.end, 1, 1)..Date.new(date.year - category.ages.begin, 12, 31)
   end
-  
+
   def date
     event.try :date
   end
-  
+
   def year
     event && event.date && event.date.year
   end
-  
+
   # Incorrectly doubles tandem and other team events' field sizes
   def field_size
     if self[:field_size].present? && self[:field_size] > 0
@@ -113,7 +117,7 @@ class Race < ActiveRecord::Base
       results.size
     end
   end
-  
+
   def sanctioned_by
     self[:sanctioned_by] || event.try(:sanctioned_by) || RacingAssociation.current.default_sanctioned_by
   end
@@ -156,16 +160,16 @@ class Race < ActiveRecord::Base
     end
     self[:result_columns] = value
   end
-  
+
   # Default columns if empty
   def result_columns_or_default
     self.result_columns ||= DEFAULT_RESULT_COLUMNS.dup
   end
-  
+
   # Ugh. Better here than a controller or helper, I guess.
   def result_columns_or_default_for_editing
     columns = result_columns_or_default
-    columns.map! do |column| 
+    columns.map! do |column|
       if column == "first_name" || column == "last_name"
         "name"
       else
@@ -176,15 +180,15 @@ class Race < ActiveRecord::Base
     columns.uniq!
     columns
   end
-  
+
   def custom_columns
     self[:custom_columns] ||= []
   end
-  
+
   def symbolize_custom_columns
     self.custom_columns.map! { |col| col.to_s.to_sym }
   end
-  
+
   # Ensure child team and people are not duplicates of existing records
   # Tricky side effect -- external references to new association records
   # (category, bar_category, person, team) will not point to associated records
@@ -204,7 +208,7 @@ class Race < ActiveRecord::Base
     if row_hash["place"].present? && row_hash["place"] != "1" && row_hash["place"] != "0"
       return true
     end
-    if row_hash["person.first_name"].blank? && 
+    if row_hash["person.first_name"].blank? &&
        row_hash["person.last_name"].blank? &&
        row_hash["person.road_number"].blank? &&
        row_hash["team.name"].blank?
@@ -212,33 +216,33 @@ class Race < ActiveRecord::Base
     end
     true
   end
-  
+
   # Sort results by points, assign places
-  # Save! each result after place is set
-  def place_results_by_points(break_ties = true, ascending = true)
-    results.sort! do |x, y| 
+  def place_results_by_points(break_ties = true, descending = true)
+    _results = results.to_a
+    _results.sort! do |x, y|
       x.compare_by_points(y, break_ties)
     end
 
-    if !ascending
-      results.reverse!
+    if !descending
+      _results.reverse!
     end
 
-    results.each_with_index do |result, index|
+    _results.each_with_index do |result, index|
       if index == 0
         result.place = 1
       else
-        if results[index - 1].compare_by_points(result, break_ties) == 0
-          result.place = results[index - 1].place
+        if _results[index - 1].compare_by_points(result, break_ties) == 0
+          result.place = _results[index - 1].place
         else
           result.place = index + 1
         end
       end
 
-      result.update_column(:place, result.place)
+      result.update_column(:place, result.place) if result.place_changed?
     end
   end
-  
+
   def calculate_members_only_places!
     event_notification_was_enabled = event.notification_enabled?
     event.disable_notification!
@@ -250,14 +254,14 @@ class Race < ActiveRecord::Base
       results.sort.each do |result|
         place_before = result.members_only_place.to_i
         result.members_only_place = ''
-        if result.place.to_i > 0         
+        if result.place.to_i > 0
           if ((result.person.nil? || (result.person && result.person.member?(result.date))) && !non_members_on_team(result))
             # only increment if we have moved onto a new place
             last_members_only_place += 1 if (result.place.to_i != last_members_only_place && result.place.to_i!=last_result_place)
             result.members_only_place = last_members_only_place.to_s
           end
           # Slight optimization. Most of the time, no point in saving a result that hasn't changed
-          result.update_attributes(:members_only_place => result.members_only_place) if place_before != result.members_only_place 
+          result.update_attributes(:members_only_place => result.members_only_place) if place_before != result.members_only_place
           # store to know when switching to new placement (team result feature)
           last_result_place = result.place.to_i
         end
@@ -266,7 +270,7 @@ class Race < ActiveRecord::Base
       event.enable_notification! if event_notification_was_enabled
     end
   end
-  
+
   def non_members_on_team(result)
     non_members = false
     # if this is undeclared in environment.rb, assume this rule does not apply
@@ -274,7 +278,7 @@ class Race < ActiveRecord::Base
     if (exempt_cats.nil? || exempt_cats.include?(result.race.category.name))
       return non_members
     else
-      other_results_in_place = Result.all( :conditions => ["race_id = ? and place = ?", result.race.id, result.place])
+      other_results_in_place = Result.where(:race_id => result.race.id, :place => result.place)
       other_results_in_place.each { |orip|
         unless orip.person.nil?
           if !orip.person.member?(result.date)
@@ -290,47 +294,47 @@ class Race < ActiveRecord::Base
       non_members
     end
   end
-  
+
   def create_result_before(result_id)
-    results.sort!
     if results.empty?
       return results.create(:place => "1")
     end
-    
+
+    _results = results.sort
     if result_id
       result = Result.find(result_id)
       place = result.place
-      start_index = results.index(result)
-      for index in start_index...(results.size)
-        if results[index].place.to_i > 0
-          results[index].place = (results[index].place.to_i + 1).to_s
-          results[index].save!
+      start_index = _results.index(result)
+      for index in start_index...(_results.size)
+        if _results[index].place.to_i > 0
+          _results[index].place = (_results[index].place.to_i + 1).to_s
+          _results[index].save!
         end
       end
     else
-      result = results.last
+      result = _results.last
       if result.place.to_i > 0
         place = result.place.to_i + 1
       else
         place = result.place
       end
     end
-    
+
     results.create(:place => place)
   end
-  
+
   def destroy_result(result)
-    results.sort!
-    start_index = results.index(result) + 1
-    for index in start_index...(results.size)
-      if results[index].place.to_i > 0
-        results[index].place = results[index].place.to_i - 1
-        results[index].save!
+    _results = results.sort
+    start_index = _results.index(result) + 1
+    for index in start_index...(_results.size)
+      if _results[index].place.to_i > 0
+        _results[index].place = _results[index].place.to_i - 1
+        _results[index].save!
       end
     end
     result.destroy
   end
-  
+
   # By category name
   def <=>other
     category.name <=> other.category.name

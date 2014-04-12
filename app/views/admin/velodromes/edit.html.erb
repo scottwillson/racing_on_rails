@@ -9,18 +9,18 @@
 
 <h2><%= @velodrome.name %></h2>
 
-<%= form_for([:admin, @velodrome], :html => { :class => "form-horizontal" }) do |f| -%>
-<div class="row-fluid">
-  <div class="span12">
-    <%= f.labelled_text_field :name, nil, :class => "wants_focus span12" %>
+<%= form_for([:admin, @velodrome], :html => { :class => "form-horizontal", :role => "form" }) do |f| -%>
+<div class="row">
+  <div class="col-sm-6">
+    <%= f.labelled_text_field :name, nil, :class => "wants_focus col-sm-12 form-control" %>
     <%= f.labelled_text_field :website %>
   </div>
 </div>
-<div class="row-fluid">
-  <div class="span12">
-    <%= submit_tag "Save", :class => "btn btn-primary", :id => "save" %>
+<div class="row">
+  <div class="col-sm-6">
+    <%= submit_tag "Save", :class => "btn btn-default", :id => "save" %>
     <%= link_to("Delete", admin_velodrome_path(@velodrome), :method => :delete, :class => 'btn', :id => 'delete') unless @velodrome.new_record? %>
-    <div class="pull-right created_updated"><%= "Updated: " + time_ago_in_words(@velodrome.updated_at, true) + " ago" unless @velodrome.updated_at.nil? || mobile_request? %></div>
+    <div class="pull-right created_updated"><%= "Updated: " + time_ago_in_words(@velodrome.updated_at, include_seconds: true) + " ago" unless @velodrome.updated_at.nil? || mobile_request? %></div>
   </div>
 </div>
 <% end -%>

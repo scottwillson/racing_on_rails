@@ -19,29 +19,29 @@ class AddObraHomepagePartials < ActiveRecord::Migration
   
   def ads_html
     <<-END
-    <div class="row-fluid">
-      <div class="span3">
+    <div class="row">
+      <div class="col-md-3">
         <a href="http://issuu.com/castelli-cycling/docs/serviziocorse_2013_us" class="ad" onclick="javascript: pageTracker._trackPageview(&#x27;issuu.com/castelli-cycling/docs/serviziocorse_2013_us&#x27;);"><img class="ad" alt="2013_catalog" src="http://www.obra.org/images/ads/2013_catalog.jpg" /></a>
       </div>
-      <div class="span3">
+      <div class="col-md-3">
         <a href="http://castelli-cycling.com/it/home/" class="ad" onclick="javascript: pageTracker._trackPageview(&#x27;/outgoing/castelli-cycling.com/&#x27;);"><img class="ad" alt="Castelli" src="http://www.obra.org/images/ads/castelli.gif" /></a>
       </div>
-      <div class="span3">
+      <div class="col-md-3">
         <a href="http://www.bicycleattorney.com/" class="ad" onclick="javascript: pageTracker._trackPageview(&#x27;/outgoing/bicycleattorney.com&#x27;);"><img class="ad" alt="Mike_colbach" src="http://www.obra.org/images/ads/mike_colbach.gif" /></a>
       </div>
-      <div class="span3">
+      <div class="col-md-3">
         <a href="http://www.rolfprima.com/" class="ad" onclick="javascript: pageTracker._trackPageview(&#x27;/outgoing/rolfprima.com/&#x27;);"><img class="ad" alt="Rolf_prima" src="http://www.obra.org/images/ads/rolf_prima.gif" /></a>
       </div>
     </div>
   
-    <div class="row-fluid">
-      <div class="span3">
+    <div class="row">
+      <div class="col-md-3">
         <a href="http://www.upperechelonfitness.com/" class="ad" onclick="javascript: pageTracker._trackPageview(&#x27;/outgoing/upperechelonfitness.com&#x27;);"><img class="ad" alt="Upper_echelon" src="http://www.obra.org/images/ads/upper_echelon.gif" /></a>
       </div>
-      <div class="span3">
+      <div class="col-md-3">
         <a href="http://obra.org/OWPS" class="ad" onclick="javascript: pageTracker._trackPageview(&#x27;/outgoing/obra.org/OWPS&#x27;);"><img class="ad" alt="Owps" src="http://www.obra.org/images/ads/owps.gif" /></a>
       </div>
-      <div class="span3">
+      <div class="col-md-3">
         <a href="http://obra.org/membership/new.html" class="ad" onclick="javascript: pageTracker._trackPageview(&#x27;/membership/new.html&#x27;);"><img class="ad" alt="Join" src="http://www.obra.org/images/ads/join.gif" /></a>
       </div>
     </div>
@@ -51,8 +51,8 @@ class AddObraHomepagePartials < ActiveRecord::Migration
   def links_html
     <<-END
     <div class="well">
-      <div class="row-fluid">
-        <div class="span4">
+      <div class="row">
+        <div class="col-md-4">
           <h3>Contacts</h3>
           <ul>
             <li><a href="http://www.obra.org/contact.html">Contact OBRA</a></li>
@@ -64,7 +64,7 @@ class AddObraHomepagePartials < ActiveRecord::Migration
             <li><a href="https://obra.org/store">OBRA Store</a></li>
           </ul>
         </div>
-        <div class="span4">
+        <div class="col-md-4">
           <h3>Competitions</h3>
           <ul>
             <li><a href="http://obra.org/bar">Best All-around Rider</a> (BAR)</li>
@@ -78,7 +78,7 @@ class AddObraHomepagePartials < ActiveRecord::Migration
             <li><a href="http://www.mudslingerevents.com/2012-oregon-xc-mtb-series/">Oregon XC Series</a></li>
           </ul>
         </div>
-        <div class="span4">
+        <div class="col-md-4">
           <h3><a href="http://www.obra.org/forms/#racer">Racers</a></h3>
           <ul>
             <li>
@@ -101,8 +101,8 @@ class AddObraHomepagePartials < ActiveRecord::Migration
           </ul>
         </div>
       </div>
-      <div class="row-fluid">
-        <div class="span4">
+      <div class="row">
+        <div class="col-md-4">
           <h3><a href="http://www.obra.org/forms/#promoter">Promoters</a></h3>
           <ul>
             <li><a href="http://www.obra.org/pdfs/insurance_app.pdf">Insurance Application</a></li>
@@ -112,7 +112,7 @@ class AddObraHomepagePartials < ActiveRecord::Migration
             <li><a href="http://www.obra.org/forms/">More...</a></li>
           </ul>
         </div>
-        <div class="span4">
+        <div class="col-md-4">
           <h3><a href="http://app.obra.org/track">Alpenrose Velodrome</a></h3>
           <ul>
             <li><a href="http://obra.org/products/27/line_items/create">Donate to Repair Fund</a></li>
@@ -121,7 +121,7 @@ class AddObraHomepagePartials < ActiveRecord::Migration
             <li><a href="http://app.obra.org/track/schedule">Schedule</a></li>
           </ul>
         </div>
-        <div class="span4">
+        <div class="col-md-4">
           <h3><a href="http://www.obra.org/links.html">Links</a></h3>
           <ul>
             <li><a href="http://www.obra.org/links.html#racing_orgs">Other Racing Organizations and Calendars</a></li>
@@ -137,8 +137,8 @@ class AddObraHomepagePartials < ActiveRecord::Migration
   
   def associated_html
     <<-END
-    <div class="row-fluid">
-      <div class="span12 associated">
+    <div class="row">
+      <div class="col-md-12 associated">
         <a href="http://www.easystreet.com/" class="image"><img alt="Hosted_by_easystreet" height="80" src="http://www.obra.org/images/logos/hosted_by_easystreet.gif" width="80" /></a>
         <a href="http://www.uscx.org/" class="image"><img alt="Uscx_final" height="90" src="http://www.obra.org/images/logos/USCX_final.gif" width="229" /></a>
         <a href="http://www.nabra.us/" class="image"><img alt="Nabra+logo_sm" height="100" src="http://www.obra.org/images/logos/NABRA+Logo_SM.gif" width="196" /></a>  
@@ -151,17 +151,17 @@ class AddObraHomepagePartials < ActiveRecord::Migration
   
   def home_html
     <<-END
-    <div class="container-fluid home">
+    <div class="container home">
       <%= render "photo", 
             :photo => @photo, 
             :most_recent_event_with_recent_result => @most_recent_event_with_recent_result, 
             :weeks_of_recent_results => @home.weeks_of_recent_results %>
 
-      <div class="row-fluid">
-        <div class="span6">
+      <div class="row">
+        <div class="col-md-6">
           <%= render_page "home/upcoming_events", :upcoming_events => @upcoming_events %>
         </div>
-        <div class="span6">
+        <div class="col-md-6">
           <%= render_page "home/recent_results", 
                 :events_with_recent_results => @events_with_recent_results, 
                 :weeks_of_recent_results => @home.weeks_of_recent_results %>

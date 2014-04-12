@@ -11,10 +11,10 @@ class PostsController < ApplicationController
     @subject = params[:subject].try(:strip)
     @mailing_list = MailingList.find(params[:mailing_list_id])
 
-    @posts = @mailing_list.posts.original.paginate(:page => page).order("position desc")
+    @posts = @mailing_list.posts.original.order("position desc")
 
     if @subject.present?
-      @posts = @posts.joins(:post_text).original.where("match(text) against (?)", @subject)
+      @posts = @posts.joins(:post_text).where("match(text) against (?)", @subject)
 
       if @subject.size < 4
         flash[:notice] = "Searches must be at least four letters"
@@ -22,6 +22,8 @@ class PostsController < ApplicationController
         flash[:notice] = "No posts with subject matching '#{@subject}'"
       end
     end
+
+    @posts = @posts.paginate(:page => page)
 
     respond_to do |format|
       format.html
@@ -60,10 +62,10 @@ class PostsController < ApplicationController
         redirect_to mailing_list_confirm_private_reply_path(@mailing_list)
       rescue ArgumentError, Net::SMTPSyntaxError, Net::SMTPServerBusy, Net::SMTPFatalError => e
         flash[:warn] = "Could not post: #{e}. Please retry, or email #{RacingAssociation.current.email} for help"
-        render(:action => "new", :reply_to_id => @reply_to.id)
+        render "new", :reply_to_id => @reply_to.id
       end
     else
-      render(:action => "new", :reply_to_id => @reply_to.id)
+      render "new", :reply_to_id => @reply_to.id
     end
   end
 
@@ -79,10 +81,10 @@ class PostsController < ApplicationController
         redirect_to mailing_list_confirm_path(@mailing_list)
       rescue Net::SMTPSyntaxError, Net::SMTPServerBusy, Net::SMTPFatalError => e
         flash[:warn] = "Could not post: #{e}. Please retry, or email #{RacingAssociation.current.email} for help"
-        render :action => "new"
+        render "new"
       end
     else
-      render :action => "new"
+      render "new"
     end
   end
 
@@ -97,16 +99,6 @@ class PostsController < ApplicationController
   end
 
   private
-
-  def page
-    begin
-      if params[:page].to_i > 0
-        params[:page].to_i
-      end
-    rescue
-      nil
-    end
-  end
 
   def post_params
     params_without_mobile.require(:post).permit(:body, :from_name, :from_email, :subject)

@@ -1,5 +1,5 @@
 <tr id="race_<%= race.id %>_row">
-  <td class="icon"><i class="icon-star"></i></td>
+  <td class="icon"><span class="glyphicon glyphicon-star"></span></td>
   <td class="race">
     <%= editable race, :category_name %>
   </td>
@@ -13,11 +13,12 @@
     <%= link_to(
           admin_race_path(race),
           :remote => true,
-          :class => "icon", 
-          :class => "icon", :id => "destroy_race_#{race.id}", :title => "Delete race",
+          :class => "icon",
+          :id => "destroy_race_#{race.id}",
+          :title => "Delete race",
           :data => { :confirm => (Rails.env.acceptance? || !promoter?) ? nil : "Really delete #{race.name}?" },
           :method => :delete) do %>
-      <i class="icon-minus-sign"></i>
+      <span class="glyphicon glyphicon-minus-sign"></span>
     <% end %>
   </td>
 </tr>

@@ -35,14 +35,12 @@ class RaceNumber < ActiveRecord::Base
     discipline_id = RaceNumber.discipline_id(_event.discipline)
     return [] unless discipline_id
     
-    RaceNumber.all(
-      :conditions => ['value=? and discipline_id = ? and number_issuer_id=? and year=?',
-                      value, 
-                      discipline_id, 
-                      _event.number_issuer.id, 
-                      _event.date.year],
-      :include => :person
-    )
+    RaceNumber.
+      includes(:person).
+      where(:value => value).
+      where(:discipline_id => discipline_id).
+      where(:number_issuer_id => _event.number_issuer_id).
+      where(:year => _event.date.year)
   end
   
   # Dupe of lousy code from Discipline
@@ -109,8 +107,8 @@ class RaceNumber < ActiveRecord::Base
   #
   # OBRA rental numbers (11-99) are not valid
   def unique_number 
-    _discipline = Discipline.find(self[:discipline_id])
-    if number_issuer.association? && RaceNumber.rental?(self[:value], _discipline)
+    _discipline = Discipline.find(discipline_id)
+    if number_issuer.association? && RaceNumber.rental?(value, _discipline)
       errors.add('value', "#{value} is a rental number. #{RacingAssociation.current.short_name} rental numbers: #{RacingAssociation.current.rental_numbers}")
       person.errors.add('value', "#{value} is a rental number. #{RacingAssociation.current.short_name} rental numbers: #{RacingAssociation.current.rental_numbers}")
       return false 
@@ -119,13 +117,14 @@ class RaceNumber < ActiveRecord::Base
     return true if person.nil?
   
     if new_record?
-      existing_numbers = RaceNumber.count(
-        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and person_id = ?', 
-        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], person.id])
+      existing_numbers = RaceNumber.
+        where(:value => value, :discipline_id => discipline_id, :number_issuer_id => number_issuer_id, :year => year, :person_id => person_id).
+        count
     else
-      existing_numbers = RaceNumber.count(
-        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and id<>? and person_id = ?', 
-        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id, person.id])
+      existing_numbers = RaceNumber.
+        where(:value => value, :discipline_id => discipline_id, :number_issuer_id => number_issuer_id, :year => year, :person_id => person_id).
+        where.not(:id => id).
+        count
     end
       
     unless existing_numbers == 0
