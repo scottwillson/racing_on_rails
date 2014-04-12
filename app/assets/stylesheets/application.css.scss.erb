@@ -67,6 +67,15 @@ $input-border-focus: darken($highlight-color, 15);
 @import "bootstrap";
 @import "bootstrap/theme";
 
+@font-face {
+  font-family: 'glyphicons-regular';
+  src: font-url('glyphicons-regular.eot');
+  src: url(font-path('glyphicons-regular.eot') + '?#iefix') format('embedded-opentype'),
+       font-url('glyphicons-regular.woff') format('woff'),
+       font-url('glyphicons-regular.ttf') format('truetype'),
+       url(font-path('glyphicons-regular.svg') + '#open_sans') format('svg');
+}
+
 body {
   background-color: $body-background-color;
   color: $font-color;
