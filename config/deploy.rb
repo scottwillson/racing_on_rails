@@ -12,7 +12,7 @@ set :unicorn_rack_env, "production"
 set :unicorn_pid, "#{shared_path}/pids/unicorn.pid"
 
 require "rvm/capistrano"
-set :rvm_ruby_string, "ruby-2.1.0"
+set :rvm_ruby_string, "ruby-2.1.1"
 set :rvm_install_ruby_params, "--patch railsexpress"
 
 set :scm, "git"
@@ -42,7 +42,7 @@ namespace :deploy do
       run "if [ -e #{release_path}/local/config/unicorn/production.rb ]; then cp #{release_path}/local/config/unicorn/production.rb #{release_path}/config/unicorn/production.rb; fi"
     end
   end
-  
+
   task :registration_engine do
     if application == "obra" || application == "nabra"
       run "if [ -e \"#{release_path}/lib/registration_engine\" ]; then rm -rf \"#{release_path}/lib/registration_engine\"; fi"
@@ -50,7 +50,7 @@ namespace :deploy do
       run "git clone git@github.com:scottwillson/registration_engine.git #{release_path}/lib/registration_engine"
     end
   end
-  
+
   task :symlinks do
     run <<-CMD
       mkdir #{latest_release}/tmp &&
