@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.5.30, for osx10.9 (i386)
 --
--- Host: localhost    Database: racing_on_rails_development
+-- Host: localhost    Database: aba_development
 -- ------------------------------------------------------
 -- Server version	5.5.30
 
@@ -512,7 +512,7 @@ CREATE TABLE `people` (
   `status` varchar(255) DEFAULT NULL,
   `crypted_password` varchar(255) DEFAULT NULL,
   `password_salt` varchar(255) DEFAULT NULL,
-  `persistence_token` varchar(255) NOT NULL,
+  `persistence_token` varchar(255) DEFAULT NULL,
   `single_access_token` varchar(255) DEFAULT NULL,
   `perishable_token` varchar(255) DEFAULT NULL,
   `login_count` int(11) NOT NULL DEFAULT '0',
@@ -753,8 +753,8 @@ CREATE TABLE `racing_associations` (
   `usac_results_format` tinyint(1) NOT NULL DEFAULT '0',
   `cat4_womens_race_series_category_id` int(11) DEFAULT NULL,
   `masters_age` int(11) NOT NULL DEFAULT '35',
-  `rental_numbers_end` int(11) DEFAULT '99',
-  `rental_numbers_start` int(11) DEFAULT '51',
+  `rental_numbers_end` int(11) DEFAULT NULL,
+  `rental_numbers_start` int(11) DEFAULT NULL,
   `search_results_limit` int(11) NOT NULL DEFAULT '100',
   `cat4_womens_race_series_points` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `administrator_tabs` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -967,45 +967,6 @@ CREATE TABLE `teams` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `topic_texts`
---
-
-DROP TABLE IF EXISTS `topic_texts`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `topic_texts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `topic_id` int(11) DEFAULT NULL,
-  `text` text,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  FULLTEXT KEY `index_topic_texts_on_text` (`text`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `topics`
---
-
-DROP TABLE IF EXISTS `topics`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `topics` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `mailing_list_id` int(11) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `posts_count` int(11) NOT NULL DEFAULT '0',
-  `posts_updated_at` datetime DEFAULT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  `position` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_topics_on_position` (`position`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `velodromes`
 --
 
@@ -1062,7 +1023,7 @@ CREATE TABLE `versions` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-04-12  9:55:00
+-- Dump completed on 2014-04-12 10:08:28
 INSERT INTO schema_migrations (version) VALUES ('1');
 
 INSERT INTO schema_migrations (version) VALUES ('10');
@@ -1331,21 +1292,15 @@ INSERT INTO schema_migrations (version) VALUES ('20140303223128');
 
 INSERT INTO schema_migrations (version) VALUES ('20140304153913');
 
-INSERT INTO schema_migrations (version) VALUES ('20140306011719');
-
 INSERT INTO schema_migrations (version) VALUES ('20140306165856');
 
-INSERT INTO schema_migrations (version) VALUES ('20140319234206');
-
 INSERT INTO schema_migrations (version) VALUES ('20140325180308');
-
-INSERT INTO schema_migrations (version) VALUES ('20140326210703');
-
-INSERT INTO schema_migrations (version) VALUES ('20140327214203');
 
 INSERT INTO schema_migrations (version) VALUES ('20140330010812');
 
 INSERT INTO schema_migrations (version) VALUES ('20140330145224');
+
+INSERT INTO schema_migrations (version) VALUES ('20140401041601');
 
 INSERT INTO schema_migrations (version) VALUES ('20140403051211');
 
