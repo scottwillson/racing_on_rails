@@ -7,4 +7,4 @@ before_script:
   - bundle exec rake db:setup RAILS_ENV=test
 
 rvm:
-  - "2.1.0"
+  - "2.1.1"
