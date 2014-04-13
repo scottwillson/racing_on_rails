@@ -6,7 +6,6 @@ RacingOnRails::Application.configure do
   config.action_view.cache_template_loading  = true
   config.active_support.deprecation          = :notify
   config.assets.compile                      = false
-  config.assets.compress                     = true
   config.assets.css_compressor               = :yui
   config.assets.digest                       = true
   config.assets.js_compressor                = :uglifier
