@@ -3,7 +3,7 @@
 
   years.uniq.sort.reverse.each do |y|
     tabs.add(
-      y, 
+      y,
       bar_path(:year => y, :category => race.try(:category_friendly_param), :discipline => Discipline[race.try(:discipline)])
     )
   end

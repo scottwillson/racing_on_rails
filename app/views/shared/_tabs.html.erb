@@ -14,7 +14,7 @@
       tabs.add "Photos", photos_path
       tabs.add("Pages", admin_pages_path) if RacingAssociation.current.administrator_tabs.include?(:pages)
   end %>
-  
+
   <%- elsif promoter? || official? -%>
 
   <%= tabs(@current_admin_tab) do |tabs|

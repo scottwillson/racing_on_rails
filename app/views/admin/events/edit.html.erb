@@ -12,9 +12,9 @@
       <%= render :partial => "races", :object => @event %>
     </div>
     <div class="col-sm-6">
-      <%= form_for(@event, 
+      <%= form_for(@event,
                   :as => :event,
-                  :url => @event.new_record? ? admin_events_path : admin_event_path(@event), 
+                  :url => @event.new_record? ? admin_events_path : admin_event_path(@event),
                   :html => { :class => "form-horizontal", :role => "form", :method => form_method_for(@event) }) do |f| -%>
 
         <%= f.hidden_field :parent_id %>
@@ -31,22 +31,22 @@
         <% if @event.type_modifiable? %>
         <%= f.labelled_select(:type, [['Event', 'Event'],
                              ['Single Day Event', 'SingleDayEvent'],
-                             ['Multi Day Event', 'MultiDayEvent'], 
-                             ['Series', 'Series'], 
-                             ['Weekly Series', 'WeeklySeries']], 
-                             {}, 
+                             ['Multi Day Event', 'MultiDayEvent'],
+                             ['Series', 'Series'],
+                             ['Weekly Series', 'WeeklySeries']],
+                             {},
                              :class => "form-control",
-                             :title => "Event: placeholder hidden from schedule (combined TT results). 
-    \nSingle day event: most events. 
-    \nMulti day event: event over consecutive days (stage races, AVC). 
-    \nSeries: weekend events with full BAR points (Cross Crusade). 
+                             :title => "Event: placeholder hidden from schedule (combined TT results).
+    \nSingle day event: most events.
+    \nMulti day event: event over consecutive days (stage races, AVC).
+    \nSeries: weekend events with full BAR points (Cross Crusade).
     \nWeekly series: weeknight, BAR points only for overall (PIR)") %>
 
         <% else -%>
         <%= f.labelled_text :type, @event.friendly_class_name %>
         <% end -%>
         <% end -%>
-      
+
         <% case @event
            when SingleDayEvent -%>
            <% if administrator? %>
@@ -71,7 +71,7 @@
           <%= f.label :city, "City, State", :class => "control-label col-sm-4" %>
           <div class="col-sm-8">
             <%= f.text_field :city, :class => "city_no_zip form-control", :maxlength => 30 %>
-            <%= f.text_field :state, :class => "state_no_zip form-control", :maxlength => 10 %> 
+            <%= f.text_field :state, :class => "state_no_zip form-control", :maxlength => 10 %>
           </div>
         </div>
 
@@ -82,7 +82,7 @@
         <% if RacingAssociation.current.show_events_velodrome? && administrator? -%>
         <%= f.labelled_select(:velodrome_id, Velodrome.all.sort_by(&:name).collect {|v| [ v.name, v.id ] }, :include_blank => true) %>
         <% end -%>
-      
+
         <% if administrator? %>
         <div class="check_boxes">
           <%= f.labelled_check_box :cancelled %>
@@ -153,21 +153,21 @@
         <% end -%>
 
         <%= f.labelled_select(:number_issuer_id, NumberIssuer.order(:name).collect {|i| [i.name, i.id]}) %>
-      
+
         <%= f.labelled_check_box :atra_points_series, "ATRA National Championship Series (NCS)" if RacingAssociation.current.competitions.include?(:atra_points_series) %>
         <% end -%>
 
         <% if RacingAssociation.current.competitions.include?(:bar) -%>
-        <%= f.labelled_select :bar_points, 
-              bar_points_and_labels, 
-              :label => { :text => "BAR Points", :class => "control-label col-sm-4" }, 
+        <%= f.labelled_select :bar_points,
+              bar_points_and_labels,
+              :label => { :text => "BAR Points", :class => "control-label col-sm-4" },
               :editable => administrator? %>
         <%- end %>
-      
+
         <% if RacingAssociation.current.competitions.include?(:rider_rankings) -%>
-        <%= f.labelled_select :bar_points, 
-              bar_points_and_labels, 
-              :label => { :text => "Rankings Pts", :class => "control-label col-sm-4" }, 
+        <%= f.labelled_select :bar_points,
+              bar_points_and_labels,
+              :label => { :text => "Rankings Pts", :class => "control-label col-sm-4" },
               :editable => administrator? %>
         <%- end %>
 
@@ -178,7 +178,7 @@
 
         <%= f.labelled_check_box(:ironman) if RacingAssociation.current.competitions.include?(:ironman) %>
         <% end -%>
-      
+
         <%= f.labelled_text_field :flyer, nil, :editable => administrator?, :class => "form-control" %>
         <% if administrator? -%>
         <%= f.labelled_check_box :flyer_approved, nil %>

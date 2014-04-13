@@ -31,7 +31,7 @@ end %>
           <% unless mobile_request? %>
           <td class="beginner_friendly icon">
             <% if event.beginner_friendly? %>
-              <%= link_to("http://www.obra.org/beginner_friendly.html", 
+              <%= link_to("http://www.obra.org/beginner_friendly.html",
                           :class => "beginner_friendly", :title => "Beginner friendly event") do %>
                 <span class="glyphicon glyphicon-ok-circle"></span>
               <% end %>
@@ -46,19 +46,19 @@ end %>
     </tbody>
   <% end -%>
 
-  <p>Please review the <a href="http://www.obra.org/track/information/index.html#rules">Alpenrose Velodrome rules</a>. 
+  <p>Please review the <a href="http://www.obra.org/track/information/index.html#rules">Alpenrose Velodrome rules</a>.
   Call the velodrome during event hours to check on weather cancellations: (503) 246-0330.</p>
 
   <h3>Weekly Races</h3>
-  <%= render "weekly_events", 
+  <%= render "weekly_events",
              :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && !e.instructional? && !e.practice? } %>
 
   <h3>Weekly Instruction Schedule</h3>
-  <%= render 'weekly_events', 
+  <%= render 'weekly_events',
              :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && e.instructional? } %>
 
   <h3>Weekly Practice Schedule</h3>
-  <%= render 'weekly_events', 
+  <%= render 'weekly_events',
              :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && e.practice? } %>
 </div>
 

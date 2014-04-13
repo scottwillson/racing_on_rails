@@ -11,12 +11,12 @@ function bindNumberYearChange() {
     jQuery('.numbers tr.number').hide();
     jQuery('.numbers tr.year-' + year).show();
     jQuery('#new_number_year').val(year);
-  });  
+  });
 }
 
 function bindPeopleDragAndDrop() {
-  jQuery('.person_icon').draggable({ 
-    revert: 'invalid', 
+  jQuery('.person_icon').draggable({
+    revert: 'invalid',
     zIndex: 10000,
     opacity: 0.7,
     helper: function(event) {

@@ -1,5 +1,5 @@
-<% if @team.new_record? 
-     team_name = "New Team" 
+<% if @team.new_record?
+     team_name = "New Team"
    else
      team_name = @team.name
    end %>
@@ -36,7 +36,7 @@
       </tr>
       <%- end -%>
     <% end -%>
-  </div>      
+  </div>
   <div class="col-sm-4">
     <h3>Aliases</h3>
     <%= table :insert_header => true, :columns => 2, :collection => @team.aliases do %>
@@ -55,7 +55,7 @@
       </tr>
       <%- end -%>
     <% end -%>
-  </div>      
+  </div>
   <div class="col-sm-4">
     <h3>Historical Names</h3>
     <%= table :insert_header => true, :columns => 3, :collection => @team.names do %>
@@ -76,7 +76,7 @@
     <% end -%>
     </div>
   </div>
-  
+
   <div class="row">
     <div class="col-sm-12">
       <%= submit_tag "Save", :class => "btn btn-default", :id => "save" %>

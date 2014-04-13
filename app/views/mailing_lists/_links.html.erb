@@ -4,13 +4,13 @@
     <li><a href="/mailman/listinfo/<%= mailing_list.name %>">Subscribe</a></li>
     <li><a href="/mailman/listinfo/<%= mailing_list.name %>#subscribers">Subscription Options</a></li>
     <li><%= link_to "New Post", new_mailing_list_post_path(mailing_list) %></li>
-    
+
     <% if @post && @post.topica_message_id.nil? %>
     <li>
         <%= link_to "Reply Privately", new_mailing_list_post_path(mailing_list, :reply_to_id => @post.id) %>
     </li>
     <% end %>
-    
+
     <% if mailing_list.present? %>
     <li>
         <%= link_to "View Posts", mailing_list_posts_path(mailing_list) %>

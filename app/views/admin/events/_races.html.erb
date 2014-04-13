@@ -31,12 +31,12 @@
     <tr id="create_race_row">
       <td colspan="3">
         <span class="icon-refresh rotate" id="propagate_races_progress" style="display: none"></span>
-        <%= link_to("Copy to child events", 
+        <%= link_to("Copy to child events",
                     propagate_admin_event_races_path(@event),
                     :remote => true,
                     :method => :post,
-                    :class => "obvious", 
-                    :id => "propagate_races", 
+                    :class => "obvious",
+                    :id => "propagate_races",
                     :title => "Add same races to all children events"
             ) if @event.races.any? && @event.children.any?
         %>
@@ -44,8 +44,8 @@
       <td class="delete_all_races">
         <%= link_to("Delete all races",
           destroy_races_admin_event_path(@event),
-          :class => "obvious", 
-          :id => "destroy_races", 
+          :class => "obvious",
+          :id => "destroy_races",
           :title => "Delete all",
           :remote => true,
           :method => :delete,
@@ -60,7 +60,7 @@
               admin_event_races_path(@event),
               :remote => true,
               :method => :post,
-              :id => "create_race", 
+              :id => "create_race",
               :title => "Add race"
             ) do %>
           <span class="glyphicon glyphicon-plus-sign"></span>

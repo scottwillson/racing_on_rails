@@ -3,7 +3,7 @@
   <%- people.each do |person| -%>
   <tr>
       <td><%= link_to(
-        person.name, 
+        person.name,
         admin_person_results_path(person, :format => "js"),
         :class => "find_person",
         :remote => true)

@@ -3,8 +3,8 @@ jQuery(document).ready(function() {
 });
 
 function bindTeamDragAndDrop() {
-  jQuery('.team_icon').draggable({ 
-    revert: 'invalid', 
+  jQuery('.team_icon').draggable({
+    revert: 'invalid',
     zIndex: 10000,
     opacity: 0.7,
     helper: function(event) {

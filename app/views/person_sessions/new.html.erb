@@ -18,8 +18,8 @@
     <p>
       <strong>Don't Have a Login Yet?</strong>
       <br class="visible-xs"/>
-      <%= link_to "Create a login", 
-            people_new_login_path(:return_to => session[:return_to]), 
+      <%= link_to "Create a login",
+            people_new_login_path(:return_to => session[:return_to]),
             { :class => "obvious", :id => "new_login" } %>
     </p>
 
@@ -27,7 +27,7 @@
       <strong>Forgot Your Password?</strong>
       <br class="visible-xs"/>
       <%= link_to "Request a reminder", new_password_reset_path, { :class => "obvious forgot", :id => "forgot" } %>
-  
+
       <% if @person_session.errors.any? %>
         You'll need to allow cookies to login
       <% end -%>

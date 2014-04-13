@@ -13,7 +13,7 @@
       <th class="date">Date</th>
       <th></th>
       <th>Event</th>
-      <th class="promoter">Promoter</th> 
+      <th class="promoter">Promoter</th>
       <th class="phone">Phone</th>
       <th class="discipline">Discipline</th>
       <th class="location">Location</th>
@@ -39,11 +39,11 @@
             <%- else -%>
           <%= event.full_name -%><%= " MTB" if !event.full_name.include?("MTB") && event.discipline == "Mountain Bike" -%>
       <%- end -%>
-      </td> 
+      </td>
   <%- end -%>
-    <td><%= link_to_event_email event %></td> 
-    <td class="contact_phone"><%= link_to_event_phone event %></td> 
-    <td class="discipline"><%= event.discipline -%></td> 
+    <td><%= link_to_event_email event %></td>
+    <td class="contact_phone"><%= link_to_event_phone event %></td>
+    <td class="discipline"><%= event.discipline -%></td>
     <td><%= event.city -%></td>
   </tr>
   <%- end -%>

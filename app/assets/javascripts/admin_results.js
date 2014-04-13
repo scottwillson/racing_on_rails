@@ -3,18 +3,18 @@ jQuery(document).ready(function() {
     jQuery('#find_progress_icon').show();
     jQuery.ajax(
       { complete: function(request) {
-                    jQuery(document).scrollTop(0); 
-                    jQuery('#right_person').show(); 
+                    jQuery(document).scrollTop(0);
+                    jQuery('#right_person').show();
                     jQuery('#find_progress_icon').hide();
-                  }, 
-        data: jQuery.param(jQuery(this).serializeArray()), 
-        success: function(request) { 
+                  },
+        data: jQuery.param(jQuery(this).serializeArray()),
+        success: function(request) {
           jQuery('#right_person').html(request);
-        }, 
+        },
         type: 'post',
         url: '/admin/results/find_person?ignore_id=630815940'
       }
-    ); 
+    );
     return false;
   });
 });
@@ -31,7 +31,7 @@ function toggle_disclosure(element) {
       type: 'post',
       dataType: 'script',
       complete: function() {
-        expand(element);          
+        expand(element);
       }
     });
   }

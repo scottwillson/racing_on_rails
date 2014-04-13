@@ -9,9 +9,9 @@
     <% end -%>
     <th>Their Account</th>
   </tr>
-  
+
   <%- account_permissions.each_with_index do |account_permission, account_permission_index| -%>
-    <%= render "people/account_permission", 
+    <%= render "people/account_permission",
           :account_permission => account_permission, :account_permission_index => :account_permission_index, :person => person, :return_to => return_to
     %>
   <% end -%>

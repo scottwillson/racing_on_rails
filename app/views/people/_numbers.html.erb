@@ -8,7 +8,7 @@
     <td><%= @person.license %></td>
   </tr>
   <% end %>
-  
+
   <% @person.race_numbers.select { |n| n.year == RacingAssociation.current.effective_year }.each do |number| -%>
   <tr>
     <td><%= number.number_issuer.name %> <%= number.discipline.name %></td>

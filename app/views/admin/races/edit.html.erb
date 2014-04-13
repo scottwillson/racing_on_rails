@@ -12,17 +12,17 @@
 
       <% if RacingAssociation.current.competitions.include?(:bar) -%>
       <%= f.labelled_text :bar_category, competition_category_name(@race), "BAR Category" %><br/><br/>
-      <%= f.labelled_select :bar_points, 
-            bar_points_and_labels, 
-            :label => { :text => "BAR Points", :class => "control-label col-sm-4" }, 
+      <%= f.labelled_select :bar_points,
+            bar_points_and_labels,
+            :label => { :text => "BAR Points", :class => "control-label col-sm-4" },
             :editable => administrator? %>
       <%- end %>
 
       <% if RacingAssociation.current.competitions.include?(:rider_rankings) -%>
       <%= f.labelled_text :bar_category, competition_category_name(@race), "Rankings Cat" %><br/><br/>
-      <%= f.labelled_select :bar_points, 
-            bar_points_and_labels, 
-            :label => { :text => "Ranking Points", :class => "control-label col-sm-4" }, 
+      <%= f.labelled_select :bar_points,
+            bar_points_and_labels,
+            :label => { :text => "Ranking Points", :class => "control-label col-sm-4" },
             :editable => administrator? %>
       <%- end %>
 
@@ -45,7 +45,7 @@
       <div class="created_updated pull-right"><%= "Updated: #{time_ago_in_words(@race.updated_at, include_seconds: true)} ago" if @race.updated_at.present? %>&nbsp;</div>
     </div>
   </div>
-<% end -%>    
+<% end -%>
 
 <% if administrator? %>
   <h3>Results</h3>

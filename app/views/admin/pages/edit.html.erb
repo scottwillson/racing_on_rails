@@ -9,8 +9,8 @@
     <div class="col-sm-4">
       <%= f.labelled_text_field :title, "Title", :class => @page.new_record? ? "wants_focus form-control col-sm-12" : "form-control col-sm-12" %>
       <%= f.labelled_text_field :slug, "Slug" %>
-      <%= f.labelled_select :parent_id, 
-                            @page.valid_parents.sort_by(&:path).collect { |p| [ "#{p.title} (#{p.path})", p.id ] }, 
+      <%= f.labelled_select :parent_id,
+                            @page.valid_parents.sort_by(&:path).collect { |p| [ "#{p.title} (#{p.path})", p.id ] },
                             { :include_blank => true } %>
       <h3>Versions</h3>
       <%= table :class => "versions", :id => :versions, :insert_header => true, :columns => 2 do %>
@@ -22,15 +22,15 @@
       <%= f.labelled_text_area :body %>
     </div>
   </div>
-  
+
   <div class="row">
     <div class="col-sm-12">
       <%= submit_tag "Save", :class => "btn btn-default", :id => "save" %>
-      <%= link_to("Delete", 
-                  admin_page_path(@page), 
-                  :data => { :confirm => confirm_destroy_message(@page) }, 
-                  :method => :delete, 
-                  :class => "btn btn-default", 
+      <%= link_to("Delete",
+                  admin_page_path(@page),
+                  :data => { :confirm => confirm_destroy_message(@page) },
+                  :method => :delete,
+                  :class => "btn btn-default",
                   :id => "delete") unless @page.new_record? %>
       <%= link_to("Preview", "/#{@page.path}", :target => "_new", :class => "btn btn-link", :id => "preview") %>
       <div class="created_updated pull-right"><%= "Updated: #{updated(@page)}".html_safe if @page.updated_at %></div>
