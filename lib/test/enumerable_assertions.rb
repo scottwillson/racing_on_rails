@@ -38,19 +38,19 @@ module Test
         flunk "#{message}\nExpected\n#{expected_message} but was \n#{actual_message}.\nDifference: #{difference.to_a.join(', ')}"
       end
     end
-  
+
     # Assert two Enumerable objects contain exactly same object in the same order
     def assert_equal_enumerables(expected, actual, message)
       diff = expected - actual
       unless diff.empty?
         fail("#{message}. Expected to find #{diff.join(', ')} in #{actual.join(', ')}")
       end
-  
+
       diff = actual - expected
       unless diff.empty?
         fail("#{message}. Did not expect #{diff.join(', ')} in #{actual.join(', ')}")
       end
-    
+
       expected.each_with_index do |expected_member, index|
         actual_member = actual[index]
         assert_equal(expected_member, actual_member, "Expected #{expected_member} at index #{index}, but was #{actual_member}")

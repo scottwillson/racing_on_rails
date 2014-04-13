@@ -10,7 +10,7 @@ module Renderers
       if result.preliminary?
         html_options = ' class="preliminary"'
       end
-    
+
       if result.competition_result?
         "<a href=\"#{path_prefix(row)}/events/#{result.event_id}/people/#{result.person_id}/results##{result.race_id}\"#{html_options}>#{text}</a>"
       else

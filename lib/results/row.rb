@@ -82,7 +82,7 @@ module Results
         # We want to pick up the info in the first 5 columns: org, year, event #, date, discipline
         return "" if blank? || size < 5
         spreadsheet_row[0, 5].select { |cell| cell.present? }.join(", ")
-      else  
+      else
         return "" if blank? || size < 2
         spreadsheet_row[1, size - 1].select { |cell| cell.present? }.join(", ")
       end

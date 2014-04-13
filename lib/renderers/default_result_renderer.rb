@@ -44,7 +44,7 @@ module Renderers
         key(column).to_s.titleize
       end
     end
-    
+
     def self.css_class(column, row = nil)
       case column.key
       when :event_full_name
@@ -65,7 +65,7 @@ module Renderers
         key = column
       end
     end
-    
+
     def self.path_prefix(row)
       if row.metadata[:mobile_request]
         "/m"

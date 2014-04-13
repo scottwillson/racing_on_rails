@@ -17,7 +17,7 @@ module RacingOnRails
       # * header_row: First row is a list of column name. Header rows are parsed are deleted, so rows.first will return the _second_ row from the source text.
       #               Defaults to false
       # * column_map: Hash of column names. Replace column names from the original file with another name if the default mapping isn't enough.
-      #               Example: 'birth date' => 'date_of_birth'. 
+      #               Example: 'birth date' => 'date_of_birth'.
       #               All keys are forced to lowercase for case-insenstive comparions
       # * row_class: Map each row to this Class. Example: :row_class => Person
       #
@@ -185,7 +185,7 @@ module RacingOnRails
         columns.each do |column|
           unless column.description.blank?
             if !column.fixed_size && (column.description.size > column.size)
-              column.size = column.description.size 
+              column.size = column.description.size
             end
           end
         end

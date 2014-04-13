@@ -7,7 +7,7 @@ module RacingOnRails
         @custom_columns = symbolize(custom_columns)
         @columns_after_custom_columns = columns_after_custom_columns
       end
-      
+
       def map(result)
         hash = {}
 
@@ -25,9 +25,9 @@ module RacingOnRails
 
         hash
       end
-      
+
       private
-      
+
       def symbolize(custom_columns)
         custom_columns.map do |column|
           column.to_s.to_sym

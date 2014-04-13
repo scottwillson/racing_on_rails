@@ -18,7 +18,7 @@ module RacingOnRails
         return slice(index) || ''
       end
 
-      # Concatenates duplicate keys into one value separated by a line return. 
+      # Concatenates duplicate keys into one value separated by a line return.
       # Example:
       # name | street    | street
       # Eddy | 10 Huy St | Apt #410
@@ -47,7 +47,7 @@ module RacingOnRails
               else
                 hash[field] = value
               end
-            else   
+            else
               unless value.blank?
                 hash[field] = "#{existing_value}#{$INPUT_RECORD_SEPARATOR}#{value}"
               end

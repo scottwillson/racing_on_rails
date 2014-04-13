@@ -2,7 +2,7 @@ module RacingOnRails
   module Controllers
     module Authorization
       extend ActiveSupport::Concern
-      
+
       private
 
       def require_current_person
@@ -32,11 +32,11 @@ module RacingOnRails
         unless require_current_person
           return false
         end
-    
-        unless administrator? || 
-               (@event && (current_person == @event.promoter || @event.editors.include?(current_person))) || 
+
+        unless administrator? ||
+               (@event && (current_person == @event.promoter || @event.editors.include?(current_person))) ||
                (@race && (current_person == @race.event.promoter || @race.event.editors.include?(current_person)))
-           
+
           redirect_to unauthorized_path
           return false
         end
@@ -47,7 +47,7 @@ module RacingOnRails
         unless require_current_person
           return false
         end
-    
+
         unless administrator? || official?
           session[:return_to] = request.fullpath
           flash[:notice] = "You must be an official or administrator to access this page"
@@ -85,14 +85,14 @@ module RacingOnRails
         unless require_current_person
           return false
         end
-    
+
         unless administrator? || promoter? || official?
           redirect_to unauthorized_path
           return false
         end
         true
       end
-  
+
       def require_administrator_or_same_person
         unless current_person.administrator? || (current_person == @person)
           redirect_to unauthorized_path

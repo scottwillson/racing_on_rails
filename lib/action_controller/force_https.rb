@@ -1,5 +1,5 @@
 module ActionController
-  # Modified version of Rails' force_ssl. Active in development Rails environment. Also uses 
+  # Modified version of Rails' force_ssl. Active in development Rails environment. Also uses
   # old ssl_requirement behavior that builds full URL.
   module ForceHTTPS
     extend ActiveSupport::Concern

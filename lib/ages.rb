@@ -15,5 +15,5 @@ module Ages
       self.ages_begin = age_split[0].to_i unless age_split[0].nil?
       self.ages_end = age_split[1].to_i unless age_split[1].nil?
     end
-  end    
+  end
 end

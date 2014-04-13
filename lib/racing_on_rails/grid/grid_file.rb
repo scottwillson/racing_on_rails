@@ -15,12 +15,12 @@ module RacingOnRails
         ::Spreadsheet.open(file.path).worksheets.each do |worksheet|
           worksheet.each do |row|
             if Rails.logger.debug? && debug?
-              Rails.logger.debug("---------------------------------") 
+              Rails.logger.debug("---------------------------------")
               Rails.logger.debug("GridFile #{Time.zone.now} row #{row.to_a.join(', ')}")
               row.each_with_index do |cell, index|
                 Rails.logger.debug("number_format pattern to_s to_f #{row.format(index).number_format}  #{row.format(index).pattern} #{cell.to_s} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}")
               end
-              Rails.logger.debug("---------------------------------") 
+              Rails.logger.debug("---------------------------------")
             end
             line = []
             for cell in row
@@ -75,7 +75,7 @@ module RacingOnRails
             t = t + (part.to_f) * (60.0 ** index)
           end
           t
-        end    
+        end
       end
 
       # source can be String or File
@@ -83,7 +83,7 @@ module RacingOnRails
       # header_row: start_at_row is header
       # FIXME Only honors start_at_row, header_row for Excel
       # FIXME Assumes all non-.txt files are Excel
-      def initialize(source, *options)  
+      def initialize(source, *options)
         case source
         when File, Tempfile
           raise "#{source} does not exist" unless File.exists?(source.path)

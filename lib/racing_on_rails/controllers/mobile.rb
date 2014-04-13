@@ -2,7 +2,7 @@ module RacingOnRails
   module Controllers
     module Mobile
       extend ActiveSupport::Concern
-      
+
       included do
         before_filter :set_mobile_preferences, :redirect_to_mobile_if_applicable, :prepend_view_path_if_mobile
 
@@ -20,7 +20,7 @@ module RacingOnRails
       end
 
       private
-      
+
       def prepend_view_path_if_mobile
         if mobile_request?
           prepend_view_path "app/views/mobile"
@@ -32,7 +32,7 @@ module RacingOnRails
           Page.find_by_path("mobile/#{page_path}")
         end
       end
-  
+
       def params_without_mobile
         _params = params.dup
         _params.delete :mobile
@@ -66,8 +66,8 @@ module RacingOnRails
       end
 
       def redirect_to_mobile
-        redirect_to request.protocol + 
-                    request.host_with_port + 
+        redirect_to request.protocol +
+                    request.host_with_port +
                     "/m" +
                     request.fullpath.
                     gsub(/[\?&]mobile_site=1/, "").
@@ -75,7 +75,7 @@ module RacingOnRails
       end
 
       def redirect_to_full_site
-        redirect_to request.protocol + 
+        redirect_to request.protocol +
                     request.host_with_port +
                     request.fullpath.
                     gsub(%r{^/m}, "").

@@ -17,7 +17,7 @@ class HashBag < Hash
     count = @counts[key]
 
     if count != nil
-      count    
+      count
     else
       0
     end

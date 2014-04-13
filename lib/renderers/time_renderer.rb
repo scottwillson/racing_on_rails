@@ -5,7 +5,7 @@ module Renderers
     def self.render(column, row)
       time = row[key(column)]
       return nil if time.nil?
-      
+
       seconds = time % 60
       minutes = (time / 60) % 60
       hours = time / (60 * 60)

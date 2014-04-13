@@ -2,12 +2,12 @@ module RacingOnRails
   module Controllers
     module Authentication
       extend ActiveSupport::Concern
-      
+
       included do
         helper_method :current_person
         helper_method :current_person_session
       end
-      
+
       private
 
       def assign_person

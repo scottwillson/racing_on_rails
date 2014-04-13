@@ -22,7 +22,7 @@ module RacingOnRails
       # * type: cast value to this Class
       def initialize(*options)
         if options
-          options.flatten! 
+          options.flatten!
           options = options.first
         end
         options = {} if options.nil?
