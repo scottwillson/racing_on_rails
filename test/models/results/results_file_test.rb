@@ -9,14 +9,14 @@ module Results
   # FIXME DNF's not handled correctly.
 
   # Most Test fixtures are in OBRA (not USAC) format. Force USAC format in ResultsFile to test logic shared by both formats.
-  class ResultsFileTest < ActiveSupport::TestCase    
+  class ResultsFileTest < ActiveSupport::TestCase
     setup :setup_number_issuer
 
     def setup_number_issuer
       FactoryGirl.create(:discipline)
-      FactoryGirl.create(:number_issuer)      
+      FactoryGirl.create(:number_issuer)
     end
-    
+
     def test_race?
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt.xls", __FILE__)), SingleDayEvent.new)
       book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/tt.xls", __FILE__))
@@ -33,7 +33,7 @@ module Results
       assert(!results_file.race?(results_file.rows[12]), 'New race')
       assert(!results_file.race?(results_file.rows[13]), 'New race')
     end
-    
+
     def test_race_usac
       RacingAssociation.current.usac_results_format = true
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt_usac.xls", __FILE__)), SingleDayEvent.new)
@@ -56,7 +56,7 @@ module Results
 
       ResultsFile.new("text \t results", SingleDayEvent.new)
     end
-    
+
     def test_create_columns
       book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/pir_2006_format.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(0)
@@ -64,7 +64,7 @@ module Results
       column_indexes = results_file.create_columns(spreadsheet_row)
       assert_equal({ :place => 0, :number => 1, :license => 2, :last_name => 3, :first_name => 4, :team_name => 5, :points => 6  }, column_indexes, "column_indexes")
     end
-    
+
     def test_create_columns_usac
       RacingAssociation.current.usac_results_format = true
       book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/tt_usac.xls", __FILE__))
@@ -85,7 +85,7 @@ module Results
         :age            => 8
       }, column_indexes, "column_indexes")
     end
-  
+
     def test_import_excel
       current_members = Person.where("member_to >= ?", Time.zone.now)
       event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2006, 1, 16))
@@ -93,7 +93,7 @@ module Results
       results_file = ResultsFile.new(File.new(source_path), event)
       assert_equal(source_path, results_file.source.path, "file path")
       results_file.import
- 
+
       expected_races = get_expected_races
       assert_equal(expected_races.size, event.races.size, "Expected #{expected_races.size.to_s} event races but was #{event.races.size.to_s}")
       expected_races.each_with_index do |expected_race, index|
@@ -118,8 +118,8 @@ module Results
               if RacingAssociation.current.add_members_from_results? || current_members.include?(result.person)
                 assert(result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
                 assert_not_equal(
-                  Time.zone.today, 
-                  result.person.member_from, 
+                  Time.zone.today,
+                  result.person.member_from,
                   "#{result.name} membership date should existing date or race date, but never today (#{result.person.member_from})")
               else
                 assert(!result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
@@ -139,10 +139,10 @@ module Results
       FactoryGirl.create(:discipline, :name => "Time Trial")
       bruce_109 = Person.create!(:first_name => 'Bruce', :last_name => 'Carter')
       bruce_109.race_numbers.create(:year => Time.zone.today.year, :value => '109')
-    
+
       bruce_1300 = Person.create!(:first_name => 'Bruce', :last_name => 'Carter')
       bruce_1300.race_numbers.create!(:year => Time.zone.today.year, :value => '1300')
-    
+
       existing_weaver = FactoryGirl.create(:person, :name => "Ryan Weaver", :road_number => "341")
       existing_matson = FactoryGirl.create(:person, :name => "Mark Matson", :road_number => "340")
 
@@ -150,7 +150,7 @@ module Results
 
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt.xls", __FILE__)), event)
       results_file.import
-    
+
       assert_equal(2, event.races(true).size, "event races")
       assert_equal(7, event.races[0].results.size, "Results")
       sorted_results = event.races[0].results.sort
@@ -163,7 +163,7 @@ module Results
       assert_equal(10, race.result_columns.size, 'Columns size')
       assert_equal('place', race.result_columns[0], 'Column 0 name')
       assert_equal('category_name', race.result_columns[2], 'Column 2 name')
-    
+
       assert_equal(2, Person.where(:first_name => 'bruce', :last_name => 'carter').count, 'Bruce Carters after import')
 
       assert(!event.races.empty?, 'event.races should not be empty')
@@ -181,7 +181,7 @@ module Results
           result.first_name
         end
       end
-    
+
       # Existing people, same name, different numbers
       bruce_1300 = event.races.first.results[6].person
       bruce_109 = event.races.last.results[2].person
@@ -190,7 +190,7 @@ module Results
       assert_equal(bruce_1300.name.downcase, bruce_109.name.downcase, "Bruces with different numbers should have same name")
       assert_not_equal(bruce_1300, bruce_109, "Bruces with different numbers should be different people")
       assert_not_equal(bruce_1300.id, bruce_109.id, "Bruces with different numbers should have different IDs")
-    
+
       # New person, same name, different number
       scott_90 = event.races.first.results[5].person
       scott_400 = event.races.last.results[3].person
@@ -213,7 +213,7 @@ module Results
       new_matson = event.races.first.results.first.person
       assert_not_equal(existing_matson, new_matson, "Person with different numbers should be different people")
     end
-  
+
     # Expose bad regex defect
     def test_import_time_trial_with_hundreds
       FactoryGirl.create(:discipline, :name => "Time Trial")
@@ -223,11 +223,11 @@ module Results
       result = event.races.first.results.first
       assert_equal 1086.23, result.time, "First result time of 18:06.23 formatted as 18:06.2 in Excel"
     end
-  
+
     def test_import_2006_v2
       FactoryGirl.create(:discipline, :name => "Circuit")
       expected_races = []
-    
+
       paul_bourcier = Person.create!(:first_name => "Paul", :last_name => "Bourcier", :member => true)
       eweb = Team.create!(:name => 'EWEB Windpower')
       paul_bourcier.team = eweb
@@ -235,10 +235,10 @@ module Results
       assert(paul_bourcier.errors.empty?)
       assert(eweb.errors.empty?)
       assert_equal(eweb, paul_bourcier.team(true), 'Paul Bourcier team')
-    
+
       chris_myers = Person.create!(:first_name => "Chris", :last_name => "Myers", :member => true)
       assert_nil(chris_myers.team(true), 'Chris Myers team')
-    
+
       race = Race.new(:category => Category.new(:name => "Pro/1/2"))
       race.results << Result.new(:place => "1", :first_name => "Paul", :last_name => "Bourcier", :number =>"146", :team_name =>"Hutch's Eugene", :points => "10.0")
       race.results << Result.new(:place => "2", :first_name => "John", :last_name => "Browning", :number =>"197", :team_name =>"Half Fast Velo", :points => "3.0")
@@ -290,18 +290,18 @@ module Results
           end
         end
       end
-    
+
       paul_bourcier.reload
       assert_equal(eweb, paul_bourcier.team(true), 'Paul Bourcier team should not be overwritten by results')
       chris_myers.reload
       assert_nil(chris_myers.team(true), 'Chris Myers team should not be updated by results')
-    
+
       browning = Person.find_by_name("John Browning")
       assert_equal(event, browning.created_by, "created_by")
       assert_equal(event, browning.team.created_by, "team created_by")
       assert_equal(event.name, browning.created_by.name, "created_by name")
     end
-  
+
     def test_import_and_reuse_races
       # race       exists?   in_results_file   order?   after_import
       # pro_1_2    Y          Y                 Y         Y + results
@@ -319,23 +319,23 @@ module Results
 
       weaver = FactoryGirl.create(:person)
       pro_1_2_race.results.create! :place => 1, :person => weaver
-    
+
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/small_event.xls", __FILE__)), event)
       results_file.import
-    
+
       event.reload
-    
+
       assert_equal 5, event.races.count, "Races"
       [ "Pro 1/2", "Cat 3", "Cat 4", "Cat 5", "Women 1/2" ].each do |cat_name|
         assert event.races.detect { |race| race.name == cat_name }, "Should have race #{cat_name}"
         assert_equal 1, event.races.select { |race| race.name == cat_name }.size, "Should only one of race #{cat_name}"
       end
-    
+
       [ "Pro 1/2", "Cat 3", "Women 1/2" ].each do |cat_name|
         assert_equal 3, event.races.detect { |race| race.name == cat_name }.results.count, "Race #{cat_name} results"
       end
     end
-  
+
     def test_stage_race
       event = SingleDayEvent.create!
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/stage_race.xls", __FILE__)), event)
@@ -354,11 +354,11 @@ module Results
          "time",
          "time_bonus_penalty",
          "time_total",
-         "time_gap_to_leader"], 
-        actual_race.result_columns, 
+         "time_gap_to_leader"],
+        actual_race.result_columns,
         "Results"
       )
-    
+
       index = 0
       result_index = 0
       result = actual_race.results[result_index]
@@ -403,7 +403,7 @@ module Results
       assert_equal('03:49:17.00', result.time_total_s, "time_total_s for race #{index} result #{result_index}")
       assert_equal('17:13.00', result.time_gap_to_leader_s, "time_gap_to_leader_s for race #{index} result #{result_index}")
     end
-  
+
     # File causes error -- just import to recreate
     def test_dh
       FactoryGirl.create(:discipline, :name => "Downhill")
@@ -411,7 +411,7 @@ module Results
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/dh.xls", __FILE__)), event)
       results_file.import
     end
-  
+
     def test_mtb
       FactoryGirl.create(:mtb_discipline)
       pro_semi_pro_men = FactoryGirl.create(:category, :name => "Pro, Semi-Pro Men")
@@ -419,14 +419,14 @@ module Results
       pro_semi_pro_men.children.create(:name => 'Expert Men')
       pro_expert_women = FactoryGirl.create(:category, :name => "Pro, Expert Women")
       pro_expert_women.children.create(:name => 'Pro/Expert Women')
-    
+
       event = SingleDayEvent.create!(:discipline => 'Mountain Bike')
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/mtb.xls", __FILE__)), event)
       results_file.import
       assert_nil(event.combined_results, 'Should not have combined results')
       assert_equal(6, event.races(true).size, "Races after import")
     end
-  
+
     def test_custom_columns
       FactoryGirl.create(:discipline, :name => "Downhill")
       event = SingleDayEvent.create(:discipline => 'Downhill')
@@ -458,7 +458,7 @@ module Results
       results_file.import
       assert_equal(1, event.races.size, 'Races')
       results = event.races.first.results
-    
+
       assert_equal(12.64, results[0].time, 'row 0: 12.64')
       assert_equal(12.64, results[1].time, 'row 1: 0:12.64')
       assert_equal(12.64, results[2].time, 'row 2: 00:12.6')
@@ -481,10 +481,10 @@ module Results
       assert_equal(2752.92, results[17].time, 'row 17: 45:52.917')
       assert_equal(36000, results[18].time, 'row 18: 10:00:00')
     end
-  
+
     def expected_results(event)
       expected_races = []
-    
+
       race = Race.new(:category => Category.new(:name => "Category 3"))
 
       build_result(race, "1", "Greg", "Tyler", "Corben Huntair")
@@ -492,55 +492,55 @@ module Results
       build_result(race, "3", "Chris", "Cook", "river City/Team Oregon")
       build_result(race, "4", "Noel", "Johnson")
       build_result(race, "5", "Kendal", "Kuhar", "Presto Velo/Bike & Hike")
-    
+
       expected_races << race
-    
+
       race = Race.new(:category => Category.new(:name => "Masters 35+"))
 
       build_result(race, "1", "David", "Zimbleman", "Excell Sports")
       build_result(race, "2", "Bruce", "Connelly", "Logie Velo")
       build_result(race, "3", "Mike", "Mauch", "Coben Huntair")
-    
+
       expected_races << race
-    
+
       race = Race.new(:category => Category.new(:name => "Pro 1/2"))
 
       build_result(race, "1", "Erik", "Tonkin", "Team S&M")
       build_result(race, "2", "Barry", "Wicks", "Kona")
       build_result(race, "3", "Billy", "Truelove", "EWEB Windpower")
-    
+
       expected_races << race
-    
+
       race = Race.new(:category => Category.new(:name => "Cat 4/5"))
 
       build_result(race, "1", "Hans", "Dyhrman")
       build_result(race, "2", "Shaun", "McLeod", "Half Fast Velo")
       build_result(race, "3", "Rob", "Dengel", "River City")
-    
+
       expected_races << race
-    
+
       race = Race.new(:category => Category.new(:name => "Women Category 1,2,3"))
 
       build_result(race, "1", "Kerry", "Rohan", "Compass Commercial")
       build_result(race, "2", "Suzanne", "King", "Compass Commercial")
       build_result(race, "3", "Colleen", "McClenahan", "Sorella Forte")
-    
+
       expected_races << race
-    
+
       race = Race.new(:category => Category.new(:name => "Women Category 4"))
 
       build_result(race, "1", "Martha", "Brown")
       build_result(race, "2", "Debbie", "Krichko")
       build_result(race, "3", "Joan", "Jasper", "Sorella Forte")
-    
+
       expected_races << race
-    
+
       return expected_races
     end
-  
+
     def get_expected_races
       races = []
-    
+
       race = Race.new(:category => Category.new(:name => "Senior Men Pro 1/2/3"))
       race.results << Result.new(:place => "1", :first_name => "Evan", :last_name => "Elken", :number =>"154", :license =>"999999999", :team_name =>"Jittery Joe's", :points => "23.0")
       if RacingAssociation.current.sanctioning_organizations.include?("USA Cycling")
@@ -596,7 +596,7 @@ module Results
       race.results << Result.new(:place => "DQ", :first_name => "Chris", :last_name => "Alling", :number =>"168", :team_name =>"Columbia River Velo")
       race.results << Result.new(:place => "DNS", :first_name => "Dickie", :last_name => "Mallison", :number =>"140", :team_name =>"Guinness Cycling")
       races << race
-    
+
       race = Race.new(:category => Category.new(:name => "Senior Men 3/4"))
       race.results << Result.new(:place => "1", :first_name => "Chuck", :last_name => "Sowers", :number =>"404", :team_name =>"Huntair", :points => "18.0")
       race.results << Result.new(:place => "2", :first_name => "Jason", :last_name => "Pfeifer", :number =>"C02", :team_name =>"Bike n Hike/Giant/Presto Velo", :points => "17.0")
@@ -636,7 +636,7 @@ module Results
       race.results << Result.new(:place => "DNF", :first_name => "Mikkel", :last_name => "Andersen", :number =>"C32", :team_name =>"NoMad Sports Club")
       race.results << Result.new(:place => "DNF", :first_name => "R. Jim", :last_name => "Moore", :number =>"C85")
       races << race
-    
+
       race = Race.new(:category => Category.new(:name => "Senior Men 4/5"))
       race.results << Result.new(:place => "1", :first_name => "Richard", :last_name => "Suditu", :number =>"909", :team_name =>"BBC", :points => "16.0")
       race.results << Result.new(:place => "2", :first_name => "John", :last_name => "Gleaves", :number =>"886", :team_name =>"BBC", :points => "13.0")
@@ -660,10 +660,10 @@ module Results
       race.results << Result.new(:place => "DNF", :first_name => "Kallen", :last_name => "Dewey", :number =>"X53", :team_name =>"BBC")
       race.results << Result.new(:place => "DNF", :first_name => "Eric", :last_name => "Aleskus", :number =>"636")
       races << race
-    
+
       races
     end
-  
+
     def test_import_excel_usac_format
       RacingAssociation.current.usac_results_format = true
       event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2008, 5, 11))
@@ -718,7 +718,7 @@ module Results
       results_file.import
       assert_equal('Field Size: 40 riders, 40 Laps, Sunny, cool, 40K', event.races(true).first.notes, 'Race notes')
     end
-    
+
     def test_race_notes_usac
       RacingAssociation.current.usac_results_format = true
       event = SingleDayEvent.create!
@@ -726,7 +726,7 @@ module Results
       results_file.import
       assert_equal('USCF, 2008, 563, 2012-05-11, Stage Race', event.races(true).first.notes, 'Race notes')
     end
-  
+
     def build_result(race, place, first_name = nil, last_name = nil, team_name = nil)
       person = nil
       if first_name != nil && last_name != nil
@@ -744,7 +744,7 @@ module Results
       result.team = team
       race.results << result
     end
-  
+
     def assert_import(event)
       assert_not_nil(event)
       assert_equal("Camas Road Race", event.name, "name")
@@ -768,7 +768,7 @@ module Results
         end
       end
     end
-  
+
     def assert_columns(expected_fields, actual_columns)
       expected_fields.each_with_index do |field, index|
         if actual_columns[index].field

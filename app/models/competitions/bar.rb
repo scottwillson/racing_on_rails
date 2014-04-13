@@ -3,19 +3,19 @@
 # Also calculates a team BAR.
 # Recalculating the BAR at years-end can take nearly 30 minutes even on a fast server. Recalculation must be manually triggered.
 # This class implements a number of OBRA-specific rules and should be generalized and simplified.
-# The BAR categories and disciplines are all configured in the database. Race categories need to have a bar_category_id to 
+# The BAR categories and disciplines are all configured in the database. Race categories need to have a bar_category_id to
 # show up in the BAR; disciplines must exist in the disciplines table and discipline_bar_categories.
 class Bar < Competition
   include Concerns::Bar::Categories
   include Concerns::Bar::Discipline
   include Concerns::Competition::CalculatorAdapter
-  
+
   def self.calculate!(year = Time.zone.today.year)
     benchmark(name, :level => :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
-        
+
         overall_bar = OverallBar.find_or_create_for_year(year)
         overall_bar.set_date
 
@@ -46,7 +46,7 @@ class Bar < Competition
     # Don't return the entire populated instance!
     true
   end
-  
+
   def self.find_by_year_and_discipline(year, discipline_name)
     Bar.where(:date => Time.zone.local(year).to_date, :discipline => discipline_name).first
   end
@@ -66,7 +66,7 @@ class Bar < Competition
   # Example: Senior Men BAR, 130th, Jon Knowlson, 45 points
   #
   # BAR results add scoring results as scores
-  # Example: 
+  # Example:
   # Senior Men BAR, 130th, Jon Knowlson, 18 points
   #  - Piece of Cake RR, 6th, Jon Knowlson 10 points
   #  - Silverton RR, 8th, Jon Knowlson 8 points
@@ -77,7 +77,7 @@ class Bar < Competition
   def source_results(race)
     query = Result.
       select([
-        "results.id as id", "person_id as participant_id", "people.member_from", "people.member_to", "place", "results.event_id", "race_id", "events.date", "results.year", 
+        "results.id as id", "person_id as participant_id", "people.member_from", "people.member_to", "place", "results.event_id", "race_id", "events.date", "results.year",
         "coalesce(races.bar_points, events.bar_points, parents_events.bar_points, parents_events_2.bar_points) as multiplier"
       ]).
       joins(:race => :event).
@@ -91,7 +91,7 @@ class Bar < Competition
       where("events.sanctioned_by" => RacingAssociation.current.default_sanctioned_by).
       where("events.discipline in (:disciplines)
             or (events.discipline is null and parents_events.discipline in (:disciplines))
-            or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (:disciplines))", 
+            or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (:disciplines))",
             :disciplines => disciplines_for(race)).
       where("coalesce(races.bar_points, events.bar_points, parents_events.bar_points, parents_events_2.bar_points) > 0").
       where("results.year = ?", year).
@@ -99,7 +99,7 @@ class Bar < Competition
 
     Result.connection.select_all query
   end
-  
+
   def source_event_types
     %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries TaborOverall }
   end

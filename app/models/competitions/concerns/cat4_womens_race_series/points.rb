@@ -17,9 +17,9 @@ module Concerns
           event_ids = source_events.collect(&:id)
           place = source_result.place.to_i
 
-          if event_ids.include?(source_result.event_id) || 
-             (source_result.event.parent_id && 
-              event_ids.include?(source_result.event.parent_id) && 
+          if event_ids.include?(source_result.event_id) ||
+             (source_result.event.parent_id &&
+              event_ids.include?(source_result.event.parent_id) &&
               source_result.event.parent.races.none? { |race| cat_4_categories.include?(race.category) })
             if place >= point_schedule.size
               return 25
@@ -34,7 +34,7 @@ module Concerns
           event_ids = source_events.collect(&:id)
           place = source_result.place.to_i
 
-          if (event_ids.include?(source_result.event_id) || 
+          if (event_ids.include?(source_result.event_id) ||
               (source_result.event.parent_id && event_ids.include?(source_result.event.parent_id) && source_result.event.parent.races.none?)) &&
                place < point_schedule.size
             return point_schedule[source_result.place.to_i] || 0

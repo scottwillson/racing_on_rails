@@ -34,7 +34,7 @@ class Concerns::Cat4WomensRaceSeries::PointsTest < Ruby::TestCase
     result = stub("result", :place => "", :event_id => 1, :race => stub("race", :event => source_event))
     assert_equal 15, series.points_for(result), "points for result"
   end
-  
+
   def test_points_for
     source_event = stub("SingleDayEvent", :id => 1)
     series = stub("Cat4WomensRaceSeries", :source_events => [ source_event ], :association_point_schedule => nil)
@@ -65,7 +65,7 @@ class Concerns::Cat4WomensRaceSeries::PointsTest < Ruby::TestCase
     result = stub("result", :place => "", :event_id => 1, :race => stub("race", :event => source_event))
     assert_equal 0, series.points_for(result), "points for result"
   end
-  
+
   def test_points_for_non_source_event
     source_event = stub("SingleDayEvent", :id => 1)
     series = stub("Cat4WomensRaceSeries", :source_events => [ source_event ], :association_point_schedule => nil)
@@ -73,14 +73,14 @@ class Concerns::Cat4WomensRaceSeries::PointsTest < Ruby::TestCase
     series.extend ::Concerns::Cat4WomensRaceSeries::Points
 
     non_source_event = stub("SingleDayEvent", :id => 2, :parent_id => nil)
-    
+
     result = stub("result", :place => "1", :event_id => 2, :event => non_source_event, :race => stub("race", :event => non_source_event))
     assert_equal 15, series.points_for(result), "points for result"
 
     result = stub("result", :place => "100", :event_id => 2, :event => non_source_event, :race => stub("race", :event => non_source_event))
     assert_equal 15, series.points_for(result), "points for result"
   end
-  
+
   def test_points_for_non_source_event_no_participation_points
     source_event = stub("SingleDayEvent", :id => 1)
     series = stub("Cat4WomensRaceSeries", :source_events => [ source_event ], :association_point_schedule => nil)
@@ -88,7 +88,7 @@ class Concerns::Cat4WomensRaceSeries::PointsTest < Ruby::TestCase
     series.extend ::Concerns::Cat4WomensRaceSeries::Points
 
     non_source_event = stub("SingleDayEvent", :id => 2, :parent_id => nil)
-    
+
     result = stub("result", :place => "1", :event_id => 2, :event => non_source_event, :race => stub("race", :event => non_source_event))
     assert_equal 0, series.points_for(result), "points for result"
 

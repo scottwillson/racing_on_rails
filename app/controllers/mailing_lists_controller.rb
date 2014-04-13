@@ -6,7 +6,7 @@ class MailingListsController < ApplicationController
   def confirm
     @mailing_list = MailingList.find(params[:mailing_list_id])
   end
-  
+
   def confirm_private_reply
     @mailing_list = MailingList.find(params[:mailing_list_id])
   end

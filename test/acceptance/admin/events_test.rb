@@ -19,7 +19,7 @@ class EventsTest < AcceptanceTest
     fill_in "event_name", :with => "Sausalito Criterium"
     click_button "Save"
     assert_page_has_content "Created Sausalito Criterium"
-    
+
     visit "/admin/events"
     assert_page_has_content "Sausalito Criterium"
     click_link "Sausalito Criterium"
@@ -99,19 +99,19 @@ class EventsTest < AcceptanceTest
 
     assert_equal "", find("#event_team_id", :visible => false).value
     assert_equal "", find("#team_auto_complete").value
-    
+
     fill_in "Date", :with => "Nov 13, 2013"
     click_button "Save"
-    
+
     event = Event.order(:updated_at).last
-    
+
     assert_equal "Wednesday, November 13, 2013", find("#event_human_date").value
     assert_equal Time.zone.local(2013, 11, 13).to_date, event.reload.date, "date should be updated in DB"
-    
+
     find("#event_human_date_picker").click
     first(".datepicker-days td.day.old", :text => "31").click
     click_button "Save"
-    
+
     assert_equal "Thursday, October 31, 2013", find("#event_human_date").value
     assert_equal Time.zone.local(2013, 10, 31).to_date, event.reload.date, "date should be updated in DB"
 
@@ -158,12 +158,12 @@ class EventsTest < AcceptanceTest
     visit "/admin/events/#{kings_valley.id}/edit"
     assert_page_has_content "Fancy New Child Event"
   end
-  
+
   def test_lost_children
     login_as FactoryGirl.create(:administrator)
     FactoryGirl.create(:series, :name => "PIR")
     event = FactoryGirl.create(:event, :name => "PIR")
-    
+
     visit "/admin/events/#{event.id}/edit"
     assert_page_has_content "has no parent"
     click_link "set_parent"

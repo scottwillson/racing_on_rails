@@ -40,13 +40,13 @@ class OregonWomensPrestigeTeamSeriesTest < ActiveSupport::TestCase
     FactoryGirl.create(:result, :race => race_event_2_women_123, :place => 25,  :team => team_2)
     FactoryGirl.create(:result, :race => race_event_2_women_123, :place => 100, :team => team_3)
     FactoryGirl.create(:result, :race => race_event_2_women_123, :place => 5,   :team => team_1)
-    
+
     # Too low a place to score
     FactoryGirl.create(:result, :race => race_event_2_women_4, :place => 101, :team => team_1)
-    
+
     # Not a series category
     FactoryGirl.create(:result, :race => race_event_1_senior_men, :place => 4, :team => team_2)
-    
+
     # Not a series event
     FactoryGirl.create(:result, :place => 2, :team => team_3)
 

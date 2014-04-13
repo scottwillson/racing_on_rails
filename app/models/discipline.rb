@@ -3,13 +3,13 @@
 class Discipline < ActiveRecord::Base
   has_many :discipline_aliases
   has_and_belongs_to_many :bar_categories, :class_name => "Category", :join_table => "discipline_bar_categories"
-  
+
   NONE = Discipline.new(:name => "").freeze unless defined?(NONE)
   @@all_aliases = nil
   @@names = nil
-  
+
   scope :numbers, -> { where(:numbers => true) }
-  
+
   # Look up Discipline by name or alias. Caches Disciplines in memory
   def self.[](name)
     return nil unless name
@@ -39,17 +39,17 @@ class Discipline < ActiveRecord::Base
       @@all_aliases[discipline.name.gsub(' ', '_').underscore.to_sym] = discipline
     end
   end
-  
+
   # Clear out cached @@aliases
   def self.reset
     @@all_aliases = nil
     @@names = nil
   end
-  
+
   def self.names
     @@names ||= Discipline.all.map(&:name)
   end
-  
+
   def names
     case name
     when "Road"
@@ -67,7 +67,7 @@ class Discipline < ActiveRecord::Base
 
   def <=>(other)
     name <=> other.name
-  end  
+  end
 
   def to_s
     "<#{self.class} #{id} #{name}>"

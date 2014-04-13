@@ -8,16 +8,16 @@ module Concerns
           name.underscore.humanize.titleize
         end
       end
-      
+
       def default_name
         "Untitled"
       end
-  
+
       # Parent's name. Own name if no parent
       def parent_event_name
         parent.try(:name) || name
       end
-  
+
       def name_with_date
         "#{name} (#{short_date})"
       end
@@ -38,7 +38,7 @@ module Concerns
           "#{parent.full_name}: #{name}"
         end
       end
-  
+
       def friendly_class_name
         self.class.friendly_class_name
       end

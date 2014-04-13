@@ -16,7 +16,7 @@ module Export
       `rm *.csv` if Dir.glob("*.csv").present?
     end
   end
-  
+
   module Base
     private
 

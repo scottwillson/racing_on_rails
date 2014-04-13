@@ -1,10 +1,10 @@
 module ResultsHelper
   # TODO Move to module in Race?
   # Order is significant
-  RESULT_COLUMNS = %W{ 
-    place number name team_name age city age_group category_class category_name points_bonus points_bonus_penalty 
-    points_from_place points_penalty points_total time_bonus_penalty time_gap_to_leader time_gap_to_previous 
-    time_gap_to_winner points laps time time_total notes 
+  RESULT_COLUMNS = %W{
+    place number name team_name age city age_group category_class category_name points_bonus points_bonus_penalty
+    points_from_place points_penalty points_total time_bonus_penalty time_gap_to_leader time_gap_to_previous
+    time_gap_to_winner points laps time time_total notes
   }.freeze
 
   # results for pagination
@@ -13,7 +13,7 @@ module ResultsHelper
 
     table = Tabular::Table.new
     table.metadata[:mobile_request] = mobile_request?
-    
+
     if mobile_request?
       if race.event.respond_to?(:team?) && race.event.team?
         table.row_mapper = RacingOnRails::Tabular::Mapper.new(%w{ place team_name points})
@@ -22,8 +22,8 @@ module ResultsHelper
       end
     else
       table.row_mapper = RacingOnRails::Tabular::Mapper.new(
-                           %W{ place number name team_name }, 
-                           race.try(:custom_columns), 
+                           %W{ place number name team_name },
+                           race.try(:custom_columns),
                            RESULT_COLUMNS - %W{ place name team_name }
                          )
     end
@@ -33,7 +33,7 @@ module ResultsHelper
     else
       table.rows = race.results.sort
     end
-    
+
     table.delete_blank_columns!
     table.delete_homogenous_columns!(:except => [ :place, :number, :time, :laps ])
 
@@ -135,7 +135,7 @@ module ResultsHelper
     table.renderers[:points_total] = Renderers::PointsRenderer
 
     table.columns << :bar
-    
+
     render "admin/races/results", :results_table_for_race => table, :race => race, :css_class => "results"
   end
 end

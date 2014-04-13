@@ -14,9 +14,9 @@ class EventsController < ApplicationController
       format.xml { render :xml => events_for_api(params[:year]).to_xml }
     end
   end
-  
+
   private
-  
+
   def events_for_api(year)
     if year.blank?
       year = RacingAssociation.current.effective_year

@@ -18,21 +18,21 @@ class RacingAssociation < ActiveRecord::Base
   serialize :competitions
   serialize :membership_email
   serialize :sanctioning_organizations
-  
+
   default_value_for :administrator_tabs do
-    Set.new([ 
-      :schedule, :first_aid, :people, :teams, :velodromes, :categories, :cat4_womens_race_series, :article_categories, :articles, :pages 
+    Set.new([
+      :schedule, :first_aid, :people, :teams, :velodromes, :categories, :cat4_womens_race_series, :article_categories, :articles, :pages
     ])
   end
-  
+
   default_value_for :cat4_womens_race_series_category do
     Category.find_or_create_by(:name => "Category 4 Women")
   end
-  
+
   default_value_for :competitions do
     Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
   end
-  
+
   # String
   default_value_for :default_sanctioned_by do |r|
     r.short_name
@@ -41,11 +41,11 @@ class RacingAssociation < ActiveRecord::Base
   default_value_for :membership_email do |r|
     r.email
   end
-  
+
   default_value_for :sanctioning_organizations do
     [ "FIAC", "CBRA", "UCI", "USA Cycling" ]
   end
-  
+
   def self.current
     @current ||= RacingAssociation.first || RacingAssociation.create
   end
@@ -53,26 +53,26 @@ class RacingAssociation < ActiveRecord::Base
   def self.current=(value)
     @current = value
   end
-  
+
   # Person record for RacingAssociation
   def person
     @person ||= Person.find_or_create_by(:name => short_name)
   end
-  
+
   def person_id
     @person_id ||= person.id
   end
-  
+
   # Returns now.beginning_of_day, which is the same as Time.zone.today
   def today
     Time.zone.now.to_date
   end
-  
+
   # Returns now.year, which is the same as Time.zone.today.
   def year
     Time.zone.now.year
   end
-  
+
   # "Membership year." Used for race number export, schedule, and renewals. Returns current year until December.
   # On and after December 15, returns the next year.
   def effective_year
@@ -91,10 +91,10 @@ class RacingAssociation < ActiveRecord::Base
         return Time.zone.now.year + 1
       end
     end
-    
+
     Time.zone.now.year
   end
-  
+
   def effective_today
     if effective_year == Time.zone.now.year
       Time.zone.today
@@ -102,11 +102,11 @@ class RacingAssociation < ActiveRecord::Base
       Time.zone.local(effective_year).beginning_of_year.to_date
     end
   end
-  
+
   def effective_year_range
     RacingAssociation.current.effective_today.beginning_of_year..RacingAssociation.current.effective_today.end_of_year
   end
-  
+
   # Time.zone.today.year + 1
   def next_year
     if effective_year == Time.zone.now.year
@@ -115,15 +115,15 @@ class RacingAssociation < ActiveRecord::Base
       effective_year
     end
   end
-  
+
   def cyclocross_season?
     RacingAssociation.current.today >= cyclocross_season_start.to_date && RacingAssociation.current.today <= cyclocross_season_end.to_date
   end
-  
+
   def cyclocross_season_start
     Time.zone.local(Time.zone.now.year, 8, 30).beginning_of_day
   end
-  
+
   def cyclocross_season_end
     Time.zone.local(Time.zone.now.year, 12, 15).end_of_day
   end
@@ -145,7 +145,7 @@ class RacingAssociation < ActiveRecord::Base
       self.rental_numbers_end = value.last
     end
   end
-  
+
   def number_issuer
     NumberIssuer.where(:name => short_name).first
   end

@@ -14,7 +14,7 @@ module TabsHelper
 
   class Tabs
     attr_reader :active_text, :tabs, :window
-    
+
     def initialize(active_text, window)
       @active_text = active_text.to_s
       @tabs = []
@@ -24,11 +24,11 @@ module TabsHelper
     def add(text, path)
       @tabs << Tab.new(text.to_s, path, active_text)
     end
-    
+
     def each(&block)
       tabs.each(&block)
     end
-    
+
     def tabs
       if window
         if @tabs.size <= window
@@ -47,24 +47,24 @@ module TabsHelper
         @tabs
       end
     end
-    
+
     def many?
       @tabs.many?
     end
   end
-  
+
   class Tab
     attr_reader :text, :path
 
     def initialize(text, path, active_text)
       @text = text.to_s
       @path = path
-      
+
       if text && active_text && (text == active_text)
         @active = true
       end
     end
-    
+
     def active?
       @active == true
     end

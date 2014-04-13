@@ -5,7 +5,7 @@ module Admin
   module Events
     class NewControllerTest < ActionController::TestCase
       tests EventsController
-      
+
       def setup
         super
         create_administrator_session
@@ -35,7 +35,7 @@ module Admin
           assert_equal 2009, assigns[:event].date.year, "Should set year"
         end
       end
-  
+
       def test_new_child_event
         parent = SingleDayEvent.create!
         get(:new, :event => { :parent_id => parent.to_param, :type => "Event" })

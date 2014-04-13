@@ -17,15 +17,15 @@ class Concerns::Event::DatesTest < Ruby::TestCase
     event = TestEvent.new
 
     event.date = Date.new(2006, 9, 9)
-    assert_equal(' 9/9 ', event.short_date, 'Short date')    
+    assert_equal(' 9/9 ', event.short_date, 'Short date')
 
     event.date = Date.new(2006, 9, 10)
-    assert_equal(' 9/10', event.short_date, 'Short date')    
+    assert_equal(' 9/10', event.short_date, 'Short date')
 
     event.date = Date.new(2006, 10, 9)
-    assert_equal('10/9 ', event.short_date, 'Short date')    
+    assert_equal('10/9 ', event.short_date, 'Short date')
 
     event.date = Date.new(2006, 10, 10)
-    assert_equal('10/10', event.short_date, 'Short date')    
+    assert_equal('10/10', event.short_date, 'Short date')
   end
 end

@@ -1,7 +1,7 @@
 class PersonSessionsController < ApplicationController
   force_https
   before_filter :require_current_person, :only => :show
-  
+
   def new
     if current_person
       return render(:show)
@@ -9,7 +9,7 @@ class PersonSessionsController < ApplicationController
       @person_session = PersonSession.new
     end
   end
-  
+
   def create
     @person_session = PersonSession.new(params[:person_session])
     @person_session.remember_me = true
@@ -24,7 +24,7 @@ class PersonSessionsController < ApplicationController
       render :new
     end
   end
-  
+
   def destroy
     session[:return_to] = nil
     current_person_session.destroy if current_person_session

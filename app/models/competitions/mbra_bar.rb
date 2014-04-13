@@ -1,6 +1,6 @@
 # MBRA Best All-around Rider Competition.
 # Calculates a BAR for each Discipline
-# The BAR categories and disciplines are all configured in the databsase. Race categories need to have a bar_category_id to 
+# The BAR categories and disciplines are all configured in the databsase. Race categories need to have a bar_category_id to
 # show up in the BAR; disciplines must exist in the disciplines table and discipline_bar_categories.
 #
 # This class implements a number of MBRA-specific rules.
@@ -40,11 +40,11 @@ class MbraBar < Competition
     # Don't return the entire populated instance!
     true
   end
-  
+
   def self.find_by_year_and_discipline(year, discipline_name)
     MbraBar.year(year).where(:discipline => discipline_name).first
   end
-  
+
   def calculate_threshold_number_of_races
     # 70% of the races (rounded to the nearest whole number) count in the BAR standings.
     @threshold_number_of_races = (Event.find_all_bar_for_discipline(self.discipline, self.date.year).size * 0.7).round.to_i
@@ -54,7 +54,7 @@ class MbraBar < Competition
     @point_schedule = @point_schedule || []
   end
 
-  # Riders obtain points inversely proportional to the starting field size, 
+  # Riders obtain points inversely proportional to the starting field size,
   # plus bonuses for first, second and third place (6, 3, and 1 points respectively).
   # DNF: 1/2  point
   def calculate_point_schedule(field_size)
@@ -72,7 +72,7 @@ class MbraBar < Competition
   # Example: Senior Men BAR, 130th, Jon Knowlson, 45 points
   #
   # BAR results add scoring results as scores
-  # Example: 
+  # Example:
   # Senior Men BAR, 130th, Jon Knowlson, 18 points
   #  - Piece of Cake RR, 6th, Jon Knowlson 10 points
   #  - Silverton RR, 8th, Jon Knowlson 8 points
@@ -113,7 +113,7 @@ class MbraBar < Competition
     }
     points
   end
-  
+
   def after_create_competition_results_for(race)
     # 70% of the races (rounded to the nearest whole number) count in the
     # individual series standings. Riders who compete in more than 70% of the
@@ -152,7 +152,7 @@ class MbraBar < Competition
           upgrade_note = "Point total includes #{upgrade_points} upgrade points."
           if up_result.notes.blank?
             up_result.notes = upgrade_note
-          else  
+          else
             up_result.notes += " #{upgrade_note}"
           end
           up_result.save!

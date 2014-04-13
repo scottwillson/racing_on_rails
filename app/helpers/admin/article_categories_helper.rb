@@ -1,7 +1,7 @@
 # HTML chunks for ArticleCategories UL tree
 module Admin::ArticleCategoriesHelper
   def display_categories(categories, parent_id)
-    ret = "<ul>" 
+    ret = "<ul>"
       for category in categories
         if category.parent_id == nil
       	  category.parent_id = 0
@@ -9,7 +9,7 @@ module Admin::ArticleCategoriesHelper
           ret << display_category(category)
         end
       end
-    ret << "</ul>" 
+    ret << "</ul>"
     ret.html_safe
   end
 
@@ -18,7 +18,7 @@ module Admin::ArticleCategoriesHelper
     ret << link_to(h(category.name), :action => "edit", :id => category)
     ret << " - " << h(category.description)
     ret << display_categories(category.children, category.id) if category.children.any?
-    ret << "</li>" 
+    ret << "</li>"
     ret.html_safe
   end
 
@@ -44,7 +44,7 @@ module Admin::ArticleCategoriesHelper
         # with article_categories it is parent_id
         if model == "article"
           html << ' selected="selected"' if cat.id == selected.article_category_id
-        else  
+        else
           html << ' selected="selected"' if cat.id == selected.parent_id
         end
         html << ">#{cat.name}</option>\n"

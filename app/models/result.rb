@@ -29,7 +29,7 @@ class Result < ActiveRecord::Base
   include Concerns::Result::Comparison
   include Concerns::Result::Time
   include Export::Results
-  
+
   serialize :custom_attributes, Hash
 
   before_save :find_associated_records
@@ -67,7 +67,7 @@ class Result < ActiveRecord::Base
   # Replace any new +person+, or +team+ with one that already exists if name matches
   def find_associated_records
     return true if competition_result?
-    
+
     _person = person
     if _person && _person.new_record?
       if _person.name.blank?
@@ -83,7 +83,7 @@ class Result < ActiveRecord::Base
     end
 
     # This logic should be in Person
-    if person && 
+    if person &&
        RacingAssociation.current.add_members_from_results? &&
        person.new_record? &&
        person.first_name.present? &&
@@ -116,13 +116,13 @@ class Result < ActiveRecord::Base
   # Need Event to match on race number. Event will not be set before result is saved to database
   def find_people(_event = event)
     matches = Set.new
-    
+
     #license first if present and source is reliable (USAC)
     if RacingAssociation.current.eager_match_on_license? && license.present?
       matches = matches + Person.where(:license => license)
       return matches if matches.size == 1
     end
-    
+
     # name
     matches = matches + Person.find_all_by_name_or_alias(:first_name => first_name, :last_name => last_name)
     return matches if matches.size == 1
@@ -165,7 +165,7 @@ class Result < ActiveRecord::Base
   # FIXME optimize default number issuer business
   def update_person_number
     return true if competition_result?
-    
+
     discipline = Discipline[event.discipline]
     default_number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name)
     if person && event.number_issuer && event.number_issuer != default_number_issuer && number.present? && !RaceNumber.rental?(number, discipline)
@@ -184,7 +184,7 @@ class Result < ActiveRecord::Base
     end
     true
   end
-  
+
   # Cache expensive cross-table lookups
   def cache_non_event_attributes
     self[:category_name] = category.try(:name)
@@ -195,7 +195,7 @@ class Result < ActiveRecord::Base
     self[:team_member]   = team ? team.member_in_year?(date) : false
     true
   end
-  
+
   def cache_event_attributes
     self[:competition_result]      = calculate_competition_result
     self[:date]                    = event.date
@@ -218,7 +218,7 @@ class Result < ActiveRecord::Base
     save!
     event.enable_notification!
   end
-  
+
   def ensure_custom_attributes
     if race_id && race.custom_columns && !custom_attributes
       self.custom_attributes = Hash.new
@@ -236,7 +236,7 @@ class Result < ActiveRecord::Base
     end
     self[:custom_attributes] = symbolized_hash
   end
-  
+
   # Destroy People that only exist because they were created by importing results
   def destroy_people
     if person && person.results.count == 0 && person.created_from_result? && !person.updated_after_created?
@@ -257,7 +257,7 @@ class Result < ActiveRecord::Base
       errors.add(:first_name, "and last name cannot both be blank")
     end
   end
-  
+
   def update_points!
     calculate_points
     if points_changed?
@@ -298,7 +298,7 @@ class Result < ActiveRecord::Base
       self[:team_competition_result] ||= (event.is_a?(TeamBar) || event.is_a?(CrossCrusadeTeamCompetition) || event.is_a?(MbraTeamBar))
     end
   end
-  
+
   # TODO Cache this, too
   def team_size
     if race_id
@@ -437,7 +437,7 @@ class Result < ActiveRecord::Base
     end
     self[:team_name] = value
   end
-  
+
   def custom_attribute(sym)
     _sym = sym.to_sym
     if custom_attributes && custom_attributes.has_key?(_sym)

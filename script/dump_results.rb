@@ -8,19 +8,19 @@ CSV.open("results.csv", "w") do |csv|
   Result.find_each do |result|
     index = index + 1
     putc(".") if index % interval == 0
-    csv << [ 
-      result.id, 
-      result.event_id, 
-      result.event.name, 
-      result.event.city, 
-      result.event.state, 
-      result.event.date, 
-      result.race_id, 
-      result.race_name, 
-      result.person_id, 
-      result.name, 
-      result.team_id, 
-      result.team_name, 
+    csv << [
+      result.id,
+      result.event_id,
+      result.event.name,
+      result.event.city,
+      result.event.state,
+      result.event.date,
+      result.race_id,
+      result.race_name,
+      result.person_id,
+      result.name,
+      result.team_id,
+      result.team_name,
       result.place,
       result.points,
       result.number,

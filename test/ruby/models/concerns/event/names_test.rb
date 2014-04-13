@@ -10,9 +10,9 @@ class Concerns::Event::NamesTest < Ruby::TestCase
 
     include Concerns::Event::Dates
     include Concerns::Event::Names
-    
+
     attr_accessor :date, :name, :children, :parent, :parent_id
-    
+
     def initialize(attributes)
       self.date = attributes[:date]
       self.name = attributes[:name]
@@ -27,7 +27,7 @@ class Concerns::Event::NamesTest < Ruby::TestCase
   def test_full_name
     event = TestEvent.new(:name => 'Reheers')
     assert_equal('Reheers', event.full_name, 'full_name')
-    
+
     series = TestEvent.new(:name => 'Bend TT Series')
     series_event = TestEvent.new(:name => 'Bend TT Series', :date => Date.new(2009, 4, 19), :parent => series)
     assert_equal('Bend TT Series', series_event.full_name, 'full_name when series name is same as event')
@@ -47,11 +47,11 @@ class Concerns::Event::NamesTest < Ruby::TestCase
     stage = TestEvent.new(:name => "Frozen Flatlands Time Trial", :parent => stage_race)
     assert_equal('Frozen Flatlands Omnium: Frozen Flatlands Time Trial', stage.full_name, 'stage race results full_name')
   end
-  
+
   def test_full_name_with_date
     event = TestEvent.new(:name => 'Reheers', :date => Date.new(2010, 1, 2))
     assert_equal('Reheers (1/2)', event.full_name_with_date, 'full_name')
-    
+
     series = TestEvent.new(:name => 'Bend TT Series', :date => Date.new(2009, 4, 19))
     series_event = TestEvent.new(:name => 'Bend TT Series', :date => Date.new(2009, 4, 19), :parent => series)
     assert_equal('Bend TT Series (4/19)', series_event.full_name_with_date, 'full_name when series name is same as event')

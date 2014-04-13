@@ -3,12 +3,12 @@ require File.expand_path("../../../test_helper", __FILE__)
 # :stopdoc:
 class ResultTest < ActiveSupport::TestCase
   setup :number_issuer
-  
+
   def number_issuer
     FactoryGirl.create(:number_issuer)
     FactoryGirl.create(:discipline)
   end
-  
+
   def test_person_first_last_name
     result = Result.new
     assert_equal(nil, result.first_name, "Person first name w/nil person")
@@ -50,7 +50,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal "Marjon", result[:first_name], ":first_name"
     assert_equal "Walrod", result[:last_name], ":last_name"
     assert_equal "Walrod, Marjon", result[:name], ":name"
-    
+
     result.save!
     assert_equal "Marjon", result[:first_name], ":first_name"
     assert_equal "Walrod", result[:last_name], ":last_name"
@@ -122,7 +122,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal("CSC", result.team_name, "person.team_name")
     assert_equal("CSC", result.team.name, "person.team")
     assert_equal("CSC", result[:team_name], "person.team_name")
-    
+
     result.save!
     assert_equal("CSC", result[:team_name], "person.team_name")
   end
@@ -333,7 +333,7 @@ class ResultTest < ActiveSupport::TestCase
     FactoryGirl.create(:result, :person => molly)
     FactoryGirl.create(:result, :person => molly)
     FactoryGirl.create(:result, :person => molly)
-    
+
     results = Result.find_all_for(molly)
     assert_not_nil(results)
     assert_equal(3, results.size, 'Results')
@@ -416,7 +416,7 @@ class ResultTest < ActiveSupport::TestCase
 
     person = result.person
     person.reload
-    
+
     if RacingAssociation.current.add_members_from_results?
       assert(person.member?, "Finisher with racing association number should be member")
     else
@@ -497,7 +497,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_not_nil(Person.find_by_name("Phil Anderson"), "Should keep person that was manually entered")
     assert_not_nil(Team.find_by_name("QuickStep"), "Should keep team that is used by person, even though it was created by a result")
   end
-  
+
   def test_competition_result
     FactoryGirl.create(:discipline, :name => "Team")
     senior_men = FactoryGirl.create(:category, :name => "Senior Men")
@@ -523,7 +523,7 @@ class ResultTest < ActiveSupport::TestCase
     result = TeamBar.create!.races.create!(:category => Category.new(:name => "Team")).results.create!(:category => senior_men)
     assert result.team_competition_result?, "TeamBar competition_result?"
   end
-  
+
   def test_custom_attributes
     banana_belt_1 = FactoryGirl.create(:event)
     senior_men = FactoryGirl.create(:category)

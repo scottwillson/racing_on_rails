@@ -14,7 +14,7 @@ module Admin
         @page = @version.versioned
         render :inline => @version.versioned.body, :layout => "application"
       end
-  
+
       def destroy
         @version = Page::Version.find(params[:id])
         @page = @version.versioned
@@ -22,7 +22,7 @@ module Admin
         flash[:notice] = "Deleted #{@version.versioned.title}"
         redirect_to edit_admin_page_path(@version.versioned)
       end
-  
+
       # Revert to +version+
       def revert
         version = Page::Version.find(params[:id])

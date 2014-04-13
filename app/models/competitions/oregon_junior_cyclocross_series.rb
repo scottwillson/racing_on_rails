@@ -2,15 +2,15 @@ class OregonJuniorCyclocrossSeries < Competition
   def friendly_name
     "Junior Cyclocross Series"
   end
-  
+
   def source_results(race)
     return [] if source_events.empty?
-    
+
     Result.find_by_sql(
-      %Q{ SELECT results.* FROM results  
-          LEFT JOIN races ON races.id = results.race_id 
-          LEFT JOIN categories ON categories.id = races.category_id 
-          LEFT JOIN events ON races.event_id = events.id 
+      %Q{ SELECT results.* FROM results
+          LEFT JOIN races ON races.id = results.race_id
+          LEFT JOIN categories ON categories.id = races.category_id
+          LEFT JOIN events ON races.event_id = events.id
           WHERE events.id in (#{source_events.map(&:id).join(",")})
             and (place > 0 or place is null or place = '')
             and categories.id in (#{category_ids_for(race).join(",")})
@@ -43,15 +43,15 @@ class OregonJuniorCyclocrossSeries < Competition
   def maximum_events(race)
     6
   end
-  
+
   def double_points_for_last_event?
     false
   end
-  
+
   def default_bar_points
     0
   end
-  
+
   def all_year
     false
   end

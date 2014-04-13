@@ -13,7 +13,7 @@ class Page < ActiveRecord::Base
 
   before_validation :set_slug, :set_path, :set_body
   validates_uniqueness_of :path, :message => "'%{value}' has already been taken"
-  
+
   after_create :update_parent
   after_destroy :update_parent
 
@@ -22,13 +22,13 @@ class Page < ActiveRecord::Base
     self.slug = title.downcase.gsub(" ", "_") if slug.blank?
     slug
   end
-  
+
   # Can't reliably set default value for MySQL text field
   def set_body
     self.body = "" unless body
     body
   end
-  
+
   def update_parent
     if parent(true)
       parent.skip_version do
@@ -43,10 +43,10 @@ class Page < ActiveRecord::Base
       page == self || descendants.include?(page)
     }
   end
-  
+
   def depth
     ancestors.size
-  end  
+  end
 
   def to_s
     "#<Page #{id} #{title} #{slug} #{path}>"

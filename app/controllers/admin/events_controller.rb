@@ -6,7 +6,7 @@ module Admin
     before_filter :require_administrator_or_promoter, :only => [ :edit, :update ]
     before_filter :require_administrator, :except => [ :edit, :update ]
     before_filter :assign_disciplines, :only => [ :new, :create, :edit, :update ]
-  
+
     # schedule calendar  with links to admin Event pages
     # === Params
     # * year: (optional) defaults to current year
@@ -29,7 +29,7 @@ module Admin
         @event.promoter = Person.find(params['promoter_id'])
       end
     end
-  
+
     # Show page to create new Event
     # === Params
     # * year: optional
@@ -37,13 +37,13 @@ module Admin
     # * event: Unsaved SingleDayEvent
     def new
       assign_new_event
-    
+
       respond_to do |format|
         format.html { render :edit }
         format.js { render(:update) { |page| page.redirect_to(:action => :new, :event => event_params) } }
       end
     end
-  
+
     # Create new SingleDayEvent
     # === Params
     # * event: Attributes Hash for new event
@@ -62,7 +62,7 @@ module Admin
         render :edit
       end
     end
-  
+
     # Create new MultiDayEvent from 'prototype' SingleDayEvent
     # === Params
     # * id: SingleDayEvent
@@ -74,7 +74,7 @@ module Admin
       expire_cache
       redirect_to(:action => :edit, :id => new_parent.to_param)
     end
-  
+
     # Update existing Event
     # === Params
     # * id
@@ -85,7 +85,7 @@ module Admin
     # * warn
     def update
       @event = Event.find(params[:id])
-      
+
       event_type = params[:event].try(:[], :type)
       if event_type && Event::TYPES.include?(event_type) && @event.type != event_type
         # Rails 3 and strong parameters don't play nice here
@@ -113,7 +113,7 @@ module Admin
       end
     end
 
-    # Upload results from Excel spreadsheet. 
+    # Upload results from Excel spreadsheet.
     # Expects column headers in first row
     # Expects Race names in first column before set of results:
     # Senior Women Category 3
@@ -126,7 +126,7 @@ module Admin
     # * notice
     def upload
       uploaded_file = params[:results_file]
-    
+
       path = "#{Dir.tmpdir}/#{uploaded_file.original_filename}"
       File.open(path, "wb") do |f|
         f.print(uploaded_file.read)
@@ -134,9 +134,9 @@ module Admin
 
       temp_file = File.new(path)
       @event = Event.find(params[:id])
-    
+
       results_file = Results::ResultsFile.new(temp_file, @event)
-    
+
       begin
         results_file.import
       rescue Ole::Storage::FormatError => e
@@ -144,16 +144,16 @@ module Admin
         assign_disciplines
         return render(:edit)
       end
-      
+
       expire_cache
       FileUtils.rm temp_file rescue nil
-    
+
       flash[:notice] = "Imported #{uploaded_file.original_filename}. "
       unless results_file.custom_columns.empty?
         flash[:notice] = flash[:notice] + "Found custom columns: #{results_file.custom_columns.map(&:humanize).join(", ")}. "
         flash[:notice] = flash[:notice] + "(If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)" if RacingAssociation.current.usac_results_format?
       end
-    
+
       if results_file.import_warnings.present?
         flash[:notice] = flash[:notice] + "Import warnings: "
         results_file.import_warnings.each do |warning|
@@ -162,7 +162,7 @@ module Admin
       end
       redirect_to(edit_admin_event_path(@event))
     end
-  
+
     # Upload new Excel Schedule
     # See Schedule::Schedule.import for details
     # Redirects to schedule index if successful
@@ -181,10 +181,10 @@ module Admin
       date = Schedule::Schedule.import(path)
       expire_cache
       flash[:notice] = "Uploaded schedule from #{uploaded_file.original_filename}"
-    
+
       redirect_to(admin_events_path)
     end
-  
+
     # Permanently destroy Event
     # === Params
     # * id
@@ -217,7 +217,7 @@ module Admin
         end
       end
     end
-  
+
     def destroy_races
       respond_to do |format|
         format.js {
@@ -249,23 +249,23 @@ module Admin
       end
       redirect_to(edit_admin_event_path(parent))
     end
-  
+
     protected
-  
+
     def assign_disciplines
       @disciplines = Discipline.names
     end
-  
+
     def assign_event
       @event = Event.find(params[:id])
     end
-  
+
     def assign_new_event
       if params[:event].nil?
         @event = SingleDayEvent.new
         return true
       end
-      
+
       _params = event_params.dup
       event_type = params[:event][:type]
       if event_type.blank?
@@ -275,11 +275,11 @@ module Admin
           event_type = "SingleDayEvent"
         end
       end
-      
+
       unless Event::TYPES.include?(event_type)
         raise "Unknown event type: #{event_type}"
       end
-      
+
       @event = eval(event_type).new(_params)
     end
 
@@ -318,7 +318,7 @@ module Admin
         :flyer_ad_fee,
         :flyer_approved,
         :human_date,
-        :human_registration_ends_on, 
+        :human_registration_ends_on,
         :human_registration_ends_at_time,
         :instructional,
         :ironman,
@@ -336,7 +336,7 @@ module Admin
         :price,
         :prize_list,
         :promoter_id,
-        :promoter_name, 
+        :promoter_name,
         :promoter_pays_registration_fee,
         :refunds,
         :refund_policy,

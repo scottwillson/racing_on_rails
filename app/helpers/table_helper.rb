@@ -1,6 +1,6 @@
 # Build HTML table with standard structure. Wrap caption div + table in div container for consistent captions across browsers.
 # Show "None" if empty content. Add sortable headers.
-# 
+#
 module TableHelper
   # == Arguments
   # * caption
@@ -54,16 +54,16 @@ module TableHelper
 
     render "table/th", locals
   end
-  
+
   # Sort rows in memory based on +sort_by+. Paginated table contents need to be sorted in DB.
   def sort_rows(collection, sort_by, sort_direction)
     return collection if sort_by.blank?
-    
+
      sort_by.split(",").each do |sort_attribute|
       sort_attribute_symbol = sort_attribute.to_sym
       collection.sort! { |x, y| (x.send(sort_attribute_symbol) || "") <=> (y.send(sort_attribute_symbol) || "") }
     end
-      
+
     collection.reverse! if sort_direction == "desc"
     collection
   end

@@ -5,7 +5,7 @@ module Admin
   module People
     class UpdateNameTest < ActionController::TestCase
       tests Admin::PeopleController
-      
+
       def setup
         super
         create_administrator_session
@@ -14,7 +14,7 @@ module Admin
 
       def test_update_name
         molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-        xhr :put, :update_attribute, 
+        xhr :put, :update_attribute,
             :id => molly.to_param,
             :name => "name",
             :value => "Mollie Cameron"
@@ -27,7 +27,7 @@ module Admin
 
       def test_update_same_name
         molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-        xhr :put, :update_attribute, 
+        xhr :put, :update_attribute,
             :id => molly.to_param,
             :name => "name",
             :value => "Molly Cameron"
@@ -41,7 +41,7 @@ module Admin
 
       def test_update_same_name_different_case
         molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-        xhr :put, :update_attribute, 
+        xhr :put, :update_attribute,
             :id => molly.to_param,
             :name => "name",
             :value => "molly cameron"
@@ -57,7 +57,7 @@ module Admin
         # Should ask to merge
         FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
         molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-        xhr :put, :update_attribute, 
+        xhr :put, :update_attribute,
             :id => molly.to_param,
             :name => "name",
             :value => "Erik Tonkin"
@@ -75,7 +75,7 @@ module Admin
         tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
         erik_alias = tonkin.aliases.create!(:name => "Eric Tonkin")
 
-        xhr :put, :update_attribute, 
+        xhr :put, :update_attribute,
             :id => tonkin.to_param,
             :name => "name",
             :value => "Eric Tonkin"
@@ -96,7 +96,7 @@ module Admin
         molly.aliases.create!(:name => "Mollie Cameron")
         assert !Alias.exists?(:name => 'Molly Cameron')
 
-        xhr :put, :update_attribute, 
+        xhr :put, :update_attribute,
             :id => molly.to_param,
             :name => "name",
             :value => "mollie cameron"
@@ -117,7 +117,7 @@ module Admin
         molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
         molly.aliases.create!(:name => "Mollie Cameron")
 
-        xhr :put, :update_attribute, 
+        xhr :put, :update_attribute,
             :id => tonkin.to_param,
             :name => "name",
             :value => "Mollie Cameron"
@@ -134,7 +134,7 @@ module Admin
       def test_update_to_other_person_existing_alias_and_duplicate_names
         FactoryGirl.create(:discipline)
         FactoryGirl.create(:number_issuer)
-        
+
         tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
         # Molly with different road number
         Person.create!(:name => 'Molly Cameron', :road_number => '1009')
@@ -146,7 +146,7 @@ module Admin
         assert_equal 1, Person.where(:first_name => 'Erik', :last_name => 'Tonkin').count, 'Eriks in database'
         assert_equal 1,  Alias.where(:name => 'Mollie Cameron').count, 'Mollie aliases in database'
 
-        xhr :put, :update_attribute, 
+        xhr :put, :update_attribute,
             :id => tonkin.to_param,
             :name => "name",
             :value => "Mollie Cameron"

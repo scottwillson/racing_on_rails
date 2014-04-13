@@ -14,7 +14,7 @@ class EventsControllerTest < ActionController::TestCase
     assert_select ".nav.tabs", :count => 0
     assert_select "a[href=?]", /.*\/admin\/events.*/, :count => 0
   end
-  
+
   def test_index_with_person_id_promoter
     Timecop.freeze(Time.zone.local(2012)) do
       promoter = FactoryGirl.create(:promoter)

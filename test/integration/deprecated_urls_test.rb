@@ -14,10 +14,10 @@ class DeprecatedURLsTest < RacingOnRails::IntegrationTest
     assert_response :success
     assert_template "results/event"
   end
-  
+
   def test_team_results
     team = FactoryGirl.create(:team)
-    
+
     get "/teams/#{team.id}/results"
     assert_response :success
     assert_template "results/team"

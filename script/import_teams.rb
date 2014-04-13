@@ -23,7 +23,7 @@ Team.transaction do
 
     sponsors = cells[1]
     p "sponsors: #{sponsors}"
-  
+
     contact_email = cells[2][/href="mailto:(.*)"/, 1]
     p "contact_email: #{contact_email}"
     if contact_email == "" || contact_email.nil?
@@ -35,10 +35,10 @@ Team.transaction do
 
     contact_phone = cells[3]
     p "contact_phone: #{contact_phone}"
-  
+
     team = Team.find_by_name_or_alias(name)
     raise "#{name} not found" unless team
-    
+
     team.website = website unless website.blank?
     team.sponsors = sponsors unless sponsors.blank?
     team.contact_name = contact_name unless contact_name.blank?

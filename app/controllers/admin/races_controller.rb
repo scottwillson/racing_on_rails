@@ -8,7 +8,7 @@ module Admin
     def new
       render :edit
     end
-  
+
     def create
       respond_to do |format|
         format.html {
@@ -32,7 +32,7 @@ module Admin
       end
       @disciplines = @disciplines.sort
     end
-  
+
     # Update existing Race
     # === Params
     # * id
@@ -49,7 +49,7 @@ module Admin
       end
       render :edit
     end
-  
+
     def update_attribute
       respond_to do |format|
         format.js {
@@ -69,7 +69,7 @@ module Admin
       @race = Race.find(params[:id])
       @destroyed = @race.destroy
     end
-  
+
     # Create Races for all +children+ to match parent Event
     # === Params
     # * event_id: parent Event ID
@@ -79,7 +79,7 @@ module Admin
 
 
     private
-  
+
     def assign_event
       if params[:event_id].present?
         @event = Event.find params[:event_id]
@@ -87,7 +87,7 @@ module Admin
         @event = Event.find race_params[:event_id]
       end
     end
-  
+
     def assign_race
       if params[:id].present?
         @race = Race.find(params[:id])

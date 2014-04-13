@@ -52,7 +52,7 @@ class IndexTest < ActionController::TestCase
     assert_not_nil(assigns["people"], "Should assign people")
     assert_equal(0, assigns['people'].size, "Should find no people")
   end
-  
+
   def test_find_empty_name
     FactoryGirl.create(:person)
     get(:index, :name => '')
@@ -85,5 +85,5 @@ class IndexTest < ActionController::TestCase
     assert_template nil
     assert_template :layout => nil
   end
-  
+
 end

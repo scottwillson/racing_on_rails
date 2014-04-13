@@ -6,7 +6,7 @@ class IronmanController < ApplicationController
     end
 
     @years = @ironman.years(@year)
-    
+
     page = params[:page].to_i rescue 1
     page = 1 if page < 1
     @results = Result.

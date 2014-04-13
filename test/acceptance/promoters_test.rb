@@ -19,7 +19,7 @@ class PromotersTest < AcceptanceTest
     event = SingleDayEvent.create!(:name => "Cross Crusade: Alpenrose", :promoter => promoter, :date => Date.new(year, 10))
     series.children << event
     login_as promoter
-    
+
     if page.has_content?("Montana")
       visit "/admin/events/#{series.id}/edit"
     else
@@ -27,7 +27,7 @@ class PromotersTest < AcceptanceTest
       click_link "Cross Crusade Series"
     end
     click_button "Save"
-    
+
     click_link "create_race"
     within "form.editor_field" do
       fill_in "value", :with => "Senior Women"
@@ -43,7 +43,7 @@ class PromotersTest < AcceptanceTest
 
     click_link "events_tab"
     click_link "Cross Crusade: Alpenrose"
-    
+
     click_link "create_race"
     within "form.editor_field" do
       fill_in "value", :with => "Masters Women 40+"

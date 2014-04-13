@@ -13,7 +13,7 @@ module Admin::RacesHelper
 
     html.html_safe
   end
-  
+
   # BAR category or Rider Rankings category
   def competition_category_name(race)
     if race && race.category

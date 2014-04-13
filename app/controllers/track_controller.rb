@@ -6,7 +6,7 @@ class TrackController < ApplicationController
                 .where(:discipline => "Track")
                 .not_child
   end
-  
+
   def schedule
     return redirect_to(track_path)
   end

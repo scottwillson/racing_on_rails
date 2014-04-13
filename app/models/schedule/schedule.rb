@@ -45,10 +45,10 @@ module Schedule
         multi_day_events = find_multi_day_events(events)
         save events, multi_day_events
       end
-      
+
       start_date
     end
-    
+
     # Events with results _will not_ be destroyed
     def self.delete_all_future_events(events)
       date = events.map(&:date).min
@@ -91,7 +91,7 @@ module Schedule
           row[:discipline] = RacingAssociation.current.default_discipline
         end
       end
-      
+
       if row[:sanctioned_by].nil?
         if row[:notes] == 'national'
           row[:sanctioned_by] = 'USA Cycling'
@@ -99,15 +99,15 @@ module Schedule
           row[:sanctioned_by] = 'UCI'
         end
       end
-      
+
       event_hash = row.to_hash
       promoter = Person.find_by_info(row[:promoter_name], row[:promoter_email], row[:promoter_phone])
-      
+
       if promoter
         if promoter.name.blank?
           promoter.update_attributes!(:name => row[:promoter_name])
         end
-          
+
         if promoter.home_phone.blank?
           promoter.update_attributes!(:home_phone => row[:promoter_phone])
         else
@@ -121,8 +121,8 @@ module Schedule
         end
       elsif row[:promoter_name].present? || row[:promoter_email].present? || row[:promoter_phone].present?
         promoter = Person.create!(
-                    :name => row[:promoter_name], 
-                    :email => row[:promoter_email], 
+                    :name => row[:promoter_name],
+                    :email => row[:promoter_email],
                     :home_phone => row[:promoter_phone]
                   )
       end
@@ -152,7 +152,7 @@ module Schedule
         event_array << event
         events_by_name[event.name] = event_array if event_array.size == 1
       end
-  
+
       multi_day_events = []
       events_by_name.each do |name, event_array|
         logger.debug "Create multi-day event #{name}"
@@ -160,7 +160,7 @@ module Schedule
           multi_day_events << MultiDayEvent.create_from_children(event_array)
         end
       end
-  
+
       multi_day_events
     end
 
@@ -186,11 +186,11 @@ module Schedule
         event.update_date
       end
     end
-    
+
     def self.logger
       Rails.logger
     end
-    
+
     # params: year, sanctioning_organization, start, end, discipline, region
     def self.find(params)
       if RacingAssociation.current.include_multiday_events_on_schedule?
@@ -198,11 +198,11 @@ module Schedule
       else
         query = Event.where(:type => "SingleDayEvent").includes(:parent)
       end
-    
+
       if !RacingAssociation.current.show_practices_on_calendar?
         query = query.where(:practice => false)
       end
-    
+
       if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
         query = query.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
       elsif RacingAssociation.current.filter_schedule_by_sanctioning_organization? && params[:sanctioning_organization].present?
@@ -220,7 +220,7 @@ module Schedule
       if params[:discipline].present?
         query = query.where(:discipline => params[:discipline].name)
       end
-    
+
       if RacingAssociation.current.filter_schedule_by_region?
         if params[:region].present?
           query = query.where(:region_id => params[:region].id)

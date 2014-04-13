@@ -1,7 +1,7 @@
 # Count pre-set list of series source_events + manually-entered non-series events
 class Cat4WomensRaceSeries < Competition
   include Concerns::Cat4WomensRaceSeries::Points
-  
+
   def friendly_name
     "Cat 4 Women's Race Series"
   end
@@ -21,11 +21,11 @@ class Cat4WomensRaceSeries < Competition
       order(:person_id).
       references(:category, :event)
   end
-  
+
   def participation_points?
     RacingAssociation.current.award_cat4_participation_points?
   end
-  
+
   def association_point_schedule
     RacingAssociation.current.cat4_womens_race_series_points
   end
@@ -37,14 +37,14 @@ class Cat4WomensRaceSeries < Competition
   def create_races
     races.create :category => category
   end
-  
+
   def cat_4_categories
     [ category ] + category.descendants
   end
-  
+
   def category
-    @category ||= 
-      RacingAssociation.current.cat4_womens_race_series_category || 
+    @category ||=
+      RacingAssociation.current.cat4_womens_race_series_category ||
       Category.find_or_create_by(:name => "Women Cat 4")
   end
 end

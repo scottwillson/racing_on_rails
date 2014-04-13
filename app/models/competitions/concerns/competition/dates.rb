@@ -20,7 +20,7 @@ module Concerns
             self.date = parent.start_date
           end
         end
-        
+
         date
       end
 
@@ -34,7 +34,7 @@ module Concerns
         if all_year?
           return Time.zone.local(year).end_of_year
         end
-          
+
         if source_events.present?
           source_events.sort.last.date
         elsif parent
@@ -55,7 +55,7 @@ module Concerns
       def multiple_days?
         source_events.count > 1
       end
-        
+
       def all_year?
         true
       end

@@ -3,7 +3,7 @@ class WsbaBarr < Competition
   def friendly_name
     'WSBA BARR'
   end
-  
+
   def point_schedule
     [ 0, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
   end
@@ -25,20 +25,20 @@ class WsbaBarr < Competition
       races.create!(:category => category)
     end
   end
-  
+
   # source_results must be in person-order
   def source_results(race)
     return [] if source_events(true).empty?
-    
+
     event_ids = source_events.map(&:id).join(', ')
-    
+
     results = Result.find_by_sql(
       %Q{ SELECT results.*
-          FROM results  
-          LEFT OUTER JOIN races ON races.id = results.race_id 
+          FROM results
+          LEFT OUTER JOIN races ON races.id = results.race_id
           LEFT OUTER JOIN categories ON categories.id = races.category_id
-          LEFT OUTER JOIN events ON races.event_id = events.id 
-            WHERE races.category_id is not null 
+          LEFT OUTER JOIN events ON races.event_id = events.id
+            WHERE races.category_id is not null
               and members_only_place between 1 and 15
               and categories.id in (#{category_ids_for(race).join(', ')})
               and (results.category_id is null or results.category_id in (#{category_ids_for(race).join(', ')}))
@@ -49,7 +49,7 @@ class WsbaBarr < Competition
     )
     results
   end
-  
+
   # Override of base BAR rules, mainly due to TTT rules on dividing points always by 4. Also, no points multiplier
   def points_for(source_result, team_size = nil)
     points = 0
@@ -57,7 +57,7 @@ class WsbaBarr < Competition
       results_in_place = Result.where(:race_id => source_result.race.id, :place => source_result.place).count
       if team_size.nil?
         # assume this is a TTT, score divided by 4 regardless of # of riders
-        team_size = (results_in_place > 1) ? 4 : 1 
+        team_size = (results_in_place > 1) ? 4 : 1
       end
       points_index = place_members_only? ? source_result.members_only_place.to_i : source_result.place.to_i
       points = point_schedule[points_index].to_f
@@ -67,11 +67,11 @@ class WsbaBarr < Competition
         points = state_championship_point_schedule[points_index].to_f
       end
 
-      points /= team_size.to_f 
+      points /= team_size.to_f
     }
     points
   end
-  
+
   def place_members_only?
     true
   end

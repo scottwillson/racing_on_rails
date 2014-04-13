@@ -11,10 +11,10 @@ class Team < ActiveRecord::Base
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
   before_destroy :ensure_no_results
-  
+
   validates_presence_of :name
   validates_uniqueness_of :name
-  
+
   has_many :aliases
   has_many :events
   has_many :people
@@ -30,7 +30,7 @@ class Team < ActiveRecord::Base
     end
     team
   end
-  
+
   def self.find_by_name_or_alias_or_create(name)
     team = find_by_name_or_alias(name)
     if team.nil?
@@ -38,7 +38,7 @@ class Team < ActiveRecord::Base
     end
     team
   end
-  
+
   def self.find_all_by_name_like(name, limit = 100)
     name_like = "%#{name}%"
     Team.
@@ -48,7 +48,7 @@ class Team < ActiveRecord::Base
       limit(limit).
       order("teams.name")
   end
-  
+
   def teams_with_same_name
     teams = Team.where(name: name) | Alias.find_all_teams_by_name(name)
     teams.reject { |team| team == self }
@@ -60,17 +60,17 @@ class Team < ActiveRecord::Base
     errors.add :base, "Cannot delete team with results. #{name} has #{results.count} results."
     false
   end
-  
+
   # If name changes to match existing alias, destroy the alias
   def destroy_shadowed_aliases
     Alias.destroy_all(['name = ?', name])
   end
-  
+
   def add_alias_for_old_name
-    if !new_record? && 
-      name_was.present? && 
-      name.present? && 
-      name_was.casecmp(name) != 0 && 
+    if !new_record? &&
+      name_was.present? &&
+      name.present? &&
+      name_was.casecmp(name) != 0 &&
       !Alias.exists?(['name = ? and team_id = ?', name_was, id]) &&
       !Team.exists?(["name = ?", name_was])
 
@@ -81,7 +81,7 @@ class Team < ActiveRecord::Base
       new_alias
     end
   end
-  
+
   def has_alias?(alias_name)
     aliases.detect { |a| a.name.casecmp(alias_name) == 0 }
   end
@@ -99,9 +99,9 @@ class Team < ActiveRecord::Base
       events_with_results = team.results.collect do |result|
         result.event
       end || []
-      
+
       team.create_team_for_historical_results!
-      
+
       aliases << team.aliases
       events << team.events
       results(true) << team.results(true)
@@ -109,11 +109,11 @@ class Team < ActiveRecord::Base
       Team.delete(team.id)
       existing_alias = aliases.detect{ |a| a.name.casecmp(team.name) == 0 }
       if existing_alias.nil? && !Team.where(:name => team.name).exists?
-        aliases.create(:name => team.name) 
+        aliases.create(:name => team.name)
       end
     end
   end
-  
+
   # Preserve team names in old results by creating a new Team for them, and moving the results.
   #
   # Results are preserved by creating a new Team from the most recent Name. If a Team
@@ -121,20 +121,20 @@ class Team < ActiveRecord::Base
   # This may be unxpected, can't think of a better way to handle it in this model.
   def create_team_for_historical_results!
     name = names.sort_by(&:year).reverse!.first
-    
+
     if name
       team = Team.find_or_create_by(:name => name.name)
       results.each do |r|
         team.results << r if r.date.year <= name.year
       end
-      
+
       name.destroy
       names.each do |n|
         team.names << n unless name == n
       end
     end
   end
-  
+
   def member_in_year?(date = Time.zone.today)
     member
   end
@@ -147,7 +147,7 @@ class Team < ActiveRecord::Base
     name_was = name unless name_was
     self[:name] = value
   end
-  
+
   def to_s
     "#<Team #{id} '#{name}'>"
   end

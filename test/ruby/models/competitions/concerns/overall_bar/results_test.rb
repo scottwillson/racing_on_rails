@@ -14,7 +14,7 @@ class Concerns::OverallBar::ResultsTest < Ruby::TestCase
       "score",
       :points => 1,
       :source_discipline => "Road",
-      :source_result => stub("source_result", 
+      :source_result => stub("source_result",
         :race => stub("race",
           :category => stub("category")
         )
@@ -25,18 +25,18 @@ class Concerns::OverallBar::ResultsTest < Ruby::TestCase
     bar.remove_duplicate_discipline_results(scores)
     assert_equal [ score ], scores, "scores"
   end
-  
+
   def test_remove_duplicate_discipline_results_multiple
     bar = TestBar.new
     bar.stubs("find_category")
     bar.stubs("logger").returns(stub(:debug? => false))
-    
+
     score_1 = stub(
       "score 1",
       :destroy => true,
       :points => 20,
       :source_discipline => "Road",
-      :source_result => stub("source_result", 
+      :source_result => stub("source_result",
         :race => stub("race",
           :category => stub("category")
         )
@@ -48,7 +48,7 @@ class Concerns::OverallBar::ResultsTest < Ruby::TestCase
       :destroy => true,
       :points => 10,
       :source_discipline => "Road",
-      :source_result => stub("source_result", 
+      :source_result => stub("source_result",
         :race => stub("race",
           :category => stub("category")
         )
@@ -60,7 +60,7 @@ class Concerns::OverallBar::ResultsTest < Ruby::TestCase
       :destroy => true,
       :points => 5,
       :source_discipline => "Track",
-      :source_result => stub("source_result", 
+      :source_result => stub("source_result",
         :race => stub("race",
           :category => stub("category")
         )

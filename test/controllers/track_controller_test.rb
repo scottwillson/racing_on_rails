@@ -9,7 +9,7 @@ class TrackControllerTest < ActionController::TestCase
     assert_response(:success)
     assert_not_nil(assigns["events"], 'Should assign @events')
   end
-  
+
   def test_schedule
     get :schedule
     assert_redirected_to track_path

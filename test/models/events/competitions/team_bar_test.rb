@@ -9,12 +9,12 @@ class TeamBarTest < ActiveSupport::TestCase
     men_a                = FactoryGirl.create(:category, :name => "Men A", :parent => senior_men)
     sr_p_1_2             = FactoryGirl.create(:category, :name => "Senior Men Pro 1/2", :parent => senior_men)
     senior_women         = FactoryGirl.create(:category, :name => "Senior Women", :parent => association_category)
-    
+
     discipline = FactoryGirl.create(:discipline, :name => "Road")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
     discipline.bar_categories << team
-    
+
     discipline = FactoryGirl.create(:discipline, :name => "Time Trial")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
@@ -33,7 +33,7 @@ class TeamBarTest < ActiveSupport::TestCase
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
     discipline.bar_categories << team
-    
+
     discipline = FactoryGirl.create(:discipline, :name => "Team")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
@@ -46,7 +46,7 @@ class TeamBarTest < ActiveSupport::TestCase
     kona = FactoryGirl.create(:team, :name => "Kona")
     gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers")
     vanilla = FactoryGirl.create(:team, :name => "Vanilla")
-    
+
     tonkin = FactoryGirl.create(:person, :name => "Tonkin", :team => kona)
     weaver = FactoryGirl.create(:person, :name => "Weaver", :team => gentle_lovers)
     molly = FactoryGirl.create(:person, :name => "Molly", :team => vanilla)
@@ -69,7 +69,7 @@ class TeamBarTest < ActiveSupport::TestCase
       :place => 15,
       :person => weaver
     )
-    
+
     swan_island = SingleDayEvent.create!(
       :name => "Swan Island",
       :discipline => "Criterium",
@@ -90,7 +90,7 @@ class TeamBarTest < ActiveSupport::TestCase
       :place => 1,
       :person => molly
     )
-    
+
     thursday_track_series = Series.create!(:name => "Thursday Track")
     thursday_track = SingleDayEvent.create!(
       :name => "Thursday Track",
@@ -108,7 +108,7 @@ class TeamBarTest < ActiveSupport::TestCase
       :person => tonkin,
       :team => kona
     )
-    
+
     team_track = SingleDayEvent.create!(
       :name => "Team Track State Championships",
       :discipline => "Track",
@@ -149,7 +149,7 @@ class TeamBarTest < ActiveSupport::TestCase
       :person => tonkin,
       :team => kona
     )
-    
+
     larch_mt_hillclimb = SingleDayEvent.create!(
       :name => "Larch Mountain Hillclimb",
       :discipline => "Time Trial",
@@ -161,7 +161,7 @@ class TeamBarTest < ActiveSupport::TestCase
       :person => tonkin,
       :team => kona
     )
-  
+
     event = FactoryGirl.create(:event, :date => Date.new(2004), :name => "Banana Belt")
     race = event.races.create!(:category => sr_p_1_2)
     race.results.create!(:place => "1", :person => tonkin, :team => kona)
@@ -185,10 +185,10 @@ class TeamBarTest < ActiveSupport::TestCase
     assert_equal(Date.new(2004, 1, 1), bar.date, "2004 TeamBar date")
     assert_equal("2004 Team BAR", bar.name, "2004 Team Bar name")
     assert_equal_dates(Time.zone.today, bar.updated_at, "BAR last updated")
-    
+
     assert_equal(1, bar.races.size, 'Should have only one Team BAR race')
     team_race = bar.races.first
-    
+
     assert_equal(3, team_race.results.size, "Team BAR results")
     assert_equal_dates(Time.zone.today, team_race.updated_at, "BAR last updated")
 

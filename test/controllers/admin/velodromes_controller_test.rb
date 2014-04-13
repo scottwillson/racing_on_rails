@@ -8,7 +8,7 @@ module Admin
       create_administrator_session
       use_ssl
     end
-  
+
     def test_not_logged_in_index
       destroy_person_session
       get(:index)
@@ -24,13 +24,13 @@ module Admin
       assert_not_nil(assigns["velodromes"], "Should assign velodromes")
       assert(!assigns["velodromes"].empty?, "Should have no velodromes")
     end
-  
+
     def test_new
       get(:new)
       assert_response(:success)
       assert_not_nil(assigns["velodrome"], "Should assign velodrome")
     end
-  
+
     def test_create
       post(:create, :velodrome => { :name => "Hellyer", :website => "www.hellyer.org" })
       velodrome = Velodrome.find_by_name("Hellyer")
@@ -40,14 +40,14 @@ module Admin
       assert_not_nil(flash[:notice], "Should have flash :notice")
       assert_nil(flash[:warn], "Should have flash :warn")
     end
-  
+
     def test_edit
       velodrome = FactoryGirl.create(:velodrome)
       get(:edit, :id => velodrome.id)
       assert_response(:success)
       assert_equal(velodrome, assigns["velodrome"], "Should assign velodrome")
     end
-  
+
     def test_update
       velodrome = FactoryGirl.create(:velodrome)
       put(:update, :id => velodrome.id, :velodrome => { :name => "T Town", :website => "www" })
@@ -56,7 +56,7 @@ module Admin
       assert_equal("T Town", velodrome.name, "Name should be updated")
       assert_equal("www", velodrome.website, "Websit should be updated")
     end
-  
+
     def test_destroy
       velodrome = FactoryGirl.create(:velodrome)
       delete :destroy, :id => velodrome.id

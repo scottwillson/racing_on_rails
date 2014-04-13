@@ -5,12 +5,12 @@ module Admin
   module Events
     class UpdateControllerTest < ActionController::TestCase
       tests Admin::EventsController
-  
+
       include ActionView::Helpers::TagHelper
       include ActionView::Helpers::UrlHelper
       include ActionView::Helpers::TextHelper
       include ActionView::Helpers::CaptureHelper
-  
+
       def setup
         super
         create_administrator_session
@@ -19,58 +19,58 @@ module Admin
 
       def test_update_child_event
         event = FactoryGirl.create(:event)
-  
+
         assert_not_equal('Banana Belt One', event.name, 'name')
         assert_not_equal(2, event.bar_points, 'bar_points')
         assert_not_equal('Cyclocross', event.discipline, 'discipline')
-  
-        post(:update, 
-             "commit"=>"Save", 
+
+        post(:update,
+             "commit"=>"Save",
              :id => event.to_param,
              "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Cyclocross"}
         )
         assert_redirected_to edit_admin_event_path(event)
-  
+
         event.reload
         assert_equal('Banana Belt One', event.name, 'name')
         assert_equal('Cyclocross', event.discipline, 'discipline')
         assert_equal(2, event.bar_points, 'bar_points')
       end
-  
+
       def test_update_nil_disciplines
         event = FactoryGirl.create(:series_event)
         event.update_attributes(:discipline => nil)
         assert_nil(event[:discipline], 'discipline')
         assert_equal('Road', event.parent.discipline, 'Parent event discipline')
-  
-        post(:update, 
-             "commit"=>"Save", 
+
+        post(:update,
+             "commit"=>"Save",
              :id => event.to_param,
              "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Road"}
         )
         assert_redirected_to edit_admin_event_path(event)
-  
+
         event.reload
         assert_equal("Road", event[:discipline], 'discipline')
       end
-  
+
       def test_update_discipline_same_as_parent_child_events
         FactoryGirl.create(:discipline)
         event = FactoryGirl.create(:series_event)
         assert_equal('Road', event[:discipline], 'discipline')
         assert_equal('Road', event.discipline, 'Parent event discipline')
-  
-        post(:update, 
-             "commit"=>"Save", 
+
+        post(:update,
+             "commit"=>"Save",
              :id => event.to_param,
              "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Road"}
         )
         assert_redirected_to edit_admin_event_path(event)
-  
+
         event.reload
         assert_equal("Road", event[:discipline], 'discipline')
-      end  
-  
+      end
+
       def test_update_existing_combined_results
         FactoryGirl.create(:discipline)
         FactoryGirl.create(:discipline, :name => "Mountain Bike")
@@ -80,14 +80,14 @@ module Admin
         source_event.bar_points = 2
         source_event.save!
         event = CombinedTimeTrialResults.create!(:parent => source_event)
-    
-        post(:update, "id" => event.id, 
-                      "event"=>{ "auto_combined_results"=>"1", 
-                                      "name"=>"Portland MTB Short Track Series", 
-                                      "bar_points"=>"0", 
-                                      "ironman"=>"1", 
+
+        post(:update, "id" => event.id,
+                      "event"=>{ "auto_combined_results"=>"1",
+                                      "name"=>"Portland MTB Short Track Series",
+                                      "bar_points"=>"0",
+                                      "ironman"=>"1",
                                       "discipline"=>"Mountain Bike"})
-    
+
         assert_nil(flash[:warn], "flash[:warn] should be empty, but was: #{flash[:empty]}")
         assert_redirected_to edit_admin_event_path(event)
       end
@@ -95,7 +95,7 @@ module Admin
       def test_update_event
         event = FactoryGirl.create(:event)
         brad_ross = FactoryGirl.create(:person, :first_name => "Brad", :last_name => "Ross")
-  
+
         assert_not_equal('Banana Belt One', event.name, 'name')
         assert_not_equal('Forest Grove', event.city, 'city')
         assert_not_equal('Geoff Mitchem', event.promoter_name, 'promoter_name')
@@ -110,17 +110,17 @@ module Admin
         assert_not_equal('WA', event.state, 'state')
         norba = NumberIssuer.create!(:name => 'NORBA')
         assert_not_equal(norba, event.number_issuer, 'number_issuer')
-  
-        post(:update, 
-             "commit"=>"Save", 
+
+        post(:update,
+             "commit"=>"Save",
              :id => event.to_param,
              "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
-                       "flyer"=>"http://#{RacingAssociation.current.static_host}/flyers/2006/event.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1", 
+                       "flyer"=>"http://#{RacingAssociation.current.static_host}/flyers/2006/event.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1",
                        "discipline"=>"Track", "cancelled"=>"1", "state"=>"WA",
                       "promoter_id" => brad_ross.to_param, 'number_issuer_id' => norba.to_param}
         )
         assert_redirected_to edit_admin_event_path(event)
-  
+
         event.reload
         assert_equal('Banana Belt One', event.name, 'name')
         assert_equal('Forest Grove', event.city, 'city')
@@ -136,21 +136,21 @@ module Admin
         assert_nil(event.promoter.email, 'promoter_email')
         assert_equal(norba, event.number_issuer, 'number_issuer')
       end
-  
+
       def test_update_single_day_to_multi_day
         number_issuer = FactoryGirl.create(:number_issuer)
         FactoryGirl.create(:number_issuer, :name => "Stage Race")
         for type in [MultiDayEvent, Series, WeeklySeries]
           event = FactoryGirl.create(:event)
-  
-          post(:update, 
-               "commit"=>"Save", 
+
+          post(:update,
+               "commit"=>"Save",
                :id => event.to_param,
                "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
-                         "flyer"=>"../../flyers/2006/event.html", "sanctioned_by"=>"UCI", 
-                         "flyer_approved"=>"1", 
+                         "flyer"=>"../../flyers/2006/event.html", "sanctioned_by"=>"UCI",
+                         "flyer_approved"=>"1",
                          "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
-                         "promoter_id" => event.promoter.to_param, 
+                         "promoter_id" => event.promoter.to_param,
                          'number_issuer_id' => number_issuer.to_param,
                          'type' => type.to_s}
           )
@@ -159,22 +159,22 @@ module Admin
           assert(event.is_a?(type), "#{event.name} should be a #{type}")
         end
       end
-  
+
       def test_update_to_event
         FactoryGirl.create(:number_issuer)
         number_issuer = FactoryGirl.create(:number_issuer, :name => "Stage Race")
-        
+
         [ MultiDayEvent, Series, WeeklySeries, SingleDayEvent ].each do |type|
           event = type.create!
-  
-          post(:update, 
-               "commit"=>"Save", 
+
+          post(:update,
+               "commit"=>"Save",
                :id => event.to_param,
                "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
-                         "flyer"=>"../../flyers/2006/event.html", "sanctioned_by"=>"UCI", 
-                         "flyer_approved"=>"1", 
+                         "flyer"=>"../../flyers/2006/event.html", "sanctioned_by"=>"UCI",
+                         "flyer_approved"=>"1",
                          "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
-                         "promoter_id" => event.promoter.to_param, 
+                         "promoter_id" => event.promoter.to_param,
                          'number_issuer_id' => number_issuer.to_param,
                          'type' => "Event" }
           )
@@ -183,16 +183,16 @@ module Admin
           assert_equal Event, event.class, "#{event.name} should be an Event, but is a #{event.class}"
         end
       end
-  
+
       def test_update_multi_day_to_single_day
         event = FactoryGirl.create(:stage_race)
         original_attributes = event.attributes.clone
-  
-        post(:update, 
-             "commit"=>"Save", 
+
+        post(:update,
+             "commit"=>"Save",
              :id => event.to_param,
              "event"=>{"city"=>event.city, "name"=>"Mt. Hood One Day",
-                       "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved, 
+                       "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved,
                        "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
                       'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'SingleDayEvent'}
         )
@@ -214,24 +214,24 @@ module Admin
         assert_equal(original_attributes["number_issuer_id"], event.number_issuer_id, 'number_issuer_id')
         assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
       end
-  
+
       # MultiDayEvent -> Series
       def test_update_multi_day_to_series
         event = FactoryGirl.create(:stage_race)
         original_attributes = event.attributes.clone
-  
-        put(:update, 
-             "commit"=>"Save", 
+
+        put(:update,
+             "commit"=>"Save",
              :id => event.to_param,
              "event"=>{"city"=>event.city, "name"=>"Mt. Hood Series","date"=>event.date.to_date,
-                       "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved, 
+                       "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved,
                        "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
                       'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'Series'}
         )
         assert_redirected_to edit_admin_event_path(event)
         event = Event.find(event.id)
         assert(event.is_a?(Series), "Mt Hood should be a Series, but is a #{event.class}")
-  
+
         assert_equal("Mt. Hood Series", event.name, 'name')
         assert_equal(original_attributes["date"].to_date, event.date, 'date')
         assert_equal(original_attributes["flyer"], event.flyer, 'flyer')

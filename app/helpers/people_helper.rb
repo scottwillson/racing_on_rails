@@ -22,7 +22,7 @@ module PeopleHelper
     else
       person.try :person
     end
-      
+
     if ((attributes && (attributes.any? { |a| person[a].blank? || subject[a].blank? })) || current_person.can_edit?(subject)) && block
       capture(&block)
     end
@@ -36,7 +36,7 @@ module PeopleHelper
       person.name
     end
   end
-  
+
   def abbreviate_category(category)
     case category
     when /Begin/i

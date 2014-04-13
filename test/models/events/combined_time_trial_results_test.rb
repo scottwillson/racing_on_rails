@@ -17,15 +17,15 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
 
     # Results with no time should not be included
     FactoryGirl.create(:result, :race => race_2, :place => "10")
-    
+
     # Only include finishers
     FactoryGirl.create(:result, :race => race_1, :place => "DNF")
     FactoryGirl.create(:result, :race => race_1, :place => "DNF", :time => 0)
     FactoryGirl.create(:result, :race => race_1, :place => "DQ", :time => 12)
 
-    event.save!    
+    event.save!
     combined_results = event.combined_results(true)
-    assert_equal(false, combined_results.ironman, 'Ironman')    
+    assert_equal(false, combined_results.ironman, 'Ironman')
     assert_equal('Combined', combined_results.name, 'name')
     assert_equal(0, combined_results.bar_points, 'bar points')
     assert_equal(1, combined_results.races.size, 'combined_results.races')
@@ -52,7 +52,7 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert_equal('35:12.00', result.time_s, 'time_s')
   end
 
-  def test_honor_auto_combined_results    
+  def test_honor_auto_combined_results
     event = FactoryGirl.create(:time_trial_event)
     race = FactoryGirl.create(:race, :event => event)
     FactoryGirl.create(:result, :race => race, :place => "1", :time => 1800)
@@ -62,7 +62,7 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert(CombinedTimeTrialResults.requires_combined_results?(event), "requires_combined_results?")
     assert(!CombinedTimeTrialResults.destroy_combined_results?(event), "destroy_combined_results?")
     assert_equal(true, event.notification?, "Event notification should be enabled")
-    
+
     event.auto_combined_results = false
     assert(CombinedTimeTrialResults.destroy_combined_results?(event), "destroy_combined_results?")
     event.save!
@@ -89,7 +89,7 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert_equal(true, event.notification?, "event notification?")
     ten_mile = event.children.create!(:name => "10 mile")
     twenty_mile = event.children.create!(:name => "20 mile")
-    
+
     ten_mile.reload
     assert_equal("Time Trial", ten_mile.discipline, "10 mile child event discipline")
     assert_equal(true, ten_mile.notification?, "10 mile child event notification?")
@@ -113,20 +113,20 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert_equal("Combined", ten_mile.combined_results.name, "10 mile combined results")
     assert_equal("Combined", twenty_mile.combined_results.name, "20 mile combined results")
   end
-  
+
   def test_destroy
     series = Series.create!(:discipline => "Time Trial")
     assert_equal true, series.notification?, "event notification?"
     assert_equal true, series.notification_enabled?, "event notification_enabled?"
     FactoryGirl.create(:result, :race => FactoryGirl.create(:race, :event => series), :place => "1", :time => 1000)
-    
+
     event = series.children.create!
     FactoryGirl.create(:result, :race => FactoryGirl.create(:race, :event => event), :place => "1", :time => 500)
     assert_equal true, event.notification?, "event notification?"
-    
+
     assert_not_nil(series.combined_results(true), "Series parent should have combined results")
     assert_not_nil(event.combined_results(true), "Series child event parent should have combined results")
-    
+
     series.reload
     event.reload
     assert_equal true, series.notification?, "event notification?"
@@ -137,15 +137,15 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     event.combined_results.destroy_races
     assert_nil(event.combined_results(true), "Series child event parent should not have combined results")
   end
-  
+
   def test_should_not_calculate_combined_results_for_combined_results
     event = FactoryGirl.create(:time_trial_event)
     race = FactoryGirl.create(:race, :event => event)
     FactoryGirl.create(:result, :race => race, :place => "1", :time => 1800)
-    
+
     assert_not_nil(event.combined_results(true), "TT event should have combined results")
     result_id = event.combined_results.races.first.results.first.id
-    
+
     race.reload
     race.calculate_members_only_places!
     event.reload

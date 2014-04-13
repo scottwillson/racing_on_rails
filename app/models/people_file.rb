@@ -1,4 +1,4 @@
-# Excel or text file of People. Assumes that the first row is a header row. 
+# Excel or text file of People. Assumes that the first row is a header row.
 # Updates membership to current year. If there are no more events in the current year, updates membership to next year.
 # See http://racingonrails.rocketsurgeryllc.com/sample_import_files/ for format details and examples.
 class PeopleFile < RacingOnRails::Grid::GridFile
@@ -92,11 +92,11 @@ class PeopleFile < RacingOnRails::Grid::GridFile
     'Please indicate other interests. (For example: time trial tandem triathalon r'   => RacingOnRails::Grid::Column.new(:name => 'notes', :description => 'Other interests'),
     'Your team or club name (please enter N/A if you do not have a team affiliation)' => RacingOnRails::Grid::Column.new(:name => 'team_name', :description => 'Team')
   }
-  
+
   attr_reader :created
   attr_reader :updated
   attr_reader :duplicates
-  
+
   def initialize(source, *options)
     if options.empty?
       options = Hash.new
@@ -127,7 +127,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
       column.field == :print_card
     end
     year = year.to_i if year
-    
+
     logger.debug("#{rows.size} rows")
     if @update_membership
       if year && year > Time.zone.today.year
@@ -137,14 +137,14 @@ class PeopleFile < RacingOnRails::Grid::GridFile
       end
       @member_to_for_imported_people = Time.zone.local(year || Time.zone.today.year).end_of_year.to_date
     end
-    
+
     Person.transaction do
       rows.each do |row|
         row_hash = row.to_hash
         row_hash[:updated_by] = import_file
         logger.debug(row_hash.inspect) if logger.debug?
         next if row_hash[:first_name].blank? && row_hash[:first_name].blank? && row_hash[:name].blank?
-        
+
         combine_categories(row_hash)
         row_hash.delete(:date_of_birth) if row_hash[:date_of_birth] == 'xx'
 
@@ -158,13 +158,13 @@ class PeopleFile < RacingOnRails::Grid::GridFile
         if people.empty?
           people = Person.find_all_by_name_or_alias(:first_name => row_hash[:first_name], :last_name => row_hash[:last_name])
         end
-        
-        logger.info("PeopleFile Found #{people.size} people for '#{row_hash[:first_name]} #{row_hash[:last_name]}' lic:  #{row_hash[:license]}") 
+
+        logger.info("PeopleFile Found #{people.size} people for '#{row_hash[:first_name]} #{row_hash[:last_name]}' lic:  #{row_hash[:license]}")
 
         person = nil
         row_hash[:member_to] = @member_to_for_imported_people if @update_membership
         if people.empty?
-          logger.info("PeopleFile Create new person") 
+          logger.info("PeopleFile Create new person")
           delete_unwanted_member_from(row_hash, person)
           add_print_card_and_label(row_hash)
           person = Person.new(:updated_by => import_file)
@@ -176,7 +176,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
           @created = @created + 1
         elsif people.size == 1
           person = people.first
-          logger.info("PeopleFile Update #{person.id} '#{person.name}' lic: #{person.license}") 
+          logger.info("PeopleFile Update #{person.id} '#{person.name}' lic: #{person.license}")
           # Don't want to overwrite existing categories
           delete_blank_categories(row_hash)
           delete_unwanted_member_from(row_hash, person)
@@ -184,7 +184,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
             row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
           end
           add_print_card_and_label(row_hash, person)
-          
+
           if year
             person.year = year
           end
@@ -196,7 +196,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
           end
           @updated = @updated + 1
         else
-          logger.info("PeopleFile Add duplicate") 
+          logger.info("PeopleFile Add duplicate")
           delete_blank_categories(row_hash)
           person = Person.new(row_hash)
           if year
@@ -218,10 +218,10 @@ class PeopleFile < RacingOnRails::Grid::GridFile
     end
     return @created, @updated
   end
-  
-  
+
+
   private
-  
+
   def combine_categories(row_hash)
     Person::CATEGORY_FIELDS.each do |field|
       if row_hash[field].present?
@@ -229,22 +229,22 @@ class PeopleFile < RacingOnRails::Grid::GridFile
       end
     end
   end
-  
+
   def delete_blank_categories(row_hash)
     for field in Person::CATEGORY_FIELDS
       row_hash.delete(field) if row_hash[field].blank?
     end
   end
-  
+
   def delete_unwanted_member_from(row_hash, person)
     # Just in case
     row_hash.delete(:login)
-    
+
     if row_hash[:member_from].blank?
       row_hash.delete(:member_from)
       return
     end
-    
+
     unless person.nil?
       if person.member_from
         begin
@@ -258,7 +258,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
       end
     end
   end
-  
+
   def add_print_card_and_label(row_hash, person = nil)
     if @update_membership && !@has_print_column
       if person.nil? || (!person.member? || person.member_to.to_date < @member_to_for_imported_people.to_date)
@@ -266,7 +266,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
       end
     end
   end
-  
+
   def import_file
     unless @import_file
       if @file
@@ -277,7 +277,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
     end
     @import_file
   end
-  
+
   def logger
     Rails.logger
   end

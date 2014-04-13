@@ -44,10 +44,10 @@ class Card < Prawn::Document
       draw_text "0", :at => [ card_left_side + 171, card_top - 27 ]
       draw_text "1", :at => [ card_left_side + 171, card_top - 44 ]
       draw_text "4", :at => [ card_left_side + 171, card_top - 61 ]
-      
+
       index = index + 1
     end
-    
+
     render
   end
 end

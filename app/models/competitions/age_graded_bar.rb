@@ -1,22 +1,22 @@
 # OBRA OverallBar organized by Masters and Juniors age categories
 class AgeGradedBar < Competition
   include Concerns::Competition::CalculatorAdapter
-  
+
   # FIXME DRY new competition methods
   after_create :set_parent
 
   def source_results(race)
     query = Result.
       select([
-        "events.date", 
-        "people.member_from", 
-        "people.member_to", 
-        "person_id as participant_id", 
-        "place", 
+        "events.date",
+        "people.member_from",
+        "people.member_to",
+        "person_id as participant_id",
+        "place",
         "points",
-        "race_id", 
-        "results.event_id", 
-        "results.id as id", 
+        "race_id",
+        "results.event_id",
+        "results.id as id",
         "year"
       ]).
       joins(:race => :event).
@@ -37,7 +37,7 @@ class AgeGradedBar < Competition
     end
     self.discipline = "Age Graded"
   end
-  
+
   def categories
     template_categories = []
     position = 0
@@ -45,17 +45,17 @@ class AgeGradedBar < Competition
       template_categories << Category.new(:name => "Masters Men #{age}-#{age + 4}", :ages => (age)..(age + 4), :position => position = position.next, :parent => Category.new(:name => 'Masters Men'))
     end
     template_categories << Category.new(:name => 'Masters Men 70+', :ages => 70..999, :position => position = position.next, :parent => Category.new(:name => 'Masters Men'))
-    
+
     30.step(55, 5) do |age|
       template_categories << Category.new(:name => "Masters Women #{age}-#{age + 4}", :ages => (age)..(age + 4), :position => position = position.next, :parent => Category.new(:name => 'Masters Women'))
     end
     template_categories << Category.new(:name => 'Masters Women 60+', :ages => 60..999, :position => position = position.next, :parent => Category.new(:name => 'Masters Women'))
-    
+
     template_categories << Category.new(:name => "Junior Men 10-12", :ages => 10..12, :position => position = position.next, :parent => Category.new(:name => 'Junior Men'))
     template_categories << Category.new(:name => "Junior Men 13-14", :ages => 13..14, :position => position = position.next, :parent => Category.new(:name => 'Junior Men'))
     template_categories << Category.new(:name => "Junior Men 15-16", :ages => 15..16, :position => position = position.next, :parent => Category.new(:name => 'Junior Men'))
     template_categories << Category.new(:name => "Junior Men 17-18", :ages => 17..18, :position => position = position.next, :parent => Category.new(:name => 'Junior Men'))
-    
+
     template_categories << Category.new(:name => "Junior Women 10-12", :ages => 10..12, :position => position = position.next, :parent => Category.new(:name => 'Junior Women'))
     template_categories << Category.new(:name => "Junior Women 13-14", :ages => 13..14, :position => position = position.next, :parent => Category.new(:name => 'Junior Women'))
     template_categories << Category.new(:name => "Junior Women 15-16", :ages => 15..16, :position => position = position.next, :parent => Category.new(:name => 'Junior Women'))
@@ -69,7 +69,7 @@ class AgeGradedBar < Competition
       else
         template_category.parent.save!
       end
-      
+
       category = Category.find_by_name(template_category.name)
       if category.nil?
         template_category.save!
@@ -77,7 +77,7 @@ class AgeGradedBar < Competition
       elsif category.ages != template_category.ages || category.parent != template_category.parent || category.position != template_category.position
         category.ages = template_category.ages
         category.parent = template_category.parent
-        category.save!            
+        category.save!
       end
       raise "#{category.name} not valid" unless category.valid?
       raise "#{category.name} is new record" if category.new_record?
@@ -90,7 +90,7 @@ class AgeGradedBar < Competition
     end
     categories
   end
-  
+
   def set_parent
     if parent.nil?
       self.parent = OverallBar.find_or_create_for_year(year)
@@ -105,7 +105,7 @@ class AgeGradedBar < Competition
   def friendly_name
     "Age Graded BAR"
   end
-    
+
   def use_source_result_points?
     true
   end

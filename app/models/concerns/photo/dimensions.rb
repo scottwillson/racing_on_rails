@@ -10,7 +10,7 @@ module Concerns
           false
         end
       end
-  
+
       def portrait?
         if height && width
           height > width
@@ -18,7 +18,7 @@ module Concerns
           false
         end
       end
-  
+
       def widescreen?
         if height && width
           width.to_f / height >= 1.37

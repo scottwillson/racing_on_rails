@@ -23,7 +23,7 @@ class TaborOverall < Overall
       5
     end
   end
-  
+
   def double_points_for_last_event?
     true
   end
@@ -31,7 +31,7 @@ class TaborOverall < Overall
   def default_bar_points
     1
   end
-  
+
   def point_schedule
     [ 0, 100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11 ]
   end

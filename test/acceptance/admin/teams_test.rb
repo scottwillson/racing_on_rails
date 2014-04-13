@@ -38,7 +38,7 @@ class TeamsTest < AcceptanceTest
     assert has_checked_field?("team_member_#{gl.id}")
     uncheck "team_member_#{gl.id}"
     wait_for_no :field, "team_member_#{gl.id}", { :checked => true }
-    
+
     visit "/admin/teams"
     assert !has_checked_field?("team_member_#{gl.id}")
 
@@ -70,7 +70,7 @@ class TeamsTest < AcceptanceTest
       raise Timeout::Error, "Should update team name after second inline edit"
     end
   end
-  
+
   def test_drag_and_drop
     kona = FactoryGirl.create(:team, :name => "Kona")
     vanilla = FactoryGirl.create(:team, :name => "Vanilla")
@@ -83,12 +83,12 @@ class TeamsTest < AcceptanceTest
     visit "/admin/teams"
     fill_in "name", :with => "a"
     press_return "name"
-    
+
     find("#team_#{kona.id}").drag_to(find("#team_#{vanilla.id}_row"))
     assert_page_has_content "Merged Kona into Vanilla"
     assert !Team.exists?(kona.id), "Kona should be merged"
     assert Team.exists?(vanilla.id), "Vanilla still exists after merge"
-    
+
     visit "/admin/teams"
     fill_in "name", :with => "e"
     press_return "name"
@@ -97,7 +97,7 @@ class TeamsTest < AcceptanceTest
     assert_table("teams_table", 3, 2, "Gentle Lovers")
     assert_table("teams_table", 4, 2, "Team dFL")
   end
-  
+
   def test_merge_confirm
     FactoryGirl.create(:team, :name => "Kona")
     vanilla = FactoryGirl.create(:team, :name => "Vanilla")
@@ -111,7 +111,7 @@ class TeamsTest < AcceptanceTest
     visit "/admin/teams"
     fill_in "name", :with => "e"
     press_return "name"
-    
+
     assert_table("teams_table", 2, 2, "Chocolate")
     assert_table("teams_table", 3, 2, "Gentle Lovers")
     assert_table("teams_table", 4, 2, "Team dFL")
@@ -120,7 +120,7 @@ class TeamsTest < AcceptanceTest
 
     fill_in_inline "#team_#{vanilla.id}_name", :with => "Gentle Lovers"
     click_button "Merge"
-    
+
     assert Team.exists?(gl.id), "Should not have merged Gentle Lovers"
 
     begin

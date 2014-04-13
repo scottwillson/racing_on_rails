@@ -2,7 +2,7 @@ class WsbaMastersBarr < WsbaBarr
   def friendly_name
     "WSBA Masters BARR"
   end
-  
+
   def point_schedule
     [ 0, 20, 17, 15, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 ]
   end
@@ -28,11 +28,11 @@ class WsbaMastersBarr < WsbaBarr
       results_in_place = Result.where(:race_id => source_result.race_id, :place => source_result.place).count
       if team_size.nil?
         # assume this is a TTT, score divided by 4 regardless of # of riders
-        team_size = (results_in_place > 1) ? 4 : 1 
+        team_size = (results_in_place > 1) ? 4 : 1
       end
       points_index = place_members_only? ? source_result.members_only_place.to_i : source_result.place.to_i
       points = point_schedule[points_index].to_f
-      points /= team_size.to_f 
+      points /= team_size.to_f
     }
     points
   end

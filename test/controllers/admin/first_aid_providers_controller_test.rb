@@ -45,14 +45,14 @@ module Admin
       assert_equal(false, assigns["past_events"], "past_events")
       assert_equal("promoter_name", assigns["sort_by"], "@sort_by from param")
     end
-  
+
     def test_non_official
       login_as FactoryGirl.create(:person)
       get :index
       assert_redirected_to new_person_session_url(secure_redirect_options)
       assert_select ".in_place_editable", 0, "Should be read-only for officials"
     end
-  
+
     def test_official
       person = FactoryGirl.create(:person_with_login, :official => true)
       login_as person

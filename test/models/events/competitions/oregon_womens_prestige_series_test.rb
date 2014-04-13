@@ -9,7 +9,7 @@ class OregonWomensPrestigeSeriesTest < ActiveSupport::TestCase
     assert_same_elements [ "Women 1/2/3", "Women 4"], competition.races.map(&:name), "category names"
     assert competition.races.first.results.empty?, "should have no results"
   end
-  
+
   test "calculate" do
     competition = OregonWomensPrestigeSeries.create!
 
@@ -35,17 +35,17 @@ class OregonWomensPrestigeSeriesTest < ActiveSupport::TestCase
     FactoryGirl.create(:result, :race => race_event_1_women_4, :place => 5)
     result_2 = FactoryGirl.create(:result, :race => race_event_2_women_123, :place => 20)
     FactoryGirl.create(:result, :race => race_event_2_women_123, :place => 100)
-    
+
     # team event scoring result
     FactoryGirl.create(:result, :race => race_event_3_women_123, :place => 7, :person_id => result_1.person_id)
     FactoryGirl.create(:result, :race => race_event_3_women_123, :place => 7, :person_id => result_2.person_id)
-    
+
     # Too low a place to score
     FactoryGirl.create(:result, :race => race_event_2_women_4, :place => 101)
-    
+
     # Not a series category
     FactoryGirl.create(:result, :race => race_event_1_senior_men, :place => 4)
-    
+
     # Not a series event
     FactoryGirl.create(:result, :place => 2)
 

@@ -34,7 +34,7 @@ class PeopleHelperTest < ActionView::TestCase
     @current_person = FactoryGirl.create(:promoter)
     assert promoter?, "promoter? with no one logged-in"
   end
-  
+
   def test_pronoun
     weaver = FactoryGirl.create(:person, :first_name => "Ryan", :last_name => "Weaver")
     tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
@@ -44,9 +44,9 @@ class PeopleHelperTest < ActionView::TestCase
     assert_equal "Erik Tonkin", pronoun(tonkin, weaver)
   end
 
-  
+
   private
-  
+
   def current_person
     @current_person
   end

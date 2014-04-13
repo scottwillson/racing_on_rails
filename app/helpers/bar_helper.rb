@@ -3,5 +3,5 @@ module BarHelper
 
   def bar_points_and_labels
     BAR_POINTS_AND_LABELS
-  end  
+  end
 end

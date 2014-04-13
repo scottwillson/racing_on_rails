@@ -6,7 +6,7 @@ module Admin
     def index
       @pages = Page.roots
     end
-  
+
     def new
       if params[:page]
         @page = Page.new(page_params)
@@ -15,10 +15,10 @@ module Admin
       end
       render :edit
     end
-  
+
     def create
       @page = Page.new(page_params)
-      
+
       if @page.save
         flash[:notice] = "Created #{@page.title}"
         expire_cache
@@ -27,11 +27,11 @@ module Admin
         render :edit
       end
     end
-  
+
     def edit
       @page = Page.find(params[:id])
     end
-  
+
     def update
       @page = Page.find(params[:id])
       if @page.update_attributes(page_params)
@@ -53,7 +53,7 @@ module Admin
         }
       end
     end
-  
+
     def destroy
       @page = Page.find(params[:id])
       begin
@@ -62,7 +62,7 @@ module Admin
       ensure
         ActiveRecord::Base.lock_optimistically = true
       end
-    
+
       expire_cache
       flash[:notice] = "Deleted #{@page.title}"
       redirect_to admin_pages_path

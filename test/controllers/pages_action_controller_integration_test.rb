@@ -7,20 +7,20 @@ class FakeController < ApplicationController
   def index
     render_page
   end
-  
+
   def recent_results
     render_page
   end
-  
+
   def upcoming_events
     render_page("home_upcoming_events")
   end
-  
+
   def news
     @news_summary = "Masters want more BAR points"
     render_page
   end
-  
+
   def partial_using_action
     render :template => "fake/partial_using_action"
   end
@@ -36,20 +36,20 @@ end
 
 class PagesActionControllerIntegrationTest < ActionController::TestCase
   tests FakeController
-  
+
   setup :create_page
-  
+
   def test_work_as_a_partial
     get(:partial_using_action)
     assert_select("p", :text => "This is a plain page")
     assert_template :layout => "application"
   end
-  
+
   def test_raise_exception_for_missing_partial
     # Would prefer MissingTemplate
     assert_raise(ActionView::TemplateError) { get(:missing_partial) }
   end
-  
+
   def test_work_as_a_partial_and_all_partials_itself
     get(:partial_using_partials_action)
     assert_select("p", :text => "This is a plain page")
@@ -85,7 +85,7 @@ class PagesActionControllerIntegrationTest < ActionController::TestCase
     assert_select("h4", :text => "Masters want more BAR points")
     assert_template :layout => "application"
   end
-  
+
   def create_page
     FactoryGirl.create(:page)
   end

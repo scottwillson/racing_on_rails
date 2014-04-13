@@ -4,16 +4,16 @@ module Concerns
       extend ActiveSupport::Concern
 
       include Comparable
-      
+
       def ==(other)
         if self.equal?(other)
           return true
         end
-        
+
         if !other.respond_to?(:id) || !other.respond_to?(:new_record?)
           return false
         end
-        
+
         if new_record? || other.new_record?
           return false
         end
@@ -40,7 +40,7 @@ module Concerns
       def <=>(other)
         return -1 if other.nil? || !other
 
-        if date 
+        if date
           if other.date
             return date <=> other.date
           else
@@ -48,7 +48,7 @@ module Concerns
           end
         elsif other.date
           return 1
-        end 
+        end
 
         unless new_record? || other.new_record?
           return id <=> other.id

@@ -15,22 +15,22 @@
 class Score < ActiveRecord::Base
   belongs_to :source_result, :class_name => 'Result', :foreign_key => 'source_result_id'
   belongs_to :competition_result, :class_name => 'Result', :foreign_key => 'competition_result_id'
-  
+
   # Intentionally validate ids. validates_presence_of :association causes it to load.
   # TODO Try :inverse to fix this
   validates_presence_of :source_result_id, :competition_result_id, :points
   validates_numericality_of :points
-  
+
   before_save :cache_date
-  
+
   def cache_date
     self[:date] = date || source_result.date
   end
-  
+
   def discipline
     competition_result.race.discipline
   end
-  
+
   def source_discipline
     source_result.try(:race).try(:discipline)
   end

@@ -9,7 +9,7 @@ class EditorRequestMailer < ActionMailer::Base
       :subject => "#{editor_request.person.name} #{RacingAssociation.current.short_name} account access granted"
     )
   end
-  
+
   def editor_request(editor_request)
     @editor_request = editor_request
     @edit_url = edit_person_editor_request_url(editor_request.person, editor_request.token, :host => RacingAssociation.current.rails_host)

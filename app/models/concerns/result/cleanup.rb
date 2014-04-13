@@ -2,7 +2,7 @@ module Concerns
   module Result
     module Cleanup
       extend ActiveSupport::Concern
-      
+
       # Fix common formatting mistakes and inconsistencies
       def cleanup
         cleanup_place
@@ -34,13 +34,13 @@ module Concerns
 
       def cleanup_number
         return if number.nil?
-        
+
         _number = number.to_s.strip.truncate(8)
-        
+
         if _number[/^\d+\.0$/]
           _number = number.to_i.to_s
         end
-        
+
         self.number = _number
       end
 

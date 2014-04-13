@@ -16,23 +16,23 @@ module Admin
           flash[:warn] = "First #{RacingAssociation.current.search_results_limit} teams"
         end
       end
-    
+
       respond_to do |format|
         format.html
         format.js
         format.json { render :json => @teams.to_json }
       end
     end
-  
+
     def edit
       @team = Team.includes(:aliases, :people).find(params[:id])
     end
-  
+
     def new
       @team = Team.new
       render :edit
     end
-  
+
     def create
       team_params[:updated_by] = current_person
       @team = Team.new(team_params)
@@ -45,7 +45,7 @@ module Admin
         render :edit
       end
     end
-  
+
     def update
       @team = Team.find(params[:id])
 
@@ -74,14 +74,14 @@ module Admin
         }
       end
     end
-  
+
     def merge
       @team = Team.find(params[:id])
       @other_team = Team.find(params[:other_team_id])
       @merged = @team.merge(@other_team)
       expire_cache
     end
-  
+
     def destroy
       @team = Team.find(params[:id])
       if @team.destroy
@@ -96,31 +96,31 @@ module Admin
       name_id = params[:name_id]
       Name.destroy(params[:name_id])
     end
-  
+
     def toggle_member
       team = Team.find(params[:id])
       team.toggle!(:member)
       render :partial => "shared/member", :locals => { :record => team }
     end
-    
+
     protected
-    
+
     def assign_current_admin_tab
       @current_admin_tab = "Team"
     end
-    
-    
+
+
     private
 
     def team_params
       params_without_mobile.require(:team).permit(
-        :contact_email, 
-        :contact_name, 
-        :contact_phone, 
-        :member, 
+        :contact_email,
+        :contact_name,
+        :contact_phone,
+        :member,
         :name,
         :show_on_public_page,
-        :sponsors, 
+        :sponsors,
         :website
       )
     end

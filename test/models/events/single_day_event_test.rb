@@ -9,7 +9,7 @@ class SingleDayEventTest < ActiveSupport::TestCase
     stage = FactoryGirl.create(:stage_race, :name => "Mt. Hood Classic").children.first
     stage.update_attributes(:name => "Mount Hood Day 1")
     assert_equal('Mt. Hood Classic: Mount Hood Day 1', stage.full_name, 'stage full_name')
-    
+
     stage.update_attributes(:name => "Mt. Hood Classic")
     assert_equal('Mt. Hood Classic', stage.full_name, 'stage full_name')
 

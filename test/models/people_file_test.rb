@@ -1,7 +1,7 @@
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
-class PersonFileTest < ActiveSupport::TestCase  
+class PersonFileTest < ActiveSupport::TestCase
   def test_import
     FactoryGirl.create(:discipline, :name => "Cyclocross")
     FactoryGirl.create(:discipline, :name => "Mountain Bike")
@@ -19,10 +19,10 @@ class PersonFileTest < ActiveSupport::TestCase
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
 
     tonkin = FactoryGirl.create(
-      :person, 
-      :first_name => "Erik", 
-      :last_name => "Tonkin", 
-      :member_from => nil, 
+      :person,
+      :first_name => "Erik",
+      :last_name => "Tonkin",
+      :member_from => nil,
       :member_to => nil,
       :ccx_category => "A",
       :road_category => "1",
@@ -33,9 +33,9 @@ class PersonFileTest < ActiveSupport::TestCase
 
     file = File.new("#{Rails.root}/test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
     people = PeopleFile.new(file).import(true)
-    
+
     assert_equal([4, 1], people, 'Number of people created and updated')
-    
+
     assert_equal(1, Person.find_all_by_name('Erik Tonkin').size, 'Erik Tonkins in database after import')
     tonkin.reload
     assert_equal('Erik Tonkin', tonkin.name, 'Tonkin name')
@@ -86,31 +86,31 @@ Downhill/Cross Country: Downhill}
     assert_equal(notes, sautter.notes, 'notes')
     assert(sautter.print_card?, 'sautter.print_card? after import')
     assert_nil(sautter.card_printed_at, 'sautter.card_printed_at after import')
-    
+
     ted_gresham = Person.find_by_name('Ted Greshsam')
     assert_equal(nil, ted_gresham.team, 'Team')
-    
+
     camden_murray = Person.find_by_name('Camden Murray')
     assert_equal(nil, camden_murray.team, 'Team')
     assert(camden_murray.created_by.name["55612_061202_151958.csv, attachment filename=55612_061202_151958.csv"], "created_by name")
-    
+
     team = Team.find_by_name("B.I.K.E. Hincapie")
     assert(team.created_by.name["55612_061202_151958.csv, attachment filename=55612_061202_151958.csv"], "created_by name")
-    
+
     assert_equal(1, Team.where(:name => "Sorella Forte Elite Team").count, "Should have one Sorella Forte in database")
     team = Team.find_by_name("Sorella Forte Elite Team")
     assert_equal(0, team.names(true).size, "names")
     assert_equal(1, team.aliases(true).size, "Aliases")
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
   end
-  
+
   def test_excel_file_database
     FactoryGirl.create(:discipline, :name => "Cyclocross")
     FactoryGirl.create(:discipline, :name => "Downhill")
     FactoryGirl.create(:discipline, :name => "Mountain Bike")
     FactoryGirl.create(:discipline, :name => "Road")
     FactoryGirl.create(:number_issuer)
-    
+
     # Pre-existing people
     Person.create!(
       :last_name =>'Abers',
@@ -138,7 +138,7 @@ Downhill/Cross Country: Downhill}
     )
     rene.reload
     assert_equal('190A', rene.road_number(true), 'Rene existing DH number')
-    
+
     scott = Person.create!(
       :last_name =>'Seaton',
       :first_name => 'Scott',
@@ -154,7 +154,7 @@ Downhill/Cross Country: Downhill}
     number = RaceNumber.where(:person_id => scott.id, :value => "422").first
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
-    
+
     # Dupe Scott Seaton should be skipped because of different license
     Person.create!(
       :last_name =>'Seaton',
@@ -163,9 +163,9 @@ Downhill/Cross Country: Downhill}
 
     file = File.new("#{Rails.root}/test/fixtures/membership/database.xls")
     people = PeopleFile.new(file).import(true)
-    
+
     assert_equal([2, 3], people, 'Number of people created and updated')
-    
+
     all_quinn_jackson = Person.find_all_by_name('quinn jackson')
     assert_equal(1, all_quinn_jackson.size, 'Quinn Jackson in database after import')
     quinn_jackson = all_quinn_jackson.first
@@ -187,7 +187,7 @@ Downhill/Cross Country: Downhill}
     number = quinn_jackson.race_numbers.detect { |n| n.value == "120" }
     assert(number.updated_by_person.name["membership/database.xls"], "updated_by_person expected to include file name but was #{number.updated_by_person}")
     assert(!quinn_jackson.print_card?, 'quinn_jackson.print_card? after import')
-    
+
     all_abers = Person.find_all_by_name('Brian Abers')
     assert_equal(1, all_abers.size, 'Brian Abers in database after import')
     brian_abers = all_abers.first
@@ -206,7 +206,7 @@ Downhill/Cross Country: Downhill}
     assert road_numbers.any? { |n| n.value == "825" }, "Should add Brian Abers new road number"
     assert_equal('117', brian_abers.dh_number, 'Brian Abers dh_number')
     assert(!brian_abers.print_card?, 'brian_abers.print_card? after import')
-    
+
     all_heidi_babi = Person.find_all_by_name('heidi babi')
     assert_equal(1, all_heidi_babi.size, 'Heidi Babi in database after import')
     heidi_babi = all_heidi_babi.first
@@ -221,7 +221,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('360-696-9272', heidi_babi.work_phone, 'Heidi work phone')
     assert_equal('360-696-9398', heidi_babi.cell_fax, 'Heidi cell/fax')
     assert(heidi_babi.print_card?, 'heidi_babi.print_card? after import')
-    
+
     all_rene_babi = Person.find_all_by_name('rene babi')
     assert_equal(1, all_rene_babi.size, 'Rene Babi in database after import')
     rene_babi = all_rene_babi.first
@@ -234,7 +234,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('1431 SE Columbia Way', rene_babi.street, 'Rene Babi street')
     assert(rene_babi.print_card?, 'rene_babi.print_card? after import')
     assert_equal('190A', rene_babi.road_number, 'Rene road_number')
-    
+
     all_scott_seaton = Person.find_all_by_name('scott seaton')
     assert_equal(2, all_scott_seaton.size, 'Scott Seaton in database after import')
     scott_seaton = all_scott_seaton.detect { |p| p.license == "1516"}
@@ -252,22 +252,22 @@ Downhill/Cross Country: Downhill}
     assert_equal('firefighter', scott_seaton.occupation, 'Scott Seaton occupation')
     assert_equal("Hutch's Bend", scott_seaton.team_name, 'Scott Seaton team should be updated')
     assert(!scott_seaton.print_card?, 'sautter.print_card? after import')
-    
+
     scott.race_numbers.create(:value => '422', :year => Time.zone.today.year - 1)
     number = RaceNumber.where(:person_id => scott.id, :value => "422").first
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
   end
-  
+
   def test_import_duplicates
     existing_person_with_login = FactoryGirl.create(:person_with_login, :name => "Erik Tonkin")
     existing_person = FactoryGirl.create(:person, :name => "Erik Tonkin")
-    
+
     file = File.new("#{Rails.root}/test/fixtures/membership/duplicates.xls")
     people_file = PeopleFile.new(file)
-    
+
     people_file.import(true)
-    
+
     assert_equal(1, people_file.created, 'Number of people created')
     assert_equal(0, people_file.updated, 'Number of people updated')
     assert_equal(1, people_file.duplicates.size, 'Number of duplicates')

@@ -1,5 +1,5 @@
 class WeeklySeries < Series
-  
+
   # TODO Is this duplicated from Ruby core and standard lib?
   DAYS_OF_WEEK = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'] unless defined?(DAYS_OF_WEEK)
 
@@ -11,11 +11,11 @@ class WeeklySeries < Series
       children.sort_by(&:date).first.date.wday
     end
   end
-  
+
   def earliest_day_of_week(date_range, reload = false)
     days_of_week(date_range, reload).min || -1
   end
-  
+
   # Formatted list. Examples:
   # * Tuesday PIR: Tu
   # * Track classes: M, W, F
@@ -29,14 +29,14 @@ class WeeklySeries < Series
       days_of_week(false).collect { |day| DAYS_OF_WEEK[day] }.join('/')
     end
   end
-  
+
   # Array of Integers. Sunday is 0. Ordered. Duplicates removed.
   # Caches result, even if date_range changes, and doesn't notice database changes.
   def days_of_week(date_range, reload = false)
     if reload || @days_of_week.nil?
       @days_of_week = WeeklySeries.connection.select_values(%Q{
-          select distinct (DAYOFWEEK(date) - 1) as day_of_week 
-          from events 
+          select distinct (DAYOFWEEK(date) - 1) as day_of_week
+          from events
           where parent_id=#{self.id} and date between '#{date_range.begin.to_s(:db)}' and '#{date_range.end.to_s(:db)}'
           order by day_of_week}
       )

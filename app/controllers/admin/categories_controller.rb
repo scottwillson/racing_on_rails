@@ -12,7 +12,7 @@ module Admin
         @unknowns = Category.find_all_unknowns
       end
     end
-    
+
     def update
       @category = Category.find(params[:id])
       @category.update_attributes(category_params)

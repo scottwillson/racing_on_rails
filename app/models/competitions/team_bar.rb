@@ -17,15 +17,15 @@ class TeamBar < Competition
       from results
       join scores on scores.source_result_id = results.id
       join results as competition_results on competition_results.id = scores.competition_result_id
-      join events as competition_events on competition_events.id = competition_results.event_id 
+      join events as competition_events on competition_events.id = competition_results.event_id
       left outer join people on people.id = results.person_id
-      join teams on results.team_id = teams.id 
-      where results.id = scores.source_result_id 
+      join teams on results.team_id = teams.id
+      where results.id = scores.source_result_id
         and competition_events.type = 'Bar'
         and competition_results.year = #{year}
     }
     )
-    
+
     results_with_tandem_teams_split = []
     results.each do |result|
       category_name = result.delete("category_name")

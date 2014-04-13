@@ -9,9 +9,9 @@ class HumanDatesController < ApplicationController
       render :json => params[:date].to_json
     end
   end
-  
+
   protected
-  
+
   def parser
     HumanDate::Parser.new
   end

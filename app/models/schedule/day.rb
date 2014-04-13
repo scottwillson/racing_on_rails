@@ -4,7 +4,7 @@ module Schedule
 
     # Array of SingleDayEvents
     attr_accessor :events
-    
+
     attr_reader :month
 
     def initialize(month, date)
@@ -21,7 +21,7 @@ module Schedule
     def day_of_month
       @date.day
     end
-    
+
     # Sunday, Monday, ... Saturday
     def day_of_week
     	Date::DAYNAMES[@date.wday]

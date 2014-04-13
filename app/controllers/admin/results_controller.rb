@@ -7,7 +7,7 @@ module Admin
       @person = Person.find(params[:person_id])
       @results = Result.find_all_for(@person)
     end
-  
+
     # == Params
     # * name
     # * ignore_id: don't show this Person
@@ -23,7 +23,7 @@ module Admin
         render :partial => "people", :locals => { :people => people }
       end
     end
-  
+
     def results
       person = Person.find(params[:person_id])
       results = Result.find_all_for(person)
@@ -33,12 +33,12 @@ module Admin
         format.js
       end
     end
-  
+
     def scores
       @result = Result.find(params[:id])
       @scores = @result.scores
     end
-  
+
     def move
       @result = Result.find(params[:result_id])
       @original_result_person = Person.find(@result.person_id)
@@ -54,13 +54,13 @@ module Admin
           @result = Result.find(params[:id])
           @result.update_attributes! params[:name] => params[:value]
           expire_cache
-        
+
           if @result.respond_to?("#{params[:name]}_s")
             text = @result.send("#{params[:name]}_s")
           else
             text = @result.send(params[:name])
           end
-        
+
           render :plain => text
         end
       end

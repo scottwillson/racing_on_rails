@@ -6,13 +6,13 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     series = Cat4WomensRaceSeries.create!(:date => Time.zone.local(2005), :name => "Series")
     omnium = MultiDayEvent.create!(:date => Time.zone.local(2005), :bar_points => 1, :name => "Omnium")
     series.source_events << omnium
-  
+
     road_race = omnium.children.create!(:date => Time.zone.local(2005), :name => "Omnium road race")
     women_cat_4 = Category.find_or_create_by(:name => "Category 4 Women")
     person = FactoryGirl.create(:person)
     omnium.races.create!(:category => women_cat_4).results.create!(:place => 1, :person => person)
     road_race.races.create!(:category => women_cat_4).results.create!(:place => 1, :person => person)
-  
+
     Cat4WomensRaceSeries.calculate!(2005)
     result = series.races.first.results.first
     assert_equal 2, result.scores.size, "Should have one score"
@@ -24,13 +24,13 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     series = Cat4WomensRaceSeries.create!(:date => Time.zone.local(2005))
     omnium = MultiDayEvent.create!(:date => Time.zone.local(2005))
     series.source_events << omnium
-  
+
     road_race = omnium.children.create!(:date => Time.zone.local(2005))
     women_cat_4 = Category.find_or_create_by(:name => "Category 4 Women")
     person = FactoryGirl.create(:person)
     omnium.races.create!(:category => women_cat_4).results.create!(:place => 1, :person => person)
     road_race.races.create!(:category => women_cat_4).results.create!(:place => 1, :person => person)
-  
+
     Cat4WomensRaceSeries.calculate!(2005)
     result = series.races.first.results.first
     assert_equal 100, result.points, "Should have points for omnium only"
@@ -39,7 +39,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
 
   def test_calculate
     setup_scenario
-    
+
     assert_difference "Result.count", 2 do
       Cat4WomensRaceSeries.calculate!(2004)
     end
@@ -64,7 +64,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
 
     assert_equal('2', results[1].place, 'Place')
     assert_equal(@molly, results[1].person, 'Person')
-    
+
     assert_equal(65, results[1].points, 'Points')
   end
 
@@ -81,9 +81,9 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal_dates(Time.zone.local(2004, 1, 1), bar.date, "2004 Cat4WomensRaceSeries date")
     assert_equal("2004 Cat 4 Women's Race Series", bar.name, "2004 Bar name")
     assert_equal_dates(Time.zone.today, bar.updated_at, "Cat4WomensRaceSeries last updated")
-  
+
     assert_equal(1, bar.races.size, 'Races')
-  
+
     race = bar.races.first
     assert_equal(@category_4_women, race.category, 'Category')
     assert_equal(1, race.results.size, 'Category 4 Women race results')
@@ -107,9 +107,9 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     series.source_events << event
 
     Cat4WomensRaceSeries.calculate!(2004)
-    series.reload    
+    series.reload
     assert_equal(1, series.races.size, 'Races')
-  
+
     race = series.races.first
     assert_equal(2, race.results.size, 'Category 4 Women race results')
     results = race.results.sort
@@ -126,7 +126,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     category_4_women = Category.find_or_create_by(:name => "Women Cat 4")
     racing_association.cat4_womens_race_series_category = category_4_women
     racing_association.save!
-  
+
     series = Cat4WomensRaceSeries.create(:date => Time.zone.local(2004))
     event = SingleDayEvent.create(:date => Time.zone.local(2004))
     race_1 = event.races.create!(:category => category_4_women)
@@ -138,9 +138,9 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     series.source_events << event
 
     Cat4WomensRaceSeries.calculate!(2004)
-    series.reload    
+    series.reload
     assert_equal(1, series.races.size, 'Races')
-  
+
     race = series.races.first
     assert_equal(2, race.results.size, 'Category 4 Women race results')
     results = race.results.sort
@@ -156,10 +156,10 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     series = Cat4WomensRaceSeries.create!(:date => Time.zone.local(2004))
     event = SingleDayEvent.create!(:discipline => "Time Trial", :date => Time.zone.local(2004))
     series.source_events << event
-  
+
     # Non Cat 4 Women race in other event
     FactoryGirl.create(:result, :place => "1")
-  
+
     fourteen_mile = event.children.create!
     assert_equal 1, fourteen_mile.bar_points, "Children should receive BAR points"
     assert_equal_dates Time.zone.local(2004), fourteen_mile.date, "Children should share parent date"
@@ -171,7 +171,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     race = seven_mile.races.create!(:category => women_cat_4)
     molly = FactoryGirl.create(:person, :name => "Molly")
     race.results.create!(:place => 1, :time => 1500, :person => molly)
-  
+
     Cat4WomensRaceSeries.calculate!(2004)
 
     race = series.races.first
@@ -210,7 +210,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     series.source_events << banana_belt
     kings_valley_2004 = FactoryGirl.create(:event, :date => Time.zone.local(2004), :name => "Kings Valley")
     series.source_events << kings_valley_2004
-  
+
     banana_belt_women_cat_4 = banana_belt.races.create!(:category => @category_4_women)
     @alice = FactoryGirl.create(:person)
     banana_belt_women_cat_4.results.create!(:person => @alice, :place => '7')
@@ -221,38 +221,38 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
 
     kv_women_cat_4 = kings_valley_2004.races.create!(:category => @category_4_women)
     kv_women_cat_4.results.create!(:person => @molly, :place => '205')
-  
+
     # ... but not DNFs, DQs, etc...
     matson = FactoryGirl.create(:person)
     kv_women_cat_4.results.create!(:person => matson, :place => 'DQ')
-  
+
     # ... and not results in different years
     wrong_year_event = SingleDayEvent.create!(:name => "Boat Street CT 2003", :date => Time.zone.local(2003).end_of_year)
     race = wrong_year_event.races.create!(:category => @category_4_women)
-    race.results.create!(:person => @molly, :place => "1")    
+    race.results.create!(:person => @molly, :place => "1")
 
     wrong_year_event = SingleDayEvent.create!(:name => "Boat Street CT 2005", :date => Time.zone.local(2005).beginning_of_year)
     race = wrong_year_event.races.create!(:category => @category_4_women)
     race.results.create!(:person => @alice, :place => "2")
-  
+
     # WSBA results count for participation points
     other_wsba_event = SingleDayEvent.create!(:name => "Boat Street CT 2004", :date => "2004-06-26")
     race = other_wsba_event.races.create!(:category => @category_4_women)
-    race.results.create!(:person => @molly, :place => "18")    
+    race.results.create!(:person => @molly, :place => "18")
 
     # Blank results count -- finished, but don't know where
     race.results.create!(:person => @alice, :place => "")
-  
+
     # Non-WSBA results count for participation points
     non_wsba_event = SingleDayEvent.create!(:name => "Classique des Alpes", :date => Time.zone.local(2004, 9, 16), :sanctioned_by => "UCI")
     race = non_wsba_event.races.create!(:category => @category_4_women)
     race.results.create!(:person => @alice, :place => "56")
-  
+
     # Other categories don't count
     category_3_women = FactoryGirl.create(:category, :name => "Women Cat 3")
     banana_belt_category_3_women = banana_belt.races.create!(:category => category_3_women)
     banana_belt_category_3_women.results.create!(:person => @alice, :place => '1')
-  
+
     # Other competitions don't count!
     RiderRankings.calculate!(2004)
   end

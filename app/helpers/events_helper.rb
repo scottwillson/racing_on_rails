@@ -5,7 +5,7 @@ module EventsHelper
   def link_to_event_email(event)
     email = event.email if event.email.present?
     email = event.promoter.email if !email && event.promoter && event.promoter.email.present?
-    
+
     name = event.promoter.name if event.promoter && event.promoter.name.present?
     name = email if name.nil?
 
@@ -38,9 +38,9 @@ module EventsHelper
   # Show link even if not approved
   def link_to_flyer(event, text = nil)
     return unless event
-    
+
     text = text || event.full_name
-    
+
     if event.flyer.blank?
       text
     else

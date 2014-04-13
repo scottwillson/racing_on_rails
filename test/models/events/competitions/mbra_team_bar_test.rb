@@ -9,7 +9,7 @@ class MbraTeamBarTest < ActiveSupport::TestCase
     senior_women = FactoryGirl.create(:category, :name => "Cat 1/2/3 Women")
     road.bar_categories << senior_men
     road.bar_categories << senior_women
-    
+
     kona          = FactoryGirl.create(:team)
     chocolate     = FactoryGirl.create(:team, :member => false)
     gentle_lovers = FactoryGirl.create(:team)
@@ -60,7 +60,7 @@ class MbraTeamBarTest < ActiveSupport::TestCase
       :person => molly,
       :team => chocolate
     )
-    
+
     # no team -> no bat results
     member = FactoryGirl.create(:person)
     swan_island_senior_men.results.create(
@@ -82,7 +82,7 @@ class MbraTeamBarTest < ActiveSupport::TestCase
       :person => alice,
       :team => gentle_lovers
     )
-    
+
     # No BAT points
     senior_women_swan_island = swan_island.races.create(:category => senior_women, :field_size => 3, :bar_points => 0)
     senior_women_swan_island.results.create(

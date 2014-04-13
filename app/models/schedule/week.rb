@@ -14,7 +14,7 @@ module Schedule
       end
       @days = []
       (start_date..start_date + 6).each do |date|
-        @days << Day.new(month, date)    
+        @days << Day.new(month, date)
       end
     end
 

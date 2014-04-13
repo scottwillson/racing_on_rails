@@ -11,7 +11,7 @@ module Events
 
         event = FactoryGirl.create(:event, :date => Date.new(2004), :name => "Banana Belt")
         race = event.races.create!(:category => category_men_1_2)
-        
+
         tonkin = FactoryGirl.create(:person, :name => "Tonkin")
         race.results.create!(:place => "1", :person => tonkin)
         ryan = FactoryGirl.create(:person, :name => "Ryan")
@@ -40,7 +40,7 @@ module Events
         men_1_2 = wsba.races.detect { |race| race.category == category_men_1_2 }
         assert_not_nil(men_1_2, "Should have Men Cat 1-2 race")
         assert_equal(3, men_1_2.results.count, "Senior men results")
-        
+
         results = men_1_2.results.sort
         assert_equal(21, results[0].points, "Result 0 points")
         assert_equal(17, results[1].points, "Result 1 points")

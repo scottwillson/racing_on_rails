@@ -13,7 +13,7 @@ class ResultsHelperTest < ActionView::TestCase
   end
 
   def test_results_table_one_ttt
-    race = Race.new(:results => [ 
+    race = Race.new(:results => [
       Result.new(:place => "1"),
       Result.new(:place => "1"),
       Result.new(:place => "1")

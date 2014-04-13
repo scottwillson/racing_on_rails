@@ -4,31 +4,31 @@ module Admin
     def index
       @velodromes = Velodrome.order(:name)
     end
-  
+
     def new
       @velodrome = Velodrome.new
       render :edit
     end
-  
+
     def create
       expire_cache
       @velodrome = Velodrome.create(velodrome_params)
-    
+
       if @velodrome.errors.empty?
         flash[:notice] = "Created #{@velodrome.name}"
         return redirect_to(new_admin_velodrome_path)
       end
       render(:template => 'admin/velodromes/edit')
     end
-  
+
     def edit
       @velodrome = Velodrome.find(params[:id])
     end
-  
+
     def update
       expire_cache
       @velodrome = Velodrome.find(params[:id])
-    
+
       if @velodrome.update_attributes(velodrome_params)
         flash[:notice] = "Updated #{@velodrome.name}"
         return redirect_to(edit_admin_velodrome_path(@velodrome))
@@ -54,7 +54,7 @@ module Admin
       redirect_to(admin_velodromes_path)
       expire_cache
     end
-  
+
     protected
 
     def assign_current_admin_tab

@@ -15,7 +15,7 @@ lines.each do |line|
     File.open("mailman/#{index}.txt", "w") do |file|
       body.each { |l| file.puts(l) }
     end
-    
+
     index = index + 1
     body = []
   end

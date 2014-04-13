@@ -9,14 +9,14 @@ module Admin
       super
       create_administrator_session
       use_ssl
-    
+
       @cyclocross = FactoryGirl.create(:cyclocross_discipline)
       FactoryGirl.create(:discipline, :name => "Downhill")
       @mountain_bike = FactoryGirl.create(:mtb_discipline)
       @road = FactoryGirl.create(:discipline, :name => "Road")
       FactoryGirl.create(:discipline, :name => "Singlespeed")
       FactoryGirl.create(:discipline, :name => "Track")
-      @association = FactoryGirl.create(:number_issuer)    
+      @association = FactoryGirl.create(:number_issuer)
     end
 
     def test_toggle_member
@@ -34,7 +34,7 @@ module Admin
       molly.reload
       assert_equal(true, molly.member, 'member after second update')
     end
-  
+
     def test_new
       get(:new)
       assert_response :success
@@ -59,26 +59,26 @@ module Admin
       assert_not_nil(assigns["person"], "Should assign person")
       assert_equal(alice, assigns['person'], 'Should assign Alice to person')
     end
-  
+
     def test_create
       assert_equal([], Person.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
-    
+
       post(:create, {"person"=>{
-                          "member_from(1i)"=>"", "member_from(2i)"=>"", "member_from(3i)"=>"", 
-                          "member_to(1i)"=>"", "member_to(2i)"=>"", "member_to(3i)"=>"", 
-                          "date_of_birth(2i)"=>"", "date_of_birth(1i)"=>"", "date_of_birth(3i)"=>"", 
-                          "work_phone"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", 
-                          "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", 
-                          "team_name"=>"", "road_category"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", 
-                          "first_name"=>"Jon", "last_name"=>"Knowlson", 
+                          "member_from(1i)"=>"", "member_from(2i)"=>"", "member_from(3i)"=>"",
+                          "member_to(1i)"=>"", "member_to(2i)"=>"", "member_to(3i)"=>"",
+                          "date_of_birth(2i)"=>"", "date_of_birth(1i)"=>"", "date_of_birth(3i)"=>"",
+                          "work_phone"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"",
+                          "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"",
+                          "team_name"=>"", "road_category"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"",
+                          "first_name"=>"Jon", "last_name"=>"Knowlson",
                           "email"=>"", "state"=>"",
                           "race_numbers_attributes"=>{
                             "0"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@road.id, "year"=>"2013", "value"=>""}
                           }
                     }, "commit"=>"Save"})
-    
+
       assert assigns['person'].errors.empty?, assigns['person'].errors.full_messages.join
-    
+
       assert(flash.empty?, "Flash should be empty, but was: #{flash}")
       knowlsons = Person.find_all_by_name('Jon Knowlson')
       assert(!knowlsons.empty?, 'Knowlson should be created')
@@ -97,26 +97,26 @@ module Admin
         molly_road_number = RaceNumber.last
         year = Time.zone.today.year.to_s
 
-        put(:update, {"commit"=>"Save", 
+        put(:update, {"commit"=>"Save",
                        "number_year" => year,
-                       "number_issuer_id"=>[@association.to_param], "number_value"=>["AZY"], 
+                       "number_issuer_id"=>[@association.to_param], "number_value"=>["AZY"],
                        "discipline_id" => [@mountain_bike.id.to_s],
                        "person"=>{
-                         "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", 
-                         "cell_fax"=>"", "zip"=>"97070", 
+                         "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville",
+                         "cell_fax"=>"", "zip"=>"97070",
                          "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "dh_category"=>"",
-                         "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", 
-                         "street"=>"31153 SW Willamette Hwy W", 
-                         "track_category"=>"", "home_phone"=>"503-582-8823", "first_name"=>"Paul", "last_name"=>"Formiller", 
-                         "date_of_birth(1i)"=>"1969", 
-                         "member_from(1i)"=>"", "member_from(2i)"=>"", "member_from(3i)"=>"", 
-                         "member_to(1i)"=>"", "member_to(2i)"=>"", "member_to(3i)"=>"", 
+                         "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5",
+                         "street"=>"31153 SW Willamette Hwy W",
+                         "track_category"=>"", "home_phone"=>"503-582-8823", "first_name"=>"Paul", "last_name"=>"Formiller",
+                         "date_of_birth(1i)"=>"1969",
+                         "member_from(1i)"=>"", "member_from(2i)"=>"", "member_from(3i)"=>"",
+                         "member_to(1i)"=>"", "member_to(2i)"=>"", "member_to(3i)"=>"",
                          "email"=>"paul.formiller@verizon.net", "state"=>"OR",
                          "race_numbers_attributes"=>{
                            "0"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@road.id, "year"=>year, "value"=>"202", "id" => molly_road_number.to_param},
                            "1"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@mountain_bike.id, "year"=>year, "value"=>"AZY"}
                          }
-                       }, 
+                       },
                        "id"=>molly.to_param}
         )
         assert assigns(:person).errors.empty?, assigns(:person).errors.full_messages.join(", ")
@@ -134,38 +134,38 @@ module Admin
 
     def test_create_with_road_number
       assert_equal([], Person.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
-    
+
       post(:create, {
-        "person"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", 
-          "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16", 
-          "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31", 
-          "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", 
+        "person"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"",
+          "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16",
+          "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31",
+          "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"",
           "team_name"=>"", "road_category"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", "first_name"=>"Jon",
            "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>"",
           "race_numbers_attributes"=>{
             "0"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@road.id, "year"=>"2007", "value"=>"8977"},
             "1"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@mountain_bike.id, "year"=>"2007", "value"=>"BBB9"}
           }
-        }, 
+        },
           :number_year => '2007', "official" => "0",
         "commit"=>"Save"})
-    
+
       assert assigns['person'].errors.empty?, assigns['person'].errors.full_messages.join
-    
+
       assert(flash.empty?, "flash empty? #{flash}")
       knowlsons = Person.find_all_by_name('Jon Knowlson')
       assert(!knowlsons.empty?, 'Knowlson should be created')
       assert_redirected_to(edit_admin_person_path(knowlsons.first))
       race_numbers = knowlsons.first.race_numbers
       assert_equal(2, race_numbers.size, 'Knowlson race numbers')
-    
+
       race_number = RaceNumber.where(:discipline_id => Discipline[:road].id, :year => 2007, :person_id => knowlsons.first.id).first
       assert_not_nil(race_number, 'Road number')
       assert_equal(2007, race_number.year, 'Road number year')
       assert_equal('8977', race_number.value, 'Road number value')
       assert_equal(Discipline[:road], race_number.discipline, 'Road number discipline')
       assert_equal(@association, race_number.number_issuer, 'Road number issuer')
-    
+
       race_number = RaceNumber.where(:discipline_id => Discipline[:mountain_bike].id, :year => 2007, :person_id => knowlsons.first.id).first
       assert_not_nil(race_number, 'MTB number')
       assert_equal(2007, race_number.year, 'MTB number year')
@@ -176,65 +176,65 @@ module Admin
       assert_equal_dates('2004-02-16', knowlsons.first.member_from, 'member_from after update')
       assert_equal_dates('2004-12-31', knowlsons.first.member_to, 'member_to after update')
     end
-  
+
     def test_create_with_duplicate_road_number
       assert_equal([], Person.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
-    
+
       post(:create, {
-        "person"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", 
-          "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16", 
-          "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31", 
-          "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", 
-          "team_name"=>"", "road_category"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", 
+        "person"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"",
+          "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16",
+          "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31",
+          "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"",
+          "team_name"=>"", "road_category"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"",
           "first_name"=>"Jon", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>"",
           "race_numbers_attributes"=>{
             "0"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@road.id, "year"=>"2004", "value"=>"104"},
             "1"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@road.id, "year"=>"2004", "value"=>"BBB9"}
           }
-        }, 
+        },
         "commit"=>"Save"})
-    
+
       assert_not_nil(assigns['person'], "Should assign person")
       assert(assigns['person'].errors.empty?, "Person should not have errors")
-    
+
       knowlsons = Person.where(:first_name => "Jon", :last_name => "Knowlson")
       assert_equal(1, knowlsons.size, "Should have two Knowlsons")
       knowlsons.each do |knowlson|
         assert_equal(2, knowlson.race_numbers.size, 'Knowlson race numbers')
       end
     end
-  
+
     def test_create_with_empty_password_and_no_numbers
-      post :create,  :person => { :login => "", :password_confirmation => "", :password => "", :team_name => "", 
+      post :create,  :person => { :login => "", :password_confirmation => "", :password => "", :team_name => "",
                                   :first_name => "Henry", :last_name => "David", :license => "" }, :number_issuer_id => [ { "1" => nil } ]
       assert_not_nil assigns(:person), "@person"
       assert assigns(:person).errors.empty?, "Did no expect @person errors: #{assigns(:person).errors.full_messages.join(', ')}"
       assert_redirected_to edit_admin_person_path(assigns(:person))
     end
-    
+
     def test_update
       vanilla = FactoryGirl.create(:team)
       molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron", :road_number => "2", :team => vanilla)
       assert_equal 1, molly.versions.size, "versions"
       molly_road_number = RaceNumber.first
-    
-      put(:update, {"commit"=>"Save", 
+
+      put(:update, {"commit"=>"Save",
                      "number_year" => Time.zone.today.year.to_s,
                      "person"=>{
-                       "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16", 
-                       "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31", 
-                       "print_card" => "1", "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", 
-                       "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "dh_category"=>"", 
-                       "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", 
-                       "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", 
-                       "first_name"=>"Paul", "last_name"=>"Formiller", 
+                       "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16",
+                       "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31",
+                       "print_card" => "1", "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville",
+                       "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "dh_category"=>"",
+                       "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5",
+                       "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823",
+                       "first_name"=>"Paul", "last_name"=>"Formiller",
                        "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR", "ccx_only" => "1",
                        "official" => "1",
                        "race_numbers_attributes" => {
-                         "0" => { "value"=>"222", "id"=>molly_road_number.id }, 
+                         "0" => { "value"=>"222", "id"=>molly_road_number.id },
                          "1" => { "number_issuer_id"=>@association.to_param, "discipline_id"=>@cyclocross.id, "year"=> Time.zone.today.year.to_s }
                        }
-                      }, 
+                      },
                      "id"=>molly.to_param}
       )
       assert(flash.empty?, "Expected flash.empty? but was: #{flash[:warn]}")
@@ -257,20 +257,20 @@ module Admin
       assert_equal nil, change.last, "Team ID after"
       assert_equal @administrator, molly.updated_by_person, "updated_by_person"
     end
-  
+
     def test_update_bad_member_from_date
       person = FactoryGirl.create(:person)
       put(:update, "commit"=>"Save", "person"=>{
-                   "member_from(1i)"=>"","member_from(2i)"=>"10", "member_from(3i)"=>"19",  
-                   "member_to(3i)"=>"31", "date_of_birth(2i)"=>"1", "city"=>"Hood River", 
+                   "member_from(1i)"=>"","member_from(2i)"=>"10", "member_from(3i)"=>"19",
+                   "member_to(3i)"=>"31", "date_of_birth(2i)"=>"1", "city"=>"Hood River",
                    "work_phone"=>"541-387-8883 x 213", "occupation"=>"Sales Territory Manager", "cell_fax"=>"541-387-8884",
                    "date_of_birth(3i)"=>"1", "zip"=>"97031", "license"=>"583", "mtb_category"=>"Beg",
-                   "dh_category"=>"Beg", "notes"=>"interests: 6\r\nr\r\ninterests: 4\r\nr\r\ninterests: 4\r\n", "gender"=>"M", 
-                   "ccx_category"=>"B", "team_name"=>"River City Specialized", "print_card"=>"1", 
-                   "street"=>"3541 Avalon Drive", "home_phone"=>"503-367-5193", "road_category"=>"3", 
-                   "track_category"=>"5", "first_name"=>"Karsten", "last_name"=>"Hagen", 
-                   "member_to(1i)"=>"2008", "member_to(2i)"=>"12", "email"=>"khagen69@hotmail.com", "date_of_birth(1i)"=>"1969",  
-                   "state"=>"OR"}, "id"=>person.to_param, 
+                   "dh_category"=>"Beg", "notes"=>"interests: 6\r\nr\r\ninterests: 4\r\nr\r\ninterests: 4\r\n", "gender"=>"M",
+                   "ccx_category"=>"B", "team_name"=>"River City Specialized", "print_card"=>"1",
+                   "street"=>"3541 Avalon Drive", "home_phone"=>"503-367-5193", "road_category"=>"3",
+                   "track_category"=>"5", "first_name"=>"Karsten", "last_name"=>"Hagen",
+                   "member_to(1i)"=>"2008", "member_to(2i)"=>"12", "email"=>"khagen69@hotmail.com", "date_of_birth(1i)"=>"1969",
+                   "state"=>"OR"}, "id"=>person.to_param,
                    "number_year"=>"2008"
       )
       assert_not_nil(assigns(:person), "@person")
@@ -278,7 +278,7 @@ module Admin
       assert(assigns(:person).errors[:member_from].empty?, "Should have no errors on 'member_from' but had #{assigns(:person).errors[:member_from]}")
       assert_redirected_to edit_admin_person_path(assigns(:person))
     end
-  
+
     def test_one_print_card
       tonkin = FactoryGirl.create(:person)
 
@@ -289,19 +289,19 @@ module Admin
       tonkin.reload
       assert(!tonkin.print_card?, 'Tonkin.print_card? after printing')
     end
-  
+
     def test_print_no_cards_pending
       get(:cards, :format => "pdf")
       assert_redirected_to(no_cards_admin_people_path(:format => "html"))
     end
-  
+
     def test_no_cards
       get(:no_cards)
       assert_response :success
       assert_template("admin/people/no_cards")
       assert_template :layout => "admin/application"
     end
-  
+
     def test_print_cards
       tonkin = FactoryGirl.create(:person)
       tonkin.print_card = true
@@ -320,7 +320,7 @@ module Admin
       assert(!tonkin.print_card?, 'Tonkin.print_card? after printing')
       assert tonkin.membership_card?, "Tonkin.has_card? after printing"
     end
-  
+
     def test_many_print_cards
       people = []
       (1..4).each do |i|
@@ -357,38 +357,38 @@ module Admin
       assert_equal(kings_valley, assigns['event'], "Should Kings Valley assign 'event'")
       assert_template("admin/people/edit")
     end
-  
+
     def test_remember_event_id_on_update
        promoter = FactoryGirl.create(:person)
        jack_frost = FactoryGirl.create(:event)
 
-      put(:update, :id => promoter.id, 
-        "person" => {"home_phone" => "(510) 410-2201", "email" => "fred@whatley.net"}, 
+      put(:update, :id => promoter.id,
+        "person" => {"home_phone" => "(510) 410-2201", "email" => "fred@whatley.net"},
         "commit" => "Save",
         "event_id" => jack_frost.id)
-    
+
       assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
-    
+
       promoter.reload
-    
+
       assert_redirected_to(edit_admin_person_path(promoter, :event_id => jack_frost))
     end
-  
+
     def test_remember_event_id_on_create
       jack_frost = FactoryGirl.create(:event)
       post(
-        :create, 
-        "person" => {"first_name" => "Fred", "last_name" => "Whatley", "home_phone" => "(510) 410-2201", "email" => "fred@whatley.net"}, 
+        :create,
+        "person" => {"first_name" => "Fred", "last_name" => "Whatley", "home_phone" => "(510) 410-2201", "email" => "fred@whatley.net"},
         "commit" => "Save",
         "event_id" => jack_frost.id
       )
-    
+
       assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
-    
+
       promoter = Person.find_by_name('Fred Whatley')
       assert_redirected_to(edit_admin_person_path(promoter, :event_id => jack_frost))
     end
-  
+
     def test_destroy
       person = FactoryGirl.create(:person)
       delete :destroy, :id => person.id
@@ -396,7 +396,7 @@ module Admin
       assert_redirected_to admin_people_path
       assert flash.notice.present?
     end
-  
+
     def test_cannot_destroy
       result = FactoryGirl.create(:result)
       person = result.person

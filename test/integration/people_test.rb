@@ -6,7 +6,7 @@ class PeopleTest < RacingOnRails::IntegrationTest
     FactoryGirl.create(:person, :first_name => "Ryan", :last_name => "Weaver")
     get "/people"
     assert_response :success
-    
+
     # MBRA has custom template
     if css_select("input#findPerson").empty? && css_select("input[type=search]").empty?
       flunk "Expected input#findPerson or input[type=search]"
@@ -25,10 +25,10 @@ class PeopleTest < RacingOnRails::IntegrationTest
     assert @response.body["Ryan"], "Should find Ryan Weaver"
     assert @response.body["Weaver"], "Should find Ryan Weaver"
   end
-  
+
   def test_import
     goto_login_page_and_login_as FactoryGirl.create(:administrator)
-    post "/admin/people/preview_import",  
+    post "/admin/people/preview_import",
          :people_file => fixture_file_upload(
            "#{ActionController::TestCase.fixture_path}/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv",
            "text/csv"

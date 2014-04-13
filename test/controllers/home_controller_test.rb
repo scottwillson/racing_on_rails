@@ -17,20 +17,20 @@ class HomeControllerTest < ActionController::TestCase
     assert_nil assigns["news_category"], "@news_category"
     assert_nil assigns["recent_news"], "@recent_news"
   end
-  
+
   test "edit" do
     use_ssl
     login_as :administrator
     get :edit
     assert_response :success
   end
-  
+
   test "edit should require administrator" do
     use_ssl
     get :edit
     assert_redirected_to new_person_session_path
   end
-  
+
   test "update" do
     use_ssl
     login_as :administrator

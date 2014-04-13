@@ -2,7 +2,7 @@
 # Many methods to handle old URLs that search engines still hit. Will be removed.
 class ResultsController < ApplicationController
   caches_page :index, :event, :person, :person_event, :team
-  
+
   # HTML: Formatted links to Events with Results
   # == Params
   # * year (optional)
@@ -16,11 +16,11 @@ class ResultsController < ApplicationController
       format.xml
     end
   end
-  
+
   # All Results for Event
   def event
     @event = Event.find(params[:event_id])
-    
+
     case @event
     when AgeGradedBar, Bar, TeamBar
       return redirect_to(:controller => 'bar', :action => 'show', :year => @event.year, :discipline => @event.discipline)
@@ -47,7 +47,7 @@ class ResultsController < ApplicationController
       format.xml { render :xml => results_for_api(@event.id) }
     end
   end
-  
+
   # Single Person's Results for a single Event
   def person_event
     @event = Event.find(params[:event_id])
@@ -69,20 +69,20 @@ class ResultsController < ApplicationController
               first!
     raise ActiveRecord::RecordNotFound unless @result
   end
-  
+
   # Person's Results for an entire year
   def person
     @person = Person.find(params[:person_id])
-      
+
     respond_to do |format|
       format.html do
         assign_person_results @person, @year
-        
+
         render :layout => !request.xhr?
       end
 
       format.json do
-        assign_person_results @person, @year        
+        assign_person_results @person, @year
         render :json => (@event_results + @competition_results).to_json
       end
 
@@ -92,14 +92,14 @@ class ResultsController < ApplicationController
       end
     end
   end
-  
+
   # Teams's Results for an entire year
   def team
     @team = Team.find(params[:team_id])
     respond_to do |format|
       format.html do
         assign_team_results @team, @year
-        
+
         render :layout => !request.xhr?
       end
 
@@ -114,14 +114,14 @@ class ResultsController < ApplicationController
       end
     end
   end
-  
-  
+
+
   private
-  
+
   def assign_events_with_results
     @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
   end
-  
+
   def assign_person_results(person, year)
     @event_results = Result.where(
       "person_id = ? and year = ? and competition_result = false and team_competition_result = false", person.id, year
@@ -130,16 +130,16 @@ class ResultsController < ApplicationController
       includes(:scores => [ :source_result, :competition_result ]).
       where("person_id = ? and year = ? and (competition_result = true or team_competition_result = true)", person.id, year)
   end
-  
+
   def assign_team_results(team, year)
     @event_results = Result.where(:team_id => team.id).where(:year => year).where("competition_result = false and team_competition_result = false")
   end
-  
+
   # Default implementation. Return nil. Override in engines.
   def assign_start_list
     @start_list = nil
   end
-  
+
   def results_for_api(event_id)
     Result.where(:event_id => event_id)
   end

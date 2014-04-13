@@ -7,14 +7,14 @@ module Concerns
     #   subchild1.ancestors # => [child1, root]
     def ancestors
       node, nodes = self, []
-      
+
       while node.parent do
         nodes << node = node.parent
         if nodes.include?(node.parent)
           break
         end
       end
-      
+
       nodes
     end
 

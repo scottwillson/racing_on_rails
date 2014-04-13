@@ -7,7 +7,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     @administrator = FactoryGirl.create(:administrator)
     @member = FactoryGirl.create(:person_with_login, :login => "bob.jones")
   end
-  
+
   # logged-in?, person_id?, same person?, admin?
   def test_member_account
     if RacingAssociation.current.ssl?
@@ -54,8 +54,8 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
 
       get "/people/#{@administrator.id}/account"
       assert_redirected_to "https://www.example.com/people/#{@administrator.id}/edit"
-    
-      assert_redirected_to "https://www.example.com/people/#{@administrator.id}/edit"      
+
+      assert_redirected_to "https://www.example.com/people/#{@administrator.id}/edit"
     else
       get "/account"
       assert_redirected_to "http://www.example.com/person_session/new"
@@ -205,7 +205,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     assert_template "person_sessions/new"
     assert_equal "Please login to your #{RacingAssociation.current.short_name} account", flash[:notice]
   end
-  
+
   def test_unauthorized
     https!
     get "/unauthorized"

@@ -7,7 +7,7 @@ module Admin
   module People
     class ExportTest < ActionController::TestCase
       tests Admin::PeopleController
-      
+
       def setup
         super
         create_administrator_session
@@ -36,7 +36,7 @@ module Admin
           FactoryGirl.create(:person, :name => "Alice Pennington", :team_name => "Gentle Lovers", :member_from => Time.zone.local(1999), :member_to => Time.zone.now.end_of_year.to_date, :road_number => "230", :gender => "F")
           FactoryGirl.create(:person, :name => "Non Results", :member_from => nil, :member_to => nil)
           FactoryGirl.create(:person, :name => "Brad Ross", :member_from => nil, :member_to => nil, :notes => "Hey,\n I’ve got some \"bad\" characters")
-        
+
           tonkin = FactoryGirl.create(:person, :singlespeed_number => "409", :track_number => "765", :name => "Erik Tonkin", :member_from => Time.zone.local(1999), :member_to => Time.zone.now.end_of_year.to_date, :date_of_birth => Time.zone.local(1982, 9, 10), :street => "127 SE Lambert", :city => "Portland", :state => "OR", :zip => "19990", :home_phone => "415 221-3773", :gender => "M", :road_category => "1", :track_category => "5", :road_number => "102", :license => "7123811", :team_name => "Kona")
           tonkin.race_numbers.create!(:discipline => Discipline[:singlespeed], :value => "410")
 
@@ -51,7 +51,7 @@ module Admin
           assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers["Content-Type"], 'Should set content to Excel')
           # FIXME use send_data
           assert_equal(11, assigns['people'].to_a.size, "People export size")
-        
+
           expected_body = [
             "license	first_name	last_name	team_name	member_from	member_to	ccx_only	print_card	card_printed_at	membership_card	date_of_birth	occupation	street	city	state	zip	wants_mail	email	wants_email	home_phone	work_phone	cell_fax	gender	road_category	track_category	ccx_category	mtb_category	dh_category	ccx_number	dh_number	road_number	singlespeed_number	track_number	xc_number	notes	volunteer_interest	official_interest	race_promotion_interest	team_interest	created_at	updated_at\n",
             "						0	0		0							0	sixhobsons@comcast.net	0	(503) 223-3343																0	0	0	0	11/1/2012	11/1/2012\n",
@@ -74,7 +74,7 @@ module Admin
           end
         end
       end
-  
+
       def test_export_to_excel_with_date
         get(:index, :format => 'xls', :include => 'all', :date => "2008-12-31")
 
@@ -100,7 +100,7 @@ module Admin
       def test_export_members_only_to_excel_promoter
         destroy_person_session
         PersonSession.create(FactoryGirl.create(:promoter))
-    
+
         get :index, :format => 'xls', :include => 'members_only', :excel_layout => "scoring_sheet"
 
         assert_response :success
@@ -109,7 +109,7 @@ module Admin
         # FIXME use send_data
         # assert_not_nil(@response.headers['Content-Length'], "Should set content length in headers:\n#{@response.headers.join("\n")}")
       end
-    
+
       def test_export_members_only_to_scoring_sheet
         get(:index, :format => 'xls', :include => 'members_only', :excel_layout => 'scoring_sheet')
 
@@ -119,7 +119,7 @@ module Admin
         # FIXME use send_data
         # assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
       end
-  
+
       def test_export_print_cards_to_endicia
         get(:index, :format => "xls", :include => "print_cards", :excel_layout => "endicia")
 

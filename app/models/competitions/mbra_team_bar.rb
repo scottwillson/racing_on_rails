@@ -1,5 +1,5 @@
 class MbraTeamBar < Competition
-  
+
   def self.calculate!(year = Time.zone.today.year)
     benchmark(name, :level => :info) {
       transaction do
@@ -35,7 +35,7 @@ class MbraTeamBar < Competition
   def point_schedule
     @point_schedule = @point_schedule || []
   end
-  
+
   # Riders obtain points inversely proportional to the starting field size,
   # plus bonuses for first, second and third place (6, 3, and 1 points respectively).
   # DNF: 1/2  point
@@ -70,7 +70,7 @@ class MbraTeamBar < Competition
     references(:events, :parent, :race).
     order("results.team_id, race_id")
   end
-  
+
   # create a competition_result for each team appearing in this set of results, which is per race
   def create_competition_results_for(results, race)
     competition_result = nil
@@ -92,7 +92,7 @@ class MbraTeamBar < Competition
           competition_result = race.results.create!(:team => source_result.team) if competition_result.nil?
         end
 
-        # limit to top two results for team for each source race by 
+        # limit to top two results for team for each source race by
         # removing the lowest score for the event after every result.
         # I do it this way because results do not arrive in postion order.
         # SQL sorting does not work as position is a varchar field.

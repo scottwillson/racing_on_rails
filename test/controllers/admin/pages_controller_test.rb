@@ -11,16 +11,16 @@ module Admin
       get(:index)
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
-  
+
     def test_view_pages_as_tree
       get(:index)
       assert_response(:success)
     end
-  
+
     def test_update_title_inplace
       page = FactoryGirl.create(:page)
-      
-      xhr(:patch, :update_attribute, 
+
+      xhr(:patch, :update_attribute,
           :id => page.to_param,
           :value => "OBRA Banquet",
           :name => "title"
@@ -32,15 +32,15 @@ module Admin
       assert_equal("OBRA Banquet", page.title, "Page title")
       assert_equal(@administrator, page.updated_by_person, "updated_by_person")
     end
-  
+
     def test_edit_page
       page = FactoryGirl.create(:page)
       get(:edit, :id => page.id)
     end
-  
+
     def test_update_page
       page = FactoryGirl.create(:page)
-      put(:update, 
+      put(:update,
           :id => page.to_param,
           :page => {
             :title => "My Awesome Bike Racing Page",
@@ -54,7 +54,7 @@ module Admin
       assert_equal("<blink>Race</blink>", page.body, "body")
       assert_equal(@administrator, page.updated_by_person, "updated_by_person")
     end
-  
+
     def test_update_page_parent
       parent_page = Page.create!(:title => "Root")
       page = FactoryGirl.create(:page)
@@ -73,11 +73,11 @@ module Admin
       assert_equal(parent_page, page.parent, "Page parent")
       assert_redirected_to(edit_admin_page_path(page))
     end
-  
+
     def test_new_page
       get(:new)
     end
-  
+
     def test_new_page_parent
       assert_equal 0, Page.count
       parent_page = FactoryGirl.create(:page)
@@ -86,12 +86,12 @@ module Admin
       assert_not_nil(page, "@page")
       assert_equal(parent_page, page.parent, "New page parent")
     end
-  
+
     def test_create_page
-      put(:create, 
+      put(:create,
           :page => {
             :title => "My Awesome Bike Racing Page",
-            :body => "<blink>Race</blink>"          
+            :body => "<blink>Race</blink>"
           }
       )
       page = Page.find_by_title("My Awesome Bike Racing Page")
@@ -101,10 +101,10 @@ module Admin
       assert_equal("<blink>Race</blink>", page.body, "body")
       assert_equal(@administrator, page.updated_by_person, "updated_by_person")
     end
-  
+
     def test_create_child_page
       parent_page = FactoryGirl.create(:page)
-      post(:create, 
+      post(:create,
           :page => {
             :title => "My Awesome Bike Racing Page",
             :body => "<blink>Race</blink>",
@@ -119,14 +119,14 @@ module Admin
       assert_equal(@administrator, page.updated_by_person, "updated_by_person")
       assert_equal(parent_page, page.parent, "Page parent")
     end
-  
+
     def test_delete_page
       page = FactoryGirl.create(:page)
       delete(:destroy, :id => page.to_param)
       assert_redirected_to(admin_pages_path)
       assert(!Page.exists?(page.id), "Page should be deleted")
     end
-  
+
     def test_delete_parent_page
       page = FactoryGirl.create(:page)
       page.children.create!
@@ -135,7 +135,7 @@ module Admin
       assert_redirected_to(admin_pages_path)
       assert(!Page.exists?(page.id), "Page should be deleted")
     end
-  
+
     def test_delete_child_page
       page = FactoryGirl.create(:page).children.create!
       delete(:destroy, :id => page.to_param)

@@ -4,9 +4,9 @@
 class ScheduleController < ApplicationController
   before_filter :assign_schedule
   before_filter :assign_sanctioning_organizations
-  
+
   caches_page :index, :list, :calendar
-  
+
   # Default calendar format
   # === Params
   # * year: default to current year
@@ -27,14 +27,14 @@ class ScheduleController < ApplicationController
         events = []
         @events.each do |event|
           events << {
-            :id => event.id, 
-            :title => event.full_name, 
-            :description => event.full_name, 
-            :start => "#{event.date}", 
-            :end => "#{event.end_date}", 
-            :allDay => true, 
+            :id => event.id,
+            :title => event.full_name,
+            :description => event.full_name,
+            :start => "#{event.date}",
+            :end => "#{event.end_date}",
+            :allDay => true,
             :url => "#{event.flyer}"
-          } 
+          }
         end
         render :json => events.to_json
       }
@@ -62,7 +62,7 @@ class ScheduleController < ApplicationController
       format.xls { render_xls }
     end
   end
-  
+
   # MBRA JS-based calendar
   def calendar
     respond_to do |format|
@@ -71,12 +71,12 @@ class ScheduleController < ApplicationController
         events = []
         @events.each do |event|
           events << {
-            :id => event.id, 
-            :title => event.full_name, 
-            :description => event.full_name, 
-            :start => event.date, 
+            :id => event.id,
+            :title => event.full_name,
+            :description => event.full_name,
+            :start => event.date,
             :end => event.end_date,
-            :allDay => true, 
+            :allDay => true,
             :url => event.flyer
           }
         end
@@ -87,7 +87,7 @@ class ScheduleController < ApplicationController
 
 
   private
-  
+
   def render_ics
     send_data(
       RiCal.Calendar do |cal|
@@ -110,27 +110,27 @@ class ScheduleController < ApplicationController
       :filename => "#{RacingAssociation.current.name} #{@year} Schedule.ics"
     )
   end
-  
+
   def render_xls
     send_data(CSV.generate(:col_sep => "\t") do |csv|
       csv << [ "id", "parent_id", "date", "name", "discipline", "flyer", "city", "state", "promoter_name" ]
       @events.each do |event|
-        csv << [ 
-          event.id, 
-          event.parent_id, 
-          event.date.to_s(:db), 
-          event.full_name, 
-          event.discipline, 
-          event.flyer, 
-          event.city, 
-          event.state, 
+        csv << [
+          event.id,
+          event.parent_id,
+          event.date.to_s(:db),
+          event.full_name,
+          event.discipline,
+          event.flyer,
+          event.city,
+          event.state,
           event.promoter_name
         ]
       end
     end, :type => :xls)
   end
 
-  def assign_schedule    
+  def assign_schedule
     @discipline = Discipline[params[:discipline]]
     @discipline_names = Discipline.names
 
@@ -150,7 +150,7 @@ class ScheduleController < ApplicationController
     )
     @events = @schedule.events
   end
-  
+
   def start_date
     if params[:start].present? && params[:start].to_i > 0 && params[:start][/\A\d+{8,12}\z/]
       Time.zone.at params[:start].to_i
@@ -158,7 +158,7 @@ class ScheduleController < ApplicationController
       params[:start]
     end
   end
-  
+
   def end_date
     if params[:end].present? && params[:end].to_i > 0 && params[:end][/\A\d+{8,12}\z/]
       Time.zone.at params[:end].to_i
@@ -166,7 +166,7 @@ class ScheduleController < ApplicationController
       params[:end]
     end
   end
-  
+
   def assign_sanctioning_organizations
     if RacingAssociation.current.filter_schedule_by_sanctioning_organization?
       @sanctioning_organizations = RacingAssociation.current.sanctioning_organizations

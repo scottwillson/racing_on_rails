@@ -7,7 +7,7 @@ class VersionsControllerTest < ActionController::TestCase
     create_administrator_session
     use_ssl
   end
-  
+
   def test_index_for_person
     person = FactoryGirl.create(:person)
     get :index, :person_id => person.to_param

@@ -3,7 +3,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 # :stopdoc:
 class FindAssociationsTest < ActiveSupport::TestCase
   setup :number_issuer
-  
+
   def number_issuer
     FactoryGirl.create(:number_issuer)
     FactoryGirl.create(:discipline)
@@ -97,7 +97,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     tonkin = FactoryGirl.create(:person, :name => "Erik Tonkin")
     FactoryGirl.create(:result, :person => tonkin)
     tonkin.aliases.create!(:name => "Eric Tonkin")
-    
+
     # Same name, number as existing person
     kings_valley_pro_1_2_2004 = FactoryGirl.create(:race)
     results = kings_valley_pro_1_2_2004.results
@@ -116,7 +116,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_not_equal(tonkin, result_3.person, 'Person')
     assert_equal("Ron", result_3.person.first_name, 'Person')
   end
-  
+
   def test_find_associated_records_non_road
     FactoryGirl.create(:cyclocross_discipline)
     FactoryGirl.create(:mtb_discipline)
@@ -165,7 +165,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
 
   def test_differentiate_people_by_number_ignore_different_names
     RacingAssociation.current.expects(:eager_match_on_license?).at_least_once.returns(false)
-    
+
     person = Person.create!(:name => "Joe Racer", :updated_at => '2008-10-01')
     person.reload
     person.update_attributes(:updated_at => "2008-10-01")
@@ -173,7 +173,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal_dates "2008-10-01", person.updated_at, "updated_at"
     person = Person.find(person.id)
     assert_equal_dates "2008-10-01", person.updated_at, "updated_at"
-    
+
     person_clone = Person.create!(:name => "Joe Racer")
     Person.create!(:name => "Jenny Biker")
     person_with_same_number = Person.create!(:name => "Eddy Racer", :road_number => "600")
@@ -198,11 +198,11 @@ class FindAssociationsTest < ActiveSupport::TestCase
 
   def test_differentiate_people_by_number_ignore_different_names_eager_match
     RacingAssociation.current.expects(:eager_match_on_license?).at_least_once.returns(true)
-    
+
     person = Person.create!(:name => "Joe Racer")
     Person.connection.execute "update people set updated_at = '#{Time.zone.local(2008).utc.to_s(:db)}' where id = #{person.id}"
     person.reload
-    
+
     person_clone = Person.create!(:name => "Joe Racer")
     Person.create!(:name => "Jenny Biker")
     person_with_same_number = Person.create!(:name => "Eddy Racer", :road_number => "600")
@@ -386,10 +386,10 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should not create! new Tonkin")
     assert_equal(new_tonkin, result.person, "Should use most recently-updated person if can't decide otherwise")
   end
-  
+
   def test_find_people_among_duplicates
     FactoryGirl.create(:cyclocross_discipline)
-    
+
     Timecop.freeze(Date.new(Time.zone.today.year, 6)) do
       Person.create!(:name => "Mary Yax").race_numbers.create!(:value => "157")
 

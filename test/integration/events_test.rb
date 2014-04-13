@@ -6,7 +6,7 @@ class EventsTest < RacingOnRails::IntegrationTest
     Timecop.freeze(Time.zone.local(2013, 3)) do
       FactoryGirl.create(:event)
       FactoryGirl.create(:event)
-    
+
       get "/events"
       assert_redirected_to schedule_path
 

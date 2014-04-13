@@ -16,7 +16,7 @@ class ActiveSupport::TestCase
   include Test::EnumerableAssertions
 
   DatabaseCleaner.strategy = :truncation
-  
+
   setup :clean_database, :activate_authlogic, :reset_association, :reset_disciplines, :reset_person_current
 
   def clean_database
@@ -26,7 +26,7 @@ class ActiveSupport::TestCase
   def reset_association
     RacingAssociation.current = nil
   end
-  
+
   def reset_disciplines
     # Discipline class may have loaded earlier with no aliases in database
     Discipline.reset
@@ -47,12 +47,12 @@ class ActiveSupport::TestCase
       raise "Don't recognize #{person}"
     end
   end
-  
+
   def logout
     session[:person_credentials_id] = nil
     session[:person_credentials] = nil
   end
-  
+
   # person = fixture symbol or Person
   def goto_login_page_and_login_as(person, password = "secret")
     person = case person
@@ -63,16 +63,16 @@ class ActiveSupport::TestCase
     else
       raise "Don't recognize #{person}"
     end
-    
+
     https! if RacingAssociation.current.ssl?
     get new_person_session_path
     assert_response :success
     assert_template "person_sessions/new"
-    
+
     post person_session_path, :person_session => { :login => person.login, :password => password }
     assert_response :redirect
   end
-  
+
   # Assert Arrays of Results are the same. Only considers place, Person, and time
   def assert_results(expected, actual, message = nil)
     assert_equal(expected.size, actual.size, "Size of results. #{message}")
@@ -82,7 +82,7 @@ class ActiveSupport::TestCase
       assert_equal(result.time, actual[index].time, "time for #{result}. #{message}")
     }
   end
-  
+
   # Expected = date in yyyy-mm-dd format
   def assert_equal_dates(expected, actual, message = nil, format = "%Y-%m-%d")
     if expected != nil && (expected.is_a?(Date) || expected.is_a?(DateTime) || expected.is_a?(Time))
@@ -110,7 +110,7 @@ class ActiveSupport::TestCase
     @administrator = Person.find_by_login("admin@example.com") || FactoryGirl.create(:administrator)
     PersonSession.create(@administrator)
   end
-  
+
   def use_ssl
     (@request.env['HTTPS'] = 'on') if RacingAssociation.current.ssl?
   end
@@ -128,19 +128,19 @@ class ActiveSupport::TestCase
       p "#{event.date} #{event.name} id: #{event.id} parent: #{event.parent_id} #{event.class} #{event.sanctioned_by} #{event.discipline}"
     }.size
   end
-  
+
   def print_all_results
     Result.order(:person_id).each {|result|
       p "#{result.place} (#{result.members_only_place}) #{result.name} #{result.team} #{result.event.name} #{result.race.name} #{result.date} BAR: #{result.bar}"
     }.size
   end
-  
+
   def print_all_categories
     Category.order('parent_id, name').each {|category|
       p "#{category.id} #{category.parent_id} #{category.name}"
       }.size
   end
-  
+
   # helps with place_members_only calculation, so there are no gaps
   def fill_in_missing_results
     Result.all.group_by(&:race).each do |race, results|
@@ -150,11 +150,11 @@ class ActiveSupport::TestCase
          unless all_results.include?(res.to_s)
            # we need a result, there is a gap here
            race.results.create!(:place => res)
-         end         
+         end
        }
     end
   end
-  
+
   def secure_redirect_options
     @controller.send :secure_redirect_options
   end

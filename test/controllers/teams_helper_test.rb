@@ -2,9 +2,9 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class TeamsHelperTest < ActionController::TestCase
-  
+
   tests TeamsController
-  
+
   include TeamsHelper
   include ActionView::Helpers::AssetTagHelper
   include ActionView::Helpers::TagHelper

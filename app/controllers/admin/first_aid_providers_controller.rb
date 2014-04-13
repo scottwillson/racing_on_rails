@@ -13,15 +13,15 @@ module Admin
       else
         @events = SingleDayEvent.today_and_future
       end
-      
+
       if params[:sort_by].present?
         @sort_by = params[:sort_by]
       else
         @sort_by = "date"
       end
-    
+
       @events = @events.where(:practice => false).where(:cancelled => false).where(:postponed => false)
-    
+
       respond_to do |format|
         format.html
         format.text { email }
@@ -36,7 +36,7 @@ module Admin
       grid = RacingOnRails::Grid::Grid.new(rows)
       grid.truncate_rows
       grid.calculate_padding
-    
+
       headers['Content-Type'] = 'text/plain'
 
       render :plain => grid.to_s(false)

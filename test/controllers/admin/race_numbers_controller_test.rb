@@ -15,7 +15,7 @@ module Admin
 
       xhr :delete, :destroy, :id => race_number.to_param
       assert_response :success
-    
+
       assert !RaceNumber.exists?(race_number.id)
     end
   end

@@ -5,7 +5,7 @@ module Admin
   module People
     class ImportTest < ActionController::TestCase
       tests Admin::PeopleController
-      
+
       def setup
         super
         create_administrator_session
@@ -19,7 +19,7 @@ module Admin
         FactoryGirl.create(:discipline, :name => "Track")
         FactoryGirl.create(:number_issuer)
       end
-      
+
       def test_preview_import
         people_before_import = Person.count
 
@@ -30,9 +30,9 @@ module Admin
         assert_response :success
         assert_template("admin/people/preview_import")
         assert_not_nil(assigns["people_file"], "Should assign 'people_file'")
-        assert(session[:people_file_path].include?('55612_061202_151958.csv, attachment filename=55612_061202_151958.csv'), 
+        assert(session[:people_file_path].include?('55612_061202_151958.csv, attachment filename=55612_061202_151958.csv'),
           'Should store temp file path in session as :people_file_path')
-  
+
         assert_equal(people_before_import, Person.count, 'Should not have added people')
       end
 
@@ -58,7 +58,7 @@ module Admin
         assert(flash.notice.present?, "flash[:notice] should not be empty")
         assert_nil(session[:duplicates], 'session[:duplicates]')
         assert_redirected_to admin_people_path
-  
+
         assert_nil(session[:people_file_path], 'Should remove temp file path from session')
         assert(people_before_import < Person.count, 'Should have added people')
         assert_equal(0, Duplicate.count, 'Should have no duplicates')
@@ -80,11 +80,11 @@ module Admin
         assert(flash.notice.present?, "flash[:notice] should not be empty")
         assert_nil(session[:duplicates], 'session[:duplicates]')
         assert_redirected_to admin_people_path
-  
+
         assert_nil(session[:people_file_path], 'Should remove temp file path from session')
         assert(people_before_import < Person.count, 'Should have added people')
         assert_equal(0, Duplicate.count, 'Should have no duplicates')
-  
+
         rene = Person.find_by_name('Rene Babi')
         assert_not_nil(rene, 'Rene Babi should have been imported and created')
         road_number = rene.race_numbers.detect {|n| n.year == next_year && n.discipline == Discipline['road']}
@@ -114,7 +114,7 @@ module Admin
         assert(flash.notice.present?, "flash[:notice] should not be empty")
         assert_equal(1, Duplicate.count, 'Should have duplicates')
         assert_redirected_to duplicates_admin_people_path
-  
+
         assert_nil(session[:people_file_path], 'Should remove temp file path from session')
         assert(people_before_import < Person.count, 'Should have added people')
       end
@@ -134,10 +134,10 @@ module Admin
 
       def test_resolve_duplicates
         FactoryGirl.create(:person, :first_name => "Alice", :last_name => "Pennington")
-        
+
         FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
         Person.create!(:name => 'Erik Tonkin')
-        
+
         FactoryGirl.create(:person, :first_name => "Ryan", :last_name => "Weaver")
         Person.create!(:name => 'Ryan Weaver', :city => 'Kenton')
         weaver_3 = Person.create!(:name => 'Ryan Weaver', :city => 'Lake Oswego')
@@ -149,14 +149,14 @@ module Admin
         post(:resolve_duplicates, tonkin_dupe.to_param => 'new', ryan_dupe.to_param => weaver_3.to_param, alice_dupe.to_param => alice_2.to_param)
         assert_redirected_to admin_people_path
         assert_equal(0, Duplicate.count, 'Should have no duplicates')
-  
+
         assert_equal(3, Person.where(:last_name => "Tonkin").count, 'Tonkins in database')
         assert_equal(3, Person.where(:last_name => "Weaver").count, 'Weaver in database')
         assert_equal(2, Person.where(:last_name => "Pennington").count, 'Pennington in database')
-  
+
         weaver_3.reload
         assert_equal('Las Vegas', weaver_3.city, 'Weaver city')
-  
+
         alice_2.reload
         assert_equal('2', alice_2.road_category, 'Alice category')
       end

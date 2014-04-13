@@ -1,7 +1,7 @@
 require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
-class CrossCrusadeTeamCompetitionTest < ActiveSupport::TestCase  
+class CrossCrusadeTeamCompetitionTest < ActiveSupport::TestCase
   def test_recalc_with_one_event
     weaver = FactoryGirl.create(:person)
     tonkin = FactoryGirl.create(:person)
@@ -10,7 +10,7 @@ class CrossCrusadeTeamCompetitionTest < ActiveSupport::TestCase
     gentle_lovers = FactoryGirl.create(:team)
     kona = FactoryGirl.create(:team)
     vanilla = FactoryGirl.create(:team)
-    
+
     series = Series.create!(:name => "Cross Crusade")
     event = series.children.create!(:date => Date.new(2007, 10, 7))
 
@@ -95,7 +95,7 @@ class CrossCrusadeTeamCompetitionTest < ActiveSupport::TestCase
     assert_equal(808, result.points, "third result points")
     assert_equal 5, result.scores.count, "third result scores"
   end
-  
+
   def test_missing_teams_penalty
     alice = FactoryGirl.create(:person)
 

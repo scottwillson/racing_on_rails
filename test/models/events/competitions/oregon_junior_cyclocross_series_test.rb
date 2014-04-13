@@ -9,7 +9,7 @@ class OregonJuniorCyclocrossSeriesTest < ActiveSupport::TestCase
     person = FactoryGirl.create(:person)
     event.races.create!(:category => boys_10_12).results.create!(:place => 3, :person => person)
     series.source_events << event
-    
+
     OregonJuniorCyclocrossSeries.calculate!
   end
 end

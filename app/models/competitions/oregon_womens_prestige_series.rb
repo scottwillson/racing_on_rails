@@ -1,19 +1,19 @@
 class OregonWomensPrestigeSeries < Competition
   include Concerns::Competition::CalculatorAdapter
-  
+
   def friendly_name
     "Oregon Womens Prestige Series"
   end
-  
+
   def category_names
     [ "Women 1/2/3", "Women 4" ]
   end
-  
+
   # Decreasing points to 20th place, then 2 points for 21st through 100th
   def point_schedule
     [ 100, 80, 70, 60, 55, 50, 45, 40, 35, 30, 25, 20, 18, 16, 14, 12, 10, 8, 6, 4 ] + ([ 2 ] * 80)
   end
-  
+
   def source_events?
     true
   end
@@ -21,7 +21,7 @@ class OregonWomensPrestigeSeries < Competition
   def categories?
     true
   end
-  
+
   def source_event_ids(race)
     ids = nil
     if source_events? && source_events.present?
@@ -56,7 +56,7 @@ class OregonWomensPrestigeSeries < Competition
         "races.category_id",
         "race_id",
         "results.event_id",
-        "results.id as id", 
+        "results.id as id",
         "year"
       ]).
       joins(:race => :event).
@@ -64,18 +64,18 @@ class OregonWomensPrestigeSeries < Competition
       joins("left outer join events parents_events on parents_events.id = events.parent_id").
       joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
       where("year = ?", year)
-    
+
     # Only consider results with categories that match +race+'s category
     if categories?
       query = query.where("races.category_id in (?)", category_ids_for(race))
     end
-    
+
     results = Result.connection.select_all(query)
     # Ignore BAR points multiplier. Leave query "universal".
     set_multiplier results
     results
   end
-  
+
   def set_multiplier(results)
     results.each do |result|
       if result["type"] == "MultiDayEvent"

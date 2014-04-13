@@ -1,6 +1,6 @@
 class CrossCrusadeCallups < Competition
   default_value_for :name, "Cross Crusade Call-ups"
-  
+
   def create_races
     races.create!(:category => Category.find_or_create_by(:name => "Category A"))
     races.create!(:category => Category.find_or_create_by(:name => "Category B"))
@@ -26,12 +26,12 @@ class CrossCrusadeCallups < Competition
   def source_results(race)
     event_ids = source_events.map(&:id).join(", ")
     category_ids = category_ids_for(race).join(", ")
-    
+
     Result.find_by_sql(
-      %Q{ SELECT results.* FROM results  
-          JOIN races ON races.id = results.race_id 
-          JOIN categories ON categories.id = races.category_id 
-          JOIN events ON races.event_id = events.id 
+      %Q{ SELECT results.* FROM results
+          JOIN races ON races.id = results.race_id
+          JOIN categories ON categories.id = races.category_id
+          JOIN events ON races.event_id = events.id
           WHERE place between 1 and #{point_schedule.size - 1}
               and categories.id in (#{category_ids})
               and events.id in (#{event_ids})
@@ -48,7 +48,7 @@ class CrossCrusadeCallups < Competition
   def points_for(source_result, team_size = nil)
     point_schedule[source_result.place.to_i].to_f
   end
-  
+
   def all_year?
     false
   end

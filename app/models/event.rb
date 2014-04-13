@@ -16,7 +16,7 @@
 #   A purer children association would return all child Events and Competitions
 #  (that's how they are in the database). But we almost always want just the child Events,
 #   and not the Competitions.
-#   
+#
 # * parent-child_competitions: A one-to-many tree. Example: stage race MultiDayEvent parent
 #   with GC and KOM child_competitions. Typically combined with children when we really
 #   do want all child Competitions and Events.
@@ -27,7 +27,7 @@
 #
 # Changes to parent Event's attributes are propogated to children, unless the children's attributes are already different.
 # See propogated_attributes
-# 
+#
 # It's debatable whether we need STI subclasses or not.
 #
 # All notification code just supports combined TT results, and should be moved to background processing
@@ -39,9 +39,9 @@ class Event < ActiveRecord::Base
   after_initialize :set_defaults
 
   validates_presence_of :date, :name
-  
+
   validate :parent_is_not_self
-  
+
   validate :inclusion_of_discipline
   validate :inclusion_of_sanctioned_by
 
@@ -60,7 +60,7 @@ class Event < ActiveRecord::Base
            :foreign_key => "parent_id",
            :dependent => :destroy,
            :after_add => :children_changed,
-           :after_remove => :children_changed 
+           :after_remove => :children_changed
 
   has_many :children_and_child_competitions,
            -> { order :date },
@@ -82,11 +82,11 @@ class Event < ActiveRecord::Base
              :inverse_of => :event,
              :dependent => :destroy,
              :after_add => :children_changed,
-             :after_remove => :children_changed 
+             :after_remove => :children_changed
 
   belongs_to :velodrome
   belongs_to :region
-  
+
   scope :editable_by, lambda { |person|
     if person.nil?
       where("true = false")
@@ -97,31 +97,31 @@ class Event < ActiveRecord::Base
       where("promoter_id = :person_id or editors_events.editor_id = :person_id", :person_id => person)
     end
   }
-  
+
   scope :today_and_future, lambda { where("date >= :today || end_date >= :today", :today => Time.zone.today) }
-  
-  scope :year, lambda { |year| 
+
+  scope :year, lambda { |year|
     where(
-      "date between ? and ?", 
-      Time.zone.local(year).beginning_of_year.to_date, 
+      "date between ? and ?",
+      Time.zone.local(year).beginning_of_year.to_date,
       Time.zone.local(year).end_of_year.to_date
     )
   }
-  
+
   scope :current_year, lambda { where(
-    "date between ? and ?", 
-    Time.zone.local(RacingAssociation.current.effective_year).beginning_of_year.to_date, 
+    "date between ? and ?",
+    Time.zone.local(RacingAssociation.current.effective_year).beginning_of_year.to_date,
     Time.zone.local(RacingAssociation.current.effective_year).end_of_year.to_date
     )
   }
-  
+
   scope :upcoming_in_weeks, lambda { |number_of_weeks|
     where(
-      "(date between :today and :later) || (end_date between :today and :later)", 
-      :today => Time.zone.today, 
+      "(date between :today and :later) || (end_date between :today and :later)",
+      :today => Time.zone.today,
       :later => number_of_weeks.weeks.from_now.to_date)
   }
-  
+
   scope :child, lambda { where("parent_id is not null") }
   scope :not_child, lambda { where("parent_id is null") }
 
@@ -134,7 +134,7 @@ class Event < ActiveRecord::Base
   include Concerns::TreeExtensions
   include Concerns::Versioned
   include Export::Events
-  
+
   # Return [weekly_series, events] that have results
   # Honors RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
   def self.find_all_with_results(year = Time.zone.today.year, discipline = nil)
@@ -143,8 +143,8 @@ class Event < ActiveRecord::Base
               joins(:races => :results).
               includes(:parent => :parent).
               where(
-                "events.date between ? and ?", 
-                Time.zone.local(year).beginning_of_year.to_date, 
+                "events.date between ? and ?",
+                Time.zone.local(year).beginning_of_year.to_date,
                 Time.zone.local(year).end_of_year.to_date
               ).
               uniq
@@ -156,13 +156,13 @@ class Event < ActiveRecord::Base
       end
       events = events.where(:discipline => discipline_names)
     end
-    
+
     if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
       events = events.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
     end
-    
+
     events = events.to_a.map(&:root).uniq
-    
+
     weekly_series, events = events.partition { |event| event.is_a?(WeeklySeries) }
     competitions, events = events.partition { |event| event.is_a?(Competition) }
 
@@ -174,7 +174,7 @@ class Event < ActiveRecord::Base
     discipline_names << 'Circuit' if discipline.downcase == 'road'
     Event.distinct.year(year).where(:discipline => discipline_names).where("bar_points > 0")
   end
-  
+
   def self.upcoming(weeks = 2)
     single_day_events = SingleDayEvent.
       not_child.
@@ -197,11 +197,11 @@ class Event < ActiveRecord::Base
       where(:cancelled => false).
       where(:practice => false).
       upcoming_in_weeks(weeks)
-      
+
     if multi_day_events.present?
       series_child_events = series_child_events.where("parent_id not in (?)", multi_day_events.map(&:id))
     end
-    
+
     if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
       single_day_events = single_day_events.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
       multi_day_events = multi_day_events.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
@@ -210,7 +210,7 @@ class Event < ActiveRecord::Base
 
     (single_day_events.load + multi_day_events.load + series_child_events.load)
   end
-    
+
   # Defaults state to RacingAssociation.current.state, date to today, name to Untitled
   def Event.find_all_for_team_and_discipline(team, discipline, date = Time.zone.today)
     first_of_year = date.beginning_of_year
@@ -234,8 +234,8 @@ class Event < ActiveRecord::Base
   def set_defaults
     if new_record?
       if parent
-        propogated_attributes.each { |attr| 
-          (self[attr] = parent[attr]) if self[attr].blank? 
+        propogated_attributes.each { |attr|
+          (self[attr] = parent[attr]) if self[attr].blank?
         }
       end
       self.bar_points = default_bar_points       if self[:bar_points].nil?
@@ -256,7 +256,7 @@ class Event < ActiveRecord::Base
       postponed cancelled flyer_approved instructional practice sanctioned_by email phone team_id beginner_friendly
     }
   end
-  
+
   def default_bar_points
     if parent.is_a?(WeeklySeries) || (parent.try(:parent) && parent.parent.is_a?(WeeklySeries))
       0
@@ -264,36 +264,36 @@ class Event < ActiveRecord::Base
       1
     end
   end
-  
+
   def default_discipline
     "Road"
   end
-  
+
   def default_ironman
     true
   end
-  
+
   def default_region_id
     RacingAssociation.current.default_region_id
   end
-  
+
   def default_state
     RacingAssociation.current.state
   end
-  
+
   def default_sanctioned_by
     RacingAssociation.current.default_sanctioned_by
   end
-  
+
   def default_number_issuer
     NumberIssuer.find_by_name(RacingAssociation.current.short_name)
   end
-  
+
   def validate_no_results
     races(true).each do |race|
       if race.results(true).any?
         errors.add('results', 'Cannot destroy event with results')
-        return false 
+        return false
       end
     end
 
@@ -304,29 +304,29 @@ class Event < ActiveRecord::Base
 
     true
   end
-  
+
   # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
   # The results page should show the results in that case.
   def has_results?(reload = false)
     self.races(reload).any? { |r| !r.results(reload).empty? }
   end
-  
+
   # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
   # The results page should show the results in that case.
   def has_results_including_children?(reload = false)
     races(reload).any? { |r| !r.results(reload).empty? } || children(reload).any? { |event| event.has_results?(reload) || event.has_results_including_children? }
   end
-  
+
   # Returns only the children with +results+
   def children_with_results(reload = false)
     children(reload).select(&:has_results_including_children?)
   end
-  
+
   # Returns only the children and child child_competitions with +results+
   def children_and_child_competitions_with_results(reload = false)
     children_and_child_competitions(reload).select(&:has_results_including_children?)
   end
-  
+
   # Returns only the Races with +results+
   def races_with_results
     races.select { |race| !race.results.empty? }.sort
@@ -360,7 +360,7 @@ class Event < ActiveRecord::Base
     _categories = races.map(&:category)
     children.inject(_categories) { |cats, child| cats + child.categories }
   end
-  
+
   # Update child events from parents' attributes if child attribute has the
   # same value as the parent before update
   def update_children
@@ -376,7 +376,7 @@ class Event < ActiveRecord::Base
         SingleDayEvent.where(attribute => was, :parent_id => id).update_all(attribute => self[attribute])
       end
     end
-    
+
     children.each(&:update_children)
     true
   end
@@ -391,7 +391,7 @@ class Event < ActiveRecord::Base
     Event.where(:id => id).update_all(:updated_at => Time.zone.now)
     true
   end
-  
+
   # Update database immediately with save!
   def disable_notification!
     if notification_enabled?
@@ -418,7 +418,7 @@ class Event < ActiveRecord::Base
     true
   end
 
-  # Child results fire change notifications? Set to false before bulk changes 
+  # Child results fire change notifications? Set to false before bulk changes
   # like event results import to prevent many pointless change notifications
   # and CombinedTimeTrialResults recalcs
   # Check database to ensure most recent value is used, and not a association's out-of-date cached value
@@ -433,7 +433,7 @@ class Event < ActiveRecord::Base
     competition_event_membership.points_factor = points
     competition_event_membership.save!
   end
-  
+
   def city_state
     if city.present?
       if state.present?
@@ -449,11 +449,11 @@ class Event < ActiveRecord::Base
       end
     end
   end
-  
+
   def location
     city_state
   end
-  
+
   # Will split on comma if city, state
   def location=(value)
     if value.present?
@@ -465,7 +465,7 @@ class Event < ActiveRecord::Base
       self.state = nil
     end
   end
-  
+
   def velodrome_name=(value)
     if value.present?
       self.velodrome = Velodrome.find_or_create_by(:name => value.strip)
@@ -475,13 +475,13 @@ class Event < ActiveRecord::Base
   def discipline_id
     Discipline[discipline].try :id
   end
-  
+
   def inclusion_of_discipline
     if discipline.present? && Discipline.names.present? && !Discipline.names.include?(discipline)
       errors.add :discipline, "'#{discipline}' is not in #{Discipline.names.join(", ")}"
     end
   end
-  
+
   def inclusion_of_sanctioned_by
     if sanctioned_by && !RacingAssociation.current.sanctioning_organizations.include?(sanctioned_by)
       errors.add :sanctioned_by, "'#{sanctioned_by}' must be in #{RacingAssociation.current.sanctioning_organizations.join(", ")}"
@@ -495,7 +495,7 @@ class Event < ActiveRecord::Base
   def promoter_name=(value)
     @new_promoter_name = value
   end
-  
+
   def set_promoter
     if new_promoter_name.present?
       promoters = Person.find_all_by_name_or_alias(new_promoter_name)
@@ -511,7 +511,7 @@ class Event < ActiveRecord::Base
       self.promoter = nil
     end
   end
-  
+
   def team_name
     team.name if team
   end
@@ -519,7 +519,7 @@ class Event < ActiveRecord::Base
   def team_name=(value)
     @new_team_name = value
   end
-  
+
   # Find or create associated Team based on new_team_name
   def set_team
     if new_team_name.present?
@@ -528,7 +528,7 @@ class Event < ActiveRecord::Base
       self.team = nil
     end
   end
-  
+
   # Find valid email—either promoter's email or event email. If all are blank, raise exception.
   def email!
     if promoter.try(:email).present?
@@ -552,21 +552,21 @@ class Event < ActiveRecord::Base
   def missing_children?
     missing_children.any?
   end
-  
+
   # Always return empty Array
   def missing_children
     []
   end
-  
+
   def multi_day_event_children_with_no_parent?
     multi_day_event_children_with_no_parent.any?
   end
-  
+
   def multi_day_event_children_with_no_parent
     return [] unless name && date
-    
+
     @multi_day_event_children_with_no_parent ||= SingleDayEvent.where(
-        "parent_id is null and name = ? and extract(year from date) = ? 
+        "parent_id is null and name = ? and extract(year from date) = ?
          and ((select count(*) from events where name = ? and extract(year from date) = ? and type in ('MultiDayEvent', 'Series', 'WeeklySeries')) = 0)",
          self.name, self.date.year, self.name, self.date.year)
     # Could do this in SQL
@@ -589,10 +589,10 @@ class Event < ActiveRecord::Base
   def type_modifiable?
     type.nil? || %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries }.include?(type)
   end
-  
+
   def inspect_debug
     puts("#{self.class.name.ljust(20)} #{self.date} #{self.name} #{self.discipline} #{self.id}")
-    self.races(true).sort.each {|r| 
+    self.races(true).sort.each {|r|
       puts("#{r.class.name.ljust(20)}   #{r.name}")
       r.results(true).sort.each {|result|
         puts("#{result.class.name.ljust(20)}      #{result.to_long_s}")
@@ -601,17 +601,17 @@ class Event < ActiveRecord::Base
         }
       }
     }
-    
+
     self.children(true).sort.each do |event|
       event.inspect_debug
     end
-    
+
     ""
   end
 
   def to_s
     "<#{self.class} #{id} #{discipline} #{name} #{date}>"
   end
-  
+
   class BlankEmail < StandardError; end
 end

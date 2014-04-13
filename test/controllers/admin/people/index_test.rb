@@ -11,7 +11,7 @@ module Admin
         create_administrator_session
         use_ssl
       end
-    
+
       def test_not_logged_in_index
         destroy_person_session
         get(:index)
@@ -94,7 +94,7 @@ module Admin
 
       def test_blank_name
         molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-        xhr :put, :update_attribute, 
+        xhr :put, :update_attribute,
             :id => molly.to_param,
             :name => "name",
             :value => ""

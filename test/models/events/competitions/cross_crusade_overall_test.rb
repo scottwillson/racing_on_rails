@@ -1,7 +1,7 @@
 require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
-class CrossCrusadeOverallTest < ActiveSupport::TestCase  
+class CrossCrusadeOverallTest < ActiveSupport::TestCase
   def test_recalc_with_one_event
     series = Series.create!(:name => "Cross Crusade")
     event = series.children.create!(:date => Date.new(2007, 10, 7), :name => "Cross Crusade #4")
@@ -10,10 +10,10 @@ class CrossCrusadeOverallTest < ActiveSupport::TestCase
     series.children.create!(:date => Date.new(2007, 10, 21))
     series.children.create!(:date => Date.new(2007, 10, 28))
     series.children.create!(:date => Date.new(2007, 11, 5))
-    
+
     series.reload
     assert_equal(Date.new(2007, 10, 7), series.date, "Series date")
-    
+
     cat_a = Category.create!(:name => "Category A")
     cat_a_race = event.races.create!(:category => cat_a)
     weaver = FactoryGirl.create(:person)
@@ -27,27 +27,27 @@ class CrossCrusadeOverallTest < ActiveSupport::TestCase
     masters_race.results.create!(:place => 15, :person => alice)
     molly = FactoryGirl.create(:person)
     masters_race.results.create!(:place => 19, :person => molly)
-    
+
     # Previous year should be ignored
     previous_event = Series.create!(:name => "Cross Crusade").children.create!(:date => Date.new(2006), :name => "Cross Crusade #3")
     previous_event.races.create!(:category => cat_a).results.create!(:place => 6, :person => weaver)
-    
+
     # Following year should be ignored
     following_event = Series.create!(:name => "Cross Crusade").children.create!(:date => Date.new(2008))
     following_event.races.create!(:category => cat_a).results.create!(:place => 10, :person => weaver)
-    
+
     CrossCrusadeOverall.calculate!(2007)
     assert_not_nil(series.overall(true), "Should add new Overall Competition child to parent Series")
     overall = series.overall
     assert_equal 21, overall.races.size, "Overall races"
-    
+
     assert_equal "Series Overall", overall.name, "Overall name"
     assert_equal "Cross Crusade: Series Overall", overall.full_name, "Overall full name"
     assert(!overall.notes.blank?, "Should have notes about rules")
     assert_equal_dates Date.new(2007, 10, 7), overall.date, "Overall series date"
     assert_equal_dates Date.new(2007, 10, 7), overall.start_date, "Overall series start date"
     assert_equal_dates Date.new(2007, 11, 5), overall.end_date, "Overall series end date"
-        
+
     cx_a_overall_race = overall.races.detect { |race| race.category == cat_a }
     assert_not_nil(cx_a_overall_race, "Should have Men A overall race")
     assert_equal(2, cx_a_overall_race.results.size, "Men A race results")
@@ -79,38 +79,38 @@ class CrossCrusadeOverallTest < ActiveSupport::TestCase
     category_a = Category.find_or_create_by(:name => "Category A")
     singlespeed = Category.find_or_create_by(:name => "Singlespeed")
     person = Person.create!(:name => "John Browning")
-    
+
     event = series.children.create!(:date => Date.new(2008, 10, 5))
     event.races.create!(:category => masters).results.create!(:place => 1, :person => person)
-    
+
     event = series.children.create!(:date => Date.new(2008, 10, 12))
     event.races.create!(:category => masters).results.create!(:place => 1, :person => person)
-    
+
     event = series.children.create!(:date => Date.new(2008, 10, 19))
     event.races.create!(:category => masters).results.create!(:place => 2, :person => person)
     event.races.create!(:category => category_a).results.create!(:place => 4, :person => person)
     event.races.create!(:category => singlespeed).results.create!(:place => 5, :person => person)
-    
+
     event = series.children.create!(:date => Date.new(2008, 10, 26))
     event.races.create!(:category => masters).results.create!(:place => 1, :person => person)
-    
+
     event = series.children.create!(:date => Date.new(2008, 11, 2))
     event.races.create!(:category => masters).results.create!(:place => 2, :person => person)
-    
+
     event = series.children.create!(:date => Date.new(2008, 11, 9))
     event.races.create!(:category => masters).results.create!(:place => 1, :person => person)
     event.races.create!(:category => category_a).results.create!(:place => 20, :person => person)
     event.races.create!(:category => singlespeed).results.create!(:place => 12, :person => person)
-    
+
     event = series.children.create!(:date => Date.new(2008, 11, 10))
     event.races.create!(:category => masters).results.create!(:place => 1, :person => person)
-    
+
     event = series.children.create!(:date => Date.new(2008, 11, 17))
     event.races.create!(:category => masters).results.create!(:place => 3, :person => person)
     event.races.create!(:category => category_a).results.create!(:place => 20, :person => person)
 
     CrossCrusadeOverall.calculate!(2008)
-    
+
     masters_overall_race = series.overall.races.detect { |race| race.category == masters }
     assert_not_nil(masters_overall_race, "Should have Masters overall race")
     results = masters_overall_race.results(true).sort

@@ -9,11 +9,11 @@ class OregonCupTest < ActiveSupport::TestCase
     # 2. Weaver      88
     # 3. Matson      60
     # 4. Molly      15
-    
+
     # Women
     # 1. Alice       75
     # 2. Molly      15
-    
+
     senior_men = FactoryGirl.create(:category, :name => "Senior Men")
     senior_men_p_1_2 = FactoryGirl.create(:category, :name => "Senior Men Pro 1/2", :parent => senior_men)
     senior_women = FactoryGirl.create(:category, :name => "Senior Women")
@@ -65,7 +65,7 @@ class OregonCupTest < ActiveSupport::TestCase
     or_cup = OregonCup.find_for_year(2004)
     assert_not_nil(or_cup, 'Should have Oregon Cup for 2004')
     assert_equal(1, OregonCup.count, "Oregon Cup events after calculate!")
-    
+
     or_cup.races.sort_by(&:name)
     races = or_cup.races.sort_by(&:name)
     results = races[0].results.to_a.sort

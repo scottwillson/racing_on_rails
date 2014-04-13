@@ -10,7 +10,7 @@ class MobileTest < RacingOnRails::IntegrationTest
     assert_select "#home_page_results_table"
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
-  
+
   test "custom page" do
     Page.create!(:slug => "home", :body => "<p class='custom'></p>")
     get "/"
@@ -18,12 +18,12 @@ class MobileTest < RacingOnRails::IntegrationTest
     assert_select "p.custom"
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
-  
+
   test "mobile page" do
     get "/people"
     assert_response :success
     assert_template "people/index"
-    
+
     # MBRA has custom template
     if css_select("th.license").empty? && css_select("#people-list").empty?
       flunk "Expected th.license or #people-list"
@@ -31,7 +31,7 @@ class MobileTest < RacingOnRails::IntegrationTest
 
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
-  
+
   test "custom mobile page" do
     Page.create!(:slug => "mobile/home", :body => "<p class='custom-mobile'></p>")
     get "/"
@@ -155,7 +155,7 @@ class MobileTest < RacingOnRails::IntegrationTest
 
   test "mobile browser, mobile template" do
     result = FactoryGirl.create(:result)
-  
+
     get "/events/#{result.event_id}/results", {}, { "HTTP_USER_AGENT" => "Android" }
     assert_redirected_to "/m/events/#{result.event_id}/results"
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
@@ -238,24 +238,24 @@ class MobileTest < RacingOnRails::IntegrationTest
 
   test "popular pages" do
     result = FactoryGirl.create(:result)
-  
+
     get "http://example.com/m/"
     assert_response :success
-  
+
     get "http://example.com/m/schedule"
     assert_response :success
-  
+
     get "http://example.com/m/results"
     assert_response :success
-      
+
     mailing_list = FactoryGirl.create(:mailing_list)
     get "http://example.com/m/mailing_lists"
     assert_response :success
-    
+
     get "http://example.com/m/mailing_lists/#{mailing_list.id}/posts"
     assert_response :success
   end
-  
+
   test "mailing_list" do
     mailing_list_post = FactoryGirl.create(:post)
     get "http://example.com/m/posts/#{mailing_list_post.id}"

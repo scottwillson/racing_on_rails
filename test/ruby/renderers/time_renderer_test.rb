@@ -20,7 +20,7 @@ module Renderers
 
       column = stub("column", :key => :time, :precision => 0, :max => 3599)
       assert_equal "00:00", TimeRenderer.render(column, row)
-      
+
       column = stub("column", :key => :time, :precision => 0, :max => 1200)
       assert_equal "00:00", TimeRenderer.render(column, row)
     end

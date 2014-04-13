@@ -2,11 +2,11 @@ module Concerns
   module Event
     module Dates
       extend ActiveSupport::Concern
-      
+
       included do
         before_save :set_end_date
       end
-      
+
       module ClassMethods
         # Return list of every year that has at least one event
         def find_all_years
@@ -23,7 +23,7 @@ module Concerns
           end
         end
       end
-      
+
       def default_date
         if parent.present?
           parent.date
@@ -65,13 +65,13 @@ module Concerns
           nil
         end
       end
-      
+
       # Handle 7/25/2013, 7-25-2013, 7/25/13, 7-25-13
       def human_date=(value)
         @human_date = value.try(:strip)
         set_date_from_human_date
       end
-      
+
       def set_date_from_human_date
         parsed_date = HumanDate::Parser.new.parse(@human_date)
 
@@ -90,7 +90,7 @@ module Concerns
       def start_date=(date)
         self.date = date
       end
-      
+
       def end_date
         set_end_date
         self[:end_date]
@@ -104,7 +104,7 @@ module Concerns
       def multiple_days?
         end_date > start_date
       end
-      
+
       def set_end_date
         if self[:end_date].nil? || date != self[:end_date]
           self.end_date = date

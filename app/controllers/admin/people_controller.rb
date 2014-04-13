@@ -10,12 +10,12 @@ module Admin
 
     include ApplicationHelper
     include ActionView::Helpers::TextHelper
-  
-    # Search for People by name. This is a 'like' search on the concatenated 
+
+    # Search for People by name. This is a 'like' search on the concatenated
     # first and last name, and aliases. E.g.,:
     # 'son' finds:
     #  * Sonja Red
-    #  * Charles Sondheim 
+    #  * Charles Sondheim
     #  * Cheryl Willson
     #  * Scott Willson
     #  * Jim Andersen (with an 'Jim Anderson' alias)
@@ -29,7 +29,7 @@ module Admin
       if params['format'] == 'ppl' || params['format'] == 'xls'
         return export
       end
-    
+
       @people = []
       @name = params[:name] || session[:person_name] || cookies[:person_name] || ''
       @name.strip!
@@ -67,35 +67,35 @@ module Admin
       headers['Content-Disposition'] = "filename=\"#{file_name}\""
 
       @people = Person.find_all_for_export(date, params['include'])
-    
+
       respond_to do |format|
         format.html
         format.ppl
         format.xls {
           if params['excel_layout'] == 'scoring_sheet'
-            render 'admin/people/scoring_sheet' 
+            render 'admin/people/scoring_sheet'
           elsif params['excel_layout'] == 'endicia'
-            render 'admin/people/endicia' 
+            render 'admin/people/endicia'
           end
         }
       end
     end
-  
+
     def new
       @person = Person.new
       assign_race_numbers
       @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
       render :edit
     end
-  
+
     def edit
       @person = Person.includes(:race_numbers).find(params[:id])
       assign_race_numbers
       @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
     end
-  
+
     # Create new Person
-    # 
+    #
     # Existing RaceNumbers are updated from a Hash:
     # :number => {'race_number_id' => {:value => 'new_value'}}
     #
@@ -108,13 +108,13 @@ module Admin
     def create
       expire_cache
       @person = Person.create(person_params)
-    
+
       if params[:number_value]
         params[:number_value].each_with_index do |number_value, index|
           unless number_value.blank?
             race_number = @person.race_numbers.create(
-              :discipline_id => params[:discipline_id][index], 
-              :number_issuer_id => params[:number_issuer_id][index], 
+              :discipline_id => params[:discipline_id][index],
+              :number_issuer_id => params[:number_issuer_id][index],
               :year => params[:number_year],
               :value => number_value
             )
@@ -136,9 +136,9 @@ module Admin
         render :edit
       end
     end
-  
+
     # Update existing Person.
-    # 
+    #
     # Existing RaceNumbers are updated from a Hash:
     # :number => {'race_number_id' => {:value => 'new_value'}}
     #
@@ -163,12 +163,12 @@ module Admin
       assign_race_numbers
       render :edit
     end
-  
+
     # Preview contents of new members file from event registration service website like SignMeUp or Active.com.
     def preview_import
       if params[:people_file].blank?
         flash[:warn] = "Choose a file of people to import first"
-        return redirect_to(:action => :index) 
+        return redirect_to(:action => :index)
       end
 
       path = "#{Dir.tmpdir}/#{params[:people_file].original_filename}"
@@ -184,10 +184,10 @@ module Admin
       else
         redirect_to :index
       end
-    
+
       render "preview_import"
     end
-  
+
     # See http://racingonrails.rocketsurgeryllc.com/sample_import_files/ for format details and examples.
     def import
       if params[:commit] == 'Cancel'
@@ -201,7 +201,7 @@ module Admin
           flash[:warn] = "No import file"
           return redirect_to(admin_people_path)
         end
-      
+
         people_file = PeopleFile.new(File.new(path))
         people_file.import(params[:update_membership], params[:year])
         flash[:notice] = "Imported #{pluralize(people_file.created, 'new person')} and updated #{pluralize(people_file.updated, 'existing person')}"
@@ -218,7 +218,7 @@ module Admin
         raise "Expected 'Import' or 'Cancel'"
       end
     end
-  
+
     # Unresolved duplicates after import
     def duplicates
       @duplicates = Duplicate.all
@@ -231,7 +231,7 @@ module Admin
         end
       end
     end
-  
+
     def resolve_duplicates
       @duplicates = Duplicate.all
       @duplicates.each do |duplicate|
@@ -240,20 +240,20 @@ module Admin
           duplicate.person.save!
         elsif id.present?
           logger.info(
-            "Duplicate Update person #{id} with " + 
+            "Duplicate Update person #{id} with " +
             "'#{duplicate.new_attributes[:first_name]} #{duplicate.new_attributes[:last_name]}' lic: #{duplicate.new_attributes[:license]}"
-            ) 
+            )
           person = Person.update(id, duplicate.new_attributes)
           unless person.valid?
             raise ActiveRecord::RecordNotSaved.new(person.errors.full_messages.join(', '))
           end
         end
       end
-  
+
       Duplicate.delete_all
       redirect_to(:action => 'index')
     end
-  
+
     def update_attribute
       respond_to do |format|
         format.js {
@@ -275,7 +275,7 @@ module Admin
       person.toggle! :member
       render :partial => "shared/member", :locals => { :record => person }
     end
-  
+
     def destroy
       @person = Person.find(params[:id])
       if @person.destroy
@@ -289,14 +289,14 @@ module Admin
         render :edit
       end
     end
-  
+
     def merge
       @person = Person.find(params[:id])
       @other_person = Person.find(params[:other_person_id])
       @merged = @person.merge(@other_person)
       expire_cache
     end
-  
+
     def number_year_changed
       if params[:id]
         @person = Person.find(params[:id])
@@ -306,12 +306,12 @@ module Admin
         @race_numbers = []
       end
       @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
-      
+
       respond_to do |format|
         format.js
       end
     end
-  
+
     # Membership card stickers/labels
     def cards
       @people = Person.where(:print_card => true).order("last_name, first_name")
@@ -323,13 +323,13 @@ module Admin
 
       respond_to do |format|
         format.pdf do
-          send_data Card.new.to_pdf(@people), 
-                    :filename => "cards.pdf", 
+          send_data Card.new.to_pdf(@people),
+                    :filename => "cards.pdf",
                     :type => "application/pdf"
         end
       end
     end
-  
+
     # Single membership card
     def card
       @person = Person.find(params[:id])
@@ -338,16 +338,16 @@ module Admin
       @person.membership_card = true
       @person.card_printed_at = Time.zone.now
       @person.save!
-    
+
       respond_to do |format|
         format.pdf do
-          send_data Card.new.to_pdf(@person), 
-                    :filename => "card.pdf", 
+          send_data Card.new.to_pdf(@person),
+                    :filename => "card.pdf",
                     :type => "application/pdf"
         end
       end
     end
-  
+
     private
 
     def update_name
@@ -363,7 +363,7 @@ module Admin
         render "merge_confirm"
       end
     end
-  
+
     def assign_race_numbers
       @disciplines = Discipline.numbers
       @number_issuers = NumberIssuer.all
@@ -389,13 +389,13 @@ module Admin
         RacingAssociation.current.effective_today
       end
     end
-  
+
     def remember_event
       unless params['event_id'].blank?
         @event = Event.find(params['event_id'])
       end
     end
-  
+
     def require_administrator_or_promoter
       unless current_person.administrator? ||
         current_person && current_person.promoter? && params[:format] == "xls" && params[:excel_layout] == "scoring_sheet"
@@ -404,12 +404,12 @@ module Admin
     end
 
     protected
-  
+
     def assign_current_admin_tab
       @current_admin_tab = "People"
     end
-    
-    
+
+
     private
 
     def person_params

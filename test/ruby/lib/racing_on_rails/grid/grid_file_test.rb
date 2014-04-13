@@ -18,7 +18,7 @@ module RacingOnRails
         assert_equal(35, grid_file.rows.size, "grid_file.rows.size")
         assert_equal("Dills", grid_file[20][3], "grid_file[20][3]")
       end
-  
+
       def test_save
         file = Tempfile.new("test_results.txt")
 
@@ -44,7 +44,7 @@ module RacingOnRails
         ensure
           file_to_read.close if file_to_read && !file_to_read.closed?
         end
-    
+
         assert_equal(expected, lines, "Saved file contents")
       end
     end

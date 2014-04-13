@@ -4,10 +4,10 @@ module Schedule
 
     # January, February ...
     attr_reader :name
-    
+
     # List of Weeks
     attr_reader :weeks
-    
+
     attr_reader :date
 
     def initialize(year, month)
@@ -28,7 +28,7 @@ module Schedule
     def name_abbr
       @name_abbr
     end
-    
+
     # Monday of this week's day as a number
     def monday_of_week(day)
       until day.wday == 0
@@ -48,7 +48,7 @@ module Schedule
         end
       end
     end
-  
+
     def to_s
       "#<Schedule::Month #{name} #{date.strftime('%x') if date}>"
     end

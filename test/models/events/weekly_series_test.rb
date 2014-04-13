@@ -25,16 +25,16 @@ class WeeklySeriesTest < ActiveSupport::TestCase
       assert_equal(0, race.bar_points, "Weekly Series race BAR points")
     }
     pir.reload
-    
+
     assert_equal(30, pir.children.size, 'PIR events')
     date = WeeklySeries.connection.select_value("select date from events where id = #{pir.id}")
     assert_equal_dates('2008-04-01', date, 'PIR data in database')
-    
+
     assert_equal(Date.new(2008, 4, 1), pir.start_date, 'PIR start date')
     assert_equal(Date.new(2008, 4, 1), pir.date, 'PIR date')
     assert_equal(Date.new(2008, 10, 21), pir.end_date, 'PIR end date')
   end
-  
+
   def test_days_of_week_as_string
     weekly_series = WeeklySeries.create!
     weekly_series.children.create!(:date => Date.new(2006, 7, 3))
@@ -62,7 +62,7 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     assert_equal('M/Tu', weekly_series.days_of_week_as_string(dates, false), 'Days of week as String')
     assert_equal('M/Tu', weekly_series.days_of_week_as_string(dates), 'Days of week as String')
   end
-  
+
   def test_earliest_day_of_week
     weekly_series = WeeklySeries.create!
     weekly_series.children.create!(:date => Date.new(2006, 7, 3))
@@ -83,7 +83,7 @@ class WeeklySeriesTest < ActiveSupport::TestCase
 
     assert_equal(-1, weekly_series.earliest_day_of_week(Date.new(2006, 7, 1)..Date.new(2006, 7, 2), true), 'earliest_day_of_week')
   end
-  
+
   def test_day_of_week
     weekly_series = WeeklySeries.create!
     weekly_series.children.create!(:date => Date.new(2006, 7, 3))
@@ -94,11 +94,11 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     weekly_series.children.create!(:date => Date.new(2006, 7, 11))
     weekly_series.children.create!(:date => Date.new(2006, 7, 12))
     assert_equal(1, weekly_series.day_of_week, 'day_of_week')
-    
+
     weekly_series = WeeklySeries.create!(:date => Date.new(2006, 7, 4))
     assert_equal(2, weekly_series.day_of_week, "day_of_week with no children")
   end
-  
+
   def test_flyer_settings_propogate_to_children
     so_or_champs = WeeklySeries.create!(:date => Date.new(2008, 4, 1), :name => 'So OR Champs')
     assert_nil(so_or_champs.flyer, "flyer should default to blank")
@@ -108,7 +108,7 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     child.reload
     assert_nil(child.flyer, "child event flyer should same as parent")
     assert(!child.flyer_approved?, "child event flyer approval should same as parent")
-    
+
     so_or_champs.flyer = "http://www.flyers.com"
     so_or_champs.flyer_approved = true
     so_or_champs.save!

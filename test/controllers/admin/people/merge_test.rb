@@ -5,7 +5,7 @@ module Admin
   module People
     class MergeTest < ActionController::TestCase
       tests Admin::PeopleController
-      
+
       def setup
         super
         create_administrator_session
@@ -15,7 +15,7 @@ module Admin
       def test_merge?
         molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
         tonkin = FactoryGirl.create(:person)
-        xhr :put, :update_attribute, 
+        xhr :put, :update_attribute,
             :id => tonkin.to_param,
             :name => "name",
             :value => molly.name
@@ -56,11 +56,11 @@ module Admin
       def test_dupes_merge?
         FactoryGirl.create(:discipline)
         FactoryGirl.create(:number_issuer)
-        
+
         molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
         molly_with_different_road_number = Person.create(:name => 'Molly Cameron', :road_number => '987123')
         tonkin = FactoryGirl.create(:person)
-        xhr :put, :update_attribute, 
+        xhr :put, :update_attribute,
             :id => tonkin.to_param,
             :name => "name",
             :value => molly.name
@@ -84,7 +84,7 @@ module Admin
         molly.save!
         molly_with_different_cross_number = Person.create(:name => 'Molly Cameron', :ccx_number => '810', :road_number => '1009')
         tonkin = FactoryGirl.create(:person)
-        xhr :put, :update_attribute, 
+        xhr :put, :update_attribute,
             :id => tonkin.to_param,
             :name => "name",
             :value => molly.name
@@ -107,8 +107,8 @@ module Admin
         molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
         tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
         tonkin.aliases.create!(:name => "Eric Tonkin")
-        
-        xhr :put, :update_attribute, 
+
+        xhr :put, :update_attribute,
             :id => molly.to_param,
             :name => "name",
             :value => "Eric Tonkin"

@@ -18,9 +18,9 @@ class PasswordResetsTest < AcceptanceTest
     click_button "Save"
 
     assert_page_has_content "Password changed"
-    
+
     visit "/logout"
-    
+
     fill_in "person_session_login", :with => "bob.jones"
     fill_in "person_session_password", :with => "new_password"
     click_button "Login"
@@ -32,7 +32,7 @@ class PasswordResetsTest < AcceptanceTest
     fill_in "person_session_login", :with => "bob.jones"
     fill_in "person_session_password", :with => "secret"
     click_button "Login"
-    
+
     visit "/password_resets/new"
     fill_in "email", :with =>  "member@example.com"
     click_button "Reset My Password"
@@ -46,9 +46,9 @@ class PasswordResetsTest < AcceptanceTest
     click_button "Save"
 
     assert_page_has_content "Password changed"
-    
+
     visit "/logout"
-    
+
     fill_in "person_session_login", :with => "bob.jones"
     fill_in "person_session_password", :with => "new_password"
     click_button "Login"

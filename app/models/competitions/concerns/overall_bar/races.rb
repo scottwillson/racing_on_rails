@@ -2,7 +2,7 @@ module Concerns
   module OverallBar
     module Races
       extend ActiveSupport::Concern
-      
+
       def find_race(discipline, category)
         if Discipline[:overall] == discipline
           event = self

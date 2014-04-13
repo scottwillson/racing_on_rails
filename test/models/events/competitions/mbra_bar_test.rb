@@ -241,7 +241,7 @@ class MbraBarTest < ActiveSupport::TestCase
       :place => 1,
       :person => molly
     )
-    
+
     MbraBar.calculate!(2008)
     road_bar = MbraBar.find_by_name("2008 Road BAR")
     cat_4_women_road_bar = road_bar.races.detect {|b| b.name == "Cat 4 Women" }

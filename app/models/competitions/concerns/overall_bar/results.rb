@@ -6,11 +6,11 @@ module Concerns
       def source_results(race)
         ::Result.
         includes(:race, {:person => :team}, :team, {:race => [:event, :category]}).
-        where(%Q{events.type = 'Bar' 
+        where(%Q{events.type = 'Bar'
           and place between 1 and 300
           and ((events.discipline not in ("Mountain Bike", "Downhill", "Short Track") and categories.id in (#{category_ids_for(race)}))
             or ((events.discipline in ("Mountain Bike", "Downhill", "Short Track")) and categories.id in (#{mtb_category_ids_for(race)})))
-          and events.date >= '#{date.year}-01-01' 
+          and events.date >= '#{date.year}-01-01'
           and events.date <= '#{date.year}-12-31'}).
         order(:person_id).
         references(:results, :events, :categories)
@@ -36,7 +36,7 @@ module Concerns
         when "Category 4 Women"
           categories = [::Category.find_or_create_by(:name => "Category 3 Women")]
         else
-          categories = [race.category]      
+          categories = [race.category]
         end
 
         categories.map(&:id).join ", "
@@ -59,7 +59,7 @@ module Concerns
         end
       end
 
-      # If person scored in more than one category that maps to same overall category in a discipline, 
+      # If person scored in more than one category that maps to same overall category in a discipline,
       # count only highest-placing category.
       # This typically happens for age-based categories like Masters and Juniors
       # Assume scores sorted in preferred order (usually by points descending)
@@ -73,7 +73,7 @@ module Concerns
 
         scores.each do |score|
           race = score.source_result.race
-          if race.category == cat_4 
+          if race.category == cat_4
             cat_4_disciplines << race.discipline
           end
         end

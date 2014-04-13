@@ -9,7 +9,7 @@ class UpcomingTest < ActiveSupport::TestCase
     FactoryGirl.create(:discipline, :name => "Track")
 
     RacingAssociation.current.show_only_association_sanctioned_races_on_calendar = true
-    
+
     # Tuesday
     may_day_rr =      SingleDayEvent.create!(:date => Date.new(2007, 5, 22), :name => 'May Day Road Race')
     WeeklySeries.create_for_every!("Tuesday",
@@ -26,26 +26,26 @@ class UpcomingTest < ActiveSupport::TestCase
     not_upcoming_rr = SingleDayEvent.create!(:date => Date.new(2007, 6, 4), :name => 'Not Upcoming Road Race')
     # Monday before all other races (to test ordering)
     saltzman_hc =     SingleDayEvent.create!(:date => Date.new(2007, 5, 21), :name => 'Saltzman Hillclimb')
-  
+
     SingleDayEvent.create!(:date => Date.new(2007, 5, 21), :name => 'Cancelled', :cancelled => true)
-  
+
     # Weekly Series
     pir = WeeklySeries.create!(:date => Date.new(2007, 4, 3), :name => 'Tuesday PIR')
     Date.new(2007, 4, 3).step(Date.new(2007, 10, 23), 7) do |date|
       pir.children.create! :date => date, :name => "Tue PIR #{date}"
     end
     pirs = pir.children.sort_by(&:date)
-  
+
     # Way, wayback
     Timecop.freeze(Time.zone.local(2005)) do
       assert Event.upcoming.empty?, "No events in 2005"
     end
-  
+
     # Wayback
     Timecop.freeze(Time.zone.local(2007, 3, 20)) do
       assert_equal_events [ pirs.first ], Event.upcoming
     end
-  
+
     # Sunday
     Timecop.freeze(Time.zone.local(2007, 5, 20)) do
       assert_equal_events(
@@ -58,24 +58,24 @@ class UpcomingTest < ActiveSupport::TestCase
     Timecop.freeze(Time.zone.local(2007, 10, 24)) do
       assert_equal_events([], Event.upcoming)
     end
-  
+
     # Big range
     Timecop.freeze(Time.zone.local(2007, 5, 21)) do
       assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr, not_upcoming_rr] + pirs[7, 16], Event.upcoming(16))
     end
-  
+
     # Small range
     Timecop.freeze(Time.zone.local(2007, 5, 22)) do
       assert_equal_events([may_day_rr, lucky_lab_tt] + pirs[7, 2], Event.upcoming(1))
     end
-  
+
     # Include ALL events regardless of sanctioned_by
     RacingAssociation.current.show_only_association_sanctioned_races_on_calendar = false
     Timecop.freeze(Time.zone.local(2007, 5, 20)) do
       assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, not_obra, woodland_rr, tst_rr] + pirs[7, 2], Event.upcoming(2))
     end
   end
-  
+
   def test_midweek_multiday_event
     FactoryGirl.create(:discipline, :name => "Mountain Bike")
     FactoryGirl.create(:discipline, :name => "Road")
@@ -103,7 +103,7 @@ class UpcomingTest < ActiveSupport::TestCase
     Timecop.freeze(Time.zone.local(2006, 6, 3)) do
       assert_equal_events [six_day], Event.upcoming
     end
-    
+
     Timecop.freeze(Time.zone.local(2006, 6, 16)) do
       assert_equal_events [six_day], Event.upcoming
     end
@@ -116,7 +116,7 @@ class UpcomingTest < ActiveSupport::TestCase
       assert_equal_events [], Event.upcoming
     end
   end
-  
+
   def test_weekly_series
     FactoryGirl.create(:discipline, :name => "Road")
 
@@ -133,22 +133,22 @@ class UpcomingTest < ActiveSupport::TestCase
     assert_equal_dates(Date.new(1999, 6, 8), series.date, 'Series date')
     assert_equal_dates(Date.new(1999, 6, 8), series.start_date, 'Series start date')
     assert_equal_dates(Date.new(1999, 7, 27), series.end_date, 'Series end date')
-    
+
     # Before
     Timecop.freeze(Time.zone.local(1999, 5, 24)) do
       assert_equal_events [], Event.upcoming
     end
-    
+
     # Monday
     Timecop.freeze(Time.zone.local(1999, 5, 25)) do
       assert_equal_events [series.children[0]], Event.upcoming
     end
-    
+
     # Tuesday
     Timecop.freeze(Time.zone.local(1999, 6, 7)) do
       assert_equal_events series.children[0, 2], Event.upcoming
     end
-    
+
     # End
     Timecop.freeze(Time.zone.local(1999, 7, 27)) do
       assert_equal_events series.children[7, 1], Event.upcoming
@@ -159,18 +159,18 @@ class UpcomingTest < ActiveSupport::TestCase
       assert_equal_events [], Event.upcoming
     end
   end
-  
+
   def test_series
     FactoryGirl.create(:discipline, :name => "Road")
 
     estacada_tt = Series.create!(
       :date => Date.new(1999, 6, 8), :name => 'Estacada'
     )
-    
+
     estacada_tt_1 = estacada_tt.children.create!(:date => Date.new(1999, 6, 8), :name => 'Estacada 1')
     estacada_tt_2 = estacada_tt.children.create!(:date => Date.new(1999, 6, 22), :name => 'Estacada 2')
     estacada_tt_3 = estacada_tt.children.create!(:date => Date.new(1999, 6, 24), :name => 'Estacada 3')
-    
+
     assert_equal(3, estacada_tt.children(true).size, 'estacada_tt events')
     assert_equal_dates(Date.new(1999, 6, 8), estacada_tt.date, 'estacada_tt date')
     assert_equal_dates(Date.new(1999, 6, 8), estacada_tt.start_date, 'estacada_tt start date')

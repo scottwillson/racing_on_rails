@@ -61,57 +61,57 @@ class PersonSessionsControllerTest < ActionController::TestCase
     assert_nil cookies["person_credentials"], "person_credentials cookie"
     assert_nil session[:person_credentials], "Authlogic should not put :person_credentials in session"
   end
-  
+
   def test_logout
     member = FactoryGirl.create(:person_with_login)
     login_as member
 
     delete :destroy
-    
+
     assert_redirected_to new_person_session_url(secure_redirect_options)
     assert_nil assigns["person_session"], "@person_session"
     assert_nil session[:person_credentials], "Should not have :person_credentials in session"
-    assert_nil cookies["person_credentials"], "person_credentials cookie"    
+    assert_nil cookies["person_credentials"], "person_credentials cookie"
     assert_nil session[:return_to], ":return_to in session"
   end
-  
+
   def test_logout_administrator
     administrator = FactoryGirl.create(:administrator)
     login_as administrator
 
     delete :destroy
-    
+
     assert_redirected_to new_person_session_url(secure_redirect_options)
     assert_nil assigns["person_session"], "@person_session"
     assert_nil session[:person_credentials], "Should not have :person_credentials in session"
-    assert_nil cookies["person_credentials"], "person_credentials cookie"    
+    assert_nil cookies["person_credentials"], "person_credentials cookie"
     assert_nil session[:return_to], ":return_to in session"
   end
-  
+
   def test_logout_no_session
     delete :destroy
-    
+
     assert_redirected_to new_person_session_url(secure_redirect_options)
     assert_nil assigns["person_session"], "@person_session"
     assert_nil session[:person_credentials], "Should not have :person_credentials in session"
-    assert_nil cookies["person_credentials"], "person_credentials cookie"    
+    assert_nil cookies["person_credentials"], "person_credentials cookie"
     assert_nil session[:return_to], ":return_to in session"
   end
-  
+
   def test_logout_no_ssl
     administrator = FactoryGirl.create(:administrator)
     @request.env['HTTPS'] = nil
     PersonSession.create(administrator)
 
     delete :destroy
-    
+
     if RacingAssociation.current.ssl?
       assert_redirected_to "https://test.host/person_session"
     else
       assert_redirected_to "http://test.host/person_session/new"
     end
   end
-  
+
   def test_show
     @request.env['HTTPS'] = nil
     get :show
@@ -121,7 +121,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
   end
-  
+
   def test_show_and_return_to
     @request.env['HTTPS'] = nil
     get :show, :return_to => "/admin"
@@ -131,7 +131,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
   end
-  
+
   def test_show_and_return_to_registration
     @request.env['HTTPS'] = nil
     get :show, :return_to => "/events/123/register"
@@ -141,7 +141,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
   end
-  
+
   def test_show_loggedin
     @request.env['HTTPS'] = nil
     member = FactoryGirl.create(:person_with_login)

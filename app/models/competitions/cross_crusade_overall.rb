@@ -2,11 +2,11 @@
 # but ... should show not apply until there are at least three races
 class CrossCrusadeOverall < Overall
   before_create :set_notes, :set_name
-  
+
   def self.parent_event_name
     "Cross Crusade"
   end
-  
+
   def create_races
     races.create!(:category => Category.find_or_create_by(:name => "Category A"))
     races.create!(:category => Category.find_or_create_by(:name => "Category B"))
@@ -47,7 +47,7 @@ class CrossCrusadeOverall < Overall
   def minimum_events
     3
   end
-  
+
   def maximum_events(race)
     7
   end
@@ -55,7 +55,7 @@ class CrossCrusadeOverall < Overall
   def set_notes
     self.notes = %Q{ Three event minimum. Results that don't meet the minimum are listed in italics. See the <a href="http://crosscrusade.com/series.html">series rules</a>. }
   end
-  
+
   def set_name
     self.name = "Series Overall"
   end

@@ -16,7 +16,7 @@ class ImageUploader < CarrierWave::Uploader::Base
   def extension_white_list
     %w(jpg jpeg gif png)
   end
-  
+
   def save_dimensions
     if @file
       img = ::Magick::Image::read(@file.file).first

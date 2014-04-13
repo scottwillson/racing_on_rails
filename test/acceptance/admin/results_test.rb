@@ -9,7 +9,7 @@ class ResultsTest < AcceptanceTest
     event = FactoryGirl.create(:event, :name => "Copperopolis Road Race")
     race = FactoryGirl.create(:race, :event => event)
     result = FactoryGirl.create(:result, :race => race, :name => "Ryan Weaver")
-    
+
     login_as FactoryGirl.create(:administrator)
 
     if Time.zone.today.month == 12
@@ -17,7 +17,7 @@ class ResultsTest < AcceptanceTest
     else
       visit "/admin/events"
     end
-    
+
     if Time.zone.today.month == 1 && Time.zone.today.day < 6
       visit "/admin/events?year=#{Time.zone.today.year - 1}"
     end
@@ -35,7 +35,7 @@ class ResultsTest < AcceptanceTest
     visit "/admin/races/#{race.id}/edit"
     assert_page_has_no_content "Ryan Weaver"
     assert_page_has_content "Megan Weaver"
-    
+
     weaver = Person.find_by_name("Ryan Weaver")
     megan = Person.find_by_name("Megan Weaver")
     assert weaver != megan, "Should create new person, not rename existing one"
@@ -44,24 +44,24 @@ class ResultsTest < AcceptanceTest
 
     visit "/admin/races/#{race.id}/edit"
     assert_page_has_content "River City"
-    
+
     if RacingAssociation.current.competitions.include?(:bar)
       assert_equal true, result.reload.bar?, "bar?"
       assert has_checked_field? "result_#{result.id}_bar"
       uncheck "result_#{result.id}_bar"
-      
+
       assert_bar_toggled result
 
       visit "/admin/races/#{race.id}/edit"
       assert !has_checked_field?("result_#{result.id}_bar")
-    
+
       check("result_#{result.id}_bar")
       assert_bar_toggled result
 
       visit "/admin/races/#{race.id}/edit"
       assert has_checked_field?("result_#{result.id}_bar")
     end
-    
+
     assert page.has_no_selector? :xpath, "//table[@id='results_table']//tr[4]"
     click_link "result_#{result.id}_add"
     wait_for :xpath, "//table[@id='results_table']//tr[4]"
@@ -74,7 +74,7 @@ class ResultsTest < AcceptanceTest
     assert page.has_no_selector? :xpath, "//table[@id='results_table']//tr[4]"
     click_link "result__add"
     wait_for :xpath, "//table[@id='results_table']//tr[4]"
-    
+
     visit "/admin/races/#{race.id}/edit"
     assert_page_has_content "Field Size (2)"
 
@@ -83,7 +83,7 @@ class ResultsTest < AcceptanceTest
     click_button "Save"
     assert_equal "12", find_field("race_laps").value
   end
-    
+
   def assert_bar_toggled(result)
     bar_was = result.bar?
     begin

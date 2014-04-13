@@ -16,12 +16,12 @@ module Admin
       assert_not_nil(assigns["category"], "Should assign category")
       assert_not_nil(assigns["unknowns"], "Should assign unknowns")
     end
-  
+
     def test_not_logged_in
       destroy_person_session
       get(:index)
       assert_redirected_to new_person_session_url(secure_redirect_options)
       assert_nil(@request.session["person"], "No person in session")
-    end  
+    end
   end
 end

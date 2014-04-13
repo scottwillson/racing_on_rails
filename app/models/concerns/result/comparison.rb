@@ -2,7 +2,7 @@ module Concerns
   module Result
     module Comparison
       extend ActiveSupport::Concern
-      
+
       # Highest points first. Break ties by highest placing
       # OBRA rules:
       # * The most first place finishes or, if still tied, the most second place finishes, etc., or if still tied;
@@ -87,7 +87,7 @@ module Concerns
        def <=>(other)
          # Respect eql?
          if id.present? && (id == other.try(:id))
-           return 0 
+           return 0
          end
 
          # Figure out the major position by place first, then break it down further if

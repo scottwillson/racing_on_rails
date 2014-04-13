@@ -2,7 +2,7 @@ module Concerns
   module Result
     module Time
       extend ActiveSupport::Concern
-      
+
       def time=(value)
         set_time_value(:time, value)
       end
@@ -38,7 +38,7 @@ module Concerns
         when ::Time
           self[attribute] = value.hour * 3600 + value.min * 60 + value.sec + (value.usec / 100.0)
         when Numeric, NilClass
-          self[attribute] = value      
+          self[attribute] = value
         else
           self[attribute] = s_to_time(value)
         end

@@ -5,7 +5,7 @@ RacingOnRails::Application.configure do
   config.action_dispatch.show_exceptions                    = false
   config.action_mailer.delivery_method                      = :test
   config.active_support.deprecation                         = :stderr
-  config.autoload_paths                                    += %W( 
+  config.autoload_paths                                    += %W(
     #{config.root}/lib/test
   )
   config.cache_classes                                      = true

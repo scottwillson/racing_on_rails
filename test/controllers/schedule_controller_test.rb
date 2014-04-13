@@ -8,7 +8,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     FactoryGirl.create(:number_issuer)
 
     year = 2006
-    
+
     SingleDayEvent.create!(
       :name => "Banana Belt I",
       :city => "Hagg Lake",
@@ -16,7 +16,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
       :flyer_approved => true
     )
-    
+
     SingleDayEvent.create!(
       :name => "Mudslinger",
       :city => "Blodgett",
@@ -26,7 +26,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :flyer_approved => false,
       :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
     )
-    
+
     SingleDayEvent.create!(:postponed => true)
     get(:index, {:year => year})
 
@@ -36,38 +36,38 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert(html["banana_belt.html"], "Schedule should include Banana Belt flyer URL")
     assert(!html["mud_slinger.html"], "Schedule should not include Mudslinger flyer URL")
   end
-  
+
   def test_index_only_shows_visible_events
     future_national_federation_event = FactoryGirl.create(:event, :sanctioned_by => "USA Cycling")
-    
+
     get :index
     html = @response.body
-    
+
     assert_equal(
       RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?,
-      !html[future_national_federation_event.name], 
+      !html[future_national_federation_event.name],
       "Schedule should only show events sanctioned by Association"
     )
   end
-  
+
   def test_index_rss
     FactoryGirl.create(:event)
     get :index, :format => :rss
     assert_redirected_to schedule_path(:format => :atom)
   end
-  
+
   def test_index_atom
     FactoryGirl.create(:event)
     get :index, :format => :atom
     assert_response :success
   end
-  
+
   def test_index_excel
     FactoryGirl.create(:event)
     get :index, :format => :xls
     assert_response :success
   end
-  
+
   def test_index_excel_discipline
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
@@ -77,7 +77,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     get :index, :discipline => "mtb", :format => :xls
     assert_response :success
   end
-  
+
   def test_index_excel_discipline_list
     FactoryGirl.create(:discipline)
 
@@ -86,12 +86,12 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     get :list, :discipline => "road", :format => :xls
     assert_response :success
   end
-  
+
   def test_road_index
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
     year = 2006
-    
+
     SingleDayEvent.create!(
       :name => "Banana Belt I",
       :city => "Hagg Lake",
@@ -99,7 +99,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
       :flyer_approved => true
     )
-    
+
     SingleDayEvent.new(
       :name => "Mudslinger",
       :city => "Blodgett",
@@ -116,13 +116,13 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert(!html["Mudslinger"], "Road events should not include MTB")
     assert(html["banana_belt.html"], "Schedule should include Banana Belt flyer URL")
   end
-  
+
   def test_mtb_index
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
     FactoryGirl.create(:number_issuer)
     year = 2006
-    
+
     SingleDayEvent.create!(
       :name => "Banana Belt I",
       :city => "Hagg Lake",
@@ -130,7 +130,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
       :flyer_approved => true
     )
-    
+
     SingleDayEvent.create!(
       :name => "Mudslinger",
       :city => "Blodgett",
@@ -147,7 +147,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert(html["Mudslinger"], "Road events should include MTB")
     assert(!html["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
   end
-  
+
   def test_filter_by_sanctioning_organization
     Timecop.freeze(2010, 2) do
       FactoryGirl.create(:event, :sanctioned_by => "FIAC", :name => "FIAC Event")
@@ -157,7 +157,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       racing_association.filter_schedule_by_sanctioning_organization = true
       racing_association.show_only_association_sanctioned_races_on_calendar = false
       racing_association.save!
-    
+
       get :index
       html = @response.body
       assert html["FIAC Event"], "Should include FIAC event"
@@ -165,7 +165,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       assert html["CBRA Event"], "Should include CBRA event"
     end
   end
-  
+
   def test_filter_by_sanctioning_organization_with_filter
     Timecop.freeze(2010, 2) do
       FactoryGirl.create(:event, :sanctioned_by => "FIAC", :name => "FIAC Event")
@@ -175,7 +175,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       racing_association.filter_schedule_by_sanctioning_organization = true
       racing_association.show_only_association_sanctioned_races_on_calendar = false
       racing_association.save!
-    
+
       get :index, :sanctioning_organization => "FIAC"
       html = @response.body
       assert html["FIAC Event"], "Should include FIAC event"
@@ -183,7 +183,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       assert !html["CBRA Event"], "Should not include CBRA event"
     end
   end
-  
+
   def test_filter_by_region
     Timecop.freeze(2010, 2) do
       racing_association = RacingAssociation.current
@@ -196,21 +196,21 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
       FactoryGirl.create(:event, :region => wa, :name => "WA Event")
       FactoryGirl.create(:event, :region => oregon, :name => "OR Event")
-    
+
       get :index, :region => "washington"
       html = @response.body
       assert html["WA Event"], "Should include Washington event"
       assert !html["OR Event"], "Should not include Oregon event"
     end
   end
-  
+
   def test_index_with_alias
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
     FactoryGirl.create(:number_issuer)
 
     year = 2006
-    
+
     SingleDayEvent.create!(
       :name => "Banana Belt I",
       :city => "Hagg Lake",
@@ -218,7 +218,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
       :flyer_approved => true
     )
-    
+
     SingleDayEvent.create!(
       :name => "Mudslinger",
       :city => "Blodgett",
@@ -235,18 +235,18 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert(html["Mudslinger"], "mountain_bike should show MTB races")
     assert(!html["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
   end
-  
+
   def test_list
     get :list
     assert_response :success
   end
-  
+
   def test_mtb_list
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
 
     year = 2006
-    
+
     SingleDayEvent.create!(
       :name => "Banana Belt I",
       :city => "Hagg Lake",
@@ -254,7 +254,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
       :flyer_approved => true
     )
-    
+
     SingleDayEvent.create!(
       :name => "Mudslinger",
       :city => "Blodgett",

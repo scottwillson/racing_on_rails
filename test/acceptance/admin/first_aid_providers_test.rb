@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 # :stopdoc:
 class FirstAidProvidersTest < AcceptanceTest
   setup :javascript!
-  
+
   def test_first_aid_providers
     # FIXME Punt!
     if Time.zone.today.month < 12
@@ -57,6 +57,6 @@ class FirstAidProvidersTest < AcceptanceTest
       find(:xpath, "//th[@class='date']//a").click
       assert_table "events_table", 2, 4, "Copperopolis"
       assert_table "events_table", 3, 4, "Giro di SF"
-    end  
+    end
   end
 end

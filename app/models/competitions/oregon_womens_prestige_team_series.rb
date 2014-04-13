@@ -1,23 +1,23 @@
 class OregonWomensPrestigeTeamSeries < Competition
   include Concerns::Competition::CalculatorAdapter
-  
+
   def friendly_name
     "Oregon Womens Prestige Team Series"
   end
-  
+
   def category_names
     [ "Team" ]
   end
-  
+
   # Decreasing points to 20th place, then 2 points for 21st through 100th
   def point_schedule
     [ 100, 80, 70, 60, 55, 50, 45, 40, 35, 30, 25, 20, 18, 16, 14, 12, 10, 8, 6, 4 ] + ([ 2 ] * 80)
   end
-  
+
   def source_events?
     true
   end
-  
+
   def source_events
     (OregonWomensPrestigeSeries.find_for_year(year) || OregonWomensPrestigeSeries.create).source_events
   end
@@ -33,7 +33,7 @@ class OregonWomensPrestigeTeamSeries < Competition
   def use_source_result_points?
     false
   end
-  
+
   def team?
     true
   end
@@ -58,7 +58,7 @@ class OregonWomensPrestigeTeamSeries < Competition
         "races.category_id",
         "race_id",
         "results.event_id",
-        "results.id as id", 
+        "results.id as id",
         "results.team_id as participant_id",
         "team_member",
         "year"
@@ -68,7 +68,7 @@ class OregonWomensPrestigeTeamSeries < Competition
       joins("left outer join events parents_events on parents_events.id = events.parent_id").
       joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
       where("year = ?", year)
-    
+
     # Only consider results with categories that match +race+'s category
     if categories?
       query = query.where("races.category_id in (?)", category_ids_for(race))
@@ -92,11 +92,11 @@ class OregonWomensPrestigeTeamSeries < Competition
       []
     end
   end
-  
+
   def cat_123_only_event_ids
     [ 21334, 21148, 21393, 21146, 21186 ]
   end
-  
+
   def cat_4_category_ids
     if @cat_4_category_ids.nil?
       categories = Category.where(:name => "Category 4 Women")

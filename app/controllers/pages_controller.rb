@@ -8,5 +8,5 @@ class PagesController < ApplicationController
   def show
     @page = Page.find_by_normalized_path!(params[:path])
     render :inline => @page.body, :layout => "application"
-  end  
+  end
 end

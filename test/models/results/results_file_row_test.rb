@@ -10,7 +10,7 @@ module Results
       spreadsheet_row = book.worksheet(0).row(0)
       Results::Row.new(spreadsheet_row, {}, false)
     end
-  
+
     def test_row_last?
       book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/pir_2006_format.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(0)
@@ -22,7 +22,7 @@ module Results
       row = Results::Row.new(spreadsheet_row, {}, false)
       assert row.last?, "Last row?"
     end
-  
+
     def test_hash_access
       book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/pir_2006_format.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(2)

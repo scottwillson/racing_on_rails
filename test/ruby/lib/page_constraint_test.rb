@@ -7,11 +7,11 @@ class Page
   include Concerns::Page::Paths
 
   @@paths = []
-    
+
   def self.exists?(conditions)
     @@paths.include? conditions[:path]
   end
-  
+
   def self.paths
     @@paths
   end
@@ -22,7 +22,7 @@ class PageConstraintTest < Ruby::TestCase
   def setup
     Page.paths.clear
   end
-  
+
   # Not sure if this ever could happen
   def test_nil
     request = stub("request", :path => nil)

@@ -7,7 +7,7 @@ class AgesTest < Ruby::TestCase
     include Ages
     attr_accessor :ages_begin, :ages_end
   end
-  
+
   def test_ages
     stub = Stub.new
     stub.ages = 12..15
@@ -15,7 +15,7 @@ class AgesTest < Ruby::TestCase
     assert_equal 15, stub.ages_end, "ages_end"
     assert_equal 12..15, stub.ages, "Default age range"
   end
-  
+
   def test_set_ages_as_string
     stub = Stub.new
     stub.ages = "12-15"

@@ -72,8 +72,8 @@ class CrossCrusadeTeamCompetition < Competition
         end
 
         competition_result.scores.create!(
-          :source_result => source_result, 
-          :competition_result => competition_result, 
+          :source_result => source_result,
+          :competition_result => competition_result,
           :points => points_for(source_result)
         )
       end
@@ -91,7 +91,7 @@ class CrossCrusadeTeamCompetition < Competition
         case scores_for_event_count
         when 0
           competition_result.scores.create!(
-            :points => 1_000, 
+            :points => 1_000,
             :competition_result => competition_result,
             :source_result => competition_result,
             :event_name => source_event.full_name,
@@ -100,8 +100,8 @@ class CrossCrusadeTeamCompetition < Competition
           )
         when 1..10
           competition_result.scores.create!(
-            :points => 100 * (10 - scores_for_event_count), 
-            :competition_result => competition_result, 
+            :points => 100 * (10 - scores_for_event_count),
+            :competition_result => competition_result,
             :source_result => competition_result,
             :event_name => source_event.full_name,
             :description => "Absentee Warriors",

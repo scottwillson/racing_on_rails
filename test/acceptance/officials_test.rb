@@ -17,13 +17,13 @@ class OfficialsTest < AcceptanceTest
 
     visit "/people"
     assert page.has_no_selector? "export_link"
-    
+
     login_as FactoryGirl.create(:administrator)
     member = FactoryGirl.create(:person_with_login)
     visit "/admin/people/#{member.id}/edit"
     check "person_official"
     click_button "Save"
-    
+
     logout
     login_as member
     visit "/admin/first_aid_providers"

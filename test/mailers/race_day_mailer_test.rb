@@ -23,7 +23,7 @@ class RaceDayMailerTest < ActionMailer::TestCase
     # Not asserting attachment, just checking that we don't get exception
     RaceDayMailer.members_export Person.find_all_for_export
   end
-  
+
   def read_fixture(action)
     template = ERB.new(
         IO.readlines(File.join(::Rails.root.to_s, 'test', 'fixtures', self.class.mailer_class.name.underscore, action)).join

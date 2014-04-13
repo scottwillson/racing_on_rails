@@ -46,7 +46,7 @@ module Concerns
 
         ids.join(', ')
       end
-        
+
       def find_category(name)
         ::Category.find_by_name name
       end

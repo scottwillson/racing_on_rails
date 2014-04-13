@@ -11,7 +11,7 @@ module Renderers
         @key = key
       end
     end
-    
+
     def test_render_key
       assert_equal "Foo", DefaultResultRenderer.render_header(:foo)
     end

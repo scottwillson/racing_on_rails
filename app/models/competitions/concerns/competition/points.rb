@@ -6,15 +6,15 @@ module Concerns
       def point_schedule
         @point_schedule || nil
       end
-        
+
       def point_schedule=(value)
         @point_schedule = value
       end
-        
+
       # Apply points from point_schedule, and split across team
       def points_for(source_result, team_size = nil)
         points = 0
-          
+
         if place_members_only?
           points = point_schedule[source_result.members_only_place.to_i].to_f || 0
         else
@@ -33,12 +33,12 @@ module Concerns
           else
             points = points * factor
           end
-            
+
           if double_points_for_last_event? && source_result.last_event?
             points = points * 2
           end
         end
-          
+
         points
       end
 
@@ -65,11 +65,11 @@ module Concerns
       def consider_points_factor?
         true
       end
-        
+
       def double_points_for_last_event?
         false
       end
-      
+
       def field_size_bonus?
         false
       end
