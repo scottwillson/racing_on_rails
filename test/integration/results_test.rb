@@ -2,7 +2,7 @@ require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
 class ResultsTest < RacingOnRails::IntegrationTest
-  def test_custom_columns
+  test "custom columns" do
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:discipline, name: "Downhill")
     FactoryGirl.create(:number_issuer)

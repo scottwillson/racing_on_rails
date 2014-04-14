@@ -39,25 +39,25 @@ class PagesActionControllerIntegrationTest < ActionController::TestCase
 
   setup :create_page
 
-  def test_work_as_a_partial
+  test "work as a partial" do
     get(:partial_using_action)
     assert_select("p", text: "This is a plain page")
     assert_template layout: "application"
   end
 
-  def test_raise_exception_for_missing_partial
+  test "raise exception for missing partial" do
     # Would prefer MissingTemplate
     assert_raise(ActionView::TemplateError) { get(:missing_partial) }
   end
 
-  def test_work_as_a_partial_and_all_partials_itself
+  test "work as a partial and all partials itself" do
     get(:partial_using_partials_action)
     assert_select("p", text: "This is a plain page")
     assert_select("p.flash_message")
     assert_template layout: "application"
   end
 
-  def test_replace_file_based_template_for_controllers
+  test "replace file based template for controllers" do
     page = Page.create!(title: "fake").children.create!(title: "recent_results", body: "<em>Results</em>")
     assert_equal("fake/recent_results", page.path, "Page path")
     get(:recent_results)
@@ -65,21 +65,21 @@ class PagesActionControllerIntegrationTest < ActionController::TestCase
     assert_template layout: "application"
   end
 
-  def test_replace_file_based_template_for_controllers_index
+  test "replace file based template for controllers index" do
     Page.create!(title: "fake", body: "<em>Homepage!</em>")
     get(:index)
     assert_select("em", text: "Homepage!")
     assert_template layout: "application"
   end
 
-  def test_replace_file_based_template_for_controllers_with_explicit_path
+  test "replace file based template for controllers with explicit path" do
     Page.create!(title: "home_upcoming_events", body: "<em>Upcoming Events</em>")
     get(:upcoming_events)
     assert_select("em", text: "Upcoming Events")
     assert_template layout: "application"
   end
 
-  def test_use_controller_assigns
+  test "use controller assigns" do
     Page.create!(title: "fake").children.create!(title: "news", body: "<h4><%= @news_summary %></h4>")
     get(:news)
     assert_select("h4", text: "Masters want more BAR points")

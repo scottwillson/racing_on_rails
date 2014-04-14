@@ -2,7 +2,7 @@ require_relative "../test_helper"
 
 # :stopdoc:
 class EventsHelperTest < ActionView::TestCase
-  def test_link_to_event_email
+  test "link to event email" do
     event = SingleDayEvent.new
     assert link_to_event_email(event).blank?, "No promoter or contact info should be blank"
 
@@ -44,7 +44,7 @@ class EventsHelperTest < ActionView::TestCase
     assert_match(/>copperopolis@velopromo.com<\/a>/, link_to_event_email(event), "Event email and promoter email and no promoter name")
   end
 
-  def test_link_to_event_phone
+  test "link to event phone" do
     event = SingleDayEvent.new
     link_to_event_phone event
 

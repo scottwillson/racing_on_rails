@@ -2,7 +2,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
 class OregonCupTest < ActiveSupport::TestCase
-  def test_calculate
+  test "calculate" do
     # Oregon Cup
     # Men
     # 1. Tonkin     114

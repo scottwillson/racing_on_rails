@@ -6,18 +6,18 @@ module Admin
     setup :create_administrator_session
     setup :use_ssl
 
-    def test_only_admins_can_edit_pages
+    test "only admins can edit pages" do
       destroy_person_session
       get(:index)
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
 
-    def test_view_pages_as_tree
+    test "view pages as tree" do
       get(:index)
       assert_response(:success)
     end
 
-    def test_update_title_inplace
+    test "update title inplace" do
       page = FactoryGirl.create(:page)
 
       xhr(:patch, :update_attribute,
@@ -33,12 +33,12 @@ module Admin
       assert_equal(@administrator, page.updated_by_person, "updated_by_person")
     end
 
-    def test_edit_page
+    test "edit page" do
       page = FactoryGirl.create(:page)
       get(:edit, id: page.id)
     end
 
-    def test_update_page
+    test "update page" do
       page = FactoryGirl.create(:page)
       put(:update,
           id: page.to_param,
@@ -55,7 +55,7 @@ module Admin
       assert_equal(@administrator, page.updated_by_person, "updated_by_person")
     end
 
-    def test_update_page_parent
+    test "update page parent" do
       parent_page = Page.create!(title: "Root")
       page = FactoryGirl.create(:page)
       put(:update,
@@ -74,11 +74,11 @@ module Admin
       assert_redirected_to(edit_admin_page_path(page))
     end
 
-    def test_new_page
+    test "new page" do
       get(:new)
     end
 
-    def test_new_page_parent
+    test "new page parent" do
       assert_equal 0, Page.count
       parent_page = FactoryGirl.create(:page)
       get(:new, page: { parent_id: parent_page.to_param })
@@ -87,7 +87,7 @@ module Admin
       assert_equal(parent_page, page.parent, "New page parent")
     end
 
-    def test_create_page
+    test "create page" do
       put(:create,
           page: {
             title: "My Awesome Bike Racing Page",
@@ -102,7 +102,7 @@ module Admin
       assert_equal(@administrator, page.updated_by_person, "updated_by_person")
     end
 
-    def test_create_child_page
+    test "create child page" do
       parent_page = FactoryGirl.create(:page)
       post(:create,
           page: {
@@ -120,14 +120,14 @@ module Admin
       assert_equal(parent_page, page.parent, "Page parent")
     end
 
-    def test_delete_page
+    test "delete page" do
       page = FactoryGirl.create(:page)
       delete(:destroy, id: page.to_param)
       assert_redirected_to(admin_pages_path)
       assert(!Page.exists?(page.id), "Page should be deleted")
     end
 
-    def test_delete_parent_page
+    test "delete parent page" do
       page = FactoryGirl.create(:page)
       page.children.create!
       page.reload
@@ -136,7 +136,7 @@ module Admin
       assert(!Page.exists?(page.id), "Page should be deleted")
     end
 
-    def test_delete_child_page
+    test "delete child page" do
       page = FactoryGirl.create(:page).children.create!
       delete(:destroy, id: page.to_param)
       assert_redirected_to(admin_pages_path)

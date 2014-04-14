@@ -7,7 +7,7 @@ module Competitions
     tests ::CompetitionsController
 
     # How does this happen?
-    def test_rider_rankings_result_with_no_person
+    test "rider rankings result with no person" do
       ::RiderRankings.calculate!
       rider_rankings = RiderRankings.find_for_year
       rider_rankings.races.first.results.create!(place: "1")
@@ -18,7 +18,7 @@ module Competitions
       assert_not_nil(assigns["year"], "Should assign year")
     end
 
-    def test_unknown_competition_type
+    test "unknown competition type" do
       assert_raise(ActionController::UrlGenerationError) { get(:show, type: 'not_a_series') }
     end
   end

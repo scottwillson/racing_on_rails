@@ -4,11 +4,11 @@ require_relative "../../../../app/models/competitions/calculator"
 # :stopdoc:
 # TODO remove noisy member setup
 class Competitions::CalculatorTest < Ruby::TestCase
-  def test_calculate_with_no_source_results
+  test "calculate_with_no_source_results" do
     assert_equal [], Competitions::Calculator.calculate([])
   end
 
-  def test_calculate_with_one_source_result
+  test "calculate_with_one_source_result" do
     source_results = [ { "event_id" => 1, "participant_id" => 1, "place" => "1", "member_from" => Date.new(2012), member_to: end_of_year, "year" => Date.today.year } ]
     expected = [
       result(place: 1, participant_id: 1, points: 1, scores: [ { numeric_place: 1, participant_id: 1, points: 1 } ])
@@ -17,7 +17,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal expected, actual
   end
 
-  def test_calculate_with_many_source_results
+  test "calculate_with_many_source_results" do
     source_results = [
       { event_id: 1, participant_id: 1, place: 1, member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year },
       { event_id: 1, participant_id: 2, place: 2, member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year }
@@ -30,7 +30,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal expected.sort_by(&:participant_id), actual.sort_by(&:participant_id)
   end
 
-  def test_calculate_team_results
+  test "calculate_team_results" do
     source_results = [
       { race_id: 1, participant_id: 3, place: 1, member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year },
       { race_id: 1, participant_id: 4, place: 1, member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year },
@@ -47,7 +47,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal expected.sort_by(&:participant_id), actual.sort_by(&:participant_id)
   end
 
-  def test_calculate_team_results_best_3_for_event
+  test "calculate_team_results_best_3_for_event" do
     source_results = [
       { event_id: 1, race_id: 1, participant_id: 1, place: 107 },
       { event_id: 1, race_id: 1, participant_id: 1, place: 7 },
@@ -80,7 +80,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal_results expected.sort_by(&:participant_id), actual.sort_by(&:participant_id)
   end
 
-  def test_calculate_should_ignore_non_scoring_results
+  test "calculate_should_ignore_non_scoring_results" do
     source_results = [
       { event_id: 1, participant_id: 1, place: "", member_from: Date.new(2012), member_to: end_of_year },
       { event_id: 1, participant_id: 2, place: "DNS", member_from: Date.new(2012), member_to: end_of_year },
@@ -92,7 +92,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal expected, actual
   end
 
-  def test_calculate_ignore_non_starters
+  test "calculate_ignore_non_starters" do
     source_results = [
       { event_id: 1, participant_id: 1, place: "", member_from: Date.new(2012), member_to: end_of_year },
       { event_id: 1, participant_id: 2, place: "DNS", member_from: Date.new(2012), member_to: end_of_year },
@@ -104,7 +104,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal expected, actual
   end
 
-  def test_calculate_with_multiple_events_and_people
+  test "calculate_with_multiple_events_and_people" do
     source_results = [
       { id: 1, event_id: 1, race_id: 1, participant_id: 1, place: 1, member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year },
       { id: 2, event_id: 1, race_id: 1, participant_id: 2, place: 2, member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year },
@@ -119,13 +119,13 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal expected.sort_by(&:participant_id), actual.sort_by(&:participant_id)
   end
 
-  def test_select_eligible_empty
+  test "select_eligible_empty" do
     expected = []
     actual = Competitions::Calculator.select_eligible([])
     assert_equal expected, actual
   end
 
-  def test_select_eligible
+  test "select_eligible" do
     source_results = [
       result(id: 1, event_id: 1, race_id: 1, place: 1, member_from: Date.new(2012), "year" => Date.today.year),
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: nil, member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year),
@@ -143,7 +143,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal_results expected, actual
   end
 
-  def test_select_eligible_with_results_per_event
+  test "select_eligible_with_results_per_event" do
     source_results = [
       result(id: 1, event_id: 1, race_id: 1, place: 1),
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: nil),
@@ -164,7 +164,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal_results expected, actual
   end
 
-  def test_select_eligible_with_results_per_race_1
+  test "select_eligible_with_results_per_race_1" do
     source_results = [
       result(id: 1, event_id: 1, race_id: 1, place: 1),
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: nil),
@@ -184,7 +184,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal_results expected, actual
   end
 
-  def test_select_eligible_with_results_per_race_2
+  test "select_eligible_with_results_per_race_2" do
     source_results = [
       result(id: 1, event_id: 1, race_id: 1, place: 1),
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: nil),
@@ -205,7 +205,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal_results expected, actual
   end
 
-  def test_select_eligible_should_sort_choose_best_results
+  test "select_eligible_should_sort_choose_best_results" do
     source_results = [
       result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200"),
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6"),
@@ -221,7 +221,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal expected.sort_by(&:id), actual.sort_by(&:id)
   end
 
-  def test_team_membership
+  test "team_membership" do
     source_results = [
       result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200",
         member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: false),
@@ -233,7 +233,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal [ 2 ], actual.map(&:id)
   end
 
-  def test_no_team_membership
+  test "no_team_membership" do
     source_results = [
       result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200",
         member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: false),
@@ -245,54 +245,54 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal [ 1, 2 ], actual.map(&:id).sort
   end
 
-  def test_map_to_scores
+  test "map_to_scores" do
     expected = [ Struct::CalculatorScore.new(nil, 1, 1, 1, 1) ]
     source_results = [ result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: 1, member_from: Date.new(2012)) ]
     actual = Competitions::Calculator.map_to_scores(source_results, nil, true)
     assert_equal expected, actual
   end
 
-  def test_map_to_scores_empty
+  test "map_to_scores_empty" do
     expected = []
     actual = Competitions::Calculator.map_to_scores([], nil, true)
     assert_equal expected, actual
   end
 
-  def test_map_to_results
+  test "map_to_results" do
     scores = [ Struct::CalculatorScore.new(nil, 1, 1, 1, 1) ]
     expected = [ result(participant_id: 1, points: 1, scores: [ { numeric_place: 1, participant_id: 1, points: 1, source_result_id: 1 } ]) ]
     actual = Competitions::Calculator.map_to_results(scores)
     assert_equal expected, actual
   end
 
-  def test_map_to_results_empty
+  test "map_to_results_empty" do
     expected = []
     actual = Competitions::Calculator.map_to_results([])
     assert_equal expected, actual
   end
 
-  def test_place
+  test "place" do
     source_results = [ result(points: 1) ]
     expected = [ result(place: 1, points: 1) ]
     actual = Competitions::Calculator.place(source_results)
     assert_equal expected, actual
   end
 
-  def test_place_by_points
+  test "place_by_points" do
     source_results = [ result(points: 1), result(points: 10), result(points: 2) ]
     expected = [ result(place: 1, points: 10), result(place: 2, points: 2), result(place: 3, points: 1) ]
     actual = Competitions::Calculator.place(source_results)
     assert_equal expected, actual.sort_by(&:place)
   end
 
-  def test_place_by_points_with_ties
+  test "place_by_points_with_ties" do
     source_results = [ result(points: 1), result(points: 10), result(points: 2), result(points: 2), result(points: 2) ]
     expected = [ result(place: 1, points: 10), result(place: 2, points: 2), result(place: 2, points: 2), result(place: 2, points: 2), result(place: 5, points: 1) ]
     actual = Competitions::Calculator.place(source_results)
     assert_equal expected, actual.sort_by(&:place)
   end
 
-  def test_place_by_points_break_ties
+  test "place_by_points_break_ties" do
     source_results = [
       result(points: 1, scores: [ { numeric_place: 5, date: Date.new(2012) } ]),
       result(points: 10, scores: [ { numeric_place: 1, date: Date.new(2012) } ]),
@@ -311,7 +311,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal expected, actual.sort_by(&:place)
   end
 
-  def test_place_by_points_unbreakable_tie
+  test "place_by_points_unbreakable_tie" do
     source_results = [
       result(points: 1, participant_id: 10, scores: [ { numeric_place: 5, date: Date.new(2012) } ]),
       result(points: 10, participant_id: 20, scores: [ { numeric_place: 1, date: Date.new(2012) } ]),
@@ -331,7 +331,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal expected.sort_by(&:participant_id), actual.sort_by(&:participant_id)
   end
 
-  def test_place_by_points_unbreakable_tie_2
+  test "place_by_points_unbreakable_tie_2" do
     source_results = [
       result(points: 15, participant_id: 11, scores: [ { numeric_place: 1, date: Date.new(2012, 6, 2) } ]),
       result(points: 15, participant_id: 11, scores: [ { numeric_place: 1, date: Date.new(2012, 6, 2) } ]),
@@ -357,17 +357,17 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal expected.sort_by(&:participant_id), actual.sort_by(&:participant_id)
   end
 
-  def test_place_empty
+  test "place_empty" do
     expected = []
     actual = Competitions::Calculator.place([])
     assert_equal expected, actual
   end
 
-  def test_points
+  test "points" do
     assert_equal 1, Competitions::Calculator.points(result(place: 20))
   end
 
-  def test_points_with_point_schedule
+  test "points_with_point_schedule" do
     assert_equal 0, Competitions::Calculator.points(result(place: "20"), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false)
     assert_equal 1, Competitions::Calculator.points(result(place: "15"), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false)
     assert_equal 14, Competitions::Calculator.points(result(place: 2), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false)
@@ -377,7 +377,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal 0, Competitions::Calculator.points(result(place: "DQ"), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false)
   end
 
-  def test_points_considers_team_size
+  test "points_considers_team_size" do
     assert_equal 0, Competitions::Calculator.points(result(place: "20", team_size: 2), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false)
     assert_equal 0.5, Competitions::Calculator.points(result(place: "15", team_size: 2), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false)
     assert_equal 7, Competitions::Calculator.points(result(place: 2, team_size: 2), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false)
@@ -394,36 +394,36 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal 0, Competitions::Calculator.points(result(place: "DQ", team_size: 3), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false)
   end
 
-  def test_points_considers_multiplier
+  test "points_considers_multiplier" do
     assert_equal 27, Competitions::Calculator.points(result(place: "7", multiplier: 3), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false)
     assert_equal 0, Competitions::Calculator.points(result(place: "7", multiplier: 0), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false)
   end
 
-  def test_points_considers_multiplier_and_team_size
+  test "points_considers_multiplier_and_team_size" do
     assert_in_delta 9.333, 0.1, Competitions::Calculator.points(result(place: "2", multiplier: 2, team_size: 3),  [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false)
   end
 
-  def test_points_considers_field_size
+  test "points_considers_field_size" do
     assert_equal 9, Competitions::Calculator.points(result(place: "7", field_size: 74), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false, true)
     assert_equal 13.5, Competitions::Calculator.points(result(place: "7", field_size: 75), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false, true)
     assert_equal 13.5, Competitions::Calculator.points(result(place: "7", field_size: 76), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false, true)
   end
 
-  def test_points_ignore_field_size_if_multipler
+  test "points_ignore_field_size_if_multipler" do
     assert_equal 27, Competitions::Calculator.points(result(place: "7", multiplier: 3, field_size: 74), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false, true)
     assert_equal 27, Competitions::Calculator.points(result(place: "7", multiplier: 3, field_size: 75), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false, true)
     assert_equal 27, Competitions::Calculator.points(result(place: "7", multiplier: 3, field_size: 76), [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], false, true)
   end
 
-  def test_points_use_source_result_points
+  test "points_use_source_result_points" do
     assert_equal 11, Competitions::Calculator.points(result(place: "2", multiplier: 2, points: 11), [ 3, 2, 1 ], false, false, true)
   end
 
-  def test_add_team_sizes_empty
+  test "add_team_sizes_empty" do
     assert_equal [], Competitions::Calculator.add_team_sizes([])
   end
 
-  def test_add_team_sizes
+  test "add_team_sizes" do
     expected = [
       result(place: 1, race_id: 1, team_size: 2),
       result(place: 1, race_id: 1, team_size: 2),
@@ -445,7 +445,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal expected, Competitions::Calculator.add_team_sizes(results)
   end
 
-  def test_numeric_place
+  test "numeric_place" do
     assert_equal 1, Competitions::Calculator.numeric_place(result(place: "1"))
     assert_equal 1, Competitions::Calculator.numeric_place(result(place: 1))
     assert_equal 217, Competitions::Calculator.numeric_place(result(place: "217"))
@@ -454,13 +454,13 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal Float::INFINITY, Competitions::Calculator.numeric_place(result(place: "DNF"))
   end
 
-  def test_map_hashes_to_results
+  test "map_hashes_to_results" do
     expected = [ Struct::CalculatorResult.new.tap { |r| r.place = 3 } ]
     actual = Competitions::Calculator.map_hashes_to_results([{ place: 3 }])
     assert_equal expected, actual
   end
 
-  def test_compare_by_best_place
+  test "compare_by_best_place" do
     x = Struct::CalculatorResult.new
     y = Struct::CalculatorResult.new
     assert_equal 0, Competitions::Calculator.compare_by_best_place(x, y)
@@ -494,7 +494,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal(1, Competitions::Calculator.compare_by_best_place(x, y))
   end
 
-  def test_compare_by_most_recent_result
+  test "compare_by_most_recent_result" do
     x = Struct::CalculatorResult.new
     y = Struct::CalculatorResult.new
     assert_equal 0, Competitions::Calculator.compare_by_most_recent_result(x, y)
@@ -528,7 +528,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal(-1, Competitions::Calculator.compare_by_most_recent_result(x, y))
   end
 
-  def test_member_in_year
+  test "member_in_year" do
     assert !Competitions::Calculator.member_in_year?(result(year: 2005))
     assert !Competitions::Calculator.member_in_year?(result(year: 2005, member_from: Date.new(2001)))
     assert !Competitions::Calculator.member_in_year?(result(year: 2005, member_from: Date.new(2012)))
@@ -537,7 +537,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert  Competitions::Calculator.member_in_year?(result(year: 2005, member_from: Date.new(1999), member_to: Date.new(2014)))
   end
 
-  def test_source_events
+  test "source_events" do
     source_results = [
       { event_id: 1, participant_id: 1, place: 1 },
       { event_id: 2, participant_id: 2, place: 2 }
@@ -550,7 +550,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
   end
 
 
-  def test_ignore_empty_source_events
+  test "ignore_empty_source_events" do
     source_results = [
       { event_id: 1, participant_id: 1, place: 1 },
       { event_id: 2, participant_id: 2, place: 2 }

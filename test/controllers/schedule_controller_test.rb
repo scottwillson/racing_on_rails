@@ -2,7 +2,7 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
-  def test_index
+  test "index" do
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
     FactoryGirl.create(:number_issuer)
@@ -37,7 +37,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert(!html["mud_slinger.html"], "Schedule should not include Mudslinger flyer URL")
   end
 
-  def test_index_only_shows_visible_events
+  test "index only shows visible events" do
     future_national_federation_event = FactoryGirl.create(:event, sanctioned_by: "USA Cycling")
 
     get :index
@@ -50,25 +50,25 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     )
   end
 
-  def test_index_rss
+  test "index rss" do
     FactoryGirl.create(:event)
     get :index, format: :rss
     assert_redirected_to schedule_path(format: :atom)
   end
 
-  def test_index_atom
+  test "index atom" do
     FactoryGirl.create(:event)
     get :index, format: :atom
     assert_response :success
   end
 
-  def test_index_excel
+  test "index excel" do
     FactoryGirl.create(:event)
     get :index, format: :xls
     assert_response :success
   end
 
-  def test_index_excel_discipline
+  test "index excel discipline" do
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
 
@@ -78,7 +78,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert_response :success
   end
 
-  def test_index_excel_discipline_list
+  test "index excel discipline list" do
     FactoryGirl.create(:discipline)
 
     FactoryGirl.create(:event, discipline: "Road")
@@ -87,7 +87,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert_response :success
   end
 
-  def test_road_index
+  test "road index" do
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
     year = 2006
@@ -117,7 +117,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert(html["banana_belt.html"], "Schedule should include Banana Belt flyer URL")
   end
 
-  def test_mtb_index
+  test "mtb index" do
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
     FactoryGirl.create(:number_issuer)
@@ -148,7 +148,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert(!html["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
   end
 
-  def test_filter_by_sanctioning_organization
+  test "filter by sanctioning organization" do
     Timecop.freeze(2010, 2) do
       FactoryGirl.create(:event, sanctioned_by: "FIAC", name: "FIAC Event")
       FactoryGirl.create(:event, sanctioned_by: "UCI", name: "UCI Event")
@@ -166,7 +166,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     end
   end
 
-  def test_filter_by_sanctioning_organization_with_filter
+  test "filter by sanctioning organization with filter" do
     Timecop.freeze(2010, 2) do
       FactoryGirl.create(:event, sanctioned_by: "FIAC", name: "FIAC Event")
       FactoryGirl.create(:event, sanctioned_by: "UCI", name: "UCI Event")
@@ -184,7 +184,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     end
   end
 
-  def test_filter_by_region
+  test "filter by region" do
     Timecop.freeze(2010, 2) do
       racing_association = RacingAssociation.current
       racing_association.filter_schedule_by_region = true
@@ -204,7 +204,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     end
   end
 
-  def test_index_with_alias
+  test "index with alias" do
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
     FactoryGirl.create(:number_issuer)
@@ -236,12 +236,12 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert(!html["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
   end
 
-  def test_list
+  test "list" do
     get :list
     assert_response :success
   end
 
-  def test_mtb_list
+  test "mtb list" do
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
 
@@ -272,7 +272,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert(!html["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
   end
 
-  def test_list_excel_discipline
+  test "list excel discipline" do
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:event, discipline: "Road")
 
@@ -280,17 +280,17 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert_response :success
   end
 
-  def test_index_as_json
+  test "index as json" do
     get :index, format: "json"
     assert_response :success
   end
 
-  def test_calendar_as_json
+  test "calendar as json" do
     get :calendar, format: "json"
     assert_response :success
   end
 
-  def test_mtb_index_as_json
+  test "mtb index as json" do
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
     SingleDayEvent.create!(
@@ -318,7 +318,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert(!json["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
   end
 
-  def test_mtb_calendar_as_json
+  test "mtb calendar as json" do
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
     SingleDayEvent.create!(

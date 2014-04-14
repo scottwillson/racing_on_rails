@@ -20,7 +20,7 @@ module Admin
         FactoryGirl.create(:number_issuer)
       end
 
-      def test_upload
+      test "upload" do
         mt_hood_1 = FactoryGirl.create(:stage_race)
         assert(mt_hood_1.races.empty?, 'Should have no races before import')
 
@@ -33,7 +33,7 @@ module Admin
         assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
       end
 
-      def test_upload_usac
+      test "upload usac" do
         RacingAssociation.current.usac_results_format = true
         mt_hood_1 = FactoryGirl.create(:stage_race)
         assert(mt_hood_1.races.empty?, 'Should have no races before import')
@@ -47,7 +47,7 @@ module Admin
         assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
       end
 
-      def test_upload_custom_columns
+      test "upload custom columns" do
         mt_hood_1 = FactoryGirl.create(:stage_race)
         assert(mt_hood_1.races.empty?, 'Should have no races before import')
 
@@ -61,7 +61,7 @@ module Admin
         assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
       end
 
-      def test_upload_dupe_people
+      test "upload dupe people" do
         # Two people with different name, same numbers
         # Excel file has Greg Rodgers with no number
         Person.create(name: 'Greg Rodgers', road_number: '404')
@@ -80,7 +80,7 @@ module Admin
         assert(!flash[:warn].present?)
       end
 
-      def test_upload_schedule
+      test "upload schedule" do
         post(:upload_schedule, schedule_file: fixture_file_upload("schedule/excel.xls", "application/vnd.ms-excel", :binary))
 
         assert(!flash[:warn].present?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
@@ -94,7 +94,7 @@ module Admin
         assert_equal(76, after_import_all, "All events count after import")
       end
 
-      def test_upload_bad_xls_format
+      test "upload bad xls format" do
         mt_hood_1 = FactoryGirl.create(:stage_race)
 
         Results::ResultsFile.any_instance.expects(:import).raises(Ole::Storage::FormatError, "OLE2 signature is invalid")

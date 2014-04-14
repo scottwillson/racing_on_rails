@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
 
 # :stopdoc:
 class PasswordResetsTest < AcceptanceTest
-  def test_reset_not_logged_in
+  test "reset not logged in" do
     FactoryGirl.create(:person_with_login, email: "member@example.com")
     visit "/person_session/new"
     click_link "forgot"
@@ -26,7 +26,7 @@ class PasswordResetsTest < AcceptanceTest
     click_button "Login"
   end
 
-  def test_reset_logged_in
+  test "reset logged in" do
     FactoryGirl.create(:person_with_login, email: "member@example.com")
     visit "/login"
     fill_in "person_session_login", with: "bob.jones"

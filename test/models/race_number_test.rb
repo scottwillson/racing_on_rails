@@ -2,7 +2,7 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class RaceNumberTest < ActiveSupport::TestCase
-  def test_defaults
+  test "defaults" do
     FactoryGirl.create(:number_issuer, name: "AVC")
     association_number_issuer = FactoryGirl.create(:number_issuer, name: "CBRA")
 
@@ -20,7 +20,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert_equal association_number_issuer, race_number.number_issuer, 'number issuer default'
   end
 
-  def test_create
+  test "create" do
     FactoryGirl.create(:number_issuer)
     road = FactoryGirl.create(:discipline, name: "Road")
     track = FactoryGirl.create(:discipline, name: "Track")
@@ -73,7 +73,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     race_number.save!
   end
 
-  def test_cannot_create_exact_same_number_for_person
+  test "cannot create exact same number for person" do
     alice = FactoryGirl.create(:person)
     obra = NumberIssuer.find_or_create_by(name: 'CBRA')
     cyclocross = FactoryGirl.create(:discipline, name: "Cyclocross")
@@ -84,7 +84,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert(!number.valid?, "Should not be able to create two of the exact same numbers")
   end
 
-  def test_rental
+  test "rental" do
     alice = FactoryGirl.create(:person)
     racing_association = RacingAssociation.current
     racing_association.rental_numbers = 51..99
@@ -129,7 +129,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert(!RaceNumber.rental?('50Z'), '50Z not rental')
   end
 
-  def test_rental_no_rental_numbers
+  test "rental no rental numbers" do
     alice = FactoryGirl.create(:person)
     racing_association = RacingAssociation.current
     racing_association.rental_numbers = nil
@@ -174,7 +174,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert(!RaceNumber.rental?('50Z'), '50Z not rental')
   end
 
-  def test_create_bmx
+  test "create bmx" do
     alice = FactoryGirl.create(:person)
     FactoryGirl.create(:number_issuer)
     FactoryGirl.create(:discipline, name: "Road")
@@ -187,7 +187,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert_equal(bmx, race_number.discipline, 'New number discipline')
   end
 
-  def test_destroy
+  test "destroy" do
     alice = FactoryGirl.create(:person)
     FactoryGirl.create(:number_issuer)
     FactoryGirl.create(:discipline, name: "Road")
@@ -198,7 +198,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert(!RaceNumber.exists?(person_id: alice.id, value: 'A103'), "Shoud delete person")
   end
 
-  def test_gender
+  test "gender" do
     alice = FactoryGirl.create(:person)
     tonkin = FactoryGirl.create(:person)
     FactoryGirl.create(:number_issuer)
@@ -216,7 +216,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert(race_number.valid?, 'Dupe number for different gender should be valid')
   end
 
-  def test_gender_alt
+  test "gender alt" do
     alice = FactoryGirl.create(:person)
     FactoryGirl.create(:person)
     molly = FactoryGirl.create(:person)

@@ -9,7 +9,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     FactoryGirl.create(:discipline)
   end
 
-  def test_find_associated_records_2
+  test "find associated records 2" do
     event = SingleDayEvent.create!(name: "Tabor CR")
     category = Category.find_or_create_by(name: "Senior Men Pro 1/2")
     race = event.races.create!(category: category)
@@ -24,7 +24,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal(result1.team.id, result2.team.id, "Teams should have same ID")
   end
 
-  def test_find_by_alias
+  test "find by alias" do
     kona = FactoryGirl.create(:team, name: "Kona")
     tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
     Alias.create!(team: kona, name: 'Kona Les Gets')
@@ -93,7 +93,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal(nil, result.team_name, 'team name')
   end
 
-  def test_find_associated_records
+  test "find associated records" do
     tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
     FactoryGirl.create(:result, person: tonkin)
     tonkin.aliases.create!(name: "Eric Tonkin")
@@ -117,7 +117,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal("Ron", result_3.person.first_name, 'Person')
   end
 
-  def test_find_associated_records_non_road
+  test "find associated records non road" do
     FactoryGirl.create(:cyclocross_discipline)
     FactoryGirl.create(:mtb_discipline)
 
@@ -132,7 +132,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal(tonkin, result.person, 'Person')
   end
 
-  def test_differentiate_people_by_license
+  test "differentiate people by license" do
     tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
     tonkin.license = "12345"
     tonkin.save!
@@ -148,7 +148,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal(tonkin_clone, result.person, 'Person')
   end
 
-  def test_differentiate_people_by_number
+  test "differentiate people by number" do
     person = Person.create!(name: "Joe Racer", road_number: "600")
     person_clone = Person.create!(name: "Joe Racer", road_number: "550")
     # Same number
@@ -163,7 +163,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal(person, result.person, 'Person')
   end
 
-  def test_differentiate_people_by_number_ignore_different_names
+  test "differentiate people by number ignore different names" do
     RacingAssociation.current.expects(:eager_match_on_license?).at_least_once.returns(false)
 
     person = Person.create!(name: "Joe Racer", updated_at: '2008-10-01')
@@ -196,7 +196,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal_dates Time.zone.today, person_clone.updated_at, "updated_at"
   end
 
-  def test_differentiate_people_by_number_ignore_different_names_eager_match
+  test "differentiate people by number ignore different names eager match" do
     RacingAssociation.current.expects(:eager_match_on_license?).at_least_once.returns(true)
 
     person = Person.create!(name: "Joe Racer")
@@ -217,7 +217,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal(person_clone, result.person, 'Person')
   end
 
-  def test_find_people
+  test "find people" do
     # TODO Add warning that numbers don't match
     tonkin = FactoryGirl.create(:person, name: 'Erik Tonkin', team: FactoryGirl.create(:team, name: "Kona"))
     tonkin.race_numbers.create(value: "104", year: 2004)
@@ -350,7 +350,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     # Test numbers from different years or disciplines
   end
 
-  def test_assign_results_to_existing_person_with_same_name_instead_of_creating_a_new_one
+  test "assign results to existing person with same name instead of creating a new one" do
     tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
     FactoryGirl.create(:result, person: tonkin)
     new_tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
@@ -368,7 +368,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal(tonkin, result.person, "Should use person with most recent result")
   end
 
-  def test_most_recent_person_if_no_results
+  test "most recent person if no results" do
     tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
     new_tonkin = Person.create!(name: "Erik Tonkin")
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should have 2 Tonkins")
@@ -387,7 +387,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal(new_tonkin, result.person, "Should use most recently-updated person if can't decide otherwise")
   end
 
-  def test_find_people_among_duplicates
+  test "find people among duplicates" do
     FactoryGirl.create(:cyclocross_discipline)
 
     Timecop.freeze(Date.new(Time.zone.today.year, 6)) do
@@ -405,7 +405,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     end
   end
 
-  def test_multiple_scores_for_same_race
+  test "multiple scores for same race" do
     competition = Competition.create!(name: 'KOM')
     cx_a = FactoryGirl.create(:category)
     competition_race = competition.races.create!(category: cx_a)
@@ -440,7 +440,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert(competition_result.scores.create_if_best_result_for_race(source_result: source_result, points: 4))
   end
 
-  def test_do_not_match_blank_licenses
+  test "do not match blank licenses" do
     Person.create!(name: 'Rocket, The', license: "")
     weaver = FactoryGirl.create(:person, name: "Ryan Weaver", first_name: 'Ryan', last_name: 'Weaver')
     race = FactoryGirl.create(:race)

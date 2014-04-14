@@ -4,7 +4,7 @@ require_relative "../test_helper"
 class RaceDayMailerTest < ActionMailer::TestCase
   tests RaceDayMailer
 
-  def test_members_export
+  test "members export" do
     FactoryGirl.create(:number_issuer)
     FactoryGirl.create(:cyclocross_discipline)
     FactoryGirl.create(:discipline, name: "Downhill")

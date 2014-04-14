@@ -41,7 +41,7 @@ class MobileTest < RacingOnRails::IntegrationTest
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
 
-  test "full_site param" do
+  test "full site param" do
     get "/", full_site: 1
     assert_response :success
     assert_template "home/index"
@@ -69,7 +69,7 @@ class MobileTest < RacingOnRails::IntegrationTest
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
 
-  test "prefer_full_site cookie" do
+  test "prefer full site cookie" do
     cookies["prefer_full_site"] = 1
     get "/"
     assert_response :success
@@ -161,7 +161,7 @@ class MobileTest < RacingOnRails::IntegrationTest
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
 
-  test "prefer_full_site cookie, full_site param" do
+  test "prefer full site cookie, full_site param" do
     cookies["prefer_full_site"] = 1
     get "/", full_site: 1
     assert_response :success
@@ -170,14 +170,14 @@ class MobileTest < RacingOnRails::IntegrationTest
     assert cookies["prefer_full_site"].present?, "cookies['prefer_full_site']"
   end
 
-  test "prefer_full_site cookie, mobile param" do
+  test "prefer full site cookie, mobile param" do
     cookies["prefer_full_site"] = 1
     get "/", mobile_site: 1
     assert_redirected_to "/m/"
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
 
-  test "prefer_full_site cookie, custom page" do
+  test "prefer full site cookie, custom page" do
     cookies["prefer_full_site"] = 1
     Page.create!(slug: "home", body: "<p class='custom'></p>")
     get "/"
@@ -186,7 +186,7 @@ class MobileTest < RacingOnRails::IntegrationTest
     assert cookies["prefer_full_site"].present?, "cookies['prefer_full_site']"
   end
 
-  test "prefer_full_site cookie, custom mobile page" do
+  test "prefer full site cookie, custom mobile page" do
     cookies["prefer_full_site"] = 1
     Page.create!(slug: "mobile/home", body: "<p class='custom-mobile'></p>")
     get "/"
@@ -196,7 +196,7 @@ class MobileTest < RacingOnRails::IntegrationTest
     assert cookies["prefer_full_site"].present?, "cookies['prefer_full_site']"
   end
 
-  test "full_site param, mobile param" do
+  test "full site param, mobile param" do
     get "/", mobile_site: 1, full_site: 1
     assert_response :success
     assert_template "home/index"
@@ -204,7 +204,7 @@ class MobileTest < RacingOnRails::IntegrationTest
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
 
-  test "full_site param, custom page" do
+  test "full site param, custom page" do
     Page.create!(slug: "home", body: "<p class='custom'></p>")
     get "/", full_site: 1
     assert_response :success
@@ -212,7 +212,7 @@ class MobileTest < RacingOnRails::IntegrationTest
     assert cookies["prefer_full_site"].present?, "cookies['prefer_full_site']"
   end
 
-  test "full_site param, custom mobile page" do
+  test "full site param, custom mobile page" do
     cookies["prefer_full_site"] = 1
     Page.create!(slug: "mobile/home", body: "<p class='custom-mobile'></p>")
     get "/"
@@ -256,7 +256,7 @@ class MobileTest < RacingOnRails::IntegrationTest
     assert_response :success
   end
 
-  test "mailing_list" do
+  test "mailing list" do
     mailing_list_post = FactoryGirl.create(:post)
     get "http://example.com/m/posts/#{mailing_list_post.id}"
     assert_response :success

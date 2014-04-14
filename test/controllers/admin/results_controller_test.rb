@@ -9,7 +9,7 @@ module Admin
       use_ssl
     end
 
-    def test_update_no_team
+    test "update no team" do
       result = FactoryGirl.create(:result, team: nil)
       xhr :put,
           :update_attribute,
@@ -22,7 +22,7 @@ module Admin
       assert_nil(result.team(true), 'team')
     end
 
-    def test_update_no_team_to_existing
+    test "update no team to existing" do
       result = FactoryGirl.create(:result, team: nil)
       FactoryGirl.create(:team, name: "Vanilla")
 
@@ -38,7 +38,7 @@ module Admin
       assert_equal("Vanilla", result.team(true).name, 'team')
     end
 
-    def test_update_no_team_to_new
+    test "update no team to new" do
       result = FactoryGirl.create(:result, team: nil)
 
       xhr :put,
@@ -52,7 +52,7 @@ module Admin
       assert_equal("Team Vanilla", result.team(true).name, "team name")
     end
 
-    def test_update_no_team_to_alias
+    test "update no team to alias" do
       result = FactoryGirl.create(:result, team: nil)
       gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
       gentle_lovers.aliases.create!(name: "Gentile Lovers")
@@ -68,7 +68,7 @@ module Admin
       assert_equal(gentle_lovers, result.team(true), 'team')
     end
 
-    def test_update_to_no_team
+    test "update to no team" do
       result = FactoryGirl.create(:result)
 
       xhr :put,
@@ -82,7 +82,7 @@ module Admin
       assert_nil(result.team(true), 'team')
     end
 
-    def test_update_to_existing_team
+    test "update to existing team" do
       result = FactoryGirl.create(:result, team: nil)
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
 
@@ -97,7 +97,7 @@ module Admin
       assert_equal(vanilla, result.team(true), 'team')
     end
 
-    def test_update_to_new_team
+    test "update to new team" do
       result = FactoryGirl.create(:result, team: nil)
 
       xhr :put,
@@ -111,7 +111,7 @@ module Admin
       assert_equal("Astana", result.team(true).name, 'team name')
     end
 
-    def test_update_to_team_alias
+    test "update to team alias" do
       result = FactoryGirl.create(:result)
       gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
       gentle_lovers.aliases.create!(name: "Gentile Lovers")
@@ -127,7 +127,7 @@ module Admin
       assert_equal(gentle_lovers, result.team(true), 'team')
     end
 
-    def test_set_result_points
+    test "set result points" do
       result = FactoryGirl.create(:result)
 
       xhr :put,
@@ -141,7 +141,7 @@ module Admin
       assert_equal(12, result.points, 'points')
     end
 
-    def test_update_no_person
+    test "update no person" do
       result = FactoryGirl.create(:result, person: nil)
       original_team_name = result.team_name
 
@@ -159,7 +159,7 @@ module Admin
       assert_nil(result.person(true), 'person')
     end
 
-    def test_update_no_person_to_existing
+    test "update no person to existing" do
       result = FactoryGirl.create(:result, person: nil)
       tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
       tonkin.aliases.create!(name: "Eric Tonkin")
@@ -179,7 +179,7 @@ module Admin
       assert_equal(1, tonkin.aliases.size)
     end
 
-    def test_update_no_person_to_alias
+    test "update no person to alias" do
       result = FactoryGirl.create(:result, person: nil)
       tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
       tonkin.aliases.create!(name: "Eric Tonkin")
@@ -200,7 +200,7 @@ module Admin
       assert_equal(1, tonkin.aliases.size)
     end
 
-    def test_update_to_no_person
+    test "update to no person" do
       result = FactoryGirl.create(:result)
 
       original_team_name = result.team_name
@@ -219,7 +219,7 @@ module Admin
       assert_nil(result.person(true), 'person')
     end
 
-    def test_update_to_different_person
+    test "update to different person" do
       result = FactoryGirl.create(:result, person: nil)
       tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
       tonkin.aliases.create!(name: "Eric Tonkin")
@@ -241,7 +241,7 @@ module Admin
       assert_equal(1, tonkin.aliases.size)
     end
 
-    def test_update_to_alias
+    test "update to alias" do
       result = FactoryGirl.create(:result, person: nil)
       tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
       tonkin.aliases.create!(name: "Eric Tonkin")
@@ -263,7 +263,7 @@ module Admin
       assert_equal(1, tonkin.aliases.size)
     end
 
-    def test_update_to_new_person
+    test "update to new person" do
       FactoryGirl.create(:number_issuer)
       FactoryGirl.create(:discipline)
 
@@ -292,7 +292,7 @@ module Admin
       assert_equal 3, weaver.results.size, "results"
     end
 
-    def test_update_attribute_should_format_times
+    test "update attribute should format times" do
       result = FactoryGirl.create(:result, time: 600)
       xhr :put,
           :update_attribute,
@@ -304,7 +304,7 @@ module Admin
       assert_equal "01:59:19.00", response.body, "Should format time but was #{response.body}"
     end
 
-    def test_person
+    test "person" do
       weaver = FactoryGirl.create(:result).person
 
       get(:index, person_id: weaver.to_param.to_s)
@@ -314,7 +314,7 @@ module Admin
       assert_response(:success)
     end
 
-    def test_find_person
+    test "find person" do
       FactoryGirl.create(:person, first_name: "Ryan", last_name: "Weaver")
       FactoryGirl.create(:person, name: "Alice")
       tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
@@ -323,7 +323,7 @@ module Admin
       assert_template('admin/results/_people')
     end
 
-    def test_find_person_one_result
+    test "find person one result" do
       weaver = FactoryGirl.create(:person)
       tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
 
@@ -333,14 +333,14 @@ module Admin
       assert_template('admin/results/_person')
     end
 
-    def test_find_person_no_results
+    test "find person no results" do
       tonkin = FactoryGirl.create(:person)
       post(:find_person, name: 'not a person in the database', ignore_id: tonkin.id)
       assert_response(:success)
       assert_template('admin/results/_people')
     end
 
-    def test_results
+    test "results" do
       weaver = FactoryGirl.create(:result).person
 
       post(:results, person_id: weaver.id)
@@ -349,13 +349,13 @@ module Admin
       assert_template('admin/results/_person')
     end
 
-    def test_scores
+    test "scores" do
       result = FactoryGirl.create(:result)
       post(:scores, id: result.id, format: "js")
       assert_response(:success)
     end
 
-    def test_move
+    test "move" do
       weaver = FactoryGirl.create(:result).person
       tonkin = FactoryGirl.create(:person)
       result = FactoryGirl.create(:result, person: tonkin)
@@ -370,7 +370,7 @@ module Admin
       assert_response :success
     end
 
-    def test_create
+    test "create" do
       race = FactoryGirl.create(:race)
       tonkin_result = FactoryGirl.create(:result, race: race, place: "1")
       weaver_result = FactoryGirl.create(:result, race: race, place: "2")
@@ -459,7 +459,7 @@ module Admin
       assert_equal('DNF', race.results(true).sort.last.place, 'DNF place after insert')
     end
 
-    def test_destroy
+    test "destroy" do
       result_2 = FactoryGirl.create(:result)
       assert_not_nil(result_2, 'Result should exist in DB')
 

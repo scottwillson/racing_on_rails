@@ -9,14 +9,14 @@ module Admin
       use_ssl
     end
 
-    def test_not_logged_in_index
+    test "not logged in index" do
       destroy_person_session
       get(:index)
       assert_redirected_to new_person_session_url(secure_redirect_options)
       assert_nil(@request.session["person"], "No person in session")
     end
 
-    def test_not_logged_in_edit
+    test "not logged in edit" do
       destroy_person_session
       vanilla = FactoryGirl.create(:team)
       get(:edit, id: vanilla.to_param)
@@ -24,7 +24,7 @@ module Admin
       assert_nil(@request.session["person"], "No person in session")
     end
 
-    def test_index
+    test "index" do
       get(:index)
       assert_response(:success)
       assert_template("admin/teams/index")
@@ -33,7 +33,7 @@ module Admin
       assert_not_nil(assigns["name"], "Should assign name")
     end
 
-    def test_index_with_cookie
+    test "index with cookie" do
       FactoryGirl.create(:team, name: "Gentle Lovers")
       @request.cookies["team_name"] = "gentle"
       get(:index)
@@ -44,7 +44,7 @@ module Admin
       assert_equal(1, assigns["teams"].size, "Should have no teams")
     end
 
-    def test_index_rjs
+    test "index rjs" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
       xhr :get, :index, name: 'nilla'
       assert_response(:success)
@@ -53,7 +53,7 @@ module Admin
       assert_equal([vanilla], assigns['teams'], 'Search for nilla should find Vanilla')
     end
 
-    def test_find
+    test "find" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
       get(:index, name: 'van')
       assert_response(:success)
@@ -64,7 +64,7 @@ module Admin
       assert_equal('van', assigns['name'], "'name' assigns")
     end
 
-    def test_find_json
+    test "find json" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
       get :index, name: 'van', format: "json"
       assert_response :success
@@ -72,7 +72,7 @@ module Admin
       assert_equal "van", assigns["name"], "'name' assigns"
     end
 
-    def test_find_nothing
+    test "find nothing" do
       FactoryGirl.create(:team, name: "Vanilla Bicycles")
       FactoryGirl.create(:team)
 
@@ -83,7 +83,7 @@ module Admin
       assert_equal(0, assigns['teams'].size, "Should find no teams")
     end
 
-    def test_find_empty_name
+    test "find empty name" do
       FactoryGirl.create(:team, name: "Vanilla Bicycles")
 
       get(:index, name: '')
@@ -95,7 +95,7 @@ module Admin
       assert_equal('', assigns['name'], "'name' assigns")
     end
 
-    def test_find_limit
+    test "find limit" do
       for i in 0..RacingAssociation.current.search_results_limit
         Team.create(name: "Test Team #{i}")
       end
@@ -110,7 +110,7 @@ module Admin
       assert_equal('Test', assigns['name'], "'name' assigns")
     end
 
-    def test_blank_name
+    test "blank name" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
       assert_raise(ActiveRecord::RecordInvalid) do
         xhr :put, :update_attribute,
@@ -126,7 +126,7 @@ module Admin
       assert_equal('Vanilla Bicycles', vanilla.name, 'Team name')
     end
 
-    def test_set_name
+    test "set name" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
       xhr :put, :update_attribute,
           id: vanilla.to_param,
@@ -141,7 +141,7 @@ module Admin
       assert_equal('Vaniller', vanilla.name, 'Team name after update')
     end
 
-    def test_set_name_same_name
+    test "set name same name" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
       xhr :put, :update_attribute,
           id: vanilla.to_param,
@@ -155,7 +155,7 @@ module Admin
       assert_equal('Vanilla', vanilla.name, 'Team name after update')
     end
 
-    def test_set_name_same_name_different_case
+    test "set name same name different case" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
       xhr :put, :update_attribute,
           id: vanilla.to_param,
@@ -169,7 +169,7 @@ module Admin
       assert_equal('vanilla', vanilla.name, 'Team name after update')
     end
 
-    def test_set_name_to_existing_name
+    test "set name to existing name" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
       FactoryGirl.create(:team, name: "Kona")
 
@@ -187,7 +187,7 @@ module Admin
       assert_equal('Vanilla Bicycles', vanilla.name, 'Team name after cancel')
     end
 
-    def test_set_name_to_existing_alias
+    test "set name to existing alias" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
 
@@ -209,7 +209,7 @@ module Admin
       assert_nil(old_vanilla_alias, 'Alias')
     end
 
-    def test_set_name_to_existing_alias_different_case
+    test "set name to existing alias different case" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
 
@@ -231,7 +231,7 @@ module Admin
       assert_nil(old_vanilla_alias, 'Alias')
     end
 
-    def test_set_name_to_other_team_existing_alias
+    test "set name to other team existing alias" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
 
@@ -251,7 +251,7 @@ module Admin
       assert_nil(Team.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles not in database')
     end
 
-    def test_set_name_land_shark_bug
+    test "set name land shark bug" do
       landshark = Team.create(name: 'Landshark')
       landshark.aliases.create(name: 'Landshark')
       landshark.aliases.create(name: 'Land Shark')
@@ -275,14 +275,14 @@ module Admin
       # try with different cases
     end
 
-    def test_destroy
+    test "destroy" do
       csc = Team.create!(name: 'CSC')
       delete(:destroy, id: csc.id)
       assert_redirected_to(admin_teams_path)
       assert(!Team.exists?(csc.id), 'CSC should have been destroyed')
     end
 
-    def test_destroy_team_with_results_should_not_cause_hard_errors
+    test "destroy team with results should not cause hard errors" do
       team = FactoryGirl.create(:result).team
       delete(:destroy, id: team.id)
       assert(Team.exists?(team.id), 'Team should not have been destroyed')
@@ -290,7 +290,7 @@ module Admin
       assert_response(:success)
     end
 
-    def test_merge?
+    test "merge?" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
       kona = FactoryGirl.create(:team)
       xhr :put, :update_attribute,
@@ -304,7 +304,7 @@ module Admin
       assert_equal([vanilla], assigns['other_teams'], 'Existing Team')
     end
 
-    def test_merge
+    test "merge" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
       kona = FactoryGirl.create(:team, name: "Kona")
       assert(Team.find_by_name('Kona'), 'Kona should be in database')
@@ -317,7 +317,7 @@ module Admin
       assert_nil(Team.find_by_name('Kona'), 'Kona should not be in database')
     end
 
-    def test_toggle_member
+    test "toggle member" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
 
       assert_equal(true, vanilla.member, 'member before update')
@@ -334,7 +334,7 @@ module Admin
       assert_equal(true, vanilla.member, 'member after second update')
     end
 
-    def test_edit
+    test "edit" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
       get(:edit, id: vanilla.to_param)
       assert_response(:success)
@@ -343,7 +343,7 @@ module Admin
       assert_equal(vanilla, assigns['team'], 'Should assign Vanilla to team')
     end
 
-    def test_destroy_name
+    test "destroy name" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
       vanilla.names.create!(name: "Generic Team", year: 1990)
       assert_equal(1, vanilla.names.count, "Vanilla names")
@@ -354,20 +354,20 @@ module Admin
       assert_equal(0, vanilla.names(true).count, 'Vanilla names after destruction')
     end
 
-    def test_new
+    test "new" do
       get(:new)
       assert_response(:success)
       assert_not_nil(assigns(:team), "@team")
     end
 
-    def test_create
+    test "create" do
       post(:create, team: { name: "My Fancy New Bike Team" })
       team = Team.find_by_name("My Fancy New Bike Team")
       assert_not_nil(team, "Should create new team")
       assert_redirected_to(edit_admin_team_path(team))
     end
 
-    def test_update
+    test "update" do
       team = FactoryGirl.create(:team, name: "Vanilla")
       post(:update, id: team.to_param, team: { name: "Speedvagen",
                                                      website: "http://speedvagen.net",
@@ -388,7 +388,7 @@ module Admin
       assert(team.member?, "member should be updated")
     end
 
-    def test_invalid_update
+    test "invalid update" do
       team = FactoryGirl.create(:team, name: "Vanilla")
       post :update, id: team.to_param, team: { name: "" }
       assert_response :success

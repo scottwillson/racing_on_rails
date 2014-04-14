@@ -5,13 +5,13 @@ require "nokogiri"
 # :stopdoc:
 module Renderers
   class NameRendererTest < Ruby::TestCase
-    def test_render_no_person
+    test "render_no_person" do
       column = mock("column", key: :name)
       row = mock("row", :[] => nil, source: mock("result", person_id: nil))
       assert_nil NameRenderer.render(column, row), "Result with no text, no person"
     end
 
-    def test_render_name
+    test "render_name" do
       column = stub("column", key: :name)
       row = stub(
               "row",
@@ -26,7 +26,7 @@ module Renderers
       assert_equal "Candi Murray", link.text, "text"
     end
 
-    def test_mobile
+    test "mobile" do
       column = stub("column", key: :name)
       row = stub(
               "row",
@@ -41,7 +41,7 @@ module Renderers
       assert_equal "Candi Murray", link.text, "text"
     end
 
-    def test_competition_result
+    test "competition_result" do
       column = stub("column", key: :name)
       row = stub("row",
                    :[] => "Mike Murray",

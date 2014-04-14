@@ -20,7 +20,7 @@ module Admin
         FactoryGirl.create(:number_issuer)
       end
 
-      def test_preview_import
+      test "preview import" do
         people_before_import = Person.count
 
         file = fixture_file_upload("membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
@@ -36,14 +36,14 @@ module Admin
         assert_equal(people_before_import, Person.count, 'Should not have added people')
       end
 
-      def test_preview_import_with_no_file
+      test "preview import with no file" do
         post(:preview_import, commit: 'Import', people_file: "")
 
         assert(flash[:warn].present?, "should have flash[:warn]")
         assert_redirected_to admin_people_path
       end
 
-      def test_import
+      test "import" do
         tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         existing_duplicate = Duplicate.new(new_attributes: Person.new(name: 'Erik Tonkin').attributes)
         existing_duplicate.people << tonkin
@@ -64,7 +64,7 @@ module Admin
         assert_equal(0, Duplicate.count, 'Should have no duplicates')
       end
 
-      def test_import_next_year
+      test "import next year" do
         tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         existing_duplicate = Duplicate.new(new_attributes: Person.new(name: 'Erik Tonkin').attributes)
         existing_duplicate.people << tonkin
@@ -101,7 +101,7 @@ module Admin
         assert(heidi.member?(Date.new(next_year, 1, 1)), 'Should be a member for next year')
       end
 
-      def test_import_with_duplicates
+      test "import with duplicates" do
         FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         people_before_import = Person.count
@@ -119,20 +119,20 @@ module Admin
         assert(people_before_import < Person.count, 'Should have added people')
       end
 
-      def test_import_with_no_file
+      test "import with no file" do
         post :import, commit: 'Import', update_membership: 'true'
         assert flash[:warn].present?, "should have flash[:warn]"
         assert_redirected_to admin_people_path
       end
 
-      def test_duplicates
+      test "duplicates" do
         @request.session[:duplicates] = []
         get(:duplicates)
         assert_response :success
         assert_template("admin/people/duplicates")
       end
 
-      def test_resolve_duplicates
+      test "resolve duplicates" do
         FactoryGirl.create(:person, first_name: "Alice", last_name: "Pennington")
 
         FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
@@ -161,7 +161,7 @@ module Admin
         assert_equal('2', alice_2.road_category, 'Alice category')
       end
 
-      def test_cancel_import
+      test "cancel import" do
         post(:import, commit: 'Cancel', update_membership: 'false')
         assert_redirected_to admin_people_path
         assert_nil(session[:people_file_path], 'Should remove temp file path from session')

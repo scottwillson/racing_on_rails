@@ -17,7 +17,7 @@ module Results
       FactoryGirl.create(:number_issuer)
     end
 
-    def test_race?
+    test "race?" do
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt.xls", __FILE__)), SingleDayEvent.new)
       book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/tt.xls", __FILE__))
       results_file.create_rows(book.worksheet(0))
@@ -34,7 +34,7 @@ module Results
       assert(!results_file.race?(results_file.rows[13]), 'New race')
     end
 
-    def test_race_usac
+    test "race usac" do
       RacingAssociation.current.usac_results_format = true
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt_usac.xls", __FILE__)), SingleDayEvent.new)
       book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/tt_usac.xls", __FILE__))
@@ -50,14 +50,14 @@ module Results
       assert(!results_file.race?(results_file.rows[7]), 'New race')
     end
 
-    def test_new
+    test "new" do
       file = Tempfile.new("test_results.txt")
       ResultsFile.new(file, SingleDayEvent.new)
 
       ResultsFile.new("text \t results", SingleDayEvent.new)
     end
 
-    def test_create_columns
+    test "create columns" do
       book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/pir_2006_format.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(0)
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/pir_2006_format.xls", __FILE__)), SingleDayEvent.new)
@@ -65,7 +65,7 @@ module Results
       assert_equal({ place: 0, number: 1, license: 2, last_name: 3, first_name: 4, team_name: 5, points: 6  }, column_indexes, "column_indexes")
     end
 
-    def test_create_columns_usac
+    test "create columns usac" do
       RacingAssociation.current.usac_results_format = true
       book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/tt_usac.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(0)
@@ -86,7 +86,7 @@ module Results
       }, column_indexes, "column_indexes")
     end
 
-    def test_import_excel
+    test "import excel" do
       current_members = Person.where("member_to >= ?", Time.zone.now)
       event = SingleDayEvent.create!(discipline: 'Road', date: Date.new(2006, 1, 16))
       source_path = File.expand_path("../../../fixtures/results/pir_2006_format.xls", __FILE__)
@@ -135,7 +135,7 @@ module Results
       end
     end
 
-    def test_import_time_trial_people_with_same_name
+    test "import time trial people with same name" do
       FactoryGirl.create(:discipline, name: "Time Trial")
       bruce_109 = Person.create!(first_name: 'Bruce', last_name: 'Carter')
       bruce_109.race_numbers.create(year: Time.zone.today.year, value: '109')
@@ -215,7 +215,7 @@ module Results
     end
 
     # Expose bad regex defect
-    def test_import_time_trial_with_hundreds
+    test "import time trial with hundreds" do
       FactoryGirl.create(:discipline, name: "Time Trial")
       event = SingleDayEvent.create!(discipline: "Time Trial")
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt_hundreds.xls", __FILE__)), event)
@@ -224,7 +224,7 @@ module Results
       assert_equal 1086.23, result.time, "First result time of 18:06.23 formatted as 18:06.2 in Excel"
     end
 
-    def test_import_2006_v2
+    test "import 2006 v2" do
       FactoryGirl.create(:discipline, name: "Circuit")
       expected_races = []
 
@@ -302,7 +302,7 @@ module Results
       assert_equal(event.name, browning.created_by.name, "created_by name")
     end
 
-    def test_import_and_reuse_races
+    test "import and reuse races" do
       # race       exists?   in_results_file   order?   after_import
       # pro_1_2    Y          Y                 Y         Y + results
       # cat_3      Y          Y                           Y + results
@@ -336,7 +336,7 @@ module Results
       end
     end
 
-    def test_stage_race
+    test "stage race" do
       event = SingleDayEvent.create!
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/stage_race.xls", __FILE__)), event)
       results_file.import
@@ -405,14 +405,14 @@ module Results
     end
 
     # File causes error -- just import to recreate
-    def test_dh
+    test "dh" do
       FactoryGirl.create(:discipline, name: "Downhill")
       event = SingleDayEvent.create(discipline: 'Downhill')
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/dh.xls", __FILE__)), event)
       results_file.import
     end
 
-    def test_mtb
+    test "mtb" do
       FactoryGirl.create(:mtb_discipline)
       pro_semi_pro_men = FactoryGirl.create(:category, name: "Pro, Semi-Pro Men")
       pro_semi_pro_men.children.create(name: 'Pro Men')
@@ -427,7 +427,7 @@ module Results
       assert_equal(6, event.races(true).size, "Races after import")
     end
 
-    def test_custom_columns
+    test "custom columns" do
       FactoryGirl.create(:discipline, name: "Downhill")
       event = SingleDayEvent.create(discipline: 'Downhill')
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/custom_columns.xls", __FILE__)), event)
@@ -435,7 +435,7 @@ module Results
       assert_equal ["bogus_column_name"], results_file.custom_columns.to_a, "Custom columns"
     end
 
-    def test_non_sequential_results
+    test "non sequential results" do
       event = SingleDayEvent.create!
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/non_sequential_results.xls", __FILE__)), event)
       results_file.import
@@ -451,7 +451,7 @@ module Results
       assert results_file.import_warnings.present?, "Should have import warnings for non-sequential usac results"
     end
 
-    def test_times
+    test "times" do
       FactoryGirl.create(:discipline, name: "Track")
       event = SingleDayEvent.create(discipline: 'Track')
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/times.xls", __FILE__)), event)
@@ -664,7 +664,7 @@ module Results
       races
     end
 
-    def test_import_excel_usac_format
+    test "import excel usac format" do
       RacingAssociation.current.usac_results_format = true
       event = SingleDayEvent.create!(discipline: 'Road', date: Date.new(2008, 5, 11))
       source_path = File.expand_path("../../../fixtures/results/tt_usac.xls", __FILE__)
@@ -712,14 +712,14 @@ module Results
       races
     end
 
-    def test_race_notes
+    test "race notes" do
       event = SingleDayEvent.create!
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt.xls", __FILE__)), event)
       results_file.import
       assert_equal('Field Size: 40 riders, 40 Laps, Sunny, cool, 40K', event.races(true).first.notes, 'Race notes')
     end
 
-    def test_race_notes_usac
+    test "race notes usac" do
       RacingAssociation.current.usac_results_format = true
       event = SingleDayEvent.create!
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt_usac.xls", __FILE__)), event)

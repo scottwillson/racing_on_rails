@@ -6,7 +6,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 class IndexTest < ActionController::TestCase
   tests PeopleController
 
-  def test_index
+  test "index" do
     get(:index)
     assert_response(:success)
     assert_template("people/index")
@@ -17,14 +17,14 @@ class IndexTest < ActionController::TestCase
     assert_select "a#export_link", count: 0
   end
 
-  def test_list
+  test "list" do
     FactoryGirl.create(:person, first_name: "Bob", last_name: "Jones")
     get(:list, name: 'jone')
     assert_response(:success)
     assert_not_nil(@response.body.index("Jones"), "Search for jone should find Jones #{@response}")
   end
 
-  def test_index_as_promoter
+  test "index as promoter" do
     promoter = FactoryGirl.create(:promoter)
     PersonSession.create(promoter)
     get(:index)
@@ -36,7 +36,7 @@ class IndexTest < ActionController::TestCase
     assert_select "a#export_link", count: 1
   end
 
-  def test_find
+  test "find" do
     weaver = FactoryGirl.create(:person)
     get(:index, name: "weav")
     assert_response(:success)
@@ -46,14 +46,14 @@ class IndexTest < ActionController::TestCase
     assert_equal('weav', assigns['name'], "'name' assigns")
   end
 
-  def test_find_nothing
+  test "find nothing" do
     get(:index, name: 's7dfnacs89danfx')
     assert_response(:success)
     assert_not_nil(assigns["people"], "Should assign people")
     assert_equal(0, assigns['people'].size, "Should find no people")
   end
 
-  def test_find_empty_name
+  test "find empty name" do
     FactoryGirl.create(:person)
     get(:index, name: '')
     assert_response(:success)
@@ -63,7 +63,7 @@ class IndexTest < ActionController::TestCase
     assert_equal('', assigns['name'], "'name' assigns")
   end
 
-  def test_find_limit
+  test "find limit" do
     for i in 0..RacingAssociation.current.search_results_limit
       Person.create(name: "Test Person #{i}")
     end
@@ -76,7 +76,7 @@ class IndexTest < ActionController::TestCase
     assert_equal('Test', assigns['name'], "'name' assigns")
   end
 
-  def test_ajax_ssl_find
+  test "ajax ssl find" do
     FactoryGirl.create(:person)
     use_ssl
     xhr :get, :index, name: "weav", format: "json"

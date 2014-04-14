@@ -9,7 +9,7 @@ module Admin
       use_ssl
     end
 
-    def test_index
+    test "index" do
       FactoryGirl.create(:event, date: 3.days.from_now)
       get(:index)
       assert_response(:success)
@@ -21,13 +21,13 @@ module Admin
       assert_select ".editable", { minimum: 1 }, "Should be editable for admins"
     end
 
-    def test_index_as_txt
+    test "index as txt" do
       FactoryGirl.create :event, date: 3.days.from_now
       get :index, format: "text"
       assert_response :success
     end
 
-    def test_first_aid_update_options
+    test "first aid update options" do
       get(:index, past_events: "true")
       assert_response(:success)
       assert_template("admin/first_aid_providers/index")
@@ -36,7 +36,7 @@ module Admin
       assert_equal(true, assigns["past_events"], "past_events")
     end
 
-    def test_index_sorting
+    test "index sorting" do
       get(:index, sort_by: "promoter_name", sort_direction: "desc")
       assert_response(:success)
       assert_template("admin/first_aid_providers/index")
@@ -46,21 +46,21 @@ module Admin
       assert_equal("promoter_name", assigns["sort_by"], "@sort_by from param")
     end
 
-    def test_non_official
+    test "non official" do
       login_as FactoryGirl.create(:person)
       get :index
       assert_redirected_to new_person_session_url(secure_redirect_options)
       assert_select ".in_place_editable", 0, "Should be read-only for officials"
     end
 
-    def test_official
+    test "official" do
       person = FactoryGirl.create(:person_with_login, official: true)
       login_as person
       get :index
       assert_response :success
     end
 
-    def test_email
+    test "email" do
       FactoryGirl.create(:event, date: 3.days.from_now)
       get :index, format: "text"
       assert_response :success

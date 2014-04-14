@@ -3,7 +3,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 # :stopdoc:
 module Events
   class DatesTest < ActiveSupport::TestCase
-    def test_find_years
+    test "find years" do
       Timecop.freeze(Date.new(2012)) do
         FactoryGirl.create(:event, date: Date.new(2007))
         FactoryGirl.create(:event, date: Date.new(2008))
@@ -13,7 +13,7 @@ module Events
       end
     end
 
-    def test_today_and_future
+    test "today and future" do
       past_event = FactoryGirl.create(:event, date: 1.day.ago.to_date)
       today_event = FactoryGirl.create(:event)
       future_event = FactoryGirl.create(:event, date: 1.day.from_now.to_date)
@@ -28,7 +28,7 @@ module Events
       assert !Event.today_and_future.include?(past_event), "today_and_future scope should not include past event with date of #{past_event.date}"
     end
 
-    def test_set_human_date
+    test "set human date" do
       [
         [ [ 2014, 5, 20 ], "7/25/2014",              [ 2014, 7, 25 ] ],
         [ [ 2014, 5, 20 ], "7-25-2014",              [ 2014, 7, 25 ] ],
@@ -50,12 +50,12 @@ module Events
       end
     end
 
-    def test_create_event_with_human_date
+    test "create event with human date" do
       event = SingleDayEvent.new(human_date: "June 28, 2011")
       assert_equal Time.zone.local(2011, 6, 28).to_date, event.date.to_date, "date"
     end
 
-    def test_end_date
+    test "end date" do
       event = SingleDayEvent.new(date: Date.new(2012, 4, 3))
       event.set_end_date
       assert_equal_dates Date.new(2012, 4, 3), event.end_date, "end_date"

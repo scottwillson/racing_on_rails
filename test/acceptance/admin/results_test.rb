@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
 class ResultsTest < AcceptanceTest
-  def test_results_editing
+  test "results editing" do
     javascript!
 
     FactoryGirl.create(:number_issuer, name: RacingAssociation.current.short_name)

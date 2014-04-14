@@ -9,7 +9,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
   end
 
   # logged-in?, person_id?, same person?, admin?
-  def test_member_account
+  test "member account" do
     if RacingAssociation.current.ssl?
       get "/account"
       assert_redirected_to "https://www.example.com/account"
@@ -100,7 +100,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     end
   end
 
-  def test_redirect_from_old_paths
+  test "redirect from old paths" do
     if RacingAssociation.current.ssl?
       get "/account/login"
       assert_redirected_to "https://www.example.com/account/login"
@@ -119,7 +119,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     end
   end
 
-  def test_login
+  test "login" do
     if RacingAssociation.current.ssl?
       get "http://www.example.com/login"
       assert_redirected_to "https://www.example.com/login"
@@ -138,7 +138,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     end
   end
 
-  def test_login_on_nonstandard_port
+  test "login on nonstandard port" do
     if RacingAssociation.current.ssl?
       get "http://www.example.com:8080/login"
       assert_redirected_to "https://www.example.com/login"
@@ -157,7 +157,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     end
   end
 
-  def test_valid_admin_login
+  test "valid admin login" do
     https!
     get admin_people_path
     assert_response :redirect
@@ -170,19 +170,19 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     assert_redirected_to admin_people_path
   end
 
-  def test_should_redirect_to_admin_home_after_admin_login
+  test "should redirect to admin home after admin login" do
     go_to_login
     login person_session: { login: 'admin@example.com', password: 'secret' }
     assert_redirected_to "/admin"
   end
 
-  def test_valid_member_login
+  test "valid member login" do
     go_to_login
     login person_session: { login: 'bob.jones', password: 'secret' }
     assert_redirected_to edit_person_path(@member)
   end
 
-  def test_should_fail_cookie_login
+  test "should fail cookie login" do
     https!
     PersonSession.create(@administrator)
     cookies["person_credentials"] = "invalid_auth_token"
@@ -190,7 +190,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     assert_redirected_to "/person_session/new"
   end
 
-  def test_blank_login_should_not_work
+  test "blank login should not work" do
     Person.create!
 
     https!
@@ -206,7 +206,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     assert_equal "Please login to your #{RacingAssociation.current.short_name} account", flash[:notice]
   end
 
-  def test_unauthorized
+  test "unauthorized" do
     https!
     get "/unauthorized"
     assert_response :success

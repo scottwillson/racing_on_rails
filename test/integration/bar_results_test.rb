@@ -4,7 +4,7 @@ require_relative "racing_on_rails/integration_test"
 class BarResultsTest < RacingOnRails::IntegrationTest
 
   # make sure all discipline pages come up with defaults
-  def test_all_disciplines_empty_results
+  test "all disciplines empty results" do
     year = Time.zone.today.year
     for discipline in Discipline.find_all_bar
       get '/bar'

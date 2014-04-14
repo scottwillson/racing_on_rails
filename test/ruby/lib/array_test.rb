@@ -4,7 +4,7 @@ require File.expand_path("../../../../lib/array/stable_sort", __FILE__)
 
 # :stopdoc:
 class ArrayTest < Ruby::TestCase
-  def test_each_row
+  test "each_row" do
     assert_equal([nil, nil], [].each_row {|row|})
     assert_equal([[1]], [1].each_row {|row|})
     assert_equal([[1, 2]], [1, 2].each_row {|row|})
@@ -13,7 +13,7 @@ class ArrayTest < Ruby::TestCase
     assert_equal([[1, 4], [2, 5], [3, 6]], [1, 2, 3, 4, 5, 6].each_row {|row|})
   end
 
-  def test_merge_sort
+  test "merge_sort" do
     assert_equal([], [].merge_sort, "[].merge_sort")
     assert_equal([9], [9].merge_sort, "[9].merge_sort")
     assert_equal([1, 2], [1, 2].merge_sort, "[1, 2].merge_sort")
@@ -29,7 +29,7 @@ class ArrayTest < Ruby::TestCase
                             "[0, 0, 7, 1, 2, 0, -20].merge_sort { |x, y| x < y }")
   end
 
-  def test_merge_sort_preserves_order
+  test "merge_sort_preserves_order" do
     king_hearts   = Card.new("king", "hearts")
     king_diamonds = Card.new("king", "diamonds")
     king_spades   = Card.new("king", "spades")
@@ -61,7 +61,7 @@ class ArrayTest < Ruby::TestCase
                 "merge_sort of equal elements should preserve order")
   end
 
-  def test_multiple_sorts_preserve_order
+  test "multiple_sorts_preserve_order" do
     king_hearts   = Card.new(14, "hearts")
     diamonds_10   = Card.new(10, "diamonds")
     diamonds_8    = Card.new( 8, "diamonds")
@@ -85,7 +85,7 @@ class ArrayTest < Ruby::TestCase
     assert_equal_enumerables([diamonds_8, diamonds_10, hearts_queen, king_hearts], list, "Sorted by value")
   end
 
-  def test_stable_sort_by
+  test "stable_sort_by" do
     king_hearts   = Card.new(14, "hearts")
     diamonds_10   = Card.new(10, "diamonds")
     diamonds_8    = Card.new( 8, "diamonds")
@@ -112,7 +112,7 @@ class ArrayTest < Ruby::TestCase
     assert_equal_enumerables([king_hearts, hearts_queen, diamonds_10, diamonds_8], list, "Sorted by value desc")
   end
 
-  def test_stable_sort_nil
+  test "stable_sort_nil" do
     diamonds_10   = Card.new(10, "diamonds")
     diamonds_nil  = Card.new(nil, "diamonds")
     hearts_queen  = Card.new(13, "hearts")

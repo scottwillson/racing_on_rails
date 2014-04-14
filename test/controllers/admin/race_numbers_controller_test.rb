@@ -9,7 +9,7 @@ module Admin
       use_ssl
     end
 
-    def test_destroy
+    test "destroy" do
       race_number = FactoryGirl.create(:race_number)
       assert_not_nil(RaceNumber.find(race_number.id), 'RaceNumber should exist')
 

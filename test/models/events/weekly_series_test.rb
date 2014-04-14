@@ -2,7 +2,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
 class WeeklySeriesTest < ActiveSupport::TestCase
-  def test_new
+  test "new" do
     pir = WeeklySeries.create!(
       date: Date.new(2008, 4, 1), name: 'Tuesday PIR', discipline: 'Road', flyer_approved: true
     )
@@ -35,7 +35,7 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     assert_equal(Date.new(2008, 10, 21), pir.end_date, 'PIR end date')
   end
 
-  def test_days_of_week_as_string
+  test "days of week as string" do
     weekly_series = WeeklySeries.create!
     weekly_series.children.create!(date: Date.new(2006, 7, 3))
     dates = Date.new(2006, 7, 1)..Date.new(2006, 7, 15)
@@ -63,7 +63,7 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     assert_equal('M/Tu', weekly_series.days_of_week_as_string(dates), 'Days of week as String')
   end
 
-  def test_earliest_day_of_week
+  test "earliest day of week" do
     weekly_series = WeeklySeries.create!
     weekly_series.children.create!(date: Date.new(2006, 7, 3))
     dates = Date.new(2006, 7, 1)..Date.new(2006, 7, 15)
@@ -84,7 +84,7 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     assert_equal(-1, weekly_series.earliest_day_of_week(Date.new(2006, 7, 1)..Date.new(2006, 7, 2), true), 'earliest_day_of_week')
   end
 
-  def test_day_of_week
+  test "day of week" do
     weekly_series = WeeklySeries.create!
     weekly_series.children.create!(date: Date.new(2006, 7, 3))
     Date.new(2006, 7, 1)..Date.new(2006, 7, 15)
@@ -99,7 +99,7 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     assert_equal(2, weekly_series.day_of_week, "day_of_week with no children")
   end
 
-  def test_flyer_settings_propogate_to_children
+  test "flyer settings propogate to children" do
     so_or_champs = WeeklySeries.create!(date: Date.new(2008, 4, 1), name: 'So OR Champs')
     assert_nil(so_or_champs.flyer, "flyer should default to blank")
     assert(!so_or_champs.flyer_approved?, "flyer should default to not approved")

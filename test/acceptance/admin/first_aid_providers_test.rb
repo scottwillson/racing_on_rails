@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 class FirstAidProvidersTest < AcceptanceTest
   setup :javascript!
 
-  def test_first_aid_providers
+  test "first aid providers" do
     # FIXME Punt!
     if Time.zone.today.month < 12
       login_as FactoryGirl.create(:administrator)

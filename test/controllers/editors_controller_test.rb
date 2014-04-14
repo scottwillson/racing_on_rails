@@ -7,7 +7,7 @@ class EditorsControllerTest < ActionController::TestCase
     use_ssl
   end
 
-  def test_create
+  test "create" do
     promoter = FactoryGirl.create(:promoter)
     member = FactoryGirl.create(:person_with_login)
 
@@ -18,7 +18,7 @@ class EditorsControllerTest < ActionController::TestCase
     assert member.editors.include?(promoter), "Should add promoter as editor of member"
   end
 
-  def test_create_by_get
+  test "create by get" do
     promoter = FactoryGirl.create(:promoter)
     member = FactoryGirl.create(:person_with_login)
 
@@ -29,7 +29,7 @@ class EditorsControllerTest < ActionController::TestCase
     assert member.editors.include?(promoter), "Should add promoter as editor of member"
   end
 
-  def test_create_as_admin
+  test "create as admin" do
     administrator = FactoryGirl.create(:administrator)
     promoter = FactoryGirl.create(:promoter)
     member = FactoryGirl.create(:person_with_login)
@@ -41,14 +41,14 @@ class EditorsControllerTest < ActionController::TestCase
     assert member.editors.include?(promoter), "Should add promoter as editor of member"
   end
 
-  def test_login_required
+  test "login required" do
     promoter = FactoryGirl.create(:promoter)
     member = FactoryGirl.create(:person)
     post :create, id: member.to_param, editor_id: promoter.to_param
     assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
-  def test_security
+  test "security" do
     promoter = FactoryGirl.create(:promoter)
     member = FactoryGirl.create(:person_with_login)
 
@@ -59,7 +59,7 @@ class EditorsControllerTest < ActionController::TestCase
     assert !member.editors.include?(promoter), "Should not add promoter as editor of member"
   end
 
-  def test_already_exists
+  test "already exists" do
     promoter = FactoryGirl.create(:promoter)
     member = FactoryGirl.create(:person_with_login)
 
@@ -72,7 +72,7 @@ class EditorsControllerTest < ActionController::TestCase
     assert member.editors.include?(promoter), "Should add promoter as editor of member"
   end
 
-  def test_admin
+  test "admin" do
     administrator = FactoryGirl.create(:administrator)
     promoter = FactoryGirl.create(:promoter)
     member = FactoryGirl.create(:person_with_login)
@@ -84,21 +84,21 @@ class EditorsControllerTest < ActionController::TestCase
     assert member.editors.include?(promoter), "Should add promoter as editor of member"
   end
 
-  def test_person_not_found
+  test "person not found" do
     member = FactoryGirl.create(:person_with_login)
 
     login_as member
     assert_raise(ActiveRecord::RecordNotFound) { post :create, editor_id: "37812361287", id: member.to_param }
   end
 
-  def test_editor_not_found
+  test "editor not found" do
     member = FactoryGirl.create(:person_with_login)
 
     login_as member
     assert_raise(ActiveRecord::RecordNotFound) { post :create, editor_id: member.to_param, id: "2312631872343" }
   end
 
-  def test_deny_access
+  test "deny access" do
     promoter = FactoryGirl.create(:promoter)
     member = FactoryGirl.create(:person_with_login)
 
@@ -111,7 +111,7 @@ class EditorsControllerTest < ActionController::TestCase
     assert !member.editors.include?(promoter), "Should remove promoter as editor of member"
   end
 
-  def test_deny_access_by_get
+  test "deny access by get" do
     promoter = FactoryGirl.create(:promoter)
     member = FactoryGirl.create(:person_with_login)
 

@@ -22,7 +22,7 @@ module Admin
         FactoryGirl.create(:number_issuer)
       end
 
-      def test_export_to_excel
+      test "export to excel" do
         Timecop.freeze(Time.zone.local(2012, 11, 1)) do
           Person.destroy_all
 
@@ -75,7 +75,7 @@ module Admin
         end
       end
 
-      def test_export_to_excel_with_date
+      test "export to excel with date" do
         get(:index, format: 'xls', include: 'all', date: "2008-12-31")
 
         assert_response :success
@@ -86,7 +86,7 @@ module Admin
         assert_equal(1, assigns['people'].count, "People export size")
       end
 
-      def test_export_members_only_to_excel
+      test "export members only to excel" do
         get(:index, format: 'xls', include: 'members_only')
 
         assert_response :success
@@ -97,7 +97,7 @@ module Admin
         # assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
       end
 
-      def test_export_members_only_to_excel_promoter
+      test "export members only to excel promoter" do
         destroy_person_session
         PersonSession.create(FactoryGirl.create(:promoter))
 
@@ -110,7 +110,7 @@ module Admin
         # assert_not_nil(@response.headers['Content-Length'], "Should set content length in headers:\n#{@response.headers.join("\n")}")
       end
 
-      def test_export_members_only_to_scoring_sheet
+      test "export members only to scoring sheet" do
         get(:index, format: 'xls', include: 'members_only', excel_layout: 'scoring_sheet')
 
         assert_response :success
@@ -120,7 +120,7 @@ module Admin
         # assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
       end
 
-      def test_export_print_cards_to_endicia
+      test "export print cards to endicia" do
         get(:index, format: "xls", include: "print_cards", excel_layout: "endicia")
 
         assert_response :success

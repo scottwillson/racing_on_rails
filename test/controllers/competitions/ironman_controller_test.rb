@@ -15,7 +15,7 @@ module Competitions
       ::Ironman.calculate!
     end
 
-    def test_index_with_year
+    test "index with year" do
       get(:index, year: "2004")
       assert_response(:success)
       assert_template("ironman/index")
@@ -24,7 +24,7 @@ module Competitions
       assert_not_nil(assigns["years"], "Should assign years")
     end
 
-    def test_index_with_page
+    test "index with page" do
       get :index, page: "2", year: "2004"
       assert_response(:success)
       assert_template("ironman/index")
@@ -33,7 +33,7 @@ module Competitions
       assert_not_nil(assigns["years"], "Should assign years")
     end
 
-    def test_index_with_bogus_page
+    test "index with bogus page" do
       get :index, page: "http", year: "2004"
       assert_response(:success)
       assert_template("ironman/index")
@@ -42,7 +42,7 @@ module Competitions
       assert_not_nil(assigns["years"], "Should assign years")
     end
 
-    def test_index
+    test "index" do
       get :index
       assert_response(:success)
       assert_template("ironman/index")

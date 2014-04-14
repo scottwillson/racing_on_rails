@@ -40,7 +40,7 @@ class PageTest < ActiveSupport::TestCase
     assert_equal(2, child_child.depth, "depth")
   end
 
-  test "updated_by_person" do
+  test "updated by person" do
     administrator = FactoryGirl.create(:administrator)
     Person.current = administrator
     page = Page.create!(body: "<h1>Welcome</h1>", title: "")

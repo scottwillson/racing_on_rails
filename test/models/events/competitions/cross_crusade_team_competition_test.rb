@@ -2,7 +2,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
 class CrossCrusadeTeamCompetitionTest < ActiveSupport::TestCase
-  def test_recalc_with_one_event
+  test "recalc with one event" do
     weaver = FactoryGirl.create(:person)
     tonkin = FactoryGirl.create(:person)
     alice = FactoryGirl.create(:person)
@@ -96,7 +96,7 @@ class CrossCrusadeTeamCompetitionTest < ActiveSupport::TestCase
     assert_equal 5, result.scores.count, "third result scores"
   end
 
-  def test_missing_teams_penalty
+  test "missing teams penalty" do
     alice = FactoryGirl.create(:person)
 
     gentle_lovers = FactoryGirl.create(:team)

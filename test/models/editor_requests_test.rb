@@ -2,7 +2,7 @@ require File.expand_path("../../test_helper", __FILE__)
 
 
 class EditorRequestsTest < ActiveSupport::TestCase
-  def test_create
+  test "create" do
     ActionMailer::Base.deliveries.clear
     editor = FactoryGirl.create(:person_with_login)
     person = FactoryGirl.create(:person_with_login, email: "hotwheels@yahoo.com")
@@ -16,14 +16,14 @@ class EditorRequestsTest < ActiveSupport::TestCase
     assert ActionMailer::Base.deliveries.any?, "Should send email to account holder"
   end
 
-  def test_validation
+  test "validation" do
     editor = FactoryGirl.create(:person)
     person = Person.create!
     editor_request = person.editor_requests.create(editor: editor)
     assert editor_request.errors.any?, "should not allow EditorRequest with no email"
   end
 
-  def test_grant
+  test "grant" do
     editor = FactoryGirl.create(:person_with_login)
     person = FactoryGirl.create(:person_with_login)
     editor_request = person.editor_requests.create!(editor: editor)

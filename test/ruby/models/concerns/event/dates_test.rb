@@ -13,7 +13,7 @@ class Concerns::Event::DatesTest < Ruby::TestCase
     attr_accessor :end_date
   end
 
-  def test_short_date
+  test "short_date" do
     event = TestEvent.new
 
     event.date = Date.new(2006, 9, 9)

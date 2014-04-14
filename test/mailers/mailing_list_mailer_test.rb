@@ -4,7 +4,7 @@ require_relative "../test_helper"
 
 # :stopdoc:
 class MailingListMailerTest < ActionMailer::TestCase
-  def test_post
+  test "post" do
     post = FactoryGirl.create(:mailing_list).posts.create!(
       from_name: "Molly",
       from_email: "molly@veloshop.com",
@@ -17,7 +17,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     assert_equal "For Sale", post_email.subject
   end
 
-  def test_post_private_reply
+  test "post private reply" do
     post = FactoryGirl.create(:mailing_list).posts.create!(
       from_name: "Molly",
       from_email: "molly@veloshop.com",
@@ -31,7 +31,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     assert_equal ["scout@butlerpress.com"], post_email.to
   end
 
-  def test_receive_simple
+  test "receive simple" do
     assert_difference "Post.count", 1 do
       subject = "Test Email"
       from = "scott@yahoo.com"
@@ -58,7 +58,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     end
   end
 
-  def test_receive
+  test "receive" do
     mailing_list = FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     assert_difference "Post.count", 1 do
       MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/to_archive.eml"))
@@ -74,25 +74,25 @@ class MailingListMailerTest < ActionMailer::TestCase
     end
   end
 
-  def test_receive_should_save_reply
+  test "receive should save reply" do
     FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     Post.expects(:save).returns(true)
     Post.any_instance.expects(:save!).never
     MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/to_archive.eml"))
   end
 
-  def test_receive_no_list_matches
+  test "receive no list matches" do
     assert_difference "Post.count", 0 do
       MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/to_archive.eml"))
     end
   end
 
-  def test_receive_invalid_byte_sequence
+  test "receive invalid byte sequence" do
     FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/invalid_byte_sequence.eml"))
   end
 
-  def test_receive_rich_text
+  test "receive rich text" do
     mailing_list = FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     assert_difference "Post.count", 1 do
       MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/rich.eml"))
@@ -107,7 +107,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     end
   end
 
-  def test_receive_bad_part_encoding
+  test "receive bad part encoding" do
     FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     assert_difference "Post.count", 1 do
       MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/bad_encoding.eml"))
@@ -118,7 +118,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     end
   end
 
-  def test_receive_outlook
+  test "receive outlook" do
     mailing_list = FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     assert_difference "Post.count", 1 do
       MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/outlook.eml"))
@@ -134,7 +134,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     end
   end
 
-  def test_receive_html
+  test "receive html" do
     mailing_list = FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     assert_difference "Post.count", 1 do
           MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/html.eml"))

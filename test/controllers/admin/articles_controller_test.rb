@@ -9,7 +9,7 @@ module Admin
       use_ssl
     end
 
-    def test_create
+    test "create" do
       article_category = FactoryGirl.create(:article_category)
       post :create,
         article: {

@@ -7,7 +7,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
     use_ssl
   end
 
-  def test_create
+  test "create" do
     promoter = FactoryGirl.create(:person_with_login)
     member = FactoryGirl.create(:person, email: "person@example.com")
 
@@ -20,7 +20,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
     assert editor_request.token.present?, "Should create token"
   end
 
-  def test_dupes
+  test "dupes" do
     promoter = FactoryGirl.create(:person_with_login)
     member = FactoryGirl.create(:person, email: "person@example.com")
     existing_editor_request = member.editor_requests.create!(editor: promoter)
@@ -35,7 +35,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
     assert !EditorRequest.exists?(existing_editor_request.id), "Should have destroyed old request"
   end
 
-  def test_already_editor
+  test "already editor" do
     promoter = FactoryGirl.create(:person_with_login)
     member = FactoryGirl.create(:person, email: "person@example.com")
 
@@ -48,20 +48,20 @@ class EditorRequestsControllerTest < ActionController::TestCase
     assert_nil editor_request, "Should note creat EditorRequest"
   end
 
-  def test_not_found
+  test "not found" do
     promoter = FactoryGirl.create(:person_with_login)
     login_as promoter
     assert_raise(ActiveRecord::RecordNotFound) { post(:create, id: 1231232213133, editor_id: promoter.to_param) }
   end
 
-  def test_must_login
+  test "must login" do
     promoter = FactoryGirl.create(:person)
     member = FactoryGirl.create(:person, email: "person@example.com")
     post :create, id: member.to_param, editor_id: promoter.to_param
     assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
-  def test_security
+  test "security" do
     promoter = FactoryGirl.create(:promoter)
     member = FactoryGirl.create(:person, email: "person@example.com")
     past_member = FactoryGirl.create(:person_with_login)
@@ -71,7 +71,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
     assert_redirected_to unauthorized_path
   end
 
-  def test_show
+  test "show" do
     promoter = FactoryGirl.create(:promoter)
     member = FactoryGirl.create(:person, email: "person@example.com")
 
@@ -81,7 +81,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
     assert member.editors(true).include?(promoter), "Should add editor"
   end
 
-  def test_show_not_found
+  test "show not found" do
     promoter = FactoryGirl.create(:promoter)
     member = FactoryGirl.create(:person, email: "person@example.com")
 

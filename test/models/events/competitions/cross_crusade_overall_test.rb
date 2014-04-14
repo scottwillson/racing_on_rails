@@ -2,7 +2,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
 class CrossCrusadeOverallTest < ActiveSupport::TestCase
-  def test_recalc_with_one_event
+  test "recalc with one event" do
     series = Series.create!(name: "Cross Crusade")
     event = series.children.create!(date: Date.new(2007, 10, 7), name: "Cross Crusade #4")
 
@@ -73,7 +73,7 @@ class CrossCrusadeOverallTest < ActiveSupport::TestCase
     assert_equal(alice, result.person, "Masters Women first result person")
   end
 
-  def test_many_results
+  test "many results" do
     series = Series.create!(name: "Cross Crusade")
     masters = Category.find_or_create_by(name: "Masters 35+ A")
     category_a = Category.find_or_create_by(name: "Category A")

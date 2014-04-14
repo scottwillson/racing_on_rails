@@ -5,7 +5,7 @@ require_relative "../../../../../lib/racing_on_rails/tabular/mapper"
 module RacingOnRails
   module Tabular
     class MapperTest < Ruby::TestCase
-      def test_numeric_custom_columns
+      test "numeric_custom_columns" do
         mapper = RacingOnRails::Tabular::Mapper.new([], [ 20130501 ])
         result = mock("result", custom_attribute: 3)
         mapper.map result

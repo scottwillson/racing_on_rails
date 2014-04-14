@@ -24,23 +24,23 @@ class PageConstraintTest < Ruby::TestCase
   end
 
   # Not sure if this ever could happen
-  def test_nil
+  test "nil" do
     request = stub("request", path: nil)
     assert !PageConstraint.new.matches?(request), "Nil request"
   end
 
   # Not sure if this ever could happen
-  def test_blank
+  test "blank" do
     request = stub("request", path: "")
     assert !PageConstraint.new.matches?(request), "blank request"
   end
 
-  def test_root
+  test "root" do
     request = stub("request", path: "/")
     assert !PageConstraint.new.matches?(request), "request for root"
   end
 
-  def test_root_with_root_page
+  test "root_with_root_page" do
     request = stub("request", path: "/")
     Page.paths << ""
     Page.paths << "foo"
@@ -48,7 +48,7 @@ class PageConstraintTest < Ruby::TestCase
     assert PageConstraint.new.matches?(request), "request for root"
   end
 
-  def test_single_page
+  test "single_page" do
     request = stub("request", path: "/foo")
     Page.paths << ""
     Page.paths << "foo"
@@ -56,7 +56,7 @@ class PageConstraintTest < Ruby::TestCase
     assert PageConstraint.new.matches?(request), "request for /foo"
   end
 
-  def test_multiple_path
+  test "multiple_path" do
     request = stub("request", path: "/foo/bar")
     Page.paths << ""
     Page.paths << "foo"
@@ -64,7 +64,7 @@ class PageConstraintTest < Ruby::TestCase
     assert PageConstraint.new.matches?(request), "request for /foo/bar"
   end
 
-  def test_multiple_path_no_match
+  test "multiple_path_no_match" do
     request = stub("request", path: "/bat/baz")
     Page.paths << ""
     Page.paths << "foo"
@@ -72,13 +72,13 @@ class PageConstraintTest < Ruby::TestCase
     assert !PageConstraint.new.matches?(request), "request for /bat/baz"
   end
 
-  def test_root_index
+  test "root_index" do
     request = stub("request", path: "/index")
     Page.paths << ""
     assert PageConstraint.new.matches?(request), "request for root"
   end
 
-  def test_child_index
+  test "child_index" do
     request = stub("request", path: "/foo/index")
     Page.paths << ""
     Page.paths << "foo"
@@ -86,7 +86,7 @@ class PageConstraintTest < Ruby::TestCase
     assert PageConstraint.new.matches?(request), "request for child index"
   end
 
-  def test_html
+  test "html" do
     request = stub("request", path: "/foo.html")
     Page.paths << ""
     Page.paths << "foo"
@@ -94,7 +94,7 @@ class PageConstraintTest < Ruby::TestCase
     assert PageConstraint.new.matches?(request), "request for child index"
   end
 
-  def test_child_html
+  test "child_html" do
     request = stub("request", path: "/foo/bar.html")
     Page.paths << ""
     Page.paths << "foo"
@@ -102,13 +102,13 @@ class PageConstraintTest < Ruby::TestCase
     assert PageConstraint.new.matches?(request), "request for child index"
   end
 
-  def test_index_html
+  test "index_html" do
     request = stub("request", path: "/index.html")
     Page.paths << ""
     assert PageConstraint.new.matches?(request), "request for root"
   end
 
-  def test_child_index_html
+  test "child_index_html" do
     request = stub("request", path: "/foo/index.html")
     Page.paths << ""
     Page.paths << "foo"

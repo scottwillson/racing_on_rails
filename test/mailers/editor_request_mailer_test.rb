@@ -2,7 +2,7 @@ require_relative "../test_helper"
 
 # :stopdoc:
 class EditorRequestMailerTest < ActionMailer::TestCase
-  def test_request
+  test "request" do
     assert_difference "ActionMailer::Base.deliveries.size", 1 do
       editor = FactoryGirl.create(:person, email: "molly@example.com", name: "Molly Cameron")
       person = FactoryGirl.create(:person, email: "hotwheels@yahoo.com", name: "Ryan Weaver")
@@ -16,7 +16,7 @@ class EditorRequestMailerTest < ActionMailer::TestCase
     end
   end
 
-  def test_notification
+  test "notification" do
     assert_difference "ActionMailer::Base.deliveries.size", 1 do
       editor = FactoryGirl.create(:person, email: "molly@example.com", name: "Molly Cameron")
       person = FactoryGirl.create(:person, email: "hotwheels@yahoo.com", name: "Ryan Weaver")

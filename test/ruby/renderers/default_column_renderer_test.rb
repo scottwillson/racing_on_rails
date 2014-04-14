@@ -12,16 +12,16 @@ module Renderers
       end
     end
 
-    def test_render_key
+    test "render_key" do
       assert_equal "Foo", DefaultResultRenderer.render_header(:foo)
     end
 
-    def test_render_column
+    test "render_column" do
       column = ColumnStub.new(:foo)
       assert_equal "Foo", DefaultResultRenderer.render_header(column)
     end
 
-    def test_render_mapped_column
+    test "render_mapped_column" do
       column = ColumnStub.new(:category_name)
       assert_equal "Category", DefaultResultRenderer.render_header(column)
     end

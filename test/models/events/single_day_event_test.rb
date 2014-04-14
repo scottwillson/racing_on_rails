@@ -2,7 +2,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
 class SingleDayEventTest < ActiveSupport::TestCase
-  def test_full_name
+  test "full name" do
     kings_valley = FactoryGirl.build(:event, name: "Kings Valley Road Race")
     assert_equal('Kings Valley Road Race', kings_valley.full_name, 'Event with no parent full_name')
 

@@ -2,7 +2,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
 class DayTest < ActiveSupport::TestCase
-  def test_other_month
+  test "other month" do
     month = Schedule::Month.new(2007, 1)
 
     date = Date.new(2006, 12, 31)

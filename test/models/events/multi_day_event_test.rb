@@ -2,7 +2,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
 class MultiDayEventTest < ActiveSupport::TestCase
-  def test_start_end_dates
+  test "start end dates" do
     series = Series.create!
     series.children.create! date: Date.new(2005, 7, 5)
     series.children.create! date: Date.new(2005, 7, 12)
@@ -34,7 +34,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal_dates("2005-08-04", series.end_date, "PIR series end date")
   end
 
-  def test_new
+  test "new" do
     series = MultiDayEvent.create!
     assert_equal_dates(Time.zone.today, series.date, "PIR series date")
     assert_equal_dates(Time.zone.today, series.start_date, "PIR series start date")
@@ -64,7 +64,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal_dates("2001-06-19", sql_results["date"], "Series date column from DB")
   end
 
-  def test_create_from_children
+  test "create from children" do
     single_event = SingleDayEvent.create!(date: Date.new(2007, 6, 19))
     multi_day_event = MultiDayEvent.create_from_children([single_event])
     assert_not_nil(multi_day_event, "MultiDayEvent from one event")
@@ -112,7 +112,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal_dates("2007-06-22", multi_day_event.end_date, "MultiDayEvent events end date")
   end
 
-  def test_create_for_every!
+  test "create for every!" do
     event = MultiDayEvent.create_for_every!("Monday",
       start_date: Date.new(2009, 4), end_date: Date.new(2009, 9), time: "5:30 PM till dusk"
     )
@@ -135,7 +135,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     end
   end
 
-  def test_create_children_on_multiple_days_of_week
+  test "create children on multiple days of week" do
     event = MultiDayEvent.create_for_every!(["Saturday", "Sunday"], start_date: Date.new(2009), end_date: Date.new(2009, 12, 31))
     assert_equal(104, event.children(true).size, "Should create child events")
 
@@ -148,13 +148,13 @@ class MultiDayEventTest < ActiveSupport::TestCase
     end
   end
 
-  def test_destroy
+  test "destroy" do
     mt_hood = FactoryGirl.create(:stage_race)
     mt_hood.destroy
     assert(!Event.exists?(mt_hood.id), "Mt. Hood Stage Race should be deleted")
   end
 
-  def test_date_range_s
+  test "date range s" do
     mt_hood = MultiDayEvent.create!
     mt_hood.children.create!(date: Date.new(2005, 7, 11))
     mt_hood.children.create!(date: Date.new(2005, 7, 12))
@@ -167,7 +167,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
   end
 
 
-  def test_date_range_s_long
+  test "date range s long" do
     mt_hood = FactoryGirl.create(:stage_race)
     assert_equal("7/11/2005-7/13/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
     last_day = mt_hood.children.last
@@ -180,7 +180,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("12/31/2003", kings_valley.date_range_s(:long), "date_range_s(long)")
   end
 
-  def test_propogate_changes
+  test "propogate changes" do
     # parent, children same except for dates
     single_event_1 = SingleDayEvent.new(date: Date.new(2007, 6, 19))
     single_event_1.name = "Elkhorn Stage Race"
@@ -410,7 +410,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("CT", results["state"], "MultiDayEvent state")
   end
 
-  def test_update_children_should_consider_blank_as_nil
+  test "update children should consider blank as nil" do
     parent = MultiDayEvent.create!
     child = parent.children.create!
     assert_equal(nil, parent.flyer, "parent flyer")
@@ -458,19 +458,19 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("http://example.com/flyers/1", child.flyer, "child flyer")
   end
 
-  def test_full_name
+  test "full name" do
     stage_race = FactoryGirl.create(:stage_race, name: "Mt. Hood Classic")
     assert_equal('Mt. Hood Classic', stage_race.name, 'stage_race full_name')
   end
 
-  def test_custom_create
+  test "custom create" do
     event = MultiDayEvent.create!(name: 'MultiDayEvent', date: Date.new(2002, 6, 12))
     child = event.children.create
     assert_equal_dates(Date.new(2002, 6, 12), event.date, 'event date')
     assert_equal_dates(Date.new(2002, 6, 12), child.date, 'child event date')
   end
 
-  def test_create_defaults
+  test "create defaults" do
     parent = MultiDayEvent.create!(flyer_approved: true)
     child = parent.children.create!(flyer_approved: true)
     assert_equal(true, child.flyer_approved?, "parent true, child true, default false")
@@ -607,7 +607,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("NY", child.state, "child should inherit parent values unless specified")
   end
 
-  def test_missing_parent
+  test "missing parent" do
     series_parent = Series.create!
     assert(!series_parent.missing_parent?, 'missing_parent?')
     assert_nil(series_parent.missing_parent, 'missing_parent')
@@ -617,7 +617,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_nil(stage_race.missing_parent, 'missing_parent')
   end
 
-  def test_guess_type
+  test "guess type" do
     mt_hood_1 = FactoryGirl.build(:event, date: Date.new(2007, 7, 11))
     mt_hood_2 = FactoryGirl.build(:event, date: Date.new(2007, 7, 12))
     assert_equal(MultiDayEvent, MultiDayEvent.guess_type([ mt_hood_1, mt_hood_2 ]), 'MultiDayEvent')
@@ -655,7 +655,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal(3, event.children_and_child_competitions_with_results(true).size, "refresh cache: children_and_child_competitions_with_results: 2 children with results + overall")
   end
 
-  def test_completed
+  test "completed" do
     parent_event = MultiDayEvent.create!
     assert(!parent_event.completed?, "New event should not be completed")
 
@@ -672,7 +672,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert(parent_event.completed?(true), "Event with all children with results should be completed")
   end
 
-  def test_child_event_dates
+  test "child event dates" do
     parent_event = MultiDayEvent.create!(date: Date.new(2007, 9, 19))
     assert_equal(Date.new(2007, 9, 19), parent_event.date, "Parent MultiDayEvent date after create")
 
@@ -683,7 +683,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal(Date.new(2007, 9, 19), event.date, "New Event child date shold match parent")
   end
 
-  def test_propagate_races
+  test "propagate races" do
     series = FactoryGirl.create(:series)
     banana_belt_1 = series.children.create!
     banana_belt_2 = series.children.create!

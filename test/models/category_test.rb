@@ -2,7 +2,7 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class CategoryTest < ActiveSupport::TestCase
-  def test_find_all_unknowns
+  test "find all unknowns" do
     unknown = Category.create(name: 'Canine')
     assoc_category = Category.find_or_create_by(name: (RacingAssociation.current.short_name))
 
@@ -13,11 +13,11 @@ class CategoryTest < ActiveSupport::TestCase
   end
 
   # Relies on ActiveRecord ==
-  def test_sort
+  test "sort" do
     [ FactoryGirl.build(:category, id: 2), FactoryGirl.build(:category, id: 1), FactoryGirl.build(:category)].sort
   end
 
-  def test_equal
+  test "equal" do
     senior_men = FactoryGirl.build(:category, name: "Senior Men", id: 1)
     senior_men_2 = FactoryGirl.build(:category, name: "Senior Men", id: 1)
     assert_equal(senior_men, senior_men_2, 'Senior Men instances')
@@ -28,20 +28,20 @@ class CategoryTest < ActiveSupport::TestCase
     assert_equal(senior_men_2, senior_men, 'Senior Men instances with different names')
   end
 
-  def test_no_circular_parents
+  test "no circular parents" do
     category = FactoryGirl.build(:category, name: "Senior Men", id: 1)
     category.parent = category
     assert !category.valid?
   end
 
-  def test_ages_default
+  test "ages default" do
     cat = FactoryGirl.build(:category)
     assert_equal(0, cat.ages_begin, 'ages_begin')
     assert_equal(999, cat.ages_end, 'ages_end is 999')
     assert_equal(0..999, cat.ages, 'Default age range is 0 to 999')
   end
 
-  def test_to_friendly_param
+  test "to friendly param" do
     assert_equal('', Category.new.to_friendly_param, 'nil friendly_param')
     assert_equal('senior_men', FactoryGirl.build(:category, name: "Senior Men").to_friendly_param, 'senior_men friendly_param')
     assert_equal('pro_expert_women', FactoryGirl.build(:category, name: "Pro, Expert Women").to_friendly_param, 'pro_expert_women friendly_param')
@@ -55,12 +55,12 @@ class CategoryTest < ActiveSupport::TestCase
     assert_equal('tandem', FactoryGirl.build(:category, name: '(Tandem)').to_friendly_param, '(Tandem) friendly_param')
   end
 
-  def test_find_by_friendly_param
+  test "find by friendly param" do
     category = FactoryGirl.create(:category, name: "Pro, Semi-Pro Men")
     assert_equal category, Category.find_by_friendly_param("pro_semi_pro_men")
   end
 
-  def test_ambiguous_find_by_param
+  test "ambiguous find by param" do
     senior_men = FactoryGirl.create(:category, name: "Senior Men")
     senior_men_2 = FactoryGirl.create(:category, name: "Senior/Men")
     assert_equal('senior_men', senior_men.friendly_param)

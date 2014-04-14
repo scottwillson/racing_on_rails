@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
 
 # :stopdoc:
 class PublicPagesTest < AcceptanceTest
-  def test_popular_pages
+  test "popular pages" do
     create_results
 
     visit "/"
@@ -64,7 +64,7 @@ class PublicPagesTest < AcceptanceTest
     visit "/track/schedule"
   end
 
-  def test_results_page
+  test "results page" do
     javascript!
 
     create_results
@@ -102,7 +102,7 @@ class PublicPagesTest < AcceptanceTest
     end
   end
 
-  def test_people
+  test "people" do
     javascript!
 
     FactoryGirl.create(:person, name: "Alice Pennington")
@@ -117,7 +117,7 @@ class PublicPagesTest < AcceptanceTest
     end
   end
 
-  def test_bar
+  test "bar" do
     FactoryGirl.create(:discipline, name: "Overall")
     age_graded = FactoryGirl.create(:discipline, name: "Age Graded")
     masters_men = FactoryGirl.create(:category, name: "Masters Men")

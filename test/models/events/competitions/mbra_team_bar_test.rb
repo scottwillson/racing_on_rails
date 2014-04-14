@@ -2,7 +2,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
 class MbraTeamBarTest < ActiveSupport::TestCase
-  def test_calculate
+  test "calculate" do
     road = FactoryGirl.create(:discipline, name: "Road")
 
     senior_men   = FactoryGirl.create(:category, name: "Cat 1/2 Men")

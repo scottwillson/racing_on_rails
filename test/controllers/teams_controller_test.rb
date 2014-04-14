@@ -2,7 +2,7 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class TeamsControllerTest < ActionController::TestCase
-  def test_index
+  test "index" do
     nonmember = Team.create!(name: "Not Member")
     assert(!nonmember.member?, "Team should not be member")
 

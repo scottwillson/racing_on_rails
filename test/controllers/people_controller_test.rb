@@ -4,7 +4,7 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class PeopleControllerTest < ActionController::TestCase
-  def test_edit
+  test "edit" do
     member = FactoryGirl.create(:person_with_login)
     use_ssl
     login_as member
@@ -14,7 +14,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert_select ".nav.tabs", count: 0
   end
 
-  def test_edit_promoter
+  test "edit promoter" do
     promoter = FactoryGirl.create(:promoter)
     use_ssl
     login_as promoter
@@ -23,7 +23,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert_equal promoter, assigns(:person), "@person"
   end
 
-  def test_edit_as_editor
+  test "edit as editor" do
     member = FactoryGirl.create(:person_with_login)
     molly = FactoryGirl.create(:person)
     molly.editors << member
@@ -35,14 +35,14 @@ class PeopleControllerTest < ActionController::TestCase
     assert_select ".nav.tabs", count: 0
   end
 
-  def test_must_be_logged_in
+  test "must be logged in" do
     member = FactoryGirl.create(:person_with_login)
     use_ssl
     get :edit, id: member.to_param
     assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
-  def test_cant_see_other_people_info
+  test "cant see other people info" do
     member = FactoryGirl.create(:person_with_login)
     weaver = FactoryGirl.create(:person)
     use_ssl
@@ -51,7 +51,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert_redirected_to unauthorized_path
   end
 
-  def test_admins_can_see_people_info
+  test "admins can see people info" do
     member = FactoryGirl.create(:person_with_login)
     administrator = FactoryGirl.create(:administrator)
     use_ssl
@@ -61,7 +61,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert_equal member, assigns(:person), "@person"
   end
 
-  def test_update
+  test "update" do
     use_ssl
     person = FactoryGirl.create(:person_with_login, first_name: "Bob", last_name: "Jones")
     gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
@@ -82,7 +82,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert_equal person, person.updated_by_person, "updated_by_person"
   end
 
-  def test_update_no_name
+  test "update no name" do
     use_ssl
     editor = FactoryGirl.create(:administrator, login: "my_login", first_name: "", last_name: "")
     gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
@@ -106,7 +106,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert_equal editor, person.updated_by_person, "updated_by_person"
   end
 
-  def test_update_by_editor
+  test "update by editor" do
     person = FactoryGirl.create(:person)
     molly = FactoryGirl.create(:person)
     person.editors << molly
@@ -119,7 +119,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert_equal gentle_lovers, person.reload.team(true), "Team should be updated"
   end
 
-  def test_account
+  test "account" do
     use_ssl
     member = FactoryGirl.create(:person_with_login)
     login_as member
@@ -127,7 +127,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert_redirected_to edit_person_path(member)
   end
 
-  def test_account_with_person
+  test "account with person" do
     use_ssl
     member = FactoryGirl.create(:person_with_login)
     login_as member
@@ -135,7 +135,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert_redirected_to edit_person_path(member)
   end
 
-  def test_account_with_another_person
+  test "account with another person" do
     use_ssl
     member = FactoryGirl.create(:person_with_login)
     login_as member
@@ -144,20 +144,20 @@ class PeopleControllerTest < ActionController::TestCase
     assert_redirected_to edit_person_path(another_person)
   end
 
-  def test_account_not_logged_in
+  test "account not logged in" do
     use_ssl
     get :account
     assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
-  def test_account_with_person_not_logged_in
+  test "account with person not logged in" do
     use_ssl
     member = FactoryGirl.create(:person_with_login)
     get :account, id: member.to_param
     assert_redirected_to edit_person_path(member)
   end
 
-  def test_new_when_logged_in
+  test "new when logged in" do
     member = FactoryGirl.create(:person_with_login)
     login_as member
     use_ssl
@@ -166,13 +166,13 @@ class PeopleControllerTest < ActionController::TestCase
     assert_not_nil flash[:notice], "flash[:notice]"
   end
 
-  def test_index_as_json
+  test "index as json" do
     get :index, format: "json", name: "ron"
     assert_response :success
     assert_equal "application/json", @response.content_type
   end
 
-  def test_find_by_name_as_xml
+  test "find by name as xml" do
     FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
     FactoryGirl.create(:person, first_name: "Kevin", last_name: "Condron")
 
@@ -182,7 +182,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert_select "first-name", "Kevin"
   end
 
-  def test_find_by_license_as_xml
+  test "find by license as xml" do
     FactoryGirl.create(:person, first_name: "Mark", last_name: "Matson", license: "576")
     get :index, name: "m", license: 576, format: "xml"
     assert_response :success

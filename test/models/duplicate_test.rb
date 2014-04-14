@@ -2,7 +2,7 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class DuplicateTest < ActiveSupport::TestCase
-  def test_create
+  test "create" do
     tonkin = FactoryGirl.create(:person)
     alice = FactoryGirl.create(:person)
 

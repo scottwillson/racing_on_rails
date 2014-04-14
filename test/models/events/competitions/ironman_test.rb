@@ -2,7 +2,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
 class IronmanTest < ActiveSupport::TestCase
-  def test_count_single_day_events
+  test "count single day events" do
     old_team = FactoryGirl.create(:team, name: "Old Team")
     person = FactoryGirl.create(:person, team: old_team)
     series = Series.create!
@@ -38,7 +38,7 @@ class IronmanTest < ActiveSupport::TestCase
     assert_equal team, ironman.races.first.results.first.team, "Should use person's current team, not source result team"
   end
 
-  def test_count_child_events
+  test "count child events" do
     person = FactoryGirl.create(:person)
     event = SingleDayEvent.create!
     child = event.children.create!
@@ -53,7 +53,7 @@ class IronmanTest < ActiveSupport::TestCase
     assert_equal(1, ironman.races.first.results.first.scores.count, "Should have one Ironman score for a child Event result")
   end
 
-  def test_skip_anything_other_than_single_day_event
+  test "skip anything other than single day event" do
     person = FactoryGirl.create(:person)
     event = FactoryGirl.create(:time_trial_event)
     senior_men = FactoryGirl.create(:category)
@@ -68,7 +68,7 @@ class IronmanTest < ActiveSupport::TestCase
     assert_equal(1, ironman.races.first.results.first.scores.count, "Should have one Ironman score for a TT result")
   end
 
-  def test_parent_event_results_do_not_count
+  test "parent event results do not count" do
     person = FactoryGirl.create(:person)
     senior_men = FactoryGirl.create(:category)
     series = Series.create!
@@ -89,12 +89,12 @@ class IronmanTest < ActiveSupport::TestCase
   end
 
   # TODO Move to superclass once superclass uses them
-  def test_source_results_no_results
+  test "source results no results" do
     ironman = Ironman.create!
     assert_equal [], ironman.source_results(ironman.races.first).to_a, "source_results"
   end
 
-  def test_source_results
+  test "source results" do
     person = FactoryGirl.create(:person, name: "Greg Lemond", member_from: Date.new(2005, 8, 1), member_to: Date.new(2010, 12, 31))
     source_result = FactoryGirl.create(:result, place: "12", person: person)
     ironman = Ironman.create!
@@ -112,7 +112,7 @@ class IronmanTest < ActiveSupport::TestCase
     assert_equal [ expected ], ironman.source_results(ironman.races.first).to_a, "source_results"
   end
 
-  def test_create_competition_results_for
+  test "create competition results for" do
     person = FactoryGirl.create(:person)
     result1 = FactoryGirl.create(:result, person: person)
     result2 = FactoryGirl.create(:result, person: person)
@@ -137,19 +137,19 @@ class IronmanTest < ActiveSupport::TestCase
     assert_equal 2, ironman_result.points, "points"
   end
 
-  def test_create_competition_results_for_no_results
+  test "create competition results for no results" do
     ironman = Ironman.create!
     ironman.create_competition_results_for([], ironman.races.first)
     assert_equal 0, Result.count
     assert_equal 0, Score.count
   end
 
-  def test_team_ids_by_person_id_hash
+  test "team ids by person id hash" do
     ironman = Ironman.create!
     assert_equal({}, ironman.team_ids_by_person_id_hash([]))
   end
 
-  def test_team_ids_by_person_id_hash_no_results
+  test "team ids by person id hash no results" do
     team = FactoryGirl.create(:team)
     person = FactoryGirl.create(:person, team: team)
     ironman = Ironman.create!
@@ -157,7 +157,7 @@ class IronmanTest < ActiveSupport::TestCase
     assert_equal({ person.id => team.id }, ironman.team_ids_by_person_id_hash([ Struct::TestResult2.new(person.id) ]))
   end
 
-  def test_create_score
+  test "create score" do
     ironman = Ironman.create!
     source_result = FactoryGirl.create(:result)
     competition_result = ironman.races.first.results.create!

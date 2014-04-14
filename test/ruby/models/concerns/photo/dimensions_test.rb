@@ -8,7 +8,7 @@ class Concerns::Photo::DimensionsTest < Ruby::TestCase
     attr_accessor :height, :width
   end
 
-  def test_nil_safe
+  test "nil_safe" do
     photo = TestPhoto.new
     assert !photo.landscape?, "landscape?"
     assert !photo.portrait?, "portrait?"

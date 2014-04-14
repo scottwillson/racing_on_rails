@@ -9,7 +9,7 @@ class ResultTest < ActiveSupport::TestCase
     FactoryGirl.create(:discipline)
   end
 
-  def test_set_time
+  test "set time" do
     result = Result.new
     result.time = "20:23:00.9"
     assert_in_delta 73380.9, result.time, 0.0001, "20:23:00.9 should be 20 hours and 23 minutes and 0.9 seconds"
@@ -24,7 +24,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_in_delta 1223.0, result.time, 0.0001, "20:23 should be 20 minutes and 23 seconds"
   end
 
-  def test_time_s
+  test "time s" do
     result = Result.new
     assert_equal nil, result.time, "no time"
     assert_equal '', result.time_s, 'no time_s'
@@ -120,7 +120,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_in_delta(-10.0, result.time_bonus_penalty, 0.0001, "time_bonus_penalty")
   end
 
-  def test_set_time_value
+  test "set time value" do
     result = Result.new
     time = Time.zone.local(2007, 11, 20, 19, 45, 50, 678)
     result.set_time_value(:time, time)

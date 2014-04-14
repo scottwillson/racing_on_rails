@@ -2,7 +2,7 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class PersonFileTest < ActiveSupport::TestCase
-  def test_import
+  test "import" do
     FactoryGirl.create(:discipline, name: "Cyclocross")
     FactoryGirl.create(:discipline, name: "Mountain Bike")
     FactoryGirl.create(:discipline, name: "Road")
@@ -104,7 +104,7 @@ Downhill/Cross Country: Downhill}
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
   end
 
-  def test_excel_file_database
+  test "excel file database" do
     FactoryGirl.create(:discipline, name: "Cyclocross")
     FactoryGirl.create(:discipline, name: "Downhill")
     FactoryGirl.create(:discipline, name: "Mountain Bike")
@@ -259,7 +259,7 @@ Downhill/Cross Country: Downhill}
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
   end
 
-  def test_import_duplicates
+  test "import duplicates" do
     existing_person_with_login = FactoryGirl.create(:person_with_login, name: "Erik Tonkin")
     existing_person = FactoryGirl.create(:person, name: "Erik Tonkin")
 

@@ -9,7 +9,7 @@ module Admin
       use_ssl
     end
 
-    def test_index
+    test "index" do
       get(:index)
       assert_response(:success)
       assert_template("admin/categories/index")
@@ -17,7 +17,7 @@ module Admin
       assert_not_nil(assigns["unknowns"], "Should assign unknowns")
     end
 
-    def test_not_logged_in
+    test "not logged in" do
       destroy_person_session
       get(:index)
       assert_redirected_to new_person_session_url(secure_redirect_options)

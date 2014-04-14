@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
 class EventsTest < AcceptanceTest
-  def test_events
+  test "events" do
     javascript!
 
     candi = FactoryGirl.create(:person, name: "Candi Murray", home_phone: "(503) 555-1212", email: "admin@example.com")
@@ -159,7 +159,7 @@ class EventsTest < AcceptanceTest
     assert_page_has_content "Fancy New Child Event"
   end
 
-  def test_lost_children
+  test "lost children" do
     login_as FactoryGirl.create(:administrator)
     FactoryGirl.create(:series, name: "PIR")
     event = FactoryGirl.create(:event, name: "PIR")

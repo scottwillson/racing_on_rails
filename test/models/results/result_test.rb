@@ -9,14 +9,14 @@ class ResultTest < ActiveSupport::TestCase
     FactoryGirl.create(:discipline)
   end
 
-  def test_person_first_last_name
+  test "person first last name" do
     result = Result.new
     assert_equal(nil, result.first_name, "Person first name w/nil person")
     assert_equal(nil, result.last_name, "Person last name w/nil person")
     assert_equal(nil, result.team_name, "Person team name w/nil person")
   end
 
-  def test_name
+  test "name" do
     result = Result.new
     assert_equal(nil, result.name, "Person name w/nil person")
 
@@ -57,7 +57,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal "Marjon Walrod", result[:name], ":name"
   end
 
-  def test_save
+  test "save" do
     event = SingleDayEvent.create!(name: "Tabor CR", discipline: 'Road')
     category = Category.find_or_create_by(name: "Senior Men Pro 1/2")
     race = event.races.create!(category: category)
@@ -91,7 +91,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_nil person_from_db.road_number, "Should not create racing association number from result"
   end
 
-  def test_first_name
+  test "first name" do
     attributes = {place: "22", first_name: "Jan"}
     result = Result.new(attributes)
     assert_equal("Jan", result.first_name, "person.first_name")
@@ -102,7 +102,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal("Ivan", result.person.first_name, "person.first_name")
   end
 
-  def test_last_name
+  test "last name" do
     result = Result.new(place: "22", last_name: "Ulrich")
     assert_equal("Ulrich", result.last_name, "person.last_name")
     assert_equal("Ulrich", result.person.last_name, "person.last_name")
@@ -112,7 +112,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal("Basso", result.person.last_name, "person.last_name")
   end
 
-  def test_team_name
+  test "team name" do
     attributes = {place: "22", team_name: "T-Mobile"}
     result = FactoryGirl.create(:race).results.build(attributes)
     assert_equal("T-Mobile", result.team_name, "person.team_name")
@@ -127,7 +127,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal("CSC", result[:team_name], "person.team_name")
   end
 
-  def test_category_name
+  test "category name" do
     result = Result.new(place: "22", last_name: "Ulrich")
     assert_equal(nil, result.category_name, "category_name")
 
@@ -149,7 +149,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal(nil, result.category_name, "category_name")
   end
 
-  def test_person_team
+  test "person team" do
     event = FactoryGirl.create(:event)
     race = FactoryGirl.create(:race, event: event)
     result = race.results.build(place: '3', number: '932')
@@ -191,14 +191,14 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal(nil, person_with_no_team.team, 'result team')
   end
 
-  def test_event
+  test "event" do
     event = FactoryGirl.create(:event)
     result = event.races.create!(category: FactoryGirl.create(:category)).results.create!
     result.reload
     assert_equal(event, result.event, 'Result event')
   end
 
-  def test_sort
+  test "sort" do
     results = [
      Result.new(place: '1'),
      Result.new(place: ''),
@@ -264,7 +264,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal(1, result_dnf <=> result_5)
   end
 
-  def test_save_number
+  test "save number" do
     racing_association = RacingAssociation.current
     racing_association.rental_numbers = 51..99
     racing_association.save!
@@ -298,7 +298,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(!result.person.member?, "Person with rental number should not be member")
   end
 
-  def test_save_number_alt
+  test "save number alt" do
     kings_valley_pro_1_2_2004 = FactoryGirl.create(:race)
     results = kings_valley_pro_1_2_2004.results
     result = results.create!(place: 1, first_name: 'Clara', last_name: 'Willson', number: '300')
@@ -328,7 +328,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(!result.person.member?, "Person with rental number should not be member")
   end
 
-  def test_find_all_for_person
+  test "find all for person" do
     molly = FactoryGirl.create(:person)
     FactoryGirl.create(:result, person: molly)
     FactoryGirl.create(:result, person: molly)
@@ -343,7 +343,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal(3, results.size, 'Results')
   end
 
-  def test_last_event?
+  test "last event?" do
     result = Result.new
     assert(!result.last_event?, "New result should not be last event")
 
@@ -369,7 +369,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(result.last_event?, "Last event should be last event")
   end
 
-  def test_finished?
+  test "finished?" do
     category = Category.find_or_create_by(name: "Senior Men Pro 1/2")
     race = SingleDayEvent.create!.races.create!(category: category)
 
@@ -407,7 +407,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(result.finished?, "'4th' should be a finisher")
   end
 
-  def test_make_member_if_association_number
+  test "make member if association number" do
     event = SingleDayEvent.create!(name: "Tabor CR")
     race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
     result = race.results.create!(
@@ -424,7 +424,7 @@ class ResultTest < ActiveSupport::TestCase
     end
   end
 
-  def test_do_not_make_member_if_not_association_number
+  test "do not make member if not association number" do
     number_issuer = NumberIssuer.create!(name: "Tabor")
     event = SingleDayEvent.create!(name: "Tabor CR", number_issuer: number_issuer)
     race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
@@ -440,7 +440,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(!person.member?, "Finisher with event (not racing association) number should not be a member")
   end
 
-  def test_only_make_member_if_full_name
+  test "only make member if full name" do
     event = SingleDayEvent.create!(name: "Tabor CR")
     race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
     result = race.results.create!(
@@ -457,7 +457,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(!result_2.person.member?, "Finisher with only last_name should be not member")
   end
 
-  def test_stable_name_on_old_results
+  test "stable name on old results" do
     team = Team.create!(name: "Tecate-Una Mas")
 
     event = SingleDayEvent.create!(date: 1.years.ago)
@@ -472,7 +472,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal("Twin Peaks", old_result.reload.team_name, "Team name on old result")
   end
 
-  def test_bar
+  test "bar" do
     event = SingleDayEvent.create!(name: "Tabor CR")
     race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
     result = race.results.create!(
@@ -483,7 +483,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(!result.bar?, "Result bar?")
   end
 
-  def test_dont_delete_team_names_if_used_by_person
+  test "dont delete team names if used by person" do
     event = SingleDayEvent.create!
     race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
     race.results.create!(
@@ -498,7 +498,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_not_nil(Team.find_by_name("QuickStep"), "Should keep team that is used by person, even though it was created by a result")
   end
 
-  def test_competition_result
+  test "competition result" do
     FactoryGirl.create(:discipline, name: "Team")
     senior_men = FactoryGirl.create(:category, name: "Senior Men")
     result = FactoryGirl.create(:result)
@@ -511,7 +511,7 @@ class ResultTest < ActiveSupport::TestCase
     assert result.competition_result?, "TeamBar competition_result?"
   end
 
-  def test_team_competition_result
+  test "team competition result" do
     FactoryGirl.create(:discipline, name: "Team")
     senior_men = FactoryGirl.create(:category, name: "Senior Men")
     result = FactoryGirl.create(:result)
@@ -524,7 +524,7 @@ class ResultTest < ActiveSupport::TestCase
     assert result.team_competition_result?, "TeamBar competition_result?"
   end
 
-  def test_custom_attributes
+  test "custom attributes" do
     banana_belt_1 = FactoryGirl.create(:event)
     senior_men = FactoryGirl.create(:category)
     race = banana_belt_1.races.create!(category: senior_men, result_columns: [ "place" ], custom_columns: [ "run", 20100929 ])

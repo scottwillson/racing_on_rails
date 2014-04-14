@@ -2,12 +2,12 @@ require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
 class PublicPagesTest < RacingOnRails::IntegrationTest
-  def test_redirect_event
+  test "redirect event" do
     get "/events/"
     assert_redirected_to schedule_url
   end
 
-  def test_schedule
+  test "schedule" do
     get "/schedule"
     assert_response :success
 
@@ -18,7 +18,7 @@ class PublicPagesTest < RacingOnRails::IntegrationTest
     assert_response :success
   end
 
-  def test_results_pages
+  test "results pages" do
     FactoryGirl.create(:discipline)
     team = FactoryGirl.create(:team)
     person = FactoryGirl.create(:person, team: team)
@@ -69,7 +69,7 @@ class PublicPagesTest < RacingOnRails::IntegrationTest
     assert_select "title", /Results: #{team.name}/
   end
 
-  def test_first_aid_providers
+  test "first aid providers" do
     person = FactoryGirl.create(:person_with_login, official: true)
     https! if RacingAssociation.current.ssl?
 
@@ -82,7 +82,7 @@ class PublicPagesTest < RacingOnRails::IntegrationTest
     assert_response :success
   end
 
-  def test_mailing_lists
+  test "mailing lists" do
     mailing_list = FactoryGirl.create(:mailing_list)
     mailing_list_post = FactoryGirl.create(:post, mailing_list: mailing_list)
 
@@ -102,7 +102,7 @@ class PublicPagesTest < RacingOnRails::IntegrationTest
     assert_response :success
   end
 
-  def test_competitions
+  test "competitions" do
     FactoryGirl.create(:category, name: "Men Cat 1-2")
     FactoryGirl.create(:category, name: "Women Cat 1-2")
     wsba = WsbaBarr.create!(date: Date.new(2004))

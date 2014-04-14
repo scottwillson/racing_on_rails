@@ -8,7 +8,7 @@ class PostTest < ActiveSupport::TestCase
     assert_equal "Re: Foo", Post.remove_list_prefix("Re: [OBRA Chat] Foo", "OBRA Chat")
   end
 
-  test "from_email_obscured" do
+  test "from email obscured" do
     post = Post.new
     post.from_email = "scout@foo.net"
     assert_equal("sco..@foo.net", post.from_email_obscured, "from_email obscured")
@@ -133,7 +133,7 @@ class PostTest < ActiveSupport::TestCase
     assert_equal 2, original.position, "original position"
   end
 
-  test "find_original" do
+  test "find original" do
     mailing_list = FactoryGirl.create(:mailing_list, subject_line_prefix: "Juniors")
     original = FactoryGirl.create(:post, mailing_list: mailing_list, last_reply_at: 1.day.ago, date: 1.day.ago, subject: "My bike")
     reply = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "[Juniors] Re: My bike")
@@ -146,7 +146,7 @@ class PostTest < ActiveSupport::TestCase
     assert_equal nil, Post.find_original(post_on_different_subject)
   end
 
-  test "normalize_subject" do
+  test "normalize subject" do
     Post.expects(:strip_subject)
     Post.expects(:remove_list_prefix)
     Post.normalize_subject "", ""

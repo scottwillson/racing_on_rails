@@ -2,7 +2,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
 class UpcomingTest < ActiveSupport::TestCase
-  def test_different_dates
+  test "different dates" do
     FactoryGirl.create(:discipline, name: "Mountain Bike")
     FactoryGirl.create(:discipline, name: "Road")
     FactoryGirl.create(:discipline, name: "Time Trial")
@@ -76,7 +76,7 @@ class UpcomingTest < ActiveSupport::TestCase
     end
   end
 
-  def test_midweek_multiday_event
+  test "midweek multiday event" do
     FactoryGirl.create(:discipline, name: "Mountain Bike")
     FactoryGirl.create(:discipline, name: "Road")
     FactoryGirl.create(:discipline, name: "Track")
@@ -117,7 +117,7 @@ class UpcomingTest < ActiveSupport::TestCase
     end
   end
 
-  def test_weekly_series
+  test "weekly series" do
     FactoryGirl.create(:discipline, name: "Road")
 
     series = WeeklySeries.create!(
@@ -160,7 +160,7 @@ class UpcomingTest < ActiveSupport::TestCase
     end
   end
 
-  def test_series
+  test "series" do
     FactoryGirl.create(:discipline, name: "Road")
 
     estacada_tt = Series.create!(

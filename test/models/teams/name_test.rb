@@ -4,7 +4,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
 class NameTest < ActiveSupport::TestCase
-  def test_name_with_date
+  test "name with date" do
     team = Team.create!(name: "Tecate-Una Mas")
     assert_equal(0, team.names(true).size, "names")
 
@@ -21,7 +21,7 @@ class NameTest < ActiveSupport::TestCase
     assert_equal("Tecate-Una Mas", team.name(Time.zone.today.next_year))
   end
 
-  def test_create_new_name_if_there_are_results_from_previous_year
+  test "create new name if there are results from previous year" do
     team = Team.create!(name: "Twin Peaks")
     event = SingleDayEvent.create!(date: 1.years.ago)
     senior_men = FactoryGirl.create(:category)
@@ -42,7 +42,7 @@ class NameTest < ActiveSupport::TestCase
     assert_equal("Tecate-Una Mas", result.reload.team_name, "Team name should change on this year's result")
   end
 
-  def test_results_before_this_year
+  test "results before this year" do
     team = Team.create!(name: "Twin Peaks")
     assert(!team.results_before_this_year?, "results_before_this_year? with no results")
 
@@ -69,7 +69,7 @@ class NameTest < ActiveSupport::TestCase
     assert(team.results_before_this_year?, "results_before_this_year? with results in many years")
   end
 
-  def test_rename_multiple_times
+  test "rename multiple times" do
     team = Team.create!(name: "Twin Peaks")
     event = SingleDayEvent.create!(date: 3.years.ago)
     senior_men = FactoryGirl.create(:category)
@@ -96,7 +96,7 @@ class NameTest < ActiveSupport::TestCase
     assert_equal(Time.zone.today.year - 1, team.names.first.year, "Old team name year")
   end
 
-  def test_name_date_or_year
+  test "name date or year" do
     team = FactoryGirl.create(:team, name: "Vanilla")
     team.names.create!(name: "Sacha's Team", year: 2001)
     assert_equal("Sacha's Team", team.name(Date.new(2001, 12, 31)), "name for 2001-12-31")
@@ -104,7 +104,7 @@ class NameTest < ActiveSupport::TestCase
     assert_equal("Sacha's Team", team.name(2001), "name for 2001")
   end
 
-  def test_multiple_names
+  test "multiple names" do
     team = FactoryGirl.create(:team, name: "Vanilla")
     team.names.create!(name: "Mapei", year: 2001)
     team.names.create!(name: "Mapei-Clas", year: 2002)
@@ -120,7 +120,7 @@ class NameTest < ActiveSupport::TestCase
     assert_equal("Vanilla", team.name(Time.zone.today.year + 1), "Name next year")
   end
 
-  def test_rename_to_old_name
+  test "rename to old name" do
     team = FactoryGirl.create(:team, name: "Vanilla")
     team.names.create!(name: "Sacha's Team", year: 2001)
     assert_equal(1, team.names.size, "Historical names")
@@ -131,7 +131,7 @@ class NameTest < ActiveSupport::TestCase
     assert_equal("Sacha's Team", team.name, "New name")
   end
 
-  def test_rename_to_other_teams_name
+  test "rename to other teams name" do
     team_o_safeway = Team.create!(name: "Team Oregon/Safeway")
     team_o_safeway.names.create!(name: "Team Oregon", year: 1.years.ago.year)
 
@@ -152,7 +152,7 @@ class NameTest < ActiveSupport::TestCase
   end
 
   # Reproduce UTF-8 conversion issues
-  def test_rename_to_alias
+  test "rename to alias" do
     team = Team.create!(name: "Grundelbruisers/Stewie Bicycles")
     team.names.create!(name: "Grundelbruisers/Stewie Bicycles", year: 1.years.ago.year)
 
@@ -166,7 +166,7 @@ class NameTest < ActiveSupport::TestCase
     assert_equal(1, team.names.count, "Historical names")
   end
 
-  def test_different_teams_with_same_name
+  test "different teams with same name" do
     team_o_safeway = Team.create!(name: "Team Oregon/Safeway")
     team_o_safeway.names.create!(name: "Team Oregon", year: 1.years.ago.year)
 
@@ -174,7 +174,7 @@ class NameTest < ActiveSupport::TestCase
     team_o_river_city.names.create!(name: "Team Oregon", year: 1.years.ago.year)
   end
 
-  def test_renamed_teams_should_keep_aliases
+  test "renamed teams should keep aliases" do
     team = Team.create!(name: "Twin Peaks/The Bike Nook")
     event = SingleDayEvent.create!(date: 3.years.ago)
     senior_men = FactoryGirl.create(:category)
@@ -190,7 +190,7 @@ class NameTest < ActiveSupport::TestCase
     assert_equal(["Twin Peaks", "Twin Peaks/The Bike Nook"], team.aliases.map(&:name).sort, "Should retain keep alias from old name")
   end
 
-  def test_create_and_override_alias
+  test "create and override alias" do
     vanilla = FactoryGirl.create(:team, name: "Vanilla")
     vanilla.aliases.create!(name: "Vanilla Bicycles")
     assert_not_nil(Team.find_by_name('Vanilla'), 'Vanilla should exist')
@@ -206,7 +206,7 @@ class NameTest < ActiveSupport::TestCase
     assert_nil(Alias.find_by_name('Vanilla'), 'Vanilla alias should not exist')
   end
 
-  def test_update_to_alias
+  test "update to alias" do
     vanilla = FactoryGirl.create(:team, name: "Vanilla")
     vanilla.aliases.create!(name: "Vanilla Bicycles")
     assert_not_nil(Team.find_by_name('Vanilla'), 'Vanilla should exist')
@@ -223,7 +223,7 @@ class NameTest < ActiveSupport::TestCase
     assert_not_nil(Alias.find_by_name('Vanilla'), 'Vanilla alias should exist')
   end
 
-  def test_update_name_different_case
+  test "update name different case" do
     vanilla = FactoryGirl.create(:team, name: "Vanilla")
     vanilla.aliases.create!(name: "Vanilla Bicycles")
     assert_equal('Vanilla', vanilla.name, 'Name before update')

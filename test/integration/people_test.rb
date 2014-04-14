@@ -2,7 +2,7 @@ require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
 class PeopleTest < RacingOnRails::IntegrationTest
-  def test_index
+  test "index" do
     FactoryGirl.create(:person, first_name: "Ryan", last_name: "Weaver")
     get "/people"
     assert_response :success
@@ -26,7 +26,7 @@ class PeopleTest < RacingOnRails::IntegrationTest
     assert @response.body["Weaver"], "Should find Ryan Weaver"
   end
 
-  def test_import
+  test "import" do
     goto_login_page_and_login_as FactoryGirl.create(:administrator)
     post "/admin/people/preview_import",
          people_file: fixture_file_upload(

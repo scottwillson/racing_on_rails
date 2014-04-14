@@ -2,7 +2,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
 class MtbBarTest < ActiveSupport::TestCase
-  def test_no_masters_or_junior_ability_categories
+  test "no masters or junior ability categories" do
     FactoryGirl.create(:discipline, name: "Super D")
     mtb = FactoryGirl.create(:discipline, name: "Mountain Bike")
 
@@ -38,7 +38,7 @@ class MtbBarTest < ActiveSupport::TestCase
     assert_equal(2, results.last.scores.size, "Junior Men BAR last scores")
   end
 
-  def test_numerical_mtb_categories
+  test "numerical mtb categories" do
     # Map categories as if they were road cats
     mtb         = FactoryGirl.create(:discipline, name: "Mountain Bike")
     road        = FactoryGirl.create(:discipline, name: "Road")
@@ -352,7 +352,7 @@ class MtbBarTest < ActiveSupport::TestCase
     assert_equal(original_results_count + 36, Result.count, "Total count of results in DB after BARs calculate!")
   end
 
-  def test_masters_state_champs
+  test "masters state champs" do
     mtb = FactoryGirl.create(:discipline, name: "Mountain Bike")
     event = SingleDayEvent.create!(name: "Mudslinger", date: Date.new(2001, 9, 7), discipline: "Mountain Bike", bar_points: 2)
     masters_men = FactoryGirl.create(:category, name: "Masters Men")

@@ -2,7 +2,7 @@ require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
 class AdminPagesTest < RacingOnRails::IntegrationTest
-  def test_events
+  test "events" do
     if RacingAssociation.current.ssl?
       FactoryGirl.create(:administrator)
       https! false

@@ -4,7 +4,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 module Events
   module Competitions
     class WsbaBarrTest < ActiveSupport::TestCase
-      def test_points
+      test "points" do
         category_men_1_2 = FactoryGirl.create(:category, name: "Men Cat 1-2")
         sr_women = FactoryGirl.create(:category, name: "Women Cat 1-2")
         wsba = WsbaBarr.create!(date: Date.new(2004))

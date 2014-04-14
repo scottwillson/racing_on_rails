@@ -5,7 +5,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
 class BarTest < ActiveSupport::TestCase
-  def test_calculate
+  test "calculate" do
     alice  = FactoryGirl.create(:person, name: "Alice")
     matson = FactoryGirl.create(:person, name: "Matson")
     molly  = FactoryGirl.create(:person, name: "Molly")
@@ -207,7 +207,7 @@ class BarTest < ActiveSupport::TestCase
     assert_equal(12, tonkin_track_bar_result.points, 'Tonkin Track BAR points')
   end
 
-  def test_calculate_team_events
+  test "calculate team events" do
     person = FactoryGirl.create(:person, name: "Paul Mautner")
 
     association_category = FactoryGirl.create(:category, name: "CBRA")
@@ -242,7 +242,7 @@ class BarTest < ActiveSupport::TestCase
     assert_equal(10, result.points, "points")
   end
 
-  def test_count_category_4_5_results
+  test "count category 4 5 results" do
     category_4_5_men = FactoryGirl.build(:category, name: "Category 4/5 Men")
     category_4_men = FactoryGirl.build(:category, name: "Category 4 Men")
     category_4_5_men.children << category_4_men
@@ -251,7 +251,7 @@ class BarTest < ActiveSupport::TestCase
     assert_equal_enumerables [ category_4_5_men.id, category_4_men.id ], ids, "Should include Cat 4/5 in Cat 4 results"
   end
 
-  def test_masters_4_5
+  test "masters 4 5" do
     masters_men             = FactoryGirl.build(:category, name: "Masters Men")
     masters_men_4_5         = FactoryGirl.build(:category, name: "Masters Men 4/5", parent: masters_men)
                               FactoryGirl.build(:category, name: "Masters Men 4/5 40+", parent: masters_men_4_5)
@@ -262,7 +262,7 @@ class BarTest < ActiveSupport::TestCase
     assert_equal_enumerables [ masters_men.id, masters_men_40_plus.id ], ids, "Should include all Masters children except 4/5"
   end
 
-  def test_masters_women
+  test "masters women" do
     masters_women           = FactoryGirl.build(:category, name: "Masters Women")
     masters_women_4         = FactoryGirl.build(:category, name: "Masters Women 4", parent: masters_women)
                               FactoryGirl.build(:category, name: "Masters Women 4 40+", parent: masters_women_4)

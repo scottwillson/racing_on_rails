@@ -2,7 +2,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
 class TaborOverallTest < ActiveSupport::TestCase
-  def test_recalc_with_one_event
+  test "recalc with one event" do
     series = WeeklySeries.create!(name: "Mt. Tabor Series")
     event = series.children.create!(date: Date.new(2007, 6, 6))
 
@@ -59,7 +59,7 @@ class TaborOverallTest < ActiveSupport::TestCase
     assert_equal(alice, result.person, "Masters Women first result person")
   end
 
-  def test_best_5_of_6_count
+  test "best 5 of 6 count" do
     series = WeeklySeries.create!(name: "Mt. Tabor Series")
 
     event = series.children.create!(date: Date.new(2007, 6, 6))
@@ -95,7 +95,7 @@ class TaborOverallTest < ActiveSupport::TestCase
     assert_equal(weaver, result.person, "person")
   end
 
-  def test_double_ponts_for_final_event
+  test "double ponts for final event" do
     series = WeeklySeries.create!(name: "Mt. Tabor Series")
 
     event = series.children.create!(date: Date.new(2007, 6, 6))
@@ -131,7 +131,7 @@ class TaborOverallTest < ActiveSupport::TestCase
     assert_equal(weaver, result.person, "person")
   end
 
-  def test_many_results
+  test "many results" do
     series = WeeklySeries.create!(name: "Mt. Tabor Series")
     masters = FactoryGirl.create(:category, name: "Masters Men")
     senior_men = FactoryGirl.create(:category, name: "Senior Men")

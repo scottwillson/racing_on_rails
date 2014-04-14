@@ -12,7 +12,7 @@ module Admin
         use_ssl
       end
 
-      def test_merge?
+      test "merge?" do
         molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         tonkin = FactoryGirl.create(:person)
         xhr :put, :update_attribute,
@@ -28,7 +28,7 @@ module Admin
         assert_equal([molly], assigns['other_people'], 'other_people')
       end
 
-      def test_merge
+      test "merge" do
         molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
@@ -41,7 +41,7 @@ module Admin
         assert_equal [], Person.find_all_by_name("Erik Tonkin"), "Tonkin should not be in database"
       end
 
-      def test_merge_same_person
+      test "merge same person" do
         tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
 
@@ -52,7 +52,7 @@ module Admin
         assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
       end
 
-      def test_dupes_merge?
+      test "dupes merge?" do
         FactoryGirl.create(:discipline)
         FactoryGirl.create(:number_issuer)
 
@@ -73,7 +73,7 @@ module Admin
         assert_equal([molly, molly_with_different_road_number], other_people, 'other_people')
       end
 
-      def test_dupes_merge_one_has_road_number_one_has_cross_number?
+      test "dupes merge one has road number one has cross number?" do
         FactoryGirl.create(:discipline)
         FactoryGirl.create(:cyclocross_discipline)
         FactoryGirl.create(:number_issuer)
@@ -102,7 +102,7 @@ module Admin
         assert_equal(2, assigns['other_people'].size, 'other_people')
       end
 
-      def test_dupes_merge_alias?
+      test "dupes merge alias?" do
         molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         tonkin.aliases.create!(name: "Eric Tonkin")
@@ -119,7 +119,7 @@ module Admin
         assert_equal([tonkin], assigns['other_people'], 'other_peoples')
       end
 
-      def test_dupe_merge
+      test "dupe merge" do
         FactoryGirl.create(:discipline)
         FactoryGirl.create(:number_issuer)
 

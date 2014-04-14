@@ -24,7 +24,7 @@ class Concerns::Event::NamesTest < Ruby::TestCase
     end
   end
 
-  def test_full_name
+  test "full_name" do
     event = TestEvent.new(name: 'Reheers')
     assert_equal('Reheers', event.full_name, 'full_name')
 
@@ -48,7 +48,7 @@ class Concerns::Event::NamesTest < Ruby::TestCase
     assert_equal('Frozen Flatlands Omnium: Frozen Flatlands Time Trial', stage.full_name, 'stage race results full_name')
   end
 
-  def test_full_name_with_date
+  test "full_name_with_date" do
     event = TestEvent.new(name: 'Reheers', date: Date.new(2010, 1, 2))
     assert_equal('Reheers (1/2)', event.full_name_with_date, 'full_name')
 

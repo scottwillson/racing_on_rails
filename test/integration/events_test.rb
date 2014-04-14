@@ -2,7 +2,7 @@ require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
 class EventsTest < RacingOnRails::IntegrationTest
-  def test_index
+  test "index" do
     Timecop.freeze(Time.zone.local(2013, 3)) do
       FactoryGirl.create(:event)
       FactoryGirl.create(:event)

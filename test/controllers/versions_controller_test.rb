@@ -8,7 +8,7 @@ class VersionsControllerTest < ActionController::TestCase
     use_ssl
   end
 
-  def test_index_for_person
+  test "index for person" do
     person = FactoryGirl.create(:person)
     get :index, person_id: person.to_param
     assert_response :success

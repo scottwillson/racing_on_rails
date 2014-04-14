@@ -2,12 +2,12 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class RaceTest < ActiveSupport::TestCase
-  def test_new_category_name
+  test "new category name" do
     race = Race.new(category_name: "Masters 35+ Women")
     assert_equal("Masters 35+ Women", race.name, "race name")
   end
 
-  def test_save_existing_category
+  test "save existing category" do
     race = Race.new(
       event: FactoryGirl.create(:event),
       category_name: "Masters 35+ Women"
@@ -16,7 +16,7 @@ class RaceTest < ActiveSupport::TestCase
     race.save!
   end
 
-  def test_result_columns
+  test "result columns" do
     event = SingleDayEvent.create!
     race = Race.create!(category_name: "Masters Women", event: event)
     assert_equal(Race::DEFAULT_RESULT_COLUMNS, race.result_columns_or_default, "race result_columns")
@@ -38,7 +38,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(result_columns, race.result_columns_or_default, "race result_columns after save")
   end
 
-  def test_custom_result_column
+  test "custom result column" do
     event = SingleDayEvent.create!
     race = Race.create!(category_name: "Masters Women", event: event)
 
@@ -47,7 +47,7 @@ class RaceTest < ActiveSupport::TestCase
     assert race.valid?, "Race with custom result column should be valid"
   end
 
-  def test_bar_points
+  test "bar points" do
     race = FactoryGirl.create(:race)
     assert_nil(race[:bar_points], 'BAR points column value')
     assert_equal(1, race.bar_points, 'BAR points')
@@ -73,7 +73,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(2, race.bar_points, 'BAR points')
   end
 
-  def test_bar_valid_points
+  test "bar valid points" do
     event = SingleDayEvent.create!
     race = Race.create!(category_name: "Masters Women", event: event)
     assert_equal(1, race.bar_points, 'BAR points')
@@ -85,7 +85,7 @@ class RaceTest < ActiveSupport::TestCase
   end
 
   # Return value from field_size column. If column is blank, count results
-  def test_field_size
+  test "field size" do
     race = FactoryGirl.create(:race)
     assert_equal(0, race.field_size, 'New race field size')
 
@@ -97,7 +97,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(120, race.field_size, 'Race field size from field_size column')
   end
 
-  def test_place_results_by_points
+  test "place results by points" do
     race = FactoryGirl.create(:race)
     race.place_results_by_points
 
@@ -147,7 +147,7 @@ class RaceTest < ActiveSupport::TestCase
 
   # Look at source results for tie-breaking
   # Intentional nonsense in some results and points to test sorting
-  def test_competition_place_results_by_points
+  test "competition place results by points" do
     race = FactoryGirl.create(:race)
 
     20.times do
@@ -219,7 +219,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal('7', results[7].place, '8th result place')
   end
 
-  def test_most_recent_placing_should_break_tie
+  test "most recent placing should break tie" do
     races = []
     races << SingleDayEvent.create!(date: Date.new(2006, 1)).races.create!(category_name: "Masters Men 50+")
     races << SingleDayEvent.create!(date: Date.new(2006, 2)).races.create!(category_name: "Masters Men 50+")
@@ -262,7 +262,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(second_competition_result, results[3], "Fourth result")
   end
 
-  def test_highest_placing_in_last_race_should_break_tie
+  test "highest placing in last race should break tie" do
     race = SingleDayEvent.create!(date: Date.new(2006, 10)).races.create!(category_name: "Masters Men 50+")
     second_race = SingleDayEvent.create!(date: Date.new(2006, 11)).races.create!(category_name: "Masters Men 50+")
 
@@ -290,7 +290,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(first_competition_result, results[1], "Second result")
   end
 
-  def test_highest_placing_in_most_recent_race_should_break_tie
+  test "highest placing in most recent race should break tie" do
     race = SingleDayEvent.create!(date: Date.new(2006, 10)).races.create!(category_name: "Masters Men 50+")
     second_race = SingleDayEvent.create!(date: Date.new(2006, 11)).races.create!(category_name: "Masters Men 50+")
     third_race = SingleDayEvent.create!(date: Date.new(2006, 12)).races.create!(category_name: "Masters Men 50+")
@@ -330,7 +330,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(second_competition_result, results[2], "3rd result")
   end
 
-  def test_calculate_members_only_places
+  test "calculate members only places" do
     event = FactoryGirl.create(:event)
     race = event.races.create!(category: FactoryGirl.create(:category))
     race.calculate_members_only_places!
@@ -374,7 +374,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(non_members[2], race.results[4].person, 'Result 4 person')
   end
 
-  def test_calculate_members_only_places_should_not_trigger_combined_results_calculation
+  test "calculate members only places should not trigger combined results calculation" do
     FactoryGirl.create(:discipline, name: "Time Trial")
     event = SingleDayEvent.create!(discipline: "Time Trial")
     senior_men = FactoryGirl.create(:category)
@@ -397,7 +397,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(result_id, result_id_after_member_place, "calculate_members_only_places! should not trigger combined results recalc")
   end
 
-  def test_dates_of_birth
+  test "dates of birth" do
     event = SingleDayEvent.create!(date: Time.zone.today)
     senior_men = FactoryGirl.create(:category)
     race = event.races.create!(category: senior_men)
@@ -410,7 +410,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal_dates(Date.new(1982, 12, 31), race.dates_of_birth.end, 'race.dates_of_birth.end')
   end
 
-  def test_create_result_before
+  test "create result before" do
     race = SingleDayEvent.create!.races.create!(category_name: "Masters Women")
     existing_result = race.results.create!(place: "1")
     new_result = race.create_result_before(existing_result.id)
@@ -431,7 +431,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal("3", results[2].place, "Existing result place")
   end
 
-  def test_create_result_before_dnf
+  test "create result before dnf" do
     race = SingleDayEvent.create!.races.create!(category_name: "Masters Women")
     first_result = race.results.create!(place: "1")
     existing_result = race.results.create!(place: "DNF")
@@ -444,7 +444,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal("DNF", results[2].place, "Existing result place")
   end
 
-  def test_destroy_should_destroy_related_people
+  test "destroy should destroy related people" do
     FactoryGirl.create(:number_issuer)
     FactoryGirl.create(:discipline, name: "Road")
 

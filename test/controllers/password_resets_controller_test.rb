@@ -7,7 +7,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     use_ssl
   end
 
-  def test_forgot_password
+  test "forgot password" do
     ActionMailer::Base.deliveries.clear
     FactoryGirl.create(:administrator)
     post :create, email: "admin@example.com"
@@ -16,21 +16,21 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_equal 1, ActionMailer::Base.deliveries.count, "Should send one email"
   end
 
-  def test_forgot_password_error
+  test "forgot password error" do
     ActionMailer::Base.deliveries.clear
     post :create, email: "noperson@example.com"
     assert_response :success
     assert_equal 0, ActionMailer::Base.deliveries.count, "Should send one email"
   end
 
-  def test_forgot_password_invalid_email
+  test "forgot password invalid email" do
     ActionMailer::Base.deliveries.clear
     post :create, email: "bob.jones"
     assert_response :success
     assert_equal 0, ActionMailer::Base.deliveries.count, "Should send one email"
   end
 
-  def test_forgot_password_blank_email
+  test "forgot password blank email" do
     ActionMailer::Base.deliveries.clear
     Person.create! email: ""
     post :create, email: ""
@@ -38,14 +38,14 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.count, "Should send one email"
   end
 
-  def test_edit
+  test "edit" do
     member = FactoryGirl.create(:person_with_login)
     get :edit, id: member.perishable_token
     assert_response :success
     assert_equal(member, assigns["person"], "@person")
   end
 
-  def test_update_admin
+  test "update admin" do
     administrator = FactoryGirl.create(:administrator)
     password = administrator.crypted_password
     post :update, id: administrator.perishable_token, person: { password: "my new password", password_confirmation: "my new password" }
@@ -57,7 +57,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_redirected_to admin_home_path
   end
 
-  def test_update_member
+  test "update member" do
     person = FactoryGirl.create(:person_with_login, login: "bob.jones")
     password = person.crypted_password
     post :update, id: person.perishable_token, person: { password: "my new password", password_confirmation: "my new password" }
@@ -72,7 +72,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_redirected_to "/account"
   end
 
-  def test_invalid_update
+  test "invalid update" do
     member = FactoryGirl.create(:person_with_login, login: "bob.jones")
     password = member.crypted_password
     post :update, id: member.perishable_token, person: { password: "my new password", password_confirmation: "another password that doesn't match" }
@@ -85,7 +85,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  def test_blank_update
+  test "blank update" do
     member = FactoryGirl.create(:person_with_login)
     password = member.crypted_password
     post :update, id: member.perishable_token, person: { password: "", password_confirmation: "" }

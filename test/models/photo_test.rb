@@ -5,7 +5,7 @@ class PhotoTest < ActiveSupport::TestCase
     FactoryGirl.create :photo
   end
 
-  test "set_title on validate from caption" do
+  test "set title on validate from caption" do
     photo = Photo.new(caption: "Foo")
     photo.valid?
     assert_equal "Foo", photo.title, "title"

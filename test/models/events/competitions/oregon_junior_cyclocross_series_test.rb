@@ -2,7 +2,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
 class OregonJuniorCyclocrossSeriesTest < ActiveSupport::TestCase
-  def test_calculate
+  test "calculate" do
     series = OregonJuniorCyclocrossSeries.create!(date: Date.new(2004))
     event = SingleDayEvent.create!(date: Date.new(2004))
     boys_10_12 = Category.find_or_create_by(name: "Boys 10-12")

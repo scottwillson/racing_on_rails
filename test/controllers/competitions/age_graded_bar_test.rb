@@ -35,19 +35,19 @@ module Competitions
       ::AgeGradedBar.calculate! 2007
     end
 
-    def test_show_age_graded
+    test "show age graded" do
       get :show, discipline: "age_graded", year: "2007", category: "masters_men_30_34"
       assert_response :success
       assert_template "bar/show"
       assert_not_nil assigns["race"], "Should assign race"
     end
 
-    def test_show_age_graded_redirect_2006
+    test "show age graded redirect 2006" do
       get :show, discipline: "age_graded", year: "2006", category: "masters_men_30_34"
       assert_redirected_to "http://#{RacingAssociation.current.static_host}/bar/2006/overall_by_age.html"
     end
 
-    def test_show_redirect_before_2006
+    test "show redirect before 2006" do
       get :show, discipline: "overall", year: "2003", category: "masters_men_30_34"
       assert_redirected_to "http://#{RacingAssociation.current.static_host}/bar/2003"
     end

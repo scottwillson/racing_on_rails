@@ -19,7 +19,7 @@ class Concerns::Event::ComparisonTest < Ruby::TestCase
     end
   end
 
-  def test_sort
+  test "sort" do
     jan_event = TestEvent.new(date: Date.new(1998, 1, 4))
     march_event = TestEvent.new(date: Date.new(1998, 3, 2))
     nov_event = TestEvent.new(date: Date.new(1998, 11, 20))
@@ -35,7 +35,7 @@ class Concerns::Event::ComparisonTest < Ruby::TestCase
     assert_equal_enumerables([jan_event, march_event, nov_event], events.sort, 'Saved events should be sorted by date')
   end
 
-  def test_equality
+  test "equality" do
     event_1 = TestEvent.new(id: 1)
     event_2 = TestEvent.new(id: 2)
     event_1_copy = TestEvent.new(id: 1)
@@ -49,7 +49,7 @@ class Concerns::Event::ComparisonTest < Ruby::TestCase
     assert event_2 != event_1_copy, "event_2 != event_1_copy"
   end
 
-  def test_set
+  test "set" do
     event_1 = TestEvent.new(id: 1)
     event_2 = TestEvent.new(id: 2)
     set = Set.new

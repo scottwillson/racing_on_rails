@@ -2,7 +2,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
 class ScheduleTest < ActiveSupport::TestCase
-  def test_create
+  test "create" do
     piece_of_cake = SingleDayEvent.new(
       name: "Piece of Cake Road Event",
       city: "Shedds",
@@ -48,7 +48,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal(piece_of_cake, event, "Last day of 3rd week of March 2007 event")
   end
 
-  def test_import_excel
+  test "import excel" do
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:cyclocross_discipline)
     FactoryGirl.create(:mtb_discipline)
@@ -342,7 +342,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal("molly@veloshop.org", promoter.email, "promoter email")
   end
 
-  def test_import_mbra_tabbed
+  test "import mbra tabbed" do
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:discipline, name: "Criterium")
     Team.create!(id: 1200000, name: "Bike Team")
@@ -377,7 +377,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert valentine_ct.flyer_approved?, "flyer_approved?"
   end
 
-  def test_import_mbra_csv
+  test "import mbra csv" do
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:discipline, name: "Criterium")
     Team.create!(id: 1200000, name: "Bike Team")

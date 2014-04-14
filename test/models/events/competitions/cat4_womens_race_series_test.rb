@@ -2,7 +2,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
 class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
-  def test_calculate_omnium
+  test "calculate omnium" do
     series = Cat4WomensRaceSeries.create!(date: Time.zone.local(2005), name: "Series")
     omnium = MultiDayEvent.create!(date: Time.zone.local(2005), bar_points: 1, name: "Omnium")
     series.source_events << omnium
@@ -19,7 +19,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal 115, result.points, "Should have points for omnium only"
   end
 
-  def test_calculate_omnium_no_participation_points
+  test "calculate omnium no participation points" do
     RacingAssociation.current.award_cat4_participation_points = false
     series = Cat4WomensRaceSeries.create!(date: Time.zone.local(2005))
     omnium = MultiDayEvent.create!(date: Time.zone.local(2005))
@@ -37,7 +37,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal 1, result.scores.size, "Should have one score"
   end
 
-  def test_calculate
+  test "calculate" do
     setup_scenario
 
     assert_difference "Result.count", 2 do
@@ -68,7 +68,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal(65, results[1].points, 'Points')
   end
 
-  def test_do_not_award_cat4_participation_points
+  test "do not award cat4 participation points" do
     RacingAssociation.current.award_cat4_participation_points = false
     setup_scenario
 
@@ -94,7 +94,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal(72, results[0].points, 'Points')
   end
 
-  def test_more_than_one_cat_4_race
+  test "more than one cat 4 race" do
     series = Cat4WomensRaceSeries.create(date: Time.zone.local(2004))
     event = SingleDayEvent.create(date: Time.zone.local(2004))
     women_cat_4 = Category.find_or_create_by(name: "Category 4 Women")
@@ -121,7 +121,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal(80, results[1].points, 'Points')
   end
 
-  def test_custom_category_name
+  test "custom category name" do
     racing_association = RacingAssociation.current
     category_4_women = Category.find_or_create_by(name: "Women Cat 4")
     racing_association.cat4_womens_race_series_category = category_4_women
@@ -152,7 +152,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal(80, results[1].points, 'Points')
   end
 
-  def test_child_events
+  test "child events" do
     series = Cat4WomensRaceSeries.create!(date: Time.zone.local(2004))
     event = SingleDayEvent.create!(discipline: "Time Trial", date: Time.zone.local(2004))
     series.source_events << event
@@ -185,7 +185,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal(90, results[1].points, 'Points')
   end
 
-  def test_honor_start_date
+  test "honor start date" do
     event = FactoryGirl.create(:event, date: Time.zone.local(2012, 2, 15))
     category_4_women = Category.find_or_create_by(name: "Category 4 Women")
     race = FactoryGirl.create(:race, category: category_4_women, event: event)

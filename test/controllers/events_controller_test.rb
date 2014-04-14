@@ -2,12 +2,12 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class EventsControllerTest < ActionController::TestCase
-  def test_index
+  test "index" do
     get :index
     assert_redirected_to schedule_path
   end
 
-  def test_index_with_person_id
+  test "index with person id" do
     promoter = FactoryGirl.create(:promoter)
     get :index, person_id: promoter
     assert_response :success
@@ -15,7 +15,7 @@ class EventsControllerTest < ActionController::TestCase
     assert_select "a[href=?]", /.*\/admin\/events.*/, count: 0
   end
 
-  def test_index_with_person_id_promoter
+  test "index with person id promoter" do
     Timecop.freeze(Time.zone.local(2012)) do
       promoter = FactoryGirl.create(:promoter)
       PersonSession.create(promoter)
@@ -29,7 +29,7 @@ class EventsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_index_as_xml
+  test "index as xml" do
     Timecop.freeze(Time.zone.local(2012, 5)) do
       FactoryGirl.create(:event)
       get :index, format: "xml"

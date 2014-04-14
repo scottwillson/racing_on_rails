@@ -12,7 +12,7 @@ module Admin
         use_ssl
       end
 
-      def test_new_single_day_event
+      test "new single day event" do
         get(:new, event: { date: '2008-01-01' })
         assert_response(:success)
         assert_template('admin/events/edit')
@@ -23,7 +23,7 @@ module Admin
         assert_equal 2008, assigns[:event].date.year, "Should set year"
       end
 
-      def test_new_single_day_event_new_year
+      test "new single day event new year" do
         Timecop.freeze Time.zone.local(2009, 12, 28) do
           get(:new)
           assert_response(:success)
@@ -36,7 +36,7 @@ module Admin
         end
       end
 
-      def test_new_child_event
+      test "new child event" do
         parent = SingleDayEvent.create!
         get(:new, event: { parent_id: parent.to_param, type: "Event" })
         assert_response(:success)

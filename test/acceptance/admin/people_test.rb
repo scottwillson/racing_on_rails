@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 class PeopleTest < AcceptanceTest
   setup :javascript!
 
-  def test_edit
+  test "edit" do
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
     FactoryGirl.create(:number_issuer, name: RacingAssociation.current.short_name)
@@ -120,7 +120,7 @@ class PeopleTest < AcceptanceTest
     assert Person.exists?(molly.id), "Molly still exist after merge"
   end
 
-  def test_merge_confirm
+  test "merge confirm" do
     login_as FactoryGirl.create(:administrator, name: "Candi Murray")
     FactoryGirl.create(:person, name: "Molly Cameron")
     FactoryGirl.create(:person, name: "Mark Matson")
@@ -160,7 +160,7 @@ class PeopleTest < AcceptanceTest
     assert molly.aliases(true).map(&:name).include?("Mark Matson"), "Should add Matson alias"
   end
 
-  def test_export
+  test "export" do
     FactoryGirl.create(:discipline, name: "Cyclocross")
     FactoryGirl.create(:discipline, name: "Downhill")
     FactoryGirl.create(:discipline, name: "Mountain Bike")
@@ -218,7 +218,7 @@ class PeopleTest < AcceptanceTest
     assert page.has_field? 'name', with: 'tonkin'
   end
 
-  def test_import
+  test "import" do
     login_as FactoryGirl.create(:administrator)
     visit '/admin/people'
     attach_file 'people_file', "#{Rails.root}/test/fixtures/membership/database.xls"

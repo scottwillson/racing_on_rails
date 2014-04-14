@@ -1,7 +1,7 @@
 require_relative "../test_helper"
 
 class NotifierTest < ActionMailer::TestCase
-  def test_password_reset_instructions
+  test "password reset instructions" do
     person = FactoryGirl.create(:person_with_login)
 
     email = Notifier.password_reset_instructions([person])
@@ -13,7 +13,7 @@ class NotifierTest < ActionMailer::TestCase
     assert_match(person.perishable_token, email.encoded, "Perishable token should be in email")
   end
 
-  def test_password_reset_instructions_no_name
+  test "password reset instructions no name" do
     person = FactoryGirl.create(:person_with_login)
     person.update_attributes! first_name: "", last_name: ""
 

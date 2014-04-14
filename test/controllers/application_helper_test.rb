@@ -2,14 +2,14 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class ApplicationHelperTest < ActionView::TestCase
-  def test_truncate_from_end
+  test "truncate from end" do
     assert_equal("...s_2009_4_1upload.xls", truncate_from_end("/tmp/racers_2009_4_1upload.xls"), "/tmp/racers_2009_4_1upload.xls")
     assert_equal("", truncate_from_end(""), "blank")
     assert_equal(nil, truncate_from_end(nil), "nil")
     assert_equal("upload.xls", truncate_from_end("upload.xls"), "upload.xls")
   end
 
-  def test_to_excel
+  test "to excel" do
     assert_equal("", to_excel(""), "''")
     assert_equal("", to_excel(nil), "nil")
     assert_equal("word", to_excel("word"), "word")

@@ -22,7 +22,7 @@ class ResultsControllerTest < ActionController::TestCase
     discipline.bar_categories << @senior_women
   end
 
-  def test_event
+  test "event" do
     banana_belt_1 = FactoryGirl.create(:event)
     get(:event, event_id: banana_belt_1.to_param)
     assert_response(:success)
@@ -31,37 +31,37 @@ class ResultsControllerTest < ActionController::TestCase
     assert_equal(assigns["event"], banana_belt_1, "Banana Belt 1")
   end
 
-  def test_event_rider_rankings
+  test "event rider rankings" do
     rider_rankings = RiderRankings.create!
     get(:event, event_id: rider_rankings.to_param)
     assert_redirected_to(rider_rankings_path(rider_rankings.date.year))
   end
 
-  def test_event_bar
+  test "event bar" do
     bar = Bar.create!
     get(:event, event_id: bar.to_param)
     assert_redirected_to(controller: 'bar', action: "show", year: bar.date.year, discipline: bar.discipline)
   end
 
-  def test_event_overall_bar
+  test "event overall bar" do
     bar = OverallBar.create!
     get(:event, event_id: bar.to_param)
     assert_redirected_to(controller: 'bar', action: "show", year: bar.date.year)
   end
 
-  def test_redirect_to_ironman
+  test "redirect to ironman" do
     event = Ironman.create!
     get :event, event_id: event.to_param
     assert_redirected_to ironman_path(year: event.year)
   end
 
-  def test_cross_crusade_team_competition
+  test "cross crusade team competition" do
     event = CrossCrusadeTeamCompetition.create!(parent: Series.create!)
     get :event, event_id: event.to_param
     assert_template "results/event"
   end
 
-  def test_big_names
+  test "big names" do
     banana_belt_1 = FactoryGirl.create(:result).event
     big_team = Team.create!(name: "T" * 60)
     big_person = Person.create!(first_name: "f" * 60, last_name: "L" * 60, team: big_team)
@@ -74,7 +74,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_equal(assigns["event"], banana_belt_1, "Banana Belt 1")
   end
 
-  def test_event_tt
+  test "event tt" do
     jack_frost = FactoryGirl.create(:time_trial_event)
     get :event, event_id: jack_frost.to_param
     assert_response(:success)
@@ -82,7 +82,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["event"], "Should assign event")
   end
 
-  def test_index
+  test "index" do
     future_national_federation_event = FactoryGirl.create(:event, date: Date.new(2004, 3), sanctioned_by: "USA Cycling")
     get(:index, year: "2004")
     assert_response(:success)
@@ -93,7 +93,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert(!assigns["events"].include?(future_national_federation_event), "Should only include association-sanctioned events")
   end
 
-  def test_index_only_shows_sanctioned_events
+  test "index only shows sanctioned events" do
     future_national_federation_event = FactoryGirl.create(:event, date: 1.day.from_now, sanctioned_by: "USA Cycling")
     get(:index)
     assert_response(:success)
@@ -104,7 +104,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert(!assigns["events"].include?(future_national_federation_event), "Should only include association-sanctioned events")
   end
 
-  def test_index_road
+  test "index road" do
     FactoryGirl.create(:event, date: Date.new(2004)).races.create!(category: @senior_women).results.create!(place: "1", person: Person.create!, team: Team.create!(name: "dfl"))
     get(:index, year: "2004", discipline: 'road')
     assert_response(:success)
@@ -114,7 +114,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_equal(assigns["discipline"], Discipline[:road], "discipline")
   end
 
-  def test_index_road_with_discipline
+  test "index road with discipline" do
     get(:index, year: "2004", discipline: 'time_trial')
     assert_response(:success)
     assert_template("results/index")
@@ -123,7 +123,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_equal(Discipline[:time_trial], assigns["discipline"], "discipline")
   end
 
-  def test_index_all_subclasses
+  test "index all subclasses" do
     Timecop.freeze(Time.zone.local(2007, 5)) do
       SingleDayEvent.create!(name: 'In past', date: Date.new(2006, 12, 31)).races.create!(category: @senior_men).results.create!
       SingleDayEvent.create!(name: 'In future', date: Date.new(2008, 1, 1)).races.create!(category: @senior_men).results.create!
@@ -203,7 +203,7 @@ class ResultsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_person
+  test "person" do
     weaver = FactoryGirl.create(:person)
     weaver_banana_belt = FactoryGirl.create(:result, person: weaver, category: @senior_men)
     competition = RiderRankings.create!
@@ -217,7 +217,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_equal(assigns["person"], weaver, "Weaver!")
   end
 
-  def test_person_with_year
+  test "person with year" do
     weaver = FactoryGirl.create(:person)
     result = SingleDayEvent.create!(date: Date.new(2008)).races.create!(category: @senior_men).results.create!(person: weaver, place: "1")
 
@@ -229,7 +229,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_equal [ result ], assigns(:event_results), "@event_results for 2008"
   end
 
-  def test_person_long_name
+  test "person long name" do
     big_team = Team.create!(name: "T" * 60)
     big_person = Person.create!(first_name: "f" * 60, last_name: "L" * 60, team: big_team)
     FactoryGirl.create(:result, person: big_person, team: big_team, place: 2, number: '99')
@@ -243,7 +243,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["competition_results"], "Should assign competition_results")
   end
 
-  def test_competition
+  test "competition" do
     FactoryGirl.create(:event, date: Date.new(2004)).races.create!(category: @senior_women).results.create!(place: "1", person: FactoryGirl.create(:person))
 
     Bar.calculate!(2004)
@@ -262,7 +262,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
 
   # A Competition calculated from another Competition
-  def test_overall_bar
+  test "overall bar" do
     FactoryGirl.create(:event, date: Date.new(2004)).races.create!(category: @senior_women).results.create!(place: "1", person: FactoryGirl.create(:person))
     event = FactoryGirl.create(:event, date: Date.new(2004))
     FactoryGirl.create(:result, event: event)
@@ -287,7 +287,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_equal(assigns["event"], overall_bar, "Should assign event")
   end
 
-  def test_empty_competition
+  test "empty competition" do
     bar = Bar.create!
     person = Person.create!(name: 'JP Morgen')
 
@@ -299,7 +299,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_equal(assigns["event"], bar, "Should assign event")
   end
 
-  def test_competition_team
+  test "competition team" do
     FactoryGirl.create(:discipline, name: "Team")
     team = Team.create!(name: "dfl", member: true)
     person = FactoryGirl.create(:person)
@@ -318,7 +318,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_equal(result, assigns["result"], "Should assign result")
   end
 
-  def test_person_with_overall_results
+  test "person with overall results" do
     person = FactoryGirl.create(:person)
     event = CrossCrusadeOverall.create!(parent: Series.create!)
     @senior_men = FactoryGirl.create(:category)
@@ -327,7 +327,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  def test_person_overall_results
+  test "person overall results" do
     person = FactoryGirl.create(:person)
     event = CrossCrusadeOverall.create!(parent: Series.create!)
     @senior_men = FactoryGirl.create(:category)
@@ -336,7 +336,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  def test_column_headers_display_correctly
+  test "column headers display correctly" do
     result = FactoryGirl.create(:result, points_bonus: 8, points_penalty: -2, laps: 9)
 
     get :event, event_id: result.event_id
@@ -347,26 +347,26 @@ class ResultsControllerTest < ActionController::TestCase
     assert(@response.body["Laps"], "Should format laps correctly")
   end
 
-  def test_index_ssl
+  test "index ssl" do
     use_ssl
     get :index
     assert_response :success
   end
 
-  def test_return_404_for_missing_event
+  test "return 404 for missing event" do
     assert_raise(ActiveRecord::RecordNotFound) { get(:event, event_id: 236127361273) }
   end
 
-  def test_return_404_for_missing_person
+  test "return 404 for missing person" do
     assert_raise(ActiveRecord::RecordNotFound) { get(:person, person_id: 236127361273) }
   end
 
-  def test_return_404_for_missing_team_event
+  test "return 404 for missing team event" do
     banana_belt_1 = FactoryGirl.create(:event)
     assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, event_id: banana_belt_1.to_param, team_id: 236127361273) }
   end
 
-  def test_return_404_for_missing_team_event_result
+  test "return 404 for missing team event result" do
     event = CrossCrusadeTeamCompetition.create!(parent: SingleDayEvent.create!(name: "Cross Crusade"))
     vanilla = FactoryGirl.create(:team)
     assert_raise(ActiveRecord::RecordNotFound) {
@@ -374,48 +374,48 @@ class ResultsControllerTest < ActionController::TestCase
     }
   end
 
-  def test_missing_person_event_bad_person
+  test "missing person event bad person" do
     banana_belt_1 = FactoryGirl.create(:event)
     assert_raise(ActiveRecord::RecordNotFound) {
       get(:person_event, event_id: banana_belt_1.to_param, person_id: 236127361273)
     }
   end
 
-  def test_return_404_for_missing_person_event_bad_event
+  test "return 404 for missing person event bad event" do
     weaver = FactoryGirl.create(:person)
     assert_raise(ActiveRecord::RecordNotFound) {
       get(:person_event, event_id: 236127361273, person_id: weaver.to_param)
     }
   end
 
-  def test_missing_person_event_result
+  test "missing person event result" do
     Bar.create!
     event = Bar.find_for_year
     get(:person_event, event_id: event.to_param, person_id: Person.create!.to_param)
     assert_response :success
   end
 
-  def test_return_404_for_missing_team_event_bad_event
+  test "return 404 for missing team event bad event" do
     vanilla = FactoryGirl.create(:team)
     assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, event_id: 236127361273, team_id: vanilla.to_param) }
   end
 
-  def test_return_404_for_missing_person_event
+  test "return 404 for missing person event" do
     banana_belt_1 = FactoryGirl.create(:event)
     assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, event_id: banana_belt_1.to_param, person_id: 236127361273) }
   end
 
-  def test_person_json
+  test "person json" do
     person = FactoryGirl.create(:result).person
     get :person, person_id: person.id, format: :json
   end
 
-  def test_person_json_with_year
+  test "person json with year" do
     result = FactoryGirl.create(:result)
     get :person, person_id: result.person_id, format: :json, year: result.year
   end
 
-  def test_person_xml
+  test "person xml" do
     Timecop.freeze(Time.zone.local(2015, 11)) do
       person = FactoryGirl.create(:result).person
       get :person, person_id: person.id, format: :xml
@@ -455,28 +455,28 @@ class ResultsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_team
+  test "team" do
     team = FactoryGirl.create(:result).team
     get :team, team_id: team.id
   end
 
-  def test_team_json
+  test "team json" do
     team = FactoryGirl.create(:result).team
     get :team, team_id: team.id, format: :json
   end
 
-  def test_team_xml
+  test "team xml" do
     team = FactoryGirl.create(:result).team
     get :team, team_id: team.id, format: :xml
   end
 
-  def test_index_xml
+  test "index xml" do
     FactoryGirl.create(:result)
     get :index, format: :xml
     assert_response :success
   end
 
-  def test_show_unregistered_teams_in_results
+  test "show unregistered teams in results" do
     kona = FactoryGirl.create(:team, member: false, name: "Kona")
     gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
     result = FactoryGirl.create(:result, team: kona)
@@ -488,7 +488,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert @response.body["Gentle Lovers"]
   end
 
-  def test_do_not_show_unregistered_teams_in_results
+  test "do not show unregistered teams in results" do
     RacingAssociation.current.unregistered_teams_in_results = true
     RacingAssociation.current.save!
 
@@ -508,7 +508,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert @response.body["DFL"], "Expected 'DFL' in #{@response.body}"
   end
 
-  def test_do_not_show_unregistered_teams_in_results_should_show_previous_years
+  test "do not show unregistered teams in results should show previous years" do
     RacingAssociation.current.unregistered_teams_in_results = false
     RacingAssociation.current.save!
 

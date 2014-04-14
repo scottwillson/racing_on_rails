@@ -4,11 +4,11 @@ require File.expand_path("../../test_helper", __FILE__)
 # Check we can call these methods with errors.
 # Actual values are going to differ between sites.
 class RacingAssociationTest < ActiveSupport::TestCase
- def test_show_events_velodrome
+ test "show events velodrome" do
    RacingAssociation.current.show_events_velodrome?
  end
 
-  def test_competitions
+  test "competitions" do
     default_competitions = RacingAssociation.current.competitions
     RacingAssociation.current.competitions.clear
     RacingAssociation.current.competitions << :ironman
@@ -22,7 +22,7 @@ class RacingAssociationTest < ActiveSupport::TestCase
     end
   end
 
-  def test_today
+  test "today" do
     assert_equal_dates Time.zone.today, RacingAssociation.current.today, "Default RacingAssociation.current.today"
 
     Timecop.freeze(Time.zone.local(2020, 4, 5, 23, 50, 55)) do
@@ -32,7 +32,7 @@ class RacingAssociationTest < ActiveSupport::TestCase
     assert_equal_dates Time.zone.today, RacingAssociation.current.today, "Default RacingAssociation.current.today should be Time.zone.today after Time.zone.now is set to nil"
   end
 
-  def test_effective_year
+  test "effective year" do
     Timecop.freeze(Time.zone.local(2020, 1, 1)) do
       assert_equal 2020, RacingAssociation.current.effective_year, "effective year for January 2020"
     end
@@ -54,7 +54,7 @@ class RacingAssociationTest < ActiveSupport::TestCase
     end
   end
 
-  def test_effective_year_range
+  test "effective year range" do
     Timecop.freeze(Time.zone.local(2020, 1, 1)) do
       assert_equal(
         Time.zone.local(2020, 1, 1).beginning_of_year.to_date..Time.zone.local(2020, 1, 1).end_of_year.to_date,
@@ -64,7 +64,7 @@ class RacingAssociationTest < ActiveSupport::TestCase
     end
   end
 
-  def test_next_year
+  test "next year" do
     Timecop.freeze(Time.zone.local(2020, 1, 1)) do
       assert_equal 2021, RacingAssociation.current.next_year, "next_year for January 2020"
     end
@@ -82,7 +82,7 @@ class RacingAssociationTest < ActiveSupport::TestCase
     end
   end
 
-  def test_next_year_start_at
+  test "next year start at" do
     racing_association = RacingAssociation.current
     racing_association.next_year_start_at = Time.zone.local(2014, 12, 15)
     racing_association.save!
@@ -138,7 +138,7 @@ class RacingAssociationTest < ActiveSupport::TestCase
     end
   end
 
-  def test_number_issuer
+  test "number issuer" do
     assert_equal nil, RacingAssociation.current.number_issuer
 
     FactoryGirl.create(:number_issuer, name: "AVC")

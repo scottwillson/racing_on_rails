@@ -18,39 +18,39 @@ module Competitions
       @bar = ::Bar.calculate! 2004
     end
 
-    def test_index
+    test "index" do
       get :index
       assert_response :success
       assert_template "bar/index"
     end
 
-    def test_show_no_bar
+    test "show no bar" do
       get :show, year: "2012"
       assert_response :success
       assert_template "bar/show"
       assert flash.present?, "flash.present?"
     end
 
-    def test_defaults
+    test "defaults" do
       get :show, year: "#{Time.zone.today.year}", discipline: "overall", category: "senior_men"
       assert_response :success
       assert_template "bar/show"
     end
 
-    def test_show_empty
+    test "show empty" do
       get :show, year: "#{Time.zone.today.year}", discipline: "road", category: "senior_men"
       assert_response :success
       assert_template "bar/show"
     end
 
-    def test_show
+    test "show" do
       Bar.calculate! Time.zone.today.year
       get :show, year: "#{Time.zone.today.year}", discipline: "road", category: "senior_women"
       assert_response :success
       assert_template "bar/show"
     end
 
-    def test_bad_discipline
+    test "bad discipline" do
       masters_men = Category.find_by_name("Masters Men")
       FactoryGirl.create(:category, name: "Masters Men 30-34", parent: masters_men)
       FactoryGirl.create(:discipline, name: "Overall")
@@ -60,7 +60,7 @@ module Competitions
       assert flash.present?, "flash.present?"
     end
 
-    def test_bad_year
+    test "bad year" do
       masters_men = Category.find_by_name("Masters Men")
       FactoryGirl.create(:category, name: "Masters Men 30-34", parent: masters_men)
       FactoryGirl.create(:discipline, name: "Overall")
@@ -70,7 +70,7 @@ module Competitions
       assert flash.present?, "flash.present?"
     end
 
-    def test_bad_category
+    test "bad category" do
       masters_men = Category.find_by_name("Masters Men")
       FactoryGirl.create(:category, name: "Masters Men 30-34", parent: masters_men)
       FactoryGirl.create(:discipline, name: "Overall")
@@ -81,7 +81,7 @@ module Competitions
     end
 
     # Lib implementation was broken at one point...
-    def test_truncate
+    test "truncate" do
       name = "Broadmark"
       truncated = truncate name, length: 5
       assert_equal "Br...", truncated, "truncated Broadmark"

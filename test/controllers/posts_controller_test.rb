@@ -2,7 +2,7 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class PostsControllerTest < ActionController::TestCase
-  def test_new
+  test "new" do
     obra_chat = FactoryGirl.create(:mailing_list)
     get(:new, mailing_list_id: obra_chat.id)
     assert_response(:success)
@@ -18,7 +18,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_tag(tag: "input", attributes: {type: "submit", name: "commit", value: "Post"})
   end
 
-  def test_new_reply
+  test "new reply" do
     obra_race = FactoryGirl.create(:mailing_list)
     original_post = Post.create!(
       mailing_list: obra_race,
@@ -45,7 +45,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_tag(tag: "input", attributes: {type: "submit", name: "commit", value: "Send"})
   end
 
-  def test_blank_search
+  test "blank search" do
     mailing_list = FactoryGirl.create(:mailing_list)
     FactoryGirl.create_list(:post, 3, mailing_list: mailing_list)
     get :index, mailing_list_id: mailing_list.id, subject: ""
@@ -53,7 +53,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal 3, assigns[:posts].size, "Should return all posts"
   end
 
-  def test_matching_search
+  test "matching search" do
     PostText.delete_all
     mailing_list = FactoryGirl.create(:mailing_list)
     FactoryGirl.build_list(:post, 3, mailing_list: mailing_list).each do |post|
@@ -68,7 +68,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal [ post ], assigns[:posts], "Should search by subject posts"
   end
 
-  def test_no_matching_search
+  test "no matching search" do
     PostText.delete_all
     mailing_list = FactoryGirl.create(:mailing_list)
     FactoryGirl.build_list(:post, 3, mailing_list: mailing_list).each do |post|
@@ -83,43 +83,43 @@ class PostsControllerTest < ActionController::TestCase
     assert assigns[:posts].empty?, "Should search by subject posts"
   end
 
-  def test_index
+  test "index" do
     mailing_list = FactoryGirl.create(:mailing_list)
     get :index, mailing_list_id: mailing_list.id
     assert_response :success
   end
 
-  def test_index_atom
+  test "index atom" do
     mailing_list = FactoryGirl.create(:mailing_list)
     get :index, mailing_list_id: mailing_list.id, format: :atom
     assert_response :success
   end
 
-  def test_index_rss
+  test "index rss" do
     mailing_list = FactoryGirl.create(:mailing_list)
     get :index, mailing_list_id: mailing_list.id, format: :rss
     assert_redirected_to format: :atom
   end
 
-  def test_index_with_date
+  test "index with date" do
     post = FactoryGirl.create(:post)
     get :index, mailing_list_id: post.mailing_list.id, month: 12, year: 2007
     assert_response :success
   end
 
-  def test_index_with_bogus_date
+  test "index with bogus date" do
     post = FactoryGirl.create(:post)
     get :index, mailing_list_id: post.mailing_list.id, month: 25, year: 7
     assert_response :success
   end
 
-  def test_index_with_bogus_page
+  test "index with bogus page" do
     post = FactoryGirl.create(:post)
     get :index, mailing_list_id: post.mailing_list.id, page: "atz"
     assert_response :success
   end
 
-  def test_list
+  test "list" do
     obra_chat = FactoryGirl.create(:mailing_list)
     for index in 1..22
       date = Time.zone.now.beginning_of_month + index * 3600 * 24
@@ -155,7 +155,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal(1, assigns["posts"].size, "Should show recent posts")
   end
 
-  def test_post
+  test "post" do
     MailingListMailer.deliveries.clear
 
     obra_chat = FactoryGirl.create(:mailing_list)
@@ -187,7 +187,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal([obra_chat.name], delivered_mail.to, "Recipient")
   end
 
-  def test_post_reply
+  test "post reply" do
     obra_chat = FactoryGirl.create(:mailing_list)
     subject = "Spynergy for Sale"
     from_name = "Tim Schauer"
@@ -227,7 +227,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal(['scout@obra.org'], delivered_mail.to, "Recipient")
   end
 
-  def test_post_invalid_reply
+  test "post invalid reply" do
     obra_chat = FactoryGirl.create(:mailing_list)
     subject = "Spynergy for Sale"
     reply_to_post = Post.create!(
@@ -259,7 +259,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal(obra_chat, post.mailing_list, "Post's mailing list")
   end
 
-  def test_post_smtp_502_error
+  test "post smtp 502 error" do
     MailingListMailer.deliveries.clear
 
     obra_chat = FactoryGirl.create(:mailing_list)
@@ -286,7 +286,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal(0, MailingListMailer.deliveries.size, "Should have no email deliveries")
   end
 
-  def test_post_smtp_5450_error
+  test "post smtp 5450 error" do
     MailingListMailer.deliveries.clear
 
     obra_chat = FactoryGirl.create(:mailing_list)
@@ -313,7 +313,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal(0, MailingListMailer.deliveries.size, "Should have no email deliveries")
   end
 
-  def test_show
+  test "show" do
     obra_race = FactoryGirl.create(:mailing_list)
     new_post = Post.create!(
       mailing_list: obra_race,
@@ -331,19 +331,19 @@ class PostsControllerTest < ActionController::TestCase
     assert_template("posts/show")
   end
 
-  def test_list_with_no_lists
+  test "list with no lists" do
     assert_raise(ActiveRecord::RecordNotFound) do
       get(:index)
     end
   end
 
-  def test_list_with_bad_name
+  test "list with bad name" do
     assert_raise(ActiveRecord::RecordNotFound) do
       get(:index, mailing_list_id: "Masters Racing")
     end
   end
 
-  def test_spam_post_should_not_cause_error
+  test "spam post should not cause error" do
     obra_chat = FactoryGirl.create(:mailing_list)
     post(:create, { "commit"=>"Post", "mailing_list_id"=> obra_chat.to_param,
                   "post" => { "from_name"=>"strap",

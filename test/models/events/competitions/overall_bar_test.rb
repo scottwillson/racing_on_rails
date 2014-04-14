@@ -4,7 +4,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
 class OverallBarTest < ActiveSupport::TestCase
-  def test_calculate
+  test "calculate" do
     alice  = FactoryGirl.create(:person)
     matson = FactoryGirl.create(:person)
     molly  = FactoryGirl.create(:person)
@@ -235,7 +235,7 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_equal(1, results[1].scores.size, "Molly Women Overall BAR results scores")
   end
 
-  def test_drop_cat_5_discipline_results
+  test "drop cat 5 discipline results" do
              FactoryGirl.create(:person, name: "Alice Pennington")
     matson = FactoryGirl.create(:person, name: "Mark Matson")
     molly  = FactoryGirl.create(:person, name: "Molly Cameron")

@@ -19,7 +19,7 @@ module Admin
       @association = FactoryGirl.create(:number_issuer)
     end
 
-    def test_toggle_member
+    test "toggle member" do
       molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
       assert_equal(true, molly.member, 'member before update')
       post(:toggle_member, id: molly.to_param)
@@ -35,12 +35,12 @@ module Admin
       assert_equal(true, molly.member, 'member after second update')
     end
 
-    def test_new
+    test "new" do
       get(:new)
       assert_response :success
     end
 
-    def test_edit
+    test "edit" do
       alice = FactoryGirl.create(:person)
 
       get(:edit, id: alice.to_param)
@@ -48,7 +48,7 @@ module Admin
       assert_nil(assigns['event'], "Should not assign 'event'")
     end
 
-    def test_edit_created_by_import_file
+    test "edit created by import file" do
       alice = FactoryGirl.create(:person)
       alice.updated_by = ImportFile.create!(name: "some_very_long_import_file_name.xls")
       alice.save!
@@ -60,7 +60,7 @@ module Admin
       assert_equal(alice, assigns['person'], 'Should assign Alice to person')
     end
 
-    def test_create
+    test "create" do
       assert_equal([], Person.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
 
       post(:create, {"person"=>{
@@ -89,7 +89,7 @@ module Admin
       assert_equal("Candi Murray", knowlsons.first.created_by.name, "created by")
     end
 
-    def test_update_new_number
+    test "update new number" do
       Timecop.freeze(Date.new(2008, 6)) do
         molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron", road_number: "202")
         assert_equal('202', molly.road_number(true, 2008), 'Road number')
@@ -132,7 +132,7 @@ module Admin
       end
     end
 
-    def test_create_with_road_number
+    test "create with road number" do
       assert_equal([], Person.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
 
       post(:create, {
@@ -177,7 +177,7 @@ module Admin
       assert_equal_dates('2004-12-31', knowlsons.first.member_to, 'member_to after update')
     end
 
-    def test_create_with_duplicate_road_number
+    test "create with duplicate road number" do
       assert_equal([], Person.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
 
       post(:create, {
@@ -204,7 +204,7 @@ module Admin
       end
     end
 
-    def test_create_with_empty_password_and_no_numbers
+    test "create with empty password and no numbers" do
       post :create,  person: { login: "", password_confirmation: "", password: "", team_name: "",
                                   first_name: "Henry", last_name: "David", license: "" }, number_issuer_id: [ { "1" => nil } ]
       assert_not_nil assigns(:person), "@person"
@@ -212,7 +212,7 @@ module Admin
       assert_redirected_to edit_admin_person_path(assigns(:person))
     end
 
-    def test_update
+    test "update" do
       vanilla = FactoryGirl.create(:team)
       molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron", road_number: "2", team: vanilla)
       assert_equal 1, molly.versions.size, "versions"
@@ -258,7 +258,7 @@ module Admin
       assert_equal @administrator, molly.updated_by_person, "updated_by_person"
     end
 
-    def test_update_bad_member_from_date
+    test "update bad member from date" do
       person = FactoryGirl.create(:person)
       put(:update, "commit"=>"Save", "person"=>{
                    "member_from(1i)"=>"","member_from(2i)"=>"10", "member_from(3i)"=>"19",
@@ -279,7 +279,7 @@ module Admin
       assert_redirected_to edit_admin_person_path(assigns(:person))
     end
 
-    def test_one_print_card
+    test "one print card" do
       tonkin = FactoryGirl.create(:person)
 
       get(:card, format: "pdf", id: tonkin.to_param)
@@ -290,19 +290,19 @@ module Admin
       assert(!tonkin.print_card?, 'Tonkin.print_card? after printing')
     end
 
-    def test_print_no_cards_pending
+    test "print no cards pending" do
       get(:cards, format: "pdf")
       assert_redirected_to(no_cards_admin_people_path(format: "html"))
     end
 
-    def test_no_cards
+    test "no cards" do
       get(:no_cards)
       assert_response :success
       assert_template("admin/people/no_cards")
       assert_template layout: "admin/application"
     end
 
-    def test_print_cards
+    test "print cards" do
       tonkin = FactoryGirl.create(:person)
       tonkin.print_card = true
       tonkin.ccx_category = "Clydesdale"
@@ -321,7 +321,7 @@ module Admin
       assert tonkin.membership_card?, "Tonkin.has_card? after printing"
     end
 
-    def test_many_print_cards
+    test "many print cards" do
       people = []
       (1..4).each do |i|
         people << Person.create!(first_name: 'First Name', last_name: "Last #{i}", print_card: true)
@@ -340,7 +340,7 @@ module Admin
       end
     end
 
-    def test_edit_with_event
+    test "edit with event" do
       kings_valley = FactoryGirl.create(:event)
       promoter = FactoryGirl.create(:person)
       get(:edit, id: promoter.to_param, event_id: kings_valley.to_param.to_s)
@@ -349,7 +349,7 @@ module Admin
       assert_template("admin/people/edit")
     end
 
-    def test_new_with_event
+    test "new with event" do
       kings_valley = FactoryGirl.create(:event)
       get(:new, event_id: kings_valley.to_param)
       assert_not_nil(assigns['person'], "Should assign 'person'")
@@ -358,7 +358,7 @@ module Admin
       assert_template("admin/people/edit")
     end
 
-    def test_remember_event_id_on_update
+    test "remember event id on update" do
        promoter = FactoryGirl.create(:person)
        jack_frost = FactoryGirl.create(:event)
 
@@ -374,7 +374,7 @@ module Admin
       assert_redirected_to(edit_admin_person_path(promoter, event_id: jack_frost))
     end
 
-    def test_remember_event_id_on_create
+    test "remember event id on create" do
       jack_frost = FactoryGirl.create(:event)
       post(
         :create,
@@ -389,7 +389,7 @@ module Admin
       assert_redirected_to(edit_admin_person_path(promoter, event_id: jack_frost))
     end
 
-    def test_destroy
+    test "destroy" do
       person = FactoryGirl.create(:person)
       delete :destroy, id: person.id
       assert !Person.exists?(person)
@@ -397,7 +397,7 @@ module Admin
       assert flash.notice.present?
     end
 
-    def test_cannot_destroy
+    test "cannot destroy" do
       result = FactoryGirl.create(:result)
       person = result.person
       delete :destroy, id: person.id

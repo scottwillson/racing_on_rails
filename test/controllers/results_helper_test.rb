@@ -6,13 +6,13 @@ class ResultsHelperTest < ActionView::TestCase
     self.stubs(:mobile_request? => false)
   end
 
-  def test_results_table
+  test "results table" do
     race = Race.new(results: [ Result.new(place: "1")])
     table = Nokogiri::HTML(results_table(race))
     assert table.css("table.results").present?
   end
 
-  def test_results_table_one_ttt
+  test "results table one ttt" do
     race = Race.new(results: [
       Result.new(place: "1"),
       Result.new(place: "1"),
@@ -23,28 +23,28 @@ class ResultsHelperTest < ActionView::TestCase
     assert table.css("td.place").present?, "Should have place column in #{table}"
   end
 
-  def test_participant_event_results_table_person
+  test "participant event results table person" do
     table = Nokogiri::HTML(participant_event_results_table(Person.new, [ Result.new(place: "1") ]))
     assert table.css("table.results").present?
   end
 
-  def test_participant_event_results_table_team
+  test "participant event results table team" do
     table = Nokogiri::HTML(participant_event_results_table(Team.new, [ Result.new(place: "1") ]))
     assert table.css("table.results").present?
   end
 
-  def test_edit_results_table
+  test "edit results table" do
     race = FactoryGirl.create(:result).race
     table = Nokogiri::HTML(edit_results_table(race))
     assert table.css("table.results").present?
   end
 
-  def test_scores_table
+  test "scores table" do
     table = Nokogiri::HTML(scores_table(Result.new(place: "1")))
     assert table.css("table.results.scores").present?
   end
 
-  def test_results_table_for_mobile
+  test "results table for mobile" do
     self.stubs(:mobile_request? => true)
 
     race = Race.new(results: [ Result.new(place: "1", name: "Molly Cameron", team_name: "Veloshop", time: 1000, laps: 4, time: 120)])

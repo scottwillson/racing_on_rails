@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
 class CategoriesTest < AcceptanceTest
-  def test_edit
+  test "edit" do
     javascript!
 
     association = FactoryGirl.create(:category, name: "CBRA")

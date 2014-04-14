@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 class TeamsTest < AcceptanceTest
   setup :javascript!
 
-  def test_edit
+  test "edit" do
     FactoryGirl.create(:team, name: "Kona")
     vanilla = FactoryGirl.create(:team, name: "Vanilla")
     vanilla.aliases.create!(name: "Vanilla Bicycles")
@@ -71,7 +71,7 @@ class TeamsTest < AcceptanceTest
     end
   end
 
-  def test_drag_and_drop
+  test "drag and drop" do
     kona = FactoryGirl.create(:team, name: "Kona")
     vanilla = FactoryGirl.create(:team, name: "Vanilla")
     FactoryGirl.create(:team, name: "Chocolate")
@@ -98,7 +98,7 @@ class TeamsTest < AcceptanceTest
     assert_table("teams_table", 4, 2, "Team dFL")
   end
 
-  def test_merge_confirm
+  test "merge confirm" do
     FactoryGirl.create(:team, name: "Kona")
     vanilla = FactoryGirl.create(:team, name: "Vanilla")
     vanilla.aliases.create!(name: "Vanilla Bicycles")

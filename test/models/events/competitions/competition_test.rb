@@ -14,7 +14,7 @@ class CompetitionTest < ActiveSupport::TestCase
     end
   end
 
-  def test_find_for_year
+  test "find for year" do
     assert_equal nil, Competition.find_for_year, "Should not find anything when no Competitions in DB"
     assert_equal nil, Competition.find_for_year(2005), "Should not find anything when no Competitions in DB"
 
@@ -27,7 +27,7 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_equal competition_in_2005, Competition.find_for_year(2005), "Should not find anything when no Competitions in DB for this year"
   end
 
-  def test_team_competition_find_for_year
+  test "team competition find for year" do
     assert_equal nil, TestCompetition.find_for_year, "find with nothing in DB"
 
     competition = TestCompetition.create!
@@ -38,7 +38,7 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_equal competition, TestCompetition.find_for_year(2005), "find in DB with multiple events"
   end
 
-  def test_dont_dupe_old_events_on_calc
+  test "dont dupe old events on calc" do
     assert_difference "Event.count", 1 do
       TestCompetition.calculate!
     end
@@ -56,7 +56,7 @@ class CompetitionTest < ActiveSupport::TestCase
     end
   end
 
-  def test_dont_dupe_races_on_calc
+  test "dont dupe races on calc" do
     assert_difference "Event.count", 1 do
       TestCompetition.calculate!
     end
@@ -66,19 +66,19 @@ class CompetitionTest < ActiveSupport::TestCase
     end
   end
 
-  def test_calc_no_source_results
+  test "calc no source results" do
     competition = TestCompetition.find_or_create_for_year
     competition.source_events << FactoryGirl.create(:event)
     TestCompetition.calculate!
   end
 
-  def test_races_creation
+  test "races creation" do
     competition = TestCompetition.create!
     category = Category.find_by_name("KOM")
     assert_equal category, competition.races.first.category, "category"
   end
 
-  def test_events
+  test "events" do
     competition = TestCompetition.find_or_create_for_year
     assert_equal(0, competition.source_events.count, 'Events')
 
@@ -88,7 +88,7 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_equal(2, competition.source_events.count, 'Events')
   end
 
-  def test_source_event_ids
+  test "source event ids" do
     competition = TestCompetitionWithSourceEvents.create!
     assert !competition.source_event_ids(nil).nil?, "Event IDs shouldn't be nil"
     assert competition.source_event_ids(nil).empty?, "Should have no event IDs"

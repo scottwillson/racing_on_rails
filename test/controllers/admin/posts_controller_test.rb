@@ -5,7 +5,7 @@ module Admin
   class PostsControllerTest < ActionController::TestCase
     setup :use_ssl
 
-    def test_index
+    test "index" do
       login_as FactoryGirl.create(:administrator)
       mailing_list = FactoryGirl.create(:mailing_list)
       get :index, mailing_list_id: mailing_list.to_param
@@ -13,27 +13,27 @@ module Admin
       assert_template layout: "admin/application"
     end
 
-    def test_non_admin_index
+    test "non admin index" do
       login_as FactoryGirl.create(:person)
       mailing_list = FactoryGirl.create(:mailing_list)
       get :index, mailing_list_id: mailing_list.to_param
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
 
-    def test_index_anonymous
+    test "index anonymous" do
       mailing_list = FactoryGirl.create(:mailing_list)
       get :index, mailing_list_id: mailing_list.to_param
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
 
-    def test_new
+    test "new" do
       login_as FactoryGirl.create(:administrator)
       mailing_list = FactoryGirl.create(:mailing_list)
       get :new, mailing_list_id: mailing_list.to_param
       assert_response :success
     end
 
-    def test_create
+    test "create" do
       Post.expects(:save).returns(true)
       Post.any_instance.expects(:save!).never
       @controller.expects(:edit_admin_mailing_list_post_path).returns("/edit")
@@ -54,7 +54,7 @@ module Admin
       assert_redirected_to "/edit"
     end
 
-    def test_receive
+    test "receive" do
       Post.expects(:save).returns(true)
       Post.any_instance.expects(:save!).never
 
@@ -66,7 +66,7 @@ module Admin
       assert_redirected_to admin_mailing_list_posts_path(mailing_list)
     end
 
-    def test_edit
+    test "edit" do
       login_as FactoryGirl.create(:administrator)
       mailing_list = FactoryGirl.create(:mailing_list)
       post = FactoryGirl.create(:post)
@@ -74,7 +74,7 @@ module Admin
       assert_response :success
     end
 
-    def test_update
+    test "update" do
       login_as FactoryGirl.create(:administrator)
       mailing_list = FactoryGirl.create(:mailing_list)
       post = FactoryGirl.create(:post)
@@ -97,7 +97,7 @@ module Admin
       assert_redirected_to edit_admin_mailing_list_post_path(mailing_list, assigns(:post))
     end
 
-    def test_destroy
+    test "destroy" do
       login_as FactoryGirl.create(:administrator)
       mailing_list = FactoryGirl.create(:mailing_list)
       post = FactoryGirl.create(:post)

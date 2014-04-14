@@ -12,7 +12,7 @@ module Admin
         use_ssl
       end
 
-      def test_create_event
+      test "create event" do
         assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
         person = FactoryGirl.create(:person)
 
@@ -43,7 +43,7 @@ module Admin
         assert_equal(person, skull_hollow.promoter, 'promoter')
       end
 
-      def test_create_child_event
+      test "create child event" do
         person = FactoryGirl.create(:person)
         parent = SingleDayEvent.create!
         assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
@@ -77,7 +77,7 @@ module Admin
         assert_equal(person, skull_hollow.promoter, 'promoter')
       end
 
-      def test_create_child_for_multi_day_event
+      test "create child for multi day event" do
         parent = MultiDayEvent.create!
         assert_nil(SingleDayEvent.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
         person = FactoryGirl.create(:person)
@@ -110,7 +110,7 @@ module Admin
         assert_equal(person, skull_hollow.promoter, 'promoter')
       end
 
-      def test_create_series
+      test "create series" do
         assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
         person = FactoryGirl.create(:person)
 
@@ -129,7 +129,7 @@ module Admin
         assert_redirected_to edit_admin_event_path(assigns(:event))
       end
 
-      def test_create_single_day_event
+      test "create single day event" do
         assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
         person = FactoryGirl.create(:person)
 
@@ -148,7 +148,7 @@ module Admin
         assert_redirected_to edit_admin_event_path(assigns(:event))
       end
 
-      def test_create_from_children
+      test "create from children" do
         lost_child = SingleDayEvent.create!(name: "Alameda Criterium")
         SingleDayEvent.create!(name: "Alameda Criterium")
 
@@ -158,7 +158,7 @@ module Admin
         assert_redirected_to edit_admin_event_path(new_parent)
       end
 
-      def test_create_without_promoter_id
+      test "create without promoter id" do
         post :create, "event"=>{"promoter_name"=>"Tour de Nuit", "city"=>"Calgary ", "name"=>"Ride the Road Tour", "date(1i)"=>"2010", "flyer_approved"=>"0", "number_issuer_id"=>"1", "sanctioned_by"=>"CBRA", "date(2i)"=>"6", "notes"=>"", "pre_event_fees"=>"", "first_aid_provider"=>"", "date(3i)"=>"6", "post_event_fees"=>"", "flyer"=>"", "beginner_friendly"=>"0", "time"=>"", "instructional"=>"0", "postponed"=>"0", "team_name"=>"", "type"=>"SingleDayEvent", "phone"=>"", "practice"=>"0", "discipline"=>"", "parent_id"=>"", "cancelled"=>"0", "flyer_ad_fee"=>"", "team_id"=>"", "chief_referee"=>"", "email"=>"gary@morepeoplecycling.ca", "promoter_id"=>"", "state"=>"AB"}
 
         assert_not_nil assigns(:event), "@event"

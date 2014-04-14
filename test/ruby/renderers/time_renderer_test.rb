@@ -4,13 +4,13 @@ require_relative "../../../lib/renderers/time_renderer"
 # :stopdoc:
 module Renderers
   class TimeRendererTest < Ruby::TestCase
-    def test_render_nil
+    test "render_nil" do
       row = Tabular::Table.new([{time: nil}]).rows.first
       column = stub("column", key: :time, precision: 0, max: 0)
       assert_equal nil, TimeRenderer.render(column, row)
     end
 
-    def test_render_zero
+    test "render_zero" do
       row = stub("row", "[]" => 0)
       column = stub("column", key: :time, precision: 0, max: 7200)
       assert_equal "0:00:00", TimeRenderer.render(column, row)
@@ -25,7 +25,7 @@ module Renderers
       assert_equal "00:00", TimeRenderer.render(column, row)
     end
 
-    def test_render_minute
+    test "render_minute" do
       row = stub("row", "[]" => 61)
       column = stub("column", key: :time, precision: 0, max: 9000)
       assert_equal "0:01:01", TimeRenderer.render(column, row)
@@ -37,19 +37,19 @@ module Renderers
       assert_equal "0:00:59", TimeRenderer.render(column, row)
     end
 
-    def test_render_25_hours
+    test "render_25_hours" do
       row = stub("row", "[]" => 60 * 60 * 25)
       column = stub("column", key: :time, precision: 0, max: 9000)
       assert_equal "25:00:00", TimeRenderer.render(column, row)
     end
 
-    def test_render_decimals
+    test "render_decimals" do
       row = stub("row", "[]" => 12.99)
       column = stub("column", key: :time, precision: 2, max: 9000)
       assert_equal "0:00:12.99", TimeRenderer.render(column, row)
     end
 
-    def test_render_with_precision
+    test "render_with_precision" do
       row = stub("row", "[]" => 12)
       column = stub("column", key: :time, precision: 0, max: 9000)
       assert_equal "0:00:12", TimeRenderer.render(column, row)

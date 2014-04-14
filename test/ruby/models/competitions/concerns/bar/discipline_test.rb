@@ -9,22 +9,22 @@ class Concerns::Bar::DisciplineTest < Ruby::TestCase
     @bar.extend Concerns::Bar::Discipline
   end
 
-  def test_discipline_for_road_race
+  test "discipline_for_road_race" do
     race = stub("race", discipline: "Road")
     assert_equal_enumerables [ "Road", "Circuit" ], @bar.disciplines_for(race), "disciplines"
   end
 
-  def test_discipline_for_track
+  test "discipline_for_track" do
     race = stub("race", discipline: "Track")
     assert_equal_enumerables [ "Track" ], @bar.disciplines_for(race), "disciplines"
   end
 
-  def test_discipline_for_mtb
+  test "discipline_for_mtb" do
     race = stub("race", discipline: "Mountain Bike")
     assert_equal_enumerables [ "Mountain Bike", "Downhill", "Super D" ], @bar.disciplines_for(race), "disciplines"
   end
 
-  def test_discipline_for_dh
+  test "discipline_for_dh" do
     race = stub("race", discipline: "Downhill")
     assert_equal_enumerables [ "Downhill" ], @bar.disciplines_for(race), "disciplines"
   end

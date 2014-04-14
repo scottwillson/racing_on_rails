@@ -4,7 +4,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
 class TeamTest < ActiveSupport::TestCase
-  def test_find_by_name_or_alias_or_create
+  test "find by name or alias or create" do
     gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
     gentle_lovers.aliases.create!(name: "Gentile Lovers")
     assert_equal(gentle_lovers, Team.find_by_name_or_alias_or_create('Gentle Lovers'), 'Gentle Lovers')
@@ -15,7 +15,7 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal('Health Net', team.name, 'New team')
   end
 
-  def test_merge
+  test "merge" do
     team_to_keep = FactoryGirl.create(:team, name: "Vanilla")
     team_to_keep.aliases.create!(name: "Vanilla Bicycles")
     FactoryGirl.create(:result, team: team_to_keep)
@@ -58,7 +58,7 @@ class TeamTest < ActiveSupport::TestCase
     assert_same_elements(promoter_events, team_to_keep.events(true), "Should merge sponsored events")
   end
 
-  def test_merge_with_names
+  test "merge with names" do
     current_year = Time.zone.today.year
     last_year = current_year - 1
 
@@ -99,7 +99,7 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal(1, team_to_keep.aliases.count, "Target team's aliases")
   end
 
-  def test_merge_with_names_that_match_existing_team
+  test "merge with names that match existing team" do
     current_year = Time.zone.today.year
     last_year = current_year - 1
 
@@ -115,7 +115,7 @@ class TeamTest < ActiveSupport::TestCase
     team_to_keep.merge(team_to_merge)
   end
 
-  def test_find_by_name_or_alias
+  test "find by name or alias" do
     # new
     name = 'Brooklyn Cycling Force'
     assert_nil(Team.find_by_name(name), "#{name} should not exist")
@@ -140,7 +140,7 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal(name, team.name, 'name')
   end
 
-  def test_find_all_by_name_like
+  test "find all by name like" do
     vanilla = FactoryGirl.create(:team, name: "Vanilla")
     vanilla.aliases.create!(name: "Vanilla Bicycles")
     assert_same_elements [vanilla], Team.find_all_by_name_like("Vanilla"), "Vanilla"
@@ -152,13 +152,13 @@ class TeamTest < ActiveSupport::TestCase
     assert_same_elements [steelman, vanilla], Team.find_all_by_name_like("cycles"), "cycles"
   end
 
-  def test_create_dupe
+  test "create dupe" do
     FactoryGirl.create(:team, name: "Vanilla")
     dupe = Team.new(name: 'Vanilla')
     assert(!dupe.valid?, 'Dupe Vanilla should not be valid')
   end
 
-  def test_member
+  test "member" do
     team = Team.new(name: 'Team Spine')
     assert_equal(false, team.member, 'member')
     team.save!
@@ -179,7 +179,7 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal(true, team.member, 'member')
   end
 
-  def test_delete_updated_by
+  test "delete updated by" do
     team = FactoryGirl.create(:team)
     person = FactoryGirl.create(:person)
     team.updated_by = person

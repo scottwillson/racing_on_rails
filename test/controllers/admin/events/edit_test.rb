@@ -12,7 +12,7 @@ module Admin
         use_ssl
       end
 
-      def test_edit
+      test "edit" do
         event = FactoryGirl.create(:event, velodrome: FactoryGirl.create(:velodrome))
         get(:edit, id: event.to_param)
         assert_response(:success)
@@ -23,7 +23,7 @@ module Admin
         assert_select "input#event_human_date"
       end
 
-      def test_edit_sti_subclasses
+      test "edit sti subclasses" do
         [SingleDayEvent, MultiDayEvent, Series, WeeklySeries].each do |event_class|
           event = event_class.create!
           get(:edit, id: event.to_param)
@@ -36,7 +36,7 @@ module Admin
         end
       end
 
-      def test_edit_parent
+      test "edit parent" do
         event = FactoryGirl.create(:series)
         get(:edit, id: event.to_param)
         assert_response(:success)
@@ -45,7 +45,7 @@ module Admin
         assert_nil(assigns["race"], "Should not assign race")
       end
 
-      def test_edit_no_results
+      test "edit no results" do
         event = FactoryGirl.create(:event)
         get(:edit, id: event.to_param)
         assert_response(:success)
@@ -54,7 +54,7 @@ module Admin
         assert_nil(assigns["race"], "Should not assign race")
       end
 
-      def test_edit_with_promoter
+      test "edit with promoter" do
         event = FactoryGirl.create(:event)
         get(:edit, id: event.to_param)
         assert_response(:success)
@@ -63,7 +63,7 @@ module Admin
         assert_nil(assigns["race"], "Should not assign race")
       end
 
-      def test_edit_as_promoter
+      test "edit as promoter" do
         event = FactoryGirl.create(:event)
         login_as event.promoter
         get :edit, id: event.to_param
@@ -72,7 +72,7 @@ module Admin
         assert_select "#event_human_date", count: 0
       end
 
-      def test_promoter_can_only_edit_own_events
+      test "promoter can only edit own events" do
         event = FactoryGirl.create(:event)
         event_2 = FactoryGirl.create(:event)
 
@@ -81,7 +81,7 @@ module Admin
         assert_redirected_to unauthorized_path
       end
 
-      def test_edit_as_editor
+      test "edit as editor" do
         event = FactoryGirl.create(:event)
         person = FactoryGirl.create(:person)
         event.editors << person
@@ -92,13 +92,13 @@ module Admin
         assert_select "#event_human_date", count: 0
       end
 
-      def test_edit_child_event
+      test "edit child event" do
         event = FactoryGirl.create(:series_event)
         get(:edit, id: event.id)
         assert_response(:success)
       end
 
-      def test_edit_combined_results
+      test "edit combined results" do
         event = FactoryGirl.create(:time_trial_event)
         FactoryGirl.create(:result, event: event)
         combined = CombinedTimeTrialResults.create!(parent: event)

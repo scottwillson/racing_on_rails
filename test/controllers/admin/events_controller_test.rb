@@ -15,14 +15,14 @@ module Admin
       use_ssl
     end
 
-    def test_destroy_event
+    test "destroy event" do
       jack_frost = FactoryGirl.create(:event)
       delete(:destroy, id: jack_frost.to_param, commit: 'Delete')
       assert_redirected_to(admin_events_path(year: jack_frost.date.year))
       assert(!Event.exists?(jack_frost.id), "Jack Frost should have been destroyed")
     end
 
-    def test_destroy_event_ajax
+    test "destroy event ajax" do
       event = FactoryGirl.create(:event)
       event.destroy_races
       xhr(:delete, :destroy, id: event.to_param, commit: 'Delete')
@@ -30,7 +30,7 @@ module Admin
       assert(!Event.exists?(event.id), "Event should have been destroyed")
     end
 
-    def test_save_no_promoter
+    test "save no promoter" do
       assert_nil(SingleDayEvent.find_by_name('Silverton'), 'Silverton should not be in database')
       # New event, no changes, single day, no promoter
       post(:create,
@@ -46,7 +46,7 @@ module Admin
       assert_redirected_to edit_admin_event_path(assigns(:event))
     end
 
-    def test_save_different_promoter
+    test "save different promoter" do
       promoter = FactoryGirl.create(:person)
       banana_belt = FactoryGirl.create(:event, promoter: promoter)
 
@@ -65,7 +65,7 @@ module Admin
       assert_equal(promoter, banana_belt.promoter(true), 'Promoter after save')
     end
 
-    def test_set_parent
+    test "set parent" do
       event = FactoryGirl.create(:event, name: "The Event")
       assert_nil(event.parent)
 
@@ -77,7 +77,7 @@ module Admin
       assert_redirected_to edit_admin_event_path(event)
     end
 
-    def test_missing_parent
+    test "missing parent" do
       FactoryGirl.create(:series, name: "The Event")
       event = FactoryGirl.create(:event, name: "The Event")
       assert(event.missing_parent?, "Event should be missing parent")
@@ -86,7 +86,7 @@ module Admin
       assert_template("admin/events/edit")
     end
 
-    def test_missing_children
+    test "missing children" do
       event = FactoryGirl.create(:series, name: "The Event")
       FactoryGirl.create(:event, name: "The Event")
       assert(event.missing_children?, "Event should be missing children")
@@ -96,7 +96,7 @@ module Admin
       assert_template("admin/events/edit")
     end
 
-    def test_multi_day_event_children_with_no_parent
+    test "multi day event children with no parent" do
       SingleDayEvent.create!(name: "PIR Short Track")
       SingleDayEvent.create!(name: "PIR Short Track")
       SingleDayEvent.create!(name: "PIR Short Track")
@@ -110,7 +110,7 @@ module Admin
       assert_template("admin/events/edit")
     end
 
-    def test_add_children
+    test "add children" do
       Timecop.freeze(Time.zone.local(RacingAssociation.current.year, 10, 3)) do
         FactoryGirl.create(:event, name: "Event", date: 1.month.from_now)
 
@@ -123,21 +123,21 @@ module Admin
       end
     end
 
-    def test_index
+    test "index" do
       get(:index, year: "2004")
       assert_response(:success)
       assert_template("admin/events/index")
       assert_not_nil(assigns["schedule"], "Should assign schedule")
     end
 
-    def test_not_logged_in
+    test "not logged in" do
       destroy_person_session
       get(:index, year: "2004")
       assert_redirected_to new_person_session_url(secure_redirect_options)
       assert_nil(@request.session["person"], "No person in session")
     end
 
-    def test_links_to_years
+    test "links to years" do
       FactoryGirl.create(:event, date: Date.new(2003, 6))
       get(:index, year: "2004")
 
@@ -150,7 +150,7 @@ module Admin
       assert(link || obra_link, "Should link to 2005 in:\n#{@response.body}")
     end
 
-    def test_links_to_years_only_past_year_has_events
+    test "links to years only past year has events" do
       current_year = Time.zone.today.year
       last_year = current_year - 1
       SingleDayEvent.create!(date: Date.new(last_year))
@@ -161,21 +161,21 @@ module Admin
     end
 
     # Really only happens to developers switching environments, and more of a test of LoginSystem
-    def test_gracefully_handle_bad_person_id
+    test "gracefully handle bad person id" do
       @request.session[:person_id] = 31289371283
       @request.session[:person_credentials] = 31289371283
       get(:index)
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
 
-    def test_destroy_child_event
+    test "destroy child event" do
       event = FactoryGirl.create(:series_event)
       event.destroy_races
       delete(:destroy, id: event.to_param, commit: 'Delete')
       assert(!Event.exists?(event.id), "Should have deleted Event")
     end
 
-    def test_destroy_races
+    test "destroy races" do
       jack_frost = FactoryGirl.create(:time_trial_event)
       jack_frost.races.create!(category: FactoryGirl.create(:category)).results.create!(place: "1", person: FactoryGirl.create(:person), time: 1200)
       CombinedTimeTrialResults.create_or_destroy_for!(jack_frost)
@@ -189,7 +189,7 @@ module Admin
       assert_nil(jack_frost.combined_results(true), "Event should have not combined results after destroying races")
     end
 
-    def test_events_for_year
+    test "events for year" do
       Timecop.freeze(2005, 6) do
         single_day_event = FactoryGirl.create(:event, date: 3.days.from_now, name: "Single Day Event")
         multi_day_event_with_children = FactoryGirl.create(:stage_race, name: "Stage Race")

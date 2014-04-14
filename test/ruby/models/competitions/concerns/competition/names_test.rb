@@ -19,18 +19,18 @@ class Concerns::Competition::NamesTest < Ruby::TestCase
     end
   end
 
-  def test_default_name
+  test "default_name" do
     competition = TestCompetition.new
     assert_equal("Competition", competition.friendly_name, "Default friendly_name")
   end
 
-  def test_name_from_friendly_name
+  test "name_from_friendly_name" do
     competition = TestCompetition.new
     competition.stubs(:friendly_name).returns("KOM")
     assert_equal("KOM", competition.friendly_name, "friendly_name")
   end
 
-  def test_name
+  test "name" do
     competition = TestCompetition.new
     competition.stubs(:friendly_name).returns("KOM")
     competition.stubs(:date).returns(Date.new(2008))

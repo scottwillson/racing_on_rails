@@ -17,7 +17,7 @@ module Admin
         use_ssl
       end
 
-      def test_update_child_event
+      test "update child event" do
         event = FactoryGirl.create(:event)
 
         assert_not_equal('Banana Belt One', event.name, 'name')
@@ -37,7 +37,7 @@ module Admin
         assert_equal(2, event.bar_points, 'bar_points')
       end
 
-      def test_update_nil_disciplines
+      test "update nil disciplines" do
         event = FactoryGirl.create(:series_event)
         event.update_attributes(discipline: nil)
         assert_nil(event[:discipline], 'discipline')
@@ -54,7 +54,7 @@ module Admin
         assert_equal("Road", event[:discipline], 'discipline')
       end
 
-      def test_update_discipline_same_as_parent_child_events
+      test "update discipline same as parent child events" do
         FactoryGirl.create(:discipline)
         event = FactoryGirl.create(:series_event)
         assert_equal('Road', event[:discipline], 'discipline')
@@ -71,7 +71,7 @@ module Admin
         assert_equal("Road", event[:discipline], 'discipline')
       end
 
-      def test_update_existing_combined_results
+      test "update existing combined results" do
         FactoryGirl.create(:discipline)
         FactoryGirl.create(:discipline, name: "Mountain Bike")
         FactoryGirl.create(:discipline, name: "Time Trial")
@@ -92,7 +92,7 @@ module Admin
         assert_redirected_to edit_admin_event_path(event)
       end
 
-      def test_update_event
+      test "update event" do
         event = FactoryGirl.create(:event)
         brad_ross = FactoryGirl.create(:person, first_name: "Brad", last_name: "Ross")
 
@@ -137,7 +137,7 @@ module Admin
         assert_equal(norba, event.number_issuer, 'number_issuer')
       end
 
-      def test_update_single_day_to_multi_day
+      test "update single day to multi day" do
         number_issuer = FactoryGirl.create(:number_issuer)
         FactoryGirl.create(:number_issuer, name: "Stage Race")
         for type in [MultiDayEvent, Series, WeeklySeries]
@@ -160,7 +160,7 @@ module Admin
         end
       end
 
-      def test_update_to_event
+      test "update to event" do
         FactoryGirl.create(:number_issuer)
         number_issuer = FactoryGirl.create(:number_issuer, name: "Stage Race")
 
@@ -184,7 +184,7 @@ module Admin
         end
       end
 
-      def test_update_multi_day_to_single_day
+      test "update multi day to single day" do
         event = FactoryGirl.create(:stage_race)
         original_attributes = event.attributes.clone
 
@@ -216,7 +216,7 @@ module Admin
       end
 
       # MultiDayEvent -> Series
-      def test_update_multi_day_to_series
+      test "update multi day to series" do
         event = FactoryGirl.create(:stage_race)
         original_attributes = event.attributes.clone
 

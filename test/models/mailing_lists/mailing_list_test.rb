@@ -2,7 +2,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
 class MailingListTest < ActiveSupport::TestCase
-  def test_save
+  test "save" do
     mailing_list = MailingList.new
     mailing_list.name = "nwcycling"
     mailing_list.friendly_name = "NW Cycling"

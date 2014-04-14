@@ -6,7 +6,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 class LoginTest < ActionController::TestCase
   tests PeopleController
 
-  def test_create_login
+  test "create login" do
     ActionMailer::Base.deliveries.clear
 
     use_ssl
@@ -23,7 +23,7 @@ class LoginTest < ActionController::TestCase
     assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
   end
 
-  def test_create_login_with_token
+  test "create login with token" do
     ActionMailer::Base.deliveries.clear
 
     person = FactoryGirl.create(:person)
@@ -42,7 +42,7 @@ class LoginTest < ActionController::TestCase
     assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
   end
 
-  def test_create_login_with_name
+  test "create login with name" do
     ActionMailer::Base.deliveries.clear
 
     use_ssl
@@ -60,7 +60,7 @@ class LoginTest < ActionController::TestCase
     assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
   end
 
-  def test_create_login_with_license_and_name
+  test "create login with license and name" do
     ActionMailer::Base.deliveries.clear
     existing_person = Person.create!(license: "123", name: "Speed Racer")
 
@@ -82,7 +82,7 @@ class LoginTest < ActionController::TestCase
     assert_equal existing_person, assigns(:person), "Should match existing Person"
   end
 
-  def test_create_login_with_license_in_name_field
+  test "create login with license in name field" do
     ActionMailer::Base.deliveries.clear
     Person.create!(license: "123", name: "Speed Racer")
 
@@ -102,7 +102,7 @@ class LoginTest < ActionController::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
-  def test_create_login_with_reversed_fields
+  test "create login with reversed fields" do
     ActionMailer::Base.deliveries.clear
     Person.create!(license: "123", name: "Speed Racer")
 
@@ -122,7 +122,7 @@ class LoginTest < ActionController::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
-  def test_create_login_blank_license
+  test "create login blank license" do
     ActionMailer::Base.deliveries.clear
     people_count = Person.count
 
@@ -137,7 +137,7 @@ class LoginTest < ActionController::TestCase
     assert_equal people_count + 1, Person.count, "People count. Should add one."
   end
 
-  def test_create_login_no_email
+  test "create login no email" do
     ActionMailer::Base.deliveries.clear
 
     Person.create! license: "111", email: "racer@example.com"
@@ -156,7 +156,7 @@ class LoginTest < ActionController::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
-  def test_create_dupe_login_no_email
+  test "create dupe login no email" do
     ActionMailer::Base.deliveries.clear
 
     use_ssl
@@ -172,7 +172,7 @@ class LoginTest < ActionController::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
-  def test_create_login_bad_email
+  test "create login bad email" do
     ActionMailer::Base.deliveries.clear
 
     Person.create! license: "111"
@@ -192,14 +192,14 @@ class LoginTest < ActionController::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
-  def test_new_login
+  test "new login" do
     use_ssl
     get :new_login
     assert_response :success
     assert assigns(:person).new_record?, "@person should be a new record"
   end
 
-  def test_new_login_with_token
+  test "new login with token" do
     person = FactoryGirl.create(:person_with_login)
     person.reset_perishable_token!
     use_ssl
@@ -208,7 +208,7 @@ class LoginTest < ActionController::TestCase
     assert !assigns(:person).new_record?, "@person should not be a new record"
   end
 
-  def test_new_login_with_token_logged_in
+  test "new login with token logged in" do
     person = FactoryGirl.create(:person)
     person.reset_perishable_token!
     login_as person
@@ -218,7 +218,7 @@ class LoginTest < ActionController::TestCase
     assert !assigns(:person).new_record?, "@person should not be a new record"
   end
 
-  def test_new_login_http
+  test "new login http" do
     get :new_login
     if RacingAssociation.current.ssl?
       assert_redirected_to people_new_login_url(secure_redirect_options)
@@ -227,7 +227,7 @@ class LoginTest < ActionController::TestCase
     end
   end
 
-  def test_create_login_all_blank
+  test "create login all blank" do
     ActionMailer::Base.deliveries.clear
 
     Person.create! license: "111"
@@ -250,7 +250,7 @@ class LoginTest < ActionController::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
-  def test_create_login_login_blank_name_blank
+  test "create login login blank name blank" do
     ActionMailer::Base.deliveries.clear
 
     Person.create! license: "111"
@@ -271,7 +271,7 @@ class LoginTest < ActionController::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
-  def test_create_login_login_blank_license_blank
+  test "create login login blank license blank" do
     ActionMailer::Base.deliveries.clear
 
     Person.create! license: "111", name: "Speed Racer"
@@ -294,7 +294,7 @@ class LoginTest < ActionController::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
-  def test_create_login_name_blank_license_blank
+  test "create login name blank license blank" do
     ActionMailer::Base.deliveries.clear
 
     Person.create! license: "111", name: "Speed Racer", email: "racer@example.com"
@@ -317,7 +317,7 @@ class LoginTest < ActionController::TestCase
     assert_equal person_count + 1, Person.count, "Person.count"
   end
 
-  def test_create_login_invalid_login
+  test "create login invalid login" do
     ActionMailer::Base.deliveries.clear
     Person.create!(license: "123", name: "Speed Racer")
 
@@ -337,7 +337,7 @@ class LoginTest < ActionController::TestCase
    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
-  def test_create_login_unmatched_license
+  test "create login unmatched license" do
     ActionMailer::Base.deliveries.clear
     Person.create!(license: "123", name: "Speed Racer")
     people_count = Person.count
@@ -360,7 +360,7 @@ class LoginTest < ActionController::TestCase
    assert_equal people_count, Person.count, "People count"
   end
 
-  def test_create_login_unmatched_name
+  test "create login unmatched name" do
     ActionMailer::Base.deliveries.clear
     Person.create!(license: "123", name: "Speed Racer")
     people_count = Person.count
@@ -383,7 +383,7 @@ class LoginTest < ActionController::TestCase
     assert_equal people_count, Person.count, "People count"
   end
 
-  def test_create_login_with_current_race_number_and_name
+  test "create login with current race number and name" do
     FactoryGirl.create(:number_issuer)
     FactoryGirl.create(:discipline)
 
@@ -408,7 +408,7 @@ class LoginTest < ActionController::TestCase
     assert_equal existing_person, assigns(:person), "Should match existing Person"
   end
 
-  def test_create_login_with_return_to_with_params
+  test "create login with return to with params" do
     use_ssl
     post :create_login,
         person: {

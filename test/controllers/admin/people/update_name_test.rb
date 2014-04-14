@@ -12,7 +12,7 @@ module Admin
         use_ssl
       end
 
-      def test_update_name
+      test "update name" do
         molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
             id: molly.to_param,
@@ -25,7 +25,7 @@ module Admin
         assert_equal "Cameron", molly.last_name, "Person last_name after update"
       end
 
-      def test_update_same_name
+      test "update same name" do
         molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
             id: molly.to_param,
@@ -39,7 +39,7 @@ module Admin
         assert_equal('Cameron', molly.last_name, 'Person last_name after update')
       end
 
-      def test_update_same_name_different_case
+      test "update same name different case" do
         molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
             id: molly.to_param,
@@ -53,7 +53,7 @@ module Admin
         assert_equal('cameron', molly.last_name, 'Person last_name after update')
       end
 
-      def test_update_to_existing_name
+      test "update to existing name" do
         # Should ask to merge
         FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
@@ -71,7 +71,7 @@ module Admin
         assert_equal('Molly Cameron', molly.name, 'Person name after cancel')
       end
 
-      def test_update_to_existing_alias
+      test "update to existing alias" do
         tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         tonkin.aliases.create!(name: "Eric Tonkin")
 
@@ -91,7 +91,7 @@ module Admin
         assert_nil(old_erik_alias, 'Old alias')
       end
 
-      def test_update_to_existing_alias_different_case
+      test "update to existing alias different case" do
         molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         molly.aliases.create!(name: "Mollie Cameron")
         assert !Alias.exists?(name: 'Molly Cameron')
@@ -112,7 +112,7 @@ module Admin
         assert_nil(mollie_alias, 'Alias')
       end
 
-      def test_update_to_other_person_existing_alias
+      test "update to other person existing alias" do
         tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         molly.aliases.create!(name: "Mollie Cameron")
@@ -131,7 +131,7 @@ module Admin
         assert(!Person.find_all_by_name('Erik Tonkin').empty?, 'Erik Tonkin still in database')
       end
 
-      def test_update_to_other_person_existing_alias_and_duplicate_names
+      test "update to other person existing alias and duplicate names" do
         FactoryGirl.create(:discipline)
         FactoryGirl.create(:number_issuer)
 

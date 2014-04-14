@@ -5,13 +5,13 @@ require "nokogiri"
 # :stopdoc:
 module Renderers
   class TeamNameRendererTest < Ruby::TestCase
-    def test_render_no_team
+    test "render_no_team" do
       column = mock("column", key: :team_name)
       row = mock("row", :[] => nil, source: mock("result", team_id: nil))
       assert_nil TeamNameRenderer.render(column, row), "Result with no text, no team"
     end
 
-    def test_render_team
+    test "render_team" do
       column = stub("column", key: :team_name)
       row = stub("row", :[] => "Gentle Lovers", metadata: {}, source: stub("result", team_id: 18, :team_competition_result? => false, year: 2010))
       TeamNameRenderer.stubs(racing_association: mock("racing_association", :unregistered_teams_in_results? => true))
@@ -22,7 +22,7 @@ module Renderers
       assert_equal "Gentle Lovers", link.text, "text"
     end
 
-    def test_mobile
+    test "mobile" do
       column = stub("column", key: :team_name)
       row = stub("row", :[] => "Gentle Lovers", metadata: { mobile_request: true }, source: stub("result", team_id: 18, :team_competition_result? => false, year: 2010))
       TeamNameRenderer.stubs(racing_association: mock("racing_association", :unregistered_teams_in_results? => true))
@@ -33,7 +33,7 @@ module Renderers
       assert_equal "Gentle Lovers", link.text, "text"
     end
 
-    def test_competition_result
+    test "competition_result" do
       column = stub("column", key: :team_name)
       row = stub("row",
                    :[] => "Gentle Lovers",

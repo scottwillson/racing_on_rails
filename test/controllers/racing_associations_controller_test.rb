@@ -1,7 +1,7 @@
 require File.expand_path("../../test_helper", __FILE__)
 
 class RacingAssociationsControllerTest < ActionController::TestCase
-  def test_edit
+  test "edit" do
     association = RacingAssociation.current
     create_administrator_session
     use_ssl
@@ -9,7 +9,7 @@ class RacingAssociationsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  def test_update
+  test "update" do
     racing_association = RacingAssociation.current
     create_administrator_session
     use_ssl

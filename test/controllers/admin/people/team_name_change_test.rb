@@ -12,7 +12,7 @@ module Admin
         use_ssl
       end
 
-      def test_update_team_name_to_new_team
+      test "update team name to new team" do
         assert_nil(Team.find_by_name('Velo Slop'), 'New team Velo Slop should not be in database')
         molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
@@ -25,7 +25,7 @@ module Admin
         assert_not_nil(Team.find_by_name('Velo Slop'), 'New team Velo Slop should be in database')
       end
 
-      def test_update_team_name_to_existing_team
+      test "update team name to existing team" do
         molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
         xhr :put, :update_attribute,
@@ -38,7 +38,7 @@ module Admin
         assert_equal(Team.find_by_name('Gentle Lovers'), molly.team, 'Molly should be on Gentle Lovers')
       end
 
-      def test_update_team_name_to_blank
+      test "update team name to blank" do
         molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
         xhr :put, :update_attribute,

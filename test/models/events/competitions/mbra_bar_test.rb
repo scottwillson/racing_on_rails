@@ -4,7 +4,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
 class MbraBarTest < ActiveSupport::TestCase
-  def test_calculate
+  test "calculate" do
     road = FactoryGirl.create(:discipline, name: "Road")
     FactoryGirl.create(:discipline, name: "Mountain Bike")
     FactoryGirl.create(:discipline, name: "Cyclocross")
@@ -208,7 +208,7 @@ class MbraBarTest < ActiveSupport::TestCase
     assert_equal((1 + 6) + ((1 + 6) * 2), women_road_bar.results[0].points, "Senior Women Road BAR results points")
   end
 
-  def test_upgrade_scoring
+  test "upgrade scoring" do
     road = FactoryGirl.create(:discipline, name: "Road")
     FactoryGirl.create(:discipline, name: "Mountain Bike")
     FactoryGirl.create(:discipline, name: "Cyclocross")

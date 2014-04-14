@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 class PagesTest < AcceptanceTest
   setup :javascript!
 
-  def test_pages
+  test "pages" do
     login_as FactoryGirl.create(:administrator)
 
     visit "/admin/pages"

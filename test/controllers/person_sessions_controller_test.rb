@@ -7,12 +7,12 @@ class PersonSessionsControllerTest < ActionController::TestCase
     use_ssl
   end
 
-  def test_login_page
+  test "login page" do
     get :new
     assert_response :success
   end
 
-  def test_admin_login
+  test "admin login" do
     FactoryGirl.create(:administrator)
     post :create, person_session: { login: "admin@example.com", password: "secret" }
     assert_not_nil(assigns["person_session"], "@person_session")
@@ -22,7 +22,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     assert_not_nil cookies["person_credentials"], "person_credentials cookie"
   end
 
-  def test_member_login
+  test "member login" do
     member = FactoryGirl.create(:person_with_login)
     post :create, person_session: { login: member.login, password: "secret" }
     assert_not_nil(assigns["person_session"], "@person_session")
@@ -32,7 +32,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     assert_not_nil cookies["person_credentials"], "person_credentials cookie"
   end
 
-  def test_login_failure
+  test "login failure" do
     FactoryGirl.create(:administrator)
     post :create, person_session: { login: "admin@example.com", password: "bad password" }
     assert_not_nil(assigns["person_session"], "@person_session")
@@ -42,7 +42,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     assert_nil cookies["person_credentials"], "person_credentials cookie"
   end
 
-  def test_blank_login_should_fail
+  test "blank login should fail" do
     FactoryGirl.create(:administrator)
     post :create, person_session: { login: "", password: "" }
     assert_not_nil(assigns["person_session"], "@person_session")
@@ -52,7 +52,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     assert_nil cookies["person_credentials"], "person_credentials cookie"
   end
 
-  def test_blank_login_should_fail_with_blank_email_address
+  test "blank login should fail with blank email address" do
     Person.create!
     post :create, "person_session" => { "email" => "", "password" => "" }, "login" => "Login"
     assert_not_nil(assigns["person_session"], "@person_session")
@@ -62,7 +62,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     assert_nil session[:person_credentials], "Authlogic should not put :person_credentials in session"
   end
 
-  def test_logout
+  test "logout" do
     member = FactoryGirl.create(:person_with_login)
     login_as member
 
@@ -75,7 +75,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     assert_nil session[:return_to], ":return_to in session"
   end
 
-  def test_logout_administrator
+  test "logout administrator" do
     administrator = FactoryGirl.create(:administrator)
     login_as administrator
 
@@ -88,7 +88,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     assert_nil session[:return_to], ":return_to in session"
   end
 
-  def test_logout_no_session
+  test "logout no session" do
     delete :destroy
 
     assert_redirected_to new_person_session_url(secure_redirect_options)
@@ -98,7 +98,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     assert_nil session[:return_to], ":return_to in session"
   end
 
-  def test_logout_no_ssl
+  test "logout no ssl" do
     administrator = FactoryGirl.create(:administrator)
     @request.env['HTTPS'] = nil
     PersonSession.create(administrator)
@@ -112,7 +112,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_show
+  test "show" do
     @request.env['HTTPS'] = nil
     get :show
     if RacingAssociation.current.ssl?
@@ -122,7 +122,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_show_and_return_to
+  test "show and return to" do
     @request.env['HTTPS'] = nil
     get :show, return_to: "/admin"
     if RacingAssociation.current.ssl?
@@ -132,7 +132,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_show_and_return_to_registration
+  test "show and return to registration" do
     @request.env['HTTPS'] = nil
     get :show, return_to: "/events/123/register"
     if RacingAssociation.current.ssl?
@@ -142,7 +142,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_show_loggedin
+  test "show loggedin" do
     @request.env['HTTPS'] = nil
     member = FactoryGirl.create(:person_with_login)
     login_as member

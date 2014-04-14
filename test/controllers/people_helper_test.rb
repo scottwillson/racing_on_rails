@@ -2,40 +2,40 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class PeopleHelperTest < ActionView::TestCase
-  def test_administrator
+  test "administrator" do
     assert !administrator?, "administrator? with no one logged-in"
   end
 
-  def test_administrator_not_admin
+  test "administrator not admin" do
     @current_person = Person.new
     assert !administrator?, "administrator? with no one logged-in"
   end
 
-  def test_administrator_admin
+  test "administrator admin" do
     @current_person = FactoryGirl.create(:administrator)
     assert administrator?, "administrator? with no one logged-in"
   end
 
-  def test_administrator_promoter
+  test "administrator promoter" do
     @current_person = FactoryGirl.create(:promoter)
     assert !administrator?, "administrator? with no one logged-in"
   end
 
-  def test_promoter
+  test "promoter" do
     assert !promoter?, "promoter? with no one logged-in"
   end
 
-  def test_promoter_person
+  test "promoter person" do
     @current_person = Person.new
     assert !promoter?, "promoter? with no one logged-in"
   end
 
-  def test_promoter_person_promoter
+  test "promoter person promoter" do
     @current_person = FactoryGirl.create(:promoter)
     assert promoter?, "promoter? with no one logged-in"
   end
 
-  def test_pronoun
+  test "pronoun" do
     weaver = FactoryGirl.create(:person, first_name: "Ryan", last_name: "Weaver")
     tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
     assert_equal "Ryan Weaver", pronoun(weaver, tonkin)

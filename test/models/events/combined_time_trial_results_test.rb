@@ -2,12 +2,12 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
 class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
-  def test_create
+  test "create" do
     combined_results = CombinedTimeTrialResults.create!(parent: FactoryGirl.create(:time_trial_event))
     assert_equal(false, combined_results.notification?, "CombinedTimeTrialResults should not send notification updates")
   end
 
-  def test_combined_tt
+  test "combined tt" do
     event = FactoryGirl.create(:time_trial_event)
     race_1 = FactoryGirl.create(:race, event: event)
     race_2 = FactoryGirl.create(:race, event: event)
@@ -52,7 +52,7 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert_equal('35:12.00', result.time_s, 'time_s')
   end
 
-  def test_honor_auto_combined_results
+  test "honor auto combined results" do
     event = FactoryGirl.create(:time_trial_event)
     race = FactoryGirl.create(:race, event: event)
     FactoryGirl.create(:result, race: race, place: "1", time: 1800)
@@ -82,7 +82,7 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert(!event.combined_results(true).nil?, "TT event should have combined results")
   end
 
-  def test_requires_combined_results_for_children
+  test "requires combined results for children" do
     event = FactoryGirl.create(:time_trial_event)
 
     event.reload
@@ -114,7 +114,7 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert_equal("Combined", twenty_mile.combined_results.name, "20 mile combined results")
   end
 
-  def test_destroy
+  test "destroy" do
     series = Series.create!(discipline: "Time Trial")
     assert_equal true, series.notification?, "event notification?"
     assert_equal true, series.notification_enabled?, "event notification_enabled?"
@@ -138,7 +138,7 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert_nil(event.combined_results(true), "Series child event parent should not have combined results")
   end
 
-  def test_should_not_calculate_combined_results_for_combined_results
+  test "should not calculate combined results for combined results" do
     event = FactoryGirl.create(:time_trial_event)
     race = FactoryGirl.create(:race, event: event)
     FactoryGirl.create(:result, race: race, place: "1", time: 1800)
