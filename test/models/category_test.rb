@@ -1,4 +1,4 @@
-require File.expand_path("../../test_helper", __FILE__)
+require "test_helper"
 
 # :stopdoc:
 class CategoryTest < ActiveSupport::TestCase
@@ -65,6 +65,6 @@ class CategoryTest < ActiveSupport::TestCase
     senior_men_2 = FactoryGirl.create(:category, name: "Senior/Men")
     assert_equal('senior_men', senior_men.friendly_param)
     assert_equal('senior_men', senior_men_2.friendly_param)
-    assert_raises(Concerns::Category::AmbiguousParamException) { Category.find_by_friendly_param('senior_men') }
+    assert_raises(Categories::AmbiguousParamException) { Category.find_by_friendly_param('senior_men') }
   end
 end

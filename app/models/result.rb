@@ -25,9 +25,9 @@ end
 # a +team+ atribute and many RaceNumbers. Result's number is just a String, not
 # a RaceNumber
 class Result < ActiveRecord::Base
-  include Concerns::Result::Cleanup
-  include Concerns::Result::Comparison
-  include Concerns::Result::Time
+  include Results::Cleanup
+  include Results::Comparison
+  include Results::Times
   include Export::Results
 
   serialize :custom_attributes, Hash

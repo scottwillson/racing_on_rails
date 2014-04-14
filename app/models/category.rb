@@ -13,7 +13,7 @@ class Category < ActiveRecord::Base
 
   include Ages
   include Comparable
-  include Concerns::Category::FriendlyParam
+  include Categories::FriendlyParam
   include Export::Categories
 
   acts_as_list

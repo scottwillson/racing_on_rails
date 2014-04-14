@@ -7,7 +7,7 @@ class Page < ActiveRecord::Base
   include ActsAsTree::Extensions
   include ActsAsTree::Validation
 
-  include Concerns::Page::Paths
+  include Pages::Paths
   include RacingOnRails::VestalVersions::Versioned
   include SentientUser
 

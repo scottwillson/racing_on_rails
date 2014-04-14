@@ -1,6 +1,6 @@
 # Archived mailing list post
 class Post < ActiveRecord::Base
-  include Concerns::Posts::Migration
+  include Posts::Migration
 
   validates_presence_of :date
   validates_presence_of :from_email, on: :create

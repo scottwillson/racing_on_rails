@@ -1,5 +1,5 @@
 class Photo < ActiveRecord::Base
-  include Concerns::Photo::Dimensions
+  include Photos::Dimensions
 
   mount_uploader :image, ImageUploader
 

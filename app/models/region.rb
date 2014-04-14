@@ -1,5 +1,5 @@
 class Region < ActiveRecord::Base
-  include Concerns::Region::FriendlyParam
+  include Regions::FriendlyParam
 
   before_save :set_friendly_param
 

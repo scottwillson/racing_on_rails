@@ -128,9 +128,9 @@ class Event < ActiveRecord::Base
   attr_reader :new_promoter_name
   attr_reader :new_team_name
 
-  include Concerns::Event::Comparison
-  include Concerns::Event::Dates
-  include Concerns::Event::Names
+  include Events::Comparison
+  include Events::Dates
+  include Events::Names
   include ActsAsTree::Extensions
   include RacingOnRails::VestalVersions::Versioned
   include Export::Events
