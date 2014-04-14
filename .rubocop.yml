@@ -1,0 +1,18 @@
+ClassLength:
+  Enabled: false
+
+Documentation:
+  Enabled: false
+
+LineLength:
+  Max: 120
+
+MethodLength:
+  Enabled: false
+
+SpaceInsideBrackets:
+  Enabled: false
+
+StringLiterals:
+  EnforcedStyle:
+    Enabled: false
