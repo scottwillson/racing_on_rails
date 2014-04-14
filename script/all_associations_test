@@ -13,7 +13,8 @@
 
   `script/local #{association}`
 
-  puts `bundle exec rake db:migrate; bundle exec rake db:structure:dump; bundle exec rake; bundle exec rake test:acceptance`
+  # Ensure DB state is good
+  puts `bundle exec rake db:migrate; bundle exec rake db:structure:dump; bundle exec rake db:test:prepare; bundle exec rake; bundle exec rake test:acceptance`
 
   if association == "obra" || association == "nabra"
     puts `bundle exec rake registration_engine:test; bundle exec rake registration_engine:test:acceptance`
