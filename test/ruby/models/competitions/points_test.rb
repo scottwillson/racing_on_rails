@@ -1,5 +1,5 @@
-require File.expand_path("../../../../test_case", __FILE__)
-require File.expand_path("../../../../../../app/models/competitions/points", __FILE__)
+require File.expand_path("../../../test_case", __FILE__)
+require File.expand_path("../../../../../app/models/competitions/points", __FILE__)
 
 # :stopdoc:
 module Competitions
