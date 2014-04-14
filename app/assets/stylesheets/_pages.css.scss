@@ -379,23 +379,26 @@ table.base td.total_points {
   padding-right: $line-height-computed;
 }
 
-table.child_single_day_events {
+table.child_single_day_events, .source_events {
   display: inline-table;
 }
 
 table.child_single_day_events td {
   font-weight: bold;
   padding-top: 12px;
+}
+
+table.child_single_day_events td, table.source_events td {
   padding-left: 8px;
   padding-right: 8px;
 }
 
-table.child_single_day_events td.date {
+table.child_single_day_events td.date, table.source_events td.date {
   text-align: right;
   white-space: nowrap;
 }
 
-table.child_single_day_events td.event {
+table.child_single_day_events td.event, table.source_events td.event {
   text-align: left;
 }
 

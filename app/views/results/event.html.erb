@@ -15,6 +15,24 @@
   <%- end -%>
 </div>
 
+<% if @event.respond_to?(:source_events) && @event.source_events.present? %>
+<div class="row event_info">
+  <table class="source_events">
+    <% @event.source_events.sort_by(&:date).each do |source_event| -%>
+    <tr>
+      <% if source_event.has_results? %>
+      <td class="date"><%= link_to source_event.date.strftime('%A, %B %-d'), event_results_path(source_event) %></td>
+      <td class="event"><%= link_to source_event.name, event_results_path(source_event) %></td>
+      <% else %>
+      <td class="date"><%= public_link_to_flyer source_event, source_event.date.strftime('%A, %B %-d') %></td>
+      <td class="event"><%= public_link_to_flyer source_event %></td>
+      <% end %>
+    </tr>
+    <% end -%>
+  </table>
+</div>
+<% end %>
+
 <% unless @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.empty? -%>
 <div class="row event_info">
   <table class="child_single_day_events">
