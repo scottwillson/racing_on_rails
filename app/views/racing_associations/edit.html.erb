@@ -1,10 +1,10 @@
 <% @show_tabs = true %>
 
-<%= render "shared/errors", :object => @racing_association %>
+<%= render "shared/errors", object: @racing_association %>
 
 <h2><%= @racing_association.name %></h2>
 
-<%= form_for @racing_association, :html => { :class => "form-horizontal", :role => "form" } do |f| -%>
+<%= form_for @racing_association, html: { class: "form-horizontal", role: "form" } do |f| -%>
   <div class="row">
     <div class="col-sm-6">
       <h3>Association</h3>
@@ -75,7 +75,7 @@
 
   <div class="row">
     <div class="col-sm-12">
-      <%= submit_tag "Save", :class => "btn-default", :id => "save" %>
+      <%= submit_tag "Save", class: "btn-default", id: "save" %>
       <div class="created_updated pull-right">
         <% if @racing_association.updated_at %>Updated <%= time_ago_in_words(@racing_association.updated_at, include_seconds: true) + " ago" %><% end %>
       </div>

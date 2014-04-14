@@ -3,7 +3,7 @@ class TrackController < ApplicationController
   def index
     @events = Event
                 .current_year
-                .where(:discipline => "Track")
+                .where(discipline: "Track")
                 .not_child
   end
 

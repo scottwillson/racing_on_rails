@@ -11,24 +11,24 @@ module Admin
       use_ssl
 
       @cyclocross = FactoryGirl.create(:cyclocross_discipline)
-      FactoryGirl.create(:discipline, :name => "Downhill")
+      FactoryGirl.create(:discipline, name: "Downhill")
       @mountain_bike = FactoryGirl.create(:mtb_discipline)
-      @road = FactoryGirl.create(:discipline, :name => "Road")
-      FactoryGirl.create(:discipline, :name => "Singlespeed")
-      FactoryGirl.create(:discipline, :name => "Track")
+      @road = FactoryGirl.create(:discipline, name: "Road")
+      FactoryGirl.create(:discipline, name: "Singlespeed")
+      FactoryGirl.create(:discipline, name: "Track")
       @association = FactoryGirl.create(:number_issuer)
     end
 
     def test_toggle_member
-      molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
+      molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
       assert_equal(true, molly.member, 'member before update')
-      post(:toggle_member, :id => molly.to_param)
+      post(:toggle_member, id: molly.to_param)
       assert_response :success
       assert_template("shared/_member")
       molly.reload
       assert_equal(false, molly.member, 'member after update')
 
-      post(:toggle_member, :id => molly.to_param)
+      post(:toggle_member, id: molly.to_param)
       assert_response :success
       assert_template("shared/_member")
       molly.reload
@@ -43,17 +43,17 @@ module Admin
     def test_edit
       alice = FactoryGirl.create(:person)
 
-      get(:edit, :id => alice.to_param)
+      get(:edit, id: alice.to_param)
       assert_response :success
       assert_nil(assigns['event'], "Should not assign 'event'")
     end
 
     def test_edit_created_by_import_file
       alice = FactoryGirl.create(:person)
-      alice.updated_by = ImportFile.create!(:name => "some_very_long_import_file_name.xls")
+      alice.updated_by = ImportFile.create!(name: "some_very_long_import_file_name.xls")
       alice.save!
 
-      get(:edit, :id => alice.to_param)
+      get(:edit, id: alice.to_param)
       assert_response :success
       assert_template("admin/people/edit")
       assert_not_nil(assigns["person"], "Should assign person")
@@ -91,7 +91,7 @@ module Admin
 
     def test_update_new_number
       Timecop.freeze(Date.new(2008, 6)) do
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron", :road_number => "202")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron", road_number: "202")
         assert_equal('202', molly.road_number(true, 2008), 'Road number')
         assert_equal('202', molly.road_number(true), 'Road number')
         molly_road_number = RaceNumber.last
@@ -147,7 +147,7 @@ module Admin
             "1"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@mountain_bike.id, "year"=>"2007", "value"=>"BBB9"}
           }
         },
-          :number_year => '2007', "official" => "0",
+          number_year: '2007', "official" => "0",
         "commit"=>"Save"})
 
       assert assigns['person'].errors.empty?, assigns['person'].errors.full_messages.join
@@ -159,14 +159,14 @@ module Admin
       race_numbers = knowlsons.first.race_numbers
       assert_equal(2, race_numbers.size, 'Knowlson race numbers')
 
-      race_number = RaceNumber.where(:discipline_id => Discipline[:road].id, :year => 2007, :person_id => knowlsons.first.id).first
+      race_number = RaceNumber.where(discipline_id: Discipline[:road].id, year: 2007, person_id: knowlsons.first.id).first
       assert_not_nil(race_number, 'Road number')
       assert_equal(2007, race_number.year, 'Road number year')
       assert_equal('8977', race_number.value, 'Road number value')
       assert_equal(Discipline[:road], race_number.discipline, 'Road number discipline')
       assert_equal(@association, race_number.number_issuer, 'Road number issuer')
 
-      race_number = RaceNumber.where(:discipline_id => Discipline[:mountain_bike].id, :year => 2007, :person_id => knowlsons.first.id).first
+      race_number = RaceNumber.where(discipline_id: Discipline[:mountain_bike].id, year: 2007, person_id: knowlsons.first.id).first
       assert_not_nil(race_number, 'MTB number')
       assert_equal(2007, race_number.year, 'MTB number year')
       assert_equal('BBB9', race_number.value, 'MTB number value')
@@ -197,7 +197,7 @@ module Admin
       assert_not_nil(assigns['person'], "Should assign person")
       assert(assigns['person'].errors.empty?, "Person should not have errors")
 
-      knowlsons = Person.where(:first_name => "Jon", :last_name => "Knowlson")
+      knowlsons = Person.where(first_name: "Jon", last_name: "Knowlson")
       assert_equal(1, knowlsons.size, "Should have two Knowlsons")
       knowlsons.each do |knowlson|
         assert_equal(2, knowlson.race_numbers.size, 'Knowlson race numbers')
@@ -205,8 +205,8 @@ module Admin
     end
 
     def test_create_with_empty_password_and_no_numbers
-      post :create,  :person => { :login => "", :password_confirmation => "", :password => "", :team_name => "",
-                                  :first_name => "Henry", :last_name => "David", :license => "" }, :number_issuer_id => [ { "1" => nil } ]
+      post :create,  person: { login: "", password_confirmation: "", password: "", team_name: "",
+                                  first_name: "Henry", last_name: "David", license: "" }, number_issuer_id: [ { "1" => nil } ]
       assert_not_nil assigns(:person), "@person"
       assert assigns(:person).errors.empty?, "Did no expect @person errors: #{assigns(:person).errors.full_messages.join(', ')}"
       assert_redirected_to edit_admin_person_path(assigns(:person))
@@ -214,7 +214,7 @@ module Admin
 
     def test_update
       vanilla = FactoryGirl.create(:team)
-      molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron", :road_number => "2", :team => vanilla)
+      molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron", road_number: "2", team: vanilla)
       assert_equal 1, molly.versions.size, "versions"
       molly_road_number = RaceNumber.first
 
@@ -282,7 +282,7 @@ module Admin
     def test_one_print_card
       tonkin = FactoryGirl.create(:person)
 
-      get(:card, :format => "pdf", :id => tonkin.to_param)
+      get(:card, format: "pdf", id: tonkin.to_param)
 
       assert_response :success
       assert_equal(tonkin, assigns['person'], 'Should assign person')
@@ -291,15 +291,15 @@ module Admin
     end
 
     def test_print_no_cards_pending
-      get(:cards, :format => "pdf")
-      assert_redirected_to(no_cards_admin_people_path(:format => "html"))
+      get(:cards, format: "pdf")
+      assert_redirected_to(no_cards_admin_people_path(format: "html"))
     end
 
     def test_no_cards
       get(:no_cards)
       assert_response :success
       assert_template("admin/people/no_cards")
-      assert_template :layout => "admin/application"
+      assert_template layout: "admin/application"
     end
 
     def test_print_cards
@@ -310,11 +310,11 @@ module Admin
       tonkin.save!
       assert !tonkin.membership_card?, "Tonkin.membership_card? before printing"
 
-      get(:cards, :format => "pdf")
+      get(:cards, format: "pdf")
 
       assert_response :success
       assert_template nil
-      assert_template :layout => nil
+      assert_template layout: nil
       assert_equal(1, assigns['people'].size, 'Should assign people')
       tonkin.reload
       assert(!tonkin.print_card?, 'Tonkin.print_card? after printing')
@@ -324,14 +324,14 @@ module Admin
     def test_many_print_cards
       people = []
       (1..4).each do |i|
-        people << Person.create!(:first_name => 'First Name', :last_name => "Last #{i}", :print_card => true)
+        people << Person.create!(first_name: 'First Name', last_name: "Last #{i}", print_card: true)
       end
 
-      get(:cards, :format => "pdf")
+      get(:cards, format: "pdf")
 
       assert_response :success
       assert_template nil, "wrong template"
-      assert_template :layout => nil
+      assert_template layout: nil
       assert_equal(4, assigns['people'].size, 'Should assign people')
       people.each do |person|
         person.reload
@@ -343,7 +343,7 @@ module Admin
     def test_edit_with_event
       kings_valley = FactoryGirl.create(:event)
       promoter = FactoryGirl.create(:person)
-      get(:edit, :id => promoter.to_param, :event_id => kings_valley.to_param.to_s)
+      get(:edit, id: promoter.to_param, event_id: kings_valley.to_param.to_s)
       assert_equal(promoter, assigns['person'], "Should assign 'person'")
       assert_equal(kings_valley, assigns['event'], "Should Kings Valley assign 'event'")
       assert_template("admin/people/edit")
@@ -351,7 +351,7 @@ module Admin
 
     def test_new_with_event
       kings_valley = FactoryGirl.create(:event)
-      get(:new, :event_id => kings_valley.to_param)
+      get(:new, event_id: kings_valley.to_param)
       assert_not_nil(assigns['person'], "Should assign 'person'")
       assert(assigns['person'].new_record?, 'Promoter should be new record')
       assert_equal(kings_valley, assigns['event'], "Should Kings Valley assign 'event'")
@@ -362,7 +362,7 @@ module Admin
        promoter = FactoryGirl.create(:person)
        jack_frost = FactoryGirl.create(:event)
 
-      put(:update, :id => promoter.id,
+      put(:update, id: promoter.id,
         "person" => {"home_phone" => "(510) 410-2201", "email" => "fred@whatley.net"},
         "commit" => "Save",
         "event_id" => jack_frost.id)
@@ -371,7 +371,7 @@ module Admin
 
       promoter.reload
 
-      assert_redirected_to(edit_admin_person_path(promoter, :event_id => jack_frost))
+      assert_redirected_to(edit_admin_person_path(promoter, event_id: jack_frost))
     end
 
     def test_remember_event_id_on_create
@@ -386,12 +386,12 @@ module Admin
       assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
 
       promoter = Person.find_by_name('Fred Whatley')
-      assert_redirected_to(edit_admin_person_path(promoter, :event_id => jack_frost))
+      assert_redirected_to(edit_admin_person_path(promoter, event_id: jack_frost))
     end
 
     def test_destroy
       person = FactoryGirl.create(:person)
-      delete :destroy, :id => person.id
+      delete :destroy, id: person.id
       assert !Person.exists?(person)
       assert_redirected_to admin_people_path
       assert flash.notice.present?
@@ -400,7 +400,7 @@ module Admin
     def test_cannot_destroy
       result = FactoryGirl.create(:result)
       person = result.person
-      delete :destroy, :id => person.id
+      delete :destroy, id: person.id
       assert Person.exists?(person)
       assert_response :success
       assert flash[:warn].present?

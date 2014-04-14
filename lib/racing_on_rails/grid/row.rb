@@ -23,8 +23,8 @@ module RacingOnRails
       # name | street    | street
       # Eddy | 10 Huy St | Apt #410
       #
-      # :name  => 'Eddy'
-      # :steet => '10 Huy St
+      # name: 'Eddy'
+      # steet: '10 Huy St
       #            Apt #410'
       def to_hash
         hash = HashWithIndifferentAccess.new

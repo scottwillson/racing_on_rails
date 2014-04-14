@@ -15,7 +15,7 @@ module Admin::ArticleCategoriesHelper
 
   def display_category(category)
     ret = "<li>"
-    ret << link_to(h(category.name), :action => "edit", :id => category)
+    ret << link_to(h(category.name), action: "edit", id: category)
     ret << " - " << h(category.description)
     ret << display_categories(category.children, category.id) if category.children.any?
     ret << "</li>"

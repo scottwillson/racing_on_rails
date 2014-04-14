@@ -4,32 +4,32 @@ require File.expand_path("../../test_helper", __FILE__)
 class PostsControllerTest < ActionController::TestCase
   def test_new
     obra_chat = FactoryGirl.create(:mailing_list)
-    get(:new, :mailing_list_id => obra_chat.id)
+    get(:new, mailing_list_id: obra_chat.id)
     assert_response(:success)
     assert_template("posts/new")
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
     assert_not_nil(assigns["post"], "Should assign post")
     post = assigns["post"]
     assert_equal(obra_chat, post.mailing_list, "Post's mailing list")
-    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[subject]"})
-    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_email]"})
-    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_name]"})
-    assert_tag(:tag => "textarea", :attributes => {:name => "post[body]"})
-    assert_tag(:tag => "input", :attributes => {:type => "submit", :name => "commit", :value => "Post"})
+    assert_tag(tag: "input", attributes: {type: "text", name: "post[subject]"})
+    assert_tag(tag: "input", attributes: {type: "text", name: "post[from_email]"})
+    assert_tag(tag: "input", attributes: {type: "text", name: "post[from_name]"})
+    assert_tag(tag: "textarea", attributes: {name: "post[body]"})
+    assert_tag(tag: "input", attributes: {type: "submit", name: "commit", value: "Post"})
   end
 
   def test_new_reply
     obra_race = FactoryGirl.create(:mailing_list)
     original_post = Post.create!(
-      :mailing_list => obra_race,
-      :subject => "Only OBRA Race Message",
-      :date => Time.zone.today,
-      :from_name => "Scout",
-      :from_email => "scout@obra.org",
-      :body => "This is a test message."
+      mailing_list: obra_race,
+      subject: "Only OBRA Race Message",
+      date: Time.zone.today,
+      from_name: "Scout",
+      from_email: "scout@obra.org",
+      body: "This is a test message."
     )
 
-    get(:new, :mailing_list_id => obra_race.id, :reply_to_id => original_post.id)
+    get(:new, mailing_list_id: obra_race.id, reply_to_id: original_post.id)
     assert_response(:success)
     assert_template("posts/new")
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
@@ -38,17 +38,17 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal(original_post, assigns["reply_to"], "Should assign reply_to")
     assert_equal("Re: Only OBRA Race Message", post.subject, 'Prepopulated subject')
     assert_equal(obra_race, post.mailing_list, "Post's mailing list")
-    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[subject]"})
-    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_email]"})
-    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_name]"})
-    assert_tag(:tag => "textarea", :attributes => {:name => "post[body]"})
-    assert_tag(:tag => "input", :attributes => {:type => "submit", :name => "commit", :value => "Send"})
+    assert_tag(tag: "input", attributes: {type: "text", name: "post[subject]"})
+    assert_tag(tag: "input", attributes: {type: "text", name: "post[from_email]"})
+    assert_tag(tag: "input", attributes: {type: "text", name: "post[from_name]"})
+    assert_tag(tag: "textarea", attributes: {name: "post[body]"})
+    assert_tag(tag: "input", attributes: {type: "submit", name: "commit", value: "Send"})
   end
 
   def test_blank_search
     mailing_list = FactoryGirl.create(:mailing_list)
-    FactoryGirl.create_list(:post, 3, :mailing_list => mailing_list)
-    get :index, :mailing_list_id => mailing_list.id, :subject => ""
+    FactoryGirl.create_list(:post, 3, mailing_list: mailing_list)
+    get :index, mailing_list_id: mailing_list.id, subject: ""
     assert_response :success
     assert_equal 3, assigns[:posts].size, "Should return all posts"
   end
@@ -56,13 +56,13 @@ class PostsControllerTest < ActionController::TestCase
   def test_matching_search
     PostText.delete_all
     mailing_list = FactoryGirl.create(:mailing_list)
-    FactoryGirl.build_list(:post, 3, :mailing_list => mailing_list).each do |post|
+    FactoryGirl.build_list(:post, 3, mailing_list: mailing_list).each do |post|
       Post.save post, mailing_list
     end
-    post = FactoryGirl.build(:post, :mailing_list => mailing_list, :subject => "Cervelo for sale")
+    post = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "Cervelo for sale")
     Post.save post, mailing_list
 
-    get :index, :mailing_list_id => mailing_list.id, :subject => "Cervelo"
+    get :index, mailing_list_id: mailing_list.id, subject: "Cervelo"
 
     assert_response :success
     assert_equal [ post ], assigns[:posts], "Should search by subject posts"
@@ -71,13 +71,13 @@ class PostsControllerTest < ActionController::TestCase
   def test_no_matching_search
     PostText.delete_all
     mailing_list = FactoryGirl.create(:mailing_list)
-    FactoryGirl.build_list(:post, 3, :mailing_list => mailing_list).each do |post|
+    FactoryGirl.build_list(:post, 3, mailing_list: mailing_list).each do |post|
       Post.save post, mailing_list
     end
-    post = FactoryGirl.build(:post, :mailing_list => mailing_list, :subject => "Paging Todd Littlehales")
+    post = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "Paging Todd Littlehales")
     Post.save post, mailing_list
 
-    get :index, :mailing_list_id => mailing_list.id, :subject => "Cervelo"
+    get :index, mailing_list_id: mailing_list.id, subject: "Cervelo"
 
     assert_response :success
     assert assigns[:posts].empty?, "Should search by subject posts"
@@ -85,37 +85,37 @@ class PostsControllerTest < ActionController::TestCase
 
   def test_index
     mailing_list = FactoryGirl.create(:mailing_list)
-    get :index, :mailing_list_id => mailing_list.id
+    get :index, mailing_list_id: mailing_list.id
     assert_response :success
   end
 
   def test_index_atom
     mailing_list = FactoryGirl.create(:mailing_list)
-    get :index, :mailing_list_id => mailing_list.id, :format => :atom
+    get :index, mailing_list_id: mailing_list.id, format: :atom
     assert_response :success
   end
 
   def test_index_rss
     mailing_list = FactoryGirl.create(:mailing_list)
-    get :index, :mailing_list_id => mailing_list.id, :format => :rss
-    assert_redirected_to :format => :atom
+    get :index, mailing_list_id: mailing_list.id, format: :rss
+    assert_redirected_to format: :atom
   end
 
   def test_index_with_date
     post = FactoryGirl.create(:post)
-    get :index, :mailing_list_id => post.mailing_list.id, :month => 12, :year => 2007
+    get :index, mailing_list_id: post.mailing_list.id, month: 12, year: 2007
     assert_response :success
   end
 
   def test_index_with_bogus_date
     post = FactoryGirl.create(:post)
-    get :index, :mailing_list_id => post.mailing_list.id, :month => 25, :year => 7
+    get :index, mailing_list_id: post.mailing_list.id, month: 25, year: 7
     assert_response :success
   end
 
   def test_index_with_bogus_page
     post = FactoryGirl.create(:post)
-    get :index, :mailing_list_id => post.mailing_list.id, :page => "atz"
+    get :index, mailing_list_id: post.mailing_list.id, page: "atz"
     assert_response :success
   end
 
@@ -124,31 +124,31 @@ class PostsControllerTest < ActionController::TestCase
     for index in 1..22
       date = Time.zone.now.beginning_of_month + index * 3600 * 24
       Post.create!(
-        :mailing_list => obra_chat,
-        :subject => "Subject Test #{index}",
-        :date => date,
-        :from_name => "Scout",
-        :from_email => "scout@obra.org",
-        :body => "This is a test message #{index}"
+        mailing_list: obra_chat,
+        subject: "Subject Test #{index}",
+        date: date,
+        from_name: "Scout",
+        from_email: "scout@obra.org",
+        body: "This is a test message #{index}"
       )
     end
 
     obra_race = FactoryGirl.create(:mailing_list)
     Post.create!(
-      :mailing_list => obra_race,
-      :subject => "Only OBRA Race Message",
-      :date => date,
-      :from_name => "Scout",
-      :from_email => "scout@obra.org",
-      :body => "This is a test message."
+      mailing_list: obra_race,
+      subject: "Only OBRA Race Message",
+      date: date,
+      from_name: "Scout",
+      from_email: "scout@obra.org",
+      body: "This is a test message."
     )
 
-    get(:index, :mailing_list_id => obra_chat.id)
+    get(:index, mailing_list_id: obra_chat.id)
     assert_response(:success)
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
     assert_equal(22, assigns["posts"].size, "Should show recent posts")
 
-    get(:index, :mailing_list_id => obra_race.id)
+    get(:index, mailing_list_id: obra_race.id)
     assert_response(:success)
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
     assert_not_nil(assigns["posts"], "Should assign posts")
@@ -165,14 +165,14 @@ class PostsControllerTest < ActionController::TestCase
     body = "Barely used"
 
     post(:create,
-        :mailing_list_id => obra_chat.to_param,
-        :reply_to_id => '',
-        :post => {
-          :subject => subject,
-          :from_name => from_name,
-          :from_email => from_email,
-          :body => body},
-        :commit => "Post"
+        mailing_list_id: obra_chat.to_param,
+        reply_to_id: '',
+        post: {
+          subject: subject,
+          from_name: from_name,
+          from_email: from_email,
+          body: body},
+        commit: "Post"
     )
 
     assert_not_nil flash[:notice]
@@ -194,24 +194,24 @@ class PostsControllerTest < ActionController::TestCase
     from_email = "tim.schauer@butlerpress.com"
     body = "Barely used"
     reply_to_post = Post.create!(
-      :mailing_list => obra_chat,
-      :subject => "Schedule Changes",
-      :date => Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
-      :from_name => "Scout",
-      :from_email => "scout@obra.org",
-      :body => "This is a test message."
+      mailing_list: obra_chat,
+      subject: "Schedule Changes",
+      date: Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
+      from_name: "Scout",
+      from_email: "scout@obra.org",
+      body: "This is a test message."
     )
 
     assert_no_difference "Post.count" do
       post(:create,
-          :mailing_list_id => obra_chat.id,
-          :post => {
-            :subject => subject,
-            :from_name => from_name,
-            :from_email => from_email,
-            :body => body},
-          :reply_to_id => reply_to_post.id,
-          :commit => "Post"
+          mailing_list_id: obra_chat.id,
+          post: {
+            subject: subject,
+            from_name: from_name,
+            from_email: from_email,
+            body: body},
+          reply_to_id: reply_to_post.id,
+          commit: "Post"
       )
     end
 
@@ -234,23 +234,23 @@ class PostsControllerTest < ActionController::TestCase
     from_email = "tim.schauer@butlerpress.com"
     body = "Barely used"
     reply_to_post = Post.create!(
-      :mailing_list => obra_chat,
-      :subject => "Schedule Changes",
-      :date => Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
-      :from_name => "Scout",
-      :from_email => "scout@obra.org",
-      :body => "This is a test message."
+      mailing_list: obra_chat,
+      subject: "Schedule Changes",
+      date: Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
+      from_name: "Scout",
+      from_email: "scout@obra.org",
+      body: "This is a test message."
     )
 
     post(:create,
-        :mailing_list_id => obra_chat.to_param,
-        :post => {
-          :subject => "Re: #{subject}",
-          :from_name => "",
-          :from_email => "",
-          :body => ""},
-        :reply_to_id => reply_to_post.id,
-        :commit => "Send"
+        mailing_list_id: obra_chat.to_param,
+        post: {
+          subject: "Re: #{subject}",
+          from_name: "",
+          from_email: "",
+          body: ""},
+        reply_to_id: reply_to_post.id,
+        commit: "Send"
     )
 
     assert_template("posts/new")
@@ -273,14 +273,14 @@ class PostsControllerTest < ActionController::TestCase
 
     Mail::Message.any_instance.expects(:deliver).raises(Net::SMTPFatalError, "502 5.5.2 Error: command not recognized")
     post(:create,
-        :mailing_list_id => obra_chat.to_param,
-        :reply_to_id => '',
-        :post => {
-          :subject => subject,
-          :from_name => from_name,
-          :from_email => from_email,
-          :body => body},
-        :commit => "Post"
+        mailing_list_id: obra_chat.to_param,
+        reply_to_id: '',
+        post: {
+          subject: subject,
+          from_name: from_name,
+          from_email: from_email,
+          body: body},
+        commit: "Post"
     )
 
     assert_not_nil flash[:warn]
@@ -300,14 +300,14 @@ class PostsControllerTest < ActionController::TestCase
 
     Mail::Message.any_instance.expects(:deliver).raises(Net::SMTPServerBusy, "450 4.1.8 <wksryz@rxrzdj.com>: Sender address rejected: Domain not found")
     post(:create,
-        :mailing_list_id => obra_chat.to_param,
-        :reply_to_id => '',
-        :post => {
-          :subject => subject,
-          :from_name => from_name,
-          :from_email => from_email,
-          :body => body},
-        :commit => "Post"
+        mailing_list_id: obra_chat.to_param,
+        reply_to_id: '',
+        post: {
+          subject: subject,
+          from_name: from_name,
+          from_email: from_email,
+          body: body},
+        commit: "Post"
     )
 
     assert_not_nil flash[:warn]
@@ -319,16 +319,16 @@ class PostsControllerTest < ActionController::TestCase
   def test_show
     obra_race = FactoryGirl.create(:mailing_list)
     new_post = Post.create!(
-      :mailing_list => obra_race,
-      :subject => "Only OBRA Race Message",
-      :date => Time.zone.now,
-      :from_name => "Scout",
-      :from_email => "scout@obra.org",
-      :body => "This is a test message."
+      mailing_list: obra_race,
+      subject: "Only OBRA Race Message",
+      date: Time.zone.now,
+      from_name: "Scout",
+      from_email: "scout@obra.org",
+      body: "This is a test message."
     )
     new_post.save!
 
-    get(:show, :mailing_list_id => obra_race.id, :id => new_post.id)
+    get(:show, mailing_list_id: obra_race.id, id: new_post.id)
     assert_response(:success)
     assert_not_nil(assigns["post"], "Should assign post")
     assert_template("posts/show")
@@ -342,7 +342,7 @@ class PostsControllerTest < ActionController::TestCase
 
   def test_list_with_bad_name
     assert_raise(ActiveRecord::RecordNotFound) do
-      get(:index, :mailing_list_id => "Masters Racing")
+      get(:index, mailing_list_id: "Masters Racing")
     end
   end
 

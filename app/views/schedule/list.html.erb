@@ -2,12 +2,12 @@
 
 <h2><%= @year %> Schedule</h2>
 
-<%= render_page "shared/years", :year => @year, :discipline => @discipline %>
-<%= render_page "shared/disciplines", :year => @year, :discipline => @discipline %>
-<%= render "tabs", :calendar_tab => @calendar_tab %>
+<%= render_page "shared/years", year: @year, discipline: @discipline %>
+<%= render_page "shared/disciplines", year: @year, discipline: @discipline %>
+<%= render "tabs", calendar_tab: @calendar_tab %>
 <%= render_page "schedule/tentative" %>
 
-<%= table :collection => @events, :columns => 7 do %>
+<%= table collection: @events, columns: 7 do %>
   <thead>
     <tr>
       <th class="date">Date</th>

@@ -2,7 +2,7 @@ class PhotosController < Admin::AdminController
   before_filter :assign_current_admin_tab
 
   def index
-    @photos = Photo.order("updated_at desc").paginate(:page => page)
+    @photos = Photo.order("updated_at desc").paginate(page: page)
   end
 
   def new

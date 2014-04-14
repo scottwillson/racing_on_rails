@@ -5,70 +5,70 @@ require File.expand_path("../../../../test_helper", __FILE__)
 # :stopdoc:
 class MbraBarTest < ActiveSupport::TestCase
   def test_calculate
-    road = FactoryGirl.create(:discipline, :name => "Road")
-    FactoryGirl.create(:discipline, :name => "Mountain Bike")
-    FactoryGirl.create(:discipline, :name => "Cyclocross")
+    road = FactoryGirl.create(:discipline, name: "Road")
+    FactoryGirl.create(:discipline, name: "Mountain Bike")
+    FactoryGirl.create(:discipline, name: "Cyclocross")
 
-    senior_men = FactoryGirl.create(:category, :name => "Cat 1/2 Men2")
-    senior_women = FactoryGirl.create(:category, :name => "Cat 1/2/3 Women")
+    senior_men = FactoryGirl.create(:category, name: "Cat 1/2 Men2")
+    senior_women = FactoryGirl.create(:category, name: "Cat 1/2/3 Women")
     road.bar_categories << senior_men
     road.bar_categories << senior_women
 
     swan_island = SingleDayEvent.create!(
-      :name => "Swan Island",
-      :discipline => "Road",
-      :date => Date.new(2008, 5, 17)
+      name: "Swan Island",
+      discipline: "Road",
+      date: Date.new(2008, 5, 17)
     )
-    swan_island_senior_men = swan_island.races.create(:category => senior_men, :field_size => 5)
+    swan_island_senior_men = swan_island.races.create(category: senior_men, field_size: 5)
 
     tonkin = FactoryGirl.create(:person)
     swan_island_senior_men.results.create(
-      :place => 1,
-      :person => tonkin
+      place: 1,
+      person: tonkin
     )
 
     molly = FactoryGirl.create(:person)
     swan_island_senior_men.results.create(
-      :place => 2,
-      :person => molly
+      place: 2,
+      person: molly
     )
 
     weaver = FactoryGirl.create(:person)
     swan_island_senior_men.results.create(
-      :place => 3,
-      :person => weaver
+      place: 3,
+      person: weaver
     )
 
     alice = FactoryGirl.create(:person)
     swan_island_senior_men.results.create(
-      :place => "dnf",
-      :person => alice
+      place: "dnf",
+      person: alice
     )
 
     matson = FactoryGirl.create(:person)
     swan_island_senior_men.results.create(
-      :place => "dq",
-      :person => matson
+      place: "dq",
+      person: matson
     )
 
     member = FactoryGirl.create(:person)
     swan_island_senior_men.results.create(
-      :place => "dns",
-      :person => member
+      place: "dns",
+      person: member
     )
 
     # single racer in category
-    senior_women_swan_island = swan_island.races.create(:category => senior_women, :field_size => 1)
+    senior_women_swan_island = swan_island.races.create(category: senior_women, field_size: 1)
     senior_women_swan_island.results.create(
-      :place => 1,
-      :person => molly
+      place: 1,
+      person: molly
     )
 
     assert_difference "Result.count", 5 do
       MbraBar.calculate!(2008)
     end
-    assert_equal(3, MbraBar.where(:date => Date.new(2008)).count, "Bar events after calculate!")
-    MbraBar.where(:date => Date.new(2008)).each do |bar|
+    assert_equal(3, MbraBar.where(date: Date.new(2008)).count, "Bar events after calculate!")
+    MbraBar.where(date: Date.new(2008)).each do |bar|
       assert(bar.name[/2008.*BAR/], "Name #{bar.name} is wrong")
       assert_equal_dates(Time.zone.today, bar.updated_at, "BAR last updated")
     end
@@ -102,59 +102,59 @@ class MbraBarTest < ActiveSupport::TestCase
 
     #championship event - double points
     duck_island = SingleDayEvent.create!(
-      :name => "Duck Island",
-      :discipline => "Road",
-      :date => Date.new(2008, 6, 17),
-      :bar_points => 2
+      name: "Duck Island",
+      discipline: "Road",
+      date: Date.new(2008, 6, 17),
+      bar_points: 2
     )
-    duck_island_senior_men = duck_island.races.create(:category => senior_men, :field_size => 3)
+    duck_island_senior_men = duck_island.races.create(category: senior_men, field_size: 3)
 
     duck_island_senior_men.results.create(
-      :place => 1,
-      :person => tonkin
+      place: 1,
+      person: tonkin
     )
     duck_island_senior_men.results.create(
-      :place => 2,
-      :person => molly
+      place: 2,
+      person: molly
     )
     #two 2nd place racers both should get 2nd place points
     duck_island_senior_men.results.create(
-      :place => 2,
-      :person => weaver
+      place: 2,
+      person: weaver
     )
 
-    senior_women_duck_island = duck_island.races.create(:category => senior_women, :field_size => 1)
+    senior_women_duck_island = duck_island.races.create(category: senior_women, field_size: 1)
     senior_women_duck_island.results.create(
-      :place => 1,
-      :person => molly
+      place: 1,
+      person: molly
     )
 
     # these results should be dropped due to 70% of events rule
     goose_island = SingleDayEvent.create!(
-      :name => "Goose Island",
-      :discipline => "Road",
-      :date => Date.new(2008, 7, 17)
+      name: "Goose Island",
+      discipline: "Road",
+      date: Date.new(2008, 7, 17)
     )
-    goose_island_senior_men = goose_island.races.create(:category => senior_men, :field_size => 2)
+    goose_island_senior_men = goose_island.races.create(category: senior_men, field_size: 2)
 
     goose_island_senior_men.results.create(
-      :place => 1,
-      :person => tonkin
+      place: 1,
+      person: tonkin
     )
     goose_island_senior_men.results.create(
-      :place => 2,
-      :person => molly
+      place: 2,
+      person: molly
     )
-    senior_women_goose_island = goose_island.races.create(:category => senior_women, :field_size => 1)
+    senior_women_goose_island = goose_island.races.create(category: senior_women, field_size: 1)
     senior_women_goose_island.results.create(
-      :place => 1,
-      :person => molly
+      place: 1,
+      person: molly
     )
 
     assert_difference "Result.count", 0 do
       MbraBar.calculate!(2008)
     end
-    assert_equal(3, MbraBar.where(:date => Date.new(2008)).count, "Bar events after calculate!")
+    assert_equal(3, MbraBar.where(date: Date.new(2008)).count, "Bar events after calculate!")
 
     road_bar = MbraBar.find_by_name("2008 Road BAR")
     men_road_bar = road_bar.races.detect {|b| b.category == senior_men }
@@ -184,15 +184,15 @@ class MbraBarTest < ActiveSupport::TestCase
 
      # No BAR points
      egret_island = SingleDayEvent.create!(
-      :name => "Egret Island",
-      :discipline => "Road",
-      :date => Date.new(2008, 7, 17),
-      :bar_points => 0
+      name: "Egret Island",
+      discipline: "Road",
+      date: Date.new(2008, 7, 17),
+      bar_points: 0
     )
-    senior_women_egret_island = egret_island.races.create(:category => senior_women, :field_size => 99)
+    senior_women_egret_island = egret_island.races.create(category: senior_women, field_size: 99)
     senior_women_egret_island.results.create(
-      :place => 1,
-      :person => molly
+      place: 1,
+      person: molly
     )
 
     assert_difference "Result.count", 0 do
@@ -209,37 +209,37 @@ class MbraBarTest < ActiveSupport::TestCase
   end
 
   def test_upgrade_scoring
-    road = FactoryGirl.create(:discipline, :name => "Road")
-    FactoryGirl.create(:discipline, :name => "Mountain Bike")
-    FactoryGirl.create(:discipline, :name => "Cyclocross")
+    road = FactoryGirl.create(:discipline, name: "Road")
+    FactoryGirl.create(:discipline, name: "Mountain Bike")
+    FactoryGirl.create(:discipline, name: "Cyclocross")
 
-    senior_men = FactoryGirl.create(:category, :name => "Cat 1/2 Men2")
-    senior_women = FactoryGirl.create(:category, :name => "Cat 1/2/3 Women")
-    cat_4_women = FactoryGirl.create(:category, :name => "Cat 4 Women")
+    senior_men = FactoryGirl.create(:category, name: "Cat 1/2 Men2")
+    senior_women = FactoryGirl.create(:category, name: "Cat 1/2/3 Women")
+    cat_4_women = FactoryGirl.create(:category, name: "Cat 4 Women")
     road.bar_categories << senior_men
     road.bar_categories << senior_women
     road.bar_categories << cat_4_women
 
     swan_island = SingleDayEvent.create!(
-      :name => "Swan Island",
-      :discipline => "Road",
-      :date => Date.new(2008, 5, 17)
+      name: "Swan Island",
+      discipline: "Road",
+      date: Date.new(2008, 5, 17)
     )
-    cat_4_women_swan_island = swan_island.races.create(:category => cat_4_women, :field_size => 23)
+    cat_4_women_swan_island = swan_island.races.create(category: cat_4_women, field_size: 23)
     molly = FactoryGirl.create(:person)
     cat_4_women_swan_island.results.create(
-      :place => 1,
-      :person => molly
+      place: 1,
+      person: molly
     )
     goose_island = SingleDayEvent.create!(
-      :name => "Goose Island",
-      :discipline => "Road",
-      :date => Date.new(2008, 7, 17)
+      name: "Goose Island",
+      discipline: "Road",
+      date: Date.new(2008, 7, 17)
     )
-    cat_1_2_3_women_goose_island = goose_island.races.create(:category => senior_women, :field_size => 3)
+    cat_1_2_3_women_goose_island = goose_island.races.create(category: senior_women, field_size: 3)
     cat_1_2_3_women_goose_island.results.create(
-      :place => 1,
-      :person => molly
+      place: 1,
+      person: molly
     )
 
     MbraBar.calculate!(2008)
@@ -256,14 +256,14 @@ class MbraBarTest < ActiveSupport::TestCase
 
     # test max 30 upgrade points
     duck_island = SingleDayEvent.create!(
-      :name => "Duck Island",
-      :discipline => "Road",
-      :date => Date.new(2008, 6, 17)
+      name: "Duck Island",
+      discipline: "Road",
+      date: Date.new(2008, 6, 17)
     )
-    cat_4_women_duck_island = duck_island.races.create(:category => cat_4_women, :field_size => 27)
+    cat_4_women_duck_island = duck_island.races.create(category: cat_4_women, field_size: 27)
     cat_4_women_duck_island.results.create(
-      :place => 1,
-      :person => molly
+      place: 1,
+      person: molly
     )
     MbraBar.calculate!(2008)
     road_bar = MbraBar.find_by_name("2008 Road BAR")

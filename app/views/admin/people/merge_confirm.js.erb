@@ -29,7 +29,7 @@ var $dialog = $('<div></div>')
           <% if @other_people.many? %>
           url: '/admin/people/' + $('input[name=other_person_id]:checked').val() + '/merge/<%= @person.id %>',
           <% else %>
-          url: '<%= admin_merge_person_path @other_people.first, @person, :format => :js %>',
+          url: '<%= admin_merge_person_path @other_people.first, @person, format: :js %>',
           <% end %>
           type: 'POST',
           dataType: 'script'

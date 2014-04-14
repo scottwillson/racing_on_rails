@@ -7,14 +7,14 @@ class OregonWomensPrestigeSeriesController < ApplicationController
     if stale?(@team_event) || stale?(@event)
       if !@event.new_record?
         @event = OregonWomensPrestigeSeries.
-                  includes(:competition_event_memberships => :event).
-                  includes(:races => [ :category, :results ]).
+                  includes(competition_event_memberships: :event).
+                  includes(races: [ :category, :results ]).
                   find(@event.id)
       end
 
       if !@team_event.new_record?
         @team_event = OregonWomensPrestigeTeamSeries
-          .includes(:races => [ :category, :results ])
+          .includes(races: [ :category, :results ])
           .find(@team_event.id)
       end
     end

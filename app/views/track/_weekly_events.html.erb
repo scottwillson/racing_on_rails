@@ -1,4 +1,4 @@
-<%= table :collection => weekly_events, :columns => 6 do %>
+<%= table collection: weekly_events, columns: 6 do %>
   <thead>
     <tr>
       <th>Day</th>
@@ -14,7 +14,7 @@
     <tr>
        <td><%= long_day_of_week(event.day_of_week) %></td>
        <td>
-         <%= link_to(event.name, event.flyer, :class => "obvious") if event.flyer? && event.flyer_approved? %>
+         <%= link_to(event.name, event.flyer, class: "obvious") if event.flyer? && event.flyer_approved? %>
          <%= event.name unless event.flyer? %>
        </td>
        <td><%= event.time %></td>

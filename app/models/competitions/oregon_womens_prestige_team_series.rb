@@ -63,7 +63,7 @@ class OregonWomensPrestigeTeamSeries < Competition
         "team_member",
         "year"
       ]).
-      joins(:race => :event).
+      joins(race: :event).
       joins("left outer join people on people.id = results.person_id").
       joins("left outer join events parents_events on parents_events.id = events.parent_id").
       joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
@@ -99,7 +99,7 @@ class OregonWomensPrestigeTeamSeries < Competition
 
   def cat_4_category_ids
     if @cat_4_category_ids.nil?
-      categories = Category.where(:name => "Category 4 Women")
+      categories = Category.where(name: "Category 4 Women")
       @cat_4_category_ids = categories.map(&:id) + categories.map(&:descendants).to_a.flatten.map(&:id)
     end
     @cat_4_category_ids

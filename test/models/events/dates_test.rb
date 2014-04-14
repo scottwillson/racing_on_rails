@@ -5,22 +5,22 @@ module Events
   class DatesTest < ActiveSupport::TestCase
     def test_find_years
       Timecop.freeze(Date.new(2012)) do
-        FactoryGirl.create(:event, :date => Date.new(2007))
-        FactoryGirl.create(:event, :date => Date.new(2008))
-        FactoryGirl.create(:event, :date => Date.new(2009))
+        FactoryGirl.create(:event, date: Date.new(2007))
+        FactoryGirl.create(:event, date: Date.new(2008))
+        FactoryGirl.create(:event, date: Date.new(2009))
         years = Event.find_all_years
         assert_equal_enumerables [ 2012, 2011, 2010, 2009, 2008, 2007 ], years, "Should find all years with events"
       end
     end
 
     def test_today_and_future
-      past_event = FactoryGirl.create(:event, :date => 1.day.ago.to_date)
+      past_event = FactoryGirl.create(:event, date: 1.day.ago.to_date)
       today_event = FactoryGirl.create(:event)
-      future_event = FactoryGirl.create(:event, :date => 1.day.from_now.to_date)
+      future_event = FactoryGirl.create(:event, date: 1.day.from_now.to_date)
       # Start in past but end in future
       multi_day_event = Series.create!
-      multi_day_event.children.create!(:date => 1.day.ago.to_date)
-      multi_day_event.children.create!(:date => 1.day.from_now.to_date)
+      multi_day_event.children.create!(date: 1.day.ago.to_date)
+      multi_day_event.children.create!(date: 1.day.from_now.to_date)
 
       assert Event.today_and_future.include?(today_event), "today_and_future scope should include event from today"
       assert Event.today_and_future.include?(future_event), "today_and_future scope should include future event"
@@ -38,7 +38,7 @@ module Events
         [ [ 2014, 5, 20 ], nil,                      :error ],
         [ [ 2014, 5, 20 ], "never!!",                :error ],
       ].each do |date, human_date, expected|
-        event = SingleDayEvent.new(:date => Time.zone.local(*date).to_date)
+        event = SingleDayEvent.new(date: Time.zone.local(*date).to_date)
 
         test_event = event.dup
         test_event.human_date = human_date
@@ -51,12 +51,12 @@ module Events
     end
 
     def test_create_event_with_human_date
-      event = SingleDayEvent.new(:human_date => "June 28, 2011")
+      event = SingleDayEvent.new(human_date: "June 28, 2011")
       assert_equal Time.zone.local(2011, 6, 28).to_date, event.date.to_date, "date"
     end
 
     def test_end_date
-      event = SingleDayEvent.new(:date => Date.new(2012, 4, 3))
+      event = SingleDayEvent.new(date: Date.new(2012, 4, 3))
       event.set_end_date
       assert_equal_dates Date.new(2012, 4, 3), event.end_date, "end_date"
 

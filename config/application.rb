@@ -52,7 +52,7 @@ module RacingOnRails
       Rails.configuration.paths["config/database"] = [ "local/config/database.yml", "config/database.yml" ]
     end
 
-    config.action_mailer.default_url_options = { :mobile => nil }
+    config.action_mailer.default_url_options = { mobile: nil }
 
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?

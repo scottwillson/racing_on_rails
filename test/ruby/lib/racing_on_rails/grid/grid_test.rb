@@ -20,7 +20,7 @@ module RacingOnRails
         assert_equal(0, grid.column_size(90), "column 90 size")
         assert_equal("", grid.to_s, "to_s")
 
-        grid = RacingOnRails::Grid::Grid.new(text, :header_row => true)
+        grid = RacingOnRails::Grid::Grid.new(text, header_row: true)
         assert_equal(0, grid.column_count, "column count")
         assert_equal(0, grid.row_count, "row count")
         assert_equal(0, grid.column_size(0), "column 0 size")
@@ -93,7 +93,7 @@ END
       3\t10a\tHolland\tSteve\tHuntair\tSenior Men 1/2/3\t\t3\t
       dnf\t100\tBourcier\tPaul\tHutch's\tSenior Men 1/2/3\t\t\t1
 END
-        grid = RacingOnRails::Grid::Grid.new(text, :columns => columns)
+        grid = RacingOnRails::Grid::Grid.new(text, columns: columns)
         assert_equal("CCCP", grid[1][4], "grid[1][4]")
         grid[1][4] = "Gentle Lovers"
         assert_equal("Gentle Lovers", grid[1][4], "grid[1][4]")
@@ -109,7 +109,7 @@ END
       3\t10a\tHolland\tSteve\tHuntair\tSenior Men 1/2/3\t\t3\t
       dnf\t100\tBourcier\tPaul\tHutch's\tSenior Men 1/2/3\t\t\t1
 END
-        grid = RacingOnRails::Grid::Grid.new(text, :columns => columns)
+        grid = RacingOnRails::Grid::Grid.new(text, columns: columns)
         assert_equal(9, grid.column_count, "column count #{grid.columns.join(', ')}")
         assert_equal(:last_name, grid.columns[2].field, "third column field")
         assert_equal("Last Name", grid.columns[2].name, "third column name")
@@ -121,11 +121,11 @@ END
       def test_empty_to_s_text
         text = ""
         columns = [
-          Column.new(:name => 'place', :description => '', :size => 3, :fixed_size => true, :justification => Column::RIGHT),
-          Column.new(:name => 'number', :description => 'Number', :size => 5, :fixed_size => true),
-          Column.new(:name => 'last_name', :description => 'Last Name', :size => 15, :fixed_size => true)
+          Column.new(name: 'place', description: '', size: 3, fixed_size: true, justification: Column::RIGHT),
+          Column.new(name: 'number', description: 'Number', size: 5, fixed_size: true),
+          Column.new(name: 'last_name', description: 'Last Name', size: 15, fixed_size: true)
         ]
-        grid = RacingOnRails::Grid::Grid.new(text, :columns => columns)
+        grid = RacingOnRails::Grid::Grid.new(text, columns: columns)
         assert_equal(3, grid.column_count, "column count")
         assert_equal(0, grid.row_count, "row count")
         assert_equal(5, grid.column_size(1), "column 1 size")
@@ -142,17 +142,17 @@ END
         dnf\t100\tBourcier\tPaul\tHutch's\tSenior Men 1/2/3\t\t\t1
 END
           columns = [
-            Column.new(:name => 'place', :description => '', :size => 3, :justification => Column::RIGHT),
-            Column.new(:name => 'number', :description => 'Number', :size => 5),
-            Column.new(:name => 'last_name', :description => 'Last Name', :size => 15, :fixed_size => true),
-            Column.new(:name => 'first_name', :description => 'First Name', :size => 12),
-            Column.new(:name => 'team_name', :description => 'Team', :size => 30),
-            Column.new(:name => 'category', :description => 'Category', :size => 20),
-            Column.new(:name => 'points', :description => '', :size => 3, :fixed_size => true, :justification => Column::RIGHT),
-            Column.new(:name => 'points_bonus_penalty', :description => '', :size => 3, :fixed_size => true, :justification => Column::RIGHT),
-            Column.new(:name => 'points_total', :description => '', :size => 3, :fixed_size => true, :justification => Column::RIGHT)
+            Column.new(name: 'place', description: '', size: 3, justification: Column::RIGHT),
+            Column.new(name: 'number', description: 'Number', size: 5),
+            Column.new(name: 'last_name', description: 'Last Name', size: 15, fixed_size: true),
+            Column.new(name: 'first_name', description: 'First Name', size: 12),
+            Column.new(name: 'team_name', description: 'Team', size: 30),
+            Column.new(name: 'category', description: 'Category', size: 20),
+            Column.new(name: 'points', description: '', size: 3, fixed_size: true, justification: Column::RIGHT),
+            Column.new(name: 'points_bonus_penalty', description: '', size: 3, fixed_size: true, justification: Column::RIGHT),
+            Column.new(name: 'points_total', description: '', size: 3, fixed_size: true, justification: Column::RIGHT)
           ]
-          grid = RacingOnRails::Grid::Grid.new(text, :columns => columns)
+          grid = RacingOnRails::Grid::Grid.new(text, columns: columns)
           assert_equal(9, grid.column_count, "column count")
           assert_equal(4, grid.row_count, "row count")
           assert_equal(6, grid.column_size(1), "column 1 size")
@@ -181,7 +181,7 @@ END
         \t\t\t  \t\t\t\t\t
         \t\t\t\t\t\t\t\t
 END
-    grid = RacingOnRails::Grid::Grid.new(text, :columns => columns)
+    grid = RacingOnRails::Grid::Grid.new(text, columns: columns)
         assert_equal(7, grid.row_count, "row count")
         grid.delete_blank_rows
         assert_equal(4, grid.row_count, "row count")

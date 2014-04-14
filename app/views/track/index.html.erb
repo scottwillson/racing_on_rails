@@ -11,7 +11,7 @@ end %>
 
 <div class="col-sm-12">
   <h3><%= link_to "Upcoming Races", "/track/schedule" %></h3>
-  <%= table :id => "upcoming_events", :columns => 5, :collection => @events do %>
+  <%= table id: "upcoming_events", columns: 5, collection: @events do %>
     <thead>
       <tr>
         <th class="date">Date</th>
@@ -32,7 +32,7 @@ end %>
           <td class="beginner_friendly icon">
             <% if event.beginner_friendly? %>
               <%= link_to("http://www.obra.org/beginner_friendly.html",
-                          :class => "beginner_friendly", :title => "Beginner friendly event") do %>
+                          class: "beginner_friendly", title: "Beginner friendly event") do %>
                 <span class="glyphicon glyphicon-ok-circle"></span>
               <% end %>
             <% end %>
@@ -51,19 +51,19 @@ end %>
 
   <h3>Weekly Races</h3>
   <%= render "weekly_events",
-             :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && !e.instructional? && !e.practice? } %>
+             weekly_events: @events.select { |e| e.is_a?(WeeklySeries) && !e.instructional? && !e.practice? } %>
 
   <h3>Weekly Instruction Schedule</h3>
   <%= render 'weekly_events',
-             :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && e.instructional? } %>
+             weekly_events: @events.select { |e| e.is_a?(WeeklySeries) && e.instructional? } %>
 
   <h3>Weekly Practice Schedule</h3>
   <%= render 'weekly_events',
-             :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && e.practice? } %>
+             weekly_events: @events.select { |e| e.is_a?(WeeklySeries) && e.practice? } %>
 </div>
 
 <div class="row">
   <div class="col-sm-12 associated">
-    <%= image_tag "http://#{RacingAssociation.current.static_host}/track/images/logos/alpenrose_logo.gif", :size => "200x65", :title => "Alpenrose" %>
+    <%= image_tag "http://#{RacingAssociation.current.static_host}/track/images/logos/alpenrose_logo.gif", size: "200x65", title: "Alpenrose" %>
   </div>
 </div>

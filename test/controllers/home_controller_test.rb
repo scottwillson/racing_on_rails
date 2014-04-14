@@ -3,9 +3,9 @@ require_relative "../test_helper"
 # :stopdoc:
 class HomeControllerTest < ActionController::TestCase
   test "index" do
-    FactoryGirl.create(:event, :date => 3.weeks.from_now)
-    future_national_federation_event = FactoryGirl.create(:event, :sanctioned_by => "USA Cycling")
-    Home.create!(:weeks_of_upcoming_events => 4)
+    FactoryGirl.create(:event, date: 3.weeks.from_now)
+    future_national_federation_event = FactoryGirl.create(:event, sanctioned_by: "USA Cycling")
+    Home.create!(weeks_of_upcoming_events: 4)
 
     get :index
 
@@ -34,7 +34,7 @@ class HomeControllerTest < ActionController::TestCase
   test "update" do
     use_ssl
     login_as :administrator
-    put :update, :home => { :weeks_of_recent_results => 1 }
+    put :update, home: { weeks_of_recent_results: 1 }
     assert_redirected_to edit_home_path
   end
 end

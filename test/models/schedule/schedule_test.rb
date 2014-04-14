@@ -4,21 +4,21 @@ require File.expand_path("../../../test_helper", __FILE__)
 class ScheduleTest < ActiveSupport::TestCase
   def test_create
     piece_of_cake = SingleDayEvent.new(
-      :name => "Piece of Cake Road Event",
-      :city => "Shedds",
-      :date => Date.new(2007, 3, 17)
+      name: "Piece of Cake Road Event",
+      city: "Shedds",
+      date: Date.new(2007, 3, 17)
     )
 
     kings_valley = SingleDayEvent.new(
-      :name => "Kings Valley Road Event",
-      :city => "Kings Valley",
-      :date => Date.new(2007, 3, 6)
+      name: "Kings Valley Road Event",
+      city: "Kings Valley",
+      date: Date.new(2007, 3, 6)
     )
 
     state_crit = SingleDayEvent.new(
-      :name => "State Championship Criterium",
-      :city => "gresham",
-      :date => Date.new(2007, 3, 17)
+      name: "State Championship Criterium",
+      city: "gresham",
+      date: Date.new(2007, 3, 17)
     )
 
     events = [piece_of_cake, kings_valley, state_crit]
@@ -52,12 +52,12 @@ class ScheduleTest < ActiveSupport::TestCase
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:cyclocross_discipline)
     FactoryGirl.create(:mtb_discipline)
-    FactoryGirl.create(:discipline, :name => "Track")
-    FactoryGirl.create(:discipline, :name => "Time Trial").discipline_aliases.create(:alias => "tt")
+    FactoryGirl.create(:discipline, name: "Track")
+    FactoryGirl.create(:discipline, name: "Time Trial").discipline_aliases.create(alias: "tt")
 
-    event_before = SingleDayEvent.create(:name => 'Before Schedule Start', :date => Date.new(2006, 1, 19))
-    event_on = SingleDayEvent.create(:name => 'On Schedule Start', :date => Date.new(2006, 1, 20))
-    event_after = SingleDayEvent.create(:name => 'After Schedule Start', :date => Date.new(2006, 1, 21))
+    event_before = SingleDayEvent.create(name: 'Before Schedule Start', date: Date.new(2006, 1, 19))
+    event_on = SingleDayEvent.create(name: 'On Schedule Start', date: Date.new(2006, 1, 20))
+    event_after = SingleDayEvent.create(name: 'After Schedule Start', date: Date.new(2006, 1, 21))
 
     FactoryGirl.create_list(:event, 4)
 
@@ -96,7 +96,7 @@ class ScheduleTest < ActiveSupport::TestCase
     }
 
     expected.each do |event_name, count|
-      assert_equal(count, Event.where(:name => event_name).where("date >= ?", Date.new(2006, 1, 20)).count, "Count of events named '#{event_name}'")
+      assert_equal(count, Event.where(name: event_name).where("date >= ?", Date.new(2006, 1, 20)).count, "Count of events named '#{event_name}'")
     end
 
     assert_equal(76, expected.inject(0) { |sum, e| sum + e.last }, "New events")
@@ -168,7 +168,7 @@ class ScheduleTest < ActiveSupport::TestCase
       assert_equal(fast_twitch_series, event.parent, "Fast Twitch Fridays parent")
       assert_equal(nil, event.flyer, "Fast Twitch flyer")
     end
-    assert_equal(1, Person.where(:first_name => 'Jen', :last_name => 'Featheringill').count, "Jen Featheringill should only be listed once in promoters")
+    assert_equal(1, Person.where(first_name: 'Jen', last_name: 'Featheringill').count, "Jen Featheringill should only be listed once in promoters")
 
     assert_not_nil(jack_frost, "Should have imported Jack Frost")
     assert_equal("Vancouver", jack_frost.city, "Jack Frost city")
@@ -344,8 +344,8 @@ class ScheduleTest < ActiveSupport::TestCase
 
   def test_import_mbra_tabbed
     FactoryGirl.create(:discipline)
-    FactoryGirl.create(:discipline, :name => "Criterium")
-    Team.create!(:id => 1200000, :name => "Bike Team")
+    FactoryGirl.create(:discipline, name: "Criterium")
+    Team.create!(id: 1200000, name: "Bike Team")
     filename = File.expand_path(File.dirname(__FILE__) + "/../../fixtures/schedule/tab-delimited.txt")
     Schedule::Schedule.import(filename)
 
@@ -379,8 +379,8 @@ class ScheduleTest < ActiveSupport::TestCase
 
   def test_import_mbra_csv
     FactoryGirl.create(:discipline)
-    FactoryGirl.create(:discipline, :name => "Criterium")
-    Team.create!(:id => 1200000, :name => "Bike Team")
+    FactoryGirl.create(:discipline, name: "Criterium")
+    Team.create!(id: 1200000, name: "Bike Team")
     filename = File.expand_path(File.dirname(__FILE__) + "/../../fixtures/schedule/comma-delimited.csv")
     Schedule::Schedule.import(filename)
 

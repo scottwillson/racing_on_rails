@@ -13,12 +13,12 @@ module Admin
       end
 
       def test_merge?
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         tonkin = FactoryGirl.create(:person)
         xhr :put, :update_attribute,
-            :id => tonkin.to_param,
-            :name => "name",
-            :value => molly.name
+            id: tonkin.to_param,
+            name: "name",
+            value: molly.name
         assert_response :success
         assert_equal(tonkin, assigns['person'], 'Person')
         person = assigns['person']
@@ -29,12 +29,12 @@ module Admin
       end
 
       def test_merge
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-        tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         old_id = tonkin.id
         assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
 
-        xhr :post, :merge, :other_person_id => tonkin.to_param, :id => molly.to_param, :format => :js
+        xhr :post, :merge, other_person_id: tonkin.to_param, id: molly.to_param, format: :js
         assert_response :success
         assert_template "admin/people/merge"
 
@@ -43,10 +43,10 @@ module Admin
       end
 
       def test_merge_same_person
-        tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
+        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
 
-        xhr :post, :merge, :other_person_id => tonkin.to_param, :id => tonkin.to_param, :format => :js
+        xhr :post, :merge, other_person_id: tonkin.to_param, id: tonkin.to_param, format: :js
         assert_response :success
         assert_template "admin/people/merge"
 
@@ -57,13 +57,13 @@ module Admin
         FactoryGirl.create(:discipline)
         FactoryGirl.create(:number_issuer)
 
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-        molly_with_different_road_number = Person.create(:name => 'Molly Cameron', :road_number => '987123')
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        molly_with_different_road_number = Person.create(name: 'Molly Cameron', road_number: '987123')
         tonkin = FactoryGirl.create(:person)
         xhr :put, :update_attribute,
-            :id => tonkin.to_param,
-            :name => "name",
-            :value => molly.name
+            id: tonkin.to_param,
+            name: "name",
+            value: molly.name
         assert_response :success
         assert_equal tonkin, assigns['person'], 'Person'
         person = assigns['person']
@@ -79,15 +79,15 @@ module Admin
         FactoryGirl.create(:cyclocross_discipline)
         FactoryGirl.create(:number_issuer)
 
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         molly.ccx_number = '102'
         molly.save!
-        molly_with_different_cross_number = Person.create(:name => 'Molly Cameron', :ccx_number => '810', :road_number => '1009')
+        molly_with_different_cross_number = Person.create(name: 'Molly Cameron', ccx_number: '810', road_number: '1009')
         tonkin = FactoryGirl.create(:person)
         xhr :put, :update_attribute,
-            :id => tonkin.to_param,
-            :name => "name",
-            :value => molly.name
+            id: tonkin.to_param,
+            name: "name",
+            value: molly.name
         assert_response :success
         assert_equal(tonkin, assigns['person'], 'Person')
         person = assigns['person']
@@ -104,14 +104,14 @@ module Admin
       end
 
       def test_dupes_merge_alias?
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-        tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-        tonkin.aliases.create!(:name => "Eric Tonkin")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        tonkin.aliases.create!(name: "Eric Tonkin")
 
         xhr :put, :update_attribute,
-            :id => molly.to_param,
-            :name => "name",
-            :value => "Eric Tonkin"
+            id: molly.to_param,
+            name: "name",
+            value: "Eric Tonkin"
         assert_response :success, "success response"
         assert_equal(molly, assigns['person'], 'Person')
         person = assigns['person']
@@ -124,15 +124,15 @@ module Admin
         FactoryGirl.create(:discipline)
         FactoryGirl.create(:number_issuer)
 
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-        tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-        tonkin_with_different_road_number = Person.create(:name => 'Erik Tonkin', :road_number => 'YYZ')
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        tonkin_with_different_road_number = Person.create(name: 'Erik Tonkin', road_number: 'YYZ')
         assert(tonkin_with_different_road_number.valid?, "tonkin_with_different_road_number not valid: #{tonkin_with_different_road_number.errors.full_messages.join(', ')}")
         assert_equal(tonkin_with_different_road_number.new_record?, false, 'tonkin_with_different_road_number should be saved')
         old_id = tonkin.id
         assert_equal(2, Person.find_all_by_name('Erik Tonkin').size, 'Tonkins in database')
 
-        post :merge, :id => molly.id, :other_person_id => tonkin.to_param, :format => :js
+        post :merge, id: molly.id, other_person_id: tonkin.to_param, format: :js
         assert_response :success
         assert_template("admin/people/merge")
 

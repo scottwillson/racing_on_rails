@@ -4,14 +4,14 @@
   <h2>General</h2>
 <% end %>
 
-  <%= render :partial => "article", :collection => @article_category.articles %>
+  <%= render partial: "article", collection: @article_category.articles %>
 
 <%
   @article_categories.each do |article_category|
     if article_category.articles.any?
 %>
       <h1><%= article_category.name %></h1>
-      <%= render :partial => "article", :collection => article_category.articles %>
+      <%= render partial: "article", collection: article_category.articles %>
 <%
     end
   end

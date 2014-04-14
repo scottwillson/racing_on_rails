@@ -14,7 +14,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
   def test_admin_login
     FactoryGirl.create(:administrator)
-    post :create, :person_session => { :login => "admin@example.com", :password => "secret" }
+    post :create, person_session: { login: "admin@example.com", password: "secret" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert assigns["person_session"].errors.empty?, assigns["person_session"].errors.full_messages.join
     assert_redirected_to admin_home_path
@@ -24,7 +24,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
   def test_member_login
     member = FactoryGirl.create(:person_with_login)
-    post :create, :person_session => { :login => member.login, :password => "secret" }
+    post :create, person_session: { login: member.login, password: "secret" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert assigns["person_session"].errors.empty?, assigns["person_session"].errors.full_messages.join
     assert_redirected_to edit_person_path(member)
@@ -34,7 +34,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
   def test_login_failure
     FactoryGirl.create(:administrator)
-    post :create, :person_session => { :login => "admin@example.com", :password => "bad password" }
+    post :create, person_session: { login: "admin@example.com", password: "bad password" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(!assigns["person_session"].errors.empty?, "@person_session should have errors")
     assert_response :success
@@ -44,7 +44,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
   def test_blank_login_should_fail
     FactoryGirl.create(:administrator)
-    post :create, :person_session => { :login => "", :password => "" }
+    post :create, person_session: { login: "", password: "" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(assigns["person_session"].errors.present?, "@person_session should have errors")
     assert_response :success
@@ -124,9 +124,9 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
   def test_show_and_return_to
     @request.env['HTTPS'] = nil
-    get :show, :return_to => "/admin"
+    get :show, return_to: "/admin"
     if RacingAssociation.current.ssl?
-      assert_redirected_to person_session_url(secure_redirect_options.merge(:return_to => "/admin"))
+      assert_redirected_to person_session_url(secure_redirect_options.merge(return_to: "/admin"))
     else
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
@@ -134,9 +134,9 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
   def test_show_and_return_to_registration
     @request.env['HTTPS'] = nil
-    get :show, :return_to => "/events/123/register"
+    get :show, return_to: "/events/123/register"
     if RacingAssociation.current.ssl?
-      assert_redirected_to person_session_url(secure_redirect_options.merge(:return_to => "/events/123/register"))
+      assert_redirected_to person_session_url(secure_redirect_options.merge(return_to: "/events/123/register"))
     else
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end

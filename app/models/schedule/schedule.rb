@@ -2,21 +2,21 @@ module Schedule
   # Single year's event schedule. Hierarchical model or Arrays: Schedule --> Month --> Week --> Day --> SingleDayEvent
   class Schedule
     COLUMNS_MAP = {
-      :race_name       => :name,
-      :race            => :name,
-      :event           => :name,
-      :type            => :discipline,
-      :city_state      => :location,
-      :promoter        => :promoter_name,
-      :phone           => :promoter_phone,
-      :email           => :promoter_email,
-      :sponsoring_team => :team_id,
-      :team            => :team_id,
-      :club            => :team_id,
-      :website         => :flyer,
-      :where           => :city,
-      :flyer_approved  => { :column_type => :boolean },
-      :velodrome       => :velodrome_name
+      race_name: :name,
+      race: :name,
+      event: :name,
+      type: :discipline,
+      city_state: :location,
+      promoter: :promoter_name,
+      phone: :promoter_phone,
+      email: :promoter_email,
+      sponsoring_team: :team_id,
+      team: :team_id,
+      club: :team_id,
+      website: :flyer,
+      where: :city,
+      flyer_approved: { column_type: :boolean },
+      velodrome: :velodrome_name
     }
 
     # FIXME Remove dependency. Is it here because we need a helper?
@@ -38,7 +38,7 @@ module Schedule
     def self.import(file_path)
       start_date = nil
       Event.transaction do
-        table = Tabular::Table.read(file_path, :columns => COLUMNS_MAP)
+        table = Tabular::Table.read(file_path, columns: COLUMNS_MAP)
         table.strip!
         events = parse_events(table)
         delete_all_future_events events
@@ -105,25 +105,25 @@ module Schedule
 
       if promoter
         if promoter.name.blank?
-          promoter.update_attributes!(:name => row[:promoter_name])
+          promoter.update_attributes!(name: row[:promoter_name])
         end
 
         if promoter.home_phone.blank?
-          promoter.update_attributes!(:home_phone => row[:promoter_phone])
+          promoter.update_attributes!(home_phone: row[:promoter_phone])
         else
           event_hash[:phone] = row[:promoter_phone]
         end
 
         if promoter.email.blank?
-          promoter.update_attributes!(:email => row[:promoter_email])
+          promoter.update_attributes!(email: row[:promoter_email])
         else
           event_hash[:email] = row[:promoter_email]
         end
       elsif row[:promoter_name].present? || row[:promoter_email].present? || row[:promoter_phone].present?
         promoter = Person.create!(
-                    :name => row[:promoter_name],
-                    :email => row[:promoter_email],
-                    :home_phone => row[:promoter_phone]
+                    name: row[:promoter_name],
+                    email: row[:promoter_email],
+                    home_phone: row[:promoter_phone]
                   )
       end
 
@@ -176,7 +176,7 @@ module Schedule
     def self.save(events, multi_day_events)
       events.each do |event|
         logger.debug "Save #{event.name}"
-        unless Event.where(:name => event.name, :date => event.date).exists?
+        unless Event.where(name: event.name, date: event.date).exists?
           event.save!
         end
       end
@@ -194,19 +194,19 @@ module Schedule
     # params: year, sanctioning_organization, start, end, discipline, region
     def self.find(params)
       if RacingAssociation.current.include_multiday_events_on_schedule?
-        query = Event.where(:parent_id => nil).where("type != ?", "Event").includes(:parent)
+        query = Event.where(parent_id: nil).where("type != ?", "Event").includes(:parent)
       else
-        query = Event.where(:type => "SingleDayEvent").includes(:parent)
+        query = Event.where(type: "SingleDayEvent").includes(:parent)
       end
 
       if !RacingAssociation.current.show_practices_on_calendar?
-        query = query.where(:practice => false)
+        query = query.where(practice: false)
       end
 
       if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
-        query = query.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
+        query = query.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
       elsif RacingAssociation.current.filter_schedule_by_sanctioning_organization? && params[:sanctioning_organization].present?
-        query = query.where(:sanctioned_by => params[:sanctioning_organization])
+        query = query.where(sanctioned_by: params[:sanctioning_organization])
       end
 
       start_date = params[:start]
@@ -218,12 +218,12 @@ module Schedule
       query = query.where("date between ? and ?", start_date, end_date)
 
       if params[:discipline].present?
-        query = query.where(:discipline => params[:discipline].name)
+        query = query.where(discipline: params[:discipline].name)
       end
 
       if RacingAssociation.current.filter_schedule_by_region?
         if params[:region].present?
-          query = query.where(:region_id => params[:region].id)
+          query = query.where(region_id: params[:region].id)
         end
       end
 

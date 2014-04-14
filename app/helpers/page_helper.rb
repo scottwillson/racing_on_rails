@@ -3,7 +3,7 @@ module PageHelper
   def render_page(path, options = {})
     page = Page.find_by_path(path)
     if page
-      render({ :inline => page.body }.merge(options))
+      render({ inline: page.body }.merge(options))
     else
       render path, options
     end

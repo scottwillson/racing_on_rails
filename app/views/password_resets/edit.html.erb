@@ -1,20 +1,20 @@
 <% @page_title = "New Password" %>
 <% @show_tabs = false %>
 
-<%= render "shared/errors", :object => @person %>
+<%= render "shared/errors", object: @person %>
 
 <h2><%= @person.name %></h2>
 
-<%= form_for :person, :url => password_reset_path, :method => :patch do |f| %>
+<%= form_for :person, url: password_reset_path, method: :patch do |f| %>
   <div class="row">
     <div class="col-sm-4"></div>
     <div class="col-sm-4">
-      <%= f.labelled_password_field :password, "New Password", :class => "col-sm-12 wants_focus" %>
+      <%= f.labelled_password_field :password, "New Password", class: "col-sm-12 wants_focus" %>
       <%= f.labelled_password_field :password_confirmation, "Confirm New Password" %>
     </div>
   </div>
   <div class="row buttons">
     <div class="col-sm-4"></div>
-    <div class="col-sm-4 actions"><%= submit_tag "Save", :class => "btn btn-default", :id => "save" %></div>
+    <div class="col-sm-4 actions"><%= submit_tag "Save", class: "btn btn-default", id: "save" %></div>
   </div>
 <% end %>

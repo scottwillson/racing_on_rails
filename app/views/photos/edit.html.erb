@@ -1,15 +1,15 @@
-<%= render "shared/errors", :object => @photo %>
+<%= render "shared/errors", object: @photo %>
 
-<%= form_for @photo, :html => { :multipart => true, :class => "form-horizontal", :role => "form" } do |f| %>
+<%= form_for @photo, html: { multipart: true, class: "form-horizontal", role: "form" } do |f| %>
   <div class="row">
     <div class="col-sm-6">
       <%= f.labelled_text_area :caption,
-        :class => "form-control",
-        :rows => 8,
-        :help => "Use <a href=\"https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet\" class=\"obvious\">Markdown</a> for formatting and links." %>
+        class: "form-control",
+        rows: 8,
+        help: "Use <a href=\"https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet\" class=\"obvious\">Markdown</a> for formatting and links." %>
 
-      <%= f.labelled_text_field :title, "Title", :class => "form-control", :help => "Shown in place of missing image and when hovered over" %>
-      <%= f.labelled_text_field :link, "Link", :class => "form-control", :help => "Link for photo" %>
+      <%= f.labelled_text_field :title, "Title", class: "form-control", help: "Shown in place of missing image and when hovered over" %>
+      <%= f.labelled_text_field :link, "Link", class: "form-control", help: "Link for photo" %>
     </div>
     <div class="col-sm-6">
       <div class="form-group">
@@ -28,8 +28,8 @@
   </div>
   <div class="row">
     <div class="col-sm-12">
-      <%= submit_tag "Save", :class => "btn btn-default", :id => "save" %>
-      <%= link_to "New", new_photo_path, :class => "btn btn-default" %>
+      <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
+      <%= link_to "New", new_photo_path, class: "btn btn-default" %>
     </div>
   </div>
 <% end %>

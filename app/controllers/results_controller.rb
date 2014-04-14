@@ -23,28 +23,28 @@ class ResultsController < ApplicationController
 
     case @event
     when AgeGradedBar, Bar, TeamBar
-      return redirect_to(:controller => 'bar', :action => 'show', :year => @event.year, :discipline => @event.discipline)
+      return redirect_to(controller: 'bar', action: 'show', year: @event.year, discipline: @event.discipline)
     when Cat4WomensRaceSeries
-      return redirect_to(cat4_womens_race_series_path(:year => @event.year))
+      return redirect_to(cat4_womens_race_series_path(year: @event.year))
     when OverallBar
-      return redirect_to(:controller => 'bar', :action => 'show', :year => @event.year)
+      return redirect_to(controller: 'bar', action: 'show', year: @event.year)
     when Ironman
-      return redirect_to(ironman_path(:year => @event.year))
+      return redirect_to(ironman_path(year: @event.year))
     when OregonCup
-      return redirect_to(oregon_cup_path(:year => @event.year))
+      return redirect_to(oregon_cup_path(year: @event.year))
     when RiderRankings
-      return redirect_to(rider_rankings_path(:year => @event.year))
+      return redirect_to(rider_rankings_path(year: @event.year))
     end
 
     respond_to do |format|
       format.html {
-        benchmark "Load results", :level => :debug do
-          @event = Event.includes(:races => [ :category, { :results => :team } ]).find(params[:event_id])
+        benchmark "Load results", level: :debug do
+          @event = Event.includes(races: [ :category, { results: :team } ]).find(params[:event_id])
         end
         assign_start_list
       }
-      format.json { render :json => results_for_api(@event.id) }
-      format.xml { render :xml => results_for_api(@event.id) }
+      format.json { render json: results_for_api(@event.id) }
+      format.xml { render xml: results_for_api(@event.id) }
     end
   end
 
@@ -53,9 +53,9 @@ class ResultsController < ApplicationController
     @event = Event.find(params[:event_id])
     @person = Person.find(params[:person_id])
     @results = Result.
-                includes(:scores => [ :source_result, :competition_result ]).
-                where(:event_id => params[:event_id]).
-                where(:person_id => params[:person_id])
+                includes(scores: [ :source_result, :competition_result ]).
+                where(event_id: params[:event_id]).
+                where(person_id: params[:person_id])
   end
 
   # Single Team's Results for a single Event
@@ -63,9 +63,9 @@ class ResultsController < ApplicationController
     @team = Team.find(params[:team_id])
     @event = Event.find(params[:event_id])
     @result = Result.
-              includes(:scores => [ :source_result, :competition_result ]).
+              includes(scores: [ :source_result, :competition_result ]).
               where("results.event_id" => params[:event_id]).
-              where(:team_id => params[:team_id]).
+              where(team_id: params[:team_id]).
               first!
     raise ActiveRecord::RecordNotFound unless @result
   end
@@ -78,17 +78,17 @@ class ResultsController < ApplicationController
       format.html do
         assign_person_results @person, @year
 
-        render :layout => !request.xhr?
+        render layout: !request.xhr?
       end
 
       format.json do
         assign_person_results @person, @year
-        render :json => (@event_results + @competition_results).to_json
+        render json: (@event_results + @competition_results).to_json
       end
 
       format.xml do
         assign_person_results @person, @year
-         render :xml => (@event_results + @competition_results).to_xml
+         render xml: (@event_results + @competition_results).to_xml
       end
     end
   end
@@ -100,17 +100,17 @@ class ResultsController < ApplicationController
       format.html do
         assign_team_results @team, @year
 
-        render :layout => !request.xhr?
+        render layout: !request.xhr?
       end
 
       format.json do
         assign_team_results @team, @year
-        render :json => @event_results.to_json
+        render json: @event_results.to_json
       end
 
       format.xml do
         assign_team_results @team, @year
-        render :xml => @event_results.to_xml
+        render xml: @event_results.to_xml
       end
     end
   end
@@ -127,12 +127,12 @@ class ResultsController < ApplicationController
       "person_id = ? and year = ? and competition_result = false and team_competition_result = false", person.id, year
     )
     @competition_results = Result.
-      includes(:scores => [ :source_result, :competition_result ]).
+      includes(scores: [ :source_result, :competition_result ]).
       where("person_id = ? and year = ? and (competition_result = true or team_competition_result = true)", person.id, year)
   end
 
   def assign_team_results(team, year)
-    @event_results = Result.where(:team_id => team.id).where(:year => year).where("competition_result = false and team_competition_result = false")
+    @event_results = Result.where(team_id: team.id).where(year: year).where("competition_result = false and team_competition_result = false")
   end
 
   # Default implementation. Return nil. Override in engines.
@@ -141,6 +141,6 @@ class ResultsController < ApplicationController
   end
 
   def results_for_api(event_id)
-    Result.where(:event_id => event_id)
+    Result.where(event_id: event_id)
   end
 end

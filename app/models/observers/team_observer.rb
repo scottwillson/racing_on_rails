@@ -1,6 +1,6 @@
 class TeamObserver < ActiveRecord::Observer
   def after_destroy(team)
-    Result.where(:team_id => team.id).update_all(:team_id => nil, :team_name => nil)
+    Result.where(team_id: team.id).update_all(team_id: nil, team_name: nil)
     true
   end
 

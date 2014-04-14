@@ -12,7 +12,7 @@ module Admin
       def show
         @version = Page::Version.find(params[:id])
         @page = @version.versioned
-        render :inline => @version.versioned.body, :layout => "application"
+        render inline: @version.versioned.body, layout: "application"
       end
 
       def destroy

@@ -1,13 +1,13 @@
 <div class="row posts">
   <div class="col-sm-3">
-    <%= link_to new_mailing_list_post_path(mailing_list), :class => "btn btn-default" do %>
+    <%= link_to new_mailing_list_post_path(mailing_list), class: "btn btn-default" do %>
       <span class="glyphicon glyphicon-envelope"></span> New Post
     <% end %>
   </div>
   <div class="col-sm-6">
     <%= will_paginate posts,
-                      :page_links => false,
-                      :previous_label => "&larr; Newer",
-                      :next_label => "Older &rarr;" %>
+                      page_links: false,
+                      previous_label: "&larr; Newer",
+                      next_label: "Older &rarr;" %>
   </div>
 </div>

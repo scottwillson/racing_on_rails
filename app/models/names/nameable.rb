@@ -3,7 +3,7 @@ module Names
   module Nameable
     def self.included(base)
       base.before_save :add_name
-      base.has_many :names, -> { order(:year) }, :as => :nameable
+      base.has_many :names, -> { order(:year) }, as: :nameable
     end
 
     def name(date_or_year = nil)
@@ -29,7 +29,7 @@ module Names
     def add_name
       last_year = Time.zone.today.year - 1
       if name_was.present? && results_before_this_year? && self.names.none? { |name| name.year == last_year }
-        name = names.build(:name => name_was, :year => last_year)
+        name = names.build(name: name_was, year: last_year)
         if self.respond_to?(:first_name)
           name.first_name = first_name_was
         end

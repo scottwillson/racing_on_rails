@@ -22,7 +22,7 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_equal competition, Competition.find_for_year, "Should find current Competition"
     assert_equal nil, Competition.find_for_year(2005), "Should not find anything when no Competitions in DB for this year"
 
-    competition_in_2005 = Competition.create!(:date => Time.zone.local(2005))
+    competition_in_2005 = Competition.create!(date: Time.zone.local(2005))
     assert_equal competition, Competition.find_for_year, "Should find current Competition"
     assert_equal competition_in_2005, Competition.find_for_year(2005), "Should not find anything when no Competitions in DB for this year"
   end
@@ -34,7 +34,7 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_equal competition, TestCompetition.find_for_year, "find in DB"
     assert_equal nil, TestCompetition.find_for_year(2005), "find in DB, different year"
 
-    competition = TestCompetition.create!(:date => Date.new(2005))
+    competition = TestCompetition.create!(date: Date.new(2005))
     assert_equal competition, TestCompetition.find_for_year(2005), "find in DB with multiple events"
   end
 

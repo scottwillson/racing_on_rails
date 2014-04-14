@@ -8,17 +8,17 @@ class PeopleControllerTest < ActionController::TestCase
     member = FactoryGirl.create(:person_with_login)
     use_ssl
     login_as member
-    get :edit, :id => member.to_param
+    get :edit, id: member.to_param
     assert_response :success
     assert_equal member, assigns(:person), "@person"
-    assert_select ".nav.tabs", :count => 0
+    assert_select ".nav.tabs", count: 0
   end
 
   def test_edit_promoter
     promoter = FactoryGirl.create(:promoter)
     use_ssl
     login_as promoter
-    get :edit, :id => promoter.to_param
+    get :edit, id: promoter.to_param
     assert_response :success
     assert_equal promoter, assigns(:person), "@person"
   end
@@ -29,16 +29,16 @@ class PeopleControllerTest < ActionController::TestCase
     molly.editors << member
     use_ssl
     login_as member
-    get :edit, :id => molly.to_param
+    get :edit, id: molly.to_param
     assert_response :success
     assert_equal molly, assigns(:person), "@person"
-    assert_select ".nav.tabs", :count => 0
+    assert_select ".nav.tabs", count: 0
   end
 
   def test_must_be_logged_in
     member = FactoryGirl.create(:person_with_login)
     use_ssl
-    get :edit, :id => member.to_param
+    get :edit, id: member.to_param
     assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
@@ -47,7 +47,7 @@ class PeopleControllerTest < ActionController::TestCase
     weaver = FactoryGirl.create(:person)
     use_ssl
     login_as member
-    get :edit, :id => weaver.to_param
+    get :edit, id: weaver.to_param
     assert_redirected_to unauthorized_path
   end
 
@@ -56,17 +56,17 @@ class PeopleControllerTest < ActionController::TestCase
     administrator = FactoryGirl.create(:administrator)
     use_ssl
     login_as administrator
-    get :edit, :id => member.to_param
+    get :edit, id: member.to_param
     assert_response :success
     assert_equal member, assigns(:person), "@person"
   end
 
   def test_update
     use_ssl
-    person = FactoryGirl.create(:person_with_login, :first_name => "Bob", :last_name => "Jones")
-    gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers")
+    person = FactoryGirl.create(:person_with_login, first_name: "Bob", last_name: "Jones")
+    gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
     login_as person
-    put :update, :id => person.to_param, :person => { :team_name => "Gentle Lovers" }
+    put :update, id: person.to_param, person: { team_name: "Gentle Lovers" }
     assert_redirected_to edit_person_path(person)
     person = Person.find(person.id)
     assert_equal gentle_lovers, person.reload.team, "Team should be updated"
@@ -84,13 +84,13 @@ class PeopleControllerTest < ActionController::TestCase
 
   def test_update_no_name
     use_ssl
-    editor = FactoryGirl.create(:administrator, :login => "my_login", :first_name => "", :last_name => "")
-    gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers")
+    editor = FactoryGirl.create(:administrator, login: "my_login", first_name: "", last_name: "")
+    gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
 
     login_as editor
 
     person = FactoryGirl.create(:person)
-    put :update, :id => person.to_param, :person => { :team_name => "Gentle Lovers" }
+    put :update, id: person.to_param, person: { team_name: "Gentle Lovers" }
     assert_redirected_to edit_person_path(person)
     person = Person.find(person.id)
     assert_equal gentle_lovers, person.reload.team, "Team should be updated"
@@ -110,11 +110,11 @@ class PeopleControllerTest < ActionController::TestCase
     person = FactoryGirl.create(:person)
     molly = FactoryGirl.create(:person)
     person.editors << molly
-    gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers")
+    gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
 
     use_ssl
     login_as molly
-    put :update, :id => person.to_param, :person => { :team_name => "Gentle Lovers" }
+    put :update, id: person.to_param, person: { team_name: "Gentle Lovers" }
     assert_redirected_to edit_person_path(person)
     assert_equal gentle_lovers, person.reload.team(true), "Team should be updated"
   end
@@ -131,7 +131,7 @@ class PeopleControllerTest < ActionController::TestCase
     use_ssl
     member = FactoryGirl.create(:person_with_login)
     login_as member
-    get :account, :id => member.to_param
+    get :account, id: member.to_param
     assert_redirected_to edit_person_path(member)
   end
 
@@ -140,7 +140,7 @@ class PeopleControllerTest < ActionController::TestCase
     member = FactoryGirl.create(:person_with_login)
     login_as member
     another_person = Person.create!
-    get :account, :id => another_person.to_param
+    get :account, id: another_person.to_param
     assert_redirected_to edit_person_path(another_person)
   end
 
@@ -153,7 +153,7 @@ class PeopleControllerTest < ActionController::TestCase
   def test_account_with_person_not_logged_in
     use_ssl
     member = FactoryGirl.create(:person_with_login)
-    get :account, :id => member.to_param
+    get :account, id: member.to_param
     assert_redirected_to edit_person_path(member)
   end
 
@@ -167,24 +167,24 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   def test_index_as_json
-    get :index, :format => "json", :name => "ron"
+    get :index, format: "json", name: "ron"
     assert_response :success
     assert_equal "application/json", @response.content_type
   end
 
   def test_find_by_name_as_xml
-    FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-    FactoryGirl.create(:person, :first_name => "Kevin", :last_name => "Condron")
+    FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+    FactoryGirl.create(:person, first_name: "Kevin", last_name: "Condron")
 
-    get :index, :name => "ron", :format => "xml"
+    get :index, name: "ron", format: "xml"
     assert_response :success
     assert_select "first-name", "Molly"
     assert_select "first-name", "Kevin"
   end
 
   def test_find_by_license_as_xml
-    FactoryGirl.create(:person, :first_name => "Mark", :last_name => "Matson", :license => "576")
-    get :index, :name => "m", :license => 576, :format => "xml"
+    FactoryGirl.create(:person, first_name: "Mark", last_name: "Matson", license: "576")
+    get :index, name: "m", license: 576, format: "xml"
     assert_response :success
     assert_select "first-name", "Mark"
   end

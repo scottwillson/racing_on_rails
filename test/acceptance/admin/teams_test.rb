@@ -5,13 +5,13 @@ class TeamsTest < AcceptanceTest
   setup :javascript!
 
   def test_edit
-    FactoryGirl.create(:team, :name => "Kona")
-    vanilla = FactoryGirl.create(:team, :name => "Vanilla")
-    vanilla.aliases.create!(:name => "Vanilla Bicycles")
-    gl = FactoryGirl.create(:team, :name => "Gentle Lovers")
-    gl.aliases.create!(:name => "Gentile Lovers")
-    FactoryGirl.create(:team, :name => "Chocolate")
-    dfl = FactoryGirl.create(:team, :name => "Team dFL")
+    FactoryGirl.create(:team, name: "Kona")
+    vanilla = FactoryGirl.create(:team, name: "Vanilla")
+    vanilla.aliases.create!(name: "Vanilla Bicycles")
+    gl = FactoryGirl.create(:team, name: "Gentle Lovers")
+    gl.aliases.create!(name: "Gentile Lovers")
+    FactoryGirl.create(:team, name: "Chocolate")
+    dfl = FactoryGirl.create(:team, name: "Team dFL")
     visit '/teams'
 
     find("a[href='/teams/#{gl.id}']").click
@@ -20,7 +20,7 @@ class TeamsTest < AcceptanceTest
 
     visit "/admin/teams"
     assert_page_has_content "Enter part of a team's name"
-    fill_in "name", :with => "e"
+    fill_in "name", with: "e"
     press_return "name"
 
     assert_table("teams_table", 2, 2, "Chocolate")
@@ -37,7 +37,7 @@ class TeamsTest < AcceptanceTest
     assert has_checked_field?("team_member_#{vanilla.id}")
     assert has_checked_field?("team_member_#{gl.id}")
     uncheck "team_member_#{gl.id}"
-    wait_for_no :field, "team_member_#{gl.id}", { :checked => true }
+    wait_for_no :field, "team_member_#{gl.id}", { checked: true }
 
     visit "/admin/teams"
     assert !has_checked_field?("team_member_#{gl.id}")
@@ -49,16 +49,16 @@ class TeamsTest < AcceptanceTest
     click_link "edit_#{vanilla.id}"
     assert_page_has_content "Vanilla"
 
-    fill_in "team_name", :with => "SpeedVagen"
+    fill_in "team_name", with: "SpeedVagen"
     click_button "Save"
 
     visit "/admin/teams"
-    fill_in "name", :with => "vagen"
+    fill_in "name", with: "vagen"
     press_return "name"
 
     assert_table("teams_table", 2, 2, "SpeedVagen")
 
-    fill_in_inline "#team_#{vanilla.id}_name", :with => "Sacha's Team"
+    fill_in_inline "#team_#{vanilla.id}_name", with: "Sacha's Team"
 
     begin
       Timeout::timeout(10) do
@@ -72,16 +72,16 @@ class TeamsTest < AcceptanceTest
   end
 
   def test_drag_and_drop
-    kona = FactoryGirl.create(:team, :name => "Kona")
-    vanilla = FactoryGirl.create(:team, :name => "Vanilla")
-    FactoryGirl.create(:team, :name => "Chocolate")
-    FactoryGirl.create(:team, :name => "Team dFL")
-    FactoryGirl.create(:team, :name => "Gentle Lovers")
+    kona = FactoryGirl.create(:team, name: "Kona")
+    vanilla = FactoryGirl.create(:team, name: "Vanilla")
+    FactoryGirl.create(:team, name: "Chocolate")
+    FactoryGirl.create(:team, name: "Team dFL")
+    FactoryGirl.create(:team, name: "Gentle Lovers")
 
     login_as FactoryGirl.create(:administrator)
 
     visit "/admin/teams"
-    fill_in "name", :with => "a"
+    fill_in "name", with: "a"
     press_return "name"
 
     find("#team_#{kona.id}").drag_to(find("#team_#{vanilla.id}_row"))
@@ -90,7 +90,7 @@ class TeamsTest < AcceptanceTest
     assert Team.exists?(vanilla.id), "Vanilla still exists after merge"
 
     visit "/admin/teams"
-    fill_in "name", :with => "e"
+    fill_in "name", with: "e"
     press_return "name"
 
     assert_table("teams_table", 2, 2, "Chocolate")
@@ -99,17 +99,17 @@ class TeamsTest < AcceptanceTest
   end
 
   def test_merge_confirm
-    FactoryGirl.create(:team, :name => "Kona")
-    vanilla = FactoryGirl.create(:team, :name => "Vanilla")
-    vanilla.aliases.create!(:name => "Vanilla Bicycles")
-    FactoryGirl.create(:team, :name => "Chocolate")
-    FactoryGirl.create(:team, :name => "Team dFL")
-    gl = FactoryGirl.create(:team, :name => "Gentle Lovers")
+    FactoryGirl.create(:team, name: "Kona")
+    vanilla = FactoryGirl.create(:team, name: "Vanilla")
+    vanilla.aliases.create!(name: "Vanilla Bicycles")
+    FactoryGirl.create(:team, name: "Chocolate")
+    FactoryGirl.create(:team, name: "Team dFL")
+    gl = FactoryGirl.create(:team, name: "Gentle Lovers")
 
     login_as FactoryGirl.create(:administrator)
 
     visit "/admin/teams"
-    fill_in "name", :with => "e"
+    fill_in "name", with: "e"
     press_return "name"
 
     assert_table("teams_table", 2, 2, "Chocolate")
@@ -118,7 +118,7 @@ class TeamsTest < AcceptanceTest
     assert_table("teams_table", 5, 2, "Vanilla")
     assert_table("teams_table", 5, 3, "Vanilla Bicycles")
 
-    fill_in_inline "#team_#{vanilla.id}_name", :with => "Gentle Lovers"
+    fill_in_inline "#team_#{vanilla.id}_name", with: "Gentle Lovers"
     click_button "Merge"
 
     assert Team.exists?(gl.id), "Should not have merged Gentle Lovers"

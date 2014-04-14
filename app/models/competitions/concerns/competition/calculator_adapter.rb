@@ -62,14 +62,14 @@ module Concerns
       def create_competition_results_for(results, race)
         results.each do |result|
           competition_result = ::Result.create!(
-            :place                   => result.place,
-            :person_id               => person_id_for_competition_result(result),
-            :team_id                 => team_id_for_competition_result(result, team_ids_by_person_id_hash(results)),
-            :event                   => self,
-            :race                    => race,
-            :competition_result      => true,
-            :team_competition_result => team?,
-            :points                  => result.points
+            place: result.place,
+            person_id: person_id_for_competition_result(result),
+            team_id: team_id_for_competition_result(result, team_ids_by_person_id_hash(results)),
+            event: self,
+            race: race,
+            competition_result: true,
+            team_competition_result: team?,
+            points: result.points
           )
 
           result.scores.each do |score|
@@ -93,9 +93,9 @@ module Concerns
       # This is always the 'best' result
       def create_score(competition_result, source_result_id, points)
         ::Score.create!(
-          :source_result_id => source_result_id,
-          :competition_result_id => competition_result.id,
-          :points => points
+          source_result_id: source_result_id,
+          competition_result_id: competition_result.id,
+          points: points
         )
       end
 

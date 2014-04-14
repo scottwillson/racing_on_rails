@@ -118,7 +118,7 @@ class AcceptanceTest < ActiveSupport::TestCase
 
     begin
       Timeout::timeout(10) do
-        until page.has_select?(id, :selected => options[:selected])
+        until page.has_select?(id, selected: options[:selected])
           sleep 0.25
         end
       end
@@ -226,8 +226,8 @@ class AcceptanceTest < ActiveSupport::TestCase
   def login_as(person)
     visit "/person_session/new"
     wait_for "#person_session_login"
-    fill_in "person_session_login", :with => person.login
-    fill_in "person_session_password", :with => "secret"
+    fill_in "person_session_login", with: person.login
+    fill_in "person_session_password", with: "secret"
     click_button "login_button"
   end
 
@@ -308,8 +308,8 @@ class AcceptanceTest < ActiveSupport::TestCase
 
     Capybara::Selenium::Driver.new(
       app,
-      :browser => :chrome,
-      :switches => ["--user-data-dir=#{Rails.root}/tmp/chrome-profile", "--ignore-certificate-errors", "--silent"]
+      browser: :chrome,
+      switches: ["--user-data-dir=#{Rails.root}/tmp/chrome-profile", "--ignore-certificate-errors", "--silent"]
     )
   end
 
@@ -319,7 +319,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     profile['browser.download.dir']                   = AcceptanceTest.download_directory
     profile['browser.helperApps.neverAsk.saveToDisk'] = "application/vnd.ms-excel,application/vnd.ms-excel; charset=utf-8"
 
-    Capybara::Selenium::Driver.new(app, :browser => :firefox, :profile => profile)
+    Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
   end
 
   Capybara.configure do |config|

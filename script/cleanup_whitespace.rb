@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-Dir.glob("{app,config,lib,public,script,test,local}/**/*.{erb,js,css,scss,html,rb}").each do |path|
+Dir.glob("../racing_on_rails_local/**/*.{erb,js,css,scss,html,rb}").each do |path|
   lines = File.readlines(path)
   puts path
   File.open(path, "w") do |file|

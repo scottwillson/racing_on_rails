@@ -1,7 +1,7 @@
 <% @page_title = "Races: #{@category.name}" %>
 
 <h2><%= @category.name %></h2>
-<%= table :columns => 2 do %>
+<%= table columns: 2 do %>
   <thead>
     <tr>
       <th>Date</th>
@@ -11,8 +11,8 @@
   <tbody>
     <% @category.races.each do |race| %>
     <tr>
-      <td class="date"><%= link_to race.event.date.to_s(:mdY), event_results_path(race.event, :anchor => "race_#{race.id}") %></td>
-      <td><%= link_to race.event.name, event_results_path(race.event, :anchor => "race_#{race.id}") %></td>
+      <td class="date"><%= link_to race.event.date.to_s(:mdY), event_results_path(race.event, anchor: "race_#{race.id}") %></td>
+      <td><%= link_to race.event.name, event_results_path(race.event, anchor: "race_#{race.id}") %></td>
     </tr>
     <% end %>
   </tbody>

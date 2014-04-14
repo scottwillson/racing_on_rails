@@ -5,14 +5,14 @@
    end %>
 <% @page_title = "Admin: Teams: #{team_name}" %>
 
-<%= render "shared/errors", :object => @team %>
+<%= render "shared/errors", object: @team %>
 
 <h2><%= @team.name %></h2>
 
-<%= form_for [ :admin, @team ], :html => { :class => "form-horizontal", :role => "form" } do |f| -%>
+<%= form_for [ :admin, @team ], html: { class: "form-horizontal", role: "form" } do |f| -%>
 <div class="row">
   <div class="col-sm-6">
-    <%= f.labelled_text_field :name, nil, :class => @team.new_record? ? "wants_focus col-sm-12 form-control" : "col-sm-12 form-control" %>
+    <%= f.labelled_text_field :name, nil, class: @team.new_record? ? "wants_focus col-sm-12 form-control" : "col-sm-12 form-control" %>
     <%= f.labelled_text_field :contact_name %>
     <%= f.labelled_text_field :contact_email %>
     <%= f.labelled_text_field :contact_phone %>
@@ -29,7 +29,7 @@
 <div class="row">
   <div class="col-sm-4">
     <h3>People</h3>
-    <%= table :insert_header => true, :collection => @team.people do %>
+    <%= table insert_header: true, collection: @team.people do %>
       <%- @team.people.sort { |x, y| x.last_name <=> y.last_name || x.first_name <=> y.first_name }.each do |person| -%>
       <tr>
         <td><%= link_to person.name, edit_admin_person_path(person) %></td>
@@ -39,16 +39,16 @@
   </div>
   <div class="col-sm-4">
     <h3>Aliases</h3>
-    <%= table :insert_header => true, :columns => 2, :collection => @team.aliases do %>
+    <%= table insert_header: true, columns: 2, collection: @team.aliases do %>
     <%- @team.aliases.sort_by(&:name).each do |name_alias| -%>
       <tr id="alias_<%= name_alias.id %>">
         <td><%= name_alias.name %></td>
         <td>
           <%= link_to(
                admin_team_alias_path(@team, name_alias),
-               :method => "delete",
-               :remote => true,
-               :class => "icon") do %>
+               method: "delete",
+               remote: true,
+               class: "icon") do %>
              <span class="glyphicon glyphicon-minus-sign"></span>
            <% end %>
         </td>
@@ -58,15 +58,15 @@
   </div>
   <div class="col-sm-4">
     <h3>Historical Names</h3>
-    <%= table :insert_header => true, :columns => 3, :collection => @team.names do %>
+    <%= table insert_header: true, columns: 3, collection: @team.names do %>
       <%- @team.names.sort_by(&:year).reverse.each do |name| -%>
       <tr id="name_<%= name.id %>">
         <td><%= name.name %></td>
         <td><%= name.year %></td>
         <td>
           <%= link_to(
-               :url => { :action => "destroy_name", :id => @team.id, :name_id => name.id},
-               :remote => true
+               url: { action: "destroy_name", id: @team.id, name_id: name.id},
+               remote: true
                ) do %>
              <span class="glyphicon glyphicon-minus-sign"></span>
            <% end %>
@@ -79,9 +79,9 @@
 
   <div class="row">
     <div class="col-sm-12">
-      <%= submit_tag "Save", :class => "btn btn-default", :id => "save" %>
-      <%= link_to("Delete", admin_team_path(@team), :method => :delete, :class => "btn btn-default", :id => 'delete') unless @team.new_record? %>
-      <%= link_to("Results", team_path(@team), :class => "btn btn-link") unless @team.new_record? %>
+      <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
+      <%= link_to("Delete", admin_team_path(@team), method: :delete, class: "btn btn-default", id: 'delete') unless @team.new_record? %>
+      <%= link_to("Results", team_path(@team), class: "btn btn-link") unless @team.new_record? %>
       <% unless mobile_request? %>
       <div class="pull-right created_updated">
         <span class="created_at">

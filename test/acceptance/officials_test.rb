@@ -5,13 +5,13 @@ class OfficialsTest < AcceptanceTest
   def test_view_assignments
     javascript!
 
-    FactoryGirl.create(:discipline, :name => "Cyclocross")
-    FactoryGirl.create(:discipline, :name => "Downhill")
-    FactoryGirl.create(:discipline, :name => "Mountain Bike")
-    FactoryGirl.create(:discipline, :name => "Road")
-    FactoryGirl.create(:discipline, :name => "Singlespeed")
-    FactoryGirl.create(:discipline, :name => "Track")
-    FactoryGirl.create(:number_issuer, :name => RacingAssociation.current.short_name)
+    FactoryGirl.create(:discipline, name: "Cyclocross")
+    FactoryGirl.create(:discipline, name: "Downhill")
+    FactoryGirl.create(:discipline, name: "Mountain Bike")
+    FactoryGirl.create(:discipline, name: "Road")
+    FactoryGirl.create(:discipline, name: "Singlespeed")
+    FactoryGirl.create(:discipline, name: "Track")
+    FactoryGirl.create(:number_issuer, name: RacingAssociation.current.short_name)
 
     visit "/admin/first_aid_providers"
 

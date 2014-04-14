@@ -7,7 +7,7 @@ module RacingOnRails
     class MapperTest < Ruby::TestCase
       def test_numeric_custom_columns
         mapper = RacingOnRails::Tabular::Mapper.new([], [ 20130501 ])
-        result = mock("result", :custom_attribute => 3)
+        result = mock("result", custom_attribute: 3)
         mapper.map result
       end
     end

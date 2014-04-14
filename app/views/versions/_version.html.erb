@@ -6,7 +6,7 @@
   <% else %>
     <% changes = version.changes.select { |key, change| change.first.present? || change.last.present? } -%>
 
-    <%= table :class => "version", :columns => 3, :collection => changes do %>
+    <%= table class: "version", columns: 3, collection: changes do %>
       <tr>
         <th class="what">What</th>
         <th class="from">From</th>

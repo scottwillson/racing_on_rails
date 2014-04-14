@@ -1,6 +1,6 @@
 <div class="form-group <%= attribute %>">
   <%= f.hidden_field "#{attribute}_id" -%>
-  <%= f.label "#{attribute}_id", label_text, :class => "control-label" %>
+  <%= f.label "#{attribute}_id", label_text, class: "control-label" %>
   <div class="form-group">
     <input type="text" class="col-sm-12" id="<%= attribute %>_auto_complete" name="<%= model %>[<%= attribute %>_name]" value="<%= value %>" autocomplete="off" />
   </div>
@@ -8,5 +8,5 @@
 
 <%
   @auto_complete_fields = @auto_complete_fields || []
-  @auto_complete_fields << { :model => model, :attribute => attribute, :path => path }
+  @auto_complete_fields << { model: model, attribute: attribute, path: path }
 %>

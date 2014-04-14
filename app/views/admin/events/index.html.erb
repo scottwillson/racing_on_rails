@@ -1,11 +1,11 @@
 <% @page_title = "Admin: Schedule: #{@year}" %>
 
-<%= render "shared/years", :year => @year, :discipline => nil %>
+<%= render "shared/years", year: @year, discipline: nil %>
 <%= render "shared/months" %>
 
 <div class="row form-group">
   <div class="col-sm-12">
-    <%= link_to 'New Event', new_admin_event_path(:event => { :date => Time.zone.local(@year).to_date.to_s(:db) }), {:class => "btn btn-default", :id => "new_event"} %>
+    <%= link_to 'New Event', new_admin_event_path(event: { date: Time.zone.local(@year).to_date.to_s(:db) }), {class: "btn btn-default", id: "new_event"} %>
   </div>
 </div>
 
@@ -63,9 +63,9 @@
 
 <div class="row">
   <div class="col-sm-12 import_schedule">
-  <%= form_tag upload_schedule_admin_events_path, :multipart => true, :class => "form-horizontal", :id => "upload_form" do %>
+  <%= form_tag upload_schedule_admin_events_path, multipart: true, class: "form-horizontal", id: "upload_form" do %>
     <label for="schedule_file">Import Schedule</label>
-    <%= file_field_tag "schedule_file", :onchange => "$('#upload_form').submit();" %>
+    <%= file_field_tag "schedule_file", onchange: "$('#upload_form').submit();" %>
   <% end %>
   </div>
 </div>

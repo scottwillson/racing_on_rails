@@ -2,13 +2,13 @@
 # Cached. Call +reset+ to clear cache.
 class Discipline < ActiveRecord::Base
   has_many :discipline_aliases
-  has_and_belongs_to_many :bar_categories, :class_name => "Category", :join_table => "discipline_bar_categories"
+  has_and_belongs_to_many :bar_categories, class_name: "Category", join_table: "discipline_bar_categories"
 
-  NONE = Discipline.new(:name => "").freeze unless defined?(NONE)
+  NONE = Discipline.new(name: "").freeze unless defined?(NONE)
   @@all_aliases = nil
   @@names = nil
 
-  scope :numbers, -> { where(:numbers => true) }
+  scope :numbers, -> { where(numbers: true) }
 
   # Look up Discipline by name or alias. Caches Disciplines in memory
   def self.[](name)
@@ -23,7 +23,7 @@ class Discipline < ActiveRecord::Base
   end
 
   def self.find_all_bar
-    Discipline.where(:bar => true)
+    Discipline.where(bar: true)
   end
 
   def self.find_via_alias(name)

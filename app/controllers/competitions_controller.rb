@@ -19,7 +19,7 @@ class CompetitionsController < ApplicationController
       raise ActiveRecord::RecordNotFound.new("No competition of type: #{params[:type]}")
     end
 
-    @event = competition_class.year(@year).first || competition_class.new(:date => Time.zone.local(@year))
+    @event = competition_class.year(@year).first || competition_class.new(date: Time.zone.local(@year))
 
     render "results/event"
   end

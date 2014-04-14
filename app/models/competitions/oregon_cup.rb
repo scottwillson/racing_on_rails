@@ -53,8 +53,8 @@ class OregonCup < Competition
   end
 
   def create_races
-    category = Category.find_or_create_by(:name => "Senior Men")
-    races.create :category => category
+    category = Category.find_or_create_by(name: "Senior Men")
+    races.create category: category
   end
 
   def all_year?

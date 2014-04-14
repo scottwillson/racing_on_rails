@@ -8,7 +8,7 @@ namespace :db do
   end
 
   # Dump the current database to a MySQL file
-  task :database_dump, :roles => :db, :only => { :primary => true } do
+  task :database_dump, roles: :db, only: { primary: true } do
     run("rm -f db/production.sql") if File.exists?("db/production.sql")
     run("rm -f db/production.sql.bz2") if File.exists?("db/production.sql.bz2")
     load File.expand_path("../../config/environment.rb", __FILE__)
@@ -21,7 +21,7 @@ namespace :db do
   end
 
   # Downloads db/production_data.sql from the remote production environment to your local machine
-  task :remote_db_download, :roles => :db, :only => { :primary => true } do
+  task :remote_db_download, roles: :db, only: { primary: true } do
     system "rm -f db/production.sql.bz2"
     get "db/production.sql.bz2", "db/production.sql.bz2"
   end
@@ -29,7 +29,7 @@ namespace :db do
   # Load the production data downloaded into db/production_data.sql into your local development database
   # By default, delete downloaded SQL. To keep it, set SAVE=true. Example:
   # cap production_data_refresh SAVE=true
-  task :production_data_load, :roles => :db, :only => { :primary => true } do
+  task :production_data_load, roles: :db, only: { primary: true } do
     load File.expand_path("../../config/environment.rb", __FILE__) unless defined?(Rails)
     abcs = ActiveRecord::Base.configurations
     dev_db = abcs[::Rails.env]["database"]
@@ -44,7 +44,7 @@ namespace :db do
   end
 
    #Cleans up data dump file
-  task :remote_db_cleanup, :roles => :db, :only => { :primary => true } do
+  task :remote_db_cleanup, roles: :db, only: { primary: true } do
     run "rm db/production.sql.bz2"
   end
 end

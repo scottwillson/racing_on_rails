@@ -25,21 +25,21 @@
     <div class="flash_messages">
       <% [ :warn, :notice ].each do |key| %>
         <% if flash[key] %>
-          <%= render "layouts/flash_message", :message => flash[key], :alert_class => alert_class(key) %>
+          <%= render "layouts/flash_message", message: flash[key], alert_class: alert_class(key) %>
         <% end %>
       <% end %>
     </div>
 
     <div class="content">
-      <%= render :partial => "shared/tabs" %>
+      <%= render partial: "shared/tabs" %>
       <%= yield %>
     </div>
   </div>
   <div class="container page-nav">
     <footer>
       <ul>
-        <li><%= link_to "Account", account_path, :class => "account_link" %></li><li><%=
-          link_to "Login", new_person_session_path, :class => "login_link" %></li>
+        <li><%= link_to "Account", account_path, class: "account_link" %></li><li><%=
+          link_to "Login", new_person_session_path, class: "login_link" %></li>
       </ul>
     </footer>
   </div>

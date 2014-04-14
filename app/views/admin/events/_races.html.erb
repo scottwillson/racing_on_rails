@@ -8,7 +8,7 @@
       <th colspan="2" class="numeric">Field Size</th>
       <th class="actions">
         <% if @event.has_results_including_children? %>
-        <%= link_to event_results_path(@event), :class => "icon", :title => 'View public results web page' do %>
+        <%= link_to event_results_path(@event), class: "icon", title: 'View public results web page' do %>
             <span class="glyphicon glyphicon-list"></span>
           <% end %>
         <% end %>
@@ -33,23 +33,23 @@
         <span class="icon-refresh rotate" id="propagate_races_progress" style="display: none"></span>
         <%= link_to("Copy to child events",
                     propagate_admin_event_races_path(@event),
-                    :remote => true,
-                    :method => :post,
-                    :class => "obvious",
-                    :id => "propagate_races",
-                    :title => "Add same races to all children events"
+                    remote: true,
+                    method: :post,
+                    class: "obvious",
+                    id: "propagate_races",
+                    title: "Add same races to all children events"
             ) if @event.races.any? && @event.children.any?
         %>
       </td>
       <td class="delete_all_races">
         <%= link_to("Delete all races",
           destroy_races_admin_event_path(@event),
-          :class => "obvious",
-          :id => "destroy_races",
-          :title => "Delete all",
-          :remote => true,
-          :method => :delete,
-          :data => { :confirm => (Rails.env.acceptance?) ? nil : "Really delete all races from #{@event.name}?" }
+          class: "obvious",
+          id: "destroy_races",
+          title: "Delete all",
+          remote: true,
+          method: :delete,
+          data: { confirm: (Rails.env.acceptance?) ? nil : "Really delete all races from #{@event.name}?" }
         ) if @event.races.any? && administrator?
         # Lame workaround for Safari
         %>
@@ -58,10 +58,10 @@
       <td class="actions">
         <%= link_to(
               admin_event_races_path(@event),
-              :remote => true,
-              :method => :post,
-              :id => "create_race",
-              :title => "Add race"
+              remote: true,
+              method: :post,
+              id: "create_race",
+              title: "Add race"
             ) do %>
           <span class="glyphicon glyphicon-plus-sign"></span>
         <% end %>
@@ -71,10 +71,10 @@
       <td colspan="5">
        <% if administrator? -%>
         <div class="form-group">
-          <%= label_tag :results_file, "Import Results", :class => "control-label", :id => "upload_form_label" %>
-          <%= form_tag upload_admin_event_path(@event), :multipart => true, :id => "upload_form" do %>
+          <%= label_tag :results_file, "Import Results", class: "control-label", id: "upload_form_label" %>
+          <%= form_tag upload_admin_event_path(@event), multipart: true, id: "upload_form" do %>
             <div class="form-group">
-              <%= file_field_tag "results_file",:style => "width: 250px;" %>
+              <%= file_field_tag "results_file",style: "width: 250px;" %>
             </div>
           <% end -%>
         </div>

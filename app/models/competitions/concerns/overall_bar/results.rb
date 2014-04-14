@@ -5,7 +5,7 @@ module Concerns
 
       def source_results(race)
         ::Result.
-        includes(:race, {:person => :team}, :team, {:race => [:event, :category]}).
+        includes(:race, {person: :team}, :team, {race: [:event, :category]}).
         where(%Q{events.type = 'Bar'
           and place between 1 and 300
           and ((events.discipline not in ("Mountain Bike", "Downhill", "Short Track") and categories.id in (#{category_ids_for(race)}))
@@ -24,17 +24,17 @@ module Concerns
 
         case race.category.name
         when "Senior Men"
-          categories = [::Category.find_or_create_by(:name => "Elite Men"), ::Category.find_or_create_by(:name => "Pro Men")]
+          categories = [::Category.find_or_create_by(name: "Elite Men"), ::Category.find_or_create_by(name: "Pro Men")]
         when "Senior Women"
-          categories = [::Category.find_or_create_by(:name => "Elite Women"), ::Category.find_or_create_by(:name => "Category 1 Women"), ::Category.find_or_create_by(:name => "Pro Women")]
+          categories = [::Category.find_or_create_by(name: "Elite Women"), ::Category.find_or_create_by(name: "Category 1 Women"), ::Category.find_or_create_by(name: "Pro Women")]
         when "Category 3 Men"
-          categories = [::Category.find_or_create_by(:name => "Category 1 Men")]
+          categories = [::Category.find_or_create_by(name: "Category 1 Men")]
         when "Category 3 Women"
-          categories = [::Category.find_or_create_by(:name => "Category 2 Women")]
+          categories = [::Category.find_or_create_by(name: "Category 2 Women")]
         when "Category 4/5 Men"
-          categories = [::Category.find_or_create_by(:name => "Category 2 Men"), ::Category.find_or_create_by(:name => "Category 3 Men")]
+          categories = [::Category.find_or_create_by(name: "Category 2 Men"), ::Category.find_or_create_by(name: "Category 3 Men")]
         when "Category 4 Women"
-          categories = [::Category.find_or_create_by(:name => "Category 3 Women")]
+          categories = [::Category.find_or_create_by(name: "Category 3 Women")]
         else
           categories = [race.category]
         end

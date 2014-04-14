@@ -3,10 +3,10 @@
 <h2><%= @person.name %></h2>
 
 <div class="row">
-  <%= form_tag({}, { :method => "get", :id => "find_person_form", :class => "form-horizontal", :role => "form" }) do %>
+  <%= form_tag({}, { method: "get", id: "find_person_form", class: "form-horizontal", role: "form" }) do %>
     <div class="col-sm-3 find-progress"><span class="icon-refresh rotate" id="find_progress_icon" style="display: none"></span></div>
     <div class="col-sm-6 input-group">
-      <%= search_field_tag("name", @name, :class => "wants_focus search-query form-control", :placeholder => "Move results to person") %>
+      <%= search_field_tag("name", @name, class: "wants_focus search-query form-control", placeholder: "Move results to person") %>
       <span class="input-group-btn">
         <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
       </span>
@@ -16,7 +16,7 @@
 
 <div class="row" people id="people">
   <div class="col-sm-6" id="left_person">
-    <%= render 'person', :person => @person, :results => @results %>
+    <%= render 'person', person: @person, results: @results %>
   </div>
 
   <div class="col-sm-6" id="right_person"></div>

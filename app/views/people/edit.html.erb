@@ -1,29 +1,29 @@
 <% @page_title = "People: #{@person.name}" %>
 <% @show_tabs = (promoter? || administrator? || official?) -%>
 
-<%= render "shared/errors", :object => @person %>
+<%= render "shared/errors", object: @person %>
 
 <h2><%= @person.name %></h2>
 
-  <%= form_for @person, :html => { :class => "form-horizontal", :role => "form" } do |f| -%>
+  <%= form_for @person, html: { class: "form-horizontal", role: "form" } do |f| -%>
     <div class="row">
       <div class="col-sm-6">
-        <%= f.labelled_text_field :first_name, nil, :class => @person.new_record? ? "wants_focus col-sm-12 form-control" : "col-sm-12 form-control" %>
+        <%= f.labelled_text_field :first_name, nil, class: @person.new_record? ? "wants_focus col-sm-12 form-control" : "col-sm-12 form-control" %>
         <%= f.labelled_text_field :last_name %>
         <%= f.labelled_text_field :team_name %>
       </div>
       <div class="col-sm-6">
         <div class="form-group form-inline">
-          <%= f.label :date_of_birth, "Date of Birth", :class => "control-label col-sm-4" %>
+          <%= f.label :date_of_birth, "Date of Birth", class: "control-label col-sm-4" %>
           <div class="col-sm-8">
             <%= f.date_select :date_of_birth,
                 {
-                  :order => [:month, :day, :year],
-                  :start_year => 1900,
-                  :end_year => Time.zone.today.year,
-                  :include_blank => true
+                  order: [:month, :day, :year],
+                  start_year: 1900,
+                  end_year: Time.zone.today.year,
+                  include_blank: true
                 },
-                { :class => "form-control"} %>
+                { class: "form-control"} %>
           </div>
         </div>
 
@@ -52,7 +52,7 @@
     </div>
     <div class="col-sm-6">
       <%= f.labelled_text_field :street %>
-      <%= render "shared/city_state_zip", :f => f %>
+      <%= render "shared/city_state_zip", f: f %>
       <%= f.labelled_text_field :occupation %>
 
       <h3>Interests</h3>
@@ -70,17 +70,17 @@
       <%= f.labelled_text :member_from, @person.member_from %>
       <%= f.labelled_text :member_to, @person.member_to %>
 
-      <%= f.labelled_text(:member, "Current", nil, :class => "current") if @person.member? -%>
-      <%= f.labelled_text(:usa_cycling, "Current (#{@person.license})", nil, :class => "current") if @person.member_usac_to && @person.member_usac_to >= Time.zone.today -%>
-      <%= f.labelled_text(:member, "Renewed", nil, :class => "renewed") if @person.renewed? -%>
-      <%= f.labelled_text(:member, "Not current", nil, :class => "not_current") if !@person.member? && !@person.renewed? -%>
-      <%= f.labelled_check_box :official, "Official", :editable => false %>
+      <%= f.labelled_text(:member, "Current", nil, class: "current") if @person.member? -%>
+      <%= f.labelled_text(:usa_cycling, "Current (#{@person.license})", nil, class: "current") if @person.member_usac_to && @person.member_usac_to >= Time.zone.today -%>
+      <%= f.labelled_text(:member, "Renewed", nil, class: "renewed") if @person.renewed? -%>
+      <%= f.labelled_text(:member, "Not current", nil, class: "not_current") if !@person.member? && !@person.renewed? -%>
+      <%= f.labelled_check_box :official, "Official", editable: false %>
     </div>
 
     <div class="col-sm-6">
-      <%= f.labelled_text_field :login, nil, :autocomplete => "off", :class => "form-control col-sm-12" %>
-      <%= f.labelled_password_field :password, nil, :autocomplete => "off", :class => "form-control col-sm-12" %>
-      <%= f.labelled_password_field :password_confirmation, "Confirm Password", :autocomplete => "off", :class => "form-control col-sm-12" %>
+      <%= f.labelled_text_field :login, nil, autocomplete: "off", class: "form-control col-sm-12" %>
+      <%= f.labelled_password_field :password, nil, autocomplete: "off", class: "form-control col-sm-12" %>
+      <%= f.labelled_password_field :password_confirmation, "Confirm Password", autocomplete: "off", class: "form-control col-sm-12" %>
     </div>
   </div>
 
@@ -88,13 +88,13 @@
 
   <div class="row">
     <div class="col-sm-4">
-      <%= render "numbers", :person => @person %>
+      <%= render "numbers", person: @person %>
     </div>
     <div class="col-sm-4">
-      <%= render "categories", :person => @person %>
+      <%= render "categories", person: @person %>
     </div>
     <div class="col-sm-4">
-      <%= render "people/events", :events => @person.administrator? ? @person.events.current_year : Event.editable_by(@person).current_year %>
+      <%= render "people/events", events: @person.administrator? ? @person.events.current_year : Event.editable_by(@person).current_year %>
     </div>
   </div>
 
@@ -102,24 +102,24 @@
     <div class="col-sm-12">
 
       <%= render "people/account_permissions",
-            :person => @person,
-            :account_permissions => @person.account_permissions,
-            :return_to => @person.new_record? ? nil : edit_person_path(@person)
+            person: @person,
+            account_permissions: @person.account_permissions,
+            return_to: @person.new_record? ? nil : edit_person_path(@person)
       %>
     </div>
   </div>
 
   <div class="row">
     <div class="col-sm-12">
-      <%= render "people/orders", :person => @person %>
+      <%= render "people/orders", person: @person %>
     </div>
   </div>
 
   <div class="row form-group">
     <div class="col-sm-12">
-      <%= submit_tag "Save", :class => "btn btn-default", :id => "save" %>
-      <%= link_to "Results", person_results_path(@person), :class => "btn btn-link" %>
-      <div class="pull-right created_updated"><%= render :partial => "people/created_updated" %></div>
+      <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
+      <%= link_to "Results", person_results_path(@person), class: "btn btn-link" %>
+      <div class="pull-right created_updated"><%= render partial: "people/created_updated" %></div>
     </div>
   </div>
 <% end -%>

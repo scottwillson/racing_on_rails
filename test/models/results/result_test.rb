@@ -20,18 +20,18 @@ class ResultTest < ActiveSupport::TestCase
     result = Result.new
     assert_equal(nil, result.name, "Person name w/nil person")
 
-    result = FactoryGirl.create(:result, :person => FactoryGirl.create(:person, :name => "Ryan Weaver"))
+    result = FactoryGirl.create(:result, person: FactoryGirl.create(:person, name: "Ryan Weaver"))
     assert_equal("Ryan Weaver", result.name, "Person name")
 
-    person = Person.new(:last_name => 'Willson')
-    result = FactoryGirl.create(:result, :person => person)
+    person = Person.new(last_name: 'Willson')
+    result = FactoryGirl.create(:result, person: person)
     assert_equal("Willson", result.person.name, "Person name")
     assert_equal("Willson", result.name, "Person name")
     result.save!
     assert_equal("Willson", result.reload.name, "Person name")
 
-    person = Person.new(:first_name => 'Clara')
-    result = Result.new(:person => person)
+    person = Person.new(first_name: 'Clara')
+    result = Result.new(person: person)
     assert_equal("Clara", result.person.name, "Person name")
 
     result = Result.new
@@ -58,20 +58,20 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   def test_save
-    event = SingleDayEvent.create!(:name => "Tabor CR", :discipline => 'Road')
-    category = Category.find_or_create_by(:name => "Senior Men Pro 1/2")
-    race = event.races.create!(:category => category)
+    event = SingleDayEvent.create!(name: "Tabor CR", discipline: 'Road')
+    category = Category.find_or_create_by(name: "Senior Men Pro 1/2")
+    race = event.races.create!(category: category)
     race.save!
     assert_equal(0, race.results.size, "Results before save")
     assert_nil(Person.find_by_last_name("Hampsten"), "Hampsten should not be in DB")
     assert_nil(Team.find_by_name("7-11"), "7-11 should not be in DB")
 
-    person = Person.new(:last_name => "Hampsten")
+    person = Person.new(last_name: "Hampsten")
     result = race.results.build
     result.person = person
     result.place = "17"
     result.number = "H67"
-    team = Team.new(:name => "7-11")
+    team = Team.new(name: "7-11")
     result.team = team
 
     race.save!
@@ -92,7 +92,7 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   def test_first_name
-    attributes = {:place => "22", :first_name => "Jan"}
+    attributes = {place: "22", first_name: "Jan"}
     result = Result.new(attributes)
     assert_equal("Jan", result.first_name, "person.first_name")
     assert_equal("Jan", result.person.first_name, "person.first_name")
@@ -103,7 +103,7 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   def test_last_name
-    result = Result.new(:place => "22", :last_name => "Ulrich")
+    result = Result.new(place: "22", last_name: "Ulrich")
     assert_equal("Ulrich", result.last_name, "person.last_name")
     assert_equal("Ulrich", result.person.last_name, "person.last_name")
 
@@ -113,7 +113,7 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   def test_team_name
-    attributes = {:place => "22", :team_name => "T-Mobile"}
+    attributes = {place: "22", team_name: "T-Mobile"}
     result = FactoryGirl.create(:race).results.build(attributes)
     assert_equal("T-Mobile", result.team_name, "person.team_name")
     assert_equal("T-Mobile", result.team.name, "person.team")
@@ -128,10 +128,10 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   def test_category_name
-    result = Result.new(:place => "22", :last_name => "Ulrich")
+    result = Result.new(place: "22", last_name: "Ulrich")
     assert_equal(nil, result.category_name, "category_name")
 
-    result.category = Category.find_or_create_by(:name => "Senior Men Pro 1/2")
+    result.category = Category.find_or_create_by(name: "Senior Men Pro 1/2")
     assert_equal("Senior Men Pro 1/2", result.category.name, "category_name")
     assert_equal(nil, result.category_name, "category_name")
     result.race = FactoryGirl.create(:race)
@@ -151,10 +151,10 @@ class ResultTest < ActiveSupport::TestCase
 
   def test_person_team
     event = FactoryGirl.create(:event)
-    race = FactoryGirl.create(:race, :event => event)
-    result = race.results.build(:place => '3', :number => '932')
-    person = Person.new(:last_name => 'Kovach', :first_name => 'Barry')
-    team = Team.new(:name => 'Sorella Forte ')
+    race = FactoryGirl.create(:race, event: event)
+    result = race.results.build(place: '3', number: '932')
+    person = Person.new(last_name: 'Kovach', first_name: 'Barry')
+    team = Team.new(name: 'Sorella Forte ')
     result.person = person
     result.team = team
 
@@ -168,9 +168,9 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal(nil, person.team, 'result team')
 
     race = FactoryGirl.create(:race)
-    result = race.results.build(:place => '3', :number => '932')
+    result = race.results.build(place: '3', number: '932')
     result.person = person
-    new_team = Team.new(:name => 'Bike Gallery')
+    new_team = Team.new(name: 'Bike Gallery')
     result.person = person
     result.team = new_team
 
@@ -180,8 +180,8 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal(nil, person.team, 'result team')
     assert_not_equal(bike_gallery_from_db, person.team, 'result team')
 
-    person_with_no_team = Person.create!(:last_name => 'Ollerenshaw', :first_name => 'Doug')
-    result = race.results.build(:place => '3', :number => '932')
+    person_with_no_team = Person.create!(last_name: 'Ollerenshaw', first_name: 'Doug')
+    result = race.results.build(place: '3', number: '932')
     result.person = person_with_no_team
     vanilla = FactoryGirl.create(:team)
     result.team = vanilla
@@ -193,21 +193,21 @@ class ResultTest < ActiveSupport::TestCase
 
   def test_event
     event = FactoryGirl.create(:event)
-    result = event.races.create!(:category => FactoryGirl.create(:category)).results.create!
+    result = event.races.create!(category: FactoryGirl.create(:category)).results.create!
     result.reload
     assert_equal(event, result.event, 'Result event')
   end
 
   def test_sort
     results = [
-     Result.new(:place => '1'),
-     Result.new(:place => ''),
-     Result.new(:place => nil),
-     Result.new(:place => '11'),
-     Result.new(:place => 'DNS'),
-     Result.new(:place => '3'),
-     Result.new(:place => 'DNF'),
-     Result.new(:place => '')
+     Result.new(place: '1'),
+     Result.new(place: ''),
+     Result.new(place: nil),
+     Result.new(place: '11'),
+     Result.new(place: 'DNS'),
+     Result.new(place: '3'),
+     Result.new(place: 'DNF'),
+     Result.new(place: '')
     ]
 
     results = results.sort
@@ -221,12 +221,12 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal('DNS', results[7].place, 'result 7 place')
 
     results = [
-     Result.new(:place => '1'),
-     Result.new(:place => '2'),
-     Result.new(:place => '11'),
-     Result.new(:place => 'DNF'),
-     Result.new(:place => ''),
-     Result.new(:place => nil)
+     Result.new(place: '1'),
+     Result.new(place: '2'),
+     Result.new(place: '11'),
+     Result.new(place: 'DNF'),
+     Result.new(place: ''),
+     Result.new(place: nil)
     ]
 
     results = results.sort
@@ -238,12 +238,12 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal('DNF', results[5].place, 'result 5 place')
 
     results = [
-     Result.new(:place => '1'),
-     Result.new(:place => '2'),
-     Result.new(:place => '11'),
-     Result.new(:place => 'DQ'),
-     Result.new(:place => 'DNF'),
-     Result.new(:place => nil)
+     Result.new(place: '1'),
+     Result.new(place: '2'),
+     Result.new(place: '11'),
+     Result.new(place: 'DQ'),
+     Result.new(place: 'DNF'),
+     Result.new(place: nil)
     ]
 
     results = results.sort
@@ -254,12 +254,12 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal('DNF', results[4].place, 'result 4 place')
     assert_equal('DQ', results[5].place, 'result 5 place')
 
-    result_5 = Result.new(:place => '5')
-    result_dnf = Result.new(:place => 'DNF')
+    result_5 = Result.new(place: '5')
+    result_dnf = Result.new(place: 'DNF')
     assert_equal(-1, result_5 <=> result_dnf)
     assert_equal(1, result_dnf <=> result_5)
 
-    result_5 = Result.new(:place => 5)
+    result_5 = Result.new(place: 5)
     assert_equal(-1, result_5 <=> result_dnf)
     assert_equal(1, result_dnf <=> result_5)
   end
@@ -271,7 +271,7 @@ class ResultTest < ActiveSupport::TestCase
 
     kings_valley_pro_1_2_2004 = FactoryGirl.create(:race)
     results = kings_valley_pro_1_2_2004.results
-    result = results.create!(:place => 1, :first_name => 'Clara', :last_name => 'Willson', :number => '300')
+    result = results.create!(place: 1, first_name: 'Clara', last_name: 'Willson', number: '300')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
     assert_nil(result.person(true).road_number(true), 'Current road number')
     road_number_2004 = result.person.race_numbers.detect{|number| number.year == 2004}
@@ -279,10 +279,10 @@ class ResultTest < ActiveSupport::TestCase
     assert(result.person.ccx_number.blank?, 'Cyclocross number')
     assert(result.person.xc_number.blank?, 'MTB number')
 
-    event = SingleDayEvent.create!(:discipline => "Road")
+    event = SingleDayEvent.create!(discipline: "Road")
     senior_women = FactoryGirl.create(:category)
-    race = event.races.create!(:category => senior_women)
-    result = race.results.create!(:place => 2, :first_name => 'Eddy', :last_name => 'Merckx', :number => '200')
+    race = event.races.create!(category: senior_women)
+    result = race.results.create!(place: 2, first_name: 'Eddy', last_name: 'Merckx', number: '200')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
     road_number = result.person(true).race_numbers(true).detect{|number| number.year == Time.zone.today.year}
     assert_nil(road_number, 'Current road number should not be set from result')
@@ -291,7 +291,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal(RacingAssociation.current.add_members_from_results?, result.person.member?, "Person should be member")
 
     # Rental
-    result = race.results.create!(:place => 2, :first_name => 'Benji', :last_name => 'Whalen', :number => '51')
+    result = race.results.create!(place: 2, first_name: 'Benji', last_name: 'Whalen', number: '51')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
     road_number = result.person(true).race_numbers(true).detect{|number| number.year == Time.zone.today.year}
     assert_nil(road_number, 'Current road number')
@@ -301,7 +301,7 @@ class ResultTest < ActiveSupport::TestCase
   def test_save_number_alt
     kings_valley_pro_1_2_2004 = FactoryGirl.create(:race)
     results = kings_valley_pro_1_2_2004.results
-    result = results.create!(:place => 1, :first_name => 'Clara', :last_name => 'Willson', :number => '300')
+    result = results.create!(place: 1, first_name: 'Clara', last_name: 'Willson', number: '300')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
     assert_nil(result.person(true).road_number(true), 'Current road number')
     road_number_2004 = result.person.race_numbers.detect{|number| number.year == 2004}
@@ -309,10 +309,10 @@ class ResultTest < ActiveSupport::TestCase
     assert(result.person.ccx_number.blank?, 'Cyclocross number')
     assert(result.person.xc_number.blank?, 'MTB number')
 
-    event = SingleDayEvent.create!(:discipline => "Road")
+    event = SingleDayEvent.create!(discipline: "Road")
     senior_women = FactoryGirl.create(:category)
-    race = event.races.create!(:category => senior_women)
-    result = race.results.create!(:place => 2, :first_name => 'Eddy', :last_name => 'Merckx', :number => '200')
+    race = event.races.create!(category: senior_women)
+    result = race.results.create!(place: 2, first_name: 'Eddy', last_name: 'Merckx', number: '200')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
     road_number = result.person(true).race_numbers(true).detect{|number| number.year == Time.zone.today.year}
     assert_nil(road_number, 'Current road number should not be set from result')
@@ -321,7 +321,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal(RacingAssociation.current.add_members_from_results?, result.person.member?, "Person should be member")
 
     RacingAssociation.current.rental_numbers = 0..99
-    result = race.results.create!(:place => 2, :first_name => 'Benji', :last_name => 'Whalen', :number => '51')
+    result = race.results.create!(place: 2, first_name: 'Benji', last_name: 'Whalen', number: '51')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
     road_number = result.person(true).race_numbers(true).detect{|number| number.year == Time.zone.today.year}
     assert_nil(road_number, 'Current road number')
@@ -330,9 +330,9 @@ class ResultTest < ActiveSupport::TestCase
 
   def test_find_all_for_person
     molly = FactoryGirl.create(:person)
-    FactoryGirl.create(:result, :person => molly)
-    FactoryGirl.create(:result, :person => molly)
-    FactoryGirl.create(:result, :person => molly)
+    FactoryGirl.create(:result, person: molly)
+    FactoryGirl.create(:result, person: molly)
+    FactoryGirl.create(:result, person: molly)
 
     results = Result.find_all_for(molly)
     assert_not_nil(results)
@@ -347,71 +347,71 @@ class ResultTest < ActiveSupport::TestCase
     result = Result.new
     assert(!result.last_event?, "New result should not be last event")
 
-    event = MultiDayEvent.create!.children.create!(:name => "Tabor CR")
-    category = Category.find_or_create_by(:name => "Senior Men Pro 1/2")
-    race = event.races.create!(:category => category)
+    event = MultiDayEvent.create!.children.create!(name: "Tabor CR")
+    category = Category.find_or_create_by(name: "Senior Men Pro 1/2")
+    race = event.races.create!(category: category)
     result = race.results.create!
     assert(result.last_event?, "Only event should be last event")
 
     # Series overall
     banana_belt_series = FactoryGirl.create(:series)
-    banana_belt_1 = banana_belt_series.children.create!(:date => 1.week.from_now)
-    banana_belt_2 = banana_belt_series.children.create!(:date => 2.weeks.from_now)
-    series_result = banana_belt_series.races.create!(:category => category).results.create!
+    banana_belt_1 = banana_belt_series.children.create!(date: 1.week.from_now)
+    banana_belt_2 = banana_belt_series.children.create!(date: 2.weeks.from_now)
+    series_result = banana_belt_series.races.create!(category: category).results.create!
     assert(!series_result.last_event?, "Series result should not be last event")
 
     # First event
-    first_result = banana_belt_1.races.create!(:category => category).results.create!
+    first_result = banana_belt_1.races.create!(category: category).results.create!
     assert(!first_result.last_event?, "First result should not be last event")
 
     # Second (and last) event
-    banana_belt_2.races.create!(:category => category).results.create!
+    banana_belt_2.races.create!(category: category).results.create!
     assert(result.last_event?, "Last event should be last event")
   end
 
   def test_finished?
-    category = Category.find_or_create_by(:name => "Senior Men Pro 1/2")
-    race = SingleDayEvent.create!.races.create!(:category => category)
+    category = Category.find_or_create_by(name: "Senior Men Pro 1/2")
+    race = SingleDayEvent.create!.races.create!(category: category)
 
-    result = race.results.create!(:place => "1")
+    result = race.results.create!(place: "1")
     assert(result.finished?, "'1' should be a finisher")
 
-    result = race.results.create!(:place => nil)
+    result = race.results.create!(place: nil)
     assert(!result.finished?, "nil should not be a finisher")
 
-    result = race.results.create!(:place => "")
+    result = race.results.create!(place: "")
     assert(!result.finished?, "'' should not be a finisher")
 
-    result = race.results.create!(:place => "1000")
+    result = race.results.create!(place: "1000")
     assert(result.finished?, "'1000' should be a finisher")
 
-    result = race.results.create!(:place => "DNF")
+    result = race.results.create!(place: "DNF")
     assert(!result.finished?, "'DNF' should not be a finisher")
 
-    result = race.results.create!(:place => "dnf")
+    result = race.results.create!(place: "dnf")
     assert(!result.finished?, "'dnf' should not be a finisher")
 
-    result = race.results.create!(:place => "DQ")
+    result = race.results.create!(place: "DQ")
     assert(!result.finished?, "'DNF' should not be a finisher")
 
-    result = race.results.create!(:place => "nanplace")
+    result = race.results.create!(place: "nanplace")
     assert(!result.finished?, "'nanplace' should not be a finisher")
 
-    result = race.results.create!(:place => "noplace9")
+    result = race.results.create!(place: "noplace9")
     assert(!result.finished?, "'noplace9' should not be a finisher")
 
-    result = race.results.create!(:place => "1st")
+    result = race.results.create!(place: "1st")
     assert(result.finished?, "'1st' should be a finisher")
 
-    result = race.results.create!(:place => "4th")
+    result = race.results.create!(place: "4th")
     assert(result.finished?, "'4th' should be a finisher")
   end
 
   def test_make_member_if_association_number
-    event = SingleDayEvent.create!(:name => "Tabor CR")
-    race = event.races.create!(:category => Category.find_or_create_by(:name => "Senior Men Pro 1/2"))
+    event = SingleDayEvent.create!(name: "Tabor CR")
+    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
     result = race.results.create!(
-      :first_name => "Tom", :last_name => "Boonen", :team_name => "Davitamon", :number => "702"
+      first_name: "Tom", last_name: "Boonen", team_name: "Davitamon", number: "702"
     )
 
     person = result.person
@@ -425,11 +425,11 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   def test_do_not_make_member_if_not_association_number
-    number_issuer = NumberIssuer.create!(:name => "Tabor")
-    event = SingleDayEvent.create!(:name => "Tabor CR", :number_issuer => number_issuer)
-    race = event.races.create!(:category => Category.find_or_create_by(:name => "Senior Men Pro 1/2"))
+    number_issuer = NumberIssuer.create!(name: "Tabor")
+    event = SingleDayEvent.create!(name: "Tabor CR", number_issuer: number_issuer)
+    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
     result = race.results.create!(
-      :first_name => "Tom", :last_name => "Boonen", :team_name => "Davitamon", :number => "702"
+      first_name: "Tom", last_name: "Boonen", team_name: "Davitamon", number: "702"
     )
 
     event.reload
@@ -441,13 +441,13 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   def test_only_make_member_if_full_name
-    event = SingleDayEvent.create!(:name => "Tabor CR")
-    race = event.races.create!(:category => Category.find_or_create_by(:name => "Senior Men Pro 1/2"))
+    event = SingleDayEvent.create!(name: "Tabor CR")
+    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
     result = race.results.create!(
-      :first_name => "Tom", :team_name => "Davitamon", :number => "702"
+      first_name: "Tom", team_name: "Davitamon", number: "702"
     )
     result_2 = race.results.create!(
-      :last_name => "Boonen", :team_name => "Davitamon", :number => "702"
+      last_name: "Boonen", team_name: "Davitamon", number: "702"
     )
 
     result.person.reload
@@ -458,25 +458,25 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   def test_stable_name_on_old_results
-    team = Team.create!(:name => "Tecate-Una Mas")
+    team = Team.create!(name: "Tecate-Una Mas")
 
-    event = SingleDayEvent.create!(:date => 1.years.ago)
+    event = SingleDayEvent.create!(date: 1.years.ago)
     senior_men = FactoryGirl.create(:category)
-    old_result = event.races.create!(:category => senior_men).results.create!(:team => team)
-    team.names.create!(:name => "Twin Peaks", :year => 1.years.ago.year)
+    old_result = event.races.create!(category: senior_men).results.create!(team: team)
+    team.names.create!(name: "Twin Peaks", year: 1.years.ago.year)
 
-    event = SingleDayEvent.create!(:date => Time.zone.today)
-    result = event.races.create!(:category => senior_men).results.create!(:team => team)
+    event = SingleDayEvent.create!(date: Time.zone.today)
+    result = event.races.create!(category: senior_men).results.create!(team: team)
 
     assert_equal("Tecate-Una Mas", result.reload.team_name, "Team name on this year's result")
     assert_equal("Twin Peaks", old_result.reload.team_name, "Team name on old result")
   end
 
   def test_bar
-    event = SingleDayEvent.create!(:name => "Tabor CR")
-    race = event.races.create!(:category => Category.find_or_create_by(:name => "Senior Men Pro 1/2"))
+    event = SingleDayEvent.create!(name: "Tabor CR")
+    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
     result = race.results.create!(
-      :first_name => "Tom", :team_name => "Davitamon", :number => "702"
+      first_name: "Tom", team_name: "Davitamon", number: "702"
     )
     assert(result.bar?, "By default, results should count toward BAR")
     result.bar = false
@@ -485,12 +485,12 @@ class ResultTest < ActiveSupport::TestCase
 
   def test_dont_delete_team_names_if_used_by_person
     event = SingleDayEvent.create!
-    race = event.races.create!(:category => Category.find_or_create_by(:name => "Senior Men Pro 1/2"))
+    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
     race.results.create!(
-      :first_name => "Tom", :team_name => "Blow", :team_name => "QuickStep"
+      first_name: "Tom", team_name: "Blow", team_name: "QuickStep"
     )
 
-    Person.create!(:name => "Phil Anderson", :team => Team.find_by_name("QuickStep"))
+    Person.create!(name: "Phil Anderson", team: Team.find_by_name("QuickStep"))
     assert(race.destroy, "Should destroy race")
 
     assert_nil(Person.find_by_name("Tom Blow"), "Should delete person that just came from results")
@@ -499,44 +499,44 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   def test_competition_result
-    FactoryGirl.create(:discipline, :name => "Team")
-    senior_men = FactoryGirl.create(:category, :name => "Senior Men")
+    FactoryGirl.create(:discipline, name: "Team")
+    senior_men = FactoryGirl.create(:category, name: "Senior Men")
     result = FactoryGirl.create(:result)
     assert !result.competition_result?, "SingleDayEvent competition_result?"
 
-    result = Ironman.create!.races.create!(:category => Category.new(:name => "Team")).results.create!(:category => senior_men)
+    result = Ironman.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
     assert result.competition_result?, "Ironman competition_result?"
 
-    result = TeamBar.create!.races.create!(:category => Category.new(:name => "Team")).results.create!(:category => senior_men)
+    result = TeamBar.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
     assert result.competition_result?, "TeamBar competition_result?"
   end
 
   def test_team_competition_result
-    FactoryGirl.create(:discipline, :name => "Team")
-    senior_men = FactoryGirl.create(:category, :name => "Senior Men")
+    FactoryGirl.create(:discipline, name: "Team")
+    senior_men = FactoryGirl.create(:category, name: "Senior Men")
     result = FactoryGirl.create(:result)
     assert !result.team_competition_result?, "SingleDayEvent team_competition_result?"
 
-    result = Ironman.create!.races.create!(:category => Category.new(:name => "Team")).results.create!(:category => senior_men)
+    result = Ironman.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
     assert !result.team_competition_result?, "Ironman team_competition_result?"
 
-    result = TeamBar.create!.races.create!(:category => Category.new(:name => "Team")).results.create!(:category => senior_men)
+    result = TeamBar.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
     assert result.team_competition_result?, "TeamBar competition_result?"
   end
 
   def test_custom_attributes
     banana_belt_1 = FactoryGirl.create(:event)
     senior_men = FactoryGirl.create(:category)
-    race = banana_belt_1.races.create!(:category => senior_men, :result_columns => [ "place" ], :custom_columns => [ "run", 20100929 ])
+    race = banana_belt_1.races.create!(category: senior_men, result_columns: [ "place" ], custom_columns: [ "run", 20100929 ])
 
-    result = race.reload.results.create!(:place => "1", :custom_attributes => { :run => "9:00" })
+    result = race.reload.results.create!(place: "1", custom_attributes: { run: "9:00" })
     assert_equal "9:00", result.custom_attribute(:run), "run custom_attribute"
     assert_equal "9:00", result.custom_attribute("run"), "run custom_attribute"
     assert_equal nil, result.custom_attribute(:"20100929"), "numerical column"
     assert_raise(NoMethodError) { result.foo_bar }
     assert_raise(NoMethodError) { result.custom_attribute(:foo_bar) }
 
-    result = race.results.create!(:place => "1", :custom_attributes => { "20100929" => "A" })
+    result = race.results.create!(place: "1", custom_attributes: { "20100929" => "A" })
     assert_equal "A", result.custom_attribute(:"20100929"), "numerical column"
   end
 end

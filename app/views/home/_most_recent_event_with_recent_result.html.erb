@@ -5,7 +5,7 @@
   <tbody>
     <% event.races_with_results.sort_by(&:name)[0, 12].each do |race| %>
   <tr>
-    <td><%= link_to race.name, event_results_path(event, :anchor => "race_#{race.id}") %></td>
+    <td><%= link_to race.name, event_results_path(event, anchor: "race_#{race.id}") %></td>
     <td><%= link_to race.results.sort.first.name, person_results_path(race.results.sort.first.person_id) %></td>
   </tr>
   <% end %>

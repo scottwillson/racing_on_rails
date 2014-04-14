@@ -28,9 +28,9 @@ class Race < ActiveRecord::Base
   belongs_to :category
   serialize :result_columns, Array
   serialize :custom_columns, Array
-  belongs_to :event, :inverse_of => :races
-  has_one :promoter, :through => :event
-  has_many :results, :dependent => :destroy
+  belongs_to :event, inverse_of: :races
+  has_one :promoter, through: :event
+  has_many :results, dependent: :destroy
 
   scope :year, lambda { |year|
     where(
@@ -63,7 +63,7 @@ class Race < ActiveRecord::Base
     if name.blank?
       self.category = nil
     else
-      self.category = Category.new(:name => name)
+      self.category = Category.new(name: name)
     end
     category.try :name
   end
@@ -261,7 +261,7 @@ class Race < ActiveRecord::Base
             result.members_only_place = last_members_only_place.to_s
           end
           # Slight optimization. Most of the time, no point in saving a result that hasn't changed
-          result.update_attributes(:members_only_place => result.members_only_place) if place_before != result.members_only_place
+          result.update_attributes(members_only_place: result.members_only_place) if place_before != result.members_only_place
           # store to know when switching to new placement (team result feature)
           last_result_place = result.place.to_i
         end
@@ -278,13 +278,13 @@ class Race < ActiveRecord::Base
     if (exempt_cats.nil? || exempt_cats.include?(result.race.category.name))
       return non_members
     else
-      other_results_in_place = Result.where(:race_id => result.race.id, :place => result.place)
+      other_results_in_place = Result.where(race_id: result.race.id, place: result.place)
       other_results_in_place.each { |orip|
         unless orip.person.nil?
           if !orip.person.member?(result.date)
             # might as well blank out this result while we're here, saves some future work
             result.members_only_place = ''
-            result.update_attribute :members_only_place => result.members_only_place
+            result.update_attribute members_only_place: result.members_only_place
             # could also use other_results_in_place.size if needed for calculations
             non_members = true
           end
@@ -297,7 +297,7 @@ class Race < ActiveRecord::Base
 
   def create_result_before(result_id)
     if results.empty?
-      return results.create(:place => "1")
+      return results.create(place: "1")
     end
 
     _results = results.sort
@@ -320,7 +320,7 @@ class Race < ActiveRecord::Base
       end
     end
 
-    results.create(:place => place)
+    results.create(place: place)
   end
 
   def destroy_result(result)

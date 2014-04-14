@@ -43,9 +43,9 @@ class Competition < Event
 
   has_many :competition_event_memberships
   has_many :source_events,
-           :through => :competition_event_memberships,
-           :source => :event,
-           :class_name => "::Event"
+           through: :competition_event_memberships,
+           source: :event,
+           class_name: "::Event"
 
   def self.find_for_year(year = RacingAssociation.current.year)
     self.where("date between ? and ?", Time.zone.local(year).beginning_of_year.to_date, Time.zone.local(year).end_of_year.to_date).first
@@ -56,13 +56,13 @@ class Competition < Event
   end
 
   def self.find_or_create_for_year(year = RacingAssociation.current.year)
-    self.find_for_year(year) || self.create(:date => (Time.zone.local(year).beginning_of_year))
+    self.find_for_year(year) || self.create(date: (Time.zone.local(year).beginning_of_year))
   end
 
   # Update results based on source event results.
   # (Calculate clashes with internal Rails method)
   def self.calculate!(year = Time.zone.today.year)
-    benchmark(name, :level => :info) {
+    benchmark(name, level: :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
         competition = self.find_for_year(year)
@@ -102,8 +102,8 @@ class Competition < Event
 
   def create_races
     category_names.each do |name|
-      category = Category.find_or_create_by(:name => (name))
-      self.races.create(:category => category)
+      category = Category.find_or_create_by(name: (name))
+      self.races.create(category: category)
     end
   end
 
@@ -173,11 +173,11 @@ class Competition < Event
           # Intentionally not using results association create method. No need to hang on to all competition results.
           # In fact, this could cause serious memory issues with the Ironman
           competition_result = Result.create!(
-             :person => person,
-             :team => person.team,
-             :event => self,
-             :race => race,
-             :competition_result => true)
+             person: person,
+             team: person.team,
+             event: self,
+             race: race,
+             competition_result: true)
         end
 
         create_score competition_result, source_result, points
@@ -187,9 +187,9 @@ class Competition < Event
 
   def create_score(competition_result, source_result, points)
     competition_result.scores.create_if_best_result_for_race(
-      :source_result => source_result,
-      :competition_result_id => competition_result.id,
-      :points => points
+      source_result: source_result,
+      competition_result_id: competition_result.id,
+      points: points
     )
   end
 
@@ -301,7 +301,7 @@ class Competition < Event
 
   def source_results_with_benchmark(race)
     results = []
-    Competition.benchmark("#{self.class.name} source_results", :level => :debug) {
+    Competition.benchmark("#{self.class.name} source_results", level: :debug) {
       results = source_results(race)
     }
     if logger.debug?

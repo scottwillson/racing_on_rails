@@ -59,12 +59,12 @@ module ApplicationHelper
   end
 
   def markdown(source)
-    renderer = Redcarpet::Markdown.new(Redcarpet::Render::HTML, :autolink => true, :space_after_headers => true)
+    renderer = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, space_after_headers: true)
     renderer.render(source).html_safe
   end
 
   def flash_js(key, message)
-    "jQuery('.flash_messages').html('#{escape_javascript(render('layouts/flash_message', :message => message, :alert_class => alert_class(key)))}');".html_safe
+    "jQuery('.flash_messages').html('#{escape_javascript(render('layouts/flash_message', message: message, alert_class: alert_class(key)))}');".html_safe
   end
 
   def alert_class(key)
@@ -80,11 +80,11 @@ module ApplicationHelper
     if collection_or_options.is_a? Hash
       options, collection_or_options = collection_or_options, nil
     end
-    options = options.merge(:renderer => BootstrapPagination::Rails)
+    options = options.merge(renderer: BootstrapPagination::Rails)
     unless options.has_key?(:page_links)
-      options = options.merge(:page_links => !mobile_request?)
+      options = options.merge(page_links: !mobile_request?)
     end
-    content_tag(:div, :class => "pagination") { super *[collection_or_options, options].compact }
+    content_tag(:div, class: "pagination") { super *[collection_or_options, options].compact }
   end
 
   # Only need this helper once, it will provide an interface to convert a block into a partial.
@@ -92,7 +92,7 @@ module ApplicationHelper
   # 2. Merge the 'body' variable into our options hash
   # 3. Render the partial with the given options hash. Just like calling the partial directly.
   def block_to_partial(partial_name, options = {}, &block)
-    options.merge!(:body => capture(&block))
+    options.merge!(body: capture(&block))
     render partial_name, options
   end
 end

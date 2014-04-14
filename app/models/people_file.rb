@@ -84,13 +84,13 @@ class PeopleFile < RacingOnRails::Grid::GridFile
     'Donation'                               => 'notes',
     'Singlespeed'                            => 'notes',
     'Tandem'                                 => 'notes',
-    'Please select a category:'              => RacingOnRails::Grid::Column.new(:name => 'notes', :description => 'Disciplines'),
+    'Please select a category:'              => RacingOnRails::Grid::Column.new(name: 'notes', description: 'Disciplines'),
     '2009 notes'                             => 'notes',
-    'Would you like to make an additional donation to support OBRA? '                 => RacingOnRails::Grid::Column.new(:name => 'notes', :description => 'Donation'),
-    'Please indicate if you are interested in racing cross country or downhill. '     => RacingOnRails::Grid::Column.new(:name => 'notes', :description => 'Downhill/Cross Country'),
-    'Please indicate if you are interested in racing single speed.'                   => RacingOnRails::Grid::Column.new(:name => 'notes', :description => 'Singlespeed'),
-    'Please indicate other interests. (For example: time trial tandem triathalon r'   => RacingOnRails::Grid::Column.new(:name => 'notes', :description => 'Other interests'),
-    'Your team or club name (please enter N/A if you do not have a team affiliation)' => RacingOnRails::Grid::Column.new(:name => 'team_name', :description => 'Team')
+    'Would you like to make an additional donation to support OBRA? '                 => RacingOnRails::Grid::Column.new(name: 'notes', description: 'Donation'),
+    'Please indicate if you are interested in racing cross country or downhill. '     => RacingOnRails::Grid::Column.new(name: 'notes', description: 'Downhill/Cross Country'),
+    'Please indicate if you are interested in racing single speed.'                   => RacingOnRails::Grid::Column.new(name: 'notes', description: 'Singlespeed'),
+    'Please indicate other interests. (For example: time trial tandem triathalon r'   => RacingOnRails::Grid::Column.new(name: 'notes', description: 'Other interests'),
+    'Your team or club name (please enter N/A if you do not have a team affiliation)' => RacingOnRails::Grid::Column.new(name: 'team_name', description: 'Team')
   }
 
   attr_reader :created
@@ -104,11 +104,11 @@ class PeopleFile < RacingOnRails::Grid::GridFile
       options = options.first
     end
     options = {
-      :delimiter => ',',
-      :quoted => true,
-      :header_row => true,
-      :row_class => Person,
-      :column_map => COLUMN_MAP
+      delimiter: ',',
+      quoted: true,
+      header_row: true,
+      row_class: Person,
+      column_map: COLUMN_MAP
     }.merge(options)
 
     super(source, options)
@@ -156,7 +156,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
         end
 
         if people.empty?
-          people = Person.find_all_by_name_or_alias(:first_name => row_hash[:first_name], :last_name => row_hash[:last_name])
+          people = Person.find_all_by_name_or_alias(first_name: row_hash[:first_name], last_name: row_hash[:last_name])
         end
 
         logger.info("PeopleFile Found #{people.size} people for '#{row_hash[:first_name]} #{row_hash[:last_name]}' lic:  #{row_hash[:license]}")
@@ -167,7 +167,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
           logger.info("PeopleFile Create new person")
           delete_unwanted_member_from(row_hash, person)
           add_print_card_and_label(row_hash)
-          person = Person.new(:updated_by => import_file)
+          person = Person.new(updated_by: import_file)
           if year
             person.year = year
           end
@@ -212,7 +212,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
           row_hash.delete(:single_access_token)
           row_hash.delete(:perishable_token)
 
-          duplicates << Duplicate.create!(:new_attributes => Person.new(row_hash).serializable_hash, :people => people)
+          duplicates << Duplicate.create!(new_attributes: Person.new(row_hash).serializable_hash, people: people)
         end
       end
     end
@@ -270,9 +270,9 @@ class PeopleFile < RacingOnRails::Grid::GridFile
   def import_file
     unless @import_file
       if @file
-        @import_file = ImportFile.create!(:name => "#{@file.path} #{Person.current.try(:name_or_login)}")
+        @import_file = ImportFile.create!(name: "#{@file.path} #{Person.current.try(:name_or_login)}")
       else
-        @import_file = ImportFile.create!(:name => "#{Person.current.try(:name_or_login)} file")
+        @import_file = ImportFile.create!(name: "#{Person.current.try(:name_or_login)} file")
       end
     end
     @import_file

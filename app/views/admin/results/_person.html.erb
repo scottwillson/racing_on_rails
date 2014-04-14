@@ -1,7 +1,7 @@
 <h3><%= [person.name, (person.team.blank? ? nil : person.team.name), person.city, person.racing_age].compact.join(', ') %></h3>
-<%= table :class => "results",
-         :dataid => person.id,
-         :id => "person_#{person.id}" do %>
+<%= table class: "results",
+         dataid: person.id,
+         id: "person_#{person.id}" do %>
   <tr>
     <th></th>
     <th class="place">Place</th>

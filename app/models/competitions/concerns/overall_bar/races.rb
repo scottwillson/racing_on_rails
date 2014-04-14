@@ -11,8 +11,8 @@ module Concerns
         end
 
         ::Race.
-          where(:event_id => event.id).
-          where(:category_id => category.id).
+          where(event_id: event.id).
+          where(category_id: category.id).
           includes(:results).
           first
       end
@@ -23,7 +23,7 @@ module Concerns
           'Junior Men', 'Junior Women', 'Masters Men', 'Masters Women',
           'Masters Men 4/5', 'Masters Women 4',
           'Singlespeed/Fixed', 'Tandem', "Clydesdale" ].each do |category_name|
-          races.create :category => ::Category.find_or_create_by(:name => category_name)
+          races.create category: ::Category.find_or_create_by(name: category_name)
         end
       end
     end

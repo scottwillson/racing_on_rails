@@ -69,7 +69,7 @@ class ActiveSupport::TestCase
     assert_response :success
     assert_template "person_sessions/new"
 
-    post person_session_path, :person_session => { :login => person.login, :password => password }
+    post person_session_path, person_session: { login: person.login, password: password }
     assert_response :redirect
   end
 
@@ -149,7 +149,7 @@ class ActiveSupport::TestCase
        (1..results.sort.last.place.to_i).reverse_each { |res|
          unless all_results.include?(res.to_s)
            # we need a result, there is a gap here
-           race.results.create!(:place => res)
+           race.results.create!(place: res)
          end
        }
     end

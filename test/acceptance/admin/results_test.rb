@@ -5,10 +5,10 @@ class ResultsTest < AcceptanceTest
   def test_results_editing
     javascript!
 
-    FactoryGirl.create(:number_issuer, :name => RacingAssociation.current.short_name)
-    event = FactoryGirl.create(:event, :name => "Copperopolis Road Race")
-    race = FactoryGirl.create(:race, :event => event)
-    result = FactoryGirl.create(:result, :race => race, :name => "Ryan Weaver")
+    FactoryGirl.create(:number_issuer, name: RacingAssociation.current.short_name)
+    event = FactoryGirl.create(:event, name: "Copperopolis Road Race")
+    race = FactoryGirl.create(:race, event: event)
+    result = FactoryGirl.create(:result, race: race, name: "Ryan Weaver")
 
     login_as FactoryGirl.create(:administrator)
 
@@ -26,11 +26,11 @@ class ResultsTest < AcceptanceTest
 
     click_link "edit_race_#{race.id}"
 
-    fill_in_inline "#result_#{result.id}_place", :with => "DNF"
+    fill_in_inline "#result_#{result.id}_place", with: "DNF"
 
     visit "/admin/races/#{race.id}/edit"
-    find "#result_#{result.id}_place", :text => "DNF"
-    fill_in_inline "#result_#{result.id}_name", :with => "Megan Weaver"
+    find "#result_#{result.id}_place", text: "DNF"
+    fill_in_inline "#result_#{result.id}_name", with: "Megan Weaver"
 
     visit "/admin/races/#{race.id}/edit"
     assert_page_has_no_content "Ryan Weaver"
@@ -40,7 +40,7 @@ class ResultsTest < AcceptanceTest
     megan = Person.find_by_name("Megan Weaver")
     assert weaver != megan, "Should create new person, not rename existing one"
 
-    fill_in_inline "#result_#{result.id}_team_name", :with => "River City"
+    fill_in_inline "#result_#{result.id}_team_name", with: "River City"
 
     visit "/admin/races/#{race.id}/edit"
     assert_page_has_content "River City"
@@ -79,7 +79,7 @@ class ResultsTest < AcceptanceTest
     assert_page_has_content "Field Size (2)"
 
     assert_equal "", find_field("race_laps").value
-    fill_in "race_laps", :with => "12"
+    fill_in "race_laps", with: "12"
     click_button "Save"
     assert_equal "12", find_field("race_laps").value
   end

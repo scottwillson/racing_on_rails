@@ -10,7 +10,7 @@ class Cat4WomensRaceSeries < Competition
     _start_date = RacingAssociation.current.cat4_womens_race_series_start_date || date.beginning_of_year
     _end_date = RacingAssociation.current.cat4_womens_race_series_end_date || self.end_date
     Result.
-      includes(:race => [ :category, :event ]).
+      includes(race: [ :category, :event ]).
       where("place > 0 or place is null or place = ''").
       where("results.name is not null").
       where("results.name != ''").
@@ -35,7 +35,7 @@ class Cat4WomensRaceSeries < Competition
   end
 
   def create_races
-    races.create :category => category
+    races.create category: category
   end
 
   def cat_4_categories
@@ -45,6 +45,6 @@ class Cat4WomensRaceSeries < Competition
   def category
     @category ||=
       RacingAssociation.current.cat4_womens_race_series_category ||
-      Category.find_or_create_by(:name => "Women Cat 4")
+      Category.find_or_create_by(name: "Women Cat 4")
   end
 end

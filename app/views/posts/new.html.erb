@@ -1,8 +1,8 @@
 <% @page_title = "Mailing Lists: #{@mailing_list.friendly_name}" %>
 
-<%= render "shared/errors", :object => @post %>
+<%= render "shared/errors", object: @post %>
 
-<%= form_for [ @mailing_list, @post ], :html => { :class => "form-horizontal", :role => "form" } do |f| %>
+<%= form_for [ @mailing_list, @post ], html: { class: "form-horizontal", role: "form" } do |f| %>
   <%= hidden_field_tag("reply_to_id", @reply_to.id) if @reply_to %>
 
   <div class="row">
@@ -23,20 +23,20 @@
 
   <div class="row">
     <div class="col-sm-12">
-      <%= f.labelled_text_area :body, :class => "col-sm-12", :rows => 12 %>
+      <%= f.labelled_text_area :body, class: "col-sm-12", rows: 12 %>
     </div>
   </div>
 
   <div class="row">
     <div class="col-sm-12">
       <% if @reply_to %>
-        <%= submit_tag("Send", :class => "btn btn-default") %>
+        <%= submit_tag("Send", class: "btn btn-default") %>
       <% else %>
-        <%= submit_tag("Post", :class => "btn btn-default", :id => "post") %>
+        <%= submit_tag("Post", class: "btn btn-default", id: "post") %>
         <% end %>
       <div class="help-block pull-right"><% unless @reply_to %>You must be a subscriber to post<% end %></div>
     </div>
   </div>
 <% end -%>
 
-<%= render "mailing_lists/links", :mailing_list => @mailing_list %>
+<%= render "mailing_lists/links", mailing_list: @mailing_list %>

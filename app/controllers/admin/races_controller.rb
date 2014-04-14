@@ -1,9 +1,9 @@
 module Admin
   class RacesController < Admin::AdminController
-    before_filter :assign_event, :only => [ :new, :create, :propagate ]
-    before_filter :assign_race, :only => [ :create, :destroy, :edit, :new, :update, :update_attribute ]
-    before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
-    before_filter :require_administrator, :except => [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
+    before_filter :assign_event, only: [ :new, :create, :propagate ]
+    before_filter :assign_race, only: [ :create, :destroy, :edit, :new, :update, :update_attribute ]
+    before_filter :require_administrator_or_promoter, only: [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
+    before_filter :require_administrator, except: [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
 
     def new
       render :edit
@@ -20,7 +20,7 @@ module Admin
           end
         }
         format.js {
-          @race.category = Category.find_or_create_by(:name => "New Category")
+          @race.category = Category.find_or_create_by(name: "New Category")
           @race.save!
         }
       end
@@ -55,7 +55,7 @@ module Admin
         format.js {
           @race.update_attributes! params[:name] => params[:value]
           expire_cache
-          render :plain => @race.send(params[:name])
+          render plain: @race.send(params[:name])
         }
       end
     end

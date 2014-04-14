@@ -1,9 +1,9 @@
-<%= content_tag :tr, :class => "photo_row", :id => "photo_#{photo.id}_row" do %>
+<%= content_tag :tr, class: "photo_row", id: "photo_#{photo.id}_row" do %>
   <td class="icon"><span class="glyphicon glyphicon-picture"></span></td>
   <td class="name">
     <%= photo.title %>
   </td>
   <td class="actions not_editable">
-    <%= link_to 'Edit', edit_photo_path(photo), :id => "edit_#{photo.id}" %>
+    <%= link_to 'Edit', edit_photo_path(photo), id: "edit_#{photo.id}" %>
   </td>
 <% end %>

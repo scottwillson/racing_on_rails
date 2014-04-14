@@ -9,7 +9,7 @@ module TabsHelper
 
     tabs = Tabs.new(active_text, window)
     yield tabs
-    render "tabs/tabs", :tabs => tabs
+    render "tabs/tabs", tabs: tabs
   end
 
   class Tabs

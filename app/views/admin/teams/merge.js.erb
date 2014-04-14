@@ -1,6 +1,6 @@
 <% if @merged %>
   jQuery('#team_<%= @other_team.id %>_row').remove();
-  jQuery('#team_<%= @team.id %>_aliases').html('<%= escape_javascript(render('aliases', :team => @team)) %>');
+  jQuery('#team_<%= @team.id %>_aliases').html('<%= escape_javascript(render('aliases', team: @team)) %>');
   <%= flash_js "notice", "Merged #{@other_team.name} into #{@team.name}" %>
 <% else %>
   <%= flash_js "warn", "Could not merge #{@other_team.name} into #{@team.name}" %>

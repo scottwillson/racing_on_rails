@@ -5,10 +5,10 @@
 class Name < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :year
-  validates_uniqueness_of :name, :scope => [ :year, :nameable_type, :nameable_id ]
-  validates_uniqueness_of :nameable_id, :scope => [ :year, :nameable_type ]
+  validates_uniqueness_of :name, scope: [ :year, :nameable_type, :nameable_id ]
+  validates_uniqueness_of :nameable_id, scope: [ :year, :nameable_type ]
 
-  belongs_to :nameable, :polymorphic => true
+  belongs_to :nameable, polymorphic: true
 
   def date=(value)
     self.year = value.year

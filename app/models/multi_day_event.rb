@@ -11,10 +11,10 @@
 # New child event should populate child event with parent data, but they don't
 class MultiDayEvent < Event
   validates_presence_of :name, :date
-  validate :on => :create do |event|
+  validate on: :create do |event|
     event.parent.nil?
   end
-  validate :on => :update do |event|
+  validate on: :update do |event|
     event.parent.nil?
   end
 
@@ -27,10 +27,10 @@ class MultiDayEvent < Event
              where("type is null or type = 'SingleDayEvent'").
              order(:date)
            },
-           :class_name => "Event",
-           :foreign_key => "parent_id",
-           :after_add => [ :children_changed, :update_date ],
-           :after_remove => [ :children_changed, :update_date ] do
+           class_name: "Event",
+           foreign_key: "parent_id",
+           after_add: [ :children_changed, :update_date ],
+           after_remove: [ :children_changed, :update_date ] do
              def create!(attributes = {})
                owner = proxy_association.owner
                attributes[:parent_id] = owner.id
@@ -64,18 +64,18 @@ class MultiDayEvent < Event
 
     first_event = children.first
     new_event_attributes = {
-      :city => first_event.city,
-      :discipline => first_event.discipline,
-      :email => first_event.email,
-      :flyer => first_event.flyer,
-      :name => first_event.name,
-      :phone => first_event.phone,
-      :promoter => first_event.promoter,
-      :prize_list => first_event.prize_list,
-      :sanctioned_by => first_event.sanctioned_by,
-      :state => first_event.state,
-      :team => first_event.team,
-      :velodrome => first_event.velodrome
+      city: first_event.city,
+      discipline: first_event.discipline,
+      email: first_event.email,
+      flyer: first_event.flyer,
+      name: first_event.name,
+      phone: first_event.phone,
+      promoter: first_event.promoter,
+      prize_list: first_event.prize_list,
+      sanctioned_by: first_event.sanctioned_by,
+      state: first_event.state,
+      team: first_event.team,
+      velodrome: first_event.velodrome
     }
 
     new_multi_day_event_class = MultiDayEvent.guess_type(children)
@@ -108,14 +108,14 @@ class MultiDayEvent < Event
     end
 
     start_date.step(event.end_date, 1) do |date|
-      event.children.create!(:date => date) if days_of_week_indexes.include?(date.wday)
+      event.children.create!(date: date) if days_of_week_indexes.include?(date.wday)
     end
 
     event
   end
 
   def self.guess_type(name, date)
-    events = SingleDayEvent.where(:name => name).year(date.year)
+    events = SingleDayEvent.where(name: name).year(date.year)
     MultiDayEvent.guess_type(events)
   end
 
@@ -136,20 +136,20 @@ class MultiDayEvent < Event
 
   def self.same_name_and_year(event)
     raise ArgumentError, "'event' cannot be nil" if event.nil?
-    MultiDayEvent.where(:name => event.name).year(event.date.year).first
+    MultiDayEvent.where(name: event.name).year(event.date.year).first
   end
 
   # Uses SQL query to set +date+ from child events. Callbacks pass in unsued child parameter.
   def update_date(child = nil)
     return true if new_record?
 
-    child_dates = Event.where(:parent_id => id).where(:cancelled => false).where(:postponed => false).pluck(:date)
+    child_dates = Event.where(parent_id: id).where(cancelled: false).where(postponed: false).pluck(:date)
     if child_dates.present?
       self.date = child_dates.min
       self.end_date = child_dates.max
       if date_changed? || end_date_changed?
         # Don't trigger callbacks
-        MultiDayEvent.where(:id => id).update_all(:date => date, :end_date => end_date)
+        MultiDayEvent.where(id: id).update_all(date: date, end_date: end_date)
       end
     end
     true
@@ -200,7 +200,7 @@ class MultiDayEvent < Event
   def missing_children
     return [] unless name && date
 
-    @missing_children ||= SingleDayEvent.where(:parent_id =>nil).where(:name => name).year(date.year)
+    @missing_children ||= SingleDayEvent.where(parent_id:nil).where(name: name).year(date.year)
   end
 
   # All children have results?
@@ -213,7 +213,7 @@ class MultiDayEvent < Event
     children.each do |event|
       races.map(&:category).each do |category|
         unless event.races.map(&:category).include?(category)
-          event.races.create!(:category => category)
+          event.races.create!(category: category)
         end
       end
     end

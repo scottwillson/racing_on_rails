@@ -5,7 +5,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
   def setup
     super
     @administrator = FactoryGirl.create(:administrator)
-    @member = FactoryGirl.create(:person_with_login, :login => "bob.jones")
+    @member = FactoryGirl.create(:person_with_login, login: "bob.jones")
   end
 
   # logged-in?, person_id?, same person?, admin?
@@ -16,7 +16,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
       https!
       follow_redirect!
       assert_redirected_to "https://www.example.com/person_session/new"
-      login :person_session => { :login => 'bob.jones', :password => 'secret' }
+      login person_session: { login: 'bob.jones', password: 'secret' }
       assert_redirected_to "https://www.example.com/account"
       follow_redirect!
       assert_redirected_to "https://www.example.com/people/#{@member.id}/edit"
@@ -38,7 +38,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
 
       get "/logout"
       get "/account"
-      login :person_session => { :login => 'admin@example.com', :password => 'secret' }
+      login person_session: { login: 'admin@example.com', password: 'secret' }
       assert_redirected_to "https://www.example.com/account"
       follow_redirect!
       assert_redirected_to "https://www.example.com/people/#{@administrator.id}/edit"
@@ -59,7 +59,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     else
       get "/account"
       assert_redirected_to "http://www.example.com/person_session/new"
-      login :person_session => { :login => 'bob.jones', :password => 'secret' }
+      login person_session: { login: 'bob.jones', password: 'secret' }
       assert_redirected_to "http://www.example.com/account"
       follow_redirect!
       assert_redirected_to "http://www.example.com/people/#{@member.id}/edit"
@@ -81,7 +81,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
 
       get "/logout"
       get "/account"
-      login :person_session => { :login => 'admin@example.com', :password => 'secret' }
+      login person_session: { login: 'admin@example.com', password: 'secret' }
       assert_redirected_to "http://www.example.com/account"
       follow_redirect!
       assert_redirected_to "http://www.example.com/people/#{@administrator.id}/edit"
@@ -127,13 +127,13 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
       https!
       get "/login"
 
-      login :person_session => { :login => 'bob.jones', :password => 'secret' }
+      login person_session: { login: 'bob.jones', password: 'secret' }
       assert_redirected_to "https://www.example.com/people/#{@member.id}/edit"
     else
       get "http://www.example.com/login"
       assert_response :success
 
-      login :person_session => { :login => 'bob.jones', :password => 'secret' }
+      login person_session: { login: 'bob.jones', password: 'secret' }
       assert_redirected_to "http://www.example.com/people/#{@member.id}/edit"
     end
   end
@@ -146,13 +146,13 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
       https!
       get "/login"
 
-      login :person_session => { :login => 'bob.jones', :password => 'secret' }
+      login person_session: { login: 'bob.jones', password: 'secret' }
       assert_redirected_to "https://www.example.com/people/#{@member.id}/edit"
     else
       get "http://www.example.com:8080/login"
       assert_response :success
 
-      login :person_session => { :login => 'bob.jones', :password => 'secret' }
+      login person_session: { login: 'bob.jones', password: 'secret' }
       assert_redirected_to "http://www.example.com:8080/people/#{@member.id}/edit"
     end
   end
@@ -166,19 +166,19 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     assert_template "person_sessions/new"
     assert_equal "Please login to your #{RacingAssociation.current.short_name} account", flash[:notice]
 
-    login :person_session => { :login => 'admin@example.com', :password => 'secret' }
+    login person_session: { login: 'admin@example.com', password: 'secret' }
     assert_redirected_to admin_people_path
   end
 
   def test_should_redirect_to_admin_home_after_admin_login
     go_to_login
-    login :person_session => { :login => 'admin@example.com', :password => 'secret' }
+    login person_session: { login: 'admin@example.com', password: 'secret' }
     assert_redirected_to "/admin"
   end
 
   def test_valid_member_login
     go_to_login
-    login :person_session => { :login => 'bob.jones', :password => 'secret' }
+    login person_session: { login: 'bob.jones', password: 'secret' }
     assert_redirected_to edit_person_path(@member)
   end
 

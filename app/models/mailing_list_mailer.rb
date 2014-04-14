@@ -4,21 +4,21 @@ class MailingListMailer < ActionMailer::Base
   def private_reply(reply_post, to)
     raise("'To' cannot be blank") if to.blank?
     mail(
-      :subject => reply_post.subject,
-      :to => to,
-      :from => "#{reply_post.from_name} <#{reply_post.from_email}>",
-      :sent_on => reply_post.date.to_s,
-      :body => reply_post.body.to_s
+      subject: reply_post.subject,
+      to: to,
+      from: "#{reply_post.from_name} <#{reply_post.from_email}>",
+      sent_on: reply_post.date.to_s,
+      body: reply_post.body.to_s
     )
   end
 
   def post(new_post)
     mail(
-      :subject => new_post.subject,
-      :to => new_post.mailing_list.name,
-      :from => "#{new_post.from_name} <#{new_post.from_email}>",
-      :sent_on => new_post.date.to_s,
-      :body => new_post.body.to_s
+      subject: new_post.subject,
+      to: new_post.mailing_list.name,
+      from: "#{new_post.from_name} <#{new_post.from_email}>",
+      sent_on: new_post.date.to_s,
+      body: new_post.body.to_s
     )
   end
 
@@ -67,7 +67,7 @@ class MailingListMailer < ActionMailer::Base
         end
 
         if post.body
-          post.body = post.body.encode("UTF-8", :undef => :replace)
+          post.body = post.body.encode("UTF-8", undef: :replace)
         else
           post.body = ""
         end

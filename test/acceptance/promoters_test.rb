@@ -5,18 +5,18 @@ class PromotersTest < AcceptanceTest
   def test_browse
     javascript!
 
-    FactoryGirl.create(:discipline, :name => "Cyclocross")
-    FactoryGirl.create(:discipline, :name => "Downhill")
-    FactoryGirl.create(:discipline, :name => "Mountain Bike")
-    FactoryGirl.create(:discipline, :name => "Road")
-    FactoryGirl.create(:discipline, :name => "Singlespeed")
-    FactoryGirl.create(:discipline, :name => "Track")
-    FactoryGirl.create(:number_issuer, :name => RacingAssociation.current.short_name)
+    FactoryGirl.create(:discipline, name: "Cyclocross")
+    FactoryGirl.create(:discipline, name: "Downhill")
+    FactoryGirl.create(:discipline, name: "Mountain Bike")
+    FactoryGirl.create(:discipline, name: "Road")
+    FactoryGirl.create(:discipline, name: "Singlespeed")
+    FactoryGirl.create(:discipline, name: "Track")
+    FactoryGirl.create(:number_issuer, name: RacingAssociation.current.short_name)
 
     year = RacingAssociation.current.effective_year
     promoter = FactoryGirl.create(:promoter)
-    series = Series.create!(:name => "Cross Crusade Series", :promoter => promoter, :date => Date.new(year, 10))
-    event = SingleDayEvent.create!(:name => "Cross Crusade: Alpenrose", :promoter => promoter, :date => Date.new(year, 10))
+    series = Series.create!(name: "Cross Crusade Series", promoter: promoter, date: Date.new(year, 10))
+    event = SingleDayEvent.create!(name: "Cross Crusade: Alpenrose", promoter: promoter, date: Date.new(year, 10))
     series.children << event
     login_as promoter
 
@@ -30,7 +30,7 @@ class PromotersTest < AcceptanceTest
 
     click_link "create_race"
     within "form.editor_field" do
-      fill_in "value", :with => "Senior Women"
+      fill_in "value", with: "Senior Women"
       press_return "value"
     end
     assert_page_has_no_content "form.editor_field input"
@@ -46,7 +46,7 @@ class PromotersTest < AcceptanceTest
 
     click_link "create_race"
     within "form.editor_field" do
-      fill_in "value", :with => "Masters Women 40+"
+      fill_in "value", with: "Masters Women 40+"
       press_return "value"
     end
     assert_page_has_no_content "form.editor_field input"

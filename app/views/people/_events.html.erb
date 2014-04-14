@@ -1,12 +1,12 @@
 <% if events.present? %>
 
 <h3>Promoted Events</h3>
-<%= table :class => "promoted_events", :collection => events, :columns => 2 do %>
+<%= table class: "promoted_events", collection: events, columns: 2 do %>
   <tr>
     <th>Date</th>
     <th>Name</th>
   </tr>
-  <%= render :partial => "people/event", :collection => events %>
+  <%= render partial: "people/event", collection: events %>
 <% end -%>
 
 <% end %>

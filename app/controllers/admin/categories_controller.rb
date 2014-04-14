@@ -6,9 +6,9 @@ module Admin
     # * categories
     def index
       if params[:parent_id].present?
-        @category = Category.includes(:children).where(:id => params[:parent_id]).first
+        @category = Category.includes(:children).where(id: params[:parent_id]).first
       else
-        @category = Category.find_or_create_by(:name => RacingAssociation.current.short_name)
+        @category = Category.find_or_create_by(name: RacingAssociation.current.short_name)
         @unknowns = Category.find_all_unknowns
       end
     end
@@ -27,13 +27,13 @@ module Admin
     # Calculate MbraBar only
     def recompute_bar
       MbraBar.calculate!
-      redirect_to :action => :index
+      redirect_to action: :index
     end
 
     # Calculate MbraTeamBar only
     def recompute_team_bar
       MbraTeamBar.calculate!
-      redirect_to :action => :index
+      redirect_to action: :index
     end
 
 

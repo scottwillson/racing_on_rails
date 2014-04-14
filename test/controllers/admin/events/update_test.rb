@@ -26,7 +26,7 @@ module Admin
 
         post(:update,
              "commit"=>"Save",
-             :id => event.to_param,
+             id: event.to_param,
              "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Cyclocross"}
         )
         assert_redirected_to edit_admin_event_path(event)
@@ -39,13 +39,13 @@ module Admin
 
       def test_update_nil_disciplines
         event = FactoryGirl.create(:series_event)
-        event.update_attributes(:discipline => nil)
+        event.update_attributes(discipline: nil)
         assert_nil(event[:discipline], 'discipline')
         assert_equal('Road', event.parent.discipline, 'Parent event discipline')
 
         post(:update,
              "commit"=>"Save",
-             :id => event.to_param,
+             id: event.to_param,
              "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Road"}
         )
         assert_redirected_to edit_admin_event_path(event)
@@ -62,7 +62,7 @@ module Admin
 
         post(:update,
              "commit"=>"Save",
-             :id => event.to_param,
+             id: event.to_param,
              "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Road"}
         )
         assert_redirected_to edit_admin_event_path(event)
@@ -73,13 +73,13 @@ module Admin
 
       def test_update_existing_combined_results
         FactoryGirl.create(:discipline)
-        FactoryGirl.create(:discipline, :name => "Mountain Bike")
-        FactoryGirl.create(:discipline, :name => "Time Trial")
+        FactoryGirl.create(:discipline, name: "Mountain Bike")
+        FactoryGirl.create(:discipline, name: "Time Trial")
         source_event = FactoryGirl.create(:time_trial_event)
-        FactoryGirl.create(:result, :event => source_event)
+        FactoryGirl.create(:result, event: source_event)
         source_event.bar_points = 2
         source_event.save!
-        event = CombinedTimeTrialResults.create!(:parent => source_event)
+        event = CombinedTimeTrialResults.create!(parent: source_event)
 
         post(:update, "id" => event.id,
                       "event"=>{ "auto_combined_results"=>"1",
@@ -94,7 +94,7 @@ module Admin
 
       def test_update_event
         event = FactoryGirl.create(:event)
-        brad_ross = FactoryGirl.create(:person, :first_name => "Brad", :last_name => "Ross")
+        brad_ross = FactoryGirl.create(:person, first_name: "Brad", last_name: "Ross")
 
         assert_not_equal('Banana Belt One', event.name, 'name')
         assert_not_equal('Forest Grove', event.city, 'city')
@@ -108,12 +108,12 @@ module Admin
         assert_not_equal('Track', event.discipline, 'discipline')
         assert_not_equal(true, event.cancelled, 'cancelled')
         assert_not_equal('WA', event.state, 'state')
-        norba = NumberIssuer.create!(:name => 'NORBA')
+        norba = NumberIssuer.create!(name: 'NORBA')
         assert_not_equal(norba, event.number_issuer, 'number_issuer')
 
         post(:update,
              "commit"=>"Save",
-             :id => event.to_param,
+             id: event.to_param,
              "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
                        "flyer"=>"http://#{RacingAssociation.current.static_host}/flyers/2006/event.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1",
                        "discipline"=>"Track", "cancelled"=>"1", "state"=>"WA",
@@ -139,13 +139,13 @@ module Admin
 
       def test_update_single_day_to_multi_day
         number_issuer = FactoryGirl.create(:number_issuer)
-        FactoryGirl.create(:number_issuer, :name => "Stage Race")
+        FactoryGirl.create(:number_issuer, name: "Stage Race")
         for type in [MultiDayEvent, Series, WeeklySeries]
           event = FactoryGirl.create(:event)
 
           post(:update,
                "commit"=>"Save",
-               :id => event.to_param,
+               id: event.to_param,
                "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
                          "flyer"=>"../../flyers/2006/event.html", "sanctioned_by"=>"UCI",
                          "flyer_approved"=>"1",
@@ -162,14 +162,14 @@ module Admin
 
       def test_update_to_event
         FactoryGirl.create(:number_issuer)
-        number_issuer = FactoryGirl.create(:number_issuer, :name => "Stage Race")
+        number_issuer = FactoryGirl.create(:number_issuer, name: "Stage Race")
 
         [ MultiDayEvent, Series, WeeklySeries, SingleDayEvent ].each do |type|
           event = type.create!
 
           post(:update,
                "commit"=>"Save",
-               :id => event.to_param,
+               id: event.to_param,
                "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
                          "flyer"=>"../../flyers/2006/event.html", "sanctioned_by"=>"UCI",
                          "flyer_approved"=>"1",
@@ -190,7 +190,7 @@ module Admin
 
         post(:update,
              "commit"=>"Save",
-             :id => event.to_param,
+             id: event.to_param,
              "event"=>{"city"=>event.city, "name"=>"Mt. Hood One Day",
                        "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved,
                        "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
@@ -222,7 +222,7 @@ module Admin
 
         put(:update,
              "commit"=>"Save",
-             :id => event.to_param,
+             id: event.to_param,
              "event"=>{"city"=>event.city, "name"=>"Mt. Hood Series","date"=>event.date.to_date,
                        "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved,
                        "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,

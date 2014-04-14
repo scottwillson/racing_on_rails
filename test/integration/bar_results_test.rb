@@ -9,7 +9,7 @@ class BarResultsTest < RacingOnRails::IntegrationTest
     for discipline in Discipline.find_all_bar
       get '/bar'
       assert_response(:success, '/bar')
-      get url_for(:controller => 'bar', :action => 'show', :year => year, :discipline => discipline)
+      get url_for(controller: 'bar', action: 'show', year: year, discipline: discipline)
       case @response.response_code
       when 200
         # pass

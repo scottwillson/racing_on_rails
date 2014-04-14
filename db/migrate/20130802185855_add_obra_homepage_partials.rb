@@ -2,12 +2,12 @@ class AddObraHomepagePartials < ActiveRecord::Migration
   def up
     if RacingAssociation.current.short_name == "OBRA"
       Person.current = Person.find_by_name("Scott Willson")
-      home = Page.find_by_title("Home Page") || Page.new(:title => "Home Page", :slug => "home")
+      home = Page.find_by_title("Home Page") || Page.new(title: "Home Page", slug: "home")
       home.body = home_html.strip
       home.save!
       
       [ "ads", "links", "associated" ].each do |title|
-        page = Page.find_by_title(title) || home.children.build(:title => title)
+        page = Page.find_by_title(title) || home.children.build(title: title)
         page.body = send("#{title}_html").strip
         page.save!
       end
@@ -153,18 +153,18 @@ class AddObraHomepagePartials < ActiveRecord::Migration
     <<-END
     <div class="container home">
       <%= render "photo", 
-            :photo => @photo, 
-            :most_recent_event_with_recent_result => @most_recent_event_with_recent_result, 
-            :weeks_of_recent_results => @home.weeks_of_recent_results %>
+            photo: @photo, 
+            most_recent_event_with_recent_result: @most_recent_event_with_recent_result, 
+            weeks_of_recent_results: @home.weeks_of_recent_results %>
 
       <div class="row">
         <div class="col-md-6">
-          <%= render_page "home/upcoming_events", :upcoming_events => @upcoming_events %>
+          <%= render_page "home/upcoming_events", upcoming_events: @upcoming_events %>
         </div>
         <div class="col-md-6">
           <%= render_page "home/recent_results", 
-                :events_with_recent_results => @events_with_recent_results, 
-                :weeks_of_recent_results => @home.weeks_of_recent_results %>
+                events_with_recent_results: @events_with_recent_results, 
+                weeks_of_recent_results: @home.weeks_of_recent_results %>
         </div>
       </div>
       <%= render_page "home/ads" %>

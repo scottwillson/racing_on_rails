@@ -32,7 +32,7 @@ module Admin
     end
 
     def test_create
-      post(:create, :velodrome => { :name => "Hellyer", :website => "www.hellyer.org" })
+      post(:create, velodrome: { name: "Hellyer", website: "www.hellyer.org" })
       velodrome = Velodrome.find_by_name("Hellyer")
       assert_not_nil(velodrome, "Should create new Velodrome")
       assert_equal("www.hellyer.org", velodrome.website, "website")
@@ -43,14 +43,14 @@ module Admin
 
     def test_edit
       velodrome = FactoryGirl.create(:velodrome)
-      get(:edit, :id => velodrome.id)
+      get(:edit, id: velodrome.id)
       assert_response(:success)
       assert_equal(velodrome, assigns["velodrome"], "Should assign velodrome")
     end
 
     def test_update
       velodrome = FactoryGirl.create(:velodrome)
-      put(:update, :id => velodrome.id, :velodrome => { :name => "T Town", :website => "www" })
+      put(:update, id: velodrome.id, velodrome: { name: "T Town", website: "www" })
       assert_redirected_to(edit_admin_velodrome_path(velodrome))
       velodrome.reload
       assert_equal("T Town", velodrome.name, "Name should be updated")
@@ -59,7 +59,7 @@ module Admin
 
     def test_destroy
       velodrome = FactoryGirl.create(:velodrome)
-      delete :destroy, :id => velodrome.id
+      delete :destroy, id: velodrome.id
       assert(!Velodrome.exists?(velodrome.id), "Should delete velodrome")
       assert_not_nil(flash[:notice], "Should have flash :notice")
     end
@@ -68,9 +68,9 @@ module Admin
       velodrome = FactoryGirl.create(:velodrome)
       xhr(:put,
           :update_attribute,
-          :id => velodrome.to_param,
-          :value => "Paul Allen Velodrome",
-          :name => "name"
+          id: velodrome.to_param,
+          value: "Paul Allen Velodrome",
+          name: "name"
       )
       assert_response(:success)
       velodrome.reload
@@ -81,9 +81,9 @@ module Admin
       velodrome = FactoryGirl.create(:velodrome)
       xhr(:put,
           :update_attribute,
-          :id => velodrome.to_param,
-          :value => "www.raceatra.com",
-          :name => "website"
+          id: velodrome.to_param,
+          value: "www.raceatra.com",
+          name: "website"
       )
       assert_response(:success)
       velodrome.reload

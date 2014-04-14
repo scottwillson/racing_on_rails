@@ -4,9 +4,9 @@ class HumanDatesController < ApplicationController
     date = parser.parse(params[:date].try(:gsub, ".json", ""))
 
     if date
-      render :json => date.to_s(:long_with_week_day).to_json
+      render json: date.to_s(:long_with_week_day).to_json
     else
-      render :json => params[:date].to_json
+      render json: params[:date].to_json
     end
   end
 

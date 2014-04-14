@@ -7,10 +7,10 @@
 <div class="row">
   <div class="col-sm-12">
     <%= form_tag "/admin/categories/recompute_bar" do -%>
-      <%= submit_tag "Recompute MBRA BAR", :id => "recompute_bar" %>
+      <%= submit_tag "Recompute MBRA BAR", id: "recompute_bar" %>
     <% end -%>
     <%= form_tag "/admin/categories/recompute_team_bar" do -%>
-      <%= submit_tag "Recompute MBRA BAT", :id => "recompute_bar" %>
+      <%= submit_tag "Recompute MBRA BAT", id: "recompute_bar" %>
     <% end -%>
   </div>
 </div>
@@ -20,14 +20,14 @@
   <div class="col-sm-6">
     <h3><%= RacingAssociation.current.short_name %></h3>
     <div class="category category_root association_category_root well" id="category_<%= @category.id %>_row" data-id="<%= @category.id %>">
-      <%= render :partial => "category", :collection => @category.children.sort_by(&:name) %>
+      <%= render partial: "category", collection: @category.children.sort_by(&:name) %>
     </div>
   </div>
 
   <div class="col-sm-6">
     <h3>Unknown</h3>
     <div class="category category_root unknown_category_root well" id="category__row" data-id="">
-      <%= render :partial => "category", :collection => @unknowns.sort_by(&:name) %>
+      <%= render partial: "category", collection: @unknowns.sort_by(&:name) %>
     </div>
   </div>
 </div>

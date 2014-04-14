@@ -1,6 +1,6 @@
 class EditorRequestsController < ApplicationController
-  before_filter :assign_person, :except => :show
-  before_filter :require_current_person, :except => :show
+  before_filter :assign_person, except: :show
+  before_filter :require_current_person, except: :show
 
   force_https
 
@@ -18,7 +18,7 @@ class EditorRequestsController < ApplicationController
       end
     else
       if @person.email.present?
-        @person.editor_requests.create!(:editor => @editor)
+        @person.editor_requests.create!(editor: @editor)
         flash[:notice] = "Emailed account access request to #{@person.name}'s account"
       else
         flash[:warn] = "Can't send access request because #{@person.name} doesn't have an email address on their account. Please ask them to login to their account and grant you access directly."
@@ -26,7 +26,7 @@ class EditorRequestsController < ApplicationController
     end
 
     if params[:return_to].present?
-      redirect_to :only_path => true, :path => params[:return_to]
+      redirect_to only_path: true, path: params[:return_to]
     else
       redirect_to edit_person_path(@editor)
     end

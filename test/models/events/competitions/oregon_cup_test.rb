@@ -14,45 +14,45 @@ class OregonCupTest < ActiveSupport::TestCase
     # 1. Alice       75
     # 2. Molly      15
 
-    senior_men = FactoryGirl.create(:category, :name => "Senior Men")
-    senior_men_p_1_2 = FactoryGirl.create(:category, :name => "Senior Men Pro 1/2", :parent => senior_men)
-    senior_women = FactoryGirl.create(:category, :name => "Senior Women")
+    senior_men = FactoryGirl.create(:category, name: "Senior Men")
+    senior_men_p_1_2 = FactoryGirl.create(:category, name: "Senior Men Pro 1/2", parent: senior_men)
+    senior_women = FactoryGirl.create(:category, name: "Senior Women")
     # Set BAR point bonus -- it should be ignored
-    kings_valley_2004 = FactoryGirl.create(:event, :date => Date.new(2004))
-    kings_valley_pro_1_2 = kings_valley_2004.races.create!(:category => senior_men_p_1_2, :bar_points => 2)
+    kings_valley_2004 = FactoryGirl.create(:event, date: Date.new(2004))
+    kings_valley_pro_1_2 = kings_valley_2004.races.create!(category: senior_men_p_1_2, bar_points: 2)
     matson = FactoryGirl.create(:person)
     tonkin = FactoryGirl.create(:person)
     weaver = FactoryGirl.create(:person)
     molly = FactoryGirl.create(:person)
     alice = FactoryGirl.create(:person)
-    kings_valley_pro_1_2.results.create!(:person => tonkin, :place => 16)
-    kings_valley_pro_1_2.results.create!(:person => weaver, :place => 17)
-    kings_valley_pro_1_2.results.create!(:person => molly, :place => 20)
-    kings_valley_pro_1_2.results.create!(:person => matson, :place => 21)
+    kings_valley_pro_1_2.results.create!(person: tonkin, place: 16)
+    kings_valley_pro_1_2.results.create!(person: weaver, place: 17)
+    kings_valley_pro_1_2.results.create!(person: molly, place: 20)
+    kings_valley_pro_1_2.results.create!(person: matson, place: 21)
 
-    race = kings_valley_2004.races.create!(:category => senior_women, :notes => "For Oregon Cup", :bar_points => 0)
-    race.results.create!(:person => alice, :place => 2)
+    race = kings_valley_2004.races.create!(category: senior_women, notes: "For Oregon Cup", bar_points: 0)
+    race.results.create!(person: alice, place: 2)
     # Ignore Cat 4 result
-    women_4 = FactoryGirl.create(:category, :name => "Women 4")
-    race.results.create!(:place => 3, :person => Person.create!(:name => "Heather G", :member_from => Date.new(2004)), :category => women_4)
-    race.results.create!(:person => molly, :place => 15)
+    women_4 = FactoryGirl.create(:category, name: "Women 4")
+    race.results.create!(place: 3, person: Person.create!(name: "Heather G", member_from: Date.new(2004)), category: women_4)
+    race.results.create!(person: molly, place: 15)
 
-    source_category = FactoryGirl.create(:category, :name => "Senior Women 1/2/3")
+    source_category = FactoryGirl.create(:category, name: "Senior Women 1/2/3")
 
     # Sometimes women categories are picked separately. Ignore them.
-    separate_category = FactoryGirl.create(:category, :name => "Senior Women 1/2")
+    separate_category = FactoryGirl.create(:category, name: "Senior Women 1/2")
     senior_women.children << separate_category
-    separate_child_event = kings_valley_2004.children.create!(:bar_points => 1)
-    separate_child_event.races.create!(:category => separate_category).results.create!(:place => "1", :person => molly)
+    separate_child_event = kings_valley_2004.children.create!(bar_points: 1)
+    separate_child_event.races.create!(category: separate_category).results.create!(place: "1", person: molly)
 
-    or_cup = OregonCup.create(:date => Date.new(2004))
-    series = FactoryGirl.create(:series, :date => Date.new(2004, 3))
-    banana_belt_1 = FactoryGirl.create(:event, :date => Date.new(2004, 3), :parent => series)
-    race = banana_belt_1.races.create!(:category => senior_men_p_1_2)
-    race.results.create!(:place => "1", :person => tonkin)
-    race.results.create!(:place => "2", :person => weaver)
-    race.results.create!(:place => "3", :person => matson)
-    race.results.create!(:place => "16", :person => molly)
+    or_cup = OregonCup.create(date: Date.new(2004))
+    series = FactoryGirl.create(:series, date: Date.new(2004, 3))
+    banana_belt_1 = FactoryGirl.create(:event, date: Date.new(2004, 3), parent: series)
+    race = banana_belt_1.races.create!(category: senior_men_p_1_2)
+    race.results.create!(place: "1", person: tonkin)
+    race.results.create!(place: "2", person: weaver)
+    race.results.create!(place: "3", person: matson)
+    race.results.create!(place: "16", person: molly)
 
     or_cup.source_events << banana_belt_1
     or_cup.source_events << kings_valley_2004

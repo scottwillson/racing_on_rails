@@ -5,7 +5,7 @@ class RacingAssociationsControllerTest < ActionController::TestCase
     association = RacingAssociation.current
     create_administrator_session
     use_ssl
-    get :edit, :id => association.to_param
+    get :edit, id: association.to_param
     assert_response :success
   end
 
@@ -13,7 +13,7 @@ class RacingAssociationsControllerTest < ActionController::TestCase
     racing_association = RacingAssociation.current
     create_administrator_session
     use_ssl
-    put :update, :id => racing_association, :racing_association => { :name => "NCNCA" }
+    put :update, id: racing_association, racing_association: { name: "NCNCA" }
     assert_redirected_to edit_racing_association_path(racing_association)
     assert_equal "NCNCA", racing_association.reload.name, "name should be updated"
   end

@@ -14,11 +14,11 @@ module Admin
 
       def test_update_team_name_to_new_team
         assert_nil(Team.find_by_name('Velo Slop'), 'New team Velo Slop should not be in database')
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
-            :id => molly.to_param,
-            :name => "team_name",
-            :value => "Velo Slop"
+            id: molly.to_param,
+            name: "team_name",
+            value: "Velo Slop"
         assert_response :success
         molly.reload
         assert_equal('Velo Slop', molly.team_name, 'Person team name after update')
@@ -26,12 +26,12 @@ module Admin
       end
 
       def test_update_team_name_to_existing_team
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
         xhr :put, :update_attribute,
-            :id => molly.to_param,
-            :name => "team_name",
-            :value => "Gentle Lovers"
+            id: molly.to_param,
+            name: "team_name",
+            value: "Gentle Lovers"
         assert_response :success
         molly.reload
         assert_equal('Gentle Lovers', molly.team_name, 'Person team name after update')
@@ -39,12 +39,12 @@ module Admin
       end
 
       def test_update_team_name_to_blank
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
         xhr :put, :update_attribute,
-            :id => molly.to_param,
-            :name => "team_name",
-            :value => ""
+            id: molly.to_param,
+            name: "team_name",
+            value: ""
         assert_response :success
         molly.reload
         assert_equal('', molly.team_name, 'Person team name after update')

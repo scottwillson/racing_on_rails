@@ -1,5 +1,5 @@
 <h3>Account Permissions</h3>
-<%= table :id => "accounts", :collection => account_permissions, :columns => 3 do %>
+<%= table id: "accounts", collection: account_permissions, columns: 3 do %>
   <tr>
     <th>Person</th>
     <% if current_person == person -%>
@@ -12,7 +12,7 @@
 
   <%- account_permissions.each_with_index do |account_permission, account_permission_index| -%>
     <%= render "people/account_permission",
-          :account_permission => account_permission, :account_permission_index => :account_permission_index, :person => person, :return_to => return_to
+          account_permission: account_permission, account_permission_index: :account_permission_index, person: person, return_to: return_to
     %>
   <% end -%>
 <% end -%>

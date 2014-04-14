@@ -7,7 +7,7 @@
     </tr>
   </thead>
   <tbody>
-    <%= render :partial => "results/result", :collection => table.rows, :as => "result" %>
+    <%= render partial: "results/result", collection: table.rows, as: "result" %>
 
     <%- if table.rows.empty? -%>
     <tr>

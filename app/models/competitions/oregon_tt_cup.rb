@@ -74,12 +74,12 @@ class OregonTTCup < Competition
         "results.id as id",
         "year"
       ]).
-      joins(:race => :event).
+      joins(race: :event).
       joins("left outer join people on people.id = results.person_id").
       joins("left outer join events parents_events on parents_events.id = events.parent_id").
       joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
       where("place between 1 and ?", point_schedule.size).
-      where(:bar => true).
+      where(bar: true).
       where("races.category_id in (?)", category_ids_for(race)).
       where("events.sanctioned_by" => RacingAssociation.current.default_sanctioned_by).
       where("coalesce(races.bar_points, events.bar_points, parents_events.bar_points, parents_events_2.bar_points) > 0").

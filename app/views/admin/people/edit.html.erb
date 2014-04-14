@@ -5,38 +5,38 @@
    end %>
 <% @page_title = "Admin: People: #{person_name}" %>
 
-<%= render "shared/errors", :object => @person %>
+<%= render "shared/errors", object: @person %>
 
 <h2><%= @person.name %></h2>
 
 <%- if @event -%>
   <p>
-    <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event, :promoter_id => @person.id), :id => "back_to_event") unless @person.new_record? %>
-    <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event), :id => "back_to_event") if @person.new_record? %>
+    <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event, promoter_id: @person.id), id: "back_to_event") unless @person.new_record? %>
+    <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event), id: "back_to_event") if @person.new_record? %>
   </p>
 <% end -%>
 
-<%= form_for [ :admin, @person ], :html => { :class => "form-horizontal", :role => "form" } do |f| -%>
+<%= form_for [ :admin, @person ], html: { class: "form-horizontal", role: "form" } do |f| -%>
 <%= hidden_field_tag("event_id", @event.id) if @event %>
 <div class="row">
   <div class="col-sm-6">
-    <%= f.labelled_text_field :first_name, nil, :class => @person.new_record? ? "wants_focus col-sm-12 form-control" : "col-sm-12 form-control" %>
+    <%= f.labelled_text_field :first_name, nil, class: @person.new_record? ? "wants_focus col-sm-12 form-control" : "col-sm-12 form-control" %>
     <%= f.labelled_text_field :last_name %>
     <%= f.labelled_text_field :team_name %>
     <%= f.labelled_text_field :status %>
   </div>
   <div class="col-sm-6">
     <div class="form-group form-inline">
-      <%= f.label :date_of_birth, "Date of Birth", :class => "control-label col-sm-4" %>
+      <%= f.label :date_of_birth, "Date of Birth", class: "control-label col-sm-4" %>
       <div class="col-sm-8">
         <%= f.date_select :date_of_birth,
             {
-              :order => [:month, :day, :year],
-              :start_year => 1900,
-              :end_year => Time.zone.today.year,
-              :include_blank => true
+              order: [:month, :day, :year],
+              start_year: 1900,
+              end_year: Time.zone.today.year,
+              include_blank: true
             },
-            { :class => "form-control"} %>
+            { class: "form-control"} %>
       </div>
     </div>
 
@@ -65,7 +65,7 @@
   </div>
   <div class="col-sm-6">
     <%= f.labelled_text_field :street %>
-    <%= render "shared/city_state_zip", :f => f %>
+    <%= render "shared/city_state_zip", f: f %>
     <%= f.labelled_text_field :occupation %>
 
     <div class="check_boxes">
@@ -75,14 +75,14 @@
       <%= f.labelled_check_box :team_interest, "Team Interest" %>
     </div>
 
-    <%= f.labelled_text_field :login, nil, :autocomplete => "off", :class => "form-control col-sm-12" %>
-    <%= f.labelled_password_field :password, nil, :autocomplete => "off", :class => "form-control col-sm-12" %>
-    <%= f.labelled_password_field :password_confirmation, "Confirm Password", :autocomplete => "off", :class => "form-control col-sm-12" %>
+    <%= f.labelled_text_field :login, nil, autocomplete: "off", class: "form-control col-sm-12" %>
+    <%= f.labelled_password_field :password, nil, autocomplete: "off", class: "form-control col-sm-12" %>
+    <%= f.labelled_password_field :password_confirmation, "Confirm Password", autocomplete: "off", class: "form-control col-sm-12" %>
     <% if @person.last_login_at -%>
     <%= f.labelled_text :last_login_at,
                         link_to(@person.last_login_at.to_s(:long_and_friendly_date_and_time),
                           {},
-                          { :title => "OK/Fail: #{@person.login_count}/#{@person.failed_login_count}\nCurrent: #{@person.current_login_at.to_s(:long_and_friendly_date_and_time)} from #{@person.current_login_ip}\nLast: #{@person.last_login_at.to_s(:long_and_friendly_date_and_time)} from #{@person.last_login_ip}" }
+                          { title: "OK/Fail: #{@person.login_count}/#{@person.failed_login_count}\nCurrent: #{@person.current_login_at.to_s(:long_and_friendly_date_and_time)} from #{@person.current_login_ip}\nLast: #{@person.last_login_at.to_s(:long_and_friendly_date_and_time)} from #{@person.last_login_ip}" }
                         ) -%>
     <% else -%>
     <%= f.labelled_text :last_login_at, "Never" -%>
@@ -93,42 +93,42 @@
 <div class="row">
   <div class="col-sm-6">
     <div class="form-group form-inline">
-      <%= f.label :member_from, "Member From", :class => "control-label col-sm-4" %>
+      <%= f.label :member_from, "Member From", class: "control-label col-sm-4" %>
       <div class="col-sm-8">
         <%= f.date_select :member_from,
             {
-              :order => [:month, :day, :year],
-              :start_year => 1999, :end_year => Time.zone.today.year + 1,
-              :include_blank => true
+              order: [:month, :day, :year],
+              start_year: 1999, end_year: Time.zone.today.year + 1,
+              include_blank: true
             },
-            { :class => "form-control"} %>
+            { class: "form-control"} %>
       </div>
     </div>
     <div class="form-group form-inline">
-      <%= f.label :member_from, "Member To", :class => "control-label col-sm-4" %>
+      <%= f.label :member_from, "Member To", class: "control-label col-sm-4" %>
       <div class="col-sm-8">
         <%= f.date_select :member_to,
             {
-              :order => [:month, :day, :year],
-              :end_year => Time.zone.today.year + 1,
-              :include_blank => true
+              order: [:month, :day, :year],
+              end_year: Time.zone.today.year + 1,
+              include_blank: true
             },
-            { :class => "form-control"} %>
+            { class: "form-control"} %>
       </div>
     </div>
 
-    <%= f.labelled_text(:member, "Current", nil, :class => "current") if @person.member? -%>
-    <%= f.labelled_text(:usa_cycling, "Current (#{@person.license})", nil, :class => "current") if @person.member_usac_to && @person.member_usac_to >= Time.zone.today -%>
-    <%= f.labelled_text(:member, "Renewed", nil, :class => "renewed") if @person.renewed? -%>
-    <%= f.labelled_text(:member, "Not current", nil, :class => "not_current") if !@person.member? && !@person.renewed? -%>
+    <%= f.labelled_text(:member, "Current", nil, class: "current") if @person.member? -%>
+    <%= f.labelled_text(:usa_cycling, "Current (#{@person.license})", nil, class: "current") if @person.member_usac_to && @person.member_usac_to >= Time.zone.today -%>
+    <%= f.labelled_text(:member, "Renewed", nil, class: "renewed") if @person.renewed? -%>
+    <%= f.labelled_text(:member, "Not current", nil, class: "not_current") if !@person.member? && !@person.renewed? -%>
 
     <div class="check_boxes">
       <%= f.labelled_check_box(:ccx_only, "Cyclocross only?") if RacingAssociation.current.cx_memberships? %>
       <%= f.labelled_check_box :official %>
       <%= f.labelled_check_box :membership_card, "Has Card?" %>
       <%= f.labelled_check_box :print_card,
-                               "Print card? #{(link_to('Print one card now', card_admin_person_path(@person, :format => "pdf"),
-                               {:class => 'obvious'}))}".html_safe unless @person.new_record? %>
+                               "Print card? #{(link_to('Print one card now', card_admin_person_path(@person, format: "pdf"),
+                               {class: 'obvious'}))}".html_safe unless @person.new_record? %>
 
       <%= f.labelled_text :card_printed_at, @person.card_printed_at ? @person.card_printed_at.to_s(:long_ordinal) : "Never" %>
     </div>
@@ -141,48 +141,48 @@
 
 <div class="row">
   <div class="col-sm-6" id="numbers-span">
-    <%= render "numbers", :year => @year, :years => @years, :person => @person, :number_issuers => @number_issuers, :disciplines => @disciplines, :f => f %>
+    <%= render "numbers", year: @year, years: @years, person: @person, number_issuers: @number_issuers, disciplines: @disciplines, f: f %>
   </div>
   <div class="col-sm-6">
-    <%= render 'categories', :f => f %>
+    <%= render 'categories', f: f %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-sm-6">
-    <%= render "aliases", :person => @person %>
+    <%= render "aliases", person: @person %>
   </div>
   <div class="col-sm-6">
-    <%= render "names", :names => @person.names %>
+    <%= render "names", names: @person.names %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-sm-6">
     <%= render "people/account_permissions",
-                :person => @person,
-                             :account_permissions => @person.account_permissions,
-                             :return_to => @person.new_record? ? nil : edit_admin_person_path(@person)
+                person: @person,
+                             account_permissions: @person.account_permissions,
+                             return_to: @person.new_record? ? nil : edit_admin_person_path(@person)
     %>
   </div>
   <div class="col-sm-6">
-    <%= render "people/events", :events => @person.administrator? ? @person.events.current_year : Event.editable_by(@person).current_year %>
+    <%= render "people/events", events: @person.administrator? ? @person.events.current_year : Event.editable_by(@person).current_year %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-sm-12">
-    <%= render "people/orders", :person => @person %>
+    <%= render "people/orders", person: @person %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-sm-12">
-    <%= submit_tag "Save", :class => "btn btn-default", :id => "save" %>
-    <%= link_to("Delete", admin_person_path(@person), :method => :delete, :class => 'btn', :id => 'delete') unless @person.new_record? %>
-    <%= link_to("Edit Results", admin_person_results_path(@person), :class => "btn btn-link") unless @person.new_record? %>
-    <%= link_to("View Results", person_results_path(@person), :class => "btn btn-link") unless @person.new_record? %>
-    <div class="pull-right created_updated"><%= render :partial => "people/created_updated" %></div>
+    <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
+    <%= link_to("Delete", admin_person_path(@person), method: :delete, class: 'btn', id: 'delete') unless @person.new_record? %>
+    <%= link_to("Edit Results", admin_person_results_path(@person), class: "btn btn-link") unless @person.new_record? %>
+    <%= link_to("View Results", person_results_path(@person), class: "btn btn-link") unless @person.new_record? %>
+    <div class="pull-right created_updated"><%= render partial: "people/created_updated" %></div>
   </div>
 </div>
 <% end -%>

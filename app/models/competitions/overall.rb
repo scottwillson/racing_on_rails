@@ -9,15 +9,15 @@ class Overall < Competition
  end
 
   def self.calculate!(year = Time.zone.today.year)
-    benchmark(name, :level => :info) {
+    benchmark(name, level: :info) {
       transaction do
-        parent = ::MultiDayEvent.year(year).where(:name => parent_event_name).first
+        parent = ::MultiDayEvent.year(year).where(name: parent_event_name).first
 
         overall = parent.try(:overall)
         if parent && parent.has_results_including_children?(true)
           unless parent.overall
             # parent.create_overall will create an instance of Overall, which is probably not what we want
-            overall = self.new(:parent_id => parent.id, :date => parent.date)
+            overall = self.new(parent_id: parent.id, date: parent.date)
             overall.save!
             parent.overall = overall
           end
@@ -39,7 +39,7 @@ class Overall < Competition
 
   def source_results_with_benchmark(race)
     results = []
-    Overall.benchmark("#{self.class.name} source_results", :level => :debug) {
+    Overall.benchmark("#{self.class.name} source_results", level: :debug) {
       results = source_results(race)
     }
     logger.debug("#{self.class.name} Found #{results.size} source results for '#{race.name}'") if logger.debug?
@@ -87,15 +87,15 @@ class Overall < Competition
           # Intentionally not using results association create method. No need to hang on to all competition results.
           # In fact, this could cause serious memory issues with the Ironman
           competition_result = Result.create!(
-             :person => person,
-             :team => (person ? person.team : nil),
-             :race => race)
+             person: person,
+             team: (person ? person.team : nil),
+             race: race)
         end
 
         competition_result.scores.create_if_best_result_for_race(
-          :source_result => source_result,
-          :competition_result => competition_result,
-          :points => points
+          source_result: source_result,
+          competition_result: competition_result,
+          points: points
         )
       end
 

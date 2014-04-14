@@ -5,7 +5,7 @@
 class CombinedTimeTrialResults < Event
   before_save :set_mandatory_defaults
   after_create :calculate!
-  validates_uniqueness_of :parent_id, :message => "Event can only have one CombinedTimeTrialResults"
+  validates_uniqueness_of :parent_id, message: "Event can only have one CombinedTimeTrialResults"
   validate { |combined_results| combined_results.combined_results.nil? }
 
   def self.create_or_destroy_for!(event)
@@ -83,15 +83,15 @@ class CombinedTimeTrialResults < Event
 
   def calculate!
     destroy_races
-    combined_race = races.create!(:category => Category.find_or_create_by(:name => "Combined"))
+    combined_race = races.create!(category: Category.find_or_create_by(name: "Combined"))
     parent.races.each do |race|
       race.results.each do |result|
         if result.place.to_i > 0 && result.time && result.time > 0
           combined_race.results.create!(
-            :person => result.person,
-            :team => result.team,
-            :time => result.time,
-            :category => race.category
+            person: result.person,
+            team: result.team,
+            time: result.time,
+            category: race.category
           )
         end
       end
@@ -109,7 +109,7 @@ class CombinedTimeTrialResults < Event
     end
     place = 1
     _results.each do |result|
-      result.update_attributes(:place => place.to_s)
+      result.update_attributes(place: place.to_s)
       place = place + 1
     end
     true

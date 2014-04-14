@@ -1,29 +1,29 @@
 <% @page_title = "Admin: Race: #{@race.name}" %>
 
-<%= render "shared/errors", :object => @race %>
+<%= render "shared/errors", object: @race %>
 
 <h2><%= link_to_events(@race) %><%= @race.name %></h2>
 
-<%= form_for [ :admin, @race ], :html => { :class => "form-horizontal", :role => "form" } do |f| -%>
+<%= form_for [ :admin, @race ], html: { class: "form-horizontal", role: "form" } do |f| -%>
   <div class="row">
     <div class="col-sm-6">
       <%= f.hidden_field :event_id %>
-      <%= f.labelled_text_field :category_name, nil, :class => @race.new_record? ? "wants_focus col-sm-12 form-control" : "col-sm-12 form-control" %>
+      <%= f.labelled_text_field :category_name, nil, class: @race.new_record? ? "wants_focus col-sm-12 form-control" : "col-sm-12 form-control" %>
 
       <% if RacingAssociation.current.competitions.include?(:bar) -%>
       <%= f.labelled_text :bar_category, competition_category_name(@race), "BAR Category" %><br/><br/>
       <%= f.labelled_select :bar_points,
             bar_points_and_labels,
-            :label => { :text => "BAR Points", :class => "control-label col-sm-4" },
-            :editable => administrator? %>
+            label: { text: "BAR Points", class: "control-label col-sm-4" },
+            editable: administrator? %>
       <%- end %>
 
       <% if RacingAssociation.current.competitions.include?(:rider_rankings) -%>
       <%= f.labelled_text :bar_category, competition_category_name(@race), "Rankings Cat" %><br/><br/>
       <%= f.labelled_select :bar_points,
             bar_points_and_labels,
-            :label => { :text => "Ranking Points", :class => "control-label col-sm-4" },
-            :editable => administrator? %>
+            label: { text: "Ranking Points", class: "control-label col-sm-4" },
+            editable: administrator? %>
       <%- end %>
 
       <% if RacingAssociation.current.sanctioning_organizations.many? -%>
@@ -32,16 +32,16 @@
     </div>
 
     <div class="col-sm-6">
-      <%= f.labelled_text_field :notes, nil, :editable => administrator?, :class => "col-sm-12" %>
-      <%= f.labelled_text_field :field_size, "Field Size (#{@race.results.size})", :editable => administrator?, :class => "col-sm-12" %>
-      <%= f.labelled_text_field :distance, nil, :editable => administrator?, :class => "col-sm-12" %>
-      <%= f.labelled_text_field :laps, nil, :editable => administrator?, :class => "col-sm-12" %>
+      <%= f.labelled_text_field :notes, nil, editable: administrator?, class: "col-sm-12" %>
+      <%= f.labelled_text_field :field_size, "Field Size (#{@race.results.size})", editable: administrator?, class: "col-sm-12" %>
+      <%= f.labelled_text_field :distance, nil, editable: administrator?, class: "col-sm-12" %>
+      <%= f.labelled_text_field :laps, nil, editable: administrator?, class: "col-sm-12" %>
     </div>
   </div>
 
   <div class="row">
     <div class="col-sm-12">
-      <%= submit_tag "Save", :class => "btn btn-default", :id => "save" %>
+      <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
       <div class="created_updated pull-right"><%= "Updated: #{time_ago_in_words(@race.updated_at, include_seconds: true)} ago" if @race.updated_at.present? %>&nbsp;</div>
     </div>
   </div>

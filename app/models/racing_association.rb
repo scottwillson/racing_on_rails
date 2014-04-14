@@ -8,8 +8,8 @@
 class RacingAssociation < ActiveRecord::Base
   # TODO bmx_numbers? Shouldn't this be in disciplines?
 
-  belongs_to :cat4_womens_race_series_category, :class_name => "Category"
-  belongs_to :default_region, :class_name => "Region"
+  belongs_to :cat4_womens_race_series_category, class_name: "Category"
+  belongs_to :default_region, class_name: "Region"
 
   attr_accessor :person
 
@@ -26,7 +26,7 @@ class RacingAssociation < ActiveRecord::Base
   end
 
   default_value_for :cat4_womens_race_series_category do
-    Category.find_or_create_by(:name => "Category 4 Women")
+    Category.find_or_create_by(name: "Category 4 Women")
   end
 
   default_value_for :competitions do
@@ -56,7 +56,7 @@ class RacingAssociation < ActiveRecord::Base
 
   # Person record for RacingAssociation
   def person
-    @person ||= Person.find_or_create_by(:name => short_name)
+    @person ||= Person.find_or_create_by(name: short_name)
   end
 
   def person_id
@@ -147,7 +147,7 @@ class RacingAssociation < ActiveRecord::Base
   end
 
   def number_issuer
-    NumberIssuer.where(:name => short_name).first
+    NumberIssuer.where(name: short_name).first
   end
 
   def priority_country_options

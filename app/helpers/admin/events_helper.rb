@@ -22,10 +22,10 @@ module Admin::EventsHelper
     html = ""
     event.ancestors.reverse.each do |e|
       if e.parent
-        html << link_to(truncate(e.name, :length => 40), edit_admin_event_path(e), :class => "obvious")
+        html << link_to(truncate(e.name, length: 40), edit_admin_event_path(e), class: "obvious")
         html << ": "
       else
-        html << link_to(truncate(e.name, :length => 40), edit_admin_event_path(e), :class => "obvious")
+        html << link_to(truncate(e.name, length: 40), edit_admin_event_path(e), class: "obvious")
         html << " (#{e.friendly_class_name}): "
       end
     end

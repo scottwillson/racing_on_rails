@@ -1,4 +1,4 @@
-<%= content_tag :tr, :class => "person_row", :id => "person_#{person.id}_row", "data-id" => person.id do %>
+<%= content_tag :tr, class: "person_row", id: "person_#{person.id}_row", "data-id" => person.id do %>
   <td class="icon"><div class="person_icon" id="person_<%= person.id %>" data-name="<%= person.name %>" data-id="<%= person.id %>"><span class="glyphicon glyphicon-user"></span></div></td>
   <td class="name">
     <%= editable person, :name %>
@@ -7,16 +7,16 @@
     <%= editable person, :team_name %>
   </td>
   <td class="aliases not_editable">
-    <%= render "aliases_cell", :person => person %>
+    <%= render "aliases_cell", person: person %>
   </td>
   <td class="number not_editable">
     <%= person.license %>
   </td>
   <td class="check_box not_editable">
-    <%= render "shared/member", :record => person %>
+    <%= render "shared/member", record: person %>
   </td>
   <td class="actions not_editable">
-    <%= link_to 'Results', admin_person_results_path(person), :id => "#{person.id}_results" %>
-    <%= link_to 'Edit', edit_admin_person_path(person), :id => "edit_#{person.id}" %>
+    <%= link_to 'Results', admin_person_results_path(person), id: "#{person.id}_results" %>
+    <%= link_to 'Edit', edit_admin_person_path(person), id: "edit_#{person.id}" %>
   </td>
 <% end %>

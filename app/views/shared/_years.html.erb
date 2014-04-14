@@ -2,6 +2,6 @@
   years = Event.find_all_years << RacingAssociation.current.effective_year << year
 
   years.uniq.sort.reverse.each do |y|
-    tabs.add(y, url_for(:year => y, :discipline => discipline))
+    tabs.add(y, url_for(year: y, discipline: discipline))
   end
 end -%>

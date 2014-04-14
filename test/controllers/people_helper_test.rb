@@ -36,8 +36,8 @@ class PeopleHelperTest < ActionView::TestCase
   end
 
   def test_pronoun
-    weaver = FactoryGirl.create(:person, :first_name => "Ryan", :last_name => "Weaver")
-    tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
+    weaver = FactoryGirl.create(:person, first_name: "Ryan", last_name: "Weaver")
+    tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
     assert_equal "Ryan Weaver", pronoun(weaver, tonkin)
     assert_equal "me", pronoun(weaver, weaver)
     assert_equal "me", pronoun(tonkin, tonkin)

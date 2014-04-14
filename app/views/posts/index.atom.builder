@@ -3,7 +3,7 @@ atom_feed do |feed|
   feed.updated @posts.first.try(:date)
 
   @posts.each do |post|
-    feed.entry(post, :published => post.date) do |entry|
+    feed.entry(post, published: post.date) do |entry|
       entry.title post.subject
       entry.content post.body
 

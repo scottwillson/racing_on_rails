@@ -1,7 +1,7 @@
 class AddEventEndDate < ActiveRecord::Migration
   def change
     change_table :events do |t|
-      t.date :end_date, :default => nil, :null => false
+      t.date :end_date, default: nil, null: false
     end
     
     puts "Set end dates for Events"

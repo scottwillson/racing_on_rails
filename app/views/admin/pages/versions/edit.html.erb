@@ -1,15 +1,15 @@
 <% @page_title = "Admin: Pages: #{@page.title}: #{@version.number}" %>
 
 <div class="col-sm-4">
-  <%= labelled_text :page, :title, "Title", @page.title, {:class => "left"} %>
-  <%= labelled_text :page, :slug, "Slug", @page.slug, {:class => "left"} %>
-  <%= labelled_text :page, :parent_id, "Parent", ("#{@parent.title} (#{@parent.path})" if @parent), {:class => "left"} %>
+  <%= labelled_text :page, :title, "Title", @page.title, {class: "left"} %>
+  <%= labelled_text :page, :slug, "Slug", @page.slug, {class: "left"} %>
+  <%= labelled_text :page, :parent_id, "Parent", ("#{@parent.title} (#{@parent.path})" if @parent), {class: "left"} %>
 
   <h3>Versions</h3>
-  <%= table :class => "versions", :id => :versions, :insert_header => true, :columns => 2 do %>
-    <%= render :partial => "admin/pages/version",
-               :collection => @page.versions.sort_by(&:number).reverse,
-               :locals => {:selected => @version} %>
+  <%= table class: "versions", id: :versions, insert_header: true, columns: 2 do %>
+    <%= render partial: "admin/pages/version",
+               collection: @page.versions.sort_by(&:number).reverse,
+               locals: {selected: @version} %>
   <% end -%>
 </div>
 
@@ -20,13 +20,13 @@
 <div class="page_buttons clear full_width>
   <div class="created_updated col-sm-6"><%= "Updated: #{updated(@page)}".html_safe if @page.updated_at %></div>
   <div class="right full_width>
-    <%= link_to("Preview", admin_pages_version_path(@version), :target => "_new", :class => "obvious", :id => "preview") %>
+    <%= link_to("Preview", admin_pages_version_path(@version), target: "_new", class: "obvious", id: "preview") %>
     <%= link_to("Delete",
                 admin_pages_version_path(@version),
-                :data => { :confirm => "Really delete this version?" },
-                :method => :delete,
-                :class => "btn btn-default",
-                :id => "delete") %>
-    <%= link_to "Revert", revert_admin_pages_version_path(@version), :data => { :confirm => "Really revert the current page to this version?" } %>
+                data: { confirm: "Really delete this version?" },
+                method: :delete,
+                class: "btn btn-default",
+                id: "delete") %>
+    <%= link_to "Revert", revert_admin_pages_version_path(@version), data: { confirm: "Really revert the current page to this version?" } %>
   </div>
 </div>

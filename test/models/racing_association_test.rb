@@ -141,8 +141,8 @@ class RacingAssociationTest < ActiveSupport::TestCase
   def test_number_issuer
     assert_equal nil, RacingAssociation.current.number_issuer
 
-    FactoryGirl.create(:number_issuer, :name => "AVC")
-    number_issuer = FactoryGirl.create(:number_issuer, :name => RacingAssociation.current.short_name)
+    FactoryGirl.create(:number_issuer, name: "AVC")
+    number_issuer = FactoryGirl.create(:number_issuer, name: RacingAssociation.current.short_name)
 
     assert_equal number_issuer, RacingAssociation.current.number_issuer
   end

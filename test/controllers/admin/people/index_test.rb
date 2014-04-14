@@ -22,7 +22,7 @@ module Admin
       def test_not_logged_in_edit
         destroy_person_session
         person = FactoryGirl.create(:person)
-        get(:edit, :id => person.to_param)
+        get(:edit, id: person.to_param)
         assert_nil(@request.session["person"], "No person in session")
         assert_redirected_to new_person_session_url(secure_redirect_options)
       end
@@ -31,7 +31,7 @@ module Admin
         get(:index)
         assert_response :success
         assert_template("admin/people/index")
-        assert_template :layout => "admin/application"
+        assert_template layout: "admin/application"
         assert_not_nil(assigns["people"], "Should assign people")
         assert(assigns["people"].empty?, "Should have no people")
         assert_not_nil(assigns["name"], "Should assign name")
@@ -39,7 +39,7 @@ module Admin
 
       def test_find
         person = FactoryGirl.create(:person)
-        get(:index, :name => 'weav')
+        get(:index, name: 'weav')
         assert_response :success
         assert_template("admin/people/index")
         assert_not_nil(assigns["people"], "Should assign people")
@@ -51,8 +51,8 @@ module Admin
       def test_find_by_number
         FactoryGirl.create(:discipline)
         FactoryGirl.create(:number_issuer)
-        person = FactoryGirl.create(:person, :road_number => "777")
-        get(:index, :name => '777')
+        person = FactoryGirl.create(:person, road_number: "777")
+        get(:index, name: '777')
         assert_response :success
         assert_template("admin/people/index")
         assert_not_nil(assigns["people"], "Should assign people")
@@ -63,7 +63,7 @@ module Admin
 
       def test_find_nothing
         FactoryGirl.create(:person)
-        get(:index, :name => 's7dfnacs89danfx')
+        get(:index, name: 's7dfnacs89danfx')
         assert_response :success
         assert_template("admin/people/index")
         assert_not_nil(assigns["people"], "Should assign people")
@@ -71,7 +71,7 @@ module Admin
       end
 
       def test_find_empty_name
-        get(:index, :name => '')
+        get(:index, name: '')
         assert_response :success
         assert_template("admin/people/index")
         assert_not_nil(assigns["people"], "Should assign people")
@@ -82,7 +82,7 @@ module Admin
 
       def test_find_limit
         FactoryGirl.create_list(:person, 100)
-        get(:index, :name => 'Ryan')
+        get(:index, name: 'Ryan')
         assert_response :success
         assert_template("admin/people/index")
         assert_not_nil(assigns["people"], "Should assign people")
@@ -93,11 +93,11 @@ module Admin
       end
 
       def test_blank_name
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
-            :id => molly.to_param,
-            :name => "name",
-            :value => ""
+            id: molly.to_param,
+            name: "name",
+            value: ""
         assert_response :success
         person = assigns["person"]
         assert_equal molly, person, "@person"

@@ -2,11 +2,11 @@
 
 <h2>People</h2>
 
-<%= render "shared/search", :name => @name, :placeholder => "Enter name to search" %>
+<%= render "shared/search", name: @name, placeholder: "Enter name to search" %>
 
 <div class="row">
   <div class="col-sm-12">
-    <%= table :class => "people", :collection => @people, :columns => 7, :id => :people do %>
+    <%= table class: "people", collection: @people, columns: 7, id: :people do %>
       <thead>
         <tr>
           <th class="icon"></th>
@@ -18,23 +18,23 @@
           <th class="actions"></th>
         </tr>
       </thead>
-      <%= render :partial => "person", :collection => @people %>
+      <%= render partial: "person", collection: @people %>
     <% end -%>
   </div>
 </div>
 
 <div class="row">
   <div class="col-sm-4">
-    <%= link_to new_admin_person_path, :class => "btn btn-default", :id => "new_person" do %>
+    <%= link_to new_admin_person_path, class: "btn btn-default", id: "new_person" do %>
       <span class="glyphicon glyphicon-user"></span> New Person
     <% end %>
-    <%= link_to cards_admin_people_path(:format => "pdf"), :class => "btn btn-default" do %>
+    <%= link_to cards_admin_people_path(format: "pdf"), class: "btn btn-default" do %>
       <span class="glyphicon glyphicon-print"></span> Print Cards
     <% end %>
   </div>
   <% unless mobile_request? %>
   <div class="col-sm-8 pull-right">
-    <%= form_tag({}, { :class => "form-inline pull-right", :id => "export_form" }) do %>
+    <%= form_tag({}, { class: "form-inline pull-right", id: "export_form" }) do %>
       <select name="include" class="form-control" id="include">
         <option value="all">All</option>
         <option value="members_only" selected="selected">Current members only</option>
@@ -46,7 +46,7 @@
         <option value="scoring_sheet">Scoring sheet</option>
         <option value="endicia">Endicia</option>
       </select>
-      <%= button_tag :class => "btn btn-default", :id => "export_button" do %>
+      <%= button_tag class: "btn btn-default", id: "export_button" do %>
         <span class="glyphicon glyphicon-download"></span> Export
       <% end %>
     <% end %>
@@ -59,9 +59,9 @@
 <% unless mobile_request? %>
 <div class="row">
   <div class="col-sm-12">
-    <%= form_tag preview_import_admin_people_path, :multipart => true, :role => "form", :id => "import_form" do %>
+    <%= form_tag preview_import_admin_people_path, multipart: true, role: "form", id: "import_form" do %>
       <label class="control-label">Import</label>
-      <%= file_field_tag "people_file", :onchange => "$('#import_form').submit();".html_safe %>
+      <%= file_field_tag "people_file", onchange: "$('#import_form').submit();".html_safe %>
     <% end -%>
   </div>
 </div>

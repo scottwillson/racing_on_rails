@@ -1,6 +1,6 @@
 <h3>Pages</h3>
 
-<%= table :class => "pages", :id => :pages, :collection => @pages, :columns => 4 do %>
+<%= table class: "pages", id: :pages, collection: @pages, columns: 4 do %>
   <thead>
     <tr>
       <th class="icon"></th>
@@ -16,7 +16,7 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <%= link_to new_admin_page_path, :class => "btn btn-default", :id => "new_page" do %>
+    <%= link_to new_admin_page_path, class: "btn btn-default", id: "new_page" do %>
       <span class="glyphicon glyphicon-file"></span> New Page
     <% end %>
   </div>

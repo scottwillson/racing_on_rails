@@ -3,12 +3,12 @@
 
 <h2>People</h2>
 
-<%= render_page "people/disciplines", :year => @year %>
-<%= render "shared/search", :name => @name, :placeholder => "Enter name to search" %>
+<%= render_page "people/disciplines", year: @year %>
+<%= render "shared/search", name: @name, placeholder: "Enter name to search" %>
 
 <div class="row">
   <div class="col-sm-12">
-    <%= table :class => "people", :id => :people, :columns => 10, :collection => @people do %>
+    <%= table class: "people", id: :people, columns: 10, collection: @people do %>
       <th class="name">Name</th>
       <th class="member">Member</th>
       <th class="license">License</th>
@@ -18,14 +18,14 @@
       <th>MTB</th>
       <th>Cross</th>
       <th class="racing_age">Racing&nbsp;Age</th>
-      <%= render :partial => "person", :collection => @people %>
+      <%= render partial: "person", collection: @people %>
       <% if @people.present? %>
         <%= will_paginate @people %>
       <% end %>
     <% end -%>
 
     <% if (promoter? || administrator? || official?) %>
-    <%= link_to("Export current members to Excel", admin_people_path(:format => "xls", :excel_layout => "scoring_sheet", :include => "members_only"), :id => "export_link") %>
+    <%= link_to("Export current members to Excel", admin_people_path(format: "xls", excel_layout: "scoring_sheet", include: "members_only"), id: "export_link") %>
     <% end -%>
   </div>
 </div>

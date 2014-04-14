@@ -3,16 +3,16 @@
 
 <h2>People</h2>
 
-<%= render_page "people/disciplines", :year => @year %>
+<%= render_page "people/disciplines", year: @year %>
 
-<%= render "shared/search", :name => @name, :placeholder => "Enter name to search" %>
+<%= render "shared/search", name: @name, placeholder: "Enter name to search" %>
 
 <div class="row">
   <div class="col-sm-12">
-    <%= table :class => "people", :id => :people, :columns => 2, :collection => @people do %>
+    <%= table class: "people", id: :people, columns: 2, collection: @people do %>
       <th class="name">Name</th>
       <th class="member">Member</th>
-      <%= render :partial => "person", :collection => @people %>
+      <%= render partial: "person", collection: @people %>
       <% if @people.present? %>
         <%= will_paginate @people %>
       <% end %>

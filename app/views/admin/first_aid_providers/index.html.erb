@@ -1,30 +1,30 @@
 <% @page_title = 'First Aid' %>
 
 <h3><%= @year %> First Aid</h3>
-<%= form_tag({}, { :method => :get }) do %>
-  <label for="past_events" class="checkbox"><%= check_box_tag "past_events", "true", @past_events, :class => "show_past_events" %>Show past events</label>
+<%= form_tag({}, { method: :get }) do %>
+  <label for="past_events" class="checkbox"><%= check_box_tag "past_events", "true", @past_events, class: "show_past_events" %>Show past events</label>
   <%= hidden_field_tag "sort_by", @sort_by %>
   <%= hidden_field_tag "sort_direction", params[:sort_direction] %>
 <% end -%>
 
-<%= table :class => "first_aid_providers", :id => :events, :collection => @events, :columns => 6 do %>
+<%= table class: "first_aid_providers", id: :events, collection: @events, columns: 6 do %>
 <tr>
-  <%= th(:first_aid_provider, :title => "Provider", :class => "name", :sort_params => { :past_events => @past_events }) %>
-  <%= th(:chief_referee, :title => "Chief Referee", :class => "name", :sort_params => { :past_events => @past_events }) %>
-  <%= th(:date, :sort_params => { :past_events => @past_events }) %>
-  <%= th(:name, :class => "event_name", :sort_params => { :past_events => @past_events }) %>
-  <%= th(:promoter_name, :title => "Promoter", :sort_params => { :past_events => @past_events }) %>
-  <%= th(:location, :sort_params => { :past_events => @past_events }) %>
+  <%= th(:first_aid_provider, title: "Provider", class: "name", sort_params: { past_events: @past_events }) %>
+  <%= th(:chief_referee, title: "Chief Referee", class: "name", sort_params: { past_events: @past_events }) %>
+  <%= th(:date, sort_params: { past_events: @past_events }) %>
+  <%= th(:name, class: "event_name", sort_params: { past_events: @past_events }) %>
+  <%= th(:promoter_name, title: "Promoter", sort_params: { past_events: @past_events }) %>
+  <%= th(:location, sort_params: { past_events: @past_events }) %>
 </tr>
-<%= render :partial => "event", :collection => sort_rows(@events.to_a, @sort_by, params[:sort_direction]) %>
+<%= render partial: "event", collection: sort_rows(@events.to_a, @sort_by, params[:sort_direction]) %>
 <% end -%>
 
 <ul class="page-links">
   <li>
-    <%= link_to "Email", admin_first_aid_providers_path(:format => "txt", :sort_by => params[:sort_by],
-                                                                       :sort_direction => params[:sort_direction],
-                                                                       :past_events => @past_events),
-              { :class => :image }
+    <%= link_to "Email", admin_first_aid_providers_path(format: "txt", sort_by: params[:sort_by],
+                                                                       sort_direction: params[:sort_direction],
+                                                                       past_events: @past_events),
+              { class: :image }
               %>
   </li>
 </ul>

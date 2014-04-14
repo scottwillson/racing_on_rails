@@ -3,9 +3,9 @@ class PersonMailer < ActionMailer::Base
     @person = person
 
     mail(
-      :to => person.email,
-      :from => "#{RacingAssociation.current.short_name} Help <#{RacingAssociation.current.email}>",
-      :subject => "New #{RacingAssociation.current.short_name} Login"
+      to: person.email,
+      from: "#{RacingAssociation.current.short_name} Help <#{RacingAssociation.current.email}>",
+      subject: "New #{RacingAssociation.current.short_name} Login"
     )
   end
 end

@@ -4,10 +4,10 @@
 
 <div class="row">
   <div class="col-sm-offset-3 col-sm-6 col-xs-offset-1 col-xs-10">
-    <%= form_tag({}, { :method => "get", :class => "form-horizontal", :role => "form" }) do %>
+    <%= form_tag({}, { method: "get", class: "form-horizontal", role: "form" }) do %>
       <div class="form-group">
         <div class="input-group">
-          <%= search_field_tag("subject", @subject, :class => "wants_focus form-control", :placeholder => "Search by subject") %>
+          <%= search_field_tag("subject", @subject, class: "wants_focus form-control", placeholder: "Search by subject") %>
           <span class="input-group-btn">
             <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
           </span>
@@ -17,9 +17,9 @@
   </div>
 </div>
 
-<%= render "pagination", :posts => @post, :mailing_list => @mailing_list %>
+<%= render "pagination", posts: @post, mailing_list: @mailing_list %>
 
-<%= table :collection => @posts, :columns => 4 do %>
+<%= table collection: @posts, columns: 4 do %>
   <thead>
     <tr>
       <th></th>
@@ -29,14 +29,14 @@
     </tr>
   </thead>
   <tbody>
-    <%= render :collection => @posts, :partial => "post", :locals => { :current_page => @posts.current_page } %>
+    <%= render collection: @posts, partial: "post", locals: { current_page: @posts.current_page } %>
   </tbody>
 <% end -%>
 
-<%= render "pagination", :posts => @post, :mailing_list => @mailing_list %>
+<%= render "pagination", posts: @post, mailing_list: @mailing_list %>
 
-<%= render "mailing_lists/links", :mailing_list => @mailing_list %>
+<%= render "mailing_lists/links", mailing_list: @mailing_list %>
 
 <% content_for :head do -%>
-  <%= auto_discovery_link_tag :atom, :format => :atom %>
+  <%= auto_discovery_link_tag :atom, format: :atom %>
 <% end %>

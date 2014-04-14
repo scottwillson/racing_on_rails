@@ -1,7 +1,7 @@
 <h3><%= RacingAssociation.current.effective_year %> Numbers</h3>
-<%= table :class => "numbers",
-         :id => "numbers",
-         :columns => 2 do %>
+<%= table class: "numbers",
+         id: "numbers",
+         columns: 2 do %>
   <% if RacingAssociation.current.show_license %>
   <tr>
     <td><%= RacingAssociation.current.short_name %> License/Membership #</td>

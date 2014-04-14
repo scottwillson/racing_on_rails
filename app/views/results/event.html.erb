@@ -21,7 +21,7 @@
     <% @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.each do |child| -%>
     <tr>
       <td class="date"><%= link_to child.date.strftime('%A, %B %-d'), event_results_path(child) %></td>
-      <td class="event"><%= link_to child.name, event_results_path(child), { :class => "obvious" } %></td>
+      <td class="event"><%= link_to child.name, event_results_path(child), { class: "obvious" } %></td>
     </tr>
     <% child.children_and_child_competitions_with_results.each do |child_child| -%>
       <tr>
@@ -34,17 +34,17 @@
 </div>
 <% end -%>
 
-  <%= render :partial => "results/races", :locals => { :event => @event } %>
+  <%= render partial: "results/races", locals: { event: @event } %>
 
   <%- if @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.present? -%>
 <div class="row event_info child_events">
   <%- @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.each do |child| -%>
-  <%= link_to child.name, event_results_path(child), { :class => "obvious" } %><br/>
+  <%= link_to child.name, event_results_path(child), { class: "obvious" } %><br/>
   <%- end -%>
 </div>
   <% else %>
     <% if @event.races_with_results.empty? && @start_list %>
-      <%= render :partial => "start_list", :locals => { :start_list => @start_list } %>
+      <%= render partial: "start_list", locals: { start_list: @start_list } %>
     <% end %>
   <%- end -%>
 
@@ -61,14 +61,14 @@
   <p class="created_updated">Updated <%= @event.updated_at.to_formatted_s(:long_and_friendly_date_and_time) %></p>
   <% end -%>
 
-  <% benchmark("Render results for event #{@event.id}", :silence => false) do %>
+  <% benchmark("Render results for event #{@event.id}", silence: false) do %>
   <% @event.races_with_results.sort.each do |race| %>
   <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
   <%= results_table race %>
   <%- end -%>
 
   <% if @event.races_with_results.empty? && @event.overall.present? && @event.overall.races_with_results.present? %>
-    <%= render :partial => "races", :locals => { :event => @event.overall } %>
+    <%= render partial: "races", locals: { event: @event.overall } %>
     <% @event.overall.races_with_results.sort.each do |race| %>
     <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
     <%= results_table race %>

@@ -5,7 +5,7 @@ class Photo < ActiveRecord::Base
 
   validates_presence_of :caption, :image, :height, :width
 
-  before_validation :set_title, :on => :create
+  before_validation :set_title, on: :create
 
   def set_title
     if title.blank?

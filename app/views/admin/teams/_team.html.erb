@@ -1,16 +1,16 @@
-<%= content_tag :tr, :class => "team_row", :id => "team_#{team.id}_row", "data-id" => team.id do %>
+<%= content_tag :tr, class: "team_row", id: "team_#{team.id}_row", "data-id" => team.id do %>
   <td class="icon"><div class="team_icon" id="team_<%= team.id %>" data-name="<%= team.name %>" data-id="<%= team.id %>"><span class="glyphicon glyphicon-group"></span></div></td>
   <td class="name">
     <%= editable team, :name %>
   </td>
   <td class="not_editable">
-    <%= render "aliases", :team => team %>
+    <%= render "aliases", team: team %>
   </td>
   <td class="check_box">
-    <%= render "shared/member", :record => team %>
+    <%= render "shared/member", record: team %>
   </td>
   <td class="actions not_editable">
-    <%= link_to "Results", team_path(team), :id => "show_#{team.id}" %>
-    <%= link_to "Edit", edit_admin_team_path(team), :id => "edit_#{team.id}" %>
+    <%= link_to "Results", team_path(team), id: "show_#{team.id}" %>
+    <%= link_to "Edit", edit_admin_team_path(team), id: "edit_#{team.id}" %>
   </td>
 <% end -%>

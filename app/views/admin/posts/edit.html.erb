@@ -1,16 +1,16 @@
 <% @page_title = "Admin: #{@mailing_list.name}: Posts: New" %>
 
-<%= render "shared/errors", :object => @post %>
+<%= render "shared/errors", object: @post %>
 
 <h2>New <%= @mailing_list.name %> Post</h2>
 
-<%= form_for [ :admin, @mailing_list, @post ], :html => { :multipart => true, :class => "form-horizontal", :role => "form" }  do |f| -%>
+<%= form_for [ :admin, @mailing_list, @post ], html: { multipart: true, class: "form-horizontal", role: "form" }  do |f| -%>
   <div class="row">
     <div class="col-sm-6">
       <div class="form-group">
-        <%= f.label :date_1i, "Date", :class => "control-label col-sm-4" %>
+        <%= f.label :date_1i, "Date", class: "control-label col-sm-4" %>
         <div class="col-sm-8">
-          <%= f.datetime_select :date, :class => "form-control" %>
+          <%= f.datetime_select :date, class: "form-control" %>
         </div>
       </div>
       <%= f.labelled_text_field :subject %>
@@ -23,8 +23,8 @@
   </div>
   <div class="row">
     <div class="col-sm-12">
-      <%= submit_tag "Save", :class => "btn btn-default", :id => "save" %>
-      <%= link_to "New", new_admin_mailing_list_post_path(@mailing_list), :class => "btn-link" %>
+      <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
+      <%= link_to "New", new_admin_mailing_list_post_path(@mailing_list), class: "btn-link" %>
     </div>
   </div>
 <% end -%>

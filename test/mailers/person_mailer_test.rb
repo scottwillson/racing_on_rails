@@ -3,7 +3,7 @@ require_relative "../test_helper"
 # :stopdoc:
 class PersonMailerTest < ActionMailer::TestCase
   def test_new_login_confirmation
-    person = FactoryGirl.create(:person, :email => "rr@example.com")
+    person = FactoryGirl.create(:person, email: "rr@example.com")
     email = PersonMailer.new_login_confirmation(person)
     assert_equal [ "rr@example.com" ], email.to
     assert_equal "New #{RacingAssociation.current.short_name} Login", email.subject

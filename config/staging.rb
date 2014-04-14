@@ -2,7 +2,7 @@ set :site_local_repository_branch, nil
 
 role :app, "rocketsurgeryllc.com"
 role :web, "rocketsurgeryllc.com"
-role :db, "rocketsurgeryllc.com", :primary => true
+role :db, "rocketsurgeryllc.com", primary: true
 
 load "local/config/staging.rb" if File.exists?("local/config/staging.rb")
 
@@ -68,7 +68,7 @@ namespace :deploy do
     CMD
   end
 
-  task :copy_cache, :roles => :app do
+  task :copy_cache, roles: :app do
     %w{ bar bar.html events export people index.html results results.html teams teams.html }.each do |cached_path|
       run("if [ -e \"#{previous_release}/public/#{cached_path}\" ]; then cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}; fi") rescue nil
     end
@@ -76,7 +76,7 @@ namespace :deploy do
 
   namespace :web do
     desc "Present a maintenance page to visitors"
-    task :disable, :roles => :web, :except => { :no_release => true } do
+    task :disable, roles: :web, except: { no_release: true } do
       on_rollback { run "rm #{shared_path}/system/maintenance.html" }
       run "if [ -f #{previous_release}/public/maintenance.html ]; then cp #{previous_release}/public/maintenance.html #{shared_path}/system/maintenance.html; fi"
       run "if [ -f #{previous_release}/local/public/maintenance.html ]; then cp #{previous_release}/local/public/maintenance.html #{shared_path}/system/maintenance.html; fi"

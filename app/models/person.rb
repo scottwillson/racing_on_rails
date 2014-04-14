@@ -15,17 +15,17 @@ class Person < ActiveRecord::Base
 
   acts_as_authentic do |config|
     config.crypto_provider Authlogic::CryptoProviders::Sha512
-    config.validates_length_of_login_field_options :within => 3..100, :allow_nil => true, :allow_blank => true
-    config.validates_format_of_login_field_options :with => Authlogic::Regex.login,
-                                                   :message => I18n.t('error_messages.login_invalid',
-                                                   :default => "should use only letters, numbers, spaces, and .-_@ please."),
-                                                   :allow_nil => true,
-                                                   :allow_blank => true
+    config.validates_length_of_login_field_options within: 3..100, allow_nil: true, allow_blank: true
+    config.validates_format_of_login_field_options with: Authlogic::Regex.login,
+                                                   message: I18n.t('error_messages.login_invalid',
+                                                   default: "should use only letters, numbers, spaces, and .-_@ please."),
+                                                   allow_nil: true,
+                                                   allow_blank: true
 
-    config.validates_uniqueness_of_login_field_options :allow_blank => true, :allow_nil => true, :case_sensitive => false
-    config.validates_confirmation_of_password_field_options :unless => Proc.new { |user| user.password.blank? }
-    config.validates_length_of_password_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
-    config.validates_length_of_password_confirmation_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
+    config.validates_uniqueness_of_login_field_options allow_blank: true, allow_nil: true, case_sensitive: false
+    config.validates_confirmation_of_password_field_options unless: Proc.new { |user| user.password.blank? }
+    config.validates_length_of_password_field_options  minimum: 4, allow_nil: true, allow_blank: true
+    config.validates_length_of_password_confirmation_field_options  minimum: 4, allow_nil: true, allow_blank: true
     config.validate_email_field false
     config.disable_perishable_token_maintenance true
     config.maintain_sessions false
@@ -39,19 +39,19 @@ class Person < ActiveRecord::Base
   before_destroy :ensure_no_results
 
   has_many :aliases
-  has_and_belongs_to_many :editable_people, :class_name => "Person", :foreign_key => "editor_id", :before_add => :validate_unique_editors
-  has_and_belongs_to_many :editors, :class_name => "Person", :association_foreign_key => "editor_id", :before_add => :validate_unique_editors
-  has_many :editor_requests, :dependent => :destroy
-  has_many :events, :foreign_key => "promoter_id"
-  has_and_belongs_to_many :editable_events, :class_name => "Event", :foreign_key => "editor_id", :join_table => "editors_events"
+  has_and_belongs_to_many :editable_people, class_name: "Person", foreign_key: "editor_id", before_add: :validate_unique_editors
+  has_and_belongs_to_many :editors, class_name: "Person", association_foreign_key: "editor_id", before_add: :validate_unique_editors
+  has_many :editor_requests, dependent: :destroy
+  has_many :events, foreign_key: "promoter_id"
+  has_and_belongs_to_many :editable_events, class_name: "Event", foreign_key: "editor_id", join_table: "editors_events"
   has_many :race_numbers, -> { includes(:discipline, :number_issuer) }
   has_many :results
   has_and_belongs_to_many :roles
-  has_many :sent_editor_requests, :foreign_key => "editor_id", :class_name => "EditorRequest", :dependent => :destroy
+  has_many :sent_editor_requests, foreign_key: "editor_id", class_name: "EditorRequest", dependent: :destroy
   belongs_to :team
 
   accepts_nested_attributes_for :race_numbers,
-    :reject_if => proc { |attributes| !attributes.has_key?(:value) || attributes[:value].blank? }
+    reject_if: proc { |attributes| !attributes.has_key?(:value) || attributes[:value].blank? }
 
   attr_accessor :year
 
@@ -63,10 +63,10 @@ class Person < ActiveRecord::Base
 
   # Does not consider Aliases
   def self.find_all_by_name(name)
-    Person.where(:name => name).order("last_name, first_name")
+    Person.where(name: name).order("last_name, first_name")
   end
 
-  # "Jane Doe" or "Jane", "Doe" or :name => "Jane Doe" or :first_name => "Jane", :last_name => "Doe"
+  # "Jane Doe" or "Jane", "Doe" or name: "Jane Doe" or first_name: "Jane", last_name: "Doe"
   def self.find_all_by_name_or_alias(*args)
     options = args.extract_options!
     options.keys.each { |key| raise(ArgumentError, "'#{key}' is not a valid key") unless [:name, :first_name, :last_name].include?(key) }
@@ -78,13 +78,13 @@ class Person < ActiveRecord::Base
     last_name = options[:last_name]
 
     if name.present?
-      Person.where(:name => name) | Alias.find_all_people_by_name(name)
+      Person.where(name: name) | Alias.find_all_people_by_name(name)
     elsif first_name.present? && last_name.blank?
-      Person.where(:first_name => first_name) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
+      Person.where(first_name: first_name) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
     elsif first_name.blank? && last_name.present?
-      Person.where(:last_name => last_name) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
+      Person.where(last_name: last_name) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
     else
-      Person.where(:first_name => first_name).where(:last_name => last_name) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
+      Person.where(first_name: first_name).where(last_name: last_name) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
     end
   end
 
@@ -115,14 +115,14 @@ class Person < ActiveRecord::Base
   end
 
   def self.find_by_name(name)
-    Person.where(:name => name).first
+    Person.where(name: name).first
   end
 
   def self.find_all_by_number(number)
     RaceNumber.
       includes(:person).
-      where(:year => [ RacingAssociation.current.year, RacingAssociation.current.next_year ]).
-      where(:value => number).
+      where(year: [ RacingAssociation.current.year, RacingAssociation.current.next_year ]).
+      where(value: number).
       map(&:person)
   end
 
@@ -235,8 +235,8 @@ class Person < ActiveRecord::Base
   def people_name_sounds_like
     return [] if name.blank?
 
-    Person.where.not(:id => id).where("soundex(name) = soundex(?)", name.strip) +
-    Person.where(:first_name => last_name).where(:last_name => first_name)
+    Person.where.not(id: id).where("soundex(name) = soundex(?)", name.strip) +
+    Person.where(first_name: last_name).where(last_name: first_name)
   end
 
   # Name on year. Could be rolled into Nameable?
@@ -359,7 +359,7 @@ class Person < ActiveRecord::Base
       self.team = nil
     else
       self.team = Team.find_by_name_or_alias(value)
-      self.team = Team.new(:name => value, :updated_by => new_record? ? updated_by : nil) unless self.team
+      self.team = Team.new(name: value, updated_by: new_record? ? updated_by : nil) unless self.team
     end
   end
 
@@ -573,14 +573,14 @@ class Person < ActiveRecord::Base
           number.value == value && number.discipline == discipline && number.association == association && number.year == _year
         end
         race_numbers.build(
-          :value => value, :discipline => discipline, :year => _year, :number_issuer => association,
-          :updated_by => updated_by
+          value: value, discipline: discipline, year: _year, number_issuer: association,
+          updated_by: updated_by
         ) unless existing_number
       else
         RaceNumber.where(
-          :value => value, :person_id => id, :discipline_id => discipline.id, :year => _year, :number_issuer_id => association.id
+          value: value, person_id: id, discipline_id: discipline.id, year: _year, number_issuer_id: association.id
         ).first || race_numbers.create(
-          :value => value, :discipline => discipline, :year => _year, :number_issuer => association, :updated_by => updated_by
+          value: value, discipline: discipline, year: _year, number_issuer: association, updated_by: updated_by
         )
       end
     end
@@ -650,7 +650,7 @@ class Person < ActiveRecord::Base
     if new_record?
       false
     else
-      Event.where(:promoter_id => id).exists? || editable_events.present?
+      Event.where(promoter_id: id).exists? || editable_events.present?
     end
   end
 
@@ -836,7 +836,7 @@ class Person < ActiveRecord::Base
   def event_results(reload = true)
     if reload
       return Result.
-        includes(:team, :person, :scores, :category, {:race => [:event, :category]}).
+        includes(:team, :person, :scores, :category, {race: [:event, :category]}).
         where("people.id" => id).
         reject {|r| r.competition_result?}
     end
@@ -876,7 +876,7 @@ class Person < ActiveRecord::Base
           self.login = other_person.login
           self.crypted_password = other_person.crypted_password
           other_person.skip_version do
-            other_person.update_attributes :login => nil
+            other_person.update_attributes login: nil
           end
         end
         if member_from.nil? || (other_person.member_from && other_person.member_from < member_from)
@@ -911,7 +911,7 @@ class Person < ActiveRecord::Base
         Person.delete other_person.id
         existing_alias = aliases.detect{ |a| a.name.casecmp(other_person.name) == 0 }
         if existing_alias.nil? and Person.find_all_by_name(other_person.name).empty?
-          aliases.create(:name => other_person.name)
+          aliases.create(name: other_person.name)
         end
         events_with_results.each do |event|
           event.reload
@@ -952,7 +952,7 @@ class Person < ActiveRecord::Base
        !Alias.exists?(['name = ? and person_id = ?', name_was, id]) &&
        !Person.exists?(["name = ?", name_was])
 
-      new_alias = Alias.new(:name => name_was, :person => self)
+      new_alias = Alias.new(name: name_was, person: self)
       unless new_alias.save
         logger.error "Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(", ")}"
       end

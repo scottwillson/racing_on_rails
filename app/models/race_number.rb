@@ -14,7 +14,7 @@ class RaceNumber < ActiveRecord::Base
 
   validates_presence_of :discipline
   validates_presence_of :number_issuer
-  validates_presence_of :person, :unless => :new_record?
+  validates_presence_of :person, unless: :new_record?
   validates_presence_of :value
   validate :unique_number
 
@@ -37,10 +37,10 @@ class RaceNumber < ActiveRecord::Base
 
     RaceNumber.
       includes(:person).
-      where(:value => value).
-      where(:discipline_id => discipline_id).
-      where(:number_issuer_id => _event.number_issuer_id).
-      where(:year => _event.date.year)
+      where(value: value).
+      where(discipline_id: discipline_id).
+      where(number_issuer_id: _event.number_issuer_id).
+      where(year: _event.date.year)
   end
 
   # Dupe of lousy code from Discipline
@@ -118,12 +118,12 @@ class RaceNumber < ActiveRecord::Base
 
     if new_record?
       existing_numbers = RaceNumber.
-        where(:value => value, :discipline_id => discipline_id, :number_issuer_id => number_issuer_id, :year => year, :person_id => person_id).
+        where(value: value, discipline_id: discipline_id, number_issuer_id: number_issuer_id, year: year, person_id: person_id).
         count
     else
       existing_numbers = RaceNumber.
-        where(:value => value, :discipline_id => discipline_id, :number_issuer_id => number_issuer_id, :year => year, :person_id => person_id).
-        where.not(:id => id).
+        where(value: value, discipline_id: discipline_id, number_issuer_id: number_issuer_id, year: year, person_id: person_id).
+        where.not(id: id).
         count
     end
 

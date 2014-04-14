@@ -2,9 +2,9 @@
 <div class="row">
   <div class="col-sm-12">
     <h3><%= link_to "Posts", mailing_lists_path %></h3>
-    <%= table :class => "mailing_lists", :columns => 1 do %>
+    <%= table class: "mailing_lists", columns: 1 do %>
     <tbody>
-      <%= render :partial => "home/post", :collection => posts %>
+      <%= render partial: "home/post", collection: posts %>
     </tbody>
     <% end %>
   </div>

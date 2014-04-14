@@ -59,7 +59,7 @@ class OregonWomensPrestigeSeries < Competition
         "results.id as id",
         "year"
       ]).
-      joins(:race => :event).
+      joins(race: :event).
       joins("left outer join people on people.id = results.person_id").
       joins("left outer join events parents_events on parents_events.id = events.parent_id").
       joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").

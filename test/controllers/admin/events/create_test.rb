@@ -149,10 +149,10 @@ module Admin
       end
 
       def test_create_from_children
-        lost_child = SingleDayEvent.create!(:name => "Alameda Criterium")
-        SingleDayEvent.create!(:name => "Alameda Criterium")
+        lost_child = SingleDayEvent.create!(name: "Alameda Criterium")
+        SingleDayEvent.create!(name: "Alameda Criterium")
 
-        get :create_from_children, :id => lost_child.to_param
+        get :create_from_children, id: lost_child.to_param
 
         new_parent = MultiDayEvent.find_by_name(lost_child.name)
         assert_redirected_to edit_admin_event_path(new_parent)

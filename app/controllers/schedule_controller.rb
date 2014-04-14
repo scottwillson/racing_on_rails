@@ -20,23 +20,23 @@ class ScheduleController < ApplicationController
     respond_to do |format|
       format.html { render_page }
       format.rss do
-        redirect_to schedule_path(:format => :atom), :status => :moved_permanently
+        redirect_to schedule_path(format: :atom), status: :moved_permanently
       end
       format.atom
       format.json {
         events = []
         @events.each do |event|
           events << {
-            :id => event.id,
-            :title => event.full_name,
-            :description => event.full_name,
-            :start => "#{event.date}",
-            :end => "#{event.end_date}",
-            :allDay => true,
-            :url => "#{event.flyer}"
+            id: event.id,
+            title: event.full_name,
+            description: event.full_name,
+            start: "#{event.date}",
+            end: "#{event.end_date}",
+            allDay: true,
+            url: "#{event.flyer}"
           }
         end
-        render :json => events.to_json
+        render json: events.to_json
       }
       format.ics { render_ics }
       format.xls { render_xls }
@@ -55,7 +55,7 @@ class ScheduleController < ApplicationController
     respond_to do |format|
       format.html { render_page }
       format.rss do
-        redirect_to schedule_path(:format => :atom), :status => :moved_permanently
+        redirect_to schedule_path(format: :atom), status: :moved_permanently
       end
       format.atom
       format.ics { render_ics }
@@ -71,16 +71,16 @@ class ScheduleController < ApplicationController
         events = []
         @events.each do |event|
           events << {
-            :id => event.id,
-            :title => event.full_name,
-            :description => event.full_name,
-            :start => event.date,
-            :end => event.end_date,
-            :allDay => true,
-            :url => event.flyer
+            id: event.id,
+            title: event.full_name,
+            description: event.full_name,
+            start: event.date,
+            end: event.end_date,
+            allDay: true,
+            url: event.flyer
           }
         end
-        render :json => events.to_json
+        render json: events.to_json
       end
     end
   end
@@ -107,12 +107,12 @@ class ScheduleController < ApplicationController
           end
         end
       end,
-      :filename => "#{RacingAssociation.current.name} #{@year} Schedule.ics"
+      filename: "#{RacingAssociation.current.name} #{@year} Schedule.ics"
     )
   end
 
   def render_xls
-    send_data(CSV.generate(:col_sep => "\t") do |csv|
+    send_data(CSV.generate(col_sep: "\t") do |csv|
       csv << [ "id", "parent_id", "date", "name", "discipline", "flyer", "city", "state", "promoter_name" ]
       @events.each do |event|
         csv << [
@@ -127,7 +127,7 @@ class ScheduleController < ApplicationController
           event.promoter_name
         ]
       end
-    end, :type => :xls)
+    end, type: :xls)
   end
 
   def assign_schedule
@@ -136,17 +136,17 @@ class ScheduleController < ApplicationController
 
     if RacingAssociation.current.filter_schedule_by_region?
       @regions = Region.all
-      @region = Region.where(:friendly_param => params[:region]).first
+      @region = Region.where(friendly_param: params[:region]).first
     end
 
     # year, sanctioning_organization, start, end, discipline, region
     @schedule = Schedule::Schedule.find(
-      :discipline => @discipline,
-      :end => end_date,
-      :region => @region,
-      :sanctioning_organization => params[:sanctioning_organization],
-      :start => start_date,
-      :year => @year
+      discipline: @discipline,
+      end: end_date,
+      region: @region,
+      sanctioning_organization: params[:sanctioning_organization],
+      start: start_date,
+      year: @year
     )
     @events = @schedule.events
   end

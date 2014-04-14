@@ -5,31 +5,31 @@ module Events
   module Competitions
     class WsbaBarrTest < ActiveSupport::TestCase
       def test_points
-        category_men_1_2 = FactoryGirl.create(:category, :name => "Men Cat 1-2")
-        sr_women = FactoryGirl.create(:category, :name => "Women Cat 1-2")
-        wsba = WsbaBarr.create!(:date => Date.new(2004))
+        category_men_1_2 = FactoryGirl.create(:category, name: "Men Cat 1-2")
+        sr_women = FactoryGirl.create(:category, name: "Women Cat 1-2")
+        wsba = WsbaBarr.create!(date: Date.new(2004))
 
-        event = FactoryGirl.create(:event, :date => Date.new(2004), :name => "Banana Belt")
-        race = event.races.create!(:category => category_men_1_2)
+        event = FactoryGirl.create(:event, date: Date.new(2004), name: "Banana Belt")
+        race = event.races.create!(category: category_men_1_2)
 
-        tonkin = FactoryGirl.create(:person, :name => "Tonkin")
-        race.results.create!(:place => "1", :person => tonkin)
-        ryan = FactoryGirl.create(:person, :name => "Ryan")
-        race.results.create!(:place => "2", :person => ryan)
-        matson = FactoryGirl.create(:person, :name => "Matson")
-        race.results.create!(:place => "3", :person => matson)
+        tonkin = FactoryGirl.create(:person, name: "Tonkin")
+        race.results.create!(place: "1", person: tonkin)
+        ryan = FactoryGirl.create(:person, name: "Ryan")
+        race.results.create!(place: "2", person: ryan)
+        matson = FactoryGirl.create(:person, name: "Matson")
+        race.results.create!(place: "3", person: matson)
         wsba.source_events << event
         event.set_points_for(wsba, 2)
 
-        event = FactoryGirl.create(:event, :date => Date.new(2004), :name => "Kings Valley")
+        event = FactoryGirl.create(:event, date: Date.new(2004), name: "Kings Valley")
         wsba.source_events << event
 
-        race = event.races.create!(:category => category_men_1_2)
-        race.results.create!(:place => "10", :person => tonkin)
+        race = event.races.create!(category: category_men_1_2)
+        race.results.create!(place: "10", person: tonkin)
 
-        race = event.races.create!(:category => sr_women)
-        race.results.create!(:place => "2")
-        race.results.create!(:place => "15")
+        race = event.races.create!(category: sr_women)
+        race.results.create!(place: "2")
+        race.results.create!(place: "15")
 
         fill_in_missing_results
         WsbaBarr.any_instance.expects(:expire_cache)

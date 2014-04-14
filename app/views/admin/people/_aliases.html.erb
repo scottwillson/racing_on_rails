@@ -1,14 +1,14 @@
 <h3>Aliases</h3>
-<%= table :class => "aliases", :insert_header => true, :columns => 2, :collection => @person.aliases do %>
+<%= table class: "aliases", insert_header: true, columns: 2, collection: @person.aliases do %>
 <%- @person.aliases.sort_by(&:name).each do |name_alias| -%>
   <tr id="alias_<%= name_alias.id %>">
     <td><%= name_alias.name %></td>
     <td class="actions">
       <%= link_to(
            admin_person_alias_path(@person, name_alias),
-           :method => "delete",
-           :remote => true,
-           :class => "icon") do %>
+           method: "delete",
+           remote: true,
+           class: "icon") do %>
       <span class="glyphicon glyphicon-minus-sign"></span>
      <% end %>
     </td>

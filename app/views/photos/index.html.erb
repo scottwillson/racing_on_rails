@@ -3,13 +3,13 @@
 <h2>Photos</h2>
 
 <%= will_paginate @photos,
-                  :page_links => false,
-                  :previous_label => "&larr; Newer",
-                  :next_label => "Older &rarr;" %>
+                  page_links: false,
+                  previous_label: "&larr; Newer",
+                  next_label: "Older &rarr;" %>
 
 <div class="row">
   <div class="col-sm-12">
-    <%= table :class => "photos", :collection => @photos, :columns => 3, :id => :people do %>
+    <%= table class: "photos", collection: @photos, columns: 3, id: :people do %>
       <thead>
         <tr>
           <th class="icon"></th>
@@ -17,14 +17,14 @@
           <th class="actions"></th>
         </tr>
       </thead>
-      <%= render :partial => "photo", :collection => @photos %>
+      <%= render partial: "photo", collection: @photos %>
     <% end -%>
   </div>
 </div>
 
 <div class="row">
   <div class="col-sm-12">
-    <%= link_to new_photo_path, :class => "btn btn-default", :id => "new_photo" do %>
+    <%= link_to new_photo_path, class: "btn btn-default", id: "new_photo" do %>
       <span class="glyphicon glyphicon-picture"></span> New Photo
     <% end %>
   </div>

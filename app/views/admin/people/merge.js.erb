@@ -1,6 +1,6 @@
 <% if @merged %>
   jQuery('#person_<%= @other_person.id %>_row').remove();
-  jQuery('#person_<%= @person.id %>_aliases').html('<%= escape_javascript(render('aliases_cell', :person => @person)) %>');
+  jQuery('#person_<%= @person.id %>_aliases').html('<%= escape_javascript(render('aliases_cell', person: @person)) %>');
   <%= flash_js "notice", "Merged #{@other_person.name} into #{@person.name}" %>
 <% else %>
   <%= flash_js "warn", "Could not merge #{@other_person.name} into #{@person.name}" %>

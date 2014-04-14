@@ -13,7 +13,7 @@ module Admin
       race_number = FactoryGirl.create(:race_number)
       assert_not_nil(RaceNumber.find(race_number.id), 'RaceNumber should exist')
 
-      xhr :delete, :destroy, :id => race_number.to_param
+      xhr :delete, :destroy, id: race_number.to_param
       assert_response :success
 
       assert !RaceNumber.exists?(race_number.id)

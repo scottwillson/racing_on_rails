@@ -1,4 +1,4 @@
-<%= render "shared/errors", :object => @article_category %>
+<%= render "shared/errors", object: @article_category %>
 
 <% if @article_category.new_record? %>
 <h2>New Article Category</h2>
@@ -6,7 +6,7 @@
 <h2>Edit Article Category</h2>
 <% end %>
 
-<%= form_for([:admin, @article_category], :html => { :class => "form-horizontal", :role => "form" }) do |f| %>
+<%= form_for([:admin, @article_category], html: { class: "form-horizontal", role: "form" }) do |f| %>
   <div class="row">
     <div class="col-sm-6">
       <%= f.labelled_text_field :name %>
@@ -16,18 +16,18 @@
       <%= f.labelled_text_field :position %>
 
       <div class="form-group">
-        <%= f.label :parent_id, :class => "control-label col-sm-4" %>
+        <%= f.label :parent_id, class: "control-label col-sm-4" %>
         <div class="col-sm-8">
-          <%= tree_select ArticleCategory.where(:parent_id => 0), 'article_category', 'parent_id', @article_category %>
+          <%= tree_select ArticleCategory.where(parent_id: 0), 'article_category', 'parent_id', @article_category %>
         </div>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-sm-12">
-      <%= f.submit "Save", :class => 'btn btn-default' %>
-      <%= link_to('Destroy', [:admin, @article_category], :confirm => 'Are you sure?', :class => 'btn', :method => :delete) unless @article_category.new_record? %>
-      <%= link_to 'Back', admin_article_categories_path, :class => 'btn btn-link' %>
+      <%= f.submit "Save", class: 'btn btn-default' %>
+      <%= link_to('Destroy', [:admin, @article_category], confirm: 'Are you sure?', class: 'btn', method: :delete) unless @article_category.new_record? %>
+      <%= link_to 'Back', admin_article_categories_path, class: 'btn btn-link' %>
     </div>
   </div>
 <% end %>

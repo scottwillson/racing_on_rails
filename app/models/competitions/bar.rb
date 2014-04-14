@@ -11,7 +11,7 @@ class Bar < Competition
   include Concerns::Competition::CalculatorAdapter
 
   def self.calculate!(year = Time.zone.today.year)
-    benchmark(name, :level => :info) {
+    benchmark(name, level: :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
@@ -23,18 +23,18 @@ class Bar < Competition
         ::Discipline.find_all_bar.reject { |discipline|
           [ ::Discipline[:age_graded], ::Discipline[:overall], ::Discipline[:team] ].include?(discipline)
         }.each do |discipline|
-          bar = Bar.where(:date => date, :discipline => discipline.name).first
+          bar = Bar.where(date: date, discipline: discipline.name).first
           unless bar
             bar = Bar.create!(
-              :parent => overall_bar,
-              :name => "#{year} #{discipline.name} BAR",
-              :date => date,
-              :discipline => discipline.name
+              parent: overall_bar,
+              name: "#{year} #{discipline.name} BAR",
+              date: date,
+              discipline: discipline.name
             )
           end
         end
 
-        Bar.where(:date => date).each do |bar|
+        Bar.where(date: date).each do |bar|
           bar.set_date
           bar.delete_races
           bar.create_races
@@ -48,7 +48,7 @@ class Bar < Competition
   end
 
   def self.find_by_year_and_discipline(year, discipline_name)
-    Bar.where(:date => Time.zone.local(year).to_date, :discipline => discipline_name).first
+    Bar.where(date: Time.zone.local(year).to_date, discipline: discipline_name).first
   end
 
   def point_schedule
@@ -80,19 +80,19 @@ class Bar < Competition
         "results.id as id", "person_id as participant_id", "people.member_from", "people.member_to", "place", "results.event_id", "race_id", "events.date", "results.year",
         "coalesce(races.bar_points, events.bar_points, parents_events.bar_points, parents_events_2.bar_points) as multiplier"
       ]).
-      joins(:race => :event).
+      joins(race: :event).
       joins("left outer join people on people.id = results.person_id").
       joins("left outer join events parents_events on parents_events.id = events.parent_id").
       joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
       where("place between 1 and ?", point_schedule.size).
       where("(events.type in (?) or events.type is NULL)", source_event_types).
-      where(:bar => true).
+      where(bar: true).
       where("races.category_id in (?)", category_ids_for(race)).
       where("events.sanctioned_by" => RacingAssociation.current.default_sanctioned_by).
       where("events.discipline in (:disciplines)
             or (events.discipline is null and parents_events.discipline in (:disciplines))
             or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (:disciplines))",
-            :disciplines => disciplines_for(race)).
+            disciplines: disciplines_for(race)).
       where("coalesce(races.bar_points, events.bar_points, parents_events.bar_points, parents_events_2.bar_points) > 0").
       where("results.year = ?", year).
       references(:results, :events, :categories)
@@ -106,7 +106,7 @@ class Bar < Competition
 
   def create_races
     ::Discipline[discipline].bar_categories.each do |category|
-      races.create!(:category => category)
+      races.create!(category: category)
     end
   end
 

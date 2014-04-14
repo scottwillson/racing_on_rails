@@ -5,8 +5,8 @@ require File.expand_path("../../../test_helper", __FILE__)
 # :stopdoc:
 class TeamTest < ActiveSupport::TestCase
   def test_find_by_name_or_alias_or_create
-    gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers")
-    gentle_lovers.aliases.create!(:name => "Gentile Lovers")
+    gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
+    gentle_lovers.aliases.create!(name: "Gentile Lovers")
     assert_equal(gentle_lovers, Team.find_by_name_or_alias_or_create('Gentle Lovers'), 'Gentle Lovers')
     assert_equal(gentle_lovers, Team.find_by_name_or_alias_or_create('Gentile Lovers'), 'Gentle Lovers alias')
     assert_nil(Team.find_by_name_or_alias('Health Net'), 'Health Net should not exist')
@@ -16,45 +16,45 @@ class TeamTest < ActiveSupport::TestCase
   end
 
   def test_merge
-    team_to_keep = FactoryGirl.create(:team, :name => "Vanilla")
-    team_to_keep.aliases.create!(:name => "Vanilla Bicycles")
-    FactoryGirl.create(:result, :team => team_to_keep)
-    FactoryGirl.create(:result, :team => team_to_keep)
-    FactoryGirl.create(:person, :team => team_to_keep)
+    team_to_keep = FactoryGirl.create(:team, name: "Vanilla")
+    team_to_keep.aliases.create!(name: "Vanilla Bicycles")
+    FactoryGirl.create(:result, team: team_to_keep)
+    FactoryGirl.create(:result, team: team_to_keep)
+    FactoryGirl.create(:person, team: team_to_keep)
 
-    team_to_merge = FactoryGirl.create(:team, :name => "Gentle Lovers")
-    team_to_merge.aliases.create!(:name => "Gentile Lovers")
-    FactoryGirl.create(:result, :team => team_to_merge)
-    FactoryGirl.create(:person, :team => team_to_merge)
-    FactoryGirl.create(:person, :team => team_to_merge)
-    FactoryGirl.create(:person, :team => team_to_merge)
+    team_to_merge = FactoryGirl.create(:team, name: "Gentle Lovers")
+    team_to_merge.aliases.create!(name: "Gentile Lovers")
+    FactoryGirl.create(:result, team: team_to_merge)
+    FactoryGirl.create(:person, team: team_to_merge)
+    FactoryGirl.create(:person, team: team_to_merge)
+    FactoryGirl.create(:person, team: team_to_merge)
 
     assert_not_nil(Team.find_by_name(team_to_keep.name), "#{team_to_keep.name} should be in DB")
-    assert_equal(2, Result.where(:team_id => team_to_keep.id).count, "Vanilla's results")
-    assert_equal(1, Person.where(:team_id => team_to_keep.id).count, "Vanilla's people")
-    assert_equal(1, Alias.where(:team_id => team_to_keep.id).count, "Vanilla's aliases")
+    assert_equal(2, Result.where(team_id: team_to_keep.id).count, "Vanilla's results")
+    assert_equal(1, Person.where(team_id: team_to_keep.id).count, "Vanilla's people")
+    assert_equal(1, Alias.where(team_id: team_to_keep.id).count, "Vanilla's aliases")
 
     assert_not_nil(Team.find_by_name(team_to_merge.name), "#{team_to_merge.name} should be in DB")
-    assert_equal(1, Result.where(:team_id => team_to_merge.id).count, "Gentle Lovers's results")
-    assert_equal(3, Person.where(:team_id => team_to_merge.id).count, "Gentle Lovers's people")
-    assert_equal(1, Alias.where(:team_id => team_to_merge.id).count, "Gentle Lovers's aliases")
+    assert_equal(1, Result.where(team_id: team_to_merge.id).count, "Gentle Lovers's results")
+    assert_equal(3, Person.where(team_id: team_to_merge.id).count, "Gentle Lovers's people")
+    assert_equal(1, Alias.where(team_id: team_to_merge.id).count, "Gentle Lovers's aliases")
 
-    promoter_events = [ Event.create!(:team => team_to_keep), Event.create!(:team => team_to_merge) ]
+    promoter_events = [ Event.create!(team: team_to_keep), Event.create!(team: team_to_merge) ]
 
     team_to_keep.merge(team_to_merge)
 
     assert_not_nil(Team.find_by_name(team_to_keep.name), "#{team_to_keep.name} should be in DB")
-    assert_equal(3, Result.where(:team_id => team_to_keep.id).count, "Vanilla's results")
-    assert_equal(4, Person.where(:team_id => team_to_keep.id).count, "Vanilla's people")
-    aliases = Alias.where(:team_id => team_to_keep.id)
+    assert_equal(3, Result.where(team_id: team_to_keep.id).count, "Vanilla's results")
+    assert_equal(4, Person.where(team_id: team_to_keep.id).count, "Vanilla's people")
+    aliases = Alias.where(team_id: team_to_keep.id)
     lovers_alias = aliases.detect{|a| a.name == 'Gentle Lovers'}
     assert_not_nil(lovers_alias, 'Vanilla should have Gentle Lovers alias')
     assert_equal(3, aliases.size, "Vanilla's aliases")
 
     assert_nil(Team.find_by_name(team_to_merge.name), "#{team_to_merge.name} should not be in DB")
-    assert_equal(0, Result.where(:team_id => team_to_merge.id).count, "Gentle Lovers's results")
-    assert_equal(0, Person.where(:team_id => team_to_merge.id).count, "Gentle Lovers's people")
-    assert_equal(0, Alias.where(:team_id => team_to_merge.id).count, "Gentle Lovers's aliases")
+    assert_equal(0, Result.where(team_id: team_to_merge.id).count, "Gentle Lovers's results")
+    assert_equal(0, Person.where(team_id: team_to_merge.id).count, "Gentle Lovers's people")
+    assert_equal(0, Alias.where(team_id: team_to_merge.id).count, "Gentle Lovers's aliases")
     assert_same_elements(promoter_events, team_to_keep.events(true), "Should merge sponsored events")
   end
 
@@ -62,24 +62,24 @@ class TeamTest < ActiveSupport::TestCase
     current_year = Time.zone.today.year
     last_year = current_year - 1
 
-    team_to_keep = Team.create!(:name => "Team Oregon/River City Bicycles")
-    team_to_keep_last_year = team_to_keep.names.create!(:name => "Team Oregon/River City Bicycles", :year => last_year)
+    team_to_keep = Team.create!(name: "Team Oregon/River City Bicycles")
+    team_to_keep_last_year = team_to_keep.names.create!(name: "Team Oregon/River City Bicycles", year: last_year)
 
     event = SingleDayEvent.create!
     senior_men = FactoryGirl.create(:category)
-    event.races.create!(:category => senior_men).results.create!(:place => "10", :team => team_to_keep)
+    event.races.create!(category: senior_men).results.create!(place: "10", team: team_to_keep)
 
-    event = SingleDayEvent.create!(:date => Date.new(last_year))
-    event.races.create!(:category => senior_men).results.create!(:place => "2", :team => team_to_keep)
+    event = SingleDayEvent.create!(date: Date.new(last_year))
+    event.races.create!(category: senior_men).results.create!(place: "2", team: team_to_keep)
 
-    team_to_merge = Team.create!(:name => "Team O/RCB")
-    team_to_merge.names.create!(:name => "Team o IRCB", :year => last_year)
+    team_to_merge = Team.create!(name: "Team O/RCB")
+    team_to_merge.names.create!(name: "Team o IRCB", year: last_year)
 
     event = SingleDayEvent.create!
-    event.races.create!(:category => senior_men).results.create!(:place => "4", :team => team_to_merge)
+    event.races.create!(category: senior_men).results.create!(place: "4", team: team_to_merge)
 
-    event = SingleDayEvent.create!(:date => Date.new(last_year))
-    team_to_merge_last_year_result = event.races.create!(:category => senior_men).results.create!(:place => "19", :team => team_to_merge)
+    event = SingleDayEvent.create!(date: Date.new(last_year))
+    team_to_merge_last_year_result = event.races.create!(category: senior_men).results.create!(place: "19", team: team_to_merge)
 
     team_to_keep.merge(team_to_merge)
 
@@ -103,14 +103,14 @@ class TeamTest < ActiveSupport::TestCase
     current_year = Time.zone.today.year
     last_year = current_year - 1
 
-    team_to_keep = Team.create!(:name => "Team Oregon/River City Bicycles")
+    team_to_keep = Team.create!(name: "Team Oregon/River City Bicycles")
     # Team to keep from last year
-    team_to_keep.names.create!(:name => "Team Oregon/River City Bicycles", :year => last_year)
+    team_to_keep.names.create!(name: "Team Oregon/River City Bicycles", year: last_year)
 
-    team_to_merge = Team.create!(:name => "Team O/RCB")
-    team_to_merge.names.create!(:name => "Team o IRCB", :year => last_year)
+    team_to_merge = Team.create!(name: "Team O/RCB")
+    team_to_merge.names.create!(name: "Team o IRCB", year: last_year)
 
-    Team.create!(:name => "Team o IRCB")
+    Team.create!(name: "Team o IRCB")
 
     team_to_keep.merge(team_to_merge)
   end
@@ -124,13 +124,13 @@ class TeamTest < ActiveSupport::TestCase
     assert_nil(team, "#{name} should not exist")
 
     # exists
-    Team.create(:name => name)
+    Team.create(name: name)
     team = Team.find_by_name_or_alias(name)
     assert_not_nil(team, "#{name} should exist")
     assert_equal(name, team.name, 'name')
 
     # alias
-    Alias.create(:name => 'BCF', :team => team)
+    Alias.create(name: 'BCF', team: team)
     team = Team.find_by_name_or_alias('BCF')
     assert_not_nil(team, "#{name} should exist")
     assert_equal(name, team.name, 'name')
@@ -141,31 +141,31 @@ class TeamTest < ActiveSupport::TestCase
   end
 
   def test_find_all_by_name_like
-    vanilla = FactoryGirl.create(:team, :name => "Vanilla")
-    vanilla.aliases.create!(:name => "Vanilla Bicycles")
+    vanilla = FactoryGirl.create(:team, name: "Vanilla")
+    vanilla.aliases.create!(name: "Vanilla Bicycles")
     assert_same_elements [vanilla], Team.find_all_by_name_like("Vanilla"), "Vanilla"
     assert_same_elements [vanilla], Team.find_all_by_name_like("Vanilla Bicycles"), "Vanilla Bicycles"
     assert_same_elements [vanilla], Team.find_all_by_name_like("van"), "van"
     assert_same_elements [vanilla], Team.find_all_by_name_like("cyc"), "cyc"
 
-    steelman = Team.create!(:name => "Steelman Cycles")
+    steelman = Team.create!(name: "Steelman Cycles")
     assert_same_elements [steelman, vanilla], Team.find_all_by_name_like("cycles"), "cycles"
   end
 
   def test_create_dupe
-    FactoryGirl.create(:team, :name => "Vanilla")
-    dupe = Team.new(:name => 'Vanilla')
+    FactoryGirl.create(:team, name: "Vanilla")
+    dupe = Team.new(name: 'Vanilla')
     assert(!dupe.valid?, 'Dupe Vanilla should not be valid')
   end
 
   def test_member
-    team = Team.new(:name => 'Team Spine')
+    team = Team.new(name: 'Team Spine')
     assert_equal(false, team.member, 'member')
     team.save!
     team.reload
     assert_equal(false, team.member, 'member')
 
-    team = Team.new(:name => 'California Road Club')
+    team = Team.new(name: 'California Road Club')
     assert_equal(false, team.member, 'member')
     team.member = true
     assert_equal(true, team.member, 'member')

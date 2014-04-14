@@ -21,11 +21,11 @@ class PublicPagesTest < RacingOnRails::IntegrationTest
   def test_results_pages
     FactoryGirl.create(:discipline)
     team = FactoryGirl.create(:team)
-    person = FactoryGirl.create(:person, :team => team)
-    event = FactoryGirl.create(:event, :date => Date.new(2004, 2))
+    person = FactoryGirl.create(:person, team: team)
+    event = FactoryGirl.create(:event, date: Date.new(2004, 2))
     senior_men = FactoryGirl.create(:category)
-    race = event.races.create!(:category => senior_men)
-    result = race.results.create(:place => "1", :person => person, :team => team)
+    race = event.races.create!(category: senior_men)
+    result = race.results.create(place: "1", person: person, team: team)
 
     Ironman.calculate! 2004
     event = Ironman.find_for_year(2004)
@@ -70,21 +70,21 @@ class PublicPagesTest < RacingOnRails::IntegrationTest
   end
 
   def test_first_aid_providers
-    person = FactoryGirl.create(:person_with_login, :official => true)
+    person = FactoryGirl.create(:person_with_login, official: true)
     https! if RacingAssociation.current.ssl?
 
     get "/admin/first_aid_providers"
     assert_redirected_to new_person_session_url(secure_redirect_options)
 
     go_to_login
-    login :person_session => { :login => person.login, :password => "secret" }
+    login person_session: { login: person.login, password: "secret" }
     get "/admin/first_aid_providers"
     assert_response :success
   end
 
   def test_mailing_lists
     mailing_list = FactoryGirl.create(:mailing_list)
-    mailing_list_post = FactoryGirl.create(:post, :mailing_list => mailing_list)
+    mailing_list_post = FactoryGirl.create(:post, mailing_list: mailing_list)
 
     get "/"
     assert_response :success
@@ -103,15 +103,15 @@ class PublicPagesTest < RacingOnRails::IntegrationTest
   end
 
   def test_competitions
-    category_men_1_2 = FactoryGirl.create(:category, :name => "Men Cat 1-2")
-    sr_women = FactoryGirl.create(:category, :name => "Women Cat 1-2")
-    wsba = WsbaBarr.create!(:date => Date.new(2004))
+    category_men_1_2 = FactoryGirl.create(:category, name: "Men Cat 1-2")
+    sr_women = FactoryGirl.create(:category, name: "Women Cat 1-2")
+    wsba = WsbaBarr.create!(date: Date.new(2004))
 
     get "/wsba_barr/2004"
     assert_response :success
     assert_equal wsba, assigns(:event), "@event"
 
-    rider_rankings = RiderRankings.create!(:date => Date.new(2004))
+    rider_rankings = RiderRankings.create!(date: Date.new(2004))
 
     get "/rider_rankings/2004"
     assert_response :success

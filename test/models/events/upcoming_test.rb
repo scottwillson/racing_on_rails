@@ -3,36 +3,36 @@ require File.expand_path("../../../test_helper", __FILE__)
 # :stopdoc:
 class UpcomingTest < ActiveSupport::TestCase
   def test_different_dates
-    FactoryGirl.create(:discipline, :name => "Mountain Bike")
-    FactoryGirl.create(:discipline, :name => "Road")
-    FactoryGirl.create(:discipline, :name => "Time Trial")
-    FactoryGirl.create(:discipline, :name => "Track")
+    FactoryGirl.create(:discipline, name: "Mountain Bike")
+    FactoryGirl.create(:discipline, name: "Road")
+    FactoryGirl.create(:discipline, name: "Time Trial")
+    FactoryGirl.create(:discipline, name: "Track")
 
     RacingAssociation.current.show_only_association_sanctioned_races_on_calendar = true
 
     # Tuesday
-    may_day_rr =      SingleDayEvent.create!(:date => Date.new(2007, 5, 22), :name => 'May Day Road Race')
+    may_day_rr =      SingleDayEvent.create!(date: Date.new(2007, 5, 22), name: 'May Day Road Race')
     WeeklySeries.create_for_every!("Tuesday",
-      :start_date => Date.new(2007, 4), :end_date => Date.new(2007, 7), :name => 'Brian Abers Training', :practice => true
+      start_date: Date.new(2007, 4), end_date: Date.new(2007, 7), name: 'Brian Abers Training', practice: true
     )
     # Wednesday
-    lucky_lab_tt =    SingleDayEvent.create!(:date => Date.new(2007, 5, 23), :name => 'Lucky Lab Road Race')
-    not_obra =        SingleDayEvent.create!(:date => Date.new(2007, 5, 23), :name => 'USA RR', :sanctioned_by => 'USA Cycling')
+    lucky_lab_tt =    SingleDayEvent.create!(date: Date.new(2007, 5, 23), name: 'Lucky Lab Road Race')
+    not_obra =        SingleDayEvent.create!(date: Date.new(2007, 5, 23), name: 'USA RR', sanctioned_by: 'USA Cycling')
 
     # Sunday of next full week
-    woodland_rr =     SingleDayEvent.create!(:date => Date.new(2007, 6, 3), :name => 'Woodland Road Race')
-    tst_rr =          SingleDayEvent.create!(:date => Date.new(2007, 6, 3), :name => 'Tahuya-Seabeck-Tahuya')
+    woodland_rr =     SingleDayEvent.create!(date: Date.new(2007, 6, 3), name: 'Woodland Road Race')
+    tst_rr =          SingleDayEvent.create!(date: Date.new(2007, 6, 3), name: 'Tahuya-Seabeck-Tahuya')
     # Monday after that
-    not_upcoming_rr = SingleDayEvent.create!(:date => Date.new(2007, 6, 4), :name => 'Not Upcoming Road Race')
+    not_upcoming_rr = SingleDayEvent.create!(date: Date.new(2007, 6, 4), name: 'Not Upcoming Road Race')
     # Monday before all other races (to test ordering)
-    saltzman_hc =     SingleDayEvent.create!(:date => Date.new(2007, 5, 21), :name => 'Saltzman Hillclimb')
+    saltzman_hc =     SingleDayEvent.create!(date: Date.new(2007, 5, 21), name: 'Saltzman Hillclimb')
 
-    SingleDayEvent.create!(:date => Date.new(2007, 5, 21), :name => 'Cancelled', :cancelled => true)
+    SingleDayEvent.create!(date: Date.new(2007, 5, 21), name: 'Cancelled', cancelled: true)
 
     # Weekly Series
-    pir = WeeklySeries.create!(:date => Date.new(2007, 4, 3), :name => 'Tuesday PIR')
+    pir = WeeklySeries.create!(date: Date.new(2007, 4, 3), name: 'Tuesday PIR')
     Date.new(2007, 4, 3).step(Date.new(2007, 10, 23), 7) do |date|
-      pir.children.create! :date => date, :name => "Tue PIR #{date}"
+      pir.children.create! date: date, name: "Tue PIR #{date}"
     end
     pirs = pir.children.sort_by(&:date)
 
@@ -77,15 +77,15 @@ class UpcomingTest < ActiveSupport::TestCase
   end
 
   def test_midweek_multiday_event
-    FactoryGirl.create(:discipline, :name => "Mountain Bike")
-    FactoryGirl.create(:discipline, :name => "Road")
-    FactoryGirl.create(:discipline, :name => "Track")
+    FactoryGirl.create(:discipline, name: "Mountain Bike")
+    FactoryGirl.create(:discipline, name: "Road")
+    FactoryGirl.create(:discipline, name: "Track")
 
     six_day = MultiDayEvent.create!(
-      :date => Date.new(2006, 6, 12), :name => 'Alpenrose Six Day', :discipline => 'Track', :flyer_approved => true
+      date: Date.new(2006, 6, 12), name: 'Alpenrose Six Day', discipline: 'Track', flyer_approved: true
     )
     Date.new(2006, 6, 12).step(Date.new(2006, 6, 17), 1) {|date|
-      single_day_six_day = SingleDayEvent.create!(:parent => six_day, :date => date, :name => 'Alpenrose Six Day', :discipline => 'Track', :flyer_approved => true)
+      single_day_six_day = SingleDayEvent.create!(parent: six_day, date: date, name: 'Alpenrose Six Day', discipline: 'Track', flyer_approved: true)
       assert(single_day_six_day.valid?, "Six Day valid?")
       assert(!single_day_six_day.new_record?, "Six Day new?")
     }
@@ -118,14 +118,14 @@ class UpcomingTest < ActiveSupport::TestCase
   end
 
   def test_weekly_series
-    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, name: "Road")
 
     series = WeeklySeries.create!(
-      :date => Date.new(1999, 6, 8), :name => 'PIR'
+      date: Date.new(1999, 6, 8), name: 'PIR'
     )
 
     Date.new(1999, 6, 8).step(Date.new(1999, 7, 27), 7) {|date|
-      SingleDayEvent.create!(:parent => series, :date => date, :name => "PIR #{date}")
+      SingleDayEvent.create!(parent: series, date: date, name: "PIR #{date}")
     }
 
     series.reload
@@ -161,15 +161,15 @@ class UpcomingTest < ActiveSupport::TestCase
   end
 
   def test_series
-    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, name: "Road")
 
     estacada_tt = Series.create!(
-      :date => Date.new(1999, 6, 8), :name => 'Estacada'
+      date: Date.new(1999, 6, 8), name: 'Estacada'
     )
 
-    estacada_tt_1 = estacada_tt.children.create!(:date => Date.new(1999, 6, 8), :name => 'Estacada 1')
-    estacada_tt_2 = estacada_tt.children.create!(:date => Date.new(1999, 6, 22), :name => 'Estacada 2')
-    estacada_tt_3 = estacada_tt.children.create!(:date => Date.new(1999, 6, 24), :name => 'Estacada 3')
+    estacada_tt_1 = estacada_tt.children.create!(date: Date.new(1999, 6, 8), name: 'Estacada 1')
+    estacada_tt_2 = estacada_tt.children.create!(date: Date.new(1999, 6, 22), name: 'Estacada 2')
+    estacada_tt_3 = estacada_tt.children.create!(date: Date.new(1999, 6, 24), name: 'Estacada 3')
 
     assert_equal(3, estacada_tt.children(true).size, 'estacada_tt events')
     assert_equal_dates(Date.new(1999, 6, 8), estacada_tt.date, 'estacada_tt date')

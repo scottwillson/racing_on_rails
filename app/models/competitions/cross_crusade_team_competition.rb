@@ -5,14 +5,14 @@ class CrossCrusadeTeamCompetition < Competition
   before_create :set_notes, :set_name
 
   def self.calculate!(year = Time.zone.today.year)
-    benchmark("#{name} calculate!", :level => :info) {
+    benchmark("#{name} calculate!", level: :info) {
       transaction do
-        series = Series.where(:name => "Cross Crusade").year(year).first
+        series = Series.where(name: "Cross Crusade").year(year).first
 
         if series && series.has_results_including_children?(true)
           team_competition = series.child_competitions.detect { |c| c.is_a? CrossCrusadeTeamCompetition }
           unless team_competition
-            team_competition = self.new(:parent_id => series.id)
+            team_competition = self.new(parent_id: series.id)
             team_competition.save!
           end
           team_competition.set_date
@@ -30,7 +30,7 @@ class CrossCrusadeTeamCompetition < Competition
   end
 
   def create_races
-    races.create!(:category => Category.find_or_create_by(:name => "Team"), :result_columns => %W{ place team_name points })
+    races.create!(category: Category.find_or_create_by(name: "Team"), result_columns: %W{ place team_name points })
   end
 
   def add_source_events
@@ -41,7 +41,7 @@ class CrossCrusadeTeamCompetition < Competition
 
   def source_results_with_benchmark(race)
     results = []
-    Overall.benchmark("#{self.class.name} source_results", :level => :debug) {
+    Overall.benchmark("#{self.class.name} source_results", level: :debug) {
       results = source_results(race)
     }
     logger.debug("#{self.class.name} Found #{results.size} source results for '#{race.name}'") if logger.debug?
@@ -55,7 +55,7 @@ class CrossCrusadeTeamCompetition < Competition
     event_ids = parent.children.map(&:id)
 
     Result.
-      includes(:race => :event).
+      includes(race: :event).
       where("results.team_id is not null").
       where("events.id" => event_ids).
       references(:events).
@@ -68,13 +68,13 @@ class CrossCrusadeTeamCompetition < Competition
       team = source_result.team
       if team.member?
         unless competition_result && competition_result.team == team
-          competition_result = Result.create!(:team => team, :race => race)
+          competition_result = Result.create!(team: team, race: race)
         end
 
         competition_result.scores.create!(
-          :source_result => source_result,
-          :competition_result => competition_result,
-          :points => points_for(source_result)
+          source_result: source_result,
+          competition_result: competition_result,
+          points: points_for(source_result)
         )
       end
     end
@@ -84,28 +84,28 @@ class CrossCrusadeTeamCompetition < Competition
     source_events.select(&:has_results?).each do |source_event|
       race.results.each do |competition_result|
         scores_for_event_count = Score.
-          includes(:source_result => { :race => :event }).
-          where(:competition_result_id => competition_result.id, "events.id" => source_event.id).
+          includes(source_result: { race: :event }).
+          where(competition_result_id: competition_result.id, "events.id" => source_event.id).
           count
 
         case scores_for_event_count
         when 0
           competition_result.scores.create!(
-            :points => 1_000,
-            :competition_result => competition_result,
-            :source_result => competition_result,
-            :event_name => source_event.full_name,
-            :description => "Absentee Warriors",
-            :date => source_event.date
+            points: 1_000,
+            competition_result: competition_result,
+            source_result: competition_result,
+            event_name: source_event.full_name,
+            description: "Absentee Warriors",
+            date: source_event.date
           )
         when 1..10
           competition_result.scores.create!(
-            :points => 100 * (10 - scores_for_event_count),
-            :competition_result => competition_result,
-            :source_result => competition_result,
-            :event_name => source_event.full_name,
-            :description => "Absentee Warriors",
-            :date => source_event.date
+            points: 100 * (10 - scores_for_event_count),
+            competition_result: competition_result,
+            source_result: competition_result,
+            event_name: source_event.full_name,
+            description: "Absentee Warriors",
+            date: source_event.date
           )
         else
           scores_for_event = competition_result.scores.select { |s| s.source_result.event == source_event }

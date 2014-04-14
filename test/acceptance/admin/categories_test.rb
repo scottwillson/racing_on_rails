@@ -5,9 +5,9 @@ class CategoriesTest < AcceptanceTest
   def test_edit
     javascript!
 
-    association = FactoryGirl.create(:category, :name => "CBRA")
-    masters_35_plus = FactoryGirl.create(:category, :name => "Masters 35+")
-    women_4 = FactoryGirl.create(:category, :name => "Women 4", :parent => association)
+    association = FactoryGirl.create(:category, name: "CBRA")
+    masters_35_plus = FactoryGirl.create(:category, name: "Masters 35+")
+    women_4 = FactoryGirl.create(:category, name: "Women 4", parent: association)
     login_as FactoryGirl.create(:administrator)
 
     visit "/admin/categories"

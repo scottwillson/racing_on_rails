@@ -2,7 +2,7 @@ class ImageUploader < CarrierWave::Uploader::Base
   include CarrierWave::RMagick
 
   storage :file
-  process :resize_to_limit => [ 2880, 1800 ]
+  process resize_to_limit: [ 2880, 1800 ]
   process :save_dimensions
 
   def store_dir

@@ -2,7 +2,7 @@
   <td class="name">
     <div class="record" id="event_<%= event.id %>">
       <% if administrator? -%>
-      <%= editable event, :first_aid_provider, :as => :event, :length => 40 %>
+      <%= editable event, :first_aid_provider, as: :event, length: 40 %>
       <% else -%>
       <%= event.first_aid_provider %>
       <% end -%>
@@ -11,7 +11,7 @@
   <td class="chief_referee">
     <div class="record" id="event_<%= event.id %>">
       <% if administrator? -%>
-      <%= editable event, :chief_referee, :as => :event, :length => 40 %>
+      <%= editable event, :chief_referee, as: :event, length: 40 %>
       <% else -%>
       <%= event.chief_referee %>
       <% end -%>

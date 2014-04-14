@@ -1,8 +1,8 @@
 class MoveWeeksOfEventsToHome < ActiveRecord::Migration
   def change
     change_table :homes do |t|
-      t.integer :weeks_of_recent_results, :default => 2, :null => false
-      t.integer :weeks_of_upcoming_events, :default => 2, :null => false
+      t.integer :weeks_of_recent_results, default: 2, null: false
+      t.integer :weeks_of_upcoming_events, default: 2, null: false
     end
     
     home = Home.current

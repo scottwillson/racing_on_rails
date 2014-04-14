@@ -19,7 +19,7 @@ module RacingOnRails
       # * column_map: Hash of column names. Replace column names from the original file with another name if the default mapping isn't enough.
       #               Example: 'birth date' => 'date_of_birth'.
       #               All keys are forced to lowercase for case-insenstive comparions
-      # * row_class: Map each row to this Class. Example: :row_class => Person
+      # * row_class: Map each row to this Class. Example: row_class: Person
       #
       # If both +columns+ and +header_row+ options are provided, +columns+ is used to create the columns, and the first row is deleted and ignored
       #
@@ -158,7 +158,7 @@ module RacingOnRails
             if column_name.is_a?(Column)
               column = column_name
             else
-              column = Column.new(:name => column_name.to_s, :description => description)
+              column = Column.new(name: column_name.to_s, description: description)
             end
 
             unless column.name.blank?

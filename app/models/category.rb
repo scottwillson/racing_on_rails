@@ -26,11 +26,11 @@ class Category < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :friendly_param
 
-  NONE = Category.new(:name => "", :id => nil)
+  NONE = Category.new(name: "", id: nil)
 
   # All categories with no parent (except root 'association' category)
   def self.find_all_unknowns
-   Category.includes(:children).where(:parent_id => nil).where("name != ?", RacingAssociation.current.short_name)
+   Category.includes(:children).where(parent_id: nil).where("name != ?", RacingAssociation.current.short_name)
   end
 
   # Sr, Mst, Jr, Cat, Beg, Exp

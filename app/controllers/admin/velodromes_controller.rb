@@ -18,7 +18,7 @@ module Admin
         flash[:notice] = "Created #{@velodrome.name}"
         return redirect_to(new_admin_velodrome_path)
       end
-      render(:template => 'admin/velodromes/edit')
+      render(template: 'admin/velodromes/edit')
     end
 
     def edit
@@ -33,7 +33,7 @@ module Admin
         flash[:notice] = "Updated #{@velodrome.name}"
         return redirect_to(edit_admin_velodrome_path(@velodrome))
       end
-      render(:template => 'admin/velodromes/edit')
+      render(template: 'admin/velodromes/edit')
     end
 
     def update_attribute
@@ -42,7 +42,7 @@ module Admin
           @velodrome = Velodrome.find(params[:id])
           @velodrome.update_attributes! params[:name] => params[:value]
           expire_cache
-          render :plain => @velodrome.send(params[:name])
+          render plain: @velodrome.send(params[:name])
         }
       end
     end

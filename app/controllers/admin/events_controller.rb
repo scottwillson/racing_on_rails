@@ -2,10 +2,10 @@ module Admin
   # Show Schedule, add and edit Events, edit Results for Events. Promoters can view and edit their own events. Promoters can edit
   # fewer fields than administrators.
   class EventsController < Admin::AdminController
-    before_filter :assign_event, :only => [ :edit, :update ]
-    before_filter :require_administrator_or_promoter, :only => [ :edit, :update ]
-    before_filter :require_administrator, :except => [ :edit, :update ]
-    before_filter :assign_disciplines, :only => [ :new, :create, :edit, :update ]
+    before_filter :assign_event, only: [ :edit, :update ]
+    before_filter :require_administrator_or_promoter, only: [ :edit, :update ]
+    before_filter :require_administrator, except: [ :edit, :update ]
+    before_filter :assign_disciplines, only: [ :new, :create, :edit, :update ]
 
     # schedule calendar  with links to admin Event pages
     # === Params
@@ -40,7 +40,7 @@ module Admin
 
       respond_to do |format|
         format.html { render :edit }
-        format.js { render(:update) { |page| page.redirect_to(:action => :new, :event => event_params) } }
+        format.js { render(:update) { |page| page.redirect_to(action: :new, event: event_params) } }
       end
     end
 
@@ -72,7 +72,7 @@ module Admin
       single_day_event = Event.find(params[:id])
       new_parent = MultiDayEvent.create_from_children(single_day_event.multi_day_event_children_with_no_parent)
       expire_cache
-      redirect_to(:action => :edit, :id => new_parent.to_param)
+      redirect_to(action: :edit, id: new_parent.to_param)
     end
 
     # Update existing Event
@@ -108,7 +108,7 @@ module Admin
           @event = Event.find(params[:id])
           @event.update_attributes! params[:name] => params[:value]
           expire_cache
-          render :plain => @event.send(params[:name])
+          render plain: @event.send(params[:name])
         }
       end
     end
@@ -202,7 +202,7 @@ module Admin
             if @event.parent
               redirect_to(edit_admin_event_path(@event.parent))
             else
-              redirect_to(admin_events_path(:year => @event.date.year))
+              redirect_to(admin_events_path(year: @event.date.year))
             end
           }
           format.js
@@ -211,7 +211,7 @@ module Admin
         respond_to do |format|
           format.html {
             flash[:notice] = "Could not delete #{@event.name}: #{@event.errors.full_messages.join}"
-            redirect_to(admin_events_path(:year => @event.date.year))
+            redirect_to(admin_events_path(year: @event.date.year))
           }
           format.js { render "destroy_error" }
         end

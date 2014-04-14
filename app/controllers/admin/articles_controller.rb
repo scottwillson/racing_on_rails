@@ -5,7 +5,7 @@ module Admin
       if params[:article_category_id].nil?
         @articles = Article.order(:title)
       else
-        @articles = Article.where(:article_category_id => params[:article_category_id]).order("title")
+        @articles = Article.where(article_category_id: params[:article_category_id]).order("title")
         params[:article_category_id] = nil
       end
     end
@@ -15,7 +15,7 @@ module Admin
 
       respond_to do |format|
         format.html
-        format.xml  { render :xml => @article }
+        format.xml  { render xml: @article }
       end
     end
 

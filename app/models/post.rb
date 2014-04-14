@@ -3,19 +3,19 @@ class Post < ActiveRecord::Base
   include Concerns::Posts::Migration
 
   validates_presence_of :date
-  validates_presence_of :from_email, :on => :create
-  validates_presence_of :from_name, :on => :create
+  validates_presence_of :from_email, on: :create
+  validates_presence_of :from_name, on: :create
   validates_presence_of :mailing_list
   validates_presence_of :subject
 
   belongs_to :mailing_list
-  belongs_to :original, :class_name => "Post", :inverse_of => :replies
+  belongs_to :original, class_name: "Post", inverse_of: :replies
   has_one :post_text
-  has_many :replies, :class_name => "Post", :inverse_of => :original, :foreign_key => :original_id
+  has_many :replies, class_name: "Post", inverse_of: :original, foreign_key: :original_id
 
-  scope :original, -> { where(:original_id => nil) }
+  scope :original, -> { where(original_id: nil) }
 
-  acts_as_list :scope => :mailing_list
+  acts_as_list scope: :mailing_list
 
   default_value_for(:date) { Time.zone.now }
 
@@ -54,7 +54,7 @@ class Post < ActiveRecord::Base
   # Find original post on this subject. Return nil if none.
   def self.find_original(post)
     subject = normalize_subject(post.subject, post.mailing_list.subject_line_prefix)
-    posts = post.mailing_list.posts.where(:subject => subject).original.order(:position)
+    posts = post.mailing_list.posts.where(subject: subject).original.order(:position)
     if !post.new_record?
       posts = posts.where("id != ?", post.id)
     end

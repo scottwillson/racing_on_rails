@@ -8,7 +8,7 @@ class MbraBar < Competition
   validate :valid_dates
 
   def self.calculate!(year = Time.zone.today.year)
-    benchmark(name, :level => :info) {
+    benchmark(name, level: :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
@@ -17,17 +17,17 @@ class MbraBar < Competition
         Discipline.find_all_bar.reject { |discipline|
           discipline == Discipline[:age_graded] || discipline == Discipline[:overall]
         }.each do |discipline|
-          bar = MbraBar.where(:date => date, :discipline => discipline.name).first
+          bar = MbraBar.where(date: date, discipline: discipline.name).first
           unless bar
             bar = MbraBar.create!(
-              :name => "#{year} #{discipline.name} BAR",
-              :date => date,
-              :discipline => discipline.name
+              name: "#{year} #{discipline.name} BAR",
+              date: date,
+              discipline: discipline.name
             )
           end
         end
 
-        MbraBar.where(:date => date).each do |bar|
+        MbraBar.where(date: date).each do |bar|
           bar.set_date
           bar.destroy_races
           bar.create_races
@@ -42,7 +42,7 @@ class MbraBar < Competition
   end
 
   def self.find_by_year_and_discipline(year, discipline_name)
-    MbraBar.year(year).where(:discipline => discipline_name).first
+    MbraBar.year(year).where(discipline: discipline_name).first
   end
 
   def calculate_threshold_number_of_races
@@ -80,7 +80,7 @@ class MbraBar < Competition
     category_ids = category_ids_for(race).join(", ")
 
     Result.
-    includes(:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}).
+    includes(:race, {person: :team}, :team, {race: [{event: { parent: :parent }}, :category]}).
       where(%Q{
         (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)
         and bar = true
@@ -102,7 +102,7 @@ class MbraBar < Competition
   def points_for(source_result, team_size = nil)
     calculate_point_schedule(source_result.race.field_size)
     points = 0
-    MbraBar.benchmark('points_for', :level => "debug") {
+    MbraBar.benchmark('points_for', level: "debug") {
       if source_result.place.strip.downcase == "dnf"
         points = 0.5
       else
@@ -164,7 +164,7 @@ class MbraBar < Competition
 
   def create_races
     Discipline[discipline].bar_categories.each do |category|
-      races.create!(:category => category)
+      races.create!(category: category)
       logger.debug("#{self.class.name} created BAR race in discipline #{discipline} for category '#{category}'") if logger.debug?
     end
   end

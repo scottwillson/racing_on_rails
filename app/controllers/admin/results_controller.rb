@@ -18,9 +18,9 @@ module Admin
       if people.size == 1
         person = people.first
         results = Result.find_all_for(person)
-        render :partial => "person", :locals => { :person => person, :results => results }
+        render partial: "person", locals: { person: person, results: results }
       else
-        render :partial => "people", :locals => { :people => people }
+        render partial: "people", locals: { people: people }
       end
     end
 
@@ -29,7 +29,7 @@ module Admin
       results = Result.find_all_for(person)
       logger.debug("Found #{results.size} for #{person.name}")
       respond_to do |format|
-        format.html { render(:partial => "person", :locals => { :person => person, :results => results }) }
+        format.html { render(partial: "person", locals: { person: person, results: results }) }
         format.js
       end
     end
@@ -61,7 +61,7 @@ module Admin
             text = @result.send(params[:name])
           end
 
-          render :plain => text
+          render plain: text
         end
       end
     end

@@ -12,7 +12,7 @@ class Page < ActiveRecord::Base
   include SentientUser
 
   before_validation :set_slug, :set_path, :set_body
-  validates_uniqueness_of :path, :message => "'%{value}' has already been taken"
+  validates_uniqueness_of :path, message: "'%{value}' has already been taken"
 
   after_create :update_parent
   after_destroy :update_parent

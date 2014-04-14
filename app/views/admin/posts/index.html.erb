@@ -7,12 +7,12 @@
     <div class="form-group">
       <label class="control-label">Import Raw Email</label>
       <%= form_tag receive_admin_mailing_list_posts_path(@mailing_list),
-                   :method => :post,
-                   :multipart => true,
-                   :class => "form-horizontal",
-                   :role => "form",
-                   :id => "mailing_list_form"  do |f| -%>
-        <%= file_field_tag "raw", :onchange => "$('#mailing_list_form').submit();" %>
+                   method: :post,
+                   multipart: true,
+                   class: "form-horizontal",
+                   role: "form",
+                   id: "mailing_list_form"  do |f| -%>
+        <%= file_field_tag "raw", onchange: "$('#mailing_list_form').submit();" %>
       <% end -%>
     </div>
   </div>
@@ -20,7 +20,7 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <%= table :class => "posts", :id => "posts", :collection => @posts, :columns => 5 do %>
+    <%= table class: "posts", id: "posts", collection: @posts, columns: 5 do %>
       <tr>
         <th class="icon"></th>
         <th class="date">Date</th>
@@ -41,7 +41,7 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <%= link_to new_admin_mailing_list_post_path(@mailing_list), :class => "btn btn-default" do %>
+    <%= link_to new_admin_mailing_list_post_path(@mailing_list), class: "btn btn-default" do %>
       <span class="glyphicon glyphicon-envelope"></span> New Post
     <% end %>
     </div>

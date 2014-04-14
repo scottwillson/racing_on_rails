@@ -9,7 +9,7 @@ module Admin
         @teams = []
       else
         session['team_name'] = @name
-        cookies[:team_name] = { :value => @name, :expires => Time.zone.now + 36000 }
+        cookies[:team_name] = { value: @name, expires: Time.zone.now + 36000 }
         name_like = "%#{@name}%"
         @teams = Team.find_all_by_name_like(@name, RacingAssociation.current.search_results_limit)
         if @teams.size == RacingAssociation.current.search_results_limit
@@ -20,7 +20,7 @@ module Admin
       respond_to do |format|
         format.html
         format.js
-        format.json { render :json => @teams.to_json }
+        format.json { render json: @teams.to_json }
       end
     end
 
@@ -67,7 +67,7 @@ module Admin
           if @other_teams.empty?
             @team.save!
             expire_cache
-            render :plain => @team[params[:name]]
+            render plain: @team[params[:name]]
           else
             render "merge_confirm"
           end
@@ -100,7 +100,7 @@ module Admin
     def toggle_member
       team = Team.find(params[:id])
       team.toggle!(:member)
-      render :partial => "shared/member", :locals => { :record => team }
+      render partial: "shared/member", locals: { record: team }
     end
 
     protected

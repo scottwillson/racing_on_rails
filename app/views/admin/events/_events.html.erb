@@ -6,8 +6,8 @@
       <th colspan="3" class="actions">
         <% if @event.has_results_including_children? %>
         <%= link_to event_results_path(@event),
-              :class => "icon",
-              :title => 'View public results web page' do %>
+              class: "icon",
+              title: 'View public results web page' do %>
             <span class="glyphicon glyphicon-list"></span>
           <% end %>
         <% end %>
@@ -28,11 +28,11 @@
         <% if administrator? %>
           <%= link_to(
                 admin_event_path(single_day_event),
-                :remote => true,
-                :class => "icon",
-                :id => "destroy_event_#{single_day_event.id}",
-                :title => "Delete event",
-                :method => :delete) do %>
+                remote: true,
+                class: "icon",
+                id: "destroy_event_#{single_day_event.id}",
+                title: "Delete event",
+                method: :delete) do %>
             <span class="glyphicon glyphicon-minus-sign"></span>
           <% end %>
         <% end %>
@@ -49,10 +49,10 @@
       <td class="actions">
         <% if administrator? && !@event.new_record?  %>
           <%= link_to(
-            new_admin_event_path(:event => { :parent_id => @event.id, :type => @event.is_a?(MultiDayEvent) ? "SingleDayEvent" : "Event" }),
-            :class => "icon",
-            :title => "Add child event",
-            :id => "new_event"
+            new_admin_event_path(event: { parent_id: @event.id, type: @event.is_a?(MultiDayEvent) ? "SingleDayEvent" : "Event" }),
+            class: "icon",
+            title: "Add child event",
+            id: "new_event"
           ) do %>
             <span class="glyphicon glyphicon-plus-sign"></span>
           <% end %>

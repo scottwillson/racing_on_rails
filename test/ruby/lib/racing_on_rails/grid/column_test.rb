@@ -6,7 +6,7 @@ module RacingOnRails
   module Grid
     class ColumnTest < Ruby::TestCase
       def test_create
-        column = Column.new(:name => "place")
+        column = Column.new(name: "place")
         assert_equal("place", column.name, "Name after create")
         assert_equal(:place, column.field, "Field after create")
       end

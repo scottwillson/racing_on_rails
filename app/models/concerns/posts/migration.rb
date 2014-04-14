@@ -18,7 +18,7 @@ module Concerns
           transaction do
             query = mailing_list.posts.select([:id, :last_reply_at, :date]).order("last_reply_at, date desc")
             connection.select_all(query).each.with_index do |post, index|
-              ::Post.where(:id => post["id"]).update_all(:position => index + 1)
+              ::Post.where(id: post["id"]).update_all(position: index + 1)
             end
           end
         end
@@ -56,14 +56,14 @@ module Concerns
               posts = posts.sort_by { |post| post["position"].to_i }
               original = posts.first
               last_reply = posts.last
-              ::Post.where(:id => original["id"]).update_all(
-                :last_reply_at => last_reply["date"],
-                :last_reply_from_name => last_reply["from_name"],
-                :replies_count => posts.size - 1
+              ::Post.where(id: original["id"]).update_all(
+                last_reply_at: last_reply["date"],
+                last_reply_from_name: last_reply["from_name"],
+                replies_count: posts.size - 1
               )
               reply_ids = posts.map { |post| post["id"] }
               reply_ids.delete original["id"]
-              ::Post.where(:id => reply_ids).update_all(:original_id => original["id"])
+              ::Post.where(id: reply_ids).update_all(original_id: original["id"])
             end
           end
         end

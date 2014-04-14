@@ -6,10 +6,10 @@ require_relative "../test_helper"
 class MailingListMailerTest < ActionMailer::TestCase
   def test_post
     post = FactoryGirl.create(:mailing_list).posts.create!(
-      :from_name => "Molly",
-      :from_email => "molly@veloshop.com",
-      :subject => "For Sale",
-      :body => "Lots of singlespeeds for sale."
+      from_name: "Molly",
+      from_email: "molly@veloshop.com",
+      subject: "For Sale",
+      body: "Lots of singlespeeds for sale."
     )
 
     post_email = MailingListMailer.post(post)
@@ -19,10 +19,10 @@ class MailingListMailerTest < ActionMailer::TestCase
 
   def test_post_private_reply
     post = FactoryGirl.create(:mailing_list).posts.create!(
-      :from_name => "Molly",
-      :from_email => "molly@veloshop.com",
-      :subject => "For Sale",
-      :body => "Lots of singlespeeds for sale."
+      from_name: "Molly",
+      from_email: "molly@veloshop.com",
+      subject: "For Sale",
+      body: "Lots of singlespeeds for sale."
     )
 
     post_email = MailingListMailer.private_reply(post, "Scout <scout@butlerpress.com>")
@@ -59,7 +59,7 @@ class MailingListMailerTest < ActionMailer::TestCase
   end
 
   def test_receive
-    mailing_list = FactoryGirl.create(:mailing_list, :name => "obra", :friendly_name => "OBRA Chat", :subject_line_prefix => "OBRA Chat")
+    mailing_list = FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     assert_difference "Post.count", 1 do
       MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/to_archive.eml"))
 
@@ -75,7 +75,7 @@ class MailingListMailerTest < ActionMailer::TestCase
   end
 
   def test_receive_should_save_reply
-    FactoryGirl.create(:mailing_list, :name => "obra", :friendly_name => "OBRA Chat", :subject_line_prefix => "OBRA Chat")
+    FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     Post.expects(:save).returns(true)
     Post.any_instance.expects(:save!).never
     MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/to_archive.eml"))
@@ -88,12 +88,12 @@ class MailingListMailerTest < ActionMailer::TestCase
   end
 
   def test_receive_invalid_byte_sequence
-    mailing_list = FactoryGirl.create(:mailing_list, :name => "obra", :friendly_name => "OBRA Chat", :subject_line_prefix => "OBRA Chat")
+    mailing_list = FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/invalid_byte_sequence.eml"))
   end
 
   def test_receive_rich_text
-    mailing_list = FactoryGirl.create(:mailing_list, :name => "obra", :friendly_name => "OBRA Chat", :subject_line_prefix => "OBRA Chat")
+    mailing_list = FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     assert_difference "Post.count", 1 do
       MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/rich.eml"))
 
@@ -108,7 +108,7 @@ class MailingListMailerTest < ActionMailer::TestCase
   end
 
   def test_receive_bad_part_encoding
-    mailing_list = FactoryGirl.create(:mailing_list, :name => "obra", :friendly_name => "OBRA Chat", :subject_line_prefix => "OBRA Chat")
+    mailing_list = FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     assert_difference "Post.count", 1 do
       MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/bad_encoding.eml"))
 
@@ -119,7 +119,7 @@ class MailingListMailerTest < ActionMailer::TestCase
   end
 
   def test_receive_outlook
-    mailing_list = FactoryGirl.create(:mailing_list, :name => "obra", :friendly_name => "OBRA Chat", :subject_line_prefix => "OBRA Chat")
+    mailing_list = FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     assert_difference "Post.count", 1 do
       MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/outlook.eml"))
 
@@ -135,7 +135,7 @@ class MailingListMailerTest < ActionMailer::TestCase
   end
 
   def test_receive_html
-    mailing_list = FactoryGirl.create(:mailing_list, :name => "obra", :friendly_name => "OBRA Chat", :subject_line_prefix => "OBRA Chat")
+    mailing_list = FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     assert_difference "Post.count", 1 do
           MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/html.eml"))
 

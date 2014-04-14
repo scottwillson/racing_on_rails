@@ -4,7 +4,7 @@ require_relative "racing_on_rails/integration_test"
 class ResultsTest < RacingOnRails::IntegrationTest
   def test_custom_columns
     FactoryGirl.create(:discipline)
-    FactoryGirl.create(:discipline, :name => "Downhill")
+    FactoryGirl.create(:discipline, name: "Downhill")
     FactoryGirl.create(:number_issuer)
 
     goto_login_page_and_login_as FactoryGirl.create(:administrator)
@@ -14,7 +14,7 @@ class ResultsTest < RacingOnRails::IntegrationTest
     assert_response :success
 
     post upload_admin_event_path(event),
-         :results_file => fixture_file_upload("#{ActionController::TestCase.fixture_path}/results/dh.xls", "application/vnd.ms-excel", :binary)
+         results_file: fixture_file_upload("#{ActionController::TestCase.fixture_path}/results/dh.xls", "application/vnd.ms-excel", :binary)
     assert_response :redirect
     follow_redirect!
     assert_response :success

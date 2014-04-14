@@ -11,7 +11,7 @@ class RacesController < ApplicationController
       @event = Event.includes(:races).find(params[:event_id])
       redirect_to event_results_path(@event)
     else
-      @category = Category.includes(:races => :event).find(params[:category_id])
+      @category = Category.includes(races: :event).find(params[:category_id])
     end
   end
 

@@ -7,16 +7,16 @@ class ResultsHelperTest < ActionView::TestCase
   end
 
   def test_results_table
-    race = Race.new(:results => [ Result.new(:place => "1")])
+    race = Race.new(results: [ Result.new(place: "1")])
     table = Nokogiri::HTML(results_table(race))
     assert table.css("table.results").present?
   end
 
   def test_results_table_one_ttt
-    race = Race.new(:results => [
-      Result.new(:place => "1"),
-      Result.new(:place => "1"),
-      Result.new(:place => "1")
+    race = Race.new(results: [
+      Result.new(place: "1"),
+      Result.new(place: "1"),
+      Result.new(place: "1")
     ])
     table = Nokogiri::HTML(results_table(race))
     assert table.css("table.results").present?
@@ -24,12 +24,12 @@ class ResultsHelperTest < ActionView::TestCase
   end
 
   def test_participant_event_results_table_person
-    table = Nokogiri::HTML(participant_event_results_table(Person.new, [ Result.new(:place => "1") ]))
+    table = Nokogiri::HTML(participant_event_results_table(Person.new, [ Result.new(place: "1") ]))
     assert table.css("table.results").present?
   end
 
   def test_participant_event_results_table_team
-    table = Nokogiri::HTML(participant_event_results_table(Team.new, [ Result.new(:place => "1") ]))
+    table = Nokogiri::HTML(participant_event_results_table(Team.new, [ Result.new(place: "1") ]))
     assert table.css("table.results").present?
   end
 
@@ -40,14 +40,14 @@ class ResultsHelperTest < ActionView::TestCase
   end
 
   def test_scores_table
-    table = Nokogiri::HTML(scores_table(Result.new(:place => "1")))
+    table = Nokogiri::HTML(scores_table(Result.new(place: "1")))
     assert table.css("table.results.scores").present?
   end
 
   def test_results_table_for_mobile
     self.stubs(:mobile_request? => true)
 
-    race = Race.new(:results => [ Result.new(:place => "1", :name => "Molly Cameron", :team_name => "Veloshop", :time => 1000, :laps => 4, :time => 120)])
+    race = Race.new(results: [ Result.new(place: "1", name: "Molly Cameron", team_name: "Veloshop", time: 1000, laps: 4, time: 120)])
 
     table = Nokogiri::HTML(results_table(race))
     assert table.css("table th.place").present?

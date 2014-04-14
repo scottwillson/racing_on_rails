@@ -6,8 +6,8 @@ class PersonTest < ActiveSupport::TestCase
     assert_nil(Person.find_by_last_name("Hampsten"), "Hampsten should not be in DB")
     assert_nil(Team.find_by_name("7-11"), "7-11 should not be in DB")
 
-    person = Person.new(:last_name => "Hampsten")
-    team = Team.new(:name => "7-11")
+    person = Person.new(last_name: "Hampsten")
+    team = Team.new(name: "7-11")
 
     person.team = team
     admin = FactoryGirl.create(:administrator)
@@ -34,19 +34,19 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal admin, person.created_by, "created_by"
     assert_equal another_admin, person.updated_by_person, "updated_by_person"
 
-    file = ImportFile.new(:name => "/tmp/import.xls")
-    assert person.update_attributes(:name => "Andrew Hampsten", :updated_by => file), "update_attributes"
+    file = ImportFile.new(name: "/tmp/import.xls")
+    assert person.update_attributes(name: "Andrew Hampsten", updated_by: file), "update_attributes"
     assert_equal admin, person.created_by, "created_by"
     assert_equal file, person.updated_by_person, "updated_by_person"
   end
 
   def test_save_existing_team
     assert_nil(Person.find_by_last_name("Hampsten"), "Hampsten should not be in DB")
-    FactoryGirl.create(:team, :name => "Vanilla").aliases.create!(:name => "Vanilla Bicycles")
+    FactoryGirl.create(:team, name: "Vanilla").aliases.create!(name: "Vanilla Bicycles")
     assert_not_nil(Team.find_by_name("Vanilla"), "Vanilla should be in DB")
 
-    person = Person.new(:last_name => "Hampsten")
-    team = Team.new(:name => "Vanilla")
+    person = Person.new(last_name: "Hampsten")
+    team = Team.new(name: "Vanilla")
 
     person.team = team
     person.save!
@@ -56,19 +56,19 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_team_name_should_preserve_aliases
-    team = Team.create!(:name => "Sorella Forte Elite Team")
-    event = SingleDayEvent.create!(:date => 1.years.ago)
+    team = Team.create!(name: "Sorella Forte Elite Team")
+    event = SingleDayEvent.create!(date: 1.years.ago)
     senior_men = FactoryGirl.create(:category)
-    event.races.create!(:category => senior_men).results.create!(:team => team)
-    team.aliases.create!(:name => "Sorella Forte")
+    event.races.create!(category: senior_men).results.create!(team: team)
+    team.aliases.create!(name: "Sorella Forte")
     assert_equal(0, team.names(true).size, "names")
     assert_equal(1, team.aliases(true).size, "Aliases")
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
 
-    person = Person.new(:name => "New Person", :team_name => "Sorella Forte")
+    person = Person.new(name: "New Person", team_name: "Sorella Forte")
     person.save!
 
-    assert_equal(1, Team.where(:name => "Sorella Forte Elite Team").count, "Should have one Sorella Forte in database")
+    assert_equal(1, Team.where(name: "Sorella Forte Elite Team").count, "Should have one Sorella Forte in database")
     team = Team.find_by_name("Sorella Forte Elite Team")
     assert_equal(0, team.names(true).size, "names")
     assert_equal(1, team.aliases(true).size, "Aliases")
@@ -77,60 +77,60 @@ class PersonTest < ActiveSupport::TestCase
 
   def test_merge
     FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, name: "Road")
 
     person_to_keep = FactoryGirl.create(
       :person_with_login,
-      :login => "molly",
-      :city => "Berlin",
-      :road_number => "202",
-      :member_from => Time.zone.local(1996)
+      login: "molly",
+      city: "Berlin",
+      road_number: "202",
+      member_from: Time.zone.local(1996)
     )
-    person_to_keep.aliases.create!(:name => "Mollie Cameron")
+    person_to_keep.aliases.create!(name: "Mollie Cameron")
     person_to_keep_old_password = person_to_keep.crypted_password
-    FactoryGirl.create(:result, :person => person_to_keep)
-    FactoryGirl.create(:result, :person => person_to_keep)
-    FactoryGirl.create(:result, :person => person_to_keep)
+    FactoryGirl.create(:result, person: person_to_keep)
+    FactoryGirl.create(:result, person: person_to_keep)
+    FactoryGirl.create(:result, person: person_to_keep)
 
-    person_to_merge = FactoryGirl.create(:person, :member_to => Time.zone.local(2008, 12, 31), :street => "123 Holly", :license => "7123811")
-    person_to_merge.race_numbers.create!(:value => "102")
-    person_to_merge.race_numbers.create!(:year => 2004, :value => "104")
-    FactoryGirl.create(:result, :person => person_to_merge)
-    FactoryGirl.create(:result, :person => person_to_merge)
-    person_to_merge.aliases.create!(:name => "Eric Tonkin")
+    person_to_merge = FactoryGirl.create(:person, member_to: Time.zone.local(2008, 12, 31), street: "123 Holly", license: "7123811")
+    person_to_merge.race_numbers.create!(value: "102")
+    person_to_merge.race_numbers.create!(year: 2004, value: "104")
+    FactoryGirl.create(:result, person: person_to_merge)
+    FactoryGirl.create(:result, person: person_to_merge)
+    person_to_merge.aliases.create!(name: "Eric Tonkin")
 
-    assert Person.where(:first_name => person_to_keep.first_name, :last_name => person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
-    assert_equal(3, Result.where(:person_id => person_to_keep.id).count, "Molly's results")
-    assert_equal(1, Alias.where(:person_id => person_to_keep.id).count, "Mollys's aliases")
+    assert Person.where(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
+    assert_equal(3, Result.where(person_id: person_to_keep.id).count, "Molly's results")
+    assert_equal(1, Alias.where(person_id: person_to_keep.id).count, "Mollys's aliases")
     assert_equal(1, person_to_keep.race_numbers.count, "Target person's race numbers")
     assert_equal("202", person_to_keep.race_numbers.first.value, "Target person's race number value")
     association = NumberIssuer.find_by_name(RacingAssociation.current.short_name)
     assert_equal(association, person_to_keep.race_numbers.first.number_issuer, "Target person's race number issuer")
 
-    assert Person.where(:first_name => person_to_merge.first_name, :last_name => person_to_merge.last_name).exists?, "#{person_to_merge.name} should be in DB"
-    assert_equal(2, Result.where(:person_id => person_to_merge.id).count, "Tonkin's results")
-    assert_equal(1, Alias.where(:person_id => person_to_merge.id).count, "Tonkin's aliases")
+    assert Person.where(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name).exists?, "#{person_to_merge.name} should be in DB"
+    assert_equal(2, Result.where(person_id: person_to_merge.id).count, "Tonkin's results")
+    assert_equal(1, Alias.where(person_id: person_to_merge.id).count, "Tonkin's aliases")
     assert_equal(2, person_to_merge.race_numbers.count, "Merging person's race numbers")
     race_numbers = person_to_merge.race_numbers.sort
     assert_equal("102", race_numbers.first.value, "Merging person's race number value")
     assert_equal(association, race_numbers.first.number_issuer, "Merging person's race number issuer")
     assert_equal("104", race_numbers.last.value, "Merging person's race number value")
-    elkhorn = NumberIssuer.create!(:name => "Elkhorn")
+    elkhorn = NumberIssuer.create!(name: "Elkhorn")
     race_numbers.last.number_issuer = elkhorn
     race_numbers.last.save!
     assert_equal(elkhorn, race_numbers.last.number_issuer, "Merging person's race number issuer")
 
-    promoter_events = [ Event.create!(:promoter => person_to_keep), Event.create!(:promoter => person_to_merge) ]
+    promoter_events = [ Event.create!(promoter: person_to_keep), Event.create!(promoter: person_to_merge) ]
 
     person_to_keep.merge(person_to_merge)
 
     person_to_keep.reload
-    assert Person.where(:first_name => person_to_keep.first_name, :last_name => person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
-    assert_equal(5, Result.where(:person_id => person_to_keep.id).count, "Molly's results")
-    aliases = Alias.where(:person_id => person_to_keep.id)
+    assert Person.where(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
+    assert_equal(5, Result.where(person_id: person_to_keep.id).count, "Molly's results")
+    aliases = Alias.where(person_id: person_to_keep.id)
     erik_alias = aliases.detect{|a| a.name == person_to_merge.name }
     assert_not_nil(erik_alias, "Molly should have merged person's name as an alias")
-    assert_equal(3, Alias.where(:person_id => person_to_keep.id).count, "Molly's aliases")
+    assert_equal(3, Alias.where(person_id: person_to_keep.id).count, "Molly's aliases")
     assert_equal(3, person_to_keep.race_numbers(true).size, "Target person's race numbers: #{person_to_keep.race_numbers.map(&:value)}")
     race_numbers = person_to_keep.race_numbers.sort
     assert_equal("102", race_numbers[0].value, "Person's race number value")
@@ -140,9 +140,9 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal("202", race_numbers[2].value, "Person's race number value")
     assert_equal(association, race_numbers[2].number_issuer, "Person's race number issuer")
 
-    assert !Person.where(:first_name => person_to_merge.first_name, :last_name => person_to_merge.last_name).exists?, "#{person_to_merge.name} should not be in DB"
-    assert_equal(0, Result.where(:person_id => person_to_merge.id).count, "Tonkin's results")
-    assert_equal(0, Alias.where(:person_id => person_to_merge.id).count, "Tonkin's aliases")
+    assert !Person.where(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name).exists?, "#{person_to_merge.name} should not be in DB"
+    assert_equal(0, Result.where(person_id: person_to_merge.id).count, "Tonkin's results")
+    assert_equal(0, Alias.where(person_id: person_to_merge.id).count, "Tonkin's aliases")
     assert_same_elements(promoter_events, person_to_keep.events(true), "Should merge promoter events")
 
     assert_equal "molly", person_to_keep.login, "Should preserve login"
@@ -158,7 +158,7 @@ class PersonTest < ActiveSupport::TestCase
 
   def test_merge_login
     person_to_keep = FactoryGirl.create(:person)
-    person_to_merge = FactoryGirl.create(:person_with_login, :login => "tonkin")
+    person_to_merge = FactoryGirl.create(:person_with_login, login: "tonkin")
 
     Timecop.freeze(1.hour.from_now) do
       person_to_merge_old_password = person_to_merge.crypted_password
@@ -177,10 +177,10 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_merge_two_logins
-    person_to_keep = FactoryGirl.create(:person, :login => "molly", :password => "secret", :password_confirmation => "secret")
+    person_to_keep = FactoryGirl.create(:person, login: "molly", password: "secret", password_confirmation: "secret")
     person_to_keep_old_password = person_to_keep.crypted_password
 
-    person_to_merge = FactoryGirl.create(:person, :login => "tonkin", :password => "secret", :password_confirmation => "secret")
+    person_to_merge = FactoryGirl.create(:person, login: "tonkin", password: "secret", password_confirmation: "secret")
 
     person_to_keep.reload
     person_to_merge.reload
@@ -193,73 +193,73 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_merge_no_alias_dup_names
-    FactoryGirl.create(:discipline, :name => "Cyclocross")
-    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, name: "Cyclocross")
+    FactoryGirl.create(:discipline, name: "Road")
     FactoryGirl.create(:number_issuer)
 
-    person_to_keep = FactoryGirl.create(:person, :login => "molly", :password => "secret", :password_confirmation => "secret")
-    FactoryGirl.create(:result, :person => person_to_keep)
-    FactoryGirl.create(:result, :person => person_to_keep)
-    FactoryGirl.create(:result, :person => person_to_keep)
-    person_to_keep.aliases.create!(:name => "Mollie Cameron")
+    person_to_keep = FactoryGirl.create(:person, login: "molly", password: "secret", password_confirmation: "secret")
+    FactoryGirl.create(:result, person: person_to_keep)
+    FactoryGirl.create(:result, person: person_to_keep)
+    FactoryGirl.create(:result, person: person_to_keep)
+    person_to_keep.aliases.create!(name: "Mollie Cameron")
 
-    person_to_merge = FactoryGirl.create(:person, :login => "tonkin", :password => "secret", :password_confirmation => "secret")
-    FactoryGirl.create(:result, :person => person_to_merge)
-    FactoryGirl.create(:result, :person => person_to_merge)
-    person_to_merge.aliases.create!(:name => "Eric Tonkin")
+    person_to_merge = FactoryGirl.create(:person, login: "tonkin", password: "secret", password_confirmation: "secret")
+    FactoryGirl.create(:result, person: person_to_merge)
+    FactoryGirl.create(:result, person: person_to_merge)
+    person_to_merge.aliases.create!(name: "Eric Tonkin")
 
     # Same name as merged
-    Person.create(:name => person_to_merge.name, :road_number => 'YYZ')
+    Person.create(name: person_to_merge.name, road_number: 'YYZ')
 
-    assert Person.where(:first_name => person_to_keep.first_name, :last_name => person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
-    assert_equal(3, Result.where(:person_id => person_to_keep.id).count, "Molly's results")
-    assert_equal(1, Alias.where(:person_id => person_to_keep.id).count, "Mollys's aliases")
+    assert Person.where(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
+    assert_equal(3, Result.where(person_id: person_to_keep.id).count, "Molly's results")
+    assert_equal(1, Alias.where(person_id: person_to_keep.id).count, "Mollys's aliases")
 
-    assert Person.where(:first_name => person_to_merge.first_name, :last_name => person_to_merge.last_name).exists?, "#{person_to_merge.name} should be in DB"
-    assert_equal(2, Result.where(:person_id => person_to_merge.id).count, "Tonkin's results")
-    assert_equal(1, Alias.where(:person_id => person_to_merge.id).count, "Tonkin's aliases")
+    assert Person.where(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name).exists?, "#{person_to_merge.name} should be in DB"
+    assert_equal(2, Result.where(person_id: person_to_merge.id).count, "Tonkin's results")
+    assert_equal(1, Alias.where(person_id: person_to_merge.id).count, "Tonkin's aliases")
 
     person_to_keep.merge(person_to_merge)
 
-    assert Person.where(:first_name => person_to_keep.first_name, :last_name => person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
-    assert_equal(5, Result.where(:person_id => person_to_keep.id).count, "Molly's results")
-    aliases = Alias.where(:person_id => person_to_keep.id)
+    assert Person.where(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
+    assert_equal(5, Result.where(person_id: person_to_keep.id).count, "Molly's results")
+    aliases = Alias.where(person_id: person_to_keep.id)
     erik_alias = aliases.detect{|a| a.name == 'Erik Tonkin'}
     assert_nil(erik_alias, 'Molly should not have Erik Tonkin alias because there is another Erik Tonkin')
-    assert_equal(2, Alias.where(:person_id => person_to_keep.id).count, "Molly's aliases")
+    assert_equal(2, Alias.where(person_id: person_to_keep.id).count, "Molly's aliases")
 
-    assert Person.where(:first_name => person_to_merge.first_name, :last_name => person_to_merge.last_name).exists?, "#{person_to_merge.name} should still be in DB"
-    assert_equal(0, Result.where(:person_id => person_to_merge.id).count, "Tonkin's results")
-    assert_equal(0, Alias.where(:person_id => person_to_merge.id).count, "Tonkin's aliases")
+    assert Person.where(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name).exists?, "#{person_to_merge.name} should still be in DB"
+    assert_equal(0, Result.where(person_id: person_to_merge.id).count, "Tonkin's results")
+    assert_equal(0, Alias.where(person_id: person_to_merge.id).count, "Tonkin's aliases")
   end
 
   def test_name
-    person = Person.new(:first_name => 'Dario', :last_name => 'Frederick')
+    person = Person.new(first_name: 'Dario', last_name: 'Frederick')
     assert_equal(person.name, 'Dario Frederick', 'name')
     person.name = ''
     assert_equal(person.name, '', 'name')
   end
 
   def test_set_name
-    person = Person.new(:first_name => "R. Jim", :last_name => "Smith")
+    person = Person.new(first_name: "R. Jim", last_name: "Smith")
     assert_equal "R. Jim", person.first_name, "first_name"
   end
 
   def test_set_single_name
-    person = Person.new(:first_name => "Jim", :last_name => "Smith")
+    person = Person.new(first_name: "Jim", last_name: "Smith")
     person.name = "Jim"
     assert_equal "Jim", person.name, "name"
   end
 
   def test_name_or_login
     assert_equal nil, Person.new.name_or_login
-    assert_equal "dario@example.com", Person.new(:email => "dario@example.com").name_or_login
-    assert_equal "the_dario", Person.new(:login => "the_dario").name_or_login
-    assert_equal "Dario", Person.new(:name => "Dario").name_or_login
+    assert_equal "dario@example.com", Person.new(email: "dario@example.com").name_or_login
+    assert_equal "the_dario", Person.new(login: "the_dario").name_or_login
+    assert_equal "Dario", Person.new(name: "Dario").name_or_login
   end
 
   def test_member
-    person = Person.new(:first_name => 'Dario', :last_name => 'Frederick')
+    person = Person.new(first_name: 'Dario', last_name: 'Frederick')
     assert_equal(false, person.member?, 'member')
     assert_nil(person.member_from, 'Member from')
     assert_nil(person.member_to, 'Member to')
@@ -397,7 +397,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_member_in_year
-    person = Person.new(:first_name => 'Dario', :last_name => 'Frederick')
+    person = Person.new(first_name: 'Dario', last_name: 'Frederick')
     assert_equal(false, person.member_in_year?, 'member_in_year')
     assert_nil(person.member_from, 'Member from')
     assert_nil(person.member_to, 'Member to')
@@ -435,7 +435,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_member_to_from_nil_to_nil
-    person = Person.new(:first_name => 'Dario', :last_name => 'Frederick')
+    person = Person.new(first_name: 'Dario', last_name: 'Frederick')
     person.member_from = nil
     person.member_to = nil
     assert_equal(false, person.member?, 'member?')
@@ -448,7 +448,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_member_to_from_before_to_before
-    person = Person.new(:first_name => 'Dario', :last_name => 'Frederick')
+    person = Person.new(first_name: 'Dario', last_name: 'Frederick')
     person.member_from = Date.new(1970, 1, 1)
     person.member_to = Date.new(1970, 12, 31)
     person.member_to = Date.new(1971, 7, 31)
@@ -463,7 +463,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_member_to_from_before_to_after
-    person = Person.new(:first_name => 'Dario', :last_name => 'Frederick')
+    person = Person.new(first_name: 'Dario', last_name: 'Frederick')
     person.member_from = Date.new(1970, 1, 1)
     person.member_to = Date.new(1985, 12, 31)
     person.member_to = Date.new(1971, 7, 31)
@@ -478,7 +478,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_member_to_from_after_to_after
-    person = Person.new(:first_name => 'Dario', :last_name => 'Frederick')
+    person = Person.new(first_name: 'Dario', last_name: 'Frederick')
     person.member_from = Date.new(2006, 1, 1)
     person.member_to = Date.new(2006, 12, 31)
     person.member_to = Date.new(2000, 1, 31)
@@ -493,7 +493,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_team_name
-    person = Person.new(:first_name => 'Dario', :last_name => 'Frederick')
+    person = Person.new(first_name: 'Dario', last_name: 'Frederick')
     assert_equal(person.team_name, '', 'name')
 
     person.team_name = 'Vanilla'
@@ -507,19 +507,19 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_duplicate
-    FactoryGirl.create(:discipline, :name => "Cyclocross")
-    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, name: "Cyclocross")
+    FactoryGirl.create(:discipline, name: "Road")
     FactoryGirl.create(:number_issuer)
 
-    Person.create(:first_name => 'Otis', :last_name => 'Guy')
-    person = Person.new(:first_name => 'Otis', :last_name => 'Guy')
+    Person.create(first_name: 'Otis', last_name: 'Guy')
+    person = Person.new(first_name: 'Otis', last_name: 'Guy')
     assert(person.valid?, 'Dupe person name with no number should be valid')
 
-    person = Person.new(:first_name => 'Otis', :last_name => 'Guy', :road_number => '180')
+    person = Person.new(first_name: 'Otis', last_name: 'Guy', road_number: '180')
     assert(person.valid?, 'Dupe person name valid even if person has no numbers')
 
-    Person.create(:first_name => 'Otis', :last_name => 'Guy', :ccx_number => '180')
-    Person.create(:first_name => 'Otis', :last_name => 'Guy', :ccx_number => '19')
+    Person.create(first_name: 'Otis', last_name: 'Guy', ccx_number: '180')
+    Person.create(first_name: 'Otis', last_name: 'Guy', ccx_number: '19')
   end
 
   def test_master?
@@ -606,11 +606,11 @@ class PersonTest < ActiveSupport::TestCase
 
   def test_blank_numbers
     FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline, :name => "Cyclocross")
-    FactoryGirl.create(:discipline, :name => "Downhill")
-    FactoryGirl.create(:discipline, :name => "Road")
-    FactoryGirl.create(:discipline, :name => "Time Trial")
-    FactoryGirl.create(:discipline, :name => "Track")
+    FactoryGirl.create(:discipline, name: "Cyclocross")
+    FactoryGirl.create(:discipline, name: "Downhill")
+    FactoryGirl.create(:discipline, name: "Road")
+    FactoryGirl.create(:discipline, name: "Time Trial")
+    FactoryGirl.create(:discipline, name: "Track")
 
     person = Person.new
     assert_nil(person.ccx_number, 'cross number after new')
@@ -629,11 +629,11 @@ class PersonTest < ActiveSupport::TestCase
 
     person = Person.update(
       person.id,
-      :ccx_number => '',
-      :dh_number => '',
-      :road_number => '',
-      :track_number => '',
-      :xc_number => ''
+      ccx_number: '',
+      dh_number: '',
+      road_number: '',
+      track_number: '',
+      xc_number: ''
     )
     assert_nil(person.ccx_number, 'cross number after update with empty string')
     assert_nil(person.dh_number, 'dh number after update with empty string')
@@ -651,14 +651,14 @@ class PersonTest < ActiveSupport::TestCase
 
   def test_numbers
     FactoryGirl.create(:number_issuer)
-    cyclocross = FactoryGirl.create(:discipline, :name => "Cyclocross")
-    FactoryGirl.create(:discipline_alias, :discipline => cyclocross, :alias => "cx")
-    FactoryGirl.create(:discipline_alias, :discipline => cyclocross, :alias => "ccx")
-    FactoryGirl.create(:discipline, :name => "Road")
-    FactoryGirl.create(:discipline, :name => "Time Trial")
+    cyclocross = FactoryGirl.create(:discipline, name: "Cyclocross")
+    FactoryGirl.create(:discipline_alias, discipline: cyclocross, alias: "cx")
+    FactoryGirl.create(:discipline_alias, discipline: cyclocross, alias: "ccx")
+    FactoryGirl.create(:discipline, name: "Road")
+    FactoryGirl.create(:discipline, name: "Time Trial")
 
     person = FactoryGirl.create(:person)
-    tonkin = Person.create!(:updated_by => person)
+    tonkin = Person.create!(updated_by: person)
     tonkin.road_number = "102"
     road_number = tonkin.race_numbers.first
     assert_equal person, road_number.created_by, "created_by"
@@ -672,36 +672,36 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_date
-    person = Person.new(:date_of_birth => '0073-10-04')
+    person = Person.new(date_of_birth: '0073-10-04')
     assert_equal_dates('1973-10-04', person.date_of_birth, 'date_of_birth from 0073-10-04')
 
-    person = Person.new(:date_of_birth => "10/27/78")
+    person = Person.new(date_of_birth: "10/27/78")
     assert_equal_dates('1978-10-27', person.date_of_birth, 'date_of_birth from 10/27/78')
 
-    person = Person.new(:date_of_birth => "78")
+    person = Person.new(date_of_birth: "78")
     assert_equal_dates('1978-01-01', person.date_of_birth, 'date_of_birth from 78')
   end
 
   def test_date_of_birth
-    person = Person.new(:date_of_birth => '1973-10-04')
+    person = Person.new(date_of_birth: '1973-10-04')
     assert_equal_dates('1973-10-04', person.date_of_birth, 'date_of_birth from 1973-10-04')
     assert_equal_dates('1973-10-04', person.birthdate, 'birthdate from 173-10-04')
 
-    person = Person.new(:date_of_birth => "05/07/73")
+    person = Person.new(date_of_birth: "05/07/73")
     assert_equal_dates "1973-05-07", person.date_of_birth, "date_of_birth from 05/07/73"
   end
 
   def test_find_all_by_number
     FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline, :name => "Road")
-    person = FactoryGirl.create(:person, :road_number => "340")
+    FactoryGirl.create(:discipline, name: "Road")
+    person = FactoryGirl.create(:person, road_number: "340")
     found_person = Person.find_all_by_number('340')
     assert_equal([person], found_person, 'Should find Matson')
   end
 
   def test_find_all_by_name_like
     assert_equal([], Person.find_all_by_name_like("foo123"), "foo123 should find no names")
-    weaver = FactoryGirl.create(:person, :name => "Ryan Weaver")
+    weaver = FactoryGirl.create(:person, name: "Ryan Weaver")
     assert_equal([weaver], Person.find_all_by_name_like("eav"), "'eav' should find Weaver")
 
     weaver.last_name = "O'Weaver"
@@ -711,18 +711,18 @@ class PersonTest < ActiveSupport::TestCase
 
     weaver.last_name = "Weaver"
     weaver.save!
-    Alias.create!(:name => "O'Weaver", :person => weaver)
+    Alias.create!(name: "O'Weaver", person: weaver)
     assert_equal([weaver], Person.find_all_by_name_like("O'Weaver"), "'O'Weaver' should find O'Weaver via alias")
   end
 
   def test_find_by_name
-    weaver = FactoryGirl.create(:person, :name => "Ryan Weaver")
+    weaver = FactoryGirl.create(:person, name: "Ryan Weaver")
     assert_equal weaver, Person.find_by_name("Ryan Weaver"), "find_by_name"
 
-    person = Person.create!(:first_name => "Sam")
+    person = Person.create!(first_name: "Sam")
     assert_equal person, Person.find_by_name("Sam"), "find_by_name first_name only"
 
-    person = Person.create!(:last_name => "Richardson")
+    person = Person.create!(last_name: "Richardson")
     assert_equal person, Person.find_by_name("Richardson"), "find_by_name last_name only"
   end
 
@@ -782,14 +782,14 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_create_and_override_alias
-    person = FactoryGirl.create(:person, :name => "Molly Cameron")
-    person.aliases.create!(:name => "Mollie Cameron")
+    person = FactoryGirl.create(:person, name: "Molly Cameron")
+    person.aliases.create!(name: "Mollie Cameron")
 
     assert_not_nil(Person.find_by_name('Molly Cameron'), 'Molly Cameron should exist')
     assert_not_nil(Alias.find_by_name('Mollie Cameron'), 'Mollie Cameron alias should exist')
     assert_nil(Person.find_by_name('Mollie Cameron'), 'Mollie Cameron should not exist')
 
-    dupe = Person.create!(:name => 'Mollie Cameron')
+    dupe = Person.create!(name: 'Mollie Cameron')
     assert(dupe.valid?, 'Dupe Mollie Cameron should be valid')
 
     assert_not_nil(Person.find_by_name('Molly Cameron'), 'Molly Cameron should exist')
@@ -799,8 +799,8 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_update_to_alias
-    person = FactoryGirl.create(:person, :name => "Molly Cameron")
-    person.aliases.create!(:name => "Mollie Cameron")
+    person = FactoryGirl.create(:person, name: "Molly Cameron")
+    person.aliases.create!(name: "Mollie Cameron")
 
     # Reload to set old name correctly
     person = Person.find(person.id)
@@ -816,11 +816,11 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_sort
-    r1 = Person.new(:name => "Aarron Burr")
+    r1 = Person.new(name: "Aarron Burr")
     r1.id = 1
-    r2 = Person.new(:name => "Aarron Car")
+    r2 = Person.new(name: "Aarron Car")
     r2.id = 2
-    r3 = Person.new(:name => "A Lincoln")
+    r3 = Person.new(name: "A Lincoln")
     r3.id = 3
 
     people = [r2, r1, r3]
@@ -828,16 +828,16 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_sort_without_ids
-    r1 = Person.new(:name => "Aarron Burr")
-    r2 = Person.new(:name => "Aarron Car")
-    r3 = Person.new(:name => "A Lincoln")
+    r1 = Person.new(name: "Aarron Burr")
+    r2 = Person.new(name: "Aarron Car")
+    r3 = Person.new(name: "A Lincoln")
 
     people = [r2, r1, r3]
     assert_same_elements([r1, r2, r3], people.sort, 'sorted')
   end
 
   def test_add_number
-    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, name: "Road")
     FactoryGirl.create(:number_issuer)
 
     person = Person.create!
@@ -849,8 +849,8 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_add_number_from_non_number_discipline
-    FactoryGirl.create(:discipline, :name => "Circuit", :numbers => false)
-    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, name: "Circuit", numbers: false)
+    FactoryGirl.create(:discipline, name: "Road")
     FactoryGirl.create(:number_issuer)
 
     person = Person.create!
@@ -865,85 +865,85 @@ class PersonTest < ActiveSupport::TestCase
     person = Person.create!
     assert(!person.created_from_result?, "created_from_result? for blank Person")
 
-    person = Person.create!(:name => "Some Person")
+    person = Person.create!(name: "Some Person")
     assert(!person.created_from_result?, "created_from_result? for Person with just name")
 
     gentle_lovers = FactoryGirl.create(:team)
-    person = Person.create!(:name => "Some Person", :team => gentle_lovers)
+    person = Person.create!(name: "Some Person", team: gentle_lovers)
     assert(!person.created_from_result?, "created_from_result? for Person with just name and team")
 
-    person = Person.create!(:name => "Some Person", :team => gentle_lovers, :email => "person@example.com")
+    person = Person.create!(name: "Some Person", team: gentle_lovers, email: "person@example.com")
     assert(!person.created_from_result?, "created_from_result? for Person with name and team and email")
 
-    person = Person.create!(:name => "Some Person", :team => gentle_lovers, :home_phone => "911")
+    person = Person.create!(name: "Some Person", team: gentle_lovers, home_phone: "911")
     assert(!person.created_from_result?, "created_from_result? for Person with name and team and phone")
 
-    person = Person.create!(:name => "Some Person", :team => gentle_lovers, :street => "10 Main Street")
+    person = Person.create!(name: "Some Person", team: gentle_lovers, street: "10 Main Street")
     assert(!person.created_from_result?, "created_from_result? for Person with name and team and street")
   end
 
   def test_people_with_same_name
-    molly = FactoryGirl.create(:person, :name => "Molly Cameron")
-    molly.aliases.create!(:name => "Mollie Cameron")
+    molly = FactoryGirl.create(:person, name: "Molly Cameron")
+    molly.aliases.create!(name: "Mollie Cameron")
 
     assert_equal([], molly.people_with_same_name, "No other people named 'Molly Cameron'")
 
-    person = FactoryGirl.create(:person, :name => "Mollie Cameron")
+    person = FactoryGirl.create(:person, name: "Mollie Cameron")
     assert_equal([], molly.people_with_same_name, "No other people named 'Mollie Cameron'")
 
-    Person.create!(:name => "Mollie Cameron")
+    Person.create!(name: "Mollie Cameron")
     assert_equal(1, person.people_with_same_name.size, "Other people named 'Mollie Cameron'")
   end
 
   def test_dh_number_with_no_downhill_discipline
-    downhill = FactoryGirl.create(:discipline, :name => "Downhill")
+    downhill = FactoryGirl.create(:discipline, name: "Downhill")
     downhill.destroy
     Discipline.reset
 
-    assert(!Discipline.exists?(:name => "Downhill"), "Downhill should be deleted")
+    assert(!Discipline.exists?(name: "Downhill"), "Downhill should be deleted")
     person = FactoryGirl.create(:person)
     assert_nil(person.dh_number, "DH number")
   end
 
   def test_find_all_by_name_or_alias
-    tonkin = FactoryGirl.create(:person, :name => "Erik Tonkin")
-    tonkin.aliases.create!(:name => "Eric Tonkin")
-    Person.create!(:name => "Erik Tonkin")
+    tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
+    tonkin.aliases.create!(name: "Eric Tonkin")
+    Person.create!(name: "Erik Tonkin")
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should have 2 Tonkins")
-    assert_equal(2, Person.find_all_by_name_or_alias(:first_name => "Erik", :last_name => "Tonkin").size, "Should have 2 Tonkins")
+    assert_equal(2, Person.find_all_by_name_or_alias(first_name: "Erik", last_name: "Tonkin").size, "Should have 2 Tonkins")
     assert_raise(ArgumentError) { Person.find_all_by_name("Erik", "Tonkin") }
   end
 
   def test_find_all_for_export
     FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline, :name => "Cyclocross")
-    FactoryGirl.create(:discipline, :name => "Downhill")
-    FactoryGirl.create(:discipline, :name => "Mountain Bike")
-    FactoryGirl.create(:discipline, :name => "Road")
-    FactoryGirl.create(:discipline, :name => "Singlespeed")
-    FactoryGirl.create(:discipline, :name => "Time Trial")
-    FactoryGirl.create(:discipline, :name => "Track")
+    FactoryGirl.create(:discipline, name: "Cyclocross")
+    FactoryGirl.create(:discipline, name: "Downhill")
+    FactoryGirl.create(:discipline, name: "Mountain Bike")
+    FactoryGirl.create(:discipline, name: "Road")
+    FactoryGirl.create(:discipline, name: "Singlespeed")
+    FactoryGirl.create(:discipline, name: "Time Trial")
+    FactoryGirl.create(:discipline, name: "Track")
 
-    FactoryGirl.create(:person, :name => "Molly Cameron")
-    kona = FactoryGirl.create(:team, :name => "Kona")
+    FactoryGirl.create(:person, name: "Molly Cameron")
+    kona = FactoryGirl.create(:team, name: "Kona")
     FactoryGirl.create(
       :person,
-      :name => "Erik Tonkin",
-      :team => kona,
-      :track_category => "4"
+      name: "Erik Tonkin",
+      team: kona,
+      track_category: "4"
     )
-    FactoryGirl.create(:person, :name => "Mark Matson", :team => kona)
+    FactoryGirl.create(:person, name: "Mark Matson", team: kona)
     FactoryGirl.create(
       :person,
-      :name => "Alice Pennington",
-      :date_of_birth => 30.years.ago,
-      :member_from => Date.new(1996),
-      :member_to => Time.zone.now.end_of_year.to_date,
-      :track_category => "5"
+      name: "Alice Pennington",
+      date_of_birth: 30.years.ago,
+      member_from: Date.new(1996),
+      member_to: Time.zone.now.end_of_year.to_date,
+      track_category: "5"
     )
-    FactoryGirl.create(:person, :name => "Candi Murray")
+    FactoryGirl.create(:person, name: "Candi Murray")
     FactoryGirl.create(:person)
-    FactoryGirl.create(:person, :name => "Kevin Condron")
+    FactoryGirl.create(:person, name: "Kevin Condron")
 
     people = Person.find_all_for_export
     assert_equal("Molly", people[0]["first_name"], "Row 0 first_name")
@@ -955,31 +955,31 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_find_or_create_by_name
-    tonkin = FactoryGirl.create(:person, :name => "Erik Tonkin")
-    person = Person.find_or_create_by(:name => "Erik Tonkin")
+    tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
+    person = Person.find_or_create_by(name: "Erik Tonkin")
     assert_equal tonkin, person, "Should find existing person"
 
-    person = Person.find_or_create_by(:name => "Sam Richardson")
+    person = Person.find_or_create_by(name: "Sam Richardson")
     assert_equal "Sam Richardson", person.name, "New person name"
     assert_equal "Sam", person.first_name, "New person first_name"
     assert_equal "Richardson", person.last_name, "New person last_name"
-    person_2 = Person.find_or_create_by(:name => "Sam Richardson")
+    person_2 = Person.find_or_create_by(name: "Sam Richardson")
     assert_equal person, person_2, "Should find new person"
 
-    person = Person.find_or_create_by(:name => "Sam")
+    person = Person.find_or_create_by(name: "Sam")
     assert_equal "Sam", person.name, "New person name"
     assert_equal "Sam", person.first_name, "New person first_name"
     assert_equal "", person.last_name, "New person last_name"
-    person_2 = Person.find_or_create_by(:name => "Sam")
+    person_2 = Person.find_or_create_by(name: "Sam")
     assert_equal person, person_2, "Should find new person"
   end
 
   def test_create
-    Person.create!(:name => 'Mr. Tuxedo', :password =>'blackcat', :password_confirmation =>'blackcat', :email => "tuxedo@example.com")
+    Person.create!(name: 'Mr. Tuxedo', password:'blackcat', password_confirmation:'blackcat', email: "tuxedo@example.com")
   end
 
   def test_find_by_info
-    promoter = FactoryGirl.create(:promoter, :name => "Brad Ross")
+    promoter = FactoryGirl.create(:promoter, name: "Brad Ross")
     assert_equal(promoter, Person.find_by_info("Brad ross"))
     assert_equal(promoter, Person.find_by_info("Brad ross", "brad@foo.com"))
 
@@ -992,11 +992,11 @@ class PersonTest < ActiveSupport::TestCase
     assert_nil(Person.find_by_info("", "mike_murray@obra.org", "(451) 324-8133"))
     assert_nil(Person.find_by_info("", "membership@obra.org"))
 
-    promoter = Person.new(:name => '', :home_phone => "(212) 522-1872")
+    promoter = Person.new(name: '', home_phone: "(212) 522-1872")
     promoter.save!
     assert_equal(promoter, Person.find_by_info("", "", "(212) 522-1872"))
 
-    promoter = Person.new(:name => '', :email => "cjw@cjw.net")
+    promoter = Person.new(name: '', email: "cjw@cjw.net")
     promoter.save!
     assert_equal(promoter, Person.find_by_info("", "cjw@cjw.net", ""))
   end
@@ -1006,12 +1006,12 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_save_no_name
-    Person.create!(:email => "nate@six-hobsons.net")
-    assert(Person.new(:email => "nate@six-hobsons.net").valid?, "Dupe email addresses allowed")
+    Person.create!(email: "nate@six-hobsons.net")
+    assert(Person.new(email: "nate@six-hobsons.net").valid?, "Dupe email addresses allowed")
   end
 
   def test_save_no_email
-    assert Person.new(:name => "Nate Hobson").valid?
+    assert Person.new(name: "Nate Hobson").valid?
   end
 
   def test_administrator
@@ -1035,34 +1035,34 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_login_with_periods
-    Person.create!(:name => 'Mr. Tuxedo', :password =>'blackcat', :password_confirmation =>'blackcat', :login => "tuxedo.cat@example.com")
+    Person.create!(name: 'Mr. Tuxedo', password:'blackcat', password_confirmation:'blackcat', login: "tuxedo.cat@example.com")
   end
 
   def test_long_login
     person = Person.create!(
-      :name => 'Mr. Tuxedo',
-      :password =>'blackcatthebestkittyinblacktuxatonypa',
-      :password_confirmation =>'blackcatthebestkittyinblacktuxatonypa',
-      :login => "tuxedo.black.cat@subdomain123456789.example.com"
+      name: 'Mr. Tuxedo',
+      password:'blackcatthebestkittyinblacktuxatonypa',
+      password_confirmation:'blackcatthebestkittyinblacktuxatonypa',
+      login: "tuxedo.black.cat@subdomain123456789.example.com"
     )
     person.reload
     assert_equal "tuxedo.black.cat@subdomain123456789.example.com", person.login, "login"
     assert PersonSession.create!(
-    :login => "tuxedo.black.cat@subdomain123456789.example.com",
-    :password =>'blackcatthebestkittyinblacktuxatonypa'
+    login: "tuxedo.black.cat@subdomain123456789.example.com",
+    password:'blackcatthebestkittyinblacktuxatonypa'
     )
   end
 
   def test_ignore_blank_login_fields
     Person.create!
-    person = Person.create!(:password => "", :password_confirmation => "", :login => "")
+    person = Person.create!(password: "", password_confirmation: "", login: "")
     person.reload
     person.save!
     person.name = "New Guy"
     person.save!
 
     assert_equal "", person.login, "Login should be blank"
-    another = Person.create!(:login => "")
+    another = Person.create!(login: "")
     another.reload
     assert_equal "", another.login, "Login should be blank"
 
@@ -1079,7 +1079,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_authlogic_should_not_set_updated_at_on_load
-    person = Person.create!(:name => "Joe Racer", :updated_at => '2008-10-01')
+    person = Person.create!(name: "Joe Racer", updated_at: '2008-10-01')
     assert_equal_dates "2008-10-01", person.updated_at, "updated_at"
     person = Person.find(person.id)
     assert_equal_dates "2008-10-01", person.updated_at, "updated_at"
@@ -1096,11 +1096,11 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_multiple_names
-    person = FactoryGirl.create(:person, :name => "Ryan Weaver")
+    person = FactoryGirl.create(:person, name: "Ryan Weaver")
 
-    person.names.create!(:first_name => "R", :last_name => "Weavedog", :name => "R Weavedog", :year => 2001)
-    person.names.create!(:first_name => "Mister", :last_name => "Weavedog", :name => "Mister Weavedog", :year => 2002)
-    person.names.create!(:first_name => "Ryan", :last_name => "Farris", :name => "Ryan Farris", :year => 2003)
+    person.names.create!(first_name: "R", last_name: "Weavedog", name: "R Weavedog", year: 2001)
+    person.names.create!(first_name: "Mister", last_name: "Weavedog", name: "Mister Weavedog", year: 2002)
+    person.names.create!(first_name: "Ryan", last_name: "Farris", name: "Ryan Farris", year: 2003)
 
     assert_equal(3, person.names.size, "Historical names. #{person.names.map {|n| n.name}.join(', ')}")
 
@@ -1124,17 +1124,17 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   def test_create_new_name_if_there_are_results_from_previous_year
-    person = FactoryGirl.create(:person, :name => "Ryan Weaver")
+    person = FactoryGirl.create(:person, name: "Ryan Weaver")
     person = Person.find(person.id)
-    event = SingleDayEvent.create!(:date => 1.year.ago)
+    event = SingleDayEvent.create!(date: 1.year.ago)
     senior_men = FactoryGirl.create(:category)
-    old_result = event.races.create!(:category => senior_men).results.create!(:person => person)
+    old_result = event.races.create!(category: senior_men).results.create!(person: person)
     assert_equal("Ryan Weaver", old_result.name, "Name on old result")
     assert_equal("Ryan", old_result.first_name, "first_name on old result")
     assert_equal("Weaver", old_result.last_name, "last_name on old result")
 
-    event = SingleDayEvent.create!(:date => Time.zone.today)
-    result = event.races.create!(:category => senior_men).results.create!(:person => person)
+    event = SingleDayEvent.create!(date: Time.zone.today)
+    result = event.races.create!(category: senior_men).results.create!(person: person)
     assert_equal("Ryan Weaver", old_result.name, "Name on old result")
     assert_equal("Ryan", old_result.first_name, "first_name on old result")
     assert_equal("Weaver", old_result.last_name, "last_name on old result")
@@ -1158,11 +1158,11 @@ class PersonTest < ActiveSupport::TestCase
     assert !person.renewed?, "New person"
 
     Timecop.freeze(Date.new(2009, 12, 14)) do
-      person = Person.create!(:member_from => Date.new(2009, 1, 1), :member_to => Date.new(2009, 12, 31))
+      person = Person.create!(member_from: Date.new(2009, 1, 1), member_to: Date.new(2009, 12, 31))
       assert person.renewed?, "Before Dec 16"
     end
 
-    person = Person.create!(:member_from => Date.new(2009, 1, 1), :member_to => Date.new(2009, 12, 31))
+    person = Person.create!(member_from: Date.new(2009, 1, 1), member_to: Date.new(2009, 12, 31))
     Timecop.freeze(Time.zone.local(2009, 12, 16)) do
       assert !person.renewed?, "On Dec 16"
     end

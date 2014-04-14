@@ -9,10 +9,10 @@ class EventsControllerTest < ActionController::TestCase
 
   def test_index_with_person_id
     promoter = FactoryGirl.create(:promoter)
-    get :index, :person_id => promoter
+    get :index, person_id: promoter
     assert_response :success
-    assert_select ".nav.tabs", :count => 0
-    assert_select "a[href=?]", /.*\/admin\/events.*/, :count => 0
+    assert_select ".nav.tabs", count: 0
+    assert_select "a[href=?]", /.*\/admin\/events.*/, count: 0
   end
 
   def test_index_with_person_id_promoter
@@ -21,7 +21,7 @@ class EventsControllerTest < ActionController::TestCase
       PersonSession.create(promoter)
 
       use_ssl
-      get :index, :person_id => promoter
+      get :index, person_id: promoter
       assert_response :success
       if css_select(".nav.tabs").present?
         assert_select "a[href=?]", /.*\/admin\/events.*/
@@ -32,7 +32,7 @@ class EventsControllerTest < ActionController::TestCase
   def test_index_as_xml
     Timecop.freeze(Time.zone.local(2012, 5)) do
       FactoryGirl.create(:event)
-      get :index, :format => "xml"
+      get :index, format: "xml"
       assert_response :success
       assert_equal "application/xml", @response.content_type
       [

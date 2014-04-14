@@ -6,18 +6,18 @@ require "nokogiri"
 module Renderers
   class NameRendererTest < Ruby::TestCase
     def test_render_no_person
-      column = mock("column", :key => :name)
-      row = mock("row", :[] => nil, :source => mock("result", :person_id => nil))
+      column = mock("column", key: :name)
+      row = mock("row", :[] => nil, source: mock("result", person_id: nil))
       assert_nil NameRenderer.render(column, row), "Result with no text, no person"
     end
 
     def test_render_name
-      column = stub("column", :key => :name)
+      column = stub("column", key: :name)
       row = stub(
               "row",
               :[] => "Candi Murray",
-              :metadata => {},
-              :source => stub("result", :person_id => 18, :competition_result? => false, :year => 2010, :preliminary? => false)
+              metadata: {},
+              source: stub("result", person_id: 18, :competition_result? => false, year: 2010, :preliminary? => false)
       )
 
       html = NameRenderer.render(column, row)
@@ -27,12 +27,12 @@ module Renderers
     end
 
     def test_mobile
-      column = stub("column", :key => :name)
+      column = stub("column", key: :name)
       row = stub(
               "row",
               :[] => "Candi Murray",
-              :metadata => { :mobile_request => true },
-              :source => stub("result", :person_id => 18, :competition_result? => false, :year => 2010, :preliminary? => false)
+              metadata: { mobile_request: true },
+              source: stub("result", person_id: 18, :competition_result? => false, year: 2010, :preliminary? => false)
       )
 
       html = NameRenderer.render(column, row)
@@ -42,15 +42,15 @@ module Renderers
     end
 
     def test_competition_result
-      column = stub("column", :key => :name)
+      column = stub("column", key: :name)
       row = stub("row",
                    :[] => "Mike Murray",
-                   :metadata => {},
-                   :source => stub(
+                   metadata: {},
+                   source: stub(
                      "result",
-                     :person_id => 18, :event_id => 3, :race_id => 200, :competition_result? => true, :year => 2010, :preliminary? => false)
+                     person_id: 18, event_id: 3, race_id: 200, :competition_result? => true, year: 2010, :preliminary? => false)
                    )
-      # TeamNameRenderer.stubs(:racing_association => mock("racing_association", :unregistered_teams_in_results? => true))
+      # TeamNameRenderer.stubs(racing_association: mock("racing_association", :unregistered_teams_in_results? => true))
 
       html = NameRenderer.render(column, row)
       link = Nokogiri::HTML.fragment(html).search('a').first

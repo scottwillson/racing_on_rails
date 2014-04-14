@@ -1,10 +1,10 @@
 FactoryGirl.define do
-  factory :person_alias, :class => Alias do
+  factory :person_alias, class: Alias do
     sequence(:name) { |n| "Person Alias #{n}" }
     person
   end
 
-  factory :team_alias, :class => Alias do
+  factory :team_alias, class: Alias do
     sequence(:name) { |n| "Team Alias #{n}" }
     team
   end
@@ -25,14 +25,14 @@ FactoryGirl.define do
     factory :cyclocross_discipline do
       name "Cyclocross"
       after(:create) { |d|
-        d.discipline_aliases.create!(:alias => "ccx")
-        d.discipline_aliases.create!(:alias => "cx")
+        d.discipline_aliases.create!(alias: "ccx")
+        d.discipline_aliases.create!(alias: "cx")
       }
     end
 
     factory :mtb_discipline do
       name "Mountain Bike"
-      after(:create) { |d| d.discipline_aliases.create!(:alias => "mtb") }
+      after(:create) { |d| d.discipline_aliases.create!(alias: "mtb") }
     end
   end
 
@@ -41,27 +41,27 @@ FactoryGirl.define do
     discipline
   end
 
-  factory :event, :class => "SingleDayEvent" do
-    promoter :factory => :person
-    factory :multi_day_event, :class => "MultiDayEvent"
-    factory :series, :class => "Series"
-    factory :weekly_series, :class => "WeeklySeries"
+  factory :event, class: "SingleDayEvent" do
+    promoter factory: :person
+    factory :multi_day_event, class: "MultiDayEvent"
+    factory :series, class: "Series"
+    factory :weekly_series, class: "WeeklySeries"
 
     factory :series_event do
-      parent :factory => :series
+      parent factory: :series
     end
 
-    factory :stage_race, :class => "MultiDayEvent" do |parent|
+    factory :stage_race, class: "MultiDayEvent" do |parent|
       date Time.zone.local(2005, 7, 11)
       children { |e| [
-        e.association(:event, :date => Time.zone.local(2005, 7, 11), :parent_id => e.id),
-        e.association(:event, :date => Time.zone.local(2005, 7, 12), :parent_id => e.id),
-        e.association(:event, :date => Time.zone.local(2005, 7, 13), :parent_id => e.id)
+        e.association(:event, date: Time.zone.local(2005, 7, 11), parent_id: e.id),
+        e.association(:event, date: Time.zone.local(2005, 7, 12), parent_id: e.id),
+        e.association(:event, date: Time.zone.local(2005, 7, 13), parent_id: e.id)
       ] }
     end
 
     factory :weekly_series_event do
-      parent :factory => :weekly_series
+      parent factory: :weekly_series
     end
 
     factory :time_trial_event do
@@ -86,7 +86,7 @@ FactoryGirl.define do
     title "Plain"
     updated_at Time.zone.local(2007)
     created_at Time.zone.local(2007)
-    updated_by :factory => :person
+    updated_by factory: :person
   end
 
   factory :person do
@@ -123,7 +123,7 @@ FactoryGirl.define do
       end
 
       factory :promoter do
-        events { |p| [ p.association(:event, :promoter_id => p.id) ] }
+        events { |p| [ p.association(:event, promoter_id: p.id) ] }
       end
     end
   end
@@ -150,11 +150,11 @@ FactoryGirl.define do
     event
 
     factory :time_trial_race do
-      association :event, :factory => :time_trial_event
+      association :event, factory: :time_trial_event
     end
 
     factory :weekly_series_race do
-      association :event, :factory => :weekly_series_event
+      association :event, factory: :weekly_series_event
     end
   end
 
@@ -177,11 +177,11 @@ FactoryGirl.define do
 
     factory :time_trial_result do
       time 1800
-      association :race, :factory => :time_trial_race
+      association :race, factory: :time_trial_race
     end
 
     factory :weekly_series_event_result do
-      association :race, :factory => :weekly_series_race
+      association :race, factory: :weekly_series_race
     end
   end
 

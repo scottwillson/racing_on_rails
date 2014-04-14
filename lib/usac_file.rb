@@ -33,9 +33,9 @@ class UsacFile
 
       #parses out the data into a 2D array with other properties (such as column referencing like hashes)
       if RUBY_VERSION < "1.9"
-        @members_list = FasterCSV.parse(response.body, {:col_sep => ",", :quote_char => "?", :headers => true})
+        @members_list = FasterCSV.parse(response.body, {col_sep: ",", quote_char: "?", headers: true})
       else
-        @members_list = CSV.parse(response.body, {:col_sep => ",", :quote_char => "?", :headers => true})
+        @members_list = CSV.parse(response.body, {col_sep: ",", quote_char: "?", headers: true})
       end
       self.clean_headers
     end
@@ -63,7 +63,7 @@ class UsacFile
       #Look for the person. License # is most reliable (e.g. we only have short first name)
       #but we may not have their USAC License # yet, so also look by full name
       r = Person.find_by_license(license)
-      dups = Person.find_all_by_name_or_alias(:first_name => memusac["first_name"], :last_name => memusac["last_name"])
+      dups = Person.find_all_by_name_or_alias(first_name: memusac["first_name"], last_name: memusac["last_name"])
       first_dup = dups.first unless dups.first.nil?
       if r.nil?
         r = Person.find_by_name(full_name)
@@ -73,7 +73,7 @@ class UsacFile
         if r != first_dup #the name USAC has does not match Person name or alias
           #Let's make an alias with their name at USAC. Helps with importing results
           begin
-            Alias.create!(:name => full_name, :person => r)
+            Alias.create!(name: full_name, person: r)
           rescue Exception => e
             Rails.logger.warn("Could not create alias #{full_name} for person #{r.name} with license #{r.license}")
           end

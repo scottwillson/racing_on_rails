@@ -10,8 +10,8 @@ class EventsController < ApplicationController
           redirect_to schedule_path
         end
       }
-      format.json { render :json => events_for_api(params[:year]) }
-      format.xml { render :xml => events_for_api(params[:year]).to_xml }
+      format.json { render json: events_for_api(params[:year]) }
+      format.xml { render xml: events_for_api(params[:year]).to_xml }
     end
   end
 

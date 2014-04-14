@@ -6,7 +6,7 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <%= link_to new_admin_article_category_path, :class => "btn btn-default", :id => "new_article_category" do %>
+    <%= link_to new_admin_article_category_path, class: "btn btn-default", id: "new_article_category" do %>
       New Article Category
     <% end %>
   </div>
@@ -14,7 +14,7 @@
 
 <hr />
 
-<%= table :class => "article_categories clear", :collection => @article_categories, :columns => 7, :id => :article_categories do %>
+<%= table class: "article_categories clear", collection: @article_categories, columns: 7, id: :article_categories do %>
   <thead>
     <tr>
       <th>Name</th>
@@ -34,7 +34,7 @@
       <td><%=h article_category.id %></td>
       <td><%=h article_category.parent_id %></td>
       <td><%= link_to 'Edit', edit_admin_article_category_path(article_category) %></td>
-      <td><%= link_to 'Destroy', [:admin, article_category], :confirm => 'Are you sure?', :method => :delete, :class => "btn btn-default" %></td>
+      <td><%= link_to 'Destroy', [:admin, article_category], confirm: 'Are you sure?', method: :delete, class: "btn btn-default" %></td>
     </tr>
   <% end %>
 <% end %>

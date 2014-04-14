@@ -3,10 +3,10 @@ module Admin
   class PeopleController < Admin::AdminController
     before_filter :require_current_person
     # Funky permissions filtering here to allow officials and promoters download Excel file
-    skip_filter :require_administrator, :only => :index
-    before_filter :require_administrator_or_promoter_or_official, :only => :index
+    skip_filter :require_administrator, only: :index
+    before_filter :require_administrator_or_promoter_or_official, only: :index
     before_filter :remember_event
-    layout 'admin/application', :except => [ :card, :cards ]
+    layout 'admin/application', except: [ :card, :cards ]
 
     include ApplicationHelper
     include ActionView::Helpers::TextHelper
@@ -34,7 +34,7 @@ module Admin
       @name = params[:name] || session[:person_name] || cookies[:person_name] || ''
       @name.strip!
       session['person_name'] = @name
-      cookies[:person_name] = { :value => @name, :expires => Time.zone.now + 36000 }
+      cookies[:person_name] = { value: @name, expires: Time.zone.now + 36000 }
       if @name.blank?
         @people = []
       else
@@ -97,13 +97,13 @@ module Admin
     # Create new Person
     #
     # Existing RaceNumbers are updated from a Hash:
-    # :number => {'race_number_id' => {:value => 'new_value'}}
+    # number: {'race_number_id' => {value: 'new_value'}}
     #
     # New numbers are created from arrays:
-    # :number_value => [...]
-    # :discipline_id => [...]
-    # :number_issuer_id => [...]
-    # :number_year => year (not array)
+    # number_value: [...]
+    # discipline_id: [...]
+    # number_issuer_id: [...]
+    # number_year: year (not array)
     # New blank numbers are ignored
     def create
       expire_cache
@@ -113,10 +113,10 @@ module Admin
         params[:number_value].each_with_index do |number_value, index|
           unless number_value.blank?
             race_number = @person.race_numbers.create(
-              :discipline_id => params[:discipline_id][index],
-              :number_issuer_id => params[:number_issuer_id][index],
-              :year => params[:number_year],
-              :value => number_value
+              discipline_id: params[:discipline_id][index],
+              number_issuer_id: params[:number_issuer_id][index],
+              year: params[:number_year],
+              value: number_value
             )
             unless race_number.errors.empty?
               @person.errors.add(:base, race_number.errors.full_messages)
@@ -126,7 +126,7 @@ module Admin
       end
       if @person.errors.empty?
         if @event
-          redirect_to(edit_admin_person_path(@person, :event_id => @event.id))
+          redirect_to(edit_admin_person_path(@person, event_id: @event.id))
         else
           redirect_to(edit_admin_person_path(@person))
         end
@@ -140,13 +140,13 @@ module Admin
     # Update existing Person.
     #
     # Existing RaceNumbers are updated from a Hash:
-    # :number => {'race_number_id' => {:value => 'new_value'}}
+    # number: {'race_number_id' => {value: 'new_value'}}
     #
     # New numbers are created from arrays:
-    # :number_value => [...]
-    # :discipline_id => [...]
-    # :number_issuer_id => [...]
-    # :number_year => year (not array)
+    # number_value: [...]
+    # discipline_id: [...]
+    # number_issuer_id: [...]
+    # number_year: year (not array)
     # New blank numbers are ignored
     def update
       expire_cache
@@ -154,7 +154,7 @@ module Admin
 
       if @person.update_attributes(person_params)
         if @event
-          return redirect_to(edit_admin_person_path(@person, :event_id => @event.id))
+          return redirect_to(edit_admin_person_path(@person, event_id: @event.id))
         else
           return redirect_to(edit_admin_person_path(@person))
         end
@@ -168,7 +168,7 @@ module Admin
     def preview_import
       if params[:people_file].blank?
         flash[:warn] = "Choose a file of people to import first"
-        return redirect_to(:action => :index)
+        return redirect_to(action: :index)
       end
 
       path = "#{Dir.tmpdir}/#{params[:people_file].original_filename}"
@@ -192,7 +192,7 @@ module Admin
     def import
       if params[:commit] == 'Cancel'
         session[:people_file_path] = nil
-        redirect_to(:action => 'index')
+        redirect_to(action: 'index')
 
       elsif params[:commit] == 'Import'
         Duplicate.delete_all
@@ -251,7 +251,7 @@ module Admin
       end
 
       Duplicate.delete_all
-      redirect_to(:action => 'index')
+      redirect_to(action: 'index')
     end
 
     def update_attribute
@@ -263,7 +263,7 @@ module Admin
           else
             @person.update_attributes! params[:name] => params[:value]
             expire_cache
-            render :plain => @person.send(params[:name])
+            render plain: @person.send(params[:name])
           end
         }
       end
@@ -273,7 +273,7 @@ module Admin
     def toggle_member
       person = Person.find(params[:id])
       person.toggle! :member
-      render :partial => "shared/member", :locals => { :record => person }
+      render partial: "shared/member", locals: { record: person }
     end
 
     def destroy
@@ -314,9 +314,9 @@ module Admin
 
     # Membership card stickers/labels
     def cards
-      @people = Person.where(:print_card => true).order("last_name, first_name")
+      @people = Person.where(print_card: true).order("last_name, first_name")
       if @people.empty?
-        return redirect_to(no_cards_admin_people_path(:format => "html"))
+        return redirect_to(no_cards_admin_people_path(format: "html"))
       else
         Person.where(id: @people.map(&:id)).update_all(print_card: 0, membership_card: 1)
       end
@@ -324,8 +324,8 @@ module Admin
       respond_to do |format|
         format.pdf do
           send_data Card.new.to_pdf(@people),
-                    :filename => "cards.pdf",
-                    :type => "application/pdf"
+                    filename: "cards.pdf",
+                    type: "application/pdf"
         end
       end
     end
@@ -342,8 +342,8 @@ module Admin
       respond_to do |format|
         format.pdf do
           send_data Card.new.to_pdf(@person),
-                    :filename => "card.pdf",
-                    :type => "application/pdf"
+                    filename: "card.pdf",
+                    type: "application/pdf"
         end
       end
     end
@@ -358,7 +358,7 @@ module Admin
       if @other_people.empty?
         @person.save
         expire_cache
-        render :plain => @person.name
+        render plain: @person.name
       else
         render "merge_confirm"
       end
@@ -470,7 +470,7 @@ module Admin
         :wants_mail,
         :work_phone,
         :zip,
-        :race_numbers_attributes => [ :discipline_id, :id, :number_issuer_id, :value, :year ]
+        race_numbers_attributes: [ :discipline_id, :id, :number_issuer_id, :value, :year ]
       )
     end
   end

@@ -2,11 +2,11 @@
 
 <h2>Teams</h2>
 
-<%= render "shared/search", :name => @name, :placeholder => "Enter name to search" %>
+<%= render "shared/search", name: @name, placeholder: "Enter name to search" %>
 
 <div class="row">
   <div class="col-sm-12">
-    <%= table :class => "teams", :id => :teams do %>
+    <%= table class: "teams", id: :teams do %>
       <tr>
         <th class="icon"></th>
         <th class="name">Name</th>
@@ -14,7 +14,7 @@
         <th class="check_box">Member</th>
         <th class="actions"></th>
       </tr>
-      <%= render :partial => "team", :collection => @teams %>
+      <%= render partial: "team", collection: @teams %>
       <% if @teams.empty? %>
       <tr>
         <%- if @name.blank? -%>
@@ -30,7 +30,7 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <%= link_to new_admin_team_path, :class => "btn btn-default", :id => "new_team" do %>
+    <%= link_to new_admin_team_path, class: "btn btn-default", id: "new_team" do %>
       <span class="glyphicon glyphicon-group"></span>New Team
     <% end %>
   </div>

@@ -45,44 +45,44 @@ class Event < ActiveRecord::Base
   validate :inclusion_of_discipline
   validate :inclusion_of_sanctioned_by
 
-  belongs_to :parent, :foreign_key => "parent_id", :class_name => "Event"
+  belongs_to :parent, foreign_key: "parent_id", class_name: "Event"
   has_many :children,
            -> { order :date },
-           :class_name => "Event",
-           :foreign_key => "parent_id",
-           :dependent => :destroy,
-           :after_add => :children_changed,
-           :after_remove => :children_changed
+           class_name: "Event",
+           foreign_key: "parent_id",
+           dependent: :destroy,
+           after_add: :children_changed,
+           after_remove: :children_changed
 
   has_many :child_competitions,
            -> { order :date },
-           :class_name => "Competition",
-           :foreign_key => "parent_id",
-           :dependent => :destroy,
-           :after_add => :children_changed,
-           :after_remove => :children_changed
+           class_name: "Competition",
+           foreign_key: "parent_id",
+           dependent: :destroy,
+           after_add: :children_changed,
+           after_remove: :children_changed
 
   has_many :children_and_child_competitions,
            -> { order :date },
-           :class_name => "Event",
-           :foreign_key => "parent_id",
-           :dependent => :destroy
+           class_name: "Event",
+           foreign_key: "parent_id",
+           dependent: :destroy
 
-  has_one :overall, :foreign_key => "parent_id", :dependent => :destroy
-  has_one :combined_results, :class_name => "CombinedTimeTrialResults", :foreign_key => "parent_id", :dependent => :destroy
-  has_many :competitions, :through => :competition_event_memberships, :source => :competition
+  has_one :overall, foreign_key: "parent_id", dependent: :destroy
+  has_one :combined_results, class_name: "CombinedTimeTrialResults", foreign_key: "parent_id", dependent: :destroy
+  has_many :competitions, through: :competition_event_memberships, source: :competition
   has_many :competition_event_memberships
 
   belongs_to :number_issuer
-  has_and_belongs_to_many :editors, :class_name => "Person", :association_foreign_key => "editor_id", :join_table => "editors_events"
-  belongs_to :promoter, :class_name => "Person"
+  has_and_belongs_to_many :editors, class_name: "Person", association_foreign_key: "editor_id", join_table: "editors_events"
+  belongs_to :promoter, class_name: "Person"
   belongs_to :team
 
   has_many   :races,
-             :inverse_of => :event,
-             :dependent => :destroy,
-             :after_add => :children_changed,
-             :after_remove => :children_changed
+             inverse_of: :event,
+             dependent: :destroy,
+             after_add: :children_changed,
+             after_remove: :children_changed
 
   belongs_to :velodrome
   belongs_to :region
@@ -94,11 +94,11 @@ class Event < ActiveRecord::Base
       # No scope
     else
       joins("left outer join editors_events on event_id = events.id").
-      where("promoter_id = :person_id or editors_events.editor_id = :person_id", :person_id => person)
+      where("promoter_id = :person_id or editors_events.editor_id = :person_id", person_id: person)
     end
   }
 
-  scope :today_and_future, lambda { where("date >= :today || end_date >= :today", :today => Time.zone.today) }
+  scope :today_and_future, lambda { where("date >= :today || end_date >= :today", today: Time.zone.today) }
 
   scope :year, lambda { |year|
     where(
@@ -118,8 +118,8 @@ class Event < ActiveRecord::Base
   scope :upcoming_in_weeks, lambda { |number_of_weeks|
     where(
       "(date between :today and :later) || (end_date between :today and :later)",
-      :today => Time.zone.today,
-      :later => number_of_weeks.weeks.from_now.to_date)
+      today: Time.zone.today,
+      later: number_of_weeks.weeks.from_now.to_date)
   }
 
   scope :child, lambda { where("parent_id is not null") }
@@ -140,8 +140,8 @@ class Event < ActiveRecord::Base
   def self.find_all_with_results(year = Time.zone.today.year, discipline = nil)
     # Maybe this should be its own class, since it has knowledge of Event and Result?
     events = Event.
-              joins(:races => :results).
-              includes(:parent => :parent).
+              joins(races: :results).
+              includes(parent: :parent).
               where(
                 "events.date between ? and ?",
                 Time.zone.local(year).beginning_of_year.to_date,
@@ -154,11 +154,11 @@ class Event < ActiveRecord::Base
       if discipline == Discipline['road']
         discipline_names << 'Circuit'
       end
-      events = events.where(:discipline => discipline_names)
+      events = events.where(discipline: discipline_names)
     end
 
     if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
-      events = events.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
+      events = events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
     end
 
     events = events.to_a.map(&:root).uniq
@@ -172,30 +172,30 @@ class Event < ActiveRecord::Base
   def self.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
     discipline_names = [discipline]
     discipline_names << 'Circuit' if discipline.downcase == 'road'
-    Event.distinct.year(year).where(:discipline => discipline_names).where("bar_points > 0")
+    Event.distinct.year(year).where(discipline: discipline_names).where("bar_points > 0")
   end
 
   def self.upcoming(weeks = 2)
     single_day_events = SingleDayEvent.
       not_child.
-      where(:postponed => false).
-      where(:cancelled => false).
-      where(:practice => false).
+      where(postponed: false).
+      where(cancelled: false).
+      where(practice: false).
       upcoming_in_weeks(weeks)
 
     multi_day_events = MultiDayEvent.
-      where(:postponed => false).
-      where(:cancelled => false).
-      where(:practice => false).
-      where(:type => "MultiDayEvent").
+      where(postponed: false).
+      where(cancelled: false).
+      where(practice: false).
+      where(type: "MultiDayEvent").
       upcoming_in_weeks(weeks)
 
     series_child_events = SingleDayEvent.
-      includes(:parent => :parent).
+      includes(parent: :parent).
       child.
-      where(:postponed => false).
-      where(:cancelled => false).
-      where(:practice => false).
+      where(postponed: false).
+      where(cancelled: false).
+      where(practice: false).
       upcoming_in_weeks(weeks)
 
     if multi_day_events.present?
@@ -203,9 +203,9 @@ class Event < ActiveRecord::Base
     end
 
     if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
-      single_day_events = single_day_events.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
-      multi_day_events = multi_day_events.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
-      series_child_events = series_child_events.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
+      single_day_events = single_day_events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
+      multi_day_events = multi_day_events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
+      series_child_events = series_child_events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
     end
 
     (single_day_events.load + multi_day_events.load + series_child_events.load)
@@ -373,7 +373,7 @@ class Event < ActiveRecord::Base
           "(#{attribute}=? or #{attribute} is null or #{attribute} = '') and parent_id=?", was, self[:id]
         ).update_all(attribute => self[attribute])
       else
-        SingleDayEvent.where(attribute => was, :parent_id => id).update_all(attribute => self[attribute])
+        SingleDayEvent.where(attribute => was, parent_id: id).update_all(attribute => self[attribute])
       end
     end
 
@@ -388,7 +388,7 @@ class Event < ActiveRecord::Base
 
   def children_changed(child)
     # Don't trigger callbacks
-    Event.where(:id => id).update_all(:updated_at => Time.zone.now)
+    Event.where(id: id).update_all(updated_at: Time.zone.now)
     true
   end
 
@@ -398,7 +398,7 @@ class Event < ActiveRecord::Base
       ActiveRecord::Base.lock_optimistically = false
       # Don't trigger after_save callback just because we're enabling notification
       self.notification = false
-      Event.where(:id => id).update_all("notification = false")
+      Event.where(id: id).update_all("notification = false")
       children.each(&:disable_notification!)
       ActiveRecord::Base.lock_optimistically = true
     end
@@ -411,7 +411,7 @@ class Event < ActiveRecord::Base
       ActiveRecord::Base.lock_optimistically = false
       # Don't trigger after_save callback just because we're enabling notification
       self.notification = true
-      Event.where(:id => id).update_all("notification = true")
+      Event.where(id: id).update_all("notification = true")
       children.each(&:enable_notification!)
       ActiveRecord::Base.lock_optimistically = true
     end
@@ -468,7 +468,7 @@ class Event < ActiveRecord::Base
 
   def velodrome_name=(value)
     if value.present?
-      self.velodrome = Velodrome.find_or_create_by(:name => value.strip)
+      self.velodrome = Velodrome.find_or_create_by(name: value.strip)
     end
   end
 
@@ -501,7 +501,7 @@ class Event < ActiveRecord::Base
       promoters = Person.find_all_by_name_or_alias(new_promoter_name)
       case promoters.size
       when 0
-        self.promoter = Person.create!(:name => new_promoter_name)
+        self.promoter = Person.create!(name: new_promoter_name)
       when 1
         self.promoter = promoters.first
       else

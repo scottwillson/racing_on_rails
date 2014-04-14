@@ -6,7 +6,7 @@ end
 
 namespace :test do
   desc "Start server and run browser-based acceptance tests"
-  task :acceptance => [ "db:test:prepare" ] do
+  task acceptance: [ "db:test:prepare" ] do
     Rake::Task["test:acceptance"].invoke
   end
 end

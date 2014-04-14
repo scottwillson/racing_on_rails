@@ -41,8 +41,8 @@ class Result < ActiveRecord::Base
   after_destroy :destroy_people
   after_destroy :destroy_teams
 
-  has_many :scores, :foreign_key => 'competition_result_id', :dependent => :destroy, :extend => CreateIfBestResultForRaceExtension
-  has_many :dependent_scores, :class_name => 'Score', :foreign_key => 'source_result_id', :dependent => :destroy
+  has_many :scores, foreign_key: 'competition_result_id', dependent: :destroy, extend: CreateIfBestResultForRaceExtension
+  has_many :dependent_scores, class_name: 'Score', foreign_key: 'source_result_id', dependent: :destroy
   belongs_to :category
   belongs_to :event
   belongs_to :race
@@ -51,7 +51,7 @@ class Result < ActiveRecord::Base
 
   validates_presence_of :race
 
-  scope :competition, -> { where(:competition_result => true) }
+  scope :competition, -> { where(competition_result: true) }
 
   attr_accessor :updated_by
 
@@ -61,7 +61,7 @@ class Result < ActiveRecord::Base
     else
       person_id = person
     end
-    Result.includes(:team, :person, :scores, :category, {:race => [:event, :category]}).where(:person_id => person_id)
+    Result.includes(:team, :person, :scores, :category, {race: [:event, :category]}).where(person_id: person_id)
   end
 
   # Replace any new +person+, or +team+ with one that already exists if name matches
@@ -119,12 +119,12 @@ class Result < ActiveRecord::Base
 
     #license first if present and source is reliable (USAC)
     if RacingAssociation.current.eager_match_on_license? && license.present?
-      matches = matches + Person.where(:license => license)
+      matches = matches + Person.where(license: license)
       return matches if matches.size == 1
     end
 
     # name
-    matches = matches + Person.find_all_by_name_or_alias(:first_name => first_name, :last_name => last_name)
+    matches = matches + Person.find_all_by_name_or_alias(first_name: first_name, last_name: last_name)
     return matches if matches.size == 1
 
     # number
@@ -269,7 +269,7 @@ class Result < ActiveRecord::Base
   def calculate_points
     # Drop to SQL for effeciency
     if competition_result?
-      self.points = Score.where(:competition_result_id => id).sum(:points)
+      self.points = Score.where(competition_result_id: id).sum(:points)
     end
     points
   end
@@ -278,7 +278,7 @@ class Result < ActiveRecord::Base
     if name.blank?
       self.category = nil
     else
-      self.category = Category.find_or_create_by(:name => name)
+      self.category = Category.find_or_create_by(name: name)
     end
     self[:category_name] = name.try(:to_s)
   end
@@ -302,7 +302,7 @@ class Result < ActiveRecord::Base
   # TODO Cache this, too
   def team_size
     if race_id
-      @team_size ||= Result.where(:race_id => race_id, :place => place).count
+      @team_size ||= Result.where(race_id: race_id, place: place).count
     else
       @team_size ||= 1
     end
@@ -378,7 +378,7 @@ class Result < ActiveRecord::Base
     if self.person
       self.person.first_name = value
     else
-      self.person = Person.new(:first_name => value)
+      self.person = Person.new(first_name: value)
     end
     self[:first_name] = value
     self[:name] = self.person.try(:name, date)
@@ -388,7 +388,7 @@ class Result < ActiveRecord::Base
     if self.person
       self.person.last_name = value
     else
-      self.person = Person.new(:last_name => value)
+      self.person = Person.new(last_name: value)
     end
     self[:last_name] = value
     self[:name] = self.person.try(:name, date)
@@ -402,7 +402,7 @@ class Result < ActiveRecord::Base
   def name=(value)
     if value.present?
       if person.try(:name) != value
-        self.person = Person.new(:name => value)
+        self.person = Person.new(name: value)
       end
       self[:first_name] = person.first_name
       self[:last_name] = person.last_name
@@ -430,7 +430,7 @@ class Result < ActiveRecord::Base
   def team_name=(value)
     team_id_will_change!
     if team.nil? || team.name != value
-      self.team = Team.new(:name => value)
+      self.team = Team.new(name: value)
     end
     if person && person.team_name != value
       person.team = team

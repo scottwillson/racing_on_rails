@@ -7,17 +7,17 @@
     <%= race[:field_size] if race[:field_size] %>
   </td>
   <td class="actions">
-    <%= link_to "Edit", edit_admin_race_path(race), :id => "edit_race_#{race.id}" %>
+    <%= link_to "Edit", edit_admin_race_path(race), id: "edit_race_#{race.id}" %>
   </td>
   <td class="actions delete">
     <%= link_to(
           admin_race_path(race),
-          :remote => true,
-          :class => "icon",
-          :id => "destroy_race_#{race.id}",
-          :title => "Delete race",
-          :data => { :confirm => (Rails.env.acceptance? || !promoter?) ? nil : "Really delete #{race.name}?" },
-          :method => :delete) do %>
+          remote: true,
+          class: "icon",
+          id: "destroy_race_#{race.id}",
+          title: "Delete race",
+          data: { confirm: (Rails.env.acceptance? || !promoter?) ? nil : "Really delete #{race.name}?" },
+          method: :delete) do %>
       <span class="glyphicon glyphicon-minus-sign"></span>
     <% end %>
   </td>

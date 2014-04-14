@@ -10,12 +10,12 @@ module Admin
     end
 
     def test_update_no_team
-      result = FactoryGirl.create(:result, :team => nil)
+      result = FactoryGirl.create(:result, team: nil)
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "team_name",
-          :value => ""
+          id: result.to_param,
+          name: "team_name",
+          value: ""
       assert_response(:success)
 
       result.reload
@@ -23,14 +23,14 @@ module Admin
     end
 
     def test_update_no_team_to_existing
-      result = FactoryGirl.create(:result, :team => nil)
-      FactoryGirl.create(:team, :name => "Vanilla")
+      result = FactoryGirl.create(:result, team: nil)
+      FactoryGirl.create(:team, name: "Vanilla")
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "team_name",
-          :value => "Vanilla"
+          id: result.to_param,
+          name: "team_name",
+          value: "Vanilla"
 
       assert_response(:success)
 
@@ -39,13 +39,13 @@ module Admin
     end
 
     def test_update_no_team_to_new
-      result = FactoryGirl.create(:result, :team => nil)
+      result = FactoryGirl.create(:result, team: nil)
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "team_name",
-          :value => "Team Vanilla"
+          id: result.to_param,
+          name: "team_name",
+          value: "Team Vanilla"
       assert_response(:success)
 
       result.reload
@@ -53,15 +53,15 @@ module Admin
     end
 
     def test_update_no_team_to_alias
-      result = FactoryGirl.create(:result, :team => nil)
-      gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers")
-      gentle_lovers.aliases.create!(:name => "Gentile Lovers")
+      result = FactoryGirl.create(:result, team: nil)
+      gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
+      gentle_lovers.aliases.create!(name: "Gentile Lovers")
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "team_name",
-          :value => "Gentile Lovers"
+          id: result.to_param,
+          name: "team_name",
+          value: "Gentile Lovers"
       assert_response(:success)
 
       result.reload
@@ -73,9 +73,9 @@ module Admin
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "team_name",
-          :value => ""
+          id: result.to_param,
+          name: "team_name",
+          value: ""
       assert_response(:success)
 
       result.reload
@@ -83,14 +83,14 @@ module Admin
     end
 
     def test_update_to_existing_team
-      result = FactoryGirl.create(:result, :team => nil)
-      vanilla = FactoryGirl.create(:team, :name => "Vanilla")
+      result = FactoryGirl.create(:result, team: nil)
+      vanilla = FactoryGirl.create(:team, name: "Vanilla")
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "team_name",
-          :value => "Vanilla"
+          id: result.to_param,
+          name: "team_name",
+          value: "Vanilla"
       assert_response(:success)
 
       result.reload
@@ -98,13 +98,13 @@ module Admin
     end
 
     def test_update_to_new_team
-      result = FactoryGirl.create(:result, :team => nil)
+      result = FactoryGirl.create(:result, team: nil)
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "team_name",
-          :value => "Astana"
+          id: result.to_param,
+          name: "team_name",
+          value: "Astana"
       assert_response(:success)
 
       result.reload
@@ -113,14 +113,14 @@ module Admin
 
     def test_update_to_team_alias
       result = FactoryGirl.create(:result)
-      gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers")
-      gentle_lovers.aliases.create!(:name => "Gentile Lovers")
+      gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
+      gentle_lovers.aliases.create!(name: "Gentile Lovers")
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "team_name",
-          :value => "Gentile Lovers"
+          id: result.to_param,
+          name: "team_name",
+          value: "Gentile Lovers"
       assert_response(:success)
 
       result.reload
@@ -132,9 +132,9 @@ module Admin
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "points",
-          :value => "12"
+          id: result.to_param,
+          name: "points",
+          value: "12"
       assert_response(:success)
 
       result.reload
@@ -142,14 +142,14 @@ module Admin
     end
 
     def test_update_no_person
-      result = FactoryGirl.create(:result, :person => nil)
+      result = FactoryGirl.create(:result, person: nil)
       original_team_name = result.team_name
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "team_name",
-          :value => original_team_name
+          id: result.to_param,
+          name: "team_name",
+          value: original_team_name
       assert_response(:success)
 
       result.reload
@@ -160,16 +160,16 @@ module Admin
     end
 
     def test_update_no_person_to_existing
-      result = FactoryGirl.create(:result, :person => nil)
-      tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-      tonkin.aliases.create!(:name => "Eric Tonkin")
+      result = FactoryGirl.create(:result, person: nil)
+      tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+      tonkin.aliases.create!(name: "Eric Tonkin")
       original_team_name = result.team_name
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "name",
-          :value => "Erik Tonkin"
+          id: result.to_param,
+          name: "name",
+          value: "Erik Tonkin"
       assert_response(:success)
 
       result.reload
@@ -180,17 +180,17 @@ module Admin
     end
 
     def test_update_no_person_to_alias
-      result = FactoryGirl.create(:result, :person => nil)
-      tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-      tonkin.aliases.create!(:name => "Eric Tonkin")
+      result = FactoryGirl.create(:result, person: nil)
+      tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+      tonkin.aliases.create!(name: "Eric Tonkin")
 
       original_team_name = result.team_name
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "name",
-          :value => "Eric Tonkin"
+          id: result.to_param,
+          name: "name",
+          value: "Eric Tonkin"
       assert_response(:success)
 
       result.reload
@@ -207,9 +207,9 @@ module Admin
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "name",
-          :value => ""
+          id: result.to_param,
+          name: "name",
+          value: ""
       assert_response(:success)
 
       result.reload
@@ -220,17 +220,17 @@ module Admin
     end
 
     def test_update_to_different_person
-      result = FactoryGirl.create(:result, :person => nil)
-      tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-      tonkin.aliases.create!(:name => "Eric Tonkin")
+      result = FactoryGirl.create(:result, person: nil)
+      tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+      tonkin.aliases.create!(name: "Eric Tonkin")
 
       original_team_name = result.team_name
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "name",
-          :value => "Erik Tonkin"
+          id: result.to_param,
+          name: "name",
+          value: "Erik Tonkin"
       assert_response(:success)
 
       result.reload
@@ -242,16 +242,16 @@ module Admin
     end
 
     def test_update_to_alias
-      result = FactoryGirl.create(:result, :person => nil)
-      tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-      tonkin.aliases.create!(:name => "Eric Tonkin")
+      result = FactoryGirl.create(:result, person: nil)
+      tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+      tonkin.aliases.create!(name: "Eric Tonkin")
       original_team_name = result.team_name
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "name",
-          :value => "Eric Tonkin"
+          id: result.to_param,
+          name: "name",
+          value: "Eric Tonkin"
       assert_response(:success)
 
       result.reload
@@ -267,15 +267,15 @@ module Admin
       FactoryGirl.create(:number_issuer)
       FactoryGirl.create(:discipline)
 
-      weaver = FactoryGirl.create(:person, :first_name => "Ryan", :last_name => "Weaver")
-      FactoryGirl.create_list(:result, 3, :person => weaver)
-      result = FactoryGirl.create(:result, :person => weaver)
+      weaver = FactoryGirl.create(:person, first_name: "Ryan", last_name: "Weaver")
+      FactoryGirl.create_list(:result, 3, person: weaver)
+      result = FactoryGirl.create(:result, person: weaver)
 
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "name",
-          :value => "Stella Carey"
+          id: result.to_param,
+          name: "name",
+          value: "Stella Carey"
 
       assert_response :success
 
@@ -293,12 +293,12 @@ module Admin
     end
 
     def test_update_attribute_should_format_times
-      result = FactoryGirl.create(:result, :time => 600)
+      result = FactoryGirl.create(:result, time: 600)
       xhr :put,
           :update_attribute,
-          :id => result.to_param,
-          :name => "time",
-          :value => "7159"
+          id: result.to_param,
+          name: "time",
+          value: "7159"
 
       assert_response :success
       assert_equal "01:59:19.00", response.body, "Should format time but was #{response.body}"
@@ -307,7 +307,7 @@ module Admin
     def test_person
       weaver = FactoryGirl.create(:result).person
 
-      get(:index, :person_id => weaver.to_param.to_s)
+      get(:index, person_id: weaver.to_param.to_s)
 
       assert_not_nil(assigns["results"], "Should assign results")
       assert_equal(weaver, assigns["person"], "Should assign person")
@@ -315,19 +315,19 @@ module Admin
     end
 
     def test_find_person
-      FactoryGirl.create(:person, :first_name => "Ryan", :last_name => "Weaver")
-      FactoryGirl.create(:person, :name => "Alice")
-      tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-      post(:find_person, :name => 'e', :ignore_id => tonkin.id)
+      FactoryGirl.create(:person, first_name: "Ryan", last_name: "Weaver")
+      FactoryGirl.create(:person, name: "Alice")
+      tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+      post(:find_person, name: 'e', ignore_id: tonkin.id)
       assert_response(:success)
       assert_template('admin/results/_people')
     end
 
     def test_find_person_one_result
       weaver = FactoryGirl.create(:person)
-      tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
+      tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
 
-      post(:find_person, :name => weaver.name, :ignore_id => tonkin.id)
+      post(:find_person, name: weaver.name, ignore_id: tonkin.id)
 
       assert_response(:success)
       assert_template('admin/results/_person')
@@ -335,7 +335,7 @@ module Admin
 
     def test_find_person_no_results
       tonkin = FactoryGirl.create(:person)
-      post(:find_person, :name => 'not a person in the database', :ignore_id => tonkin.id)
+      post(:find_person, name: 'not a person in the database', ignore_id: tonkin.id)
       assert_response(:success)
       assert_template('admin/results/_people')
     end
@@ -343,7 +343,7 @@ module Admin
     def test_results
       weaver = FactoryGirl.create(:result).person
 
-      post(:results, :person_id => weaver.id)
+      post(:results, person_id: weaver.id)
 
       assert_response(:success)
       assert_template('admin/results/_person')
@@ -351,19 +351,19 @@ module Admin
 
     def test_scores
       result = FactoryGirl.create(:result)
-      post(:scores, :id => result.id, :format => "js")
+      post(:scores, id: result.id, format: "js")
       assert_response(:success)
     end
 
     def test_move
       weaver = FactoryGirl.create(:result).person
       tonkin = FactoryGirl.create(:person)
-      result = FactoryGirl.create(:result, :person => tonkin)
+      result = FactoryGirl.create(:result, person: tonkin)
 
       assert tonkin.results.include?(result)
       assert !weaver.results.include?(result)
 
-      post :move, :person_id => weaver.id, :result_id => result.id, :format => "js"
+      post :move, person_id: weaver.id, result_id: result.id, format: "js"
 
       assert !tonkin.results(true).include?(result)
       assert weaver.results(true).include?(result)
@@ -372,12 +372,12 @@ module Admin
 
     def test_create
       race = FactoryGirl.create(:race)
-      tonkin_result = FactoryGirl.create(:result, :race => race, :place => "1")
-      weaver_result = FactoryGirl.create(:result, :race => race, :place => "2")
-      matson_result = FactoryGirl.create(:result, :race => race, :place => "3")
-      molly_result = FactoryGirl.create(:result, :race => race, :place => "16")
+      tonkin_result = FactoryGirl.create(:result, race: race, place: "1")
+      weaver_result = FactoryGirl.create(:result, race: race, place: "2")
+      matson_result = FactoryGirl.create(:result, race: race, place: "3")
+      molly_result = FactoryGirl.create(:result, race: race, place: "16")
 
-      xhr(:post, :create, :race_id => race.id, :before_result_id => weaver_result.id)
+      xhr(:post, :create, race_id: race.id, before_result_id: weaver_result.id)
       assert_response(:success)
       assert_equal(5, race.results.size, 'Results after insert')
       tonkin_result.reload
@@ -389,7 +389,7 @@ module Admin
       assert_equal('4', matson_result.place, 'Matson place after insert')
       assert_equal('17', molly_result.place, 'Molly place after insert')
 
-      xhr(:post, :create, :race_id => race.id, :before_result_id => tonkin_result.id)
+      xhr(:post, :create, race_id: race.id, before_result_id: tonkin_result.id)
       assert_response(:success)
       assert_equal(6, race.results.size, 'Results after insert')
       tonkin_result.reload
@@ -401,7 +401,7 @@ module Admin
       assert_equal('5', matson_result.place, 'Matson place after insert')
       assert_equal('18', molly_result.place, 'Molly place after insert')
 
-      xhr(:post, :create, :race_id => race.id, :before_result_id => molly_result.id)
+      xhr(:post, :create, race_id: race.id, before_result_id: molly_result.id)
       assert_response(:success)
       assert_equal(7, race.results.size, 'Results after insert')
       tonkin_result.reload
@@ -413,8 +413,8 @@ module Admin
       assert_equal('5', matson_result.place, 'Matson place after insert')
       assert_equal('19', molly_result.place, 'Molly place after insert')
 
-      dnf = race.results.create(:place => 'DNF')
-      xhr(:post, :create, :race_id => race.id, :before_result_id => weaver_result.id)
+      dnf = race.results.create(place: 'DNF')
+      xhr(:post, :create, race_id: race.id, before_result_id: weaver_result.id)
       assert_response(:success)
       assert_equal(9, race.results(true).size, 'Results after insert')
       tonkin_result.reload
@@ -428,7 +428,7 @@ module Admin
       assert_equal('20', molly_result.place, 'Molly place after insert')
       assert_equal('DNF', dnf.place, 'DNF place after insert')
 
-      xhr(:post, :create, :race_id => race.id, :before_result_id => dnf.id)
+      xhr(:post, :create, race_id: race.id, before_result_id: dnf.id)
       assert_response(:success)
       assert_equal(10, race.results(true).size, 'Results after insert')
       tonkin_result.reload
@@ -443,7 +443,7 @@ module Admin
       assert_equal('DNF', dnf.place, 'DNF place after insert')
       assert_equal('DNF', race.results(true).sort.last.place, 'DNF place after insert')
 
-      xhr :post, :create, :race_id => race.id
+      xhr :post, :create, race_id: race.id
       assert_response(:success)
       assert_equal(11, race.results(true).size, 'Results after insert')
       tonkin_result.reload
@@ -463,7 +463,7 @@ module Admin
       result_2 = FactoryGirl.create(:result)
       assert_not_nil(result_2, 'Result should exist in DB')
 
-      xhr(:post, :destroy, :id => result_2.to_param)
+      xhr(:post, :destroy, id: result_2.to_param)
       assert_response(:success)
       assert_raise(ActiveRecord::RecordNotFound, 'Result should not exist in DB') {Result.find(result_2.id)}
     end

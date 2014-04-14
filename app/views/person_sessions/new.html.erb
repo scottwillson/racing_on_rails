@@ -1,16 +1,16 @@
 <% @page_title = "Login" %>
 <% @show_tabs = false %>
 
-<%= render "shared/errors", :object => @person_session %>
+<%= render "shared/errors", object: @person_session %>
 
-<%= form_for @person_session, :url => person_session_path, :html => { :class => "form-horizontal", :role => "form" } do |f| %>
+<%= form_for @person_session, url: person_session_path, html: { class: "form-horizontal", role: "form" } do |f| %>
 <div class="row">
   <div class="col-sm-6">
-    <%= f.labelled_text_field :login, nil, :class => @person_session.login.blank? ? "wants_focus col-sm-12 form-control" : "col-sm-12 form-control" %>
-    <%= f.labelled_password_field :password, nil, :autocomplete => "off", :class => @person_session.login.blank? ? "col-sm-12 form-control" : "wants_focus col-sm-12 form-control" %>
+    <%= f.labelled_text_field :login, nil, class: @person_session.login.blank? ? "wants_focus col-sm-12 form-control" : "col-sm-12 form-control" %>
+    <%= f.labelled_password_field :password, nil, autocomplete: "off", class: @person_session.login.blank? ? "col-sm-12 form-control" : "wants_focus col-sm-12 form-control" %>
     <div class="form-group">
       <div class="col-sm-offset-4 col-sm-8">
-        <%= submit_tag "Login", :class => "btn btn-default", :id => "login_button" %>
+        <%= submit_tag "Login", class: "btn btn-default", id: "login_button" %>
       </div>
     </div>
   </div>
@@ -19,14 +19,14 @@
       <strong>Don't Have a Login Yet?</strong>
       <br class="visible-xs"/>
       <%= link_to "Create a login",
-            people_new_login_path(:return_to => session[:return_to]),
-            { :class => "obvious", :id => "new_login" } %>
+            people_new_login_path(return_to: session[:return_to]),
+            { class: "obvious", id: "new_login" } %>
     </p>
 
     <p>
       <strong>Forgot Your Password?</strong>
       <br class="visible-xs"/>
-      <%= link_to "Request a reminder", new_password_reset_path, { :class => "obvious forgot", :id => "forgot" } %>
+      <%= link_to "Request a reminder", new_password_reset_path, { class: "obvious forgot", id: "forgot" } %>
 
       <% if @person_session.errors.any? %>
         You'll need to allow cookies to login

@@ -3,13 +3,13 @@
     <div class="pagination">
       <ul class="pagination">
         <% if post.newer %>
-        <li class="prev"><%= link_to "&larr; Newer".html_safe, post_path(post.newer), :rel => "previous" %></li>
+        <li class="prev"><%= link_to "&larr; Newer".html_safe, post_path(post.newer), rel: "previous" %></li>
         <% else %>
         <li class="prev disabled"><span>&larr; Newer</span></li>
         <% end %>
-        <li class="next"><%= link_to post.mailing_list.friendly_name, mailing_list_posts_path(post.mailing_list, :page => params[:page] ) %></li>
+        <li class="next"><%= link_to post.mailing_list.friendly_name, mailing_list_posts_path(post.mailing_list, page: params[:page] ) %></li>
         <% if post.older %>
-        <li class="next"><%= link_to "Older &rarr;".html_safe, post_path(post.older), :rel => "next" %></li>
+        <li class="next"><%= link_to "Older &rarr;".html_safe, post_path(post.older), rel: "next" %></li>
         <% else %>
         <li class="next disabled"><span>Older &rarr;</span></li>
         <% end %>

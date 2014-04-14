@@ -2,24 +2,24 @@
 
 <h2>Velodromes</h2>
 
-<%= render "shared/search", :name => @name, :placeholder => "Enter name to search"%>
+<%= render "shared/search", name: @name, placeholder: "Enter name to search"%>
 
 <div class="row">
   <div class="col-sm-12">
-    <%= table :class => :velodromes, :id => :velodromes, :collection => @velodromes, :columns => 4 do %>
+    <%= table class: :velodromes, id: :velodromes, collection: @velodromes, columns: 4 do %>
       <tr>
         <th class="icon"></th>
         <th class="name">Name</th>
         <th>Website</th>
         <th class="actions"></th>
       </tr>
-      <%= render :partial => "velodrome", :collection => @velodromes %>
+      <%= render partial: "velodrome", collection: @velodromes %>
     <% end -%>
   </div>
 </div>
 <div class="row">
   <div class="col-sm-12">
-    <%= link_to new_admin_velodrome_path, :class => "btn btn-default", :id => "new_velodrome" do %>
+    <%= link_to new_admin_velodrome_path, class: "btn btn-default", id: "new_velodrome" do %>
       <span class="glyphicon glyphicon-flag"></span> New Velodrome
     <% end %>
   </div>

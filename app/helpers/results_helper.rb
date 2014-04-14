@@ -35,7 +35,7 @@ module ResultsHelper
     end
 
     table.delete_blank_columns!
-    table.delete_homogenous_columns!(:except => [ :place, :number, :time, :laps ])
+    table.delete_homogenous_columns!(except: [ :place, :number, :time, :laps ])
 
     table.renderer = Renderers::DefaultResultRenderer
     table.renderers[:name] = Renderers::NameRenderer
@@ -52,7 +52,7 @@ module ResultsHelper
     table.renderers[:points_from_place] = Renderers::PointsRenderer
     table.renderers[:points_penalty] = Renderers::PointsRenderer
     table.renderers[:points_total] = Renderers::PointsRenderer
-    render "results/table", :table => table, :css_class => "results"
+    render "results/table", table: table, css_class: "results"
   end
 
   def participant_event_results_table(participant, event_results)
@@ -79,7 +79,7 @@ module ResultsHelper
     table.renderer = Renderers::DefaultResultRenderer
     table.renderers[:event_full_name] = Renderers::EventFullNameRenderer
     table.renderers[:points] = Renderers::PointsRenderer
-    render "results/table", :table => table, :css_class => "results"
+    render "results/table", table: table, css_class: "results"
   end
 
   def scores_table(result)
@@ -104,11 +104,11 @@ module ResultsHelper
       source_result.points = score.points
       source_result
     end
-    table.rows << Tabular::Row.new(table, :points => result.points)
+    table.rows << Tabular::Row.new(table, points: result.points)
     table.renderer = Renderers::DefaultResultRenderer
     table.renderers[:event_full_name] = Renderers::ScoreEventFullNameRenderer
     table.renderers[:points] = Renderers::PointsRenderer
-    render "results/table", :table => table, :css_class => "results scores"
+    render "results/table", table: table, css_class: "results scores"
   end
 
   def edit_results_table(race)
@@ -136,6 +136,6 @@ module ResultsHelper
 
     table.columns << :bar
 
-    render "admin/races/results", :results_table_for_race => table, :race => race, :css_class => "results"
+    render "admin/races/results", results_table_for_race: table, race: race, css_class: "results"
   end
 end

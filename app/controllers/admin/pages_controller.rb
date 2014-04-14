@@ -1,7 +1,7 @@
 module Admin
   # Admin editing for Pages in built-in CMS. All editing actions expire the cache.
   class PagesController < Admin::AdminController
-    before_filter :require_administrator, :except => [ :show ]
+    before_filter :require_administrator, except: [ :show ]
 
     def index
       @pages = Page.roots
@@ -49,7 +49,7 @@ module Admin
           @page = Page.find(params[:id])
           @page.update_attributes! params[:name] => params[:value]
           expire_cache
-          render :plain => @page.send(params[:name])
+          render plain: @page.send(params[:name])
         }
       end
     end

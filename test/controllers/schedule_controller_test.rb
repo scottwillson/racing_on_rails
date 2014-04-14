@@ -10,25 +10,25 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     year = 2006
 
     SingleDayEvent.create!(
-      :name => "Banana Belt I",
-      :city => "Hagg Lake",
-      :date => Date.new(year, 1, 1),
-      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
-      :flyer_approved => true
+      name: "Banana Belt I",
+      city: "Hagg Lake",
+      date: Date.new(year, 1, 1),
+      flyer: "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
+      flyer_approved: true
     )
 
     SingleDayEvent.create!(
-      :name => "Mudslinger",
-      :city => "Blodgett",
-      :date => Date.new(year, 12, 27),
-      :discipline => "Mountain Bike",
-      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
-      :flyer_approved => false,
-      :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
+      name: "Mudslinger",
+      city: "Blodgett",
+      date: Date.new(year, 12, 27),
+      discipline: "Mountain Bike",
+      flyer: "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
+      flyer_approved: false,
+      promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    SingleDayEvent.create!(:postponed => true)
-    get(:index, {:year => year})
+    SingleDayEvent.create!(postponed: true)
+    get(:index, {year: year})
 
     html = @response.body
     assert(html["Banana Belt I"], "'Banana Belt I' should be in HTML")
@@ -38,7 +38,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   end
 
   def test_index_only_shows_visible_events
-    future_national_federation_event = FactoryGirl.create(:event, :sanctioned_by => "USA Cycling")
+    future_national_federation_event = FactoryGirl.create(:event, sanctioned_by: "USA Cycling")
 
     get :index
     html = @response.body
@@ -52,19 +52,19 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
   def test_index_rss
     FactoryGirl.create(:event)
-    get :index, :format => :rss
-    assert_redirected_to schedule_path(:format => :atom)
+    get :index, format: :rss
+    assert_redirected_to schedule_path(format: :atom)
   end
 
   def test_index_atom
     FactoryGirl.create(:event)
-    get :index, :format => :atom
+    get :index, format: :atom
     assert_response :success
   end
 
   def test_index_excel
     FactoryGirl.create(:event)
-    get :index, :format => :xls
+    get :index, format: :xls
     assert_response :success
   end
 
@@ -72,18 +72,18 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
 
-    FactoryGirl.create(:event, :discipline => "Mountain Bike")
+    FactoryGirl.create(:event, discipline: "Mountain Bike")
 
-    get :index, :discipline => "mtb", :format => :xls
+    get :index, discipline: "mtb", format: :xls
     assert_response :success
   end
 
   def test_index_excel_discipline_list
     FactoryGirl.create(:discipline)
 
-    FactoryGirl.create(:event, :discipline => "Road")
+    FactoryGirl.create(:event, discipline: "Road")
 
-    get :list, :discipline => "road", :format => :xls
+    get :list, discipline: "road", format: :xls
     assert_response :success
   end
 
@@ -93,24 +93,24 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     year = 2006
 
     SingleDayEvent.create!(
-      :name => "Banana Belt I",
-      :city => "Hagg Lake",
-      :date => Date.new(year, 1, 22),
-      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
-      :flyer_approved => true
+      name: "Banana Belt I",
+      city: "Hagg Lake",
+      date: Date.new(year, 1, 22),
+      flyer: "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
+      flyer_approved: true
     )
 
     SingleDayEvent.new(
-      :name => "Mudslinger",
-      :city => "Blodgett",
-      :date => Date.new(year, 12, 27),
-      :discipline => "Mountain Bike",
-      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
-      :flyer_approved => false,
-      :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
+      name: "Mudslinger",
+      city: "Blodgett",
+      date: Date.new(year, 12, 27),
+      discipline: "Mountain Bike",
+      flyer: "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
+      flyer_approved: false,
+      promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:index, {:year => year, :discipline => "Road"})
+    get(:index, {year: year, discipline: "Road"})
 
     html = @response.body
     assert(!html["Mudslinger"], "Road events should not include MTB")
@@ -124,24 +124,24 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     year = 2006
 
     SingleDayEvent.create!(
-      :name => "Banana Belt I",
-      :city => "Hagg Lake",
-      :date => Date.new(year, 1, 22),
-      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
-      :flyer_approved => true
+      name: "Banana Belt I",
+      city: "Hagg Lake",
+      date: Date.new(year, 1, 22),
+      flyer: "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
+      flyer_approved: true
     )
 
     SingleDayEvent.create!(
-      :name => "Mudslinger",
-      :city => "Blodgett",
-      :date => Date.new(year, 12, 27),
-      :discipline => "Mountain Bike",
-      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
-      :flyer_approved => false,
-      :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
+      name: "Mudslinger",
+      city: "Blodgett",
+      date: Date.new(year, 12, 27),
+      discipline: "Mountain Bike",
+      flyer: "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
+      flyer_approved: false,
+      promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:index, {:year => year, :discipline => "Mountain Bike"})
+    get(:index, {year: year, discipline: "Mountain Bike"})
 
     html = @response.body
     assert(html["Mudslinger"], "Road events should include MTB")
@@ -150,9 +150,9 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
   def test_filter_by_sanctioning_organization
     Timecop.freeze(2010, 2) do
-      FactoryGirl.create(:event, :sanctioned_by => "FIAC", :name => "FIAC Event")
-      FactoryGirl.create(:event, :sanctioned_by => "UCI", :name => "UCI Event")
-      FactoryGirl.create(:event, :sanctioned_by => "CBRA", :name => "CBRA Event")
+      FactoryGirl.create(:event, sanctioned_by: "FIAC", name: "FIAC Event")
+      FactoryGirl.create(:event, sanctioned_by: "UCI", name: "UCI Event")
+      FactoryGirl.create(:event, sanctioned_by: "CBRA", name: "CBRA Event")
       racing_association = RacingAssociation.current
       racing_association.filter_schedule_by_sanctioning_organization = true
       racing_association.show_only_association_sanctioned_races_on_calendar = false
@@ -168,15 +168,15 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
   def test_filter_by_sanctioning_organization_with_filter
     Timecop.freeze(2010, 2) do
-      FactoryGirl.create(:event, :sanctioned_by => "FIAC", :name => "FIAC Event")
-      FactoryGirl.create(:event, :sanctioned_by => "UCI", :name => "UCI Event")
-      FactoryGirl.create(:event, :sanctioned_by => "CBRA", :name => "CBRA Event")
+      FactoryGirl.create(:event, sanctioned_by: "FIAC", name: "FIAC Event")
+      FactoryGirl.create(:event, sanctioned_by: "UCI", name: "UCI Event")
+      FactoryGirl.create(:event, sanctioned_by: "CBRA", name: "CBRA Event")
       racing_association = RacingAssociation.current
       racing_association.filter_schedule_by_sanctioning_organization = true
       racing_association.show_only_association_sanctioned_races_on_calendar = false
       racing_association.save!
 
-      get :index, :sanctioning_organization => "FIAC"
+      get :index, sanctioning_organization: "FIAC"
       html = @response.body
       assert html["FIAC Event"], "Should include FIAC event"
       assert !html["UCI Event"], "Should not include UCI event"
@@ -190,14 +190,14 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       racing_association.filter_schedule_by_region = true
       racing_association.save!
 
-      wa = Region.create! :name => "Washington"
-      oregon = Region.create! :name => "Oregon"
-      Region.create! :name => "Northern California"
+      wa = Region.create! name: "Washington"
+      oregon = Region.create! name: "Oregon"
+      Region.create! name: "Northern California"
 
-      FactoryGirl.create(:event, :region => wa, :name => "WA Event")
-      FactoryGirl.create(:event, :region => oregon, :name => "OR Event")
+      FactoryGirl.create(:event, region: wa, name: "WA Event")
+      FactoryGirl.create(:event, region: oregon, name: "OR Event")
 
-      get :index, :region => "washington"
+      get :index, region: "washington"
       html = @response.body
       assert html["WA Event"], "Should include Washington event"
       assert !html["OR Event"], "Should not include Oregon event"
@@ -212,24 +212,24 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     year = 2006
 
     SingleDayEvent.create!(
-      :name => "Banana Belt I",
-      :city => "Hagg Lake",
-      :date => Date.new(year, 1, 22),
-      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
-      :flyer_approved => true
+      name: "Banana Belt I",
+      city: "Hagg Lake",
+      date: Date.new(year, 1, 22),
+      flyer: "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
+      flyer_approved: true
     )
 
     SingleDayEvent.create!(
-      :name => "Mudslinger",
-      :city => "Blodgett",
-      :date => Date.new(year, 12, 27),
-      :discipline => "Mountain Bike",
-      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
-      :flyer_approved => false,
-      :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
+      name: "Mudslinger",
+      city: "Blodgett",
+      date: Date.new(year, 12, 27),
+      discipline: "Mountain Bike",
+      flyer: "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
+      flyer_approved: false,
+      promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get :index, :year => year, :discipline => "mountain_bike"
+    get :index, year: year, discipline: "mountain_bike"
 
     html = @response.body
     assert(html["Mudslinger"], "mountain_bike should show MTB races")
@@ -248,24 +248,24 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     year = 2006
 
     SingleDayEvent.create!(
-      :name => "Banana Belt I",
-      :city => "Hagg Lake",
-      :date => Date.new(year, 1, 22),
-      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
-      :flyer_approved => true
+      name: "Banana Belt I",
+      city: "Hagg Lake",
+      date: Date.new(year, 1, 22),
+      flyer: "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
+      flyer_approved: true
     )
 
     SingleDayEvent.create!(
-      :name => "Mudslinger",
-      :city => "Blodgett",
-      :date => Date.new(year, 12, 27),
-      :discipline => "Mountain Bike",
-      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
-      :flyer_approved => false,
-      :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
+      name: "Mudslinger",
+      city: "Blodgett",
+      date: Date.new(year, 12, 27),
+      discipline: "Mountain Bike",
+      flyer: "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
+      flyer_approved: false,
+      promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:list, {:year => year, :discipline => "Mountain Bike"})
+    get(:list, {year: year, discipline: "Mountain Bike"})
 
     html = @response.body
     assert(html["Mudslinger"], "Road events should include MTB")
@@ -274,19 +274,19 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
   def test_list_excel_discipline
     FactoryGirl.create(:discipline)
-    FactoryGirl.create(:event, :discipline => "Road")
+    FactoryGirl.create(:event, discipline: "Road")
 
-    get :list, :discipline => "road", :format => :xls
+    get :list, discipline: "road", format: :xls
     assert_response :success
   end
 
   def test_index_as_json
-    get :index, :format => "json"
+    get :index, format: "json"
     assert_response :success
   end
 
   def test_calendar_as_json
-    get :calendar, :format => "json"
+    get :calendar, format: "json"
     assert_response :success
   end
 
@@ -294,24 +294,24 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
     SingleDayEvent.create!(
-      :name => "Banana Belt I",
-      :city => "Hagg Lake",
-      :date => Date.new(2006, 1, 22),
-      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
-      :flyer_approved => true
+      name: "Banana Belt I",
+      city: "Hagg Lake",
+      date: Date.new(2006, 1, 22),
+      flyer: "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
+      flyer_approved: true
     )
 
     SingleDayEvent.create!(
-      :name => "Mudslinger",
-      :city => "Blodgett",
-      :date => Date.new(2006, 12, 27),
-      :discipline => "Mountain Bike",
-      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
-      :flyer_approved => false,
-      :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
+      name: "Mudslinger",
+      city: "Blodgett",
+      date: Date.new(2006, 12, 27),
+      discipline: "Mountain Bike",
+      flyer: "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
+      flyer_approved: false,
+      promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:index, {:year => 2006, :discipline => "Mountain Bike", :format => "json"})
+    get(:index, {year: 2006, discipline: "Mountain Bike", format: "json"})
 
     json = @response.body
     assert(json["Mudslinger"], "Calendar should include MTB event")
@@ -322,24 +322,24 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
     SingleDayEvent.create!(
-      :name => "Banana Belt I",
-      :city => "Hagg Lake",
-      :date => Date.new(2006, 1, 22),
-      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
-      :flyer_approved => true
+      name: "Banana Belt I",
+      city: "Hagg Lake",
+      date: Date.new(2006, 1, 22),
+      flyer: "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
+      flyer_approved: true
     )
 
     SingleDayEvent.create!(
-      :name => "Mudslinger",
-      :city => "Blodgett",
-      :date => Date.new(2006, 12, 27),
-      :discipline => "Mountain Bike",
-      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
-      :flyer_approved => false,
-      :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
+      name: "Mudslinger",
+      city: "Blodgett",
+      date: Date.new(2006, 12, 27),
+      discipline: "Mountain Bike",
+      flyer: "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
+      flyer_approved: false,
+      promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:calendar, {:year => 2006, :discipline => "Mountain Bike", :format => "json"})
+    get(:calendar, {year: 2006, discipline: "Mountain Bike", format: "json"})
 
     json = @response.body
     assert(json["Mudslinger"], "Calendar should include MTB event")

@@ -3,13 +3,13 @@
 <h2><%= link_to @team.name, team_results_path(@team) %></h2>
 
 <h3><%= @result.place.to_i.ordinalize %> &mdash; <%=
-  link_to @result.race_full_name, event_results_path(@event, :anchor => "race_#{@result.race_id}")
+  link_to @result.race_full_name, event_results_path(@event, anchor: "race_#{@result.race_id}")
 %></h3>
 
 <%= scores_table @result %>
 
 <%# TODO Add year param %>
 <p>
-  See all results for <%= link_to(@team.name, team_results_path(@team, @event.year), :class => 'obvious') %> or the
-  <%= link_to(@result.event.full_name, event_results_path(@result.event), :class => 'obvious') %>.
+  See all results for <%= link_to(@team.name, team_results_path(@team, @event.year), class: 'obvious') %> or the
+  <%= link_to(@result.event.full_name, event_results_path(@result.event), class: 'obvious') %>.
 </p>

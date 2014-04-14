@@ -1,6 +1,6 @@
 class PasswordResetsController < ApplicationController
   force_https
-  before_filter :load_person_using_perishable_token, :only => [:edit, :update]
+  before_filter :load_person_using_perishable_token, only: [:edit, :update]
 
   def create
     if params[:email].blank?
@@ -9,7 +9,7 @@ class PasswordResetsController < ApplicationController
     end
 
     @email = params[:email].strip
-    @people = Person.where(:email => @email).where("login is not null and login != ''")
+    @people = Person.where(email: @email).where("login is not null and login != ''")
     if @people.any?
       Person.deliver_password_reset_instructions!(@people)
       flash[:notice] = "Please check your email. We've sent you password reset instructions."

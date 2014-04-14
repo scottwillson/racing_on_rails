@@ -27,7 +27,7 @@ module Results
       book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/pir_2006_format.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(2)
 
-      row = Results::Row.new(spreadsheet_row, { :place => 0, :last_name => 3 }, false)
+      row = Results::Row.new(spreadsheet_row, { place: 0, last_name: 3 }, false)
       assert_nil row[:city], "Non existent column"
       assert_equal 1, row[:place], "place"
       assert_equal "Elken", row[:last_name], "last_name"

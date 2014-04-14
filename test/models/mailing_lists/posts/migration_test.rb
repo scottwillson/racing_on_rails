@@ -13,27 +13,27 @@ module Posts
       one_day_ago = 1.day.ago
       last_original = FactoryGirl.create(
         :post,
-        :mailing_list => mailing_list,
-        :subject => "For Sale: Trek Madrone",
-        :date => 2.days.ago,
-        :last_reply_at => one_day_ago,
-        :position => 0
+        mailing_list: mailing_list,
+        subject: "For Sale: Trek Madrone",
+        date: 2.days.ago,
+        last_reply_at: one_day_ago,
+        position: 0
       )
       first_original = FactoryGirl.create(
         :post,
-        :mailing_list => mailing_list,
-        :subject => "Autographed TDF Jersey",
-        :date => 4.days.ago,
-        :last_reply_at => 4.days.ago,
-        :position => 2
+        mailing_list: mailing_list,
+        subject: "Autographed TDF Jersey",
+        date: 4.days.ago,
+        last_reply_at: 4.days.ago,
+        position: 2
       )
       reply_to_last_original = FactoryGirl.create(
         :post,
-        :mailing_list => mailing_list,
-        :subject => "re: For Sale: Trek Madrone",
-        :date => one_day_ago,
-        :last_reply_at => one_day_ago,
-        :position => 3
+        mailing_list: mailing_list,
+        subject: "re: For Sale: Trek Madrone",
+        date: one_day_ago,
+        last_reply_at: one_day_ago,
+        position: 3
       )
 
       Post.reposition! mailing_list
@@ -51,8 +51,8 @@ module Posts
 
     test "add_replies!" do
       mailing_list = FactoryGirl.create(:mailing_list)
-      FactoryGirl.create(:post, :mailing_list => mailing_list, :subject => "For Sale: Trek Madrone", :from_name => "Lance")
-      FactoryGirl.create(:post, :mailing_list => mailing_list, :subject => "Autographed TDF Jersey")
+      FactoryGirl.create(:post, mailing_list: mailing_list, subject: "For Sale: Trek Madrone", from_name: "Lance")
+      FactoryGirl.create(:post, mailing_list: mailing_list, subject: "Autographed TDF Jersey")
 
       Post.add_replies! mailing_list
       assert_equal 2, Post.original.count
@@ -60,9 +60,9 @@ module Posts
 
     test "add_replies! should consolidate similar posts" do
       mailing_list = FactoryGirl.create(:mailing_list)
-      original = FactoryGirl.create(:post, :mailing_list => mailing_list, :subject => "FS: Trek Madrone", date: 3.days.ago)
-      first_reply = FactoryGirl.create(:post, :mailing_list => mailing_list, :subject => "Re: FS: Trek Madrone", date: 2.days.ago)
-      second_reply = FactoryGirl.create(:post, :mailing_list => mailing_list, :subject => "fs: trek madrone", date: 1.day.ago)
+      original = FactoryGirl.create(:post, mailing_list: mailing_list, subject: "FS: Trek Madrone", date: 3.days.ago)
+      first_reply = FactoryGirl.create(:post, mailing_list: mailing_list, subject: "Re: FS: Trek Madrone", date: 2.days.ago)
+      second_reply = FactoryGirl.create(:post, mailing_list: mailing_list, subject: "fs: trek madrone", date: 1.day.ago)
 
       Post.add_replies! mailing_list
 

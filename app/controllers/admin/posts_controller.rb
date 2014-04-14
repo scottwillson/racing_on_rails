@@ -4,7 +4,7 @@ module Admin
 
     def index
       @posts = Post.
-        where(:mailing_list_id => @mailing_list.id).
+        where(mailing_list_id: @mailing_list.id).
         order("date desc").
         page(params[:page])
     end

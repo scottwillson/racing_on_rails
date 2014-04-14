@@ -3,7 +3,7 @@
      id="disclosure_<%= category.id %>"
      data-id="<%= category.id%>"></span>
   <div class="category_name" id="category_<%= category.id %>" data-id="<%= category.id %>"><span class="glyphicon glyphicon-star"></span> <%= category.name %></div>
-  <%= link_to(category_races_path(category), :title => "#{category.races.count} races") do %>
+  <%= link_to(category_races_path(category), title: "#{category.races.count} races") do %>
     <span class="glyphicon glyphicon-list"></span>
   <% end if category.races.present? %>
   <div class="children" id="category_<%= category.id %>_children"></div>

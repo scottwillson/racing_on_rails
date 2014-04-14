@@ -1,12 +1,12 @@
 <% @page_title = "#{@post.mailing_list.friendly_name}: #{truncate(@post.subject)}" %>
 <h2><%= @post.subject %></h2>
 
-<%= render "show_pagination", :post => @post %>
-<%= render :collection => @post.replies.sort_by(&:position).reverse.to_a << @post, :partial => "posts/reply" %>
-<%= render "show_pagination", :post => @post %>
+<%= render "show_pagination", post: @post %>
+<%= render collection: @post.replies.sort_by(&:position).reverse.to_a << @post, partial: "posts/reply" %>
+<%= render "show_pagination", post: @post %>
 
 <div class="row">
   <div class="col-sm-12">
-    <%= render "mailing_lists/links", :mailing_list => @post.mailing_list %>
+    <%= render "mailing_lists/links", mailing_list: @post.mailing_list %>
   </div>
 </div>

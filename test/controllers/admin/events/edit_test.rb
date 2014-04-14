@@ -13,8 +13,8 @@ module Admin
       end
 
       def test_edit
-        event = FactoryGirl.create(:event, :velodrome => FactoryGirl.create(:velodrome))
-        get(:edit, :id => event.to_param)
+        event = FactoryGirl.create(:event, velodrome: FactoryGirl.create(:velodrome))
+        get(:edit, id: event.to_param)
         assert_response(:success)
         assert_template("admin/events/edit")
         assert_not_nil(assigns["event"], "Should assign event")
@@ -26,19 +26,19 @@ module Admin
       def test_edit_sti_subclasses
         [SingleDayEvent, MultiDayEvent, Series, WeeklySeries].each do |event_class|
           event = event_class.create!
-          get(:edit, :id => event.to_param)
+          get(:edit, id: event.to_param)
           assert_response(:success)
           if event_class == SingleDayEvent
             assert_select "input#event_human_date"
           else
-            assert_select "input#event_human_date", :count => 0
+            assert_select "input#event_human_date", count: 0
           end
         end
       end
 
       def test_edit_parent
         event = FactoryGirl.create(:series)
-        get(:edit, :id => event.to_param)
+        get(:edit, id: event.to_param)
         assert_response(:success)
         assert_template("admin/events/edit")
         assert_not_nil(assigns["event"], "Should assign event")
@@ -47,7 +47,7 @@ module Admin
 
       def test_edit_no_results
         event = FactoryGirl.create(:event)
-        get(:edit, :id => event.to_param)
+        get(:edit, id: event.to_param)
         assert_response(:success)
         assert_template("admin/events/edit")
         assert_not_nil(assigns["event"], "Should assign event")
@@ -56,7 +56,7 @@ module Admin
 
       def test_edit_with_promoter
         event = FactoryGirl.create(:event)
-        get(:edit, :id => event.to_param)
+        get(:edit, id: event.to_param)
         assert_response(:success)
         assert_template("admin/events/edit")
         assert_not_nil(assigns["event"], "Should assign event")
@@ -66,10 +66,10 @@ module Admin
       def test_edit_as_promoter
         event = FactoryGirl.create(:event)
         login_as event.promoter
-        get :edit, :id => event.to_param
+        get :edit, id: event.to_param
         assert_response :success
         assert_template "admin/events/edit"
-        assert_select "#event_human_date", :count => 0
+        assert_select "#event_human_date", count: 0
       end
 
       def test_promoter_can_only_edit_own_events
@@ -77,7 +77,7 @@ module Admin
         event_2 = FactoryGirl.create(:event)
 
         login_as event_2.promoter
-        get :edit, :id => event.to_param
+        get :edit, id: event.to_param
         assert_redirected_to unauthorized_path
       end
 
@@ -86,23 +86,23 @@ module Admin
         person = FactoryGirl.create(:person)
         event.editors << person
         login_as person
-        get :edit, :id => event.to_param
+        get :edit, id: event.to_param
         assert_response :success
         assert_template "admin/events/edit"
-        assert_select "#event_human_date", :count => 0
+        assert_select "#event_human_date", count: 0
       end
 
       def test_edit_child_event
         event = FactoryGirl.create(:series_event)
-        get(:edit, :id => event.id)
+        get(:edit, id: event.id)
         assert_response(:success)
       end
 
       def test_edit_combined_results
         event = FactoryGirl.create(:time_trial_event)
-        result = FactoryGirl.create(:result, :event => event)
-        combined = CombinedTimeTrialResults.create!(:parent => event)
-        get(:edit, :id => combined.id)
+        result = FactoryGirl.create(:result, event: event)
+        combined = CombinedTimeTrialResults.create!(parent: event)
+        get(:edit, id: combined.id)
         assert_response(:success)
       end
     end

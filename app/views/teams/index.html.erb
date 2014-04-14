@@ -2,10 +2,10 @@
 
 <h2><%= RacingAssociation.current.short_name %>-registered teams in Oregon and SW Washington.</h2>
 
-<p>A list of <%= link_to "clubs rides", "http://#{RacingAssociation.current.static_host}/teams/rides.html", :class => "obvious" %> is available if you're looking for a group ride.</p>
+<p>A list of <%= link_to "clubs rides", "http://#{RacingAssociation.current.static_host}/teams/rides.html", class: "obvious" %> is available if you're looking for a group ride.</p>
 
 <h3>Teams</h3>
-<%= table :id => "teams", :collection => @teams, :columns => 4 do %>
+<%= table id: "teams", collection: @teams, columns: 4 do %>
   <tr>
     <th>Name</th>
     <% unless mobile_request? %>
@@ -14,6 +14,6 @@
     <% end %>
     <th>Results</th>
   </tr>
-  <%= render :partial => "team", :collection => @teams.sort { |x, y| x.name.downcase <=> y.name.downcase } %>
+  <%= render partial: "team", collection: @teams.sort { |x, y| x.name.downcase <=> y.name.downcase } %>
 <% end -%>
 

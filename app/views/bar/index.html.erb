@@ -2,9 +2,9 @@
 
 <h2>OBRA BAR</h2>
 
-<%= render "years", :overall_bar => @overall_bar, :race => @race, :year => @year %>
-<%= render("disciplines", :overall_bar => @overall_bar, :race => @race, :discipline => @overall_bar.discipline) if @overall_bar %>
-<%= render("races", :race => @race, :categories => @overall_bar.races_with_results.map(&:category)) if @race %>
+<%= render "years", overall_bar: @overall_bar, race: @race, year: @year %>
+<%= render("disciplines", overall_bar: @overall_bar, race: @race, discipline: @overall_bar.discipline) if @overall_bar %>
+<%= render("races", race: @race, categories: @overall_bar.races_with_results.map(&:category)) if @race %>
 
 <p>Oregon Best All-Around Rider (BAR) a year-round, multi-discipline competition open to annual members. Points and ranking will be tracked in at least the following categories: Senior Men and Women, Category 3 Men, Category 4/5 Men, Category 3 Women, Category 4/5 Women, Masters Men and Women, Junior Men and Women, Singlespeed/Fixed, Tandem, and Clydesdale.</p>
 

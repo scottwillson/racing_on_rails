@@ -28,7 +28,7 @@ module RacingOnRails
         if request.format == "text/javascript"
           session[:return_to] = request.referrer
           @redirect_to = new_person_session_url(secure_redirect_options)
-          render :template => "redirect"
+          render template: "redirect"
         else
           session[:return_to] = request.fullpath
           redirect_to new_person_session_url(secure_redirect_options)

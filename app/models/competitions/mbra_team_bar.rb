@@ -1,25 +1,25 @@
 class MbraTeamBar < Competition
 
   def self.calculate!(year = Time.zone.today.year)
-    benchmark(name, :level => :info) {
+    benchmark(name, level: :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
 
         # Maybe I will exclude MTB and CX if people are disturbed by it...but calc for now for fun.
         Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}.each do |discipline|
-          bar = MbraTeamBar.year(year).where(:discipline => discipline.name).first
+          bar = MbraTeamBar.year(year).where(discipline: discipline.name).first
           logger.debug("In MbraTeamBar.calculate!: discipline #{discipline}") if logger.debug?
           unless bar
             bar = MbraTeamBar.create!(
-              :name => "#{year} #{discipline.name} BAT",
-              :date => date,
-              :discipline => discipline.name
+              name: "#{year} #{discipline.name} BAT",
+              date: date,
+              discipline: discipline.name
             )
           end
         end
 
-        MbraTeamBar.where(:date => date).each do |bar|
+        MbraTeamBar.where(date: date).each do |bar|
           logger.debug("In MbraTeamBar.calculate!: processing bar #{bar.name}") if logger.debug?
           bar.set_date
           bar.destroy_races
@@ -53,7 +53,7 @@ class MbraTeamBar < Competition
     race_disciplines = "'#{race.discipline}'"
     category_ids = category_ids_for(race).join(", ")
     Result.
-      includes(:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}).
+      includes(:race, {person: :team}, :team, {race: [{event: { parent: :parent }}, :category]}).
       where(%Q{
         (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)
         and bar = true
@@ -89,7 +89,7 @@ class MbraTeamBar < Competition
           # So 'first result' really means 'not the same as last result'
           # race here is the category in the competition
           competition_result = race.results.detect {|result| result.team == source_result.team}
-          competition_result = race.results.create!(:team => source_result.team) if competition_result.nil?
+          competition_result = race.results.create!(team: source_result.team) if competition_result.nil?
         end
 
         # limit to top two results for team for each source race by
@@ -97,9 +97,9 @@ class MbraTeamBar < Competition
         # I do it this way because results do not arrive in postion order.
         # SQL sorting does not work as position is a varchar field.
         competition_result.scores.create!(
-          :source_result => source_result,
-          :competition_result => competition_result,
-          :points => points_for(source_result).to_f
+          source_result: source_result,
+          competition_result: competition_result,
+          points: points_for(source_result).to_f
         )
         logger.debug("#{self.class.name} competition result: #{competition_result.event.name} | #{competition_result.race.name} | #{competition_result.place} | #{competition_result.team_name}") if logger.debug?
         # e.g., MbraTeamBar competition result: 2009 MBRA BAT | Master A Men |  | Gallatin Alpine Sports/Intrinsik Architecture
@@ -121,7 +121,7 @@ class MbraTeamBar < Competition
   def points_for(source_result, team_size = nil)
     calculate_point_schedule(source_result.race.field_size)
     points = 0
-    MbraTeamBar.benchmark('points_for', :level => "debug") {
+    MbraTeamBar.benchmark('points_for', level: "debug") {
       if source_result.place.strip.downcase == "dnf"
         points = 0.5
       else
@@ -138,7 +138,7 @@ class MbraTeamBar < Competition
     logger.debug("In create_races: discipline #{discipline}") if logger.debug?
     Discipline[discipline].bar_categories.each do |category|
       logger.debug("In create_race: category #{category}") if logger.debug?
-      races.create!(:category => category)
+      races.create!(category: category)
     end
   end
 

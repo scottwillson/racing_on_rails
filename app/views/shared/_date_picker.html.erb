@@ -1,14 +1,14 @@
 <div class="form-group">
-  <%= f.label "human_#{method}", method.to_s.titlecase, :class => "control-label col-sm-4" %>
+  <%= f.label "human_#{method}", method.to_s.titlecase, class: "control-label col-sm-4" %>
   <div class="col-sm-8">
     <div class="input-group">
-      <%= f.text_field "human_#{method}", :size => nil, :class => "form-control" %>
+      <%= f.text_field "human_#{method}", size: nil, class: "form-control" %>
       <span class="input-group-btn">
         <%= content_tag(
               :a,
-              :class => "btn btn-default",
-              :id => "#{object_name}_human_#{method}_picker",
-              :data => {
+              class: "btn btn-default",
+              id: "#{object_name}_human_#{method}_picker",
+              data: {
                 "behaviour" => "datepicker",
                 "date-format" => "yyyy-mm-dd",
                 "date" => object.send(method).try(:to_s, :db),

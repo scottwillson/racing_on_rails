@@ -8,28 +8,28 @@ module Admin
     def test_index
       login_as FactoryGirl.create(:administrator)
       mailing_list = FactoryGirl.create(:mailing_list)
-      get :index, :mailing_list_id => mailing_list.to_param
+      get :index, mailing_list_id: mailing_list.to_param
       assert_response :success
-      assert_template :layout => "admin/application"
+      assert_template layout: "admin/application"
     end
 
     def test_non_admin_index
       login_as FactoryGirl.create(:person)
       mailing_list = FactoryGirl.create(:mailing_list)
-      get :index, :mailing_list_id => mailing_list.to_param
+      get :index, mailing_list_id: mailing_list.to_param
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
 
     def test_index_anonymous
       mailing_list = FactoryGirl.create(:mailing_list)
-      get :index, :mailing_list_id => mailing_list.to_param
+      get :index, mailing_list_id: mailing_list.to_param
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
 
     def test_new
       login_as FactoryGirl.create(:administrator)
       mailing_list = FactoryGirl.create(:mailing_list)
-      get :new, :mailing_list_id => mailing_list.to_param
+      get :new, mailing_list_id: mailing_list.to_param
       assert_response :success
     end
 
@@ -40,11 +40,11 @@ module Admin
 
       login_as FactoryGirl.create(:administrator)
       mailing_list = FactoryGirl.create(:mailing_list)
-      post :create, :mailing_list_id => mailing_list.to_param, :post => {
-        :from_name => "Mike Murray",
-        :from_email => "mmurray@obra.org",
-        :subject => "No More Masters Races",
-        :body => "That is all",
+      post :create, mailing_list_id: mailing_list.to_param, post: {
+        from_name: "Mike Murray",
+        from_email: "mmurray@obra.org",
+        subject: "No More Masters Races",
+        body: "That is all",
         "date(1i)"=>"2009",
         "date(2i)"=>"11",
         "date(3i)"=>"22"
@@ -59,8 +59,8 @@ module Admin
       Post.any_instance.expects(:save!).never
 
       login_as FactoryGirl.create(:administrator)
-      mailing_list = FactoryGirl.create(:mailing_list, :name => "obra")
-      post :receive, :mailing_list_id => mailing_list.to_param, :raw => fixture_file_upload("email/for_sale.eml")
+      mailing_list = FactoryGirl.create(:mailing_list, name: "obra")
+      post :receive, mailing_list_id: mailing_list.to_param, raw: fixture_file_upload("email/for_sale.eml")
       assert_not_nil assigns(:post), @post
       assert assigns(:post).errors.empty?, assigns(:post).errors.full_messages.join(", ")
       assert_redirected_to admin_mailing_list_posts_path(mailing_list)
@@ -70,7 +70,7 @@ module Admin
       login_as FactoryGirl.create(:administrator)
       mailing_list = FactoryGirl.create(:mailing_list)
       post = FactoryGirl.create(:post)
-      get :edit, :mailing_list_id => mailing_list.to_param, :id => post.to_param
+      get :edit, mailing_list_id: mailing_list.to_param, id: post.to_param
       assert_response :success
     end
 
@@ -82,11 +82,11 @@ module Admin
       Post.expects(:save).returns(true)
       Post.any_instance.expects(:save!).never
 
-      put :update, :mailing_list_id => mailing_list.to_param, :id => post.to_param, :post => {
-        :from_name => "Mike Murray",
-        :from_email => "mmurray@obra.org",
-        :subject => "No More Masters Races",
-        :body => "That is all",
+      put :update, mailing_list_id: mailing_list.to_param, id: post.to_param, post: {
+        from_name: "Mike Murray",
+        from_email: "mmurray@obra.org",
+        subject: "No More Masters Races",
+        body: "That is all",
         "date(1i)"=>"2009",
         "date(2i)"=>"11",
         "date(3i)"=>"22"
@@ -101,7 +101,7 @@ module Admin
       login_as FactoryGirl.create(:administrator)
       mailing_list = FactoryGirl.create(:mailing_list)
       post = FactoryGirl.create(:post)
-      delete :destroy, :mailing_list_id => mailing_list.to_param, :id => post.to_param
+      delete :destroy, mailing_list_id: mailing_list.to_param, id: post.to_param
       assert_redirected_to admin_mailing_list_posts_path(mailing_list)
       assert !Post.exists?(mailing_list.id), "Should delete Post"
     end

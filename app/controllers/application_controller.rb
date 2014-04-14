@@ -26,22 +26,22 @@ class ApplicationController < ActionController::Base
       FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "schedule"))
       FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "teams"))
       FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "wsba_barr"))
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "bar.html"), :force => true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "cat4_womens_race_series.html"), :force => true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "home.html"), :force => true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "index.html"), :force => true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "m.html"), :force => true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "owps.html"), :force => true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "oregon_tt_cup.html"), :force => true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "results.html"), :force => true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "rider_rankings.html"), :force => true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "schedule.html"), :force =>true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "schedule.ics"), :force =>true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "schedule.atom"), :force =>true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "schedule.xls"), :force =>true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "teams.html"), :force =>true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "wsba_barr.html"), :force =>true)
-      FileUtils.rm(File.join(::Rails.root.to_s, "public", "wsba_masters_barr.html"), :force =>true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "bar.html"), force: true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "cat4_womens_race_series.html"), force: true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "home.html"), force: true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "index.html"), force: true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "m.html"), force: true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "owps.html"), force: true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "oregon_tt_cup.html"), force: true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "results.html"), force: true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "rider_rankings.html"), force: true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "schedule.html"), force:true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "schedule.ics"), force:true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "schedule.atom"), force:true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "schedule.xls"), force:true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "teams.html"), force:true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "wsba_barr.html"), force:true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "wsba_masters_barr.html"), force:true)
     rescue Exception => e
       logger.error e
     end
@@ -84,7 +84,7 @@ class ApplicationController < ActionController::Base
     end
 
     if @page
-      render(:inline => @page.body, :layout => true)
+      render(inline: @page.body, layout: true)
     end
   end
 
@@ -93,12 +93,12 @@ class ApplicationController < ActionController::Base
       type.html {
         local_path = "#{Rails.root}/local/public/404.html"
         if File.exists?(local_path)
-          render :file => "#{::Rails.root.to_s}/local/public/404.html", :status => "404 Not Found"
+          render file: "#{::Rails.root.to_s}/local/public/404.html", status: "404 Not Found"
         else
-          render :file => "#{::Rails.root.to_s}/public/404.html", :status => "404 Not Found"
+          render file: "#{::Rails.root.to_s}/public/404.html", status: "404 Not Found"
         end
       }
-      type.all { render :nothing => true, :status => "404 Not Found" }
+      type.all { render nothing: true, status: "404 Not Found" }
     end
   end
 
@@ -107,12 +107,12 @@ class ApplicationController < ActionController::Base
       type.html {
         local_path = "#{Rails.root}/local/public/500.html"
         if File.exists?(local_path)
-          render :file => "#{::Rails.root.to_s}/local/public/500.html", :status => "500 Error"
+          render file: "#{::Rails.root.to_s}/local/public/500.html", status: "500 Error"
         else
-          render :file => "#{::Rails.root.to_s}/public/500.html", :status => "500 Error"
+          render file: "#{::Rails.root.to_s}/public/500.html", status: "500 Error"
         end
       }
-      type.all { render :nothing => true, :status => "500 Error" }
+      type.all { render nothing: true, status: "500 Error" }
     end
   end
 
@@ -140,7 +140,7 @@ class ApplicationController < ActionController::Base
 
   def secure_redirect_options
     if RacingAssociation.current.ssl?
-      { :protocol => "https", :host => request.host, :port => 443 }
+      { protocol: "https", host: request.host, port: 443 }
     else
       {}
     end
@@ -149,7 +149,7 @@ class ApplicationController < ActionController::Base
   def redirect_back_or_default(default)
     if session[:return_to]
       uri = URI.parse(session[:return_to])
-      redirect_to URI::Generic.build(:path => uri.path, :query => uri.query).to_s
+      redirect_to URI::Generic.build(path: uri.path, query: uri.query).to_s
       session[:return_to] = nil
     else
       redirect_to default

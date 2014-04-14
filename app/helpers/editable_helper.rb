@@ -9,7 +9,7 @@ module EditableHelper
     end
 
     if options[:length].present?
-      value = truncate(value, :length => options[:length])
+      value = truncate(value, length: options[:length])
     end
 
     if options[:as].present?
@@ -20,10 +20,10 @@ module EditableHelper
 
     content_tag(
       :div,
-      :class => "editable",
-      :id => "#{_object_name}_#{object.to_param}_#{attribute}",
+      class: "editable",
+      id: "#{_object_name}_#{object.to_param}_#{attribute}",
       "data-id" => object.id,
-      "data-url" => url_for(:controller => _object_name.pluralize, :action => "update_attribute", :id => object.to_param),
+      "data-url" => url_for(controller: _object_name.pluralize, action: "update_attribute", id: object.to_param),
       "data-model" => _object_name,
       "data-attribute" => attribute,
       "data-original" => value) do

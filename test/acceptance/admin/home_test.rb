@@ -9,7 +9,7 @@ module Admin
 
       visit "/photos/new"
       attach_file "photo_image", "#{Rails.root}/test/fixtures/photo.jpg"
-      fill_in "Caption", :with => "Bike racer wins the bike race"
+      fill_in "Caption", with: "Bike racer wins the bike race"
       click_button "Save"
 
       assert_equal "1079", find("#photo_height").text

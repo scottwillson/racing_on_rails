@@ -1,16 +1,16 @@
-<%= render "shared/errors", :object => @person %>
+<%= render "shared/errors", object: @person %>
 
 <h2>New Login</h2>
 
-<%= form_for :person, :url => create_login_people_path, :html => { :class => "form-horizontal", :role => "form" } do |f| -%>
+<%= form_for :person, url: create_login_people_path, html: { class: "form-horizontal", role: "form" } do |f| -%>
   <div class="row">
     <div class="col-sm-offset-1 col-sm-8">
-      <%= f.labelled_text_field :login, nil, :class => @person.new_record? ? "form-control col-sm-12 wants_focus" : "form-control col-sm-12", :help => "Most people use their email address as a login, but it's up to you" %>
+      <%= f.labelled_text_field :login, nil, class: @person.new_record? ? "form-control col-sm-12 wants_focus" : "form-control col-sm-12", help: "Most people use their email address as a login, but it's up to you" %>
       <% if @person.new_record? %>
         <%= f.labelled_text_field :email,
             nil,
-            :class => "form-control col-sm-12",
-            :help => "#{RacingAssociation.current.short_name} respects your privacy and security. If it's OK with you, we will mail and email you about bike racing." %>
+            class: "form-control col-sm-12",
+            help: "#{RacingAssociation.current.short_name} respects your privacy and security. If it's OK with you, we will mail and email you about bike racing." %>
         <%= f.labelled_text_field :name %>
       <% end -%>
       <%= f.labelled_password_field :password %>
@@ -21,13 +21,13 @@
       <% if @person.new_record? %>
       <%= f.labelled_text_field :license,
             "License or Bib #",
-            :autocomplete => "off",
-            :class => "form-control col-sm-12",
-            :help => "Current or past #{RacingAssociation.current.short_name} member? Enter your license number or your bib number—we can link to your account." %>
+            autocomplete: "off",
+            class: "form-control col-sm-12",
+            help: "Current or past #{RacingAssociation.current.short_name} member? Enter your license number or your bib number—we can link to your account." %>
       <% end -%>
 
       <div class="form-group">
-        <div class="col-sm-offset-4 col-sm-8"><%= submit_tag "Save", :class => "btn btn-default", :id => "save" %></div>
+        <div class="col-sm-offset-4 col-sm-8"><%= submit_tag "Save", class: "btn btn-default", id: "save" %></div>
       </div>
     </div>
   </div>

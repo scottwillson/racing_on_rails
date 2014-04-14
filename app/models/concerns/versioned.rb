@@ -3,9 +3,9 @@ module Concerns
     extend ActiveSupport::Concern
 
     included do
-      versioned :except => [ :current_login_at, :current_login_ip, :last_login_at, :last_login_ip, :login_count, :password_salt,
+      versioned except: [ :current_login_at, :current_login_ip, :last_login_at, :last_login_ip, :login_count, :password_salt,
                              :perishable_token, :persistence_token, :single_access_token ],
-                :initial_version => true
+                initial_version: true
       before_save :set_updated_by
     end
 

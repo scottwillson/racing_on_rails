@@ -5,15 +5,15 @@ class TaborOverall < Overall
   end
 
   def create_races
-    races.create! :category => Category.find_or_create_by(:name => "Fixed Gear")
-    races.create! :category => Category.find_or_create_by(:name => "Category 4 Women")
-    races.create! :category => Category.find_or_create_by(:name => "Masters Women")
-    races.create! :category => Category.find_or_create_by(:name => "Senior Women")
-    races.create! :category => Category.find_or_create_by(:name => "Masters Men")
-    races.create! :category => Category.find_or_create_by(:name => "Category 4 Men")
-    races.create! :category => Category.find_or_create_by(:name => "Category 5 Men")
-    races.create! :category => Category.find_or_create_by(:name => "Category 3 Men")
-    races.create! :category => Category.find_or_create_by(:name => "Senior Men")
+    races.create! category: Category.find_or_create_by(name: "Fixed Gear")
+    races.create! category: Category.find_or_create_by(name: "Category 4 Women")
+    races.create! category: Category.find_or_create_by(name: "Masters Women")
+    races.create! category: Category.find_or_create_by(name: "Senior Women")
+    races.create! category: Category.find_or_create_by(name: "Masters Men")
+    races.create! category: Category.find_or_create_by(name: "Category 4 Men")
+    races.create! category: Category.find_or_create_by(name: "Category 5 Men")
+    races.create! category: Category.find_or_create_by(name: "Category 3 Men")
+    races.create! category: Category.find_or_create_by(name: "Senior Men")
   end
 
   def maximum_events(race)

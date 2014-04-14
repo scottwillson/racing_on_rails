@@ -13,11 +13,11 @@ module Admin
       end
 
       def test_update_name
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
-            :id => molly.to_param,
-            :name => "name",
-            :value => "Mollie Cameron"
+            id: molly.to_param,
+            name: "name",
+            value: "Mollie Cameron"
         assert_response :success
         assert @response.body["Mollie Cameron"]
         molly.reload
@@ -26,11 +26,11 @@ module Admin
       end
 
       def test_update_same_name
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
-            :id => molly.to_param,
-            :name => "name",
-            :value => "Molly Cameron"
+            id: molly.to_param,
+            name: "name",
+            value: "Molly Cameron"
         assert_response :success
         assert_not_nil(assigns["person"], "Should assign person")
         assert_equal(molly, assigns['person'], 'Person')
@@ -40,11 +40,11 @@ module Admin
       end
 
       def test_update_same_name_different_case
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
-            :id => molly.to_param,
-            :name => "name",
-            :value => "molly cameron"
+            id: molly.to_param,
+            name: "name",
+            value: "molly cameron"
         assert_response :success
         assert_not_nil(assigns["person"], "Should assign person")
         assert_equal(molly, assigns['person'], 'Person')
@@ -55,12 +55,12 @@ module Admin
 
       def test_update_to_existing_name
         # Should ask to merge
-        FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
+        FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
-            :id => molly.to_param,
-            :name => "name",
-            :value => "Erik Tonkin"
+            id: molly.to_param,
+            name: "name",
+            value: "Erik Tonkin"
         assert_response :success
         assert_template("admin/people/merge_confirm")
         assert_not_nil(assigns["person"], "Should assign person")
@@ -72,13 +72,13 @@ module Admin
       end
 
       def test_update_to_existing_alias
-        tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-        erik_alias = tonkin.aliases.create!(:name => "Eric Tonkin")
+        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        erik_alias = tonkin.aliases.create!(name: "Eric Tonkin")
 
         xhr :put, :update_attribute,
-            :id => tonkin.to_param,
-            :name => "name",
-            :value => "Eric Tonkin"
+            id: tonkin.to_param,
+            name: "name",
+            value: "Eric Tonkin"
         assert_response :success
         assert_not_nil(assigns["person"], "Should assign person")
         assert_equal(tonkin, assigns['person'], 'Person')
@@ -92,14 +92,14 @@ module Admin
       end
 
       def test_update_to_existing_alias_different_case
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-        molly.aliases.create!(:name => "Mollie Cameron")
-        assert !Alias.exists?(:name => 'Molly Cameron')
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        molly.aliases.create!(name: "Mollie Cameron")
+        assert !Alias.exists?(name: 'Molly Cameron')
 
         xhr :put, :update_attribute,
-            :id => molly.to_param,
-            :name => "name",
-            :value => "mollie cameron"
+            id: molly.to_param,
+            name: "name",
+            value: "mollie cameron"
         assert_response :success
         assert_not_nil(assigns["person"], "Should assign person")
         assert_equal(molly, assigns['person'], 'Person')
@@ -113,14 +113,14 @@ module Admin
       end
 
       def test_update_to_other_person_existing_alias
-        tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-        molly.aliases.create!(:name => "Mollie Cameron")
+        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        molly.aliases.create!(name: "Mollie Cameron")
 
         xhr :put, :update_attribute,
-            :id => tonkin.to_param,
-            :name => "name",
-            :value => "Mollie Cameron"
+            id: tonkin.to_param,
+            name: "name",
+            value: "Mollie Cameron"
         assert_response :success
         assert_template("admin/people/merge_confirm")
         assert_not_nil(assigns["person"], "Should assign person")
@@ -135,31 +135,31 @@ module Admin
         FactoryGirl.create(:discipline)
         FactoryGirl.create(:number_issuer)
 
-        tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
+        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         # Molly with different road number
-        Person.create!(:name => 'Molly Cameron', :road_number => '1009')
-        molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-        molly.aliases.create!(:name => "Mollie Cameron")
+        Person.create!(name: 'Molly Cameron', road_number: '1009')
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        molly.aliases.create!(name: "Mollie Cameron")
 
-        assert_equal 0, Person.where(:first_name => 'Mollie', :last_name => 'Cameron').count, 'Mollies in database'
-        assert_equal 2, Person.where(:first_name => 'Molly', :last_name => 'Cameron').count, 'Mollys in database'
-        assert_equal 1, Person.where(:first_name => 'Erik', :last_name => 'Tonkin').count, 'Eriks in database'
-        assert_equal 1,  Alias.where(:name => 'Mollie Cameron').count, 'Mollie aliases in database'
+        assert_equal 0, Person.where(first_name: 'Mollie', last_name: 'Cameron').count, 'Mollies in database'
+        assert_equal 2, Person.where(first_name: 'Molly', last_name: 'Cameron').count, 'Mollys in database'
+        assert_equal 1, Person.where(first_name: 'Erik', last_name: 'Tonkin').count, 'Eriks in database'
+        assert_equal 1,  Alias.where(name: 'Mollie Cameron').count, 'Mollie aliases in database'
 
         xhr :put, :update_attribute,
-            :id => tonkin.to_param,
-            :name => "name",
-            :value => "Mollie Cameron"
+            id: tonkin.to_param,
+            name: "name",
+            value: "Mollie Cameron"
         assert_response :success
         assert_template("admin/people/merge_confirm")
         assert_not_nil(assigns["person"], "Should assign person")
         assert_equal(tonkin, assigns['person'], 'Person')
         assert_equal(1, assigns['other_people'].size, "other_people: #{assigns['other_people']}")
 
-        assert_equal 0, Person.where(:first_name => 'Mollie', :last_name => 'Cameron').count, 'Mollies in database'
-        assert_equal 2, Person.where(:first_name => 'Molly', :last_name => 'Cameron').count, 'Mollys in database'
-        assert_equal 1, Person.where(:first_name => 'Erik', :last_name => 'Tonkin').count, 'Eriks in database'
-        assert_equal 1,  Alias.where(:name => 'Mollie Cameron').count, 'Mollie aliases in database'
+        assert_equal 0, Person.where(first_name: 'Mollie', last_name: 'Cameron').count, 'Mollies in database'
+        assert_equal 2, Person.where(first_name: 'Molly', last_name: 'Cameron').count, 'Mollys in database'
+        assert_equal 1, Person.where(first_name: 'Erik', last_name: 'Tonkin').count, 'Eriks in database'
+        assert_equal 1,  Alias.where(name: 'Mollie Cameron').count, 'Mollie aliases in database'
       end
     end
   end

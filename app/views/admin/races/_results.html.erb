@@ -1,4 +1,4 @@
-<%= table :class => "results", :id => :results do %>
+<%= table class: "results", id: :results do %>
   <tr>
     <% results_table_for_race.columns.each do |column| %>
     <th class="<%= column.key %>"><%= column.render %></th>
@@ -6,7 +6,7 @@
     <th class="actions col-sm-2"></th>
   </tr>
   <% results_table_for_race.rows.each do |row| %>
-  <%= render "admin/races/result", :row => row, :result => row.source %>
+  <%= render "admin/races/result", row: row, result: row.source %>
   <% end %>
-  <%= render "admin/races/result", :row => Tabular::Row.new(results_table_for_race), :result => race.results.build %>
+  <%= render "admin/races/result", row: Tabular::Row.new(results_table_for_race), result: race.results.build %>
 <% end unless race.new_record? -%>

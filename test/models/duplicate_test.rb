@@ -6,8 +6,8 @@ class DuplicateTest < ActiveSupport::TestCase
     tonkin = FactoryGirl.create(:person)
     alice = FactoryGirl.create(:person)
 
-    new_person = {:first_name => 'Magnus', :last_name => 'Tonkin'}
-    Duplicate.create!(:new_attributes => new_person, :people => [ tonkin, alice ])
+    new_person = {first_name: 'Magnus', last_name: 'Tonkin'}
+    Duplicate.create!(new_attributes: new_person, people: [ tonkin, alice ])
     dupes = Duplicate.all
     assert_equal(1, dupes.size, 'Dupes')
     dupe = dupes.first

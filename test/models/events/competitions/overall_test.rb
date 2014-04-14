@@ -8,7 +8,7 @@ class OverallTest < ActiveSupport::TestCase
     end
 
     def create_races
-      races.create!(:category => Category.find_or_create_by(:name => "Men A"))
+      races.create!(category: Category.find_or_create_by(name: "Men A"))
     end
 
     def point_schedule
@@ -28,29 +28,29 @@ class OverallTest < ActiveSupport::TestCase
   end
 
   test "preliminary results after event minimum" do
-    series = Series.create!(:name => "Test Series")
+    series = Series.create!(name: "Test Series")
 
-    series.children.create!(:date => Date.new(2007, 10, 7))
-    series.children.create!(:date => Date.new(2007, 10, 14))
-    series.children.create!(:date => Date.new(2007, 10, 21))
-    series.children.create!(:date => Date.new(2007, 10, 28))
-    series.children.create!(:date => Date.new(2007, 11, 5))
+    series.children.create!(date: Date.new(2007, 10, 7))
+    series.children.create!(date: Date.new(2007, 10, 14))
+    series.children.create!(date: Date.new(2007, 10, 21))
+    series.children.create!(date: Date.new(2007, 10, 28))
+    series.children.create!(date: Date.new(2007, 11, 5))
 
-    men_a = Category.find_or_create_by(:name => "Men A")
-    men_a_race = series.children[0].races.create!(:category => men_a)
+    men_a = Category.find_or_create_by(name: "Men A")
+    men_a_race = series.children[0].races.create!(category: men_a)
     weaver = FactoryGirl.create(:person)
-    men_a_race.results.create!(:place => 1, :person => weaver)
+    men_a_race.results.create!(place: 1, person: weaver)
     tonkin = FactoryGirl.create(:person)
-    men_a_race.results.create!(:place => 2, :person => tonkin)
+    men_a_race.results.create!(place: 2, person: tonkin)
 
-    men_a_race = series.children[1].races.create!(:category => men_a)
-    men_a_race.results.create!(:place => 43, :person => weaver)
+    men_a_race = series.children[1].races.create!(category: men_a)
+    men_a_race.results.create!(place: 43, person: weaver)
 
-    men_a_race = series.children[2].races.create!(:category => men_a)
-    men_a_race.results.create!(:place => 1, :person => weaver)
+    men_a_race = series.children[2].races.create!(category: men_a)
+    men_a_race.results.create!(place: 1, person: weaver)
 
-    men_a_race = series.children[3].races.create!(:category => men_a)
-    men_a_race.results.create!(:place => 8, :person => tonkin)
+    men_a_race = series.children[3].races.create!(category: men_a)
+    men_a_race.results.create!(place: 8, person: tonkin)
 
     TestOverall.calculate!(2007)
 
@@ -67,51 +67,51 @@ class OverallTest < ActiveSupport::TestCase
   end
 
   test "raced minimum events boundaries" do
-    series = Series.create!(:name => "Test Series")
-    men_a = Category.find_or_create_by(:name => "Men A")
+    series = Series.create!(name: "Test Series")
+    men_a = Category.find_or_create_by(name: "Men A")
     molly = FactoryGirl.create(:person)
-    event = series.children.create!(:date => Date.new(2007, 10, 7))
+    event = series.children.create!(date: Date.new(2007, 10, 7))
 
     # Molly does three races in different categories
-    men_a_race = event.races.create!(:category => men_a)
-    men_a_race.results.create!(:place => 6, :person => molly)
-    single_speed = FactoryGirl.create(:category, :name => "Single Speed")
-    single_speed_race = event.races.create!(:category => single_speed)
-    single_speed_race.results.create!(:place => 8, :person => molly)
-    masters_men_race = event.races.create!(:category => Category.find_or_create_by(:name => "Masters Men A 40+"))
-    masters_men_race.results.create!(:place => 10, :person => molly)
+    men_a_race = event.races.create!(category: men_a)
+    men_a_race.results.create!(place: 6, person: molly)
+    single_speed = FactoryGirl.create(:category, name: "Single Speed")
+    single_speed_race = event.races.create!(category: single_speed)
+    single_speed_race.results.create!(place: 8, person: molly)
+    masters_men_race = event.races.create!(category: Category.find_or_create_by(name: "Masters Men A 40+"))
+    masters_men_race.results.create!(place: 10, person: molly)
 
     alice = FactoryGirl.create(:person)
-    men_a_race.results.create!(:place => 17, :person => alice)
+    men_a_race.results.create!(place: 17, person: alice)
 
     TestOverall.calculate!(2007)
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert(!series.overall.raced_minimum_events?(molly, men_a_overall_race), "One event. No people have raced minimum")
     assert(!series.overall.raced_minimum_events?(alice, men_a_overall_race), "One event. No people have raced minimum")
 
-    event = series.children.create!(:date => Date.new(2007, 10, 14))
-    men_a_race = event.races.create!(:category => men_a)
-    men_a_race.results.create!(:place => 14, :person => molly)
-    men_a_race.results.create!(:place => 6, :person => alice)
+    event = series.children.create!(date: Date.new(2007, 10, 14))
+    men_a_race = event.races.create!(category: men_a)
+    men_a_race.results.create!(place: 14, person: molly)
+    men_a_race.results.create!(place: 6, person: alice)
 
     TestOverall.calculate!(2007)
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert(series.overall.raced_minimum_events?(molly, men_a_overall_race), "Two events. Molly has raced minimum")
     assert(series.overall.raced_minimum_events?(alice, men_a_overall_race), "Two events. Alice hasraced minimum")
 
-    event = series.children.create!(:date => Date.new(2007, 10, 21))
-    men_a_race = event.races.create!(:category => men_a)
-    men_a_race.results.create!(:place => "DNF", :person => molly)
-    single_speed_race = event.races.create!(:category => single_speed)
-    single_speed_race.results.create!(:place => 8, :person => alice)
+    event = series.children.create!(date: Date.new(2007, 10, 21))
+    men_a_race = event.races.create!(category: men_a)
+    men_a_race.results.create!(place: "DNF", person: molly)
+    single_speed_race = event.races.create!(category: single_speed)
+    single_speed_race.results.create!(place: 8, person: alice)
 
     TestOverall.calculate!(2007)
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert(series.overall.raced_minimum_events?(molly, men_a_overall_race), "Three events. Molly has raced minimum")
     assert(series.overall.raced_minimum_events?(alice, men_a_overall_race), "Three events. Alice has raced minimum")
 
-    event = series.children.create!(:date => Date.new(2007, 10, 28))
-    men_a_race = event.races.create!(:category => men_a)
+    event = series.children.create!(date: Date.new(2007, 10, 28))
+    men_a_race = event.races.create!(category: men_a)
 
     TestOverall.calculate!(2007)
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
@@ -120,12 +120,12 @@ class OverallTest < ActiveSupport::TestCase
   end
 
   test "minimum events should handle results without person" do
-    series = Series.create!(:name => "Test Series")
-    men_a = Category.find_or_create_by(:name => "Men A")
-    event = series.children.create!(:date => Date.new(2007, 10, 7))
+    series = Series.create!(name: "Test Series")
+    men_a = Category.find_or_create_by(name: "Men A")
+    event = series.children.create!(date: Date.new(2007, 10, 7))
 
-    men_a_race = event.races.create!(:category => men_a)
-    men_a_race.results.create!(:place => 17)
+    men_a_race = event.races.create!(category: men_a)
+    men_a_race.results.create!(place: 17)
 
     TestOverall.calculate!(2007)
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
@@ -133,18 +133,18 @@ class OverallTest < ActiveSupport::TestCase
   end
 
   test "count six best results" do
-    series = Series.create!(:name => "Test Series")
-    men_a = Category.find_or_create_by(:name => "Men A")
-    person = Person.create!(:name => "Kevin Hulick")
+    series = Series.create!(name: "Test Series")
+    men_a = Category.find_or_create_by(name: "Men A")
+    person = Person.create!(name: "Kevin Hulick")
 
     date = Date.new(2008, 10, 19)
     [8, 3, 10, 7, 8, 7, 8].each do |place|
-      series.children.create!(:date => date).races.create!(:category => men_a).results.create!(:place => place, :person => person)
+      series.children.create!(date: date).races.create!(category: men_a).results.create!(place: place, person: person)
       date = date + 7
     end
 
     # Simulate 7 of 8 events. Last, double-point event still in future
-    series.children.create!(:date => date).races.create!(:category => men_a)
+    series.children.create!(date: date).races.create!(category: men_a)
 
     TestOverall.calculate!(2008)
 
@@ -157,13 +157,13 @@ class OverallTest < ActiveSupport::TestCase
   end
 
   test "choose best results by place" do
-    series = Series.create!(:name => "Test Series")
-    men_a = Category.find_or_create_by(:name => "Men A")
-    person = Person.create!(:name => "Kevin Hulick")
+    series = Series.create!(name: "Test Series")
+    men_a = Category.find_or_create_by(name: "Men A")
+    person = Person.create!(name: "Kevin Hulick")
 
     date = Date.new(2008, 10, 19)
     [8, 8, 8, 7, 6, 8, 7, 9].each do |place|
-      series.children.create!(:date => date).races.create!(:category => men_a).results.create!(:place => place, :person => person)
+      series.children.create!(date: date).races.create!(category: men_a).results.create!(place: place, person: person)
       date = date + 7
     end
 
@@ -177,18 +177,18 @@ class OverallTest < ActiveSupport::TestCase
   end
 
   test "ensure dnf sorted correctly" do
-    series = Series.create!(:name => "Test Series")
-    men_a = Category.find_or_create_by(:name => "Men A")
-    person = Person.create!(:name => "Kevin Hulick")
+    series = Series.create!(name: "Test Series")
+    men_a = Category.find_or_create_by(name: "Men A")
+    person = Person.create!(name: "Kevin Hulick")
 
     date = Date.new(2008, 10, 19)
     [8, 3, 10, "DNF", 8, 7, 8].each do |place|
-      series.children.create!(:date => date).races.create!(:category => men_a).results.create!(:place => place, :person => person)
+      series.children.create!(date: date).races.create!(category: men_a).results.create!(place: place, person: person)
       date = date + 7
     end
 
     # Simulate 7 of 8 events. Last, double-point, event, still in future
-    series.children.create!(:date => date).races.create!(:category => men_a)
+    series.children.create!(date: date).races.create!(category: men_a)
 
     TestOverall.calculate!(2008)
 
@@ -200,17 +200,17 @@ class OverallTest < ActiveSupport::TestCase
   end
 
   test "ignore age graded bar" do
-    series = Series.create!(:name => "Test Series")
-    men_a = Category.find_or_create_by(:name => "Men A")
-    series.children.create!(:date => Date.new(2007, 10, 7))
-    event = series.children.create!(:date => Date.new(2007, 10, 14))
+    series = Series.create!(name: "Test Series")
+    men_a = Category.find_or_create_by(name: "Men A")
+    series.children.create!(date: Date.new(2007, 10, 7))
+    event = series.children.create!(date: Date.new(2007, 10, 14))
 
-    men_a_race = event.races.create!(:category => men_a)
+    men_a_race = event.races.create!(category: men_a)
     alice = FactoryGirl.create(:person)
-    men_a_race.results.create!(:place => 17, :person => alice)
+    men_a_race.results.create!(place: 17, person: alice)
 
-    age_graded_race = AgeGradedBar.create!(:name => "Age Graded Results for BAR/Championships").races.create!(:category => men_a)
-    age_graded_race.results.create!(:place => 1, :person => alice)
+    age_graded_race = AgeGradedBar.create!(name: "Age Graded Results for BAR/Championships").races.create!(category: men_a)
+    age_graded_race.results.create!(place: 1, person: alice)
 
     TestOverall.calculate!(2007)
 
@@ -220,9 +220,9 @@ class OverallTest < ActiveSupport::TestCase
   end
 
   test "should count for bar, nor ironman" do
-    series = Series.create!(:name => "Test Series")
-    men_a = Category.find_or_create_by(:name => "Men A")
-    series.children.create!(:date => Date.new(2008)).races.create!(:category => men_a).results.create!(:place => "4", :person => FactoryGirl.create(:person))
+    series = Series.create!(name: "Test Series")
+    men_a = Category.find_or_create_by(name: "Men A")
+    series.children.create!(date: Date.new(2008)).races.create!(category: men_a).results.create!(place: "4", person: FactoryGirl.create(:person))
 
     TestOverall.calculate!(2008)
     series.reload

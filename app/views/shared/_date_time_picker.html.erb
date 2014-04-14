@@ -2,12 +2,12 @@
   <label class="control-label col-sm-4" for="<%= object_name %>_human_<%= method %>_on">Registration Ends At</label>
   <div class="col-sm-6 date_time_picker">
     <div class="input-group">
-      <%= f.text_field "human_#{method}_on", :size => 28, :class => "form-control" %>
+      <%= f.text_field "human_#{method}_on", size: 28, class: "form-control" %>
       <span class="input-group-btn">
         <%= content_tag(
               :a,
-              :class => "btn btn-default",
-              :data => {
+              class: "btn btn-default",
+              data: {
                 "behaviour" => "datepicker",
                 "date-format" => "yyyy-mm-dd",
                 "date" => object.send("#{method}_at") ? object.send("#{method}_at").to_s(:db_date_only) : nil,
@@ -19,8 +19,8 @@
   </div>
   <div class="col-sm-2">
     <%= f.text_field "human_#{method}_at_time",
-                   :value => object.send("human_#{method}_at_time"),
-                   :size => 4,
-                   :class => "form-control" %>
+                   value: object.send("human_#{method}_at_time"),
+                   size: 4,
+                   class: "form-control" %>
   </div>
 </div>

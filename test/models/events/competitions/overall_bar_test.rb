@@ -13,171 +13,171 @@ class OverallBarTest < ActiveSupport::TestCase
 
     kona = FactoryGirl.create(:team)
 
-    association_category = FactoryGirl.create(:category, :name => "CBRA")
-    senior_men           = FactoryGirl.create(:category, :name => "Senior Men", :parent => association_category)
-    men_a                = FactoryGirl.create(:category, :name => "Men A", :parent => senior_men)
-    sr_p_1_2             = FactoryGirl.create(:category, :name => "Senior Men Pro 1/2", :parent => senior_men)
-    senior_women         = FactoryGirl.create(:category, :name => "Senior Women", :parent => association_category)
-    senior_women_1_2_3 = FactoryGirl.create(:category, :name => "Senior Women 1/2/3", :parent => senior_women)
+    association_category = FactoryGirl.create(:category, name: "CBRA")
+    senior_men           = FactoryGirl.create(:category, name: "Senior Men", parent: association_category)
+    men_a                = FactoryGirl.create(:category, name: "Men A", parent: senior_men)
+    sr_p_1_2             = FactoryGirl.create(:category, name: "Senior Men Pro 1/2", parent: senior_men)
+    senior_women         = FactoryGirl.create(:category, name: "Senior Women", parent: association_category)
+    senior_women_1_2_3 = FactoryGirl.create(:category, name: "Senior Women 1/2/3", parent: senior_women)
 
-    discipline = FactoryGirl.create(:discipline, :name => "Road")
+    discipline = FactoryGirl.create(:discipline, name: "Road")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
 
-    discipline = FactoryGirl.create(:discipline, :name => "Time Trial")
+    discipline = FactoryGirl.create(:discipline, name: "Time Trial")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
 
-    discipline = FactoryGirl.create(:discipline, :name => "Cyclocross")
+    discipline = FactoryGirl.create(:discipline, name: "Cyclocross")
     discipline.bar_categories << men_a
 
-    discipline = FactoryGirl.create(:discipline, :name => "Track")
+    discipline = FactoryGirl.create(:discipline, name: "Track")
     discipline.bar_categories << senior_men
 
-    discipline = FactoryGirl.create(:discipline, :name => "Criterium")
+    discipline = FactoryGirl.create(:discipline, name: "Criterium")
     discipline.bar_categories << senior_men
 
-    discipline = FactoryGirl.create(:discipline, :name => "Mountain Bike")
+    discipline = FactoryGirl.create(:discipline, name: "Mountain Bike")
     discipline.bar_categories << senior_men
 
-    discipline = FactoryGirl.create(:discipline, :name => "Overall")
+    discipline = FactoryGirl.create(:discipline, name: "Overall")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
 
-    cross_crusade = Series.create!(:name => "Cross Crusade")
+    cross_crusade = Series.create!(name: "Cross Crusade")
     barton = SingleDayEvent.create!(
-      :name => "Cross Crusade: Barton Park",
-      :discipline => "Cyclocross",
-      :date => Date.new(2004, 11, 7),
-      :parent => cross_crusade
+      name: "Cross Crusade: Barton Park",
+      discipline: "Cyclocross",
+      date: Date.new(2004, 11, 7),
+      parent: cross_crusade
     )
-    barton_a = barton.races.create!(:category => men_a, :field_size => 5)
+    barton_a = barton.races.create!(category: men_a, field_size: 5)
     barton_a.results.create!(
-      :place => 3,
-      :person => tonkin
+      place: 3,
+      person: tonkin
     )
     barton_a.results.create!(
-      :place => 15,
-      :person => weaver
+      place: 15,
+      person: weaver
     )
 
     swan_island = SingleDayEvent.create!(
-      :name => "Swan Island",
-      :discipline => "Criterium",
-      :date => Date.new(2004, 5, 17),
+      name: "Swan Island",
+      discipline: "Criterium",
+      date: Date.new(2004, 5, 17),
     )
-    swan_island_senior_men = swan_island.races.create!(:category => senior_men, :field_size => 4)
+    swan_island_senior_men = swan_island.races.create!(category: senior_men, field_size: 4)
     swan_island_senior_men.results.create!(
-      :place => 12,
-      :person => tonkin
+      place: 12,
+      person: tonkin
     )
     swan_island_senior_men.results.create!(
-      :place => 2,
-      :person => molly
+      place: 2,
+      person: molly
     )
     # No BAR points
-    senior_women_swan_island = swan_island.races.create!(:category => senior_women, :field_size => 3, :bar_points => 0)
+    senior_women_swan_island = swan_island.races.create!(category: senior_women, field_size: 3, bar_points: 0)
     senior_women_swan_island.results.create!(
-      :place => 1,
-      :person => molly
+      place: 1,
+      person: molly
     )
 
-    thursday_track_series = Series.create!(:name => "Thursday Track")
+    thursday_track_series = Series.create!(name: "Thursday Track")
     thursday_track = SingleDayEvent.create!(
-      :name => "Thursday Track",
-      :discipline => "Track",
-      :date => Date.new(2004, 5, 12),
-      :parent => thursday_track_series
+      name: "Thursday Track",
+      discipline: "Track",
+      date: Date.new(2004, 5, 12),
+      parent: thursday_track_series
     )
-    thursday_track_senior_men = thursday_track.races.create!(:category => senior_men, :field_size => 6)
+    thursday_track_senior_men = thursday_track.races.create!(category: senior_men, field_size: 6)
     r = thursday_track_senior_men.results.create!(
-      :place => 5,
-      :person => weaver
+      place: 5,
+      person: weaver
     )
     thursday_track_senior_men.results.create!(
-      :place => 14,
-      :person => tonkin,
-      :team => kona
+      place: 14,
+      person: tonkin,
+      team: kona
     )
 
     team_track = SingleDayEvent.create!(
-      :name => "Team Track State Championships",
-      :discipline => "Track",
-      :date => Date.new(2004, 9, 1),
-      :bar_points => 2
+      name: "Team Track State Championships",
+      discipline: "Track",
+      date: Date.new(2004, 9, 1),
+      bar_points: 2
     )
-    team_track_senior_men = team_track.races.create!(:category => senior_men, :field_size => 6)
+    team_track_senior_men = team_track.races.create!(category: senior_men, field_size: 6)
     team_track_senior_men.results.create!(
-      :place => 1,
-      :person => weaver,
-      :team => kona
-    )
-    team_track_senior_men.results.create!(
-      :place => 1,
-      :person => tonkin,
-      :team => kona
+      place: 1,
+      person: weaver,
+      team: kona
     )
     team_track_senior_men.results.create!(
-      :place => 1,
-      :person => molly
+      place: 1,
+      person: tonkin,
+      team: kona
     )
     team_track_senior_men.results.create!(
-      :place => 5,
-      :person => alice
+      place: 1,
+      person: molly
     )
     team_track_senior_men.results.create!(
-      :place => 5,
-      :person => matson
+      place: 5,
+      person: alice
+    )
+    team_track_senior_men.results.create!(
+      place: 5,
+      person: matson
     )
     # Weaver and Erik's second ride should not count
     team_track_senior_men.results.create!(
-      :place => 15,
-      :person => weaver,
-      :team => kona
+      place: 15,
+      person: weaver,
+      team: kona
     )
     team_track_senior_men.results.create!(
-      :place => 15,
-      :person => tonkin,
-      :team => kona
+      place: 15,
+      person: tonkin,
+      team: kona
     )
 
     larch_mt_hillclimb = SingleDayEvent.create!(
-      :name => "Larch Mountain Hillclimb",
-      :discipline => "Time Trial",
-      :date => Date.new(2004, 2, 1)
+      name: "Larch Mountain Hillclimb",
+      discipline: "Time Trial",
+      date: Date.new(2004, 2, 1)
     )
-    larch_mt_hillclimb_senior_men = larch_mt_hillclimb.races.create!(:category => senior_men, :field_size => 6)
+    larch_mt_hillclimb_senior_men = larch_mt_hillclimb.races.create!(category: senior_men, field_size: 6)
     larch_mt_hillclimb_senior_men.results.create!(
-      :place => 13,
-      :person => tonkin,
-      :team => kona
+      place: 13,
+      person: tonkin,
+      team: kona
     )
 
-    event = FactoryGirl.create(:event, :date => Date.new(2004))
-    race = event.races.create!(:category => sr_p_1_2)
-    race.results.create!(:place => "1", :person => tonkin)
-    race.results.create!(:place => "2", :person => weaver)
-    race.results.create!(:place => "3", :person => matson)
-    race = event.races.create!(:category => senior_women_1_2_3)
-    race.results.create!(:place => "2", :person => alice)
-    race.results.create!(:place => "15", :person => molly)
+    event = FactoryGirl.create(:event, date: Date.new(2004))
+    race = event.races.create!(category: sr_p_1_2)
+    race.results.create!(place: "1", person: tonkin)
+    race.results.create!(place: "2", person: weaver)
+    race.results.create!(place: "3", person: matson)
+    race = event.races.create!(category: senior_women_1_2_3)
+    race.results.create!(place: "2", person: alice)
+    race.results.create!(place: "15", person: molly)
 
     # previous year does note count
-    event = FactoryGirl.create(:event, :date => Date.new(2003, 12, 31))
-    race = event.races.create!(:category => sr_p_1_2)
-    race.results.create!(:place => "4", :person => tonkin)
+    event = FactoryGirl.create(:event, date: Date.new(2003, 12, 31))
+    race = event.races.create!(category: sr_p_1_2)
+    race.results.create!(place: "4", person: tonkin)
 
     # next year does note count
-    event = FactoryGirl.create(:event, :date => Date.new(2005, 1, 1))
-    race = event.races.create!(:category => sr_p_1_2)
-    race.results.create!(:place => "5", :person => tonkin)
+    event = FactoryGirl.create(:event, date: Date.new(2005, 1, 1))
+    race = event.races.create!(category: sr_p_1_2)
+    race.results.create!(place: "5", person: tonkin)
 
     Bar.calculate!(2004)
     # Discipline BAR results past 300 don't count -- add fake result
     bar = Bar.find_by_year_and_discipline(2004, "Road")
     assert_not_nil bar.parent, "Should have parent"
     sr_men_road_bar = bar.races.detect {|r| r.category == senior_men}
-    sr_men_road_bar.results.create!(:place => 305, :person => alice)
+    sr_men_road_bar.results.create!(place: 305, person: alice)
 
     assert_difference "Result.count", 7 do
       OverallBar.calculate!(2004)
@@ -236,99 +236,99 @@ class OverallBarTest < ActiveSupport::TestCase
   end
 
   def test_drop_cat_5_discipline_results
-    alice  = FactoryGirl.create(:person, :name => "Alice Pennington")
-    matson = FactoryGirl.create(:person, :name => "Mark Matson")
-    molly  = FactoryGirl.create(:person, :name => "Molly Cameron")
-    tonkin = FactoryGirl.create(:person, :name => "Erik Tonkin")
+    alice  = FactoryGirl.create(:person, name: "Alice Pennington")
+    matson = FactoryGirl.create(:person, name: "Mark Matson")
+    molly  = FactoryGirl.create(:person, name: "Molly Cameron")
+    tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
     weaver = FactoryGirl.create(:person)
 
-    association_category = FactoryGirl.create(:category, :name => "CBRA")
-    senior_men           = FactoryGirl.create(:category, :name => "Senior Men", :parent => association_category)
-    men_a                = FactoryGirl.create(:category, :name => "Men A", :parent => senior_men)
-    sr_p_1_2             = FactoryGirl.create(:category, :name => "Senior Men Pro 1/2", :parent => senior_men)
-    senior_women         = FactoryGirl.create(:category, :name => "Senior Women", :parent => association_category)
-    senior_women_1_2_3   = FactoryGirl.create(:category, :name => "Senior Women 1/2/3", :parent => senior_women)
-    category_3_men       = FactoryGirl.create(:category, :name => "Category 3 Men", :parent => association_category)
-    category_4_5_men     = FactoryGirl.create(:category, :name => "Category 4/5 Men", :parent => association_category)
-    category_4_men       = FactoryGirl.create(:category, :name => "Category 4 Men", :parent => category_4_5_men)
-    category_5_men       = FactoryGirl.create(:category, :name => "Category 5 Men", :parent => category_4_5_men)
+    association_category = FactoryGirl.create(:category, name: "CBRA")
+    senior_men           = FactoryGirl.create(:category, name: "Senior Men", parent: association_category)
+    men_a                = FactoryGirl.create(:category, name: "Men A", parent: senior_men)
+    sr_p_1_2             = FactoryGirl.create(:category, name: "Senior Men Pro 1/2", parent: senior_men)
+    senior_women         = FactoryGirl.create(:category, name: "Senior Women", parent: association_category)
+    senior_women_1_2_3   = FactoryGirl.create(:category, name: "Senior Women 1/2/3", parent: senior_women)
+    category_3_men       = FactoryGirl.create(:category, name: "Category 3 Men", parent: association_category)
+    category_4_5_men     = FactoryGirl.create(:category, name: "Category 4/5 Men", parent: association_category)
+    category_4_men       = FactoryGirl.create(:category, name: "Category 4 Men", parent: category_4_5_men)
+    category_5_men       = FactoryGirl.create(:category, name: "Category 5 Men", parent: category_4_5_men)
 
-    discipline = FactoryGirl.create(:discipline, :name => "Road")
+    discipline = FactoryGirl.create(:discipline, name: "Road")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
     discipline.bar_categories << category_3_men
     discipline.bar_categories << category_4_men
     discipline.bar_categories << category_5_men
 
-    discipline = FactoryGirl.create(:discipline, :name => "Time Trial")
+    discipline = FactoryGirl.create(:discipline, name: "Time Trial")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
     discipline.bar_categories << category_3_men
     discipline.bar_categories << category_4_men
     discipline.bar_categories << category_5_men
 
-    discipline = FactoryGirl.create(:discipline, :name => "Cyclocross")
+    discipline = FactoryGirl.create(:discipline, name: "Cyclocross")
     discipline.bar_categories << men_a
 
-    discipline = FactoryGirl.create(:discipline, :name => "Track")
+    discipline = FactoryGirl.create(:discipline, name: "Track")
     discipline.bar_categories << senior_men
     discipline.bar_categories << category_3_men
     discipline.bar_categories << category_4_men
     discipline.bar_categories << category_5_men
 
-    discipline = FactoryGirl.create(:discipline, :name => "Criterium")
+    discipline = FactoryGirl.create(:discipline, name: "Criterium")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
     discipline.bar_categories << category_3_men
     discipline.bar_categories << category_4_men
     discipline.bar_categories << category_5_men
 
-    discipline = FactoryGirl.create(:discipline, :name => "Mountain Bike")
+    discipline = FactoryGirl.create(:discipline, name: "Mountain Bike")
     discipline.bar_categories << senior_men
     discipline.bar_categories << category_3_men
     discipline.bar_categories << category_4_men
     discipline.bar_categories << category_5_men
 
-    discipline = FactoryGirl.create(:discipline, :name => "Overall")
+    discipline = FactoryGirl.create(:discipline, name: "Overall")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
     discipline.bar_categories << category_3_men
     discipline.bar_categories << category_4_5_men
 
-    event = SingleDayEvent.create!(:discipline => 'Road')
-    cat_4_race = event.races.create!(:category => category_4_men)
-    cat_4_race.results.create!(:place => '4', :person => weaver)
-    cat_4_race.results.create!(:place => '5', :person => matson)
+    event = SingleDayEvent.create!(discipline: 'Road')
+    cat_4_race = event.races.create!(category: category_4_men)
+    cat_4_race.results.create!(place: '4', person: weaver)
+    cat_4_race.results.create!(place: '5', person: matson)
 
-    cat_5_race = event.races.create!(:category => category_5_men)
-    cat_5_race.results.create!(:place => '6', :person => matson)
-    cat_5_race.results.create!(:place => '15', :person => tonkin)
+    cat_5_race = event.races.create!(category: category_5_men)
+    cat_5_race.results.create!(place: '6', person: matson)
+    cat_5_race.results.create!(place: '15', person: tonkin)
 
-    event = SingleDayEvent.create!(:discipline => 'Road')
-    cat_5_race = event.races.create!(:category => category_5_men)
-    cat_5_race.results.create!(:place => '15', :person => tonkin)
+    event = SingleDayEvent.create!(discipline: 'Road')
+    cat_5_race = event.races.create!(category: category_5_men)
+    cat_5_race.results.create!(place: '15', person: tonkin)
 
     # Add several different discipline results to expose ordering bug
-    event = SingleDayEvent.create!(:discipline => "Criterium")
-    event.races.create!(:category => category_4_men).results.create!(:place => 3, :person => matson)
-    event.races.create!(:category => category_4_men).results.create!(:place => 6, :person => tonkin)
-    event.races.create!(:category => category_4_men).results.create!(:place => 12, :person => molly)
-    event.races.create!(:category => category_4_men).results.create!(:place => 15, :person => weaver)
+    event = SingleDayEvent.create!(discipline: "Criterium")
+    event.races.create!(category: category_4_men).results.create!(place: 3, person: matson)
+    event.races.create!(category: category_4_men).results.create!(place: 6, person: tonkin)
+    event.races.create!(category: category_4_men).results.create!(place: 12, person: molly)
+    event.races.create!(category: category_4_men).results.create!(place: 15, person: weaver)
 
-    event = SingleDayEvent.create!(:discipline => "Mountain Bike")
-    event.races.create!(:category => category_3_men).results.create!(:place => 14, :person => matson)
-    event.races.create!(:category => category_3_men).results.create!(:place => 15, :person => weaver)
+    event = SingleDayEvent.create!(discipline: "Mountain Bike")
+    event.races.create!(category: category_3_men).results.create!(place: 14, person: matson)
+    event.races.create!(category: category_3_men).results.create!(place: 15, person: weaver)
 
-    event = SingleDayEvent.create!(:discipline => "Track")
-    event.races.create!(:category => category_4_men).results.create!(:place => 6, :person => tonkin)
-    event.races.create!(:category => category_4_men).results.create!(:place => 14, :person => matson)
-    event.races.create!(:category => category_4_men).results.create!(:place => 15, :person => weaver)
+    event = SingleDayEvent.create!(discipline: "Track")
+    event.races.create!(category: category_4_men).results.create!(place: 6, person: tonkin)
+    event.races.create!(category: category_4_men).results.create!(place: 14, person: matson)
+    event.races.create!(category: category_4_men).results.create!(place: 15, person: weaver)
 
-    event.races.create!(:category => category_5_men).results.create!(:place => 1, :person => weaver)
+    event.races.create!(category: category_5_men).results.create!(place: 1, person: weaver)
 
-    sevent = SingleDayEvent.create!(:discipline => "Time Trial")
-    sevent.races.create!(:category => category_5_men).results.create!(:place => 1, :person => weaver)
-    sevent.races.create!(:category => category_5_men).results.create!(:place => 15, :person => matson)
+    sevent = SingleDayEvent.create!(discipline: "Time Trial")
+    sevent.races.create!(category: category_5_men).results.create!(place: 1, person: weaver)
+    sevent.races.create!(category: category_5_men).results.create!(place: 15, person: matson)
 
     Bar.calculate!
     OverallBar.calculate!

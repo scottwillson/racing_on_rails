@@ -8,7 +8,7 @@ var $dialog = jQuery('<div></div>')
       "Merge": function() {
         jQuery(this).dialog("close");
         jQuery.ajax({
-          url: '<%= admin_merge_team_path @other_teams.first, @team, :format => :js %>',
+          url: '<%= admin_merge_team_path @other_teams.first, @team, format: :js %>',
           type: 'POST',
           dataType: 'script'
         });

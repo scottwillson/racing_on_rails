@@ -35,7 +35,7 @@ module TableHelper
     _attribute = nil
     _attribute = attribute.to_s if attribute
 
-    locals = { :attribute => _attribute }
+    locals = { attribute: _attribute }
     options = options.extract_options!
     if options.has_key?(:sort_by)
       locals[:sort_by] = [options[:sort_by]].flatten.compact

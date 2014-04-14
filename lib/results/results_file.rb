@@ -152,7 +152,7 @@ module Results
     #
     # Example:
     # Place, Num, First Name
-    # { :place => 0, :number => 1, :first_name => 2 }
+    # { place: 0, number: 1, first_name: 2 }
     def create_columns(spreadsheet_row)
       self.column_indexes = Hash.new
       self.columns = []
@@ -221,15 +221,15 @@ module Results
 
     def find_or_create_race(row)
       if usac_results_format?
-        category = Category.find_or_create_by(:name => construct_usac_category(row))
+        category = Category.find_or_create_by(name: construct_usac_category(row))
       else
-        category = Category.find_or_create_by(:name => row.first)
+        category = Category.find_or_create_by(name: row.first)
       end
       race = event.races.detect { |r| r.category == category }
       if race
         race.results.clear
       else
-        race = event.races.build(:category => category, :notes => row.notes)
+        race = event.races.build(category: category, notes: row.notes)
       end
       race.result_columns = columns
       race.custom_columns = race_custom_columns.to_a
@@ -318,7 +318,7 @@ module Results
           false
         end
       end
-      attributes.merge! :custom_attributes => custom_attributes
+      attributes.merge! custom_attributes: custom_attributes
       attributes
     end
 

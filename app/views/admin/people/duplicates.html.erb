@@ -1,6 +1,6 @@
 <% @page_title = 'Admin: People: Duplicates' %>
 
-<%= form_tag(:action => 'resolve_duplicates') %>
+<%= form_tag(action: 'resolve_duplicates') %>
 <% @duplicates.each do |duplicate| %>
 <h3><%= duplicate.person.name %></h3>
 <table class="table table-striped">
@@ -74,5 +74,5 @@
   </tbody>
 </table>
 <% end %>
-<%= submit_tag 'Done', :class => "btn btn-default" %>
+<%= submit_tag 'Done', class: "btn btn-default" %>
 </form>

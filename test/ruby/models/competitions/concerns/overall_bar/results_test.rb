@@ -12,11 +12,11 @@ class Concerns::OverallBar::ResultsTest < Ruby::TestCase
     bar.stubs("find_category").returns(stub("category"))
     score = stub(
       "score",
-      :points => 1,
-      :source_discipline => "Road",
-      :source_result => stub("source_result",
-        :race => stub("race",
-          :category => stub("category")
+      points: 1,
+      source_discipline: "Road",
+      source_result: stub("source_result",
+        race: stub("race",
+          category: stub("category")
         )
       )
     )
@@ -33,36 +33,36 @@ class Concerns::OverallBar::ResultsTest < Ruby::TestCase
 
     score_1 = stub(
       "score 1",
-      :destroy => true,
-      :points => 20,
-      :source_discipline => "Road",
-      :source_result => stub("source_result",
-        :race => stub("race",
-          :category => stub("category")
+      destroy: true,
+      points: 20,
+      source_discipline: "Road",
+      source_result: stub("source_result",
+        race: stub("race",
+          category: stub("category")
         )
       )
     )
 
     score_2 = stub(
       "score 2",
-      :destroy => true,
-      :points => 10,
-      :source_discipline => "Road",
-      :source_result => stub("source_result",
-        :race => stub("race",
-          :category => stub("category")
+      destroy: true,
+      points: 10,
+      source_discipline: "Road",
+      source_result: stub("source_result",
+        race: stub("race",
+          category: stub("category")
         )
       )
     )
 
     score_3 = stub(
       "score 3",
-      :destroy => true,
-      :points => 5,
-      :source_discipline => "Track",
-      :source_result => stub("source_result",
-        :race => stub("race",
-          :category => stub("category")
+      destroy: true,
+      points: 5,
+      source_discipline: "Track",
+      source_result: stub("source_result",
+        race: stub("race",
+          category: stub("category")
         )
       )
     )

@@ -1,5 +1,5 @@
 <h3><%= link_to "Schedule", schedule_path %></h3>
-<%= table :id => "upcoming_events", :columns => 4 do %>
+<%= table id: "upcoming_events", columns: 4 do %>
   <% upcoming_events.sort_by(&:date)[0, mobile_request? ? 6 : 1000].each do |event| %>
     <tr>
       <td class="date"><%= public_link_to_flyer(event, event.date.to_s(:short_with_week_day)) %></td>
@@ -8,7 +8,7 @@
       <td class="beginner_friendly icon">
         <% if event.beginner_friendly? %>
           <%= link_to("http://www.obra.org/beginner_friendly.html",
-                      :class => "beginner_friendly", :title => "Beginner friendly event") do %>
+                      class: "beginner_friendly", title: "Beginner friendly event") do %>
             <span class="glyphicon glyphicon-ok-circle"></span>
           <% end %>
         <% end %>
@@ -21,9 +21,9 @@
       <td class="discipline">
         <%= link_to event.discipline,
             schedule_index_path(
-              :year => RacingAssociation.current.effective_year,
-              :discipline => Discipline[event.discipline].to_param,
-              :anchor => event.date.strftime("%B").downcase
+              year: RacingAssociation.current.effective_year,
+              discipline: Discipline[event.discipline].to_param,
+              anchor: event.date.strftime("%B").downcase
             ) %>
       </td>
       <% end %>

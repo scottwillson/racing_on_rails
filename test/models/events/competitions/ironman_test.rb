@@ -3,11 +3,11 @@ require File.expand_path("../../../../test_helper", __FILE__)
 # :stopdoc:
 class IronmanTest < ActiveSupport::TestCase
   def test_count_single_day_events
-    old_team = FactoryGirl.create(:team, :name => "Old Team")
-    person = FactoryGirl.create(:person, :team => old_team)
+    old_team = FactoryGirl.create(:team, name: "Old Team")
+    person = FactoryGirl.create(:person, team: old_team)
     series = Series.create!
     senior_men = FactoryGirl.create(:category)
-    series.races.create!(:category => senior_men).results.create(:place => "1", :person => person)
+    series.races.create!(category: senior_men).results.create(place: "1", person: person)
 
     Ironman.any_instance.expects(:expire_cache).at_least_once
     Ironman.calculate!
@@ -16,10 +16,10 @@ class IronmanTest < ActiveSupport::TestCase
     assert_equal(0, ironman.races.first.results.count, "Should have no Ironman result for a Series result")
 
     event = series.children.create!
-    event.races.create!(:category => senior_men).results.create(:place => "1", :person => person, :team_name => "Source Result Team")
+    event.races.create!(category: senior_men).results.create(place: "1", person: person, team_name: "Source Result Team")
 
     # Change team
-    team = FactoryGirl.create(:team, :name => "Current Team")
+    team = FactoryGirl.create(:team, name: "Current Team")
     person.team = team
     person.save!
 
@@ -43,7 +43,7 @@ class IronmanTest < ActiveSupport::TestCase
     event = SingleDayEvent.create!
     child = event.children.create!
     senior_men = FactoryGirl.create(:category)
-    child.races.create!(:category => senior_men).results.create(:place => "1", :person => person)
+    child.races.create!(category: senior_men).results.create(place: "1", person: person)
     assert(child.ironman?, "Child event should count towards Ironman")
 
     Ironman.calculate!
@@ -57,8 +57,8 @@ class IronmanTest < ActiveSupport::TestCase
     person = FactoryGirl.create(:person)
     event = FactoryGirl.create(:time_trial_event)
     senior_men = FactoryGirl.create(:category)
-    event.races.create!(:category => senior_men).results.create(:place => "99", :person => person)
-    combined_results = CombinedTimeTrialResults.create!(:parent => event)
+    event.races.create!(category: senior_men).results.create(place: "99", person: person)
+    combined_results = CombinedTimeTrialResults.create!(parent: event)
     assert(!combined_results.ironman?, "CombinedTimeTrialResults event should not count towards Ironman")
 
     Ironman.calculate!
@@ -72,14 +72,14 @@ class IronmanTest < ActiveSupport::TestCase
     person = FactoryGirl.create(:person)
     senior_men = FactoryGirl.create(:category)
     series = Series.create!
-    series.races.create!(:category => senior_men).results.create(:place => "1", :person => person)
+    series.races.create!(category: senior_men).results.create(place: "1", person: person)
 
     # Only way to exclude these results is to manually set ironman? to false
-    event = series.children.create!(:ironman => false)
-    event.races.create!(:category => senior_men).results.create(:place => "1", :person => person)
+    event = series.children.create!(ironman: false)
+    event.races.create!(category: senior_men).results.create(place: "1", person: person)
 
     child = event.children.create!
-    child.races.create!(:category => senior_men).results.create(:place => "1", :person => person)
+    child.races.create!(category: senior_men).results.create(place: "1", person: person)
 
     Ironman.calculate!
 

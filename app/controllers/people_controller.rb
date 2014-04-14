@@ -1,23 +1,23 @@
 class PeopleController < ApplicationController
-  force_https :except => [ :index, :list, :show ]
+  force_https except: [ :index, :list, :show ]
 
-  before_filter :require_current_person, :only => [ :edit, :update, :card ]
-  before_filter :assign_person, :only => [ :edit, :update, :card ]
-  before_filter :require_same_person_or_administrator_or_editor, :only => [ :edit, :update, :card ]
+  before_filter :require_current_person, only: [ :edit, :update, :card ]
+  before_filter :assign_person, only: [ :edit, :update, :card ]
+  before_filter :require_same_person_or_administrator_or_editor, only: [ :edit, :update, :card ]
 
   def index
     respond_to do |format|
       format.html { find_people }
       format.js { find_people }
-      format.xml { render :xml => find_people.to_xml(:only => [ :id, :first_name, :last_name ]) }
-      format.json { render :json => find_people.as_json(:only => [ :id, :first_name, :last_name, :name, :city ], :methods => [ :team_name ] ) }
+      format.xml { render xml: find_people.to_xml(only: [ :id, :first_name, :last_name ]) }
+      format.json { render json: find_people.as_json(only: [ :id, :first_name, :last_name, :name, :city ], methods: [ :team_name ] ) }
     end
   end
 
   def list
     people_list = Array.new
     Person.find_all_by_name_like(params['name']).each { |person| people_list.push( { "label" => person.name, "id" => person.id.to_s} ) }
-    render :json => people_list
+    render json: people_list
   end
 
   def account
@@ -45,8 +45,8 @@ class PeopleController < ApplicationController
     respond_to do |format|
       format.pdf do
         send_data Card.new.to_pdf(@person),
-                  :filename => "card.pdf",
-                  :type => "application/pdf"
+                  filename: "card.pdf",
+                  type: "application/pdf"
       end
     end
   end
@@ -155,7 +155,7 @@ class PeopleController < ApplicationController
       PersonMailer.new_login_confirmation(@person).deliver rescue nil
       if @return_to.present?
         uri = URI.parse(@return_to)
-        redirect_to URI::Generic.build(:path => uri.path, :query => uri.query).to_s
+        redirect_to URI::Generic.build(path: uri.path, query: uri.query).to_s
         session[:return_to] = nil
       else
         redirect_to edit_person_path(@person)

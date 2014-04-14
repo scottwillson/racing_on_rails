@@ -8,12 +8,12 @@ class FirstAidProvidersTest < AcceptanceTest
     # FIXME Punt!
     if Time.zone.today.month < 12
       login_as FactoryGirl.create(:administrator)
-      promoter = FactoryGirl.create(:person, :name => "Brad Ross")
-      event_1 = FactoryGirl.create(:event, :promoter => promoter, :date => 2.days.from_now, :first_aid_provider => "Megan Weaver", :name => "Copperopolis")
-      event_2 = FactoryGirl.create(:event, :date => 4.days.from_now, :name => "Giro di SF")
-      event_3 = FactoryGirl.create(:event, :date => 3.days.ago, :name => "San Ardo")
-      FactoryGirl.create(:event, :date => 2.weeks.from_now, :name => "Snelling")
-      FactoryGirl.create(:event, :date => 3.weeks.from_now, :name => "Berkeley Hills")
+      promoter = FactoryGirl.create(:person, name: "Brad Ross")
+      event_1 = FactoryGirl.create(:event, promoter: promoter, date: 2.days.from_now, first_aid_provider: "Megan Weaver", name: "Copperopolis")
+      event_2 = FactoryGirl.create(:event, date: 4.days.from_now, name: "Giro di SF")
+      event_3 = FactoryGirl.create(:event, date: 3.days.ago, name: "San Ardo")
+      FactoryGirl.create(:event, date: 2.weeks.from_now, name: "Snelling")
+      FactoryGirl.create(:event, date: 3.weeks.from_now, name: "Berkeley Hills")
 
       visit "/admin/first_aid_providers"
 
@@ -24,7 +24,7 @@ class FirstAidProvidersTest < AcceptanceTest
 
       find(:xpath, "//table[@id='events_table']//tr[2]//td[@class='name']//div[@class='record']//div[@class='editable']").click
       within "form.editor_field" do
-        fill_in "value", :with => "Megan Weaver"
+        fill_in "value", with: "Megan Weaver"
         press_return "value"
       end
 

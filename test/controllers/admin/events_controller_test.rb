@@ -17,15 +17,15 @@ module Admin
 
     def test_destroy_event
       jack_frost = FactoryGirl.create(:event)
-      delete(:destroy, :id => jack_frost.to_param, :commit => 'Delete')
-      assert_redirected_to(admin_events_path(:year => jack_frost.date.year))
+      delete(:destroy, id: jack_frost.to_param, commit: 'Delete')
+      assert_redirected_to(admin_events_path(year: jack_frost.date.year))
       assert(!Event.exists?(jack_frost.id), "Jack Frost should have been destroyed")
     end
 
     def test_destroy_event_ajax
       event = FactoryGirl.create(:event)
       event.destroy_races
-      xhr(:delete, :destroy, :id => event.to_param, :commit => 'Delete')
+      xhr(:delete, :destroy, id: event.to_param, commit: 'Delete')
       assert_response(:success)
       assert(!Event.exists?(event.id), "Event should have been destroyed")
     end
@@ -48,11 +48,11 @@ module Admin
 
     def test_save_different_promoter
       promoter = FactoryGirl.create(:person)
-      banana_belt = FactoryGirl.create(:event, :promoter => promoter)
+      banana_belt = FactoryGirl.create(:event, promoter: promoter)
 
       post(:update,
            "commit"=>"Save",
-           :id => banana_belt.to_param,
+           id: banana_belt.to_param,
            "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
                      "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1",
                      "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR", 'type' => 'SingleDayEvent',
@@ -66,11 +66,11 @@ module Admin
     end
 
     def test_set_parent
-      event = FactoryGirl.create(:event, :name => "The Event")
+      event = FactoryGirl.create(:event, name: "The Event")
       assert_nil(event.parent)
 
-      parent = FactoryGirl.create(:series, :name => "The Event")
-      get(:set_parent, :parent_id => parent, :child_id => event)
+      parent = FactoryGirl.create(:series, name: "The Event")
+      get(:set_parent, parent_id: parent, child_id: event)
 
       event.reload
       assert_equal(parent, event.parent)
@@ -78,44 +78,44 @@ module Admin
     end
 
     def test_missing_parent
-      FactoryGirl.create(:series, :name => "The Event")
-      event = FactoryGirl.create(:event, :name => "The Event")
+      FactoryGirl.create(:series, name: "The Event")
+      event = FactoryGirl.create(:event, name: "The Event")
       assert(event.missing_parent?, "Event should be missing parent")
-      get(:edit, :id => event.to_param)
+      get(:edit, id: event.to_param)
       assert_response(:success)
       assert_template("admin/events/edit")
     end
 
     def test_missing_children
-      event = FactoryGirl.create(:series, :name => "The Event")
-      FactoryGirl.create(:event, :name => "The Event")
+      event = FactoryGirl.create(:series, name: "The Event")
+      FactoryGirl.create(:event, name: "The Event")
       assert(event.missing_children?, "Event should be missing children")
       assert_not_nil(event.missing_children, "Event should be missing children")
-      get(:edit, :id => event.to_param)
+      get(:edit, id: event.to_param)
       assert_response(:success)
       assert_template("admin/events/edit")
     end
 
     def test_multi_day_event_children_with_no_parent
-      SingleDayEvent.create!(:name => "PIR Short Track")
-      SingleDayEvent.create!(:name => "PIR Short Track")
-      SingleDayEvent.create!(:name => "PIR Short Track")
-      event = SingleDayEvent.create!(:name => "PIR Short Track")
+      SingleDayEvent.create!(name: "PIR Short Track")
+      SingleDayEvent.create!(name: "PIR Short Track")
+      SingleDayEvent.create!(name: "PIR Short Track")
+      event = SingleDayEvent.create!(name: "PIR Short Track")
 
       assert(event.multi_day_event_children_with_no_parent?, "multi_day_event_children_with_no_parent?")
       assert_not_nil(event.multi_day_event_children_with_no_parent, "multi_day_event_children_with_no_parent")
       assert(!(event.multi_day_event_children_with_no_parent).empty?, "multi_day_event_children_with_no_parent")
-      get(:edit, :id => event.to_param)
+      get(:edit, id: event.to_param)
       assert_response(:success)
       assert_template("admin/events/edit")
     end
 
     def test_add_children
       Timecop.freeze(Time.zone.local(RacingAssociation.current.year, 10, 3)) do
-        FactoryGirl.create(:event, :name => "Event", :date => 1.month.from_now)
+        FactoryGirl.create(:event, name: "Event", date: 1.month.from_now)
 
-        event = FactoryGirl.create(:series, :name => "Event")
-        get(:add_children, :parent_id => event.to_param)
+        event = FactoryGirl.create(:series, name: "Event")
+        get(:add_children, parent_id: event.to_param)
         assert_redirected_to edit_admin_event_path(event)
         event.reload.children(true)
         assert_equal 1.month.from_now.to_date, event.start_date, "parent start_date"
@@ -124,7 +124,7 @@ module Admin
     end
 
     def test_index
-      get(:index, :year => "2004")
+      get(:index, year: "2004")
       assert_response(:success)
       assert_template("admin/events/index")
       assert_not_nil(assigns["schedule"], "Should assign schedule")
@@ -132,14 +132,14 @@ module Admin
 
     def test_not_logged_in
       destroy_person_session
-      get(:index, :year => "2004")
+      get(:index, year: "2004")
       assert_redirected_to new_person_session_url(secure_redirect_options)
       assert_nil(@request.session["person"], "No person in session")
     end
 
     def test_links_to_years
-      FactoryGirl.create(:event, :date => Date.new(2003, 6))
-      get(:index, :year => "2004")
+      FactoryGirl.create(:event, date: Date.new(2003, 6))
+      get(:index, year: "2004")
 
       link = @response.body["href=\"/admin/events?year=2003"]
       obra_link = @response.body["/schedule/2003"]
@@ -153,11 +153,11 @@ module Admin
     def test_links_to_years_only_past_year_has_events
       current_year = Time.zone.today.year
       last_year = current_year - 1
-      SingleDayEvent.create!(:date => Date.new(last_year))
+      SingleDayEvent.create!(date: Date.new(last_year))
 
-      get(:index, :year => current_year)
+      get(:index, year: current_year)
       assert_match("href=\"/admin/events?year=#{last_year}", @response.body, "Should link to #{last_year} in:\n#{@response.body}")
-      assert_select(".nav a", { :text => current_year.to_s }, "Should have tab for current year")
+      assert_select(".nav a", { text: current_year.to_s }, "Should have tab for current year")
     end
 
     # Really only happens to developers switching environments, and more of a test of LoginSystem
@@ -171,17 +171,17 @@ module Admin
     def test_destroy_child_event
       event = FactoryGirl.create(:series_event)
       event.destroy_races
-      delete(:destroy, :id => event.to_param, :commit => 'Delete')
+      delete(:destroy, id: event.to_param, commit: 'Delete')
       assert(!Event.exists?(event.id), "Should have deleted Event")
     end
 
     def test_destroy_races
       jack_frost = FactoryGirl.create(:time_trial_event)
-      jack_frost.races.create!(:category => FactoryGirl.create(:category)).results.create!(:place => "1", :person => FactoryGirl.create(:person), :time => 1200)
+      jack_frost.races.create!(category: FactoryGirl.create(:category)).results.create!(place: "1", person: FactoryGirl.create(:person), time: 1200)
       CombinedTimeTrialResults.create_or_destroy_for!(jack_frost)
       assert_not_nil(jack_frost.combined_results, "Event should have combined results before destroying races")
       assert_equal(1, jack_frost.races.count, "Races before destroy")
-      xhr :delete, :destroy_races, :id => jack_frost.id, :commit => 'Delete'
+      xhr :delete, :destroy_races, id: jack_frost.id, commit: 'Delete'
       assert_not_nil(assigns(:races), "@races")
       assert_not_nil(assigns(:combined_results), "@combined_results")
       assert_response(:success)
@@ -191,9 +191,9 @@ module Admin
 
     def test_events_for_year
       Timecop.freeze(2005, 6) do
-        single_day_event = FactoryGirl.create(:event, :date => 3.days.from_now, :name => "Single Day Event")
-        multi_day_event_with_children = FactoryGirl.create(:stage_race, :name => "Stage Race")
-        multi_day_event = MultiDayEvent.create!(:date => 1.week.ago, :name => "Childless MultiDayEvent")
+        single_day_event = FactoryGirl.create(:event, date: 3.days.from_now, name: "Single Day Event")
+        multi_day_event_with_children = FactoryGirl.create(:stage_race, name: "Stage Race")
+        multi_day_event = MultiDayEvent.create!(date: 1.week.ago, name: "Childless MultiDayEvent")
 
         expected_events = [ single_day_event, multi_day_event ] + multi_day_event_with_children.children
         assert_same_elements expected_events, @controller.send(:events_for_year, 2005), "events_for_year should include childless MultiDayEvents"

@@ -20,7 +20,7 @@ module Admin
         @sort_by = "date"
       end
 
-      @events = @events.where(:practice => false).where(:cancelled => false).where(:postponed => false)
+      @events = @events.where(practice: false).where(cancelled: false).where(postponed: false)
 
       respond_to do |format|
         format.html
@@ -39,7 +39,7 @@ module Admin
 
       headers['Content-Type'] = 'text/plain'
 
-      render :plain => grid.to_s(false)
+      render plain: grid.to_s(false)
     end
 
     protected

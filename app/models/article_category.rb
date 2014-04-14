@@ -1,6 +1,6 @@
 # Homepage Article Category
 class ArticleCategory < ActiveRecord::Base
-  acts_as_tree :order => "position"
+  acts_as_tree order: "position"
   include Concerns::TreeExtensions
   include Concerns::TreeValidation
 

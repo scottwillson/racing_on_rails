@@ -1,4 +1,4 @@
-<%= content_tag :tr, :id => "velodrome_#{velodrome.id}_row" do %>
+<%= content_tag :tr, id: "velodrome_#{velodrome.id}_row" do %>
   <td class="icon"><span class="icon-flag" id="velodrome_<%= velodrome.id %>" ></span></td>
   <td class="name">
     <%= editable velodrome, :name %>
@@ -7,6 +7,6 @@
     <%= editable velodrome, :website %>
   </td>
   <td class="actions">
-    <%= link_to "Edit", edit_admin_velodrome_path(velodrome), :id => "edit_#{velodrome.id}" %>
+    <%= link_to "Edit", edit_admin_velodrome_path(velodrome), id: "edit_#{velodrome.id}" %>
   </td>
 <% end -%>

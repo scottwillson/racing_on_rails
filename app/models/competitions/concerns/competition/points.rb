@@ -51,7 +51,7 @@ module Concerns
       end
 
       def team_size_from_result(source_result)
-        ::Result.where(:race_id => source_result.race_id, :place => source_result.place).count
+        ::Result.where(race_id: source_result.race_id, place: source_result.place).count
       end
 
       def ascending_points?

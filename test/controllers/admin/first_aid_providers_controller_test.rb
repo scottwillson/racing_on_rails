@@ -10,7 +10,7 @@ module Admin
     end
 
     def test_index
-      FactoryGirl.create(:event, :date => 3.days.from_now)
+      FactoryGirl.create(:event, date: 3.days.from_now)
       get(:index)
       assert_response(:success)
       assert_template("admin/first_aid_providers/index")
@@ -18,17 +18,17 @@ module Admin
       assert_not_nil(assigns["year"], "Should assign year")
       assert_equal(false, assigns["past_events"], "past_events")
       assert_equal("date", assigns["sort_by"], "@sort_by default")
-      assert_select ".editable", { :minimum => 1 }, "Should be editable for admins"
+      assert_select ".editable", { minimum: 1 }, "Should be editable for admins"
     end
 
     def test_index_as_txt
-      FactoryGirl.create :event, :date => 3.days.from_now
-      get :index, :format => "text"
+      FactoryGirl.create :event, date: 3.days.from_now
+      get :index, format: "text"
       assert_response :success
     end
 
     def test_first_aid_update_options
-      get(:index, :past_events => "true")
+      get(:index, past_events: "true")
       assert_response(:success)
       assert_template("admin/first_aid_providers/index")
       assert_not_nil(assigns["events"], "Should assign events")
@@ -37,7 +37,7 @@ module Admin
     end
 
     def test_index_sorting
-      get(:index, :sort_by => "promoter_name", :sort_direction => "desc")
+      get(:index, sort_by: "promoter_name", sort_direction: "desc")
       assert_response(:success)
       assert_template("admin/first_aid_providers/index")
       assert_not_nil(assigns["events"], "Should assign events")
@@ -54,15 +54,15 @@ module Admin
     end
 
     def test_official
-      person = FactoryGirl.create(:person_with_login, :official => true)
+      person = FactoryGirl.create(:person_with_login, official: true)
       login_as person
       get :index
       assert_response :success
     end
 
     def test_email
-      FactoryGirl.create(:event, :date => 3.days.from_now)
-      get :index, :format => "text"
+      FactoryGirl.create(:event, date: 3.days.from_now)
+      get :index, format: "text"
       assert_response :success
     end
   end

@@ -1,9 +1,9 @@
 <% if photo.link.present? %>
 <%= link_to photo.link do %>
-  <%= image_tag photo.image_url, :title => photo.title, :class => "hero_photo img-responsive" %>
+  <%= image_tag photo.image_url, title: photo.title, class: "hero_photo img-responsive" %>
 <% end %>
 <% else %>
-<%= image_tag photo.image_url, :title => photo.title, :class => "hero_photo img-responsive" %>
+<%= image_tag photo.image_url, title: photo.title, class: "hero_photo img-responsive" %>
 <% end %>
 
 <% if photo.caption.present? %>

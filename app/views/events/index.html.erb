@@ -4,7 +4,7 @@
 <div class="row">
   <div class="col-sm-4">
     <h3>Promoted Events</h3>
-    <%= table :columns => 2, :collection => @events do %>
+    <%= table columns: 2, collection: @events do %>
       <thead>
         <tr>
           <th>Date</th>
@@ -12,7 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        <%= render :partial => "event", :collection => @events.sort_by(&:date) %>
+        <%= render partial: "event", collection: @events.sort_by(&:date) %>
       </tbody>
     <% end -%>
   </div>

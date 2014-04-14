@@ -31,10 +31,10 @@ class AccountPermissionTest < ActiveSupport::TestCase
   end
 
   def test_account_permissions
-    person = Person.create!(:name => "Person")
+    person = Person.create!(name: "Person")
     assert_equal [], person.account_permissions, "account_permissions for new Person"
 
-    another_person = Person.create!(:name => "Another")
+    another_person = Person.create!(name: "Another")
     person.editors << another_person
     assert_equal 1, person.account_permissions.size, "account_permissions size"
     account_permission = person.account_permissions.first

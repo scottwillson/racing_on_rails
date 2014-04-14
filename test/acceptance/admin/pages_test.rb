@@ -11,8 +11,8 @@ class PagesTest < AcceptanceTest
 
     find(:xpath, "//a[@href='/admin/pages/new']").click
 
-    fill_in "page_title", :with => "Schedule"
-    fill_in "page_body", :with => "This year is cancelled"
+    fill_in "page_title", with: "Schedule"
+    fill_in "page_body", with: "This year is cancelled"
 
     click_button "Save"
     page = Page.last
@@ -36,9 +36,9 @@ class PagesTest < AcceptanceTest
 
     find(:xpath, "//a[@href='/admin/pages/new']").click
 
-    fill_in "page_title", :with => "Officials Home Phone Numbers"
-    fill_in "page_slug", :with => "officials"
-    fill_in "page_body", :with => "411 911"
+    fill_in "page_title", with: "Officials Home Phone Numbers"
+    fill_in "page_slug", with: "officials"
+    fill_in "page_body", with: "411 911"
 
     click_button "Save"
 

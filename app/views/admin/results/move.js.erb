@@ -1,4 +1,4 @@
 jQuery('#result_<%= @result.id %>_row').remove();
-jQuery('<%= escape_javascript(render('admin/results/result', :result => @result)) %>').insertAfter('#person_<%= @person.id %>_table tr:first-child');
+jQuery('<%= escape_javascript(render('admin/results/result', result: @result)) %>').insertAfter('#person_<%= @person.id %>_table tr:first-child');
 jQuery('#people').fadeTo("fast", 1);
 jQuery('#find_progress_icon').hide();

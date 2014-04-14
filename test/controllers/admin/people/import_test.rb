@@ -11,12 +11,12 @@ module Admin
         create_administrator_session
         use_ssl
 
-        FactoryGirl.create(:discipline, :name => "Cyclocross")
-        FactoryGirl.create(:discipline, :name => "Downhill")
-        FactoryGirl.create(:discipline, :name => "Mountain Bike")
-        FactoryGirl.create(:discipline, :name => "Road")
-        FactoryGirl.create(:discipline, :name => "Singlespeed")
-        FactoryGirl.create(:discipline, :name => "Track")
+        FactoryGirl.create(:discipline, name: "Cyclocross")
+        FactoryGirl.create(:discipline, name: "Downhill")
+        FactoryGirl.create(:discipline, name: "Mountain Bike")
+        FactoryGirl.create(:discipline, name: "Road")
+        FactoryGirl.create(:discipline, name: "Singlespeed")
+        FactoryGirl.create(:discipline, name: "Track")
         FactoryGirl.create(:number_issuer)
       end
 
@@ -24,7 +24,7 @@ module Admin
         people_before_import = Person.count
 
         file = fixture_file_upload("membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
-        post :preview_import, :people_file => file
+        post :preview_import, people_file: file
 
         assert(!flash[:warn].present?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
         assert_response :success
@@ -37,22 +37,22 @@ module Admin
       end
 
       def test_preview_import_with_no_file
-        post(:preview_import, :commit => 'Import', :people_file => "")
+        post(:preview_import, commit: 'Import', people_file: "")
 
         assert(flash[:warn].present?, "should have flash[:warn]")
         assert_redirected_to admin_people_path
       end
 
       def test_import
-        tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-        existing_duplicate = Duplicate.new(:new_attributes => Person.new(:name => 'Erik Tonkin').attributes)
+        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        existing_duplicate = Duplicate.new(new_attributes: Person.new(name: 'Erik Tonkin').attributes)
         existing_duplicate.people << tonkin
         existing_duplicate.save!
         people_before_import = Person.count
 
         file = fixture_file_upload("membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
         @request.session[:people_file_path] = File.expand_path("#{::Rails.root.to_s}/test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
-        post(:import, :commit => 'Import', :update_membership => 'true')
+        post(:import, commit: 'Import', update_membership: 'true')
 
         assert(!flash[:warn].present?, "flash[:warn] should be empty, but was: #{flash[:warn]}")
         assert(flash.notice.present?, "flash[:notice] should not be empty")
@@ -65,8 +65,8 @@ module Admin
       end
 
       def test_import_next_year
-        tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-        existing_duplicate = Duplicate.new(:new_attributes => Person.new(:name => 'Erik Tonkin').attributes)
+        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        existing_duplicate = Duplicate.new(new_attributes: Person.new(name: 'Erik Tonkin').attributes)
         existing_duplicate.people << tonkin
         existing_duplicate.save!
         people_before_import = Person.count
@@ -74,7 +74,7 @@ module Admin
         file = fixture_file_upload("membership/database.xls", "application/vnd.ms-excel", :binary)
         @request.session[:people_file_path] = File.expand_path("#{::Rails.root.to_s}/test/fixtures/membership/database.xls")
         next_year = Time.zone.today.year + 1
-        post(:import, :commit => 'Import', :update_membership => 'true', :year => next_year)
+        post(:import, commit: 'Import', update_membership: 'true', year: next_year)
 
         assert(!flash[:warn].present?, "flash[:warn] should be empty, but was: #{flash[:warn]}")
         assert(flash.notice.present?, "flash[:notice] should not be empty")
@@ -102,13 +102,13 @@ module Admin
       end
 
       def test_import_with_duplicates
-        FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-        FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
+        FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         people_before_import = Person.count
 
         file = fixture_file_upload("membership/duplicates.xls", "application/vnd.ms-excel", :binary)
         @request.session[:people_file_path] = "#{::Rails.root.to_s}/test/fixtures/membership/duplicates.xls"
-        post(:import, :commit => 'Import', :update_membership => 'true')
+        post(:import, commit: 'Import', update_membership: 'true')
 
         assert(flash[:warn].present?, "flash[:warn] should not be empty")
         assert(flash.notice.present?, "flash[:notice] should not be empty")
@@ -120,7 +120,7 @@ module Admin
       end
 
       def test_import_with_no_file
-        post :import, :commit => 'Import', :update_membership => 'true'
+        post :import, commit: 'Import', update_membership: 'true'
         assert flash[:warn].present?, "should have flash[:warn]"
         assert_redirected_to admin_people_path
       end
@@ -133,26 +133,26 @@ module Admin
       end
 
       def test_resolve_duplicates
-        FactoryGirl.create(:person, :first_name => "Alice", :last_name => "Pennington")
+        FactoryGirl.create(:person, first_name: "Alice", last_name: "Pennington")
 
-        FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-        Person.create!(:name => 'Erik Tonkin')
+        FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        Person.create!(name: 'Erik Tonkin')
 
-        FactoryGirl.create(:person, :first_name => "Ryan", :last_name => "Weaver")
-        Person.create!(:name => 'Ryan Weaver', :city => 'Kenton')
-        weaver_3 = Person.create!(:name => 'Ryan Weaver', :city => 'Lake Oswego')
-        alice_2 = Person.create!(:name => 'Alice Pennington', :road_category => '3')
+        FactoryGirl.create(:person, first_name: "Ryan", last_name: "Weaver")
+        Person.create!(name: 'Ryan Weaver', city: 'Kenton')
+        weaver_3 = Person.create!(name: 'Ryan Weaver', city: 'Lake Oswego')
+        alice_2 = Person.create!(name: 'Alice Pennington', road_category: '3')
 
-        tonkin_dupe = Duplicate.create!(:new_attributes => {:name => 'Erik Tonkin'}, :people => Person.where(:last_name => "Tonkin"))
-        ryan_dupe = Duplicate.create!(:new_attributes => {:name => 'Ryan Weaver', :city => 'Las Vegas'}, :people => Person.where(:last_name => "Weaver"))
-        alice_dupe = Duplicate.create!(:new_attributes => {:name => 'Alice Pennington', :road_category => '2'}, :people => Person.where(:last_name => "Pennington"))
+        tonkin_dupe = Duplicate.create!(new_attributes: {name: 'Erik Tonkin'}, people: Person.where(last_name: "Tonkin"))
+        ryan_dupe = Duplicate.create!(new_attributes: {name: 'Ryan Weaver', city: 'Las Vegas'}, people: Person.where(last_name: "Weaver"))
+        alice_dupe = Duplicate.create!(new_attributes: {name: 'Alice Pennington', road_category: '2'}, people: Person.where(last_name: "Pennington"))
         post(:resolve_duplicates, tonkin_dupe.to_param => 'new', ryan_dupe.to_param => weaver_3.to_param, alice_dupe.to_param => alice_2.to_param)
         assert_redirected_to admin_people_path
         assert_equal(0, Duplicate.count, 'Should have no duplicates')
 
-        assert_equal(3, Person.where(:last_name => "Tonkin").count, 'Tonkins in database')
-        assert_equal(3, Person.where(:last_name => "Weaver").count, 'Weaver in database')
-        assert_equal(2, Person.where(:last_name => "Pennington").count, 'Pennington in database')
+        assert_equal(3, Person.where(last_name: "Tonkin").count, 'Tonkins in database')
+        assert_equal(3, Person.where(last_name: "Weaver").count, 'Weaver in database')
+        assert_equal(2, Person.where(last_name: "Pennington").count, 'Pennington in database')
 
         weaver_3.reload
         assert_equal('Las Vegas', weaver_3.city, 'Weaver city')
@@ -162,7 +162,7 @@ module Admin
       end
 
       def test_cancel_import
-        post(:import, :commit => 'Cancel', :update_membership => 'false')
+        post(:import, commit: 'Cancel', update_membership: 'false')
         assert_redirected_to admin_people_path
         assert_nil(session[:people_file_path], 'Should remove temp file path from session')
       end

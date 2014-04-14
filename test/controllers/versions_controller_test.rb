@@ -10,7 +10,7 @@ class VersionsControllerTest < ActionController::TestCase
 
   def test_index_for_person
     person = FactoryGirl.create(:person)
-    get :index, :person_id => person.to_param
+    get :index, person_id: person.to_param
     assert_response :success
     assert_equal person, assigns(:person), "@person"
   end

@@ -3,26 +3,26 @@ require File.expand_path("../../../../test_helper", __FILE__)
 # :stopdoc:
 class MtbBarTest < ActiveSupport::TestCase
   def test_no_masters_or_junior_ability_categories
-    FactoryGirl.create(:discipline, :name => "Super D")
-    mtb = FactoryGirl.create(:discipline, :name => "Mountain Bike")
+    FactoryGirl.create(:discipline, name: "Super D")
+    mtb = FactoryGirl.create(:discipline, name: "Mountain Bike")
 
-    junior_men        = FactoryGirl.create(:category, :name => "Junior Men")
-    expert_junior_men = FactoryGirl.create(:category, :name => "Expert Junior Men", :parent => junior_men)
-    sport_junior_men  = FactoryGirl.create(:category, :name => "Sport Junior Men", :parent => junior_men)
+    junior_men        = FactoryGirl.create(:category, name: "Junior Men")
+    expert_junior_men = FactoryGirl.create(:category, name: "Expert Junior Men", parent: junior_men)
+    sport_junior_men  = FactoryGirl.create(:category, name: "Sport Junior Men", parent: junior_men)
     mtb.bar_categories << expert_junior_men
     mtb.bar_categories << junior_men
     mtb.bar_categories << sport_junior_men
 
-    marin_knobular = SingleDayEvent.create!(:name => "Marin Knobular", :date => Date.new(2001, 9, 7), :discipline => "Mountain Bike")
-    race = marin_knobular.races.create!(:category => expert_junior_men)
-    kc = Person.create!(:name => "KC Mautner", :member_from => Date.new(2001, 1, 1))
-    race.results.create!(:person => kc, :place => 4)
-    chris_woods = Person.create!(:name => "Chris Woods", :member_from => Date.new(2001, 1, 1))
-    race.results.create!(:person => chris_woods, :place => 12)
+    marin_knobular = SingleDayEvent.create!(name: "Marin Knobular", date: Date.new(2001, 9, 7), discipline: "Mountain Bike")
+    race = marin_knobular.races.create!(category: expert_junior_men)
+    kc = Person.create!(name: "KC Mautner", member_from: Date.new(2001, 1, 1))
+    race.results.create!(person: kc, place: 4)
+    chris_woods = Person.create!(name: "Chris Woods", member_from: Date.new(2001, 1, 1))
+    race.results.create!(person: chris_woods, place: 12)
 
-    lemurian = SingleDayEvent.create!(:name => "Lemurian", :date => Date.new(2001, 9, 14), :discipline => "Super D")
-    race = lemurian.races.create!(:category => sport_junior_men)
-    race.results.create!(:person => chris_woods, :place => 14)
+    lemurian = SingleDayEvent.create!(name: "Lemurian", date: Date.new(2001, 9, 14), discipline: "Super D")
+    race = lemurian.races.create!(category: sport_junior_men)
+    race.results.create!(person: chris_woods, place: 14)
 
     Bar.calculate!(2001)
     mtb_bar = Bar.find_by_year_and_discipline(2001, "Mountain Bike")
@@ -40,68 +40,68 @@ class MtbBarTest < ActiveSupport::TestCase
 
   def test_numerical_mtb_categories
     # Map categories as if they were road cats
-    mtb         = FactoryGirl.create(:discipline, :name => "Mountain Bike")
-    road        = FactoryGirl.create(:discipline, :name => "Road")
-    overall     = FactoryGirl.create(:discipline, :name => "Overall")
-    short_track = FactoryGirl.create(:discipline, :name => "Short Track")
-                  FactoryGirl.create(:discipline, :name => "Downhill")
+    mtb         = FactoryGirl.create(:discipline, name: "Mountain Bike")
+    road        = FactoryGirl.create(:discipline, name: "Road")
+    overall     = FactoryGirl.create(:discipline, name: "Overall")
+    short_track = FactoryGirl.create(:discipline, name: "Short Track")
+                  FactoryGirl.create(:discipline, name: "Downhill")
 
-    elite_men = Category.find_or_create_by(:name => "Elite Men")
-    senior_men = Category.find_or_create_by(:name => "Senior Men")
+    elite_men = Category.find_or_create_by(name: "Elite Men")
+    senior_men = Category.find_or_create_by(name: "Senior Men")
     elite_men.parent = senior_men
     elite_men.save!
     mtb.bar_categories << elite_men
 
-    men_1 = Category.find_or_create_by(:name => "Category 1 Men")
+    men_1 = Category.find_or_create_by(name: "Category 1 Men")
     men_1.parent = senior_men
     men_1.save!
     mtb.bar_categories << men_1
 
-    men_2 = Category.find_or_create_by(:name => "Category 2 Men")
+    men_2 = Category.find_or_create_by(name: "Category 2 Men")
     men_2.parent = senior_men
     men_2.save!
     mtb.bar_categories << men_2
 
-    men_3 = Category.find_or_create_by(:name => "Category 3 Men")
-    category_3_men = Category.find_or_create_by(:name => "Category 3 Men")
+    men_3 = Category.find_or_create_by(name: "Category 3 Men")
+    category_3_men = Category.find_or_create_by(name: "Category 3 Men")
     mtb.bar_categories << men_3
 
-    elite_women = Category.find_or_create_by(:name => "Elite Women")
-    senior_women = Category.find_or_create_by(:name => "Senior Women")
+    elite_women = Category.find_or_create_by(name: "Elite Women")
+    senior_women = Category.find_or_create_by(name: "Senior Women")
     elite_women.parent = senior_women
     elite_women.save!
     mtb.bar_categories << elite_women
 
-    women_1 = Category.find_or_create_by(:name => "Category 1 Women")
+    women_1 = Category.find_or_create_by(name: "Category 1 Women")
     women_1.parent = senior_women
     women_1.save!
     mtb.bar_categories << women_1
 
-    women_2 = Category.find_or_create_by(:name => "Category 2 Women")
+    women_2 = Category.find_or_create_by(name: "Category 2 Women")
     women_2.parent = senior_women
     women_2.save!
     mtb.bar_categories << women_2
 
-    women_3 = Category.find_or_create_by(:name => "Category 3 Women")
-    category_3_women = Category.find_or_create_by(:name => "Category 3 Women")
+    women_3 = Category.find_or_create_by(name: "Category 3 Women")
+    category_3_women = Category.find_or_create_by(name: "Category 3 Women")
     mtb.bar_categories << women_3
 
     mtb.save!
 
     road.bar_categories << senior_men
     road.bar_categories << category_3_men
-    category_4_men = Category.find_or_create_by(:name => "Category 4 Men")
-    category_4_5_men = Category.find_or_create_by(:name => "Category 4/5 Men")
+    category_4_men = Category.find_or_create_by(name: "Category 4 Men")
+    category_4_5_men = Category.find_or_create_by(name: "Category 4/5 Men")
     category_4_men.parent = category_4_5_men
     category_4_men.save!
     road.bar_categories << category_4_men
-    category_5_men = Category.find_or_create_by(:name => "Category 5 Men")
+    category_5_men = Category.find_or_create_by(name: "Category 5 Men")
     category_5_men.parent = category_4_5_men
     category_5_men.save!
     road.bar_categories << category_5_men
     road.bar_categories << senior_women
     road.bar_categories << category_3_women
-    category_4_women = Category.find_or_create_by(:name => "Category 4 Women")
+    category_4_women = Category.find_or_create_by(name: "Category 4 Women")
     road.bar_categories << category_4_women
     road.save!
 
@@ -116,59 +116,59 @@ class MtbBarTest < ActiveSupport::TestCase
 
     # Create road and MTB/DH result for each category
     tonkin = FactoryGirl.create(:person)
-    event = SingleDayEvent.create!(:discipline => "Road")
-    event.races.create!(:category => elite_men, :field_size => 6).results.create!(:place => "3", :person => tonkin)
+    event = SingleDayEvent.create!(discipline: "Road")
+    event.races.create!(category: elite_men, field_size: 6).results.create!(place: "3", person: tonkin)
 
     weaver = FactoryGirl.create(:person)
-    event.races.create!(:category => men_1, :field_size => 6).results.create!(:place => "2", :person => weaver)
+    event.races.create!(category: men_1, field_size: 6).results.create!(place: "2", person: weaver)
 
     molly = FactoryGirl.create(:person)
-    event.races.create!(:category => men_2, :field_size => 6).results.create!(:place => "5", :person => molly)
+    event.races.create!(category: men_2, field_size: 6).results.create!(place: "5", person: molly)
 
     alice = FactoryGirl.create(:person)
-    event.races.create!(:category => men_3, :field_size => 6).results.create!(:place => "6", :person => alice)
+    event.races.create!(category: men_3, field_size: 6).results.create!(place: "6", person: alice)
 
     matson = FactoryGirl.create(:person)
-    event.races.create!(:category => category_4_men, :field_size => 6).results.create!(:place => "1", :person => matson)
+    event.races.create!(category: category_4_men, field_size: 6).results.create!(place: "1", person: matson)
 
-    event = SingleDayEvent.create!(:discipline => "Mountain Bike")
-    event.races.create!(:category => elite_men, :field_size => 6).results.create!(:place => "14", :person => matson)
+    event = SingleDayEvent.create!(discipline: "Mountain Bike")
+    event.races.create!(category: elite_men, field_size: 6).results.create!(place: "14", person: matson)
 
-    dh_event = SingleDayEvent.create!(:discipline => "Downhill")
-    dh_event.races.create!(:category => men_1, :field_size => 6).results.create!(:place => "7", :person => molly)
-    event.races.create!(:category => men_2, :field_size => 6).results.create!(:place => "5", :person => tonkin)
-    event.races.create!(:category => men_3, :field_size => 6).results.create!(:place => "4", :person => weaver)
+    dh_event = SingleDayEvent.create!(discipline: "Downhill")
+    dh_event.races.create!(category: men_1, field_size: 6).results.create!(place: "7", person: molly)
+    event.races.create!(category: men_2, field_size: 6).results.create!(place: "5", person: tonkin)
+    event.races.create!(category: men_3, field_size: 6).results.create!(place: "4", person: weaver)
 
     # Women road
-    event = SingleDayEvent.create!(:discipline => "Road")
-    woman_pro = Person.create!(:name => "Woman Pro", :member => true)
-    event.races.create!(:category => elite_women, :field_size => 6).results.create!(:place => "2", :person => woman_pro)
+    event = SingleDayEvent.create!(discipline: "Road")
+    woman_pro = Person.create!(name: "Woman Pro", member: true)
+    event.races.create!(category: elite_women, field_size: 6).results.create!(place: "2", person: woman_pro)
 
-    woman_1 = Person.create!(:name => "Woman One", :member => true)
-    event.races.create!(:category => women_1, :field_size => 6).results.create!(:place => "3", :person => woman_1)
+    woman_1 = Person.create!(name: "Woman One", member: true)
+    event.races.create!(category: women_1, field_size: 6).results.create!(place: "3", person: woman_1)
 
-    woman_2 = Person.create!(:name => "Woman Two", :member => true)
-    event.races.create!(:category => women_2, :field_size => 6).results.create!(:place => "4", :person => woman_2)
+    woman_2 = Person.create!(name: "Woman Two", member: true)
+    event.races.create!(category: women_2, field_size: 6).results.create!(place: "4", person: woman_2)
 
-    woman_3 = Person.create!(:name => "Woman Three", :member => true)
-    event.races.create!(:category => women_3, :field_size => 6).results.create!(:place => "1", :person => woman_3)
+    woman_3 = Person.create!(name: "Woman Three", member: true)
+    event.races.create!(category: women_3, field_size: 6).results.create!(place: "1", person: woman_3)
 
-    woman_4 = Person.create!(:name => "Woman Four", :member => true)
-    event.races.create!(:category => category_4_women, :field_size => 6).results.create!(:place => "3", :person => woman_4)
+    woman_4 = Person.create!(name: "Woman Four", member: true)
+    event.races.create!(category: category_4_women, field_size: 6).results.create!(place: "3", person: woman_4)
 
     # Women MTB
-    event = SingleDayEvent.create!(:discipline => "Mountain Bike")
-    event.races.create!(:category => women_1, :field_size => 6).results.create!(:place => "6", :person => woman_3)
-    event.races.create!(:category => women_2, :field_size => 6).results.create!(:place => "4", :person => woman_1)
-    event.races.create!(:category => women_3, :field_size => 6).results.create!(:place => "5", :person => woman_2)
+    event = SingleDayEvent.create!(discipline: "Mountain Bike")
+    event.races.create!(category: women_1, field_size: 6).results.create!(place: "6", person: woman_3)
+    event.races.create!(category: women_2, field_size: 6).results.create!(place: "4", person: woman_1)
+    event.races.create!(category: women_3, field_size: 6).results.create!(place: "5", person: woman_2)
 
     # Women DH
-    event = SingleDayEvent.create!(:discipline => "Downhill")
-    event.races.create!(:category => elite_women, :field_size => 6).results.create!(:place => "15", :person => woman_pro)
+    event = SingleDayEvent.create!(discipline: "Downhill")
+    event.races.create!(category: elite_women, field_size: 6).results.create!(place: "15", person: woman_pro)
 
     # Short Track
-    event = SingleDayEvent.create!(:discipline => "Short Track")
-    event.races.create!(:category => men_3, :field_size => 6).results.create!(:place => "6", :person => weaver)
+    event = SingleDayEvent.create!(discipline: "Short Track")
+    event.races.create!(category: men_3, field_size: 6).results.create!(place: "6", person: weaver)
 
     original_results_count = Result.count
     Bar.calculate!
@@ -353,13 +353,13 @@ class MtbBarTest < ActiveSupport::TestCase
   end
 
   def test_masters_state_champs
-    mtb = FactoryGirl.create(:discipline, :name => "Mountain Bike")
-    event = SingleDayEvent.create!(:name => "Mudslinger", :date => Date.new(2001, 9, 7), :discipline => "Mountain Bike", :bar_points => 2)
-    masters_men = FactoryGirl.create(:category, :name => "Masters Men")
-    masters_men_45_54 = masters_men.children.create!(:name => "Masters Men 45 -54")
-    race = event.races.create!(:category => masters_men_45_54)
-    kc = Person.create!(:name => "KC Mautner", :member_from => Date.new(2001, 1, 1))
-    race.results.create!(:person => kc, :place => 4)
+    mtb = FactoryGirl.create(:discipline, name: "Mountain Bike")
+    event = SingleDayEvent.create!(name: "Mudslinger", date: Date.new(2001, 9, 7), discipline: "Mountain Bike", bar_points: 2)
+    masters_men = FactoryGirl.create(:category, name: "Masters Men")
+    masters_men_45_54 = masters_men.children.create!(name: "Masters Men 45 -54")
+    race = event.races.create!(category: masters_men_45_54)
+    kc = Person.create!(name: "KC Mautner", member_from: Date.new(2001, 1, 1))
+    race.results.create!(person: kc, place: 4)
 
     mtb.bar_categories << masters_men
     Bar.calculate!(2001)

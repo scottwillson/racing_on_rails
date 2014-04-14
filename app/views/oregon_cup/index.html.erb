@@ -6,7 +6,7 @@
   <div class="col-sm-12">
     <%= tabs(@year) do |tabs|
       Event.find_all_years.each do |year|
-        tabs.add year, url_for(:year => year)
+        tabs.add year, url_for(year: year)
       end
     end -%>
 

@@ -34,7 +34,7 @@ class Team < ActiveRecord::Base
   def self.find_by_name_or_alias_or_create(name)
     team = find_by_name_or_alias(name)
     if team.nil?
-      team = Team.create(:name => name)
+      team = Team.create(name: name)
     end
     team
   end
@@ -74,7 +74,7 @@ class Team < ActiveRecord::Base
       !Alias.exists?(['name = ? and team_id = ?', name_was, id]) &&
       !Team.exists?(["name = ?", name_was])
 
-      new_alias = Alias.create!(:name => name_was, :team => self)
+      new_alias = Alias.create!(name: name_was, team: self)
       unless new_alias.save
         logger.error("Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(", ")}")
       end
@@ -108,8 +108,8 @@ class Team < ActiveRecord::Base
       people << team.people
       Team.delete(team.id)
       existing_alias = aliases.detect{ |a| a.name.casecmp(team.name) == 0 }
-      if existing_alias.nil? && !Team.where(:name => team.name).exists?
-        aliases.create(:name => team.name)
+      if existing_alias.nil? && !Team.where(name: team.name).exists?
+        aliases.create(name: team.name)
       end
     end
   end
@@ -123,7 +123,7 @@ class Team < ActiveRecord::Base
     name = names.sort_by(&:year).reverse!.first
 
     if name
-      team = Team.find_or_create_by(:name => name.name)
+      team = Team.find_or_create_by(name: name.name)
       results.each do |r|
         team.results << r if r.date.year <= name.year
       end

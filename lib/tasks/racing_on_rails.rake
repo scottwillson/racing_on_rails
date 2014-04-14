@@ -17,7 +17,7 @@ end
 namespace :db do
   namespace :structure do
     desc "Monkey-patched by Racing on Rails. Standardize format to prevent source control churn."
-    task :dump => :environment do
+    task dump: :environment do
       sql = File.open("#{::Rails.root.to_s}/db/structure.sql").readlines.join
       sql.gsub!(/AUTO_INCREMENT=\d+ +/i, "")
 
@@ -43,7 +43,7 @@ end
 
 namespace :doc do
   desc "Upload RDoc to WWW server"
-  task :upload => [:clobber_app, :app] do
+  task upload: [:clobber_app, :app] do
     `scp -r doc/app/ butlerpress.com:/usr/local/www/www.butlerpress.com/racing_on_rails/rdoc`
   end
 end

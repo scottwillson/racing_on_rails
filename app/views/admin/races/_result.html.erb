@@ -4,33 +4,33 @@
     <% if result.respond_to?(column.key) && !result.new_record? %>
       <% if column.key == :bar %>
         <%= check_box_tag "result_#{result.id}_bar", "1", result.bar?,
-              :class => "bar_check_box",
-              "data-url" => url_for(:controller => "results",
-              :action => "update_attribute",
-              :id => result.to_param)
+              class: "bar_check_box",
+              "data-url" => url_for(controller: "results",
+              action: "update_attribute",
+              id: result.to_param)
         %>
       <% else %>
-        <%= editable result, column.key, :value => row.render(column) %>
+        <%= editable result, column.key, value: row.render(column) %>
       <% end %>
     <% end %>
   </td>
   <% end %>
   <td class="actions">
     <%= link_to(
-    admin_race_results_path(:race_id => result.race_id, :before_result_id => result.id),
-          :remote => true,
-          :class => "icon",
-          :id => "result_#{result.id}_add",
-          :method => "post") do %>
+    admin_race_results_path(race_id: result.race_id, before_result_id: result.id),
+          remote: true,
+          class: "icon",
+          id: "result_#{result.id}_add",
+          method: "post") do %>
       <span class="glyphicon glyphicon-plus-sign"></span>
     <% end %>
     <% unless result.new_record? %>
       <%= link_to(
-      admin_result_path(:id => result.id),
-            :remote => true,
-            :class => "icon",
-            :id => "result_#{result.id}_destroy",
-            :method => "delete") do %>
+      admin_result_path(id: result.id),
+            remote: true,
+            class: "icon",
+            id: "result_#{result.id}_destroy",
+            method: "delete") do %>
         <span class="glyphicon glyphicon-minus-sign"></span>
       <% end %>
     <% end %>
