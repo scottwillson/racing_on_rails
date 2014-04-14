@@ -8,18 +8,18 @@ module RacingOnRails
   module Grid
     class GridFileTest < Ruby::TestCase
 
-      test "new" do
+      def test_new
         assert_raises(ArgumentError) {GridFile.new(nil)}
       end
 
-      test "new_file" do
+      def test_new_file
         file = File.new("#{File.dirname(__FILE__)}/../../../../fixtures/results/tabor.txt")
         grid_file = GridFile.new(file)
         assert_equal(35, grid_file.rows.size, "grid_file.rows.size")
         assert_equal("Dills", grid_file[20][3], "grid_file[20][3]")
       end
 
-      test "save" do
+      def test_save
         file = Tempfile.new("test_results.txt")
 
         begin

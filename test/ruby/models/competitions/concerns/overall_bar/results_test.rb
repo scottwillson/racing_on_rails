@@ -7,7 +7,7 @@ class Concerns::OverallBar::ResultsTest < Ruby::TestCase
     include Concerns::OverallBar::Results
   end
 
-  test "remove_duplicate_discipline_results_single_score" do
+  def test_remove_duplicate_discipline_results_single_score
     bar = TestBar.new
     bar.stubs("find_category").returns(stub("category"))
     score = stub(
@@ -26,7 +26,7 @@ class Concerns::OverallBar::ResultsTest < Ruby::TestCase
     assert_equal [ score ], scores, "scores"
   end
 
-  test "remove_duplicate_discipline_results_multiple" do
+  def test_remove_duplicate_discipline_results_multiple
     bar = TestBar.new
     bar.stubs("find_category")
     bar.stubs("logger").returns(stub(:debug? => false))

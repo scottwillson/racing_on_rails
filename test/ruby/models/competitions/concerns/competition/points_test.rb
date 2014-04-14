@@ -7,7 +7,7 @@ class Concerns::Competition::PointsTest < Ruby::TestCase
     include ::Concerns::Competition::Points
   end
 
-  test "points_for" do
+  def test_points_for
     competition = TestCompetition.new
     competition.stubs(:points_factor).returns(1)
     competition.stubs(:team_size_from_result).returns(1)
@@ -49,7 +49,7 @@ class Concerns::Competition::PointsTest < Ruby::TestCase
     assert_equal 0, points, "Points for first place with team of one and no multiplier"
   end
 
-  test "points_for_place_members_only" do
+  def test_points_for_place_members_only
     competition = TestCompetition.new
     competition.stubs(:team_size_from_result).returns(1)
     competition.stubs(:place_members_only?).returns(true)
@@ -69,7 +69,7 @@ class Concerns::Competition::PointsTest < Ruby::TestCase
     assert_equal 20, points, "points"
   end
 
-  test "points_for_team_event" do
+  def test_points_for_team_event
     competition = TestCompetition.new
     competition.point_schedule = [ 0, 20, 10, 5, 4, 3, 2, 1 ]
     competition.stubs(:points_factor).returns(1)
@@ -86,7 +86,7 @@ class Concerns::Competition::PointsTest < Ruby::TestCase
     assert_equal 2.5, points, "Points for first place with team of two and no multiplier"
   end
 
-  test "consider_points_factor" do
+  def test_consider_points_factor
     competition = TestCompetition.new
     competition.point_schedule = [ 0, 20, 10, 5, 4, 3, 2, 1 ]
     competition.stubs(:points_factor).returns(2)
@@ -103,7 +103,7 @@ class Concerns::Competition::PointsTest < Ruby::TestCase
     assert_equal 8, points, "Points"
   end
 
-  test "do_not_consider_points_factor" do
+  def test_do_not_consider_points_factor
     competition = TestCompetition.new
     competition.point_schedule = [ 0, 20, 10, 5, 4, 3, 2, 1 ]
     competition.stubs(:consider_points_factor?).returns(false)

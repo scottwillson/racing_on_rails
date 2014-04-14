@@ -4,7 +4,7 @@ require File.expand_path("../../../../../../../app/models/competitions/concerns/
 # :stopdoc:
 # Used to only award bonus points for races of five or less, but now all races get equal points
 class Concerns::Cat4WomensRaceSeries::PointsTest < Ruby::TestCase
-  test "points_for_with_participation_points" do
+  def test_points_for_with_participation_points
     source_event = stub("SingleDayEvent", id: 1)
     series = stub("Cat4WomensRaceSeries", source_events: [ source_event ], association_point_schedule: nil)
     series.stubs(:participation_points? => true)
@@ -35,7 +35,7 @@ class Concerns::Cat4WomensRaceSeries::PointsTest < Ruby::TestCase
     assert_equal 15, series.points_for(result), "points for result"
   end
 
-  test "points_for" do
+  def test_points_for
     source_event = stub("SingleDayEvent", id: 1)
     series = stub("Cat4WomensRaceSeries", source_events: [ source_event ], association_point_schedule: nil)
     series.stubs(:participation_points? => false)
@@ -66,7 +66,7 @@ class Concerns::Cat4WomensRaceSeries::PointsTest < Ruby::TestCase
     assert_equal 0, series.points_for(result), "points for result"
   end
 
-  test "points_for_non_source_event" do
+  def test_points_for_non_source_event
     source_event = stub("SingleDayEvent", id: 1)
     series = stub("Cat4WomensRaceSeries", source_events: [ source_event ], association_point_schedule: nil)
     series.stubs(:participation_points? => true)
@@ -81,7 +81,7 @@ class Concerns::Cat4WomensRaceSeries::PointsTest < Ruby::TestCase
     assert_equal 15, series.points_for(result), "points for result"
   end
 
-  test "points_for_non_source_event_no_participation_points" do
+  def test_points_for_non_source_event_no_participation_points
     source_event = stub("SingleDayEvent", id: 1)
     series = stub("Cat4WomensRaceSeries", source_events: [ source_event ], association_point_schedule: nil)
     series.stubs(:participation_points? => false)

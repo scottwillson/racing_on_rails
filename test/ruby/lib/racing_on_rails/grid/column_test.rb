@@ -5,7 +5,7 @@ require File.expand_path("../../../../../../lib/racing_on_rails/grid/column", __
 module RacingOnRails
   module Grid
     class ColumnTest < Ruby::TestCase
-      test "create" do
+      def test_create
         column = Column.new(name: "place")
         assert_equal("place", column.name, "Name after create")
         assert_equal(:place, column.field, "Field after create")

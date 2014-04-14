@@ -58,11 +58,11 @@ END
         assert_equal("CCCP", grid[2][4], "grid[2][4]")
         assert_equal("", grid[3][18], "grid[3][18]")
         expected_text = <<END
-Place   Number   Last Name   First Name   Team           Category Raced
+Place   Number   Last Name   First Name   Team           Category Raced                
 1       189      Willson     Scott        Gentle Lover   Senior Men 1/2/3   11       11
-2       190      Phinney     Harry        CCCP           Senior Men 1/2/3   9
-3       10a      Holland     Steve        Huntair        Senior Men 1/2/3        3
-dnf     100      Bourcier    Paul         Hutch's        Senior Men 1/2/3            1
+2       190      Phinney     Harry        CCCP           Senior Men 1/2/3   9          
+3       10a      Holland     Steve        Huntair        Senior Men 1/2/3        3     
+dnf     100      Bourcier    Paul         Hutch's        Senior Men 1/2/3            1 
 END
         assert_equal(expected_text, grid.to_s, "to_s")
       end
@@ -161,10 +161,10 @@ END
         assert_equal("CCCP", grid[1][4], "grid[1][4]")
         assert_equal("", grid[2][18], "grid[2][18]")
         expected_text = <<END
-      Number   Last Name         First Name     Team                             Category
+      Number   Last Name         First Name     Team                             Category                              
   1   189      Willson           Scott          Gentle Lover                     Senior Men 1/2/3        11          11
-  2   190      Phinney-Carp...   Harry          CCCP                             Senior Men 1/2/3         9
-  3   10a      Holland           Steve          Huntair                          Senior Men 1/2/3               3
+  2   190      Phinney-Carp...   Harry          CCCP                             Senior Men 1/2/3         9            
+  3   10a      Holland           Steve          Huntair                          Senior Men 1/2/3               3      
 dnf   100      Bourcier          Paul           Hutch's                          Senior Men 1/2/3                     1
 END
         assert_equal(expected_text, grid.to_s, "to_s")
