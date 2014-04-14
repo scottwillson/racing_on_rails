@@ -139,7 +139,7 @@ module Admin
 
       begin
         results_file.import
-      rescue Ole::Storage::FormatError => e
+      rescue Ole::Storage::FormatError
         flash[:warn] = "Could not read results file. Try re-saving it in 'Excel 97-2004 Workbook format'"
         assign_disciplines
         return render(:edit)
@@ -178,7 +178,7 @@ module Admin
         f.print(uploaded_file.read)
       end
 
-      date = Schedule::Schedule.import(path)
+      Schedule::Schedule.import(path)
       expire_cache
       flash[:notice] = "Uploaded schedule from #{uploaded_file.original_filename}"
 

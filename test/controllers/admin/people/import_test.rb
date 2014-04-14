@@ -50,8 +50,8 @@ module Admin
         existing_duplicate.save!
         people_before_import = Person.count
 
-        file = fixture_file_upload("membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
-        @request.session[:people_file_path] = File.expand_path("#{::Rails.root.to_s}/test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
+        fixture_file_upload("membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
+        @request.session[:people_file_path] = File.expand_path("#{::Rails.root}/test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
         post(:import, commit: 'Import', update_membership: 'true')
 
         assert(!flash[:warn].present?, "flash[:warn] should be empty, but was: #{flash[:warn]}")
@@ -71,8 +71,8 @@ module Admin
         existing_duplicate.save!
         people_before_import = Person.count
 
-        file = fixture_file_upload("membership/database.xls", "application/vnd.ms-excel", :binary)
-        @request.session[:people_file_path] = File.expand_path("#{::Rails.root.to_s}/test/fixtures/membership/database.xls")
+        fixture_file_upload("membership/database.xls", "application/vnd.ms-excel", :binary)
+        @request.session[:people_file_path] = File.expand_path("#{::Rails.root}/test/fixtures/membership/database.xls")
         next_year = Time.zone.today.year + 1
         post(:import, commit: 'Import', update_membership: 'true', year: next_year)
 
@@ -106,8 +106,8 @@ module Admin
         FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
         people_before_import = Person.count
 
-        file = fixture_file_upload("membership/duplicates.xls", "application/vnd.ms-excel", :binary)
-        @request.session[:people_file_path] = "#{::Rails.root.to_s}/test/fixtures/membership/duplicates.xls"
+        fixture_file_upload("membership/duplicates.xls", "application/vnd.ms-excel", :binary)
+        @request.session[:people_file_path] = "#{::Rails.root}/test/fixtures/membership/duplicates.xls"
         post(:import, commit: 'Import', update_membership: 'true')
 
         assert(flash[:warn].present?, "flash[:warn] should not be empty")

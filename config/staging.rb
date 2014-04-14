@@ -4,7 +4,7 @@ role :app, "rocketsurgeryllc.com"
 role :web, "rocketsurgeryllc.com"
 role :db, "rocketsurgeryllc.com", primary: true
 
-load "local/config/staging.rb" if File.exists?("local/config/staging.rb")
+load "local/config/staging.rb" if File.exist?("local/config/staging.rb")
 
 set :rails_env, "staging"
 set :deploy_to, "/var/www/rails/#{application}"

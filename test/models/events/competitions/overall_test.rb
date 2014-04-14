@@ -111,7 +111,7 @@ class OverallTest < ActiveSupport::TestCase
     assert(series.overall.raced_minimum_events?(alice, men_a_overall_race), "Three events. Alice has raced minimum")
 
     event = series.children.create!(date: Date.new(2007, 10, 28))
-    men_a_race = event.races.create!(category: men_a)
+    event.races.create!(category: men_a)
 
     TestOverall.calculate!(2007)
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }

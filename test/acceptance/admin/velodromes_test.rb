@@ -6,7 +6,7 @@ class VelodromesTest < AcceptanceTest
     javascript!
 
     login_as FactoryGirl.create(:administrator)
-    alpenrose = FactoryGirl.create(:velodrome, name: "Alpenrose Dairy", website: "http://www.obra.org/track/")
+    FactoryGirl.create(:velodrome, name: "Alpenrose Dairy", website: "http://www.obra.org/track/")
     t_town = FactoryGirl.create(:velodrome, name: "Valley Preferred Cycling Center", website: "http://www.lvvelo.org/")
 
     visit "/admin/velodromes"

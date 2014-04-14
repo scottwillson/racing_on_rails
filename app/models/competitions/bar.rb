@@ -25,7 +25,7 @@ class Bar < Competition
         }.each do |discipline|
           bar = Bar.where(date: date, discipline: discipline.name).first
           unless bar
-            bar = Bar.create!(
+            Bar.create!(
               parent: overall_bar,
               name: "#{year} #{discipline.name} BAR",
               date: date,

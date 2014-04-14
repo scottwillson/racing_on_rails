@@ -103,8 +103,8 @@ class PublicPagesTest < RacingOnRails::IntegrationTest
   end
 
   def test_competitions
-    category_men_1_2 = FactoryGirl.create(:category, name: "Men Cat 1-2")
-    sr_women = FactoryGirl.create(:category, name: "Women Cat 1-2")
+    FactoryGirl.create(:category, name: "Men Cat 1-2")
+    FactoryGirl.create(:category, name: "Women Cat 1-2")
     wsba = WsbaBarr.create!(date: Date.new(2004))
 
     get "/wsba_barr/2004"

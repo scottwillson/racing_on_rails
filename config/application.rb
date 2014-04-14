@@ -48,7 +48,7 @@ module RacingOnRails
     require "array/each_row"
     require "array/stable_sort"
 
-    if File.exists?("#{config.root}/local/config/database.yml")
+    if File.exist?("#{config.root}/local/config/database.yml")
       Rails.configuration.paths["config/database"] = [ "local/config/database.yml", "config/database.yml" ]
     end
 

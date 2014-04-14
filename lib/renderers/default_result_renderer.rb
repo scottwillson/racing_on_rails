@@ -60,9 +60,9 @@ module Renderers
 
     def self.key(column)
       if column.respond_to?(:key)
-        key = column.key
+        column.key
       else
-        key = column
+        column
       end
     end
 

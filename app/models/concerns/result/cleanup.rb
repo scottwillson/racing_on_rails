@@ -59,7 +59,7 @@ module Concerns
         return '' if name == '.'
         return '' if name.include?('N/A')
         name = name.gsub(';', '\'')
-        name = name.gsub(/ *\/ */, '/')
+        name.gsub(/ *\/ */, '/')
       end
     end
   end

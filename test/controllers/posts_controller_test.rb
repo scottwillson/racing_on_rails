@@ -230,9 +230,6 @@ class PostsControllerTest < ActionController::TestCase
   def test_post_invalid_reply
     obra_chat = FactoryGirl.create(:mailing_list)
     subject = "Spynergy for Sale"
-    from_name = "Tim Schauer"
-    from_email = "tim.schauer@butlerpress.com"
-    body = "Barely used"
     reply_to_post = Post.create!(
       mailing_list: obra_chat,
       subject: "Schedule Changes",

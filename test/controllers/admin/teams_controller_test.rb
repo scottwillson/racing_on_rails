@@ -73,7 +73,7 @@ module Admin
     end
 
     def test_find_nothing
-      vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
+      FactoryGirl.create(:team, name: "Vanilla Bicycles")
       FactoryGirl.create(:team)
 
       get(:index, name: 's7dfnacs89danfx')
@@ -84,7 +84,7 @@ module Admin
     end
 
     def test_find_empty_name
-      vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
+      FactoryGirl.create(:team, name: "Vanilla Bicycles")
 
       get(:index, name: '')
       assert_response(:success)
@@ -253,9 +253,9 @@ module Admin
 
     def test_set_name_land_shark_bug
       landshark = Team.create(name: 'Landshark')
-      landshark_alias = landshark.aliases.create(name: 'Landshark')
-      land_shark_alias = landshark.aliases.create(name: 'Land Shark')
-      team_landshark_alias = landshark.aliases.create(name: 'Team Landshark')
+      landshark.aliases.create(name: 'Landshark')
+      landshark.aliases.create(name: 'Land Shark')
+      landshark.aliases.create(name: 'Team Landshark')
 
       xhr :put, :update_attribute,
           id: landshark.to_param,
@@ -307,7 +307,6 @@ module Admin
     def test_merge
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
       kona = FactoryGirl.create(:team, name: "Kona")
-      old_id = kona.id
       assert(Team.find_by_name('Kona'), 'Kona should be in database')
 
       xhr :post, :merge, id: vanilla.id, other_team_id: kona.to_param

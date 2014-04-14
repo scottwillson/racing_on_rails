@@ -21,7 +21,7 @@ class IndexTest < ActionController::TestCase
     FactoryGirl.create(:person, first_name: "Bob", last_name: "Jones")
     get(:list, name: 'jone')
     assert_response(:success)
-    assert_not_nil(@response.body.index("Jones"), "Search for jone should find Jones #{@response.to_s}")
+    assert_not_nil(@response.body.index("Jones"), "Search for jone should find Jones #{@response}")
   end
 
   def test_index_as_promoter

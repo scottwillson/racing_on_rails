@@ -19,7 +19,7 @@ class MbraBar < Competition
         }.each do |discipline|
           bar = MbraBar.where(date: date, discipline: discipline.name).first
           unless bar
-            bar = MbraBar.create!(
+            MbraBar.create!(
               name: "#{year} #{discipline.name} BAR",
               date: date,
               discipline: discipline.name

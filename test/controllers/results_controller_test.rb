@@ -194,10 +194,10 @@ class ResultsControllerTest < ActionController::TestCase
       assert_not_nil(assigns['events'], "Should assign 'events'")
 
       if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
-        expected = [series_with_races, single_day_event, series_with_child_races, multi_day_event_with_races,
+        [series_with_races, single_day_event, series_with_child_races, multi_day_event_with_races,
                   multi_day_event_with_child_races, series_with_races_and_child_races]
       else
-        expected = [series_with_races, single_day_event, series_with_child_races, usa_cycling_event_with_results, multi_day_event_with_races,
+        [series_with_races, single_day_event, series_with_child_races, usa_cycling_event_with_results, multi_day_event_with_races,
                   multi_day_event_with_child_races, series_with_races_and_child_races]
       end
     end
@@ -471,7 +471,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
 
   def test_index_xml
-    result = FactoryGirl.create(:result)
+    FactoryGirl.create(:result)
     get :index, format: :xml
     assert_response :success
   end

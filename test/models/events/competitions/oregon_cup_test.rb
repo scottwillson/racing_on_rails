@@ -37,7 +37,7 @@ class OregonCupTest < ActiveSupport::TestCase
     race.results.create!(place: 3, person: Person.create!(name: "Heather G", member_from: Date.new(2004)), category: women_4)
     race.results.create!(person: molly, place: 15)
 
-    source_category = FactoryGirl.create(:category, name: "Senior Women 1/2/3")
+    FactoryGirl.create(:category, name: "Senior Women 1/2/3")
 
     # Sometimes women categories are picked separately. Ignore them.
     separate_category = FactoryGirl.create(:category, name: "Senior Women 1/2")

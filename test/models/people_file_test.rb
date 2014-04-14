@@ -150,7 +150,7 @@ Downhill/Cross Country: Downhill}
       date_of_birth: '1959-12-09',
       license: "1516"
     )
-    number = scott.race_numbers.create!(value: '422', year: Time.zone.today.year - 1)
+    scott.race_numbers.create!(value: '422', year: Time.zone.today.year - 1)
     number = RaceNumber.where(person_id: scott.id, value: "422").first
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')

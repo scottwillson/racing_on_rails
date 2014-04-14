@@ -73,7 +73,7 @@ module Admin
 
       def test_update_to_existing_alias
         tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
-        erik_alias = tonkin.aliases.create!(name: "Eric Tonkin")
+        tonkin.aliases.create!(name: "Eric Tonkin")
 
         xhr :put, :update_attribute,
             id: tonkin.to_param,

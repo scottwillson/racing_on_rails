@@ -31,7 +31,6 @@ module Admin
       def test_merge
         molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
         tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
-        old_id = tonkin.id
         assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
 
         xhr :post, :merge, other_person_id: tonkin.to_param, id: molly.to_param, format: :js
@@ -129,7 +128,6 @@ module Admin
         tonkin_with_different_road_number = Person.create(name: 'Erik Tonkin', road_number: 'YYZ')
         assert(tonkin_with_different_road_number.valid?, "tonkin_with_different_road_number not valid: #{tonkin_with_different_road_number.errors.full_messages.join(', ')}")
         assert_equal(tonkin_with_different_road_number.new_record?, false, 'tonkin_with_different_road_number should be saved')
-        old_id = tonkin.id
         assert_equal(2, Person.find_all_by_name('Erik Tonkin').size, 'Tonkins in database')
 
         post :merge, id: molly.id, other_person_id: tonkin.to_param, format: :js

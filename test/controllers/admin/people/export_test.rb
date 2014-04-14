@@ -67,7 +67,7 @@ module Admin
             "	Ryan	Weaver	Gentle Lovers	1/1/2000	12/31/2012	0	0		0							0	hotwheels@yahoo.com	0				M								341			437		0	0	0	0	11/1/2012	11/1/2012\n"
             ].reverse
 
-          unless File.exists?("local/app/views/admin/people/index.xls.erb")
+          unless File.exist?("local/app/views/admin/people/index.xls.erb")
             @response.body.lines.each do |line|
               assert_equal expected_body.pop, line
             end

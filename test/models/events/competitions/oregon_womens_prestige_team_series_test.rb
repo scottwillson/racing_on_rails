@@ -66,7 +66,7 @@ class OregonWomensPrestigeTeamSeriesTest < ActiveSupport::TestCase
 
     team_1 = FactoryGirl.create(:team)
     team_2 = FactoryGirl.create(:team)
-    team_3 = FactoryGirl.create(:team)
+    FactoryGirl.create(:team)
 
     FactoryGirl.create(:result, race: race_event_1_women_123, place: 1, team: team_1)
     FactoryGirl.create(:result, race: race_event_1_women_123, place: 1, team: team_1)

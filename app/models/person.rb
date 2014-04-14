@@ -134,9 +134,9 @@ class Person < ActiveRecord::Base
   def self.find_all_for_export(date = Time.zone.today, include_people = "members_only")
     association_number_issuer_id = NumberIssuer.find_by_name(RacingAssociation.current.short_name).id
     if include_people == "members_only"
-      where_clause = "WHERE (member_to >= '#{date.to_s}')"
+      where_clause = "WHERE (member_to >= '#{date}')"
     elsif include_people == "print_cards"
-      where_clause = "WHERE  (member_to >= '#{date.to_s}') and print_card is true"
+      where_clause = "WHERE  (member_to >= '#{date}') and print_card is true"
     end
 
     people = Person.connection.select_all(%Q{

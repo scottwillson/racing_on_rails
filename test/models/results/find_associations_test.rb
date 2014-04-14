@@ -428,7 +428,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     # Need a lot more tests
     expert_junior_men = FactoryGirl.create(:category)
     competition_race = competition.races.create!(category: expert_junior_men)
-    race = race.event.races.create!(category: expert_junior_men)
+    race.event.races.create!(category: expert_junior_men)
     vanilla = FactoryGirl.create(:team)
     source_result = jack_frost_pro_1_2.results.build(team: vanilla)
     competition_result = competition_race.results.create!(team: vanilla)

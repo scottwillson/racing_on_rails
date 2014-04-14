@@ -88,7 +88,7 @@ class MailingListMailerTest < ActionMailer::TestCase
   end
 
   def test_receive_invalid_byte_sequence
-    mailing_list = FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
+    FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/invalid_byte_sequence.eml"))
   end
 
@@ -108,7 +108,7 @@ class MailingListMailerTest < ActionMailer::TestCase
   end
 
   def test_receive_bad_part_encoding
-    mailing_list = FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
+    FactoryGirl.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     assert_difference "Post.count", 1 do
       MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/bad_encoding.eml"))
 

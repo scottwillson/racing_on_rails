@@ -130,7 +130,7 @@ module Results
         if debug?
           Rails.logger.debug("Results::ResultsFile #{Time.zone.now} row #{spreadsheet_row.to_a.join(', ')}")
           spreadsheet_row.each_with_index do |cell, index|
-            Rails.logger.debug("number_format pattern to_s to_f #{spreadsheet_row.format(index).number_format}  #{spreadsheet_row.format(index).pattern} #{cell.to_s} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}")
+            Rails.logger.debug("number_format pattern to_s to_f #{spreadsheet_row.format(index).number_format}  #{spreadsheet_row.format(index).pattern} #{cell} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}")
           end
         end
         row = Results::Row.new(spreadsheet_row, column_indexes, usac_results_format?)

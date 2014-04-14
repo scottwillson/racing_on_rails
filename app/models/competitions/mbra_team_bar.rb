@@ -11,7 +11,7 @@ class MbraTeamBar < Competition
           bar = MbraTeamBar.year(year).where(discipline: discipline.name).first
           logger.debug("In MbraTeamBar.calculate!: discipline #{discipline}") if logger.debug?
           unless bar
-            bar = MbraTeamBar.create!(
+            MbraTeamBar.create!(
               name: "#{year} #{discipline.name} BAT",
               date: date,
               discipline: discipline.name

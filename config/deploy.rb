@@ -1,6 +1,6 @@
 set :site_local_repository_branch, nil
 
-load "local/config/deploy.rb" if File.exists?("local/config/deploy.rb")
+load "local/config/deploy.rb" if File.exist?("local/config/deploy.rb")
 
 set :deploy_to, "/var/www/rails/#{application}"
 

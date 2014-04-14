@@ -16,7 +16,7 @@ class PeopleController < ApplicationController
 
   def list
     people_list = Array.new
-    Person.find_all_by_name_like(params['name']).each { |person| people_list.push( { "label" => person.name, "id" => person.id.to_s} ) }
+    Person.find_all_by_name_like(params['name']).each { |person| people_list.push( { "label" => person.name, "id" => person.id} ) }
     render json: people_list
   end
 

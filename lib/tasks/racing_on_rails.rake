@@ -18,10 +18,10 @@ namespace :db do
   namespace :structure do
     desc "Monkey-patched by Racing on Rails. Standardize format to prevent source control churn."
     task dump: :environment do
-      sql = File.open("#{::Rails.root.to_s}/db/structure.sql").readlines.join
+      sql = File.open("#{::Rails.root}/db/structure.sql").readlines.join
       sql.gsub!(/AUTO_INCREMENT=\d+ +/i, "")
 
-      File.open("#{::Rails.root.to_s}/db/structure.sql", "w") do |file|
+      File.open("#{::Rails.root}/db/structure.sql", "w") do |file|
         file << sql
       end
     end

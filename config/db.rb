@@ -9,8 +9,8 @@ namespace :db do
 
   # Dump the current database to a MySQL file
   task :database_dump, roles: :db, only: { primary: true } do
-    run("rm -f db/production.sql") if File.exists?("db/production.sql")
-    run("rm -f db/production.sql.bz2") if File.exists?("db/production.sql.bz2")
+    run("rm -f db/production.sql") if File.exist?("db/production.sql")
+    run("rm -f db/production.sql.bz2") if File.exist?("db/production.sql.bz2")
     load File.expand_path("../../config/environment.rb", __FILE__)
     abcs = ActiveRecord::Base.configurations
     run("mkdir -p db")
@@ -35,12 +35,12 @@ namespace :db do
     dev_db = abcs[::Rails.env]["database"]
     `mysql -u #{abcs[::Rails.env]["username"]} -e 'drop database if exists #{dev_db}'`
     `mysql -u #{abcs[::Rails.env]["username"]} -e 'create database #{dev_db}'`
-    if File.exists?("db/production.sql.bz2")
-      system "rm -f db/production.sql" if File.exists?("db/production.sql")
+    if File.exist?("db/production.sql.bz2")
+      system "rm -f db/production.sql" if File.exist?("db/production.sql")
       system "bzip2 -d db/production.sql.bz2"
     end
     `mysql -u #{abcs[::Rails.env]["username"]} #{dev_db} < db/production.sql`
-    exec("rm db/production.sql") if File.exists?("db/production.sql") && ENV["SAVE"].nil?
+    exec("rm db/production.sql") if File.exist?("db/production.sql") && ENV["SAVE"].nil?
   end
 
    #Cleans up data dump file

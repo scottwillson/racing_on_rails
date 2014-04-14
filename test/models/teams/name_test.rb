@@ -73,7 +73,7 @@ class NameTest < ActiveSupport::TestCase
     team = Team.create!(name: "Twin Peaks")
     event = SingleDayEvent.create!(date: 3.years.ago)
     senior_men = FactoryGirl.create(:category)
-    result = event.races.create!(category: senior_men).results.create!(team: team)
+    event.races.create!(category: senior_men).results.create!(team: team)
     assert_equal(0, team.names(true).size, "names")
 
     team.name = "Tecate"
@@ -138,7 +138,7 @@ class NameTest < ActiveSupport::TestCase
     team_o_river_city = Team.create!(name: "Team Oregon/River City")
     event = SingleDayEvent.create!(date: 1.years.ago)
     senior_men = FactoryGirl.create(:category)
-    result = event.races.create!(category: senior_men).results.create!(team: team_o_river_city)
+    event.races.create!(category: senior_men).results.create!(team: team_o_river_city)
     team_o_river_city.name = "Team Oregon"
     team_o_river_city.save!
 
@@ -178,7 +178,7 @@ class NameTest < ActiveSupport::TestCase
     team = Team.create!(name: "Twin Peaks/The Bike Nook")
     event = SingleDayEvent.create!(date: 3.years.ago)
     senior_men = FactoryGirl.create(:category)
-    result = event.races.create!(category: senior_men).results.create!(team: team)
+    event.races.create!(category: senior_men).results.create!(team: team)
     team.aliases.create!(name: "Twin Peaks")
     assert_equal(0, team.names(true).size, "names")
     assert_equal(1, team.aliases(true).size, "Aliases")

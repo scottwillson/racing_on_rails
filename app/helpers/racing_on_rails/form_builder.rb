@@ -12,7 +12,7 @@ module RacingOnRails
         if text_field_options[:help]
           help_block = "<span class='help-block'>#{text_field_options.delete(:help)}</span>"
         end
-        %Q{<div class="form-group #{method.to_s}">#{label(method, "#{text || method.to_s.titleize}", label_options)} <div class="col-sm-8">#{text_field(method, text_field_options)}#{help_block}</div></div>}.html_safe
+        %Q{<div class="form-group #{method}">#{label(method, "#{text || method.to_s.titleize}", label_options)} <div class="col-sm-8">#{text_field(method, text_field_options)}#{help_block}</div></div>}.html_safe
       end
     end
 
@@ -54,7 +54,7 @@ module RacingOnRails
       if password_field_options[:help]
         help_block = "<span class='help-block'>#{password_field_options.delete(:help)}</span>"
       end
-      %Q{<div class="form-group #{method.to_s}">#{label(method, "#{text || method.to_s.titleize}", label_options)} <div class="col-sm-8">#{password_field(method, password_field_options)}#{help_block}</div></div>}.html_safe
+      %Q{<div class="form-group #{method}">#{label(method, "#{text || method.to_s.titleize}", label_options)} <div class="col-sm-8">#{password_field(method, password_field_options)}#{help_block}</div></div>}.html_safe
     end
 
     # Set +editable+ to false for read-only
@@ -90,7 +90,7 @@ module RacingOnRails
 
     def labelled_text(method, text = nil, label_text = nil, label_options = {})
       label_options.merge!(class: "col-sm-4 control-label")
-      %Q{<div class="form-group #{method.to_s}">#{label(method, "#{label_text || method.to_s.titleize}", label_options)} <div class="col-sm-8"><p class="form-control-static" id="#{object_name}_#{method}">#{text || @object.send(method)}</p></div></div>}.html_safe
+      %Q{<div class="form-group #{method}">#{label(method, "#{label_text || method.to_s.titleize}", label_options)} <div class="col-sm-8"><p class="form-control-static" id="#{object_name}_#{method}">#{text || @object.send(method)}</p></div></div>}.html_safe
     end
   end
 end

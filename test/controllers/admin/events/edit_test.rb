@@ -100,7 +100,7 @@ module Admin
 
       def test_edit_combined_results
         event = FactoryGirl.create(:time_trial_event)
-        result = FactoryGirl.create(:result, event: event)
+        FactoryGirl.create(:result, event: event)
         combined = CombinedTimeTrialResults.create!(parent: event)
         get(:edit, id: combined.id)
         assert_response(:success)

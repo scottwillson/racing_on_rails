@@ -87,7 +87,7 @@ class WeeklySeriesTest < ActiveSupport::TestCase
   def test_day_of_week
     weekly_series = WeeklySeries.create!
     weekly_series.children.create!(date: Date.new(2006, 7, 3))
-    dates = Date.new(2006, 7, 1)..Date.new(2006, 7, 15)
+    Date.new(2006, 7, 1)..Date.new(2006, 7, 15)
     assert_equal(1, weekly_series.day_of_week, 'day_of_week')
 
     weekly_series.children.create!(date: Date.new(2006, 7, 10))

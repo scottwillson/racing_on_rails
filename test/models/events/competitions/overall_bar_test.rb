@@ -90,7 +90,7 @@ class OverallBarTest < ActiveSupport::TestCase
       parent: thursday_track_series
     )
     thursday_track_senior_men = thursday_track.races.create!(category: senior_men, field_size: 6)
-    r = thursday_track_senior_men.results.create!(
+    thursday_track_senior_men.results.create!(
       place: 5,
       person: weaver
     )
@@ -236,7 +236,7 @@ class OverallBarTest < ActiveSupport::TestCase
   end
 
   def test_drop_cat_5_discipline_results
-    alice  = FactoryGirl.create(:person, name: "Alice Pennington")
+             FactoryGirl.create(:person, name: "Alice Pennington")
     matson = FactoryGirl.create(:person, name: "Mark Matson")
     molly  = FactoryGirl.create(:person, name: "Molly Cameron")
     tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
@@ -245,9 +245,9 @@ class OverallBarTest < ActiveSupport::TestCase
     association_category = FactoryGirl.create(:category, name: "CBRA")
     senior_men           = FactoryGirl.create(:category, name: "Senior Men", parent: association_category)
     men_a                = FactoryGirl.create(:category, name: "Men A", parent: senior_men)
-    sr_p_1_2             = FactoryGirl.create(:category, name: "Senior Men Pro 1/2", parent: senior_men)
+                           FactoryGirl.create(:category, name: "Senior Men Pro 1/2", parent: senior_men)
     senior_women         = FactoryGirl.create(:category, name: "Senior Women", parent: association_category)
-    senior_women_1_2_3   = FactoryGirl.create(:category, name: "Senior Women 1/2/3", parent: senior_women)
+                           FactoryGirl.create(:category, name: "Senior Women 1/2/3", parent: senior_women)
     category_3_men       = FactoryGirl.create(:category, name: "Category 3 Men", parent: association_category)
     category_4_5_men     = FactoryGirl.create(:category, name: "Category 4/5 Men", parent: association_category)
     category_4_men       = FactoryGirl.create(:category, name: "Category 4 Men", parent: category_4_5_men)

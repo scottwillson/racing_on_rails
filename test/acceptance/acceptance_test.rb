@@ -263,12 +263,12 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   def clear_downloads
     unless AcceptanceTest.javascript_driver == :chrome
-      if Dir.exists?(AcceptanceTest.download_directory)
+      if Dir.exist?(AcceptanceTest.download_directory)
         FileUtils.rm_rf AcceptanceTest.download_directory
       end
     end
 
-    unless Dir.exists?(AcceptanceTest.download_directory)
+    unless Dir.exist?(AcceptanceTest.download_directory)
       FileUtils.mkdir_p AcceptanceTest.download_directory
     end
   end
@@ -285,7 +285,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     unless @passed
       begin
         save_page
-      rescue Exception => e
+      rescue StandardError => e
         Rails.logger.error "Test did not pass. Could not save page: #{e}."
       end
     end
@@ -298,11 +298,11 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   Capybara.register_driver :chrome do |app|
-    if Dir.exists?("#{Rails.root}/tmp/chrome-profile")
+    if Dir.exist?("#{Rails.root}/tmp/chrome-profile")
       FileUtils.rm_rf "#{Rails.root}/tmp/chrome-profile"
     end
 
-    unless Dir.exists?("#{Rails.root}/tmp/chrome-profile")
+    unless Dir.exist?("#{Rails.root}/tmp/chrome-profile")
       FileUtils.mkdir "#{Rails.root}/tmp/chrome-profile"
     end
 

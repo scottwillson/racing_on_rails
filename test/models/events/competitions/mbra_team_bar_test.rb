@@ -23,7 +23,7 @@ class MbraTeamBarTest < ActiveSupport::TestCase
     )
 
     # future event, no results
-    pigeon_island = SingleDayEvent.create!(
+    SingleDayEvent.create!(
       name: "Pigeon Island",
       discipline: "Road",
       date: Date.new(2008, 7, 17),

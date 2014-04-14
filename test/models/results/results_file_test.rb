@@ -95,7 +95,7 @@ module Results
       results_file.import
 
       expected_races = get_expected_races
-      assert_equal(expected_races.size, event.races.size, "Expected #{expected_races.size.to_s} event races but was #{event.races.size.to_s}")
+      assert_equal(expected_races.size, event.races.size, "Expected #{expected_races.size} event races but was #{event.races.size}")
       expected_races.each_with_index do |expected_race, index|
         actual_race = event.races[index]
         assert_not_nil(actual_race, "race #{index}")
@@ -673,7 +673,7 @@ module Results
       results_file.import
 
       expected_races = get_expected_races_usac_format
-      assert_equal(expected_races.size, event.races.size, "Expected #{expected_races.size.to_s} event races but was #{event.races.size.to_s}")
+      assert_equal(expected_races.size, event.races.size, "Expected #{expected_races.size} event races but was #{event.races.size}")
       expected_races.each_with_index do |expected_race, index|
         actual_race = event.races[index]
         assert_not_nil(actual_race, "race #{index}")

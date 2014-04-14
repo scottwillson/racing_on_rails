@@ -12,7 +12,7 @@ class AgeGradedBarTest < ActiveSupport::TestCase
     road = FactoryGirl.create(:discipline, name: "Road")
     road.bar_categories << masters_men
 
-    overall = FactoryGirl.create(:discipline, name: "Overall")
+    FactoryGirl.create(:discipline, name: "Overall")
 
     # Masters 30-34 result. (32)
     weaver = FactoryGirl.create(:person, date_of_birth: Date.new(1972))
@@ -67,7 +67,7 @@ class AgeGradedBarTest < ActiveSupport::TestCase
     assert_equal_dates(Time.zone.today, bar.updated_at, "AgeGradedBar last updated")
     assert_equal('Age Graded', bar.discipline, 'Age Graded BAR discipline')
 
-    race = bar.races.detect { |race| race.category == masters_30_34 }
+    race = bar.races.detect { |r| r.category == masters_30_34 }
     assert_not_nil(race, 'Age Graded BAR should have Men 30-34 race')
     assert_equal(1, race.results.size, 'Men 30-34 should have one result')
     result = race.results.first
@@ -75,7 +75,7 @@ class AgeGradedBarTest < ActiveSupport::TestCase
     assert_equal(weaver, result.person, 'Person')
     assert_equal(299, result.points, 'Points')
 
-    race = bar.races.detect { |race| race.category == masters_35_39 }
+    race = bar.races.detect { |r| r.category == masters_35_39 }
     assert_not_nil(race, 'Age Graded BAR should have Men 35-39 race')
     assert_equal(3, race.results.size, 'Men 35-39 results')
     results = race.results.sort

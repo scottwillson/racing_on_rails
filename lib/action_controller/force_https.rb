@@ -13,7 +13,7 @@ module ActionController
       # * <tt>only</tt>   - The callback should be run only for this action
       # * <tt>except<tt>  - The callback should be run for all actions except this action
       def force_https(options = {})
-        host = options.delete(:host)
+        options.delete(:host)
         before_filter(options) do
           if !request.ssl? && RacingAssociation.current.ssl?
             redirect_to "https://#{request.host}#{request.original_fullpath}", status: :moved_permanently

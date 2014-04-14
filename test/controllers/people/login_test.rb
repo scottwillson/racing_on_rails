@@ -84,7 +84,7 @@ class LoginTest < ActionController::TestCase
 
   def test_create_login_with_license_in_name_field
     ActionMailer::Base.deliveries.clear
-     existing_person = Person.create!(license: "123", name: "Speed Racer")
+    Person.create!(license: "123", name: "Speed Racer")
 
     use_ssl
     post :create_login,
@@ -104,7 +104,7 @@ class LoginTest < ActionController::TestCase
 
   def test_create_login_with_reversed_fields
     ActionMailer::Base.deliveries.clear
-    existing_person = Person.create!(license: "123", name: "Speed Racer")
+    Person.create!(license: "123", name: "Speed Racer")
 
     use_ssl
     post :create_login,
@@ -319,7 +319,7 @@ class LoginTest < ActionController::TestCase
 
   def test_create_login_invalid_login
     ActionMailer::Base.deliveries.clear
-    existing_person = Person.create!(license: "123", name: "Speed Racer")
+    Person.create!(license: "123", name: "Speed Racer")
 
     use_ssl
     post :create_login,
@@ -339,7 +339,7 @@ class LoginTest < ActionController::TestCase
 
   def test_create_login_unmatched_license
     ActionMailer::Base.deliveries.clear
-    existing_person = Person.create!(license: "123", name: "Speed Racer")
+    Person.create!(license: "123", name: "Speed Racer")
     people_count = Person.count
 
     use_ssl
@@ -362,7 +362,7 @@ class LoginTest < ActionController::TestCase
 
   def test_create_login_unmatched_name
     ActionMailer::Base.deliveries.clear
-    existing_person = Person.create!(license: "123", name: "Speed Racer")
+    Person.create!(license: "123", name: "Speed Racer")
     people_count = Person.count
 
     use_ssl

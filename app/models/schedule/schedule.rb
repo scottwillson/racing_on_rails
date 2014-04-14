@@ -77,7 +77,6 @@ module Schedule
     # Read Table Row and create SingleDayEvent
     def self.parse(row)
       logger.debug(row.inspect) if logger.debug?
-      event = nil
 
       if row[:discipline] == "Clinic"
         row[:instructional] = true

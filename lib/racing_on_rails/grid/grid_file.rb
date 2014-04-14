@@ -18,7 +18,7 @@ module RacingOnRails
               Rails.logger.debug("---------------------------------")
               Rails.logger.debug("GridFile #{Time.zone.now} row #{row.to_a.join(', ')}")
               row.each_with_index do |cell, index|
-                Rails.logger.debug("number_format pattern to_s to_f #{row.format(index).number_format}  #{row.format(index).pattern} #{cell.to_s} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}")
+                Rails.logger.debug("number_format pattern to_s to_f #{row.format(index).number_format}  #{row.format(index).pattern} #{cell} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}")
               end
               Rails.logger.debug("---------------------------------")
             end
@@ -86,7 +86,7 @@ module RacingOnRails
       def initialize(source, *options)
         case source
         when File, Tempfile
-          raise "#{source} does not exist" unless File.exists?(source.path)
+          raise "#{source} does not exist" unless File.exist?(source.path)
           @file = source
           if excel?
             lines = GridFile.read_excel(@file)

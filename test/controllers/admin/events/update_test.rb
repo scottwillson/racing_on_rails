@@ -152,7 +152,7 @@ module Admin
                          "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
                          "promoter_id" => event.promoter.to_param,
                          'number_issuer_id' => number_issuer.to_param,
-                         'type' => type.to_s}
+                         'type' => type}
           )
           assert_redirected_to edit_admin_event_path(event)
           event = Event.find(event.id)

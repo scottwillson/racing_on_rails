@@ -74,7 +74,7 @@ class UsacFile
           #Let's make an alias with their name at USAC. Helps with importing results
           begin
             Alias.create!(name: full_name, person: r)
-          rescue Exception => e
+          rescue StandardError
             Rails.logger.warn("Could not create alias #{full_name} for person #{r.name} with license #{r.license}")
           end
 

@@ -237,7 +237,7 @@ class MobileTest < RacingOnRails::IntegrationTest
   end
 
   test "popular pages" do
-    result = FactoryGirl.create(:result)
+    FactoryGirl.create(:result)
 
     get "http://example.com/m/"
     assert_response :success

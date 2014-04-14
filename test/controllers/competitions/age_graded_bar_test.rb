@@ -20,7 +20,7 @@ module Competitions
       road = FactoryGirl.create(:discipline, name: "Road")
       road.bar_categories << @masters_men
 
-      overall = FactoryGirl.create(:discipline, name: "Overall")
+      FactoryGirl.create(:discipline, name: "Overall")
 
       weaver = FactoryGirl.create(:person, date_of_birth: 32.years.ago(Time.zone.local(2007)))
       banana_belt = FactoryGirl.create(:event, date: Date.new(2007, 3, 20))

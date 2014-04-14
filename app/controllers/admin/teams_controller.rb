@@ -10,7 +10,6 @@ module Admin
       else
         session['team_name'] = @name
         cookies[:team_name] = { value: @name, expires: Time.zone.now + 36000 }
-        name_like = "%#{@name}%"
         @teams = Team.find_all_by_name_like(@name, RacingAssociation.current.search_results_limit)
         if @teams.size == RacingAssociation.current.search_results_limit
           flash[:warn] = "First #{RacingAssociation.current.search_results_limit} teams"
@@ -93,7 +92,6 @@ module Admin
     end
 
     def destroy_name
-      name_id = params[:name_id]
       Name.destroy(params[:name_id])
     end
 

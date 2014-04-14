@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
       FileUtils.rm(File.join(::Rails.root.to_s, "public", "teams.html"), force:true)
       FileUtils.rm(File.join(::Rails.root.to_s, "public", "wsba_barr.html"), force:true)
       FileUtils.rm(File.join(::Rails.root.to_s, "public", "wsba_masters_barr.html"), force:true)
-    rescue Exception => e
+    rescue StandardError => e
       logger.error e
     end
 
@@ -92,10 +92,10 @@ class ApplicationController < ActionController::Base
     respond_to do |type|
       type.html {
         local_path = "#{Rails.root}/local/public/404.html"
-        if File.exists?(local_path)
-          render file: "#{::Rails.root.to_s}/local/public/404.html", status: "404 Not Found"
+        if File.exist?(local_path)
+          render file: "#{::Rails.root}/local/public/404.html", status: "404 Not Found"
         else
-          render file: "#{::Rails.root.to_s}/public/404.html", status: "404 Not Found"
+          render file: "#{::Rails.root}/public/404.html", status: "404 Not Found"
         end
       }
       type.all { render nothing: true, status: "404 Not Found" }
@@ -106,10 +106,10 @@ class ApplicationController < ActionController::Base
     respond_to do |type|
       type.html {
         local_path = "#{Rails.root}/local/public/500.html"
-        if File.exists?(local_path)
-          render file: "#{::Rails.root.to_s}/local/public/500.html", status: "500 Error"
+        if File.exist?(local_path)
+          render file: "#{::Rails.root}/local/public/500.html", status: "500 Error"
         else
-          render file: "#{::Rails.root.to_s}/public/500.html", status: "500 Error"
+          render file: "#{::Rails.root}/public/500.html", status: "500 Error"
         end
       }
       type.all { render nothing: true, status: "500 Error" }

@@ -76,7 +76,7 @@ class TeamBarTest < ActiveSupport::TestCase
       date: Date.new(2004, 5, 17),
     )
     swan_island_senior_men = swan_island.races.create(category: senior_men)
-    x = swan_island_senior_men.results.create!(
+    swan_island_senior_men.results.create!(
       place: 12,
       person: tonkin
     )

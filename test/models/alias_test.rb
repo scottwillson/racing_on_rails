@@ -11,7 +11,7 @@ class AliasTest < ActiveSupport::TestCase
 
   def test_find_all_people_by_name
     person = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
-    person_alias = Alias.create!(name: "Mollie Cameron", person: person)
+    Alias.create!(name: "Mollie Cameron", person: person)
     Alias.find_all_people_by_name("Ryan Weaver").to_a
     aliases = Alias.find_all_people_by_name("Mollie Cameron").to_a
     assert aliases.include?(person), "Alias.find_all_people_by_name should find alias"

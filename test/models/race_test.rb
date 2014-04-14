@@ -113,7 +113,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal('1', race.results.last.place, 'Last result place')
 
     race = FactoryGirl.create(:race)
-    results = [
+    [
       race.results.create!(points: 90, place: 4),
       race.results.create!(points: 0, place: 5),
       race.results.create!(points: 89, place: 4),

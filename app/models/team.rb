@@ -96,7 +96,7 @@ class Team < ActiveRecord::Base
     Team.transaction do
       reload
       team.reload
-      events_with_results = team.results.collect do |result|
+      team.results.collect do |result|
         result.event
       end || []
 
@@ -144,7 +144,7 @@ class Team < ActiveRecord::Base
   end
 
   def name=(value)
-    name_was = name unless name_was
+    self.name_was = name unless name_was
     self[:name] = value
   end
 

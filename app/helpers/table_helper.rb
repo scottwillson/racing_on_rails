@@ -59,7 +59,7 @@ module TableHelper
   def sort_rows(collection, sort_by, sort_direction)
     return collection if sort_by.blank?
 
-     sort_by.split(",").each do |sort_attribute|
+    sort_by.split(",").each do |sort_attribute|
       sort_attribute_symbol = sort_attribute.to_sym
       collection.sort! { |x, y| (x.send(sort_attribute_symbol) || "") <=> (y.send(sort_attribute_symbol) || "") }
     end

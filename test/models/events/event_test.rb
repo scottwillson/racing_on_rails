@@ -146,7 +146,7 @@ class EventTest < ActiveSupport::TestCase
   end
 
   def test_choose_promoter_by_id_with_multiple_same_names
-    promoter = FactoryGirl.create(:person, name: "Brad Ross")
+    FactoryGirl.create(:person, name: "Brad Ross")
     brad_ross_2 = Person.create!(name: "Brad Ross")
     event = SingleDayEvent.create!(promoter_name: "Brad Ross", promoter_id: brad_ross_2.id)
     assert_equal brad_ross_2, event.promoter, "Should use promoter_id to choose between duplicates"
@@ -181,7 +181,7 @@ class EventTest < ActiveSupport::TestCase
   end
 
   def test_remove_promoter
-    promoter = FactoryGirl.create(:person, name: "Mollie Cameron")
+    FactoryGirl.create(:person, name: "Mollie Cameron")
     event = SingleDayEvent.create!(promoter_name: "Mollie Cameron")
     event.update_attributes(promoter_name: "")
     assert_nil event.promoter, "Blank promoter name should remove promoter"

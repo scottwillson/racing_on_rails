@@ -138,7 +138,7 @@ class ActiveSupport::TestCase
   def print_all_categories
     Category.order('parent_id, name').each {|category|
       p "#{category.id} #{category.parent_id} #{category.name}"
-      }.size
+    }.size
   end
 
   # helps with place_members_only calculation, so there are no gaps
