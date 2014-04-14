@@ -132,7 +132,7 @@ class Event < ActiveRecord::Base
   include Concerns::Event::Dates
   include Concerns::Event::Names
   include ActsAsTree::Extensions
-  include Concerns::Versioned
+  include RacingOnRails::VestalVersions::Versioned
   include Export::Events
 
   # Return [weekly_series, events] that have results

@@ -8,7 +8,7 @@ class Person < ActiveRecord::Base
   YEAR_1900 = Time.zone.local(1900).to_date
 
   include Comparable
-  include Concerns::Versioned
+  include RacingOnRails::VestalVersions::Versioned
   include Export::People
   include Names::Nameable
   include SentientUser

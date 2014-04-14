@@ -4,7 +4,7 @@
 #
 # Team names must be unique
 class Team < ActiveRecord::Base
-  include Concerns::Versioned
+  include RacingOnRails::VestalVersions::Versioned
   include Export::Teams
   include Names::Nameable
 
