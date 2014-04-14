@@ -504,10 +504,10 @@ class ResultTest < ActiveSupport::TestCase
     result = FactoryGirl.create(:result)
     assert !result.competition_result?, "SingleDayEvent competition_result?"
 
-    result = Ironman.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
+    result = Competitions::Ironman.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
     assert result.competition_result?, "Ironman competition_result?"
 
-    result = TeamBar.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
+    result = Competitions::TeamBar.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
     assert result.competition_result?, "TeamBar competition_result?"
   end
 
@@ -517,10 +517,10 @@ class ResultTest < ActiveSupport::TestCase
     result = FactoryGirl.create(:result)
     assert !result.team_competition_result?, "SingleDayEvent team_competition_result?"
 
-    result = Ironman.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
+    result = Competitions::Ironman.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
     assert !result.team_competition_result?, "Ironman team_competition_result?"
 
-    result = TeamBar.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
+    result = Competitions::TeamBar.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
     assert result.team_competition_result?, "TeamBar competition_result?"
   end
 

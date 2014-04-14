@@ -56,7 +56,7 @@ class Event < ActiveRecord::Base
 
   has_many :child_competitions,
            -> { order :date },
-           class_name: "Competition",
+           class_name: "Competitions::Competition",
            foreign_key: "parent_id",
            dependent: :destroy,
            after_add: :children_changed,
@@ -68,10 +68,10 @@ class Event < ActiveRecord::Base
            foreign_key: "parent_id",
            dependent: :destroy
 
-  has_one :overall, foreign_key: "parent_id", dependent: :destroy
+  has_one :overall, foreign_key: "parent_id", dependent: :destroy, class_name: "Competitions::Overall"
   has_one :combined_results, class_name: "CombinedTimeTrialResults", foreign_key: "parent_id", dependent: :destroy
-  has_many :competitions, through: :competition_event_memberships, source: :competition
-  has_many :competition_event_memberships
+  has_many :competitions, through: :competition_event_memberships, source: :competition, class_name: "Competitions::Competition"
+  has_many :competition_event_memberships, class_name: "Competitions::CompetitionEventMembership"
 
   belongs_to :number_issuer
   has_and_belongs_to_many :editors, class_name: "Person", association_foreign_key: "editor_id", join_table: "editors_events"
@@ -130,7 +130,7 @@ class Event < ActiveRecord::Base
 
   include Events::Comparison
   include Events::Dates
-  include Events::Names
+  include Events::Naming
   include ActsAsTree::Extensions
   include RacingOnRails::VestalVersions::Versioned
   include Export::Events
@@ -164,7 +164,7 @@ class Event < ActiveRecord::Base
     events = events.to_a.map(&:root).uniq
 
     weekly_series, events = events.partition { |event| event.is_a?(WeeklySeries) }
-    competitions, events = events.partition { |event| event.is_a?(Competition) }
+    competitions, events = events.partition { |event| event.is_a?(Competitions::Competition) }
 
     [ weekly_series, events, competitions ]
   end

@@ -208,7 +208,7 @@ class ResultsControllerTest < ActionController::TestCase
     weaver_banana_belt = FactoryGirl.create(:result, person: weaver, category: @senior_men)
     competition = RiderRankings.create!
     competition_result = competition.races.create!(category: @senior_men).results.create!
-    Score.create!(competition_result: competition_result, source_result: weaver_banana_belt, points: 1)
+    Competitions::Score.create!(competition_result: competition_result, source_result: weaver_banana_belt, points: 1)
 
     get :person, person_id: weaver.to_param
     assert_response(:success)

@@ -41,8 +41,12 @@ class Result < ActiveRecord::Base
   after_destroy :destroy_people
   after_destroy :destroy_teams
 
-  has_many :scores, foreign_key: 'competition_result_id', dependent: :destroy, extend: CreateIfBestResultForRaceExtension
-  has_many :dependent_scores, class_name: 'Score', foreign_key: 'source_result_id', dependent: :destroy
+  has_many :scores,
+           class_name: "Competitions::Score",
+           foreign_key: 'competition_result_id',
+           dependent: :destroy,
+           extend: CreateIfBestResultForRaceExtension
+  has_many :dependent_scores, class_name: 'Competitions::Score', foreign_key: 'source_result_id', dependent: :destroy
   belongs_to :category
   belongs_to :event
   belongs_to :race
@@ -269,7 +273,7 @@ class Result < ActiveRecord::Base
   def calculate_points
     # Drop to SQL for effeciency
     if competition_result?
-      self.points = Score.where(competition_result_id: id).sum(:points)
+      self.points = Competitions::Score.where(competition_result_id: id).sum(:points)
     end
     points
   end
@@ -285,17 +289,24 @@ class Result < ActiveRecord::Base
 
   def calculate_competition_result
     if frozen?
-      self[:competition_result] || event.is_a?(Competition)
+      self[:competition_result] || event.is_a?(Competitions::Competition)
     else
-      self[:competition_result] ||= event.is_a?(Competition)
+      self[:competition_result] ||= event.is_a?(Competitions::Competition)
     end
   end
 
   def calculate_team_competition_result
     if frozen?
-      self[:team_competition_result] || event.is_a?(TeamBar) || event.is_a?(CrossCrusadeTeamCompetition) || event.is_a?(MbraTeamBar)
+      self[:team_competition_result] ||
+      event.is_a?(Competitions::TeamBar) ||
+      event.is_a?(Competitions::CrossCrusadeTeamCompetition) ||
+      event.is_a?(Competitions::MbraTeamBar)
     else
-      self[:team_competition_result] ||= (event.is_a?(TeamBar) || event.is_a?(CrossCrusadeTeamCompetition) || event.is_a?(MbraTeamBar))
+      self[:team_competition_result] ||= (
+        event.is_a?(Competitions::TeamBar) ||
+        event.is_a?(Competitions::CrossCrusadeTeamCompetition) ||
+        event.is_a?(Competitions::MbraTeamBar)
+      )
     end
   end
 

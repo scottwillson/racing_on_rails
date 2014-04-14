@@ -15,7 +15,7 @@ module Categories
         when 1
           ::Category.where(friendly_param: param).first
         else
-          raise Categories::AmbiguousParamException, "#{category_count} occurrences of #{param}"
+          raise ::Categories::AmbiguousParamException, "#{category_count} occurrences of #{param}"
         end
       end
     end

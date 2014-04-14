@@ -406,7 +406,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
   end
 
   test "multiple scores for same race" do
-    competition = Competition.create!(name: 'KOM')
+    competition = Competitions::Competition.create!(name: 'KOM')
     cx_a = FactoryGirl.create(:category)
     competition_race = competition.races.create!(category: cx_a)
     tonkin = FactoryGirl.create(:person)

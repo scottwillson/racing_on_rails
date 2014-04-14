@@ -154,7 +154,7 @@ class RaceTest < ActiveSupport::TestCase
       FactoryGirl.create(:result, race: race)
     end
 
-    ironman = Ironman.create!
+    ironman = Competitions::Ironman.create!
     ironman_race = ironman.races.create!(category: Category.new(name: 'Ironman'))
 
     first_competition_result = ironman_race.results.create!
@@ -226,7 +226,7 @@ class RaceTest < ActiveSupport::TestCase
     races << SingleDayEvent.create!(date: Date.new(2006, 3)).races.create!(category_name: "Masters Men 50+")
     races << SingleDayEvent.create!(date: Date.new(2006, 4)).races.create!(category_name: "Masters Men 50+")
 
-    ironman = Ironman.create!
+    ironman = Competitions::Ironman.create!
     ironman_race = ironman.races.create!(category: Category.new(name: 'Ironman'))
 
     first_competition_result = ironman_race.results.create!
@@ -266,7 +266,7 @@ class RaceTest < ActiveSupport::TestCase
     race = SingleDayEvent.create!(date: Date.new(2006, 10)).races.create!(category_name: "Masters Men 50+")
     second_race = SingleDayEvent.create!(date: Date.new(2006, 11)).races.create!(category_name: "Masters Men 50+")
 
-    ironman = Ironman.create!
+    ironman = Competitions::Ironman.create!
     ironman_race = ironman.races.create!(category: Category.new(name: 'Ironman'))
 
     first_competition_result = ironman_race.results.create!
@@ -295,7 +295,7 @@ class RaceTest < ActiveSupport::TestCase
     second_race = SingleDayEvent.create!(date: Date.new(2006, 11)).races.create!(category_name: "Masters Men 50+")
     third_race = SingleDayEvent.create!(date: Date.new(2006, 12)).races.create!(category_name: "Masters Men 50+")
 
-    ironman = Ironman.create!
+    ironman = Competitions::Ironman.create!
     ironman_race = ironman.races.create!(category: Category.new(name: 'Ironman'))
 
     first_competition_result = ironman_race.results.create!

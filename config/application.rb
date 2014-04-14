@@ -7,7 +7,6 @@ Bundler.require(*Rails.groups)
 module RacingOnRails
   class Application < Rails::Application
     config.autoload_paths += %W(
-      #{config.root}/app/models/competitions
       #{config.root}/app/models/observers
       #{config.root}/app/pdfs
       #{config.root}/app/rack
