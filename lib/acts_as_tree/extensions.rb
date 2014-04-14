@@ -1,5 +1,5 @@
-module Concerns
-  module TreeExtensions
+module ActsAsTree
+  module Extensions
     extend ActiveSupport::Concern
 
     # Returns list of ancestors, starting from parent until root.

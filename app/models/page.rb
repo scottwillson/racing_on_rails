@@ -4,8 +4,8 @@
 # do things like <% Person.destroy_all %>!
 class Page < ActiveRecord::Base
   acts_as_tree
-  include Concerns::TreeExtensions
-  include Concerns::TreeValidation
+  include ActsAsTree::Extensions
+  include ActsAsTree::Validation
 
   include Concerns::Page::Paths
   include Concerns::Versioned

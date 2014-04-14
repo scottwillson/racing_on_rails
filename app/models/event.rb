@@ -131,7 +131,7 @@ class Event < ActiveRecord::Base
   include Concerns::Event::Comparison
   include Concerns::Event::Dates
   include Concerns::Event::Names
-  include Concerns::TreeExtensions
+  include ActsAsTree::Extensions
   include Concerns::Versioned
   include Export::Events
 

@@ -1,5 +1,5 @@
-module Concerns
-  module TreeValidation
+module ActsAsTree
+  module Validation
     extend ActiveSupport::Concern
 
     included do
