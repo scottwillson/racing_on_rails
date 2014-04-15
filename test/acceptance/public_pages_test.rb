@@ -32,21 +32,7 @@ class PublicPagesTest < AcceptanceTest
     assert_page_has_content RacingAssociation.current.effective_year.to_s
     click_link @new_event.name
 
-    Ironman.calculate!
-
-    visit "/ironman"
-    assert_page_has_content "Ironman"
-
     visit "/people"
-
-    visit "/rider_rankings"
-    assert_page_has_content "WSBA is using the default USA Cycling ranking system from 2012 onward"
-
-    visit "/cat4_womens_race_series"
-    assert_page_has_content "No results for #{RacingAssociation.current.effective_year}"
-
-    visit "/oregon_cup"
-    assert_page_has_content "Oregon Cup"
 
     visit "/teams"
     unless page.has_content?("Member Teams") || page.has_content?("teams in Oregon")
@@ -115,51 +101,6 @@ class PublicPagesTest < AcceptanceTest
       press_return "name"
       assert_page_has_content "Pennington"
     end
-  end
-
-  test "bar" do
-    FactoryGirl.create(:discipline, name: "Overall")
-    age_graded = FactoryGirl.create(:discipline, name: "Age Graded")
-    masters_men = FactoryGirl.create(:category, name: "Masters Men")
-    masters_30_34 = FactoryGirl.create(:category, name: "Masters Men 30-34", ages: 30..34, parent: masters_men)
-    FactoryGirl.create(:category, name: "Masters Men 35-39", ages: 35..39, parent: masters_men)
-    age_graded.bar_categories << masters_30_34
-
-    road = FactoryGirl.create(:discipline, name: "Road")
-    road.bar_categories << masters_men
-
-    # Masters 30-34 result. (32)
-    weaver = FactoryGirl.create(:person, date_of_birth: Date.new(1977))
-    banana_belt_1 = FactoryGirl.create(:event, date: Date.new(2009, 3))
-
-    Timecop.freeze(2009, 4) do
-      banana_belt_masters_30_34 = banana_belt_1.races.create!(category: masters_30_34)
-      banana_belt_masters_30_34.results.create!(person: weaver, place: '10')
-
-      Bar.calculate! 2009
-      OverallBar.calculate! 2009
-      AgeGradedBar.calculate! 2009
-    end
-
-    Bar.calculate!
-    OverallBar.calculate!
-    AgeGradedBar.calculate!
-
-    visit "/bar"
-    assert_page_has_content "BAR"
-    assert_page_has_content "Oregon Best All-Around Rider"
-
-    visit "/bar/2009"
-    page.has_css?("title", text: /BAR/)
-
-    visit "/bar/2009/age_graded"
-    assert_page_has_content "Masters Men 30-34"
-
-    visit "/bar/#{Time.zone.today.year}"
-    assert_page_has_content "Overall"
-
-    visit "/bar/#{Time.zone.today.year}/age_graded"
-    page.has_css?("title", text: /Age Graded/)
   end
 
 

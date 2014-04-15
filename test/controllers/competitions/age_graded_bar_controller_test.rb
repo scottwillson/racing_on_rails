@@ -1,14 +1,14 @@
-require File.expand_path("../../../test_helper", __FILE__)
+require "test_helper"
 
 module Competitions
   # :stopdoc:
-  class AgeGradedBarTest < ActionController::TestCase
+  class AgeGradedBarControllerTest < ActionController::TestCase
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::UrlHelper
     include ActionView::Helpers::TextHelper
     include ActionView::Helpers::CaptureHelper
 
-    tests Competitions::BarController
+    tests BarController
 
     def setup
       super
