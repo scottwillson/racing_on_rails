@@ -7,7 +7,7 @@ class ResultsController < ApplicationController
   # == Params
   # * year (optional)
   def index
-    @discipline = Discipline[params['discipline']]
+    @discipline = Discipline[params["discipline"]]
     @discipline_names = Discipline.names
     @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
 
@@ -22,17 +22,17 @@ class ResultsController < ApplicationController
     @event = Event.find(params[:event_id])
 
     case @event
-    when AgeGradedBar, Bar, TeamBar
-      return redirect_to(controller: 'bar', action: 'show', year: @event.year, discipline: @event.discipline)
-    when Cat4WomensRaceSeries
+    when Competitions::AgeGradedBar, Competitions::Bar, Competitions::TeamBar
+      return redirect_to(controller: "competitions/bar", action: "show", year: @event.year, discipline: @event.discipline)
+    when Competitions::Cat4WomensRaceSeries
       return redirect_to(cat4_womens_race_series_path(year: @event.year))
-    when OverallBar
-      return redirect_to(controller: 'bar', action: 'show', year: @event.year)
-    when Ironman
+    when Competitions::OverallBar
+      return redirect_to(controller: "competitions/bar", action: "show", year: @event.year)
+    when Competitions::Ironman
       return redirect_to(ironman_path(year: @event.year))
-    when OregonCup
+    when Competitions::OregonCup
       return redirect_to(oregon_cup_path(year: @event.year))
-    when RiderRankings
+    when Competitions::RiderRankings
       return redirect_to(rider_rankings_path(year: @event.year))
     end
 

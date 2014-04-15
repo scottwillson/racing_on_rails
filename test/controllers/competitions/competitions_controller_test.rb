@@ -3,12 +3,9 @@ require File.expand_path("../../../test_helper", __FILE__)
 module Competitions
   # :stopdoc:
   class CompetitionsControllerTest < ActionController::TestCase #:nodoc: all
-
-    tests ::CompetitionsController
-
     # How does this happen?
     test "rider rankings result with no person" do
-      ::RiderRankings.calculate!
+      RiderRankings.calculate!
       rider_rankings = RiderRankings.find_for_year
       rider_rankings.races.first.results.create!(place: "1")
       get(:show, type: 'rider_rankings')

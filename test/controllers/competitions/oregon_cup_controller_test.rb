@@ -6,7 +6,7 @@ module Competitions
     tests OregonCupController
 
     test "index" do
-      event = ::OregonCup.create!(date: Date.new(2004, 3, 18))
+      event = OregonCup.create!(date: Date.new(2004, 3, 18))
       race = event.races.create!(category: FactoryGirl.create(:category))
       race.results.create!(place: 1, person: Person.create!(name: "Floyd Landis"))
 

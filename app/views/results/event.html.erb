@@ -70,7 +70,7 @@
   <p class="event_notes"><%= @event.notes.html_safe -%></p>
   <%- end -%>
 
-  <%- if @event.races_with_results.empty? && @event.is_a?(Competition) -%>
+  <%- if @event.races_with_results.empty? && @event.is_a?(Competitions::Competition) -%>
   <p class="event_notes"><%= @event.notes.html_safe -%></p>
     No results for <%= @event.year %>
   <%- end -%>

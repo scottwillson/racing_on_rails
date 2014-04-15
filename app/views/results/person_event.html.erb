@@ -14,7 +14,7 @@
 
 <p>
   See all results for <%= link_to(@person.name, person_results_year_path(@person, @event.date.year), class: 'obvious') %> or the
-  <% if @event.is_a?(Ironman) %>
+  <% if @event.is_a?(Competitions::Ironman) %>
     <%= link_to(@event.name, {controller: 'ironman', action: 'index', year: @event.date.year}, class: 'obvious') %>.
   <% else %>
     <%= link_to(@event.full_name, event_results_path(@event), class: 'obvious') %>.

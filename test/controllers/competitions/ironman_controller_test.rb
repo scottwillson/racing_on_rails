@@ -11,8 +11,8 @@ module Competitions
       weaver = FactoryGirl.create(:person, first_name: "f" * 60, last_name: "T" * 60, team: big_team)
       FactoryGirl.create(:race).results.create! person: weaver, team: big_team
 
-      ::Ironman.calculate! 2004
-      ::Ironman.calculate!
+      Ironman.calculate! 2004
+      Ironman.calculate!
     end
 
     test "index with year" do

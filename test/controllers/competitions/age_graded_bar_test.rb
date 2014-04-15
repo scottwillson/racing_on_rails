@@ -8,7 +8,7 @@ module Competitions
     include ActionView::Helpers::TextHelper
     include ActionView::Helpers::CaptureHelper
 
-    tests ::BarController
+    tests Competitions::BarController
 
     def setup
       super
@@ -30,9 +30,9 @@ module Competitions
       big_team = Team.create(name: "T" * 60)
       weaver = FactoryGirl.create(:person, first_name: "f" * 60, last_name: "T" * 60, team: big_team)
       FactoryGirl.create(:race).results.create! person: weaver, team: big_team
-      ::Bar.calculate! 2007
-      ::OverallBar.calculate! 2007
-      ::AgeGradedBar.calculate! 2007
+      Bar.calculate! 2007
+      OverallBar.calculate! 2007
+      AgeGradedBar.calculate! 2007
     end
 
     test "show age graded" do

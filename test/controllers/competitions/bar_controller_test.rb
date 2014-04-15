@@ -8,14 +8,12 @@ module Competitions
     include ActionView::Helpers::TextHelper
     include ActionView::Helpers::CaptureHelper
 
-    tests ::BarController
-
     def setup
       super
       big_team = Team.create(name: "T" * 60)
       weaver = FactoryGirl.create(:person, first_name: "f" * 60, last_name: "T" * 60, team: big_team)
       FactoryGirl.create(:race).results.create! person: weaver, team: big_team
-      @bar = ::Bar.calculate! 2004
+      @bar = Bar.calculate! 2004
     end
 
     test "index" do
