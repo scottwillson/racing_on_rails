@@ -282,7 +282,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def before_teardown
-    unless @passed
+    unless passed?
       begin
         save_page
       rescue StandardError => e
