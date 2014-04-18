@@ -11,7 +11,7 @@ module RacingOnRails
       private
 
       def assign_person
-        @person = Person.find(params[:id])
+        @person = ::Person.find(params[:id])
       end
 
       def current_person_session
