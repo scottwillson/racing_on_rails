@@ -70,6 +70,7 @@ end
 group :test, :acceptance do
   gem "database_cleaner"
   gem "factory_girl_rails"
+  gem "fakeweb"
   gem "mocha", require: false
   gem "timecop"
 end
