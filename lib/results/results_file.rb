@@ -221,9 +221,9 @@ module Results
 
     def find_or_create_race(row)
       if usac_results_format?
-        category = Category.find_or_create_by(name: construct_usac_category(row))
+        category = Category.find_or_create_by_normalized_name(construct_usac_category(row))
       else
-        category = Category.find_or_create_by(name: row.first)
+        category = Category.find_or_create_by_normalized_name(row.first)
       end
       race = event.races.detect { |r| r.category == category }
       if race

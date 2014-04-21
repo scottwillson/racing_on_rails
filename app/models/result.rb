@@ -282,7 +282,7 @@ class Result < ActiveRecord::Base
     if name.blank?
       self.category = nil
     else
-      self.category = Category.find_or_create_by(name: name)
+      self.category = Category.find_or_create_by_normalized_name(name)
     end
     self[:category_name] = name.try(:to_s)
   end

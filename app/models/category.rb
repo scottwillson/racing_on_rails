@@ -12,6 +12,7 @@ class Category < ActiveRecord::Base
   include ActsAsTree::Validation
 
   include Ages
+  include Categories::Cleanup
   include Comparable
   include Categories::FriendlyParam
   include Export::Categories
@@ -27,6 +28,7 @@ class Category < ActiveRecord::Base
   validates_presence_of :friendly_param
 
   NONE = Category.new(name: "", id: nil)
+  RACING_ASSOCIATIONS = %{ ABA ATRA CBRA MBRA NABRA OBRA WSBA }
 
   # All categories with no parent (except root 'association' category)
   def self.find_all_unknowns
@@ -37,6 +39,45 @@ class Category < ActiveRecord::Base
   def self.short_name(name)
     return name if name.blank?
     name.gsub('Senior', 'Sr').gsub('Masters', 'Mst').gsub('Junior', 'Jr').gsub('Category', 'Cat').gsub('Beginner', 'Beg').gsub('Expert', 'Exp').gsub("Clydesdale", "Clyd")
+  end
+
+  def self.strip_whitespace(name)
+    if name
+      name = name.strip
+      name = name.gsub(/\s+/, " ")
+    end
+    name
+  end
+
+  def self.cleanup_case(name)
+    if name
+      name = name.split.map do |token|
+        # Calling RacingAssociation.current triggers an infinite loop
+        if token[/of/i]
+          "of"
+        elsif token[/\Ai+\z/i] || token[/\A\d[a-z]/i]
+          token.upcase
+        elsif token.in?(RACING_ASSOCIATIONS) || token.in?(%w{ MTB SS TT TTT }) || token[/\A[A-Z][a-z]/]
+          token
+        else
+          token.downcase.gsub(/\A[a-z]/) { $&.upcase }.gsub(/[[:punct:]][a-z]/) { $&.upcase }
+        end
+      end.join(" ")
+    end
+    name
+  end
+
+  def self.normalized_name(name)
+    name = strip_whitespace(name)
+    cleanup_case name
+  end
+
+  def self.find_or_create_by_normalized_name(name)
+    Category.find_or_create_by name: normalized_name(name)
+  end
+
+  def name=(value)
+    self[:name] = Category.normalized_name(value)
   end
 
   # Sr, Mst, Jr, Cat, Beg, Exp
