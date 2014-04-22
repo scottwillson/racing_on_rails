@@ -11,7 +11,7 @@
     <th class="points">Pts</th>
     <th></th>
   </tr>
-  <%- results.sort_by(&:date).each do |result| -%>
+  <%- results.sort_by(&:date).reverse.each do |result| -%>
     <%= render result %>
   <%- end -%>
 
