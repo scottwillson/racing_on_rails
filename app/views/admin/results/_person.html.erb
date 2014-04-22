@@ -1,25 +1,23 @@
 <h3><%= [person.name, (person.team.blank? ? nil : person.team.name), person.city, person.racing_age].compact.join(', ') %></h3>
 <%= table class: "results",
+         collection: results,
+         columns: 8,
          dataid: person.id,
          id: "person_#{person.id}" do %>
-  <tr>
-    <th></th>
-    <th class="place">Place</th>
-    <th>Race</th>
-    <th>Category</th>
-    <th class="date">Date</th>
-    <th class="points">Pts</th>
-    <th></th>
-  </tr>
-  <%- results.sort_by(&:date).reverse.each do |result| -%>
-    <%= render result %>
-  <%- end -%>
-
-  <%- if results.empty? -%>
-  <tr>
-    <td colspan="8">No results</td>
-  </tr>
-  <%- end -%>
+ <thead>
+    <tr>
+      <th></th>
+      <th class="place">Place</th>
+      <th>Race</th>
+      <th>Category</th>
+      <th class="date">Date</th>
+      <th class="points">Pts</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render results.sort_by(&:date).reverse %>
+  </tbody>
 <% end -%>
 
 <%= javascript_tag do %>
