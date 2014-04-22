@@ -1,4 +1,4 @@
-RacingOnRails::Application.routes.draw do
+Rails.application.routes.draw do
   scope "(:mobile)", mobile: /m/ do
     namespace :admin do
       resources :articles
