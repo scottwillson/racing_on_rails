@@ -26,7 +26,7 @@ class Post < ActiveRecord::Base
   #
   # In most cases, you want to call this service method, not just save! or create!
   def self.save(post, mailing_list)
-    post.subject = Post.remove_list_prefix(post.subject, mailing_list.subject_line_prefix)
+    post.subject = Post.normalize_subject(post.subject, mailing_list.subject_line_prefix)
 
     transaction do
       original = find_original(post)

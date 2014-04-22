@@ -113,7 +113,7 @@ class MailingListMailerTest < ActionMailer::TestCase
       MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/bad_encoding.eml"))
 
       post_from_db = Post.order(:date).last
-      assert_equal("Fwd: cyclist missing-- Mark Bosworth", post_from_db.subject, "Subject")
+      assert_equal("cyclist missing-- Mark Bosworth", post_from_db.subject, "Subject")
       assert(post_from_db.body["Thanks in advance for your help Kenji"], "body")
     end
   end
