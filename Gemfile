@@ -77,11 +77,11 @@ end
 
 group :production do
   gem "syslog-logger"
-  gem "unicorn"
 end
 
 group :staging, :production do
   gem "raygun4ruby"
+  gem "unicorn"
 end
 
 group :acceptance, :staging, :production do
