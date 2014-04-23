@@ -1,5 +1,3 @@
-rails_env ENV['::Rails.env'] || 'staging'
-
 worker_processes 1
 GC.respond_to?(:copy_on_write_friendly=) && GC.copy_on_write_friendly = true
 preload_app true
