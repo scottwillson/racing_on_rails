@@ -102,7 +102,7 @@ module Competitions
 
     def create_races
       category_names.each do |name|
-        category = Category.find_or_create_by(name: (name))
+        category = Category.find_or_create_by(name: name)
         self.races.create(category: category)
       end
     end
