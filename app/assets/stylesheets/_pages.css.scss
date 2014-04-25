@@ -173,7 +173,6 @@ p.list_link, p.atra_ncs {
 .disclosure {
   background-repeat: no-repeat;
   clear: none;
-  cursor: pointer;
   display: inline-block;
   float: left;
   height: 16px;
@@ -185,6 +184,7 @@ p.list_link, p.atra_ncs {
 }
 
 .disclosure.glyphicon-collapse, .disclosure.glyphicon-expand {
+  cursor: pointer;
   font-size: 20px;
 }
 
