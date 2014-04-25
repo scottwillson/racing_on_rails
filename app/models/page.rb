@@ -38,9 +38,9 @@ class Page < ActiveRecord::Base
   end
 
   def valid_parents
-    Page.all.to_a.delete_if { |page|
-      page == self || descendants.include?(page)
-    }
+    Page.all.select do |page|
+      page != self && !descendants.include?(page)
+    end
   end
 
   def depth
