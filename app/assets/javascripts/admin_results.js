@@ -21,10 +21,10 @@ jQuery(document).ready(function() {
 
 function toggle_disclosure(element) {
   var id = /\d+/.exec(jQuery(element).attr('id'))[0];
-  if (jQuery(element).is('.collapsed')) {
-    jQuery(element).removeClass('collapsed');
-    jQuery(element).removeClass('expanded');
-    jQuery(element).addClass('icon-refresh');
+  if (jQuery(element).is('.glyphicon-collapse')) {
+    jQuery(element).removeClass('glyphicon-collapse');
+    jQuery(element).removeClass('glyphicon-expand');
+    jQuery(element).addClass('glyphicon-refresh');
     jQuery(element).addClass('rotate');
     jQuery.ajax({
       url: '/admin/results/' + id + '/scores',
@@ -36,9 +36,9 @@ function toggle_disclosure(element) {
     });
   }
   else {
-    jQuery(element).addClass('collapsed');
-    jQuery(element).removeClass('expanded');
-    jQuery(element).removeClass('icon-refresh');
+    jQuery(element).addClass('glyphicon-collapse');
+    jQuery(element).removeClass('glyphicon-expand');
+    jQuery(element).removeClass('glyphicon-refresh');
     jQuery(element).removeClass('rotate');
     jQuery('tr.scores_' + id).each(function(index, e) {
       jQuery(e).remove();
@@ -47,8 +47,8 @@ function toggle_disclosure(element) {
 }
 
 function expand(element) {
-  jQuery(element).removeClass('collapsed');
-  jQuery(element).addClass('expanded');
-  jQuery(element).removeClass('icon-refresh');
+  jQuery(element).removeClass('glyphicon-collapse');
+  jQuery(element).addClass('glyphicon-expand');
+  jQuery(element).removeClass('glyphicon-refresh');
   jQuery(element).removeClass('rotate');
 }

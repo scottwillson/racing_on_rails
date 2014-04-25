@@ -184,13 +184,7 @@ p.list_link, p.atra_ncs {
   width: 16px;
 }
 
-.disclosure.collapsed:before {
-  content: "\e369";
-  font-size: 20px;
-}
-
-.disclosure.expanded:before {
-  content: "\e368";
+.disclosure.glyphicon-collapse, .disclosure.glyphicon-expand {
   font-size: 20px;
 }
 

@@ -35,26 +35,26 @@ function bindCategoryEvents() {
 
 function expandDisclosure(categoryId) {
   var disclosure = jQuery('#disclosure_' + categoryId);
-  if (disclosure.is('.collapsed')) {
-    disclosure.removeClass('collapsed');
-    disclosure.removeClass('expanded');
-    disclosure.addClass('icon-refresh');
+  if (disclosure.is('.glyphicon-collapse')) {
+    disclosure.removeClass('glyphicon-collapse');
+    disclosure.removeClass('glyphicon-expand');
+    disclosure.addClass('glyphicon-refresh');
     disclosure.addClass('rotate');
 
     jQuery.get(
       '/admin/categories.js',
       { parent_id: categoryId },
       function(data) {
-        disclosure.removeClass('icon-refresh');
+        disclosure.removeClass('glyphicon-refresh');
         disclosure.removeClass('rotate');
-        disclosure.addClass('expanded');
+        disclosure.addClass('glyphicon-expand');
         bindCategoryEvents();
       }
     );
   }
   else {
-    disclosure.removeClass('expanded');
-    disclosure.addClass('collapsed');
+    disclosure.removeClass('glyphicon-expand');
+    disclosure.addClass('glyphicon-collapse');
     jQuery('#category_' + categoryId + "_children").html('');
   }
 }

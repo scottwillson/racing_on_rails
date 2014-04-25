@@ -1,5 +1,5 @@
 <div class="category" id="category_<%= category.id %>_row" data-id="<%= category.id %>">
-  <span class="disclosure glyphicon <%= "collapsed" if category.children.present? %>"
+  <span class="disclosure glyphicon xyz <%= "glyphicon-collapse" if category.children.present? %>"
      id="disclosure_<%= category.id %>"
      data-id="<%= category.id%>"></span>
   <div class="category_name" id="category_<%= category.id %>" data-id="<%= category.id %>"><span class="glyphicon glyphicon-star"></span> <%= category.name %></div>
