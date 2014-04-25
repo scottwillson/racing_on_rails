@@ -272,5 +272,19 @@ module Competitions
       ids = Bar.new.category_ids_for(Race.new(category: masters_women))
       assert_equal_enumerables [ masters_women.id, masters_women_40_plus.id ], ids, "Should include all Masters women children except 4"
     end
+
+    test "#category_ids_for should not modify association" do
+      root = FactoryGirl.create(:category)
+      node = FactoryGirl.create(:category, parent: root)
+      leaf = FactoryGirl.create(:category, parent: node)
+
+      Bar.new.category_ids_for(Race.new(category: root.reload))
+      Bar.new.category_ids_for(Race.new(category: node.reload))
+      Bar.new.category_ids_for(Race.new(category: leaf.reload))
+
+      assert_equal nil, root.parent, "root parent"
+      assert_equal root, node.parent, "node parent"
+      assert_equal node, leaf.parent, "leaf parent"
+    end
   end
 end

@@ -21,14 +21,6 @@ class PageTest < ActiveSupport::TestCase
     assert_equal("women/faq/cat4", child_child_child.path, "path")
   end
 
-  test "not allow circular relationships" do
-    parent = Page.create!(body: "<h1>Welcome</h1>", title: "")
-    child = parent.children.create!(body: "<h2>Child</h2>", title: "Child")
-    assert !(parent.children << parent)
-    assert parent.errors.present?
-    assert(!child.children(true).include?(parent), "Should not be able to add parent as child")
-  end
-
   test "depth" do
     page = FactoryGirl.create(:page)
     assert_equal(0, page.depth, "depth")
@@ -47,28 +39,6 @@ class PageTest < ActiveSupport::TestCase
     page.versions(true)
     assert_equal(administrator, page.created_by, "created_by")
     assert_equal(administrator, page.updated_by_person, "updated_by_person")
-  end
-
-  test "Root page valid_parents" do
-    page = FactoryGirl.create(:page)
-    assert_equal([], page.valid_parents, "valid_parents")
-  end
-
-  test "Parent-child pages valid_parents" do
-    parent = FactoryGirl.create(:page)
-    child = parent.children.create!(title: "child")
-    assert_equal([], parent.valid_parents, "parent valid_parents")
-    assert_equal([parent], child.valid_parents, "child valid_parents")
-  end
-
-  test "Many roots valid_parents" do
-    parent = FactoryGirl.create(:page)
-    child = parent.children.create!(title: "child")
-    another_root = Page.create!(title: "Another root")
-
-    assert_same_elements([another_root], parent.valid_parents, "parent valid_parents")
-    assert_same_elements([parent, another_root], child.valid_parents, "child valid_parents")
-    assert_same_elements([parent, child], another_root.valid_parents, "another_root valid_parents")
   end
 
   test "Do not update path or slug when title changes" do

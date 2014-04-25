@@ -34,6 +34,12 @@ class CategoryTest < ActiveSupport::TestCase
     assert !category.valid?
   end
 
+  test "no circular parents <<" do
+    category = FactoryGirl.build(:category, name: "Senior Men", id: 1)
+    category.children << category
+    assert !category.valid?
+  end
+
   test "ages default" do
     cat = FactoryGirl.build(:category)
     assert_equal(0, cat.ages_begin, 'ages_begin')
