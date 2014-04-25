@@ -7,12 +7,11 @@ module ActsAsTree
     end
 
     def valid_parent
-      if parent == self || descendants.include?(self) || ancestors.include?(self)
-        errors.add :parent, "can't include self"
-        false
-      else
-        true
+      if parent == self
+        errors.add :parent, "can't be own parent"
+        return false
       end
+
       true
     end
   end
