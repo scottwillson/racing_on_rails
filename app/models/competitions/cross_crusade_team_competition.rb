@@ -21,10 +21,6 @@ module Competitions
             team_competition.create_races
             team_competition.calculate!
           end
-          team_competition.set_date
-          team_competition.destroy_races
-          team_competition.create_races
-          team_competition.calculate!
         end
       }
       true
