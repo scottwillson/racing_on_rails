@@ -25,6 +25,8 @@ module Competitions
     end
 
     def source_results(race)
+      return [] if source_events.empty?
+
       event_ids = source_events.map(&:id).join(", ")
       category_ids = category_ids_for(race).join(", ")
 
