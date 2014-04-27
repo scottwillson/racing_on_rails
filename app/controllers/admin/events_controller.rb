@@ -280,7 +280,7 @@ module Admin
         raise "Unknown event type: #{event_type}"
       end
 
-      @event = eval(event_type).new(_params)
+      @event = Object.const_get(event_type).new(_params)
     end
 
     def assign_current_admin_tab
