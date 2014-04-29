@@ -257,6 +257,15 @@ class Event < ActiveRecord::Base
     }
   end
 
+  def attributes_for_duplication
+    _attributes = attributes.dup
+    _attributes.delete("id")
+    _attributes.delete("notification")
+    _attributes.delete("created_at")
+    _attributes.delete("updated_at")
+    _attributes
+  end
+
   def default_bar_points
     if parent.is_a?(WeeklySeries) || (parent.try(:parent) && parent.parent.is_a?(WeeklySeries))
       0
