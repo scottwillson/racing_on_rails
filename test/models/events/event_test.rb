@@ -579,6 +579,15 @@ class EventTest < ActiveSupport::TestCase
     assert_equal "promoter@example.com", event.email!
   end
 
+  test "attributes_for_duplication" do
+    attributes = FactoryGirl.create(:event).attributes_for_duplication
+    assert !attributes.include?("id"), "attributes_for_duplication should not include id"
+    assert !attributes.include?("notification"), "attributes_for_duplication should not include notification"
+    assert !attributes.include?("updated_at"), "attributes_for_duplication should not include updated_at"
+    assert attributes.include?("name"), "attributes_for_duplication should include name"
+    assert attributes.include?("city"), "attributes_for_duplication should include city"
+  end
+
   private
 
   def assert_no_orphans(event)
