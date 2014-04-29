@@ -44,7 +44,7 @@ module Categories
           replace_with existing_category
         else
           logger.debug "Cleanup Category name whitespace from '#{name}' to '#{normalized_name}'"
-          update_attributes! name: normalized_name
+          update_attributes! raw_name: normalized_name
         end
       end
     end
@@ -53,7 +53,7 @@ module Categories
       cleaned_name = Category.cleanup_case(name)
       if cleaned_name != name
         logger.debug "Cleanup Category case from '#{name}' to '#{cleaned_name}'"
-        update_attributes! name: cleaned_name
+        update_attributes! raw_name: cleaned_name
       end
     end
 
@@ -65,7 +65,7 @@ module Categories
           replace_with existing_category
         else
           logger.debug "Cleanup Category name normalized_name from '#{name}' to '#{normalized_name}'"
-          update_attributes! name: normalized_name
+          update_attributes! raw_name: normalized_name
         end
       end
     end
