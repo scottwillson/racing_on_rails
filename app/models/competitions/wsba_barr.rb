@@ -13,7 +13,7 @@ module Competitions
       [ 0, 20, 17, 15, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 ]
     end
 
-    def create_races
+    def category_names
       [
         "Men Cat 1-2",
         "Men Cat 3",
@@ -21,10 +21,7 @@ module Competitions
         "Women Cat 1-2",
         "Women Cat 3",
         "Women Cat 4"
-      ].each do |category_name|
-        category = Category.find_or_create_by(name: category_name)
-        races.create!(category: category)
-      end
+      ]
     end
 
     # source_results must be in person-order

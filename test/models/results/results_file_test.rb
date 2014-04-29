@@ -326,12 +326,12 @@ module Results
       event.reload
 
       assert_equal 5, event.races.count, "Races"
-      [ "Pro 1/2", "Cat 3", "Cat 4", "Cat 5", "Women 1/2" ].each do |cat_name|
+      [ "Pro 1/2", "Category 3", "Category 4", "Category 5", "Women 1/2" ].each do |cat_name|
         assert event.races.detect { |race| race.name == cat_name }, "Should have race #{cat_name}"
         assert_equal 1, event.races.select { |race| race.name == cat_name }.size, "Should only one of race #{cat_name}"
       end
 
-      [ "Pro 1/2", "Cat 3", "Women 1/2" ].each do |cat_name|
+      [ "Pro 1/2", "Category 3", "Women 1/2" ].each do |cat_name|
         assert_equal 3, event.races.detect { |race| race.name == cat_name }.results.count, "Race #{cat_name} results"
       end
     end

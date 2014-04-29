@@ -7,7 +7,7 @@ class Events::DatesTest < Ruby::TestCase
     def self.before_save(symbol)
     end
 
-    include Events::Dates
+    include ::Events::Dates
 
     attr_accessor :date
     attr_accessor :end_date

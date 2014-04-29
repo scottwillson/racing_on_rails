@@ -8,7 +8,7 @@ module Competitions
       [ 0, 20, 17, 15, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 ]
     end
 
-    def create_races
+    def category_names
       [
         "Master Men 35-39 Cat 1-3",
         "Master Men 35-39 Cat 4-5",
@@ -17,10 +17,7 @@ module Competitions
         "Master Men 50+ Cat 1-5",
         "Master Women 35+ Cat 1-3",
         "Master Women 35+ Cat 4"
-      ].each do |category_name|
-        category = Category.find_or_create_by(name: category_name)
-        races.create!(category: category)
-      end
+      ]
     end
 
     def points_for(source_result, team_size = nil)

@@ -24,6 +24,7 @@ module Categories
         # Whitespace cleanup deletes duplicate categories
         Category.all.each(&:cleanup_whitespace!)
         Category.all.each(&:cleanup_case!)
+        Category.all.each(&:cleanup_name!)
       end
     end
 
@@ -53,6 +54,19 @@ module Categories
       if cleaned_name != name
         logger.debug "Cleanup Category case from '#{name}' to '#{cleaned_name}'"
         update_attributes! name: cleaned_name
+      end
+    end
+
+    def cleanup_name!
+      normalized_name = Category.normalized_name(name)
+      if name != normalized_name
+        existing_category = Category.where(name: normalized_name).where.not(id: id).first
+        if existing_category
+          replace_with existing_category
+        else
+          logger.debug "Cleanup Category name normalized_name from '#{name}' to '#{normalized_name}'"
+          update_attributes! name: normalized_name
+        end
       end
     end
 

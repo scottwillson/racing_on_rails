@@ -102,7 +102,10 @@ module Competitions
 
     def create_races
       category_names.each do |name|
-        category = Category.find_or_create_by(name: name)
+        category = Category.where(name: name).first
+        if category.nil?
+          category = Category.create!(raw_name: name)
+        end
         self.races.create(category: category)
       end
     end

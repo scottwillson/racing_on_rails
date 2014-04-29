@@ -6,8 +6,8 @@ module Competitions
     module Competitions
       class WsbaBarrTest < ActiveSupport::TestCase
         test "points" do
-          category_men_1_2 = FactoryGirl.create(:category, name: "Men Cat 1-2")
-          sr_women = FactoryGirl.create(:category, name: "Women Cat 1-2")
+          category_men_1_2 = FactoryGirl.create(:category, raw_name: "Men Cat 1-2")
+          sr_women = FactoryGirl.create(:category, raw_name: "Women Cat 1-2")
           wsba = WsbaBarr.create!(date: Date.new(2004))
 
           event = FactoryGirl.create(:event, date: Date.new(2004), name: "Banana Belt")

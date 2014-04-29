@@ -214,9 +214,9 @@ module Competitions
       FactoryGirl.create(:discipline, name: "Mountain Bike")
       FactoryGirl.create(:discipline, name: "Cyclocross")
 
-      senior_men = FactoryGirl.create(:category, name: "Cat 1/2 Men2")
-      senior_women = FactoryGirl.create(:category, name: "Cat 1/2/3 Women")
-      cat_4_women = FactoryGirl.create(:category, name: "Cat 4 Women")
+      senior_men = FactoryGirl.create(:category, raw_name: "Cat 1/2 Men2")
+      senior_women = FactoryGirl.create(:category, raw_name: "Cat 1/2/3 Women")
+      cat_4_women = FactoryGirl.create(:category, raw_name: "Cat 4 Women")
       road.bar_categories << senior_men
       road.bar_categories << senior_women
       road.bar_categories << cat_4_women
