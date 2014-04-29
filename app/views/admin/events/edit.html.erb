@@ -24,7 +24,7 @@
         <% unless @event.new_record? -%>
         <div class="form-group">
           <div class="col-sm-offset-4 col-sm-8">
-            <%= link_to "Duplicate", new_admin_event_path(event: @event.attributes), class: "obvious", id: "duplicate_event" %>
+            <%= link_to "Duplicate", new_admin_event_path(event: @event.attributes_for_duplication), class: "obvious", id: "duplicate_event" %>
           </div>
         </div>
         <% end -%>
