@@ -44,6 +44,10 @@ class Category < ActiveRecord::Base
     if name
       name = name.strip
       name = name.gsub(/\s+/, " ")
+      # E.g., 30 - 39
+      name = name.gsub(/(\d+)\s+-\s+(\d+)/, "\\1-\\2")
+      # 1 / 2 => 1/2
+      name = name.gsub(/\s+\/\s+/, "/")
     end
     name
   end
@@ -66,9 +70,55 @@ class Category < ActiveRecord::Base
     name
   end
 
+  def self.expand_abbreviations(name)
+    if name
+      name = name.split.map do |token|
+        if token[/\Acat\.?\z/i]
+          "Category"
+        elsif token[/\Asr\.?\z/i] || token[/\Aseniors\z/i] || token[/\Asenoir\z/i]
+          "Senior"
+        elsif token[/\Ajr\.?\z/i] || token[/\Ajuniors\z/i]
+          "Junior"
+        elsif token[/\Amaster\z/i] || token[/\Amas\z/i] || token[/\Amstr?\z/i]
+          "Masters"
+        elsif token[/\Aveteran'?s\z/i] || token[/\Aveteren\z/i] || token[/\Avet\.?\z/i]
+          "Veteran"
+        elsif token[/\Aclydesdales\z/i]
+          "Clydesdale"
+        elsif token[/\Amen'?s\z/i]
+          "Men"
+        elsif token[/\Awomen'?s\z/i] || token[/\Awoman'?s\z/i]
+          "Women"
+        elsif token[/\Awmn?\.?\z/i] || token[/\Awom\.?\z/i] || token[/\Aw\z/i] || token[/\Awmen?\.?\z/i]
+          "Women"
+        elsif token[/\Abeg?\.?\z/i] || token[/\Abegin?\.?\z/i] || token[/\Abeginners\z/i]
+          "Beginner"
+        elsif token[/\Aexp\.?\z/i] || token[/\Aexpt\.?\z/i]
+          "Expert"
+        elsif token[/\Asprt\.?\z/i]
+          "Sport"
+        elsif token[/\Asinglespeeds?\z/i] || token[/\Ass\z/i]
+          "Singlespeed"
+        elsif token[/\Atand?\z/i] || token[/\Atandems\z/i]
+          "Tandem"
+        elsif token == "&"
+          "and"
+        else
+          token
+        end
+      end.join(" ")
+
+      name = name.gsub(/single speeds?/i, "Singlespeed")
+      name = name.gsub(/sgl spd/i, "Singlespeed")
+      name = name.gsub(/sgl speed/i, "Singlespeed")
+    end
+    name
+  end
+
   def self.normalized_name(name)
-    name = strip_whitespace(name)
-    cleanup_case name
+    _name = strip_whitespace(name)
+    _name = cleanup_case(_name)
+    expand_abbreviations _name
   end
 
   def self.find_or_create_by_normalized_name(name)

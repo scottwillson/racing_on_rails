@@ -56,7 +56,7 @@ class CategoryTest < ActiveSupport::TestCase
     assert_equal('masters_35_plus', FactoryGirl.build(:category, name: "Masters 35+").to_friendly_param, 'masters_35_plus friendly_param')
     assert_equal('pro_semi_pro_men', FactoryGirl.build(:category, name: "Pro, Semi-Pro Men").to_friendly_param, 'pro_semi_pro_men friendly_param')
     assert_equal('category_3_200m_tt', FactoryGirl.build(:category, name: 'Category 3 - 200m TT').to_friendly_param, 'Category 3 - 200m TT friendly_param')
-    assert_equal('jr_varisty_15_18_beginner', FactoryGirl.build(:category, name: 'Jr Varisty 15 -18 Beginner').to_friendly_param, 'Jr Varisty 15 -18 Beginner friendly_param')
+    assert_equal('junior_varisty_15_18_beginner', FactoryGirl.build(:category, name: 'Jr Varisty 15 -18 Beginner').to_friendly_param, 'Jr Varisty 15 -18 Beginner friendly_param')
     assert_equal('tandem_mixed_co_ed', FactoryGirl.build(:category, name: 'Tandem - Mixed (Co-Ed)').to_friendly_param, 'Tandem - Mixed (Co-Ed) friendly_param')
     assert_equal('tandem', FactoryGirl.build(:category, name: '(Tandem)').to_friendly_param, '(Tandem) friendly_param')
   end
