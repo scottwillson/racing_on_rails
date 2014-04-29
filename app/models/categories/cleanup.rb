@@ -46,13 +46,13 @@ module Categories
           update_attributes! name: normalized_name
         end
       end
+    end
 
-      def cleanup_case!
-        cleaned_name = Category.cleanup_case(name)
-        if cleaned_name != name
-          logger.debug "Cleanup Category case from '#{name}' to '#{cleaned_name}'"
-          update_attributes! name: cleaned_name
-        end
+    def cleanup_case!
+      cleaned_name = Category.cleanup_case(name)
+      if cleaned_name != name
+        logger.debug "Cleanup Category case from '#{name}' to '#{cleaned_name}'"
+        update_attributes! name: cleaned_name
       end
     end
 
