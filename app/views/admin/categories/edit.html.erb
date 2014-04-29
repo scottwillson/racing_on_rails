@@ -1,0 +1,36 @@
+<% if @category.new_record?
+     category_name = "New Category"
+   else
+     category_name = @category.name
+   end %>
+<% @page_title = "Admin: Categories: #{@category.name}" %>
+
+<%= render "shared/errors", object: @category %>
+
+<h2><%= @category.name %></h2>
+
+<%= form_for([:admin, @category], html: { class: "form-horizontal", role: "form" }) do |f| -%>
+<div class="row">
+  <div class="col-sm-6">
+    <%= f.labelled_text_field :raw_name %>
+    <%= f.labelled_text "Races", "#{link_to @category.races.count, category_races_path(@category)}".html_safe %>
+  </div>
+  <div class="col-sm-6">
+    <ul>
+      <% @category.ancestors.reverse.each do |category| %>
+      <li><%= link_to category.name, edit_admin_category_path(category) %></li>
+      <% end %>
+      <li><strong><%= @category.name %></strong></li>
+      <% @category.children.sort_by(&:name).each do |category| %>
+      <li><em><%= link_to category.name, edit_admin_category_path(category) %></em></li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
+    <div class="pull-right created_updated"><%= "Updated: #{time_ago_in_words(@category.updated_at, include_seconds: true)} ago" unless @category.updated_at.nil? || mobile_request? %></div>
+  </div>
+</div>
+<% end -%>

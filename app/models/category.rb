@@ -79,6 +79,14 @@ class Category < ActiveRecord::Base
     self[:name] = Category.normalized_name(value)
   end
 
+  def raw_name
+    name
+  end
+
+  def raw_name=(value)
+    self[:name] = value
+  end
+
   # Sr, Mst, Jr, Cat, Beg, Exp
   def short_name
     Category.short_name name

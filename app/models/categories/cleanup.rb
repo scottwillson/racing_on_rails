@@ -21,9 +21,8 @@ module Categories
       end
 
       def self.cleanup_names!
-        Category.all.each(&:cleanup_whitespace!)
-
         # Whitespace cleanup deletes duplicate categories
+        Category.all.each(&:cleanup_whitespace!)
         Category.all.each(&:cleanup_case!)
       end
     end

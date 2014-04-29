@@ -10,18 +10,21 @@ module Admin
     end
 
     test "index" do
-      get(:index)
-      assert_response(:success)
-      assert_template("admin/categories/index")
-      assert_not_nil(assigns["category"], "Should assign category")
-      assert_not_nil(assigns["unknowns"], "Should assign unknowns")
+      get :index
+      assert_not_nil assigns["category"], "Should assign category"
+      assert_not_nil assigns["unknowns"], "Should assign unknowns"
     end
 
-    test "not logged in" do
-      destroy_person_session
-      get(:index)
-      assert_redirected_to new_person_session_url(secure_redirect_options)
-      assert_nil(@request.session["person"], "No person in session")
+    test "edit" do
+      category = FactoryGirl.create(:category)
+      get :edit, id: category
+    end
+
+    test "update should save name as-is" do
+      category = FactoryGirl.create(:category)
+      patch :update, id: category, category: { raw_name: "JUNIORS" }
+      assert_equal "JUNIORS", category.reload.name
+      assert_redirected_to edit_admin_category_path(category)
     end
   end
 end

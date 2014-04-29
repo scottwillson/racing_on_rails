@@ -13,6 +13,10 @@ module Admin
       end
     end
 
+    def edit
+      @category = Category.find(params[:id])
+    end
+
     def update
       @category = Category.find(params[:id])
       @category.update_attributes(category_params)
@@ -21,6 +25,11 @@ module Admin
         @children = @category.parent.children
       else
         @children = Category.find_all_unknowns
+      end
+
+      respond_to do |type|
+        type.js
+        type.html { redirect_to edit_admin_category_path(@category) }
       end
     end
 
@@ -40,7 +49,7 @@ module Admin
     private
 
     def category_params
-      params_without_mobile.require(:category).permit(:parent_id, :position)
+      params_without_mobile.require(:category).permit(:parent_id, :position, :raw_name)
     end
   end
 end
