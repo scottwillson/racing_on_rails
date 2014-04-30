@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   include ActionController::ForceHTTPS
   include Authentication
   include Authorization
-  include RacingOnRails::Controllers::Mobile
+  include Mobile
   include SentientController
 
 
