@@ -50,7 +50,7 @@ module RacingOnRails
       if Rails.env.production? || Rails.env.staging?
         Raygun
       else
-        RacingOnRails::ExceptionNotifier
+        ExceptionNotification::Logging
       end
     end
   end

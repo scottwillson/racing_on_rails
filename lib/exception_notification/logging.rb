@@ -1,5 +1,5 @@
-module RacingOnRails
-  class ExceptionNotifier
+module ExceptionNotification
+  class Logging
     def self.track_exception(e)
       Rails.logger.error e
     end
