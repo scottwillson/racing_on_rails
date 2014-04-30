@@ -248,7 +248,7 @@ Rails.application.routes.draw do
     get '/' => 'home#index', as: :root
     resource :home, controller: :home
 
-    get '*path', to: 'pages#show', constraints: PageConstraint.new
+    get '*path', to: 'pages#show', constraints: Pages::Constraint.new
 
     if Rails.env.test?
       resources :fake do
