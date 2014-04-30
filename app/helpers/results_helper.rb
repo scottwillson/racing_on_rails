@@ -16,12 +16,12 @@ module ResultsHelper
 
     if mobile_request?
       if race.event.respond_to?(:team?) && race.event.team?
-        table.row_mapper = RacingOnRails::Tabular::Mapper.new(%w{ place team_name points})
+        table.row_mapper = Results::Tabular::Mapper.new(%w{ place team_name points})
       else
-        table.row_mapper = RacingOnRails::Tabular::Mapper.new(%w{ place name points time})
+        table.row_mapper = Results::Tabular::Mapper.new(%w{ place name points time})
       end
     else
-      table.row_mapper = RacingOnRails::Tabular::Mapper.new(
+      table.row_mapper = Results::Tabular::Mapper.new(
                            %W{ place number name team_name },
                            race.try(:custom_columns),
                            RESULT_COLUMNS - %W{ place name team_name }
@@ -61,15 +61,15 @@ module ResultsHelper
     case participant
     when Person
       if mobile_request?
-        table.row_mapper = RacingOnRails::Tabular::Mapper.new(%w{ place event_full_name })
+        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name })
       else
-        table.row_mapper = RacingOnRails::Tabular::Mapper.new(%w{ place event_full_name race_name event_date_range_s })
+        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name race_name event_date_range_s })
       end
     when Team
       if mobile_request?
-        table.row_mapper = RacingOnRails::Tabular::Mapper.new(%w{ place event_full_name name })
+        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name name })
       else
-        table.row_mapper = RacingOnRails::Tabular::Mapper.new(%w{ place event_full_name race_name name event_date_range_s })
+        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name race_name name event_date_range_s })
       end
     else
       raise ArgumentError, "participant must be a Person or Team but was #{participant.class}"
@@ -87,15 +87,15 @@ module ResultsHelper
 
     if result.team_competition_result?
       if mobile_request?
-        table.row_mapper = RacingOnRails::Tabular::Mapper.new(%w{ place event_full_name name })
+        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name name })
       else
-        table.row_mapper = RacingOnRails::Tabular::Mapper.new(%w{ place event_full_name race_name name event_date_range_s points })
+        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name race_name name event_date_range_s points })
       end
     else
       if mobile_request?
-        table.row_mapper = RacingOnRails::Tabular::Mapper.new(%w{ place event_full_name })
+        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name })
       else
-        table.row_mapper = RacingOnRails::Tabular::Mapper.new(%w{ place event_full_name race_name event_date_range_s points })
+        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name race_name event_date_range_s points })
       end
     end
 
@@ -113,7 +113,7 @@ module ResultsHelper
 
   def edit_results_table(race)
     table = Tabular::Table.new
-    table.row_mapper = RacingOnRails::Tabular::Mapper.new(RESULT_COLUMNS, race.custom_columns)
+    table.row_mapper = Results::Tabular::Mapper.new(RESULT_COLUMNS, race.custom_columns)
 
     table.rows = race.results.sort
 
