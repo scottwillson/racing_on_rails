@@ -5,8 +5,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   include ActionController::ForceHTTPS
-  include RacingOnRails::Controllers::Authorization
   include Authentication
+  include Authorization
   include RacingOnRails::Controllers::Mobile
   include SentientController
 
