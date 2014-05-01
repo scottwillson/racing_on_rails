@@ -1,3 +1,4 @@
+require "action_controller/force_https"
 require "sentient_user/sentient_controller"
 
 class ApplicationController < ActionController::Base

@@ -1,3 +1,5 @@
+require "array/each_row"
+
 module ResultsHelper
   # TODO Move to module in Race?
   # Order is significant
@@ -16,12 +18,12 @@ module ResultsHelper
 
     if mobile_request?
       if race.event.respond_to?(:team?) && race.event.team?
-        table.row_mapper = Results::Tabular::Mapper.new(%w{ place team_name points})
+        table.row_mapper = Results::Mapper.new(%w{ place team_name points})
       else
-        table.row_mapper = Results::Tabular::Mapper.new(%w{ place name points time})
+        table.row_mapper = Results::Mapper.new(%w{ place name points time})
       end
     else
-      table.row_mapper = Results::Tabular::Mapper.new(
+      table.row_mapper = Results::Mapper.new(
                            %W{ place number name team_name },
                            race.try(:custom_columns),
                            RESULT_COLUMNS - %W{ place name team_name }
@@ -37,21 +39,21 @@ module ResultsHelper
     table.delete_blank_columns!
     table.delete_homogenous_columns!(except: [ :place, :number, :time, :laps ])
 
-    table.renderer = Renderers::DefaultResultRenderer
-    table.renderers[:name] = Renderers::NameRenderer
-    table.renderers[:team_name] = Renderers::TeamNameRenderer
-    table.renderers[:time] = Renderers::TimeRenderer
-    table.renderers[:time_bonus_penalty] = Renderers::TimeRenderer
-    table.renderers[:time_gap_to_leader] = Renderers::TimeRenderer
-    table.renderers[:time_gap_to_previous] = Renderers::TimeRenderer
-    table.renderers[:time_gap_to_winner] = Renderers::TimeRenderer
-    table.renderers[:time_total] = Renderers::TimeRenderer
-    table.renderers[:points] = Renderers::PointsRenderer
-    table.renderers[:points_bonus] = Renderers::PointsRenderer
-    table.renderers[:points_bonus_penalty] = Renderers::PointsRenderer
-    table.renderers[:points_from_place] = Renderers::PointsRenderer
-    table.renderers[:points_penalty] = Renderers::PointsRenderer
-    table.renderers[:points_total] = Renderers::PointsRenderer
+    table.renderer = Results::Renderers::DefaultResultRenderer
+    table.renderers[:name] = Results::Renderers::NameRenderer
+    table.renderers[:team_name] = Results::Renderers::TeamNameRenderer
+    table.renderers[:time] = Results::Renderers::TimeRenderer
+    table.renderers[:time_bonus_penalty] = Results::Renderers::TimeRenderer
+    table.renderers[:time_gap_to_leader] = Results::Renderers::TimeRenderer
+    table.renderers[:time_gap_to_previous] = Results::Renderers::TimeRenderer
+    table.renderers[:time_gap_to_winner] = Results::Renderers::TimeRenderer
+    table.renderers[:time_total] = Results::Renderers::TimeRenderer
+    table.renderers[:points] = Results::Renderers::PointsRenderer
+    table.renderers[:points_bonus] = Results::Renderers::PointsRenderer
+    table.renderers[:points_bonus_penalty] = Results::Renderers::PointsRenderer
+    table.renderers[:points_from_place] = Results::Renderers::PointsRenderer
+    table.renderers[:points_penalty] = Results::Renderers::PointsRenderer
+    table.renderers[:points_total] = Results::Renderers::PointsRenderer
     render "results/table", table: table, css_class: "results"
   end
 
@@ -61,24 +63,24 @@ module ResultsHelper
     case participant
     when Person
       if mobile_request?
-        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name })
+        table.row_mapper = Results::Mapper.new(%w{ place event_full_name })
       else
-        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name race_name event_date_range_s })
+        table.row_mapper = Results::Mapper.new(%w{ place event_full_name race_name event_date_range_s })
       end
     when Team
       if mobile_request?
-        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name name })
+        table.row_mapper = Results::Mapper.new(%w{ place event_full_name name })
       else
-        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name race_name name event_date_range_s })
+        table.row_mapper = Results::Mapper.new(%w{ place event_full_name race_name name event_date_range_s })
       end
     else
       raise ArgumentError, "participant must be a Person or Team but was #{participant.class}"
     end
 
     table.rows = event_results.sort_by(&:date).reverse
-    table.renderer = Renderers::DefaultResultRenderer
-    table.renderers[:event_full_name] = Renderers::EventFullNameRenderer
-    table.renderers[:points] = Renderers::PointsRenderer
+    table.renderer = Results::Renderers::DefaultResultRenderer
+    table.renderers[:event_full_name] = Results::Renderers::EventFullNameRenderer
+    table.renderers[:points] = Results::Renderers::PointsRenderer
     render "results/table", table: table, css_class: "results"
   end
 
@@ -87,15 +89,15 @@ module ResultsHelper
 
     if result.team_competition_result?
       if mobile_request?
-        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name name })
+        table.row_mapper = Results::Mapper.new(%w{ place event_full_name name })
       else
-        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name race_name name event_date_range_s points })
+        table.row_mapper = Results::Mapper.new(%w{ place event_full_name race_name name event_date_range_s points })
       end
     else
       if mobile_request?
-        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name })
+        table.row_mapper = Results::Mapper.new(%w{ place event_full_name })
       else
-        table.row_mapper = Results::Tabular::Mapper.new(%w{ place event_full_name race_name event_date_range_s points })
+        table.row_mapper = Results::Mapper.new(%w{ place event_full_name race_name event_date_range_s points })
       end
     end
 
@@ -105,34 +107,34 @@ module ResultsHelper
       source_result
     end
     table.rows << Tabular::Row.new(table, points: result.points)
-    table.renderer = Renderers::DefaultResultRenderer
-    table.renderers[:event_full_name] = Renderers::ScoreEventFullNameRenderer
-    table.renderers[:points] = Renderers::PointsRenderer
+    table.renderer = Results::Renderers::DefaultResultRenderer
+    table.renderers[:event_full_name] = Results::Renderers::ScoreEventFullNameRenderer
+    table.renderers[:points] = Results::Renderers::PointsRenderer
     render "results/table", table: table, css_class: "results scores"
   end
 
   def edit_results_table(race)
     table = Tabular::Table.new
-    table.row_mapper = Results::Tabular::Mapper.new(RESULT_COLUMNS, race.custom_columns)
+    table.row_mapper = Results::Mapper.new(RESULT_COLUMNS, race.custom_columns)
 
     table.rows = race.results.sort
 
     table.delete_blank_columns!
     table.delete_homogenous_columns!
 
-    table.renderer = Renderers::DefaultResultRenderer
-    table.renderers[:time] = Renderers::TimeRenderer
-    table.renderers[:time_bonus_penalty] = Renderers::TimeRenderer
-    table.renderers[:time_gap_to_leader] = Renderers::TimeRenderer
-    table.renderers[:time_gap_to_previous] = Renderers::TimeRenderer
-    table.renderers[:time_gap_to_winner] = Renderers::TimeRenderer
-    table.renderers[:time_total] = Renderers::TimeRenderer
-    table.renderers[:points] = Renderers::PointsRenderer
-    table.renderers[:points_bonus] = Renderers::PointsRenderer
-    table.renderers[:points_bonus_penalty] = Renderers::PointsRenderer
-    table.renderers[:points_from_place] = Renderers::PointsRenderer
-    table.renderers[:points_penalty] = Renderers::PointsRenderer
-    table.renderers[:points_total] = Renderers::PointsRenderer
+    table.renderer = Results::Renderers::DefaultResultRenderer
+    table.renderers[:time] = Results::Renderers::TimeRenderer
+    table.renderers[:time_bonus_penalty] = Results::Renderers::TimeRenderer
+    table.renderers[:time_gap_to_leader] = Results::Renderers::TimeRenderer
+    table.renderers[:time_gap_to_previous] = Results::Renderers::TimeRenderer
+    table.renderers[:time_gap_to_winner] = Results::Renderers::TimeRenderer
+    table.renderers[:time_total] = Results::Renderers::TimeRenderer
+    table.renderers[:points] = Results::Renderers::PointsRenderer
+    table.renderers[:points_bonus] = Results::Renderers::PointsRenderer
+    table.renderers[:points_bonus_penalty] = Results::Renderers::PointsRenderer
+    table.renderers[:points_from_place] = Results::Renderers::PointsRenderer
+    table.renderers[:points_penalty] = Results::Renderers::PointsRenderer
+    table.renderers[:points_total] = Results::Renderers::PointsRenderer
 
     table.columns << :bar
 

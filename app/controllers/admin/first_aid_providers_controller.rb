@@ -33,7 +33,7 @@ module Admin
       rows = @events.collect do |event|
         [event.first_aid_provider, event.date.strftime("%a %-m/%-d") , event.name, event.city_state]
       end
-      grid = RacingOnRails::Grid::Grid.new(rows)
+      grid = Grid::Base.new(rows)
       grid.truncate_rows
       grid.calculate_padding
 

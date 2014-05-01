@@ -1,3 +1,5 @@
+require "array/stable_sort"
+
 module Admin
   # Add, delete, and edit Person information. Also merge.
   class PeopleController < Admin::AdminController

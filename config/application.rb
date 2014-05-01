@@ -10,9 +10,6 @@ module RacingOnRails
       #{config.root}/app/models/observers
       #{config.root}/app/pdfs
       #{config.root}/app/rack
-      #{config.root}/lib
-      #{config.root}/lib/racing_on_rails
-      #{config.root}/lib/results
     )
 
     config.encoding = "utf-8"
@@ -36,9 +33,6 @@ module RacingOnRails
 
     require "#{config.root}/app/helpers/racing_on_rails/form_builder"
     config.action_view.default_form_builder = ::RacingOnRails::FormBuilder
-
-    require "array/each_row"
-    require "array/stable_sort"
 
     if File.exist?("#{config.root}/local/config/database.yml")
       Rails.configuration.paths["config/database"] = [ "local/config/database.yml", "config/database.yml" ]

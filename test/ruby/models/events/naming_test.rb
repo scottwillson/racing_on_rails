@@ -1,5 +1,5 @@
 require File.expand_path("../../../test_case", __FILE__)
-require File.expand_path("../../../../../app/models/events/dates", __FILE__)
+# require File.expand_path("../../../../../app/models/events/dates", __FILE__)
 require File.expand_path("../../../../../app/models/events/naming", __FILE__)
 
 # :stopdoc:
@@ -8,8 +8,8 @@ class Events::NamingTest < Ruby::TestCase
     def self.before_save(symbol)
     end
 
-    include Events::Dates
-    include Events::Naming
+    # include ::Events::Dates
+    include ::Events::Naming
 
     attr_accessor :date, :name, :children, :parent, :parent_id
 

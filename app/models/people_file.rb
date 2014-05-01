@@ -1,7 +1,9 @@
+require_dependency "grid/grid_file"
+
 # Excel or text file of People. Assumes that the first row is a header row.
 # Updates membership to current year. If there are no more events in the current year, updates membership to next year.
 # See http://racingonrails.rocketsurgeryllc.com/sample_import_files/ for format details and examples.
-class PeopleFile < RacingOnRails::Grid::GridFile
+class PeopleFile < Grid::GridFile
   # 'club' ...this is often team in USAC download. How handle? Use club for team if no team? and if both, ignore club?
   #  'NCCA club' ...can have this in addition to club and team. should team be many to many?
 
@@ -84,13 +86,13 @@ class PeopleFile < RacingOnRails::Grid::GridFile
     'Donation'                               => 'notes',
     'Singlespeed'                            => 'notes',
     'Tandem'                                 => 'notes',
-    'Please select a category:'              => RacingOnRails::Grid::Column.new(name: 'notes', description: 'Disciplines'),
+    'Please select a category:'              => Grid::Column.new(name: 'notes', description: 'Disciplines'),
     '2009 notes'                             => 'notes',
-    'Would you like to make an additional donation to support OBRA? '                 => RacingOnRails::Grid::Column.new(name: 'notes', description: 'Donation'),
-    'Please indicate if you are interested in racing cross country or downhill. '     => RacingOnRails::Grid::Column.new(name: 'notes', description: 'Downhill/Cross Country'),
-    'Please indicate if you are interested in racing single speed.'                   => RacingOnRails::Grid::Column.new(name: 'notes', description: 'Singlespeed'),
-    'Please indicate other interests. (For example: time trial tandem triathalon r'   => RacingOnRails::Grid::Column.new(name: 'notes', description: 'Other interests'),
-    'Your team or club name (please enter N/A if you do not have a team affiliation)' => RacingOnRails::Grid::Column.new(name: 'team_name', description: 'Team')
+    'Would you like to make an additional donation to support OBRA? '                 => Grid::Column.new(name: 'notes', description: 'Donation'),
+    'Please indicate if you are interested in racing cross country or downhill. '     => Grid::Column.new(name: 'notes', description: 'Downhill/Cross Country'),
+    'Please indicate if you are interested in racing single speed.'                   => Grid::Column.new(name: 'notes', description: 'Singlespeed'),
+    'Please indicate other interests. (For example: time trial tandem triathalon r'   => Grid::Column.new(name: 'notes', description: 'Other interests'),
+    'Your team or club name (please enter N/A if you do not have a team affiliation)' => Grid::Column.new(name: 'team_name', description: 'Team')
   }
 
   attr_reader :created

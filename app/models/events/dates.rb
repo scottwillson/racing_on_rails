@@ -1,3 +1,5 @@
+require_dependency "human_date/parser"
+
 module Events
   module Dates
     extend ActiveSupport::Concern
