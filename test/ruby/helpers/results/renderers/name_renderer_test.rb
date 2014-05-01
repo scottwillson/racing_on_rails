@@ -1,5 +1,7 @@
-require_relative "../test_case"
-require_relative "../../../lib/renderers/name_renderer"
+require_relative "../../../test_case"
+require_relative "../../../../../app/helpers/results/lib/renderers/name_renderer"
+require "ruby-ole"
+require "tabular"
 require "nokogiri"
 
 module Results

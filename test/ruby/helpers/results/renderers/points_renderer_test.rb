@@ -1,5 +1,7 @@
-require_relative "../test_case"
-require_relative "../../../lib/renderers/points_renderer"
+require_relative "../../../test_case"
+require "ruby-ole"
+require "tabular"
+require_relative "../../../../../app/helpers/results/renderers/points_renderer"
 
 module Results
   module Renderers

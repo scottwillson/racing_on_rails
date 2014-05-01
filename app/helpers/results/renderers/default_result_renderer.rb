@@ -1,5 +1,3 @@
-require "tabular"
-
 module Results
   module Renderers
     class DefaultResultRenderer < Tabular::Renderer
