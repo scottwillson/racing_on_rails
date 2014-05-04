@@ -160,7 +160,7 @@ END
       assert_equal("CCCP", grid[1][4], "grid[1][4]")
       assert_equal("", grid[2][18], "grid[2][18]")
       expected_text = <<END
-    Number   Last Name         First Name     Team                             Category
+      Number   Last Name         First Name     Team                             Category                              
   1   189      Willson           Scott          Gentle Lover                     Senior Men 1/2/3        11          11
   2   190      Phinney-Carp...   Harry          CCCP                             Senior Men 1/2/3         9            
   3   10a      Holland           Steve          Huntair                          Senior Men 1/2/3               3      
