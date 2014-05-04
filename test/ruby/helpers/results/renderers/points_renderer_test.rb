@@ -1,5 +1,4 @@
 require_relative "../../../test_case"
-require "ruby-ole"
 require "tabular"
 require_relative "../../../../../app/helpers/results/renderers/points_renderer"
 

@@ -1,6 +1,5 @@
 require_relative "../../../test_case"
 require "active_support/core_ext/string/inflections"
-require "ruby-ole"
 require "tabular"
 require_relative "../../../../../app/helpers/results/renderers/default_result_renderer"
 
