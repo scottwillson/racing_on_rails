@@ -44,6 +44,7 @@ module RacingOnRails
       if Rails.env.production? || Rails.env.staging?
         Raygun
       else
+        require "exception_notification/logging"
         ExceptionNotification::Logging
       end
     end
