@@ -1,4 +1,4 @@
-require_dependency "human_date/parser"
+require "human_date/parser"
 
 module Events
   module Dates

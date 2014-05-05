@@ -1,5 +1,6 @@
-require File.expand_path("../../../test_case", __FILE__)
-# require File.expand_path("../../../../../app/models/events/dates", __FILE__)
+require_relative "../../test_case"
+require_relative "../../../../lib/human_date/parser"
+require_relative "../../../../app/models/events/dates"
 
 # :stopdoc:
 class Events::DatesTest < Ruby::TestCase
@@ -7,7 +8,7 @@ class Events::DatesTest < Ruby::TestCase
     def self.before_save(symbol)
     end
 
-    # include ::Events::Dates
+    include ::Events::Dates
 
     attr_accessor :date
     attr_accessor :end_date

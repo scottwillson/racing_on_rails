@@ -1,5 +1,4 @@
 require File.expand_path("../../../test_case", __FILE__)
-# require File.expand_path("../../../../../app/models/events/dates", __FILE__)
 require File.expand_path("../../../../../app/models/events/naming", __FILE__)
 
 # :stopdoc:
@@ -8,13 +7,12 @@ class Events::NamingTest < Ruby::TestCase
     def self.before_save(symbol)
     end
 
-    # include ::Events::Dates
     include ::Events::Naming
 
-    attr_accessor :date, :name, :children, :parent, :parent_id
+    attr_accessor :short_date, :name, :children, :parent, :parent_id
 
     def initialize(attributes)
-      self.date = attributes[:date]
+      self.short_date = attributes[:short_date]
       self.name = attributes[:name]
       self.parent = attributes[:parent]
       if parent
@@ -49,19 +47,19 @@ class Events::NamingTest < Ruby::TestCase
   end
 
   def test_full_name_with_date
-    event = TestEvent.new(name: 'Reheers', date: Date.new(2010, 1, 2))
+    event = TestEvent.new(name: 'Reheers', short_date: "1/2")
     assert_equal('Reheers (1/2)', event.full_name_with_date, 'full_name')
 
-    series = TestEvent.new(name: 'Bend TT Series', date: Date.new(2009, 4, 19))
-    series_event = TestEvent.new(name: 'Bend TT Series', date: Date.new(2009, 4, 19), parent: series)
+    series = TestEvent.new(name: 'Bend TT Series', short_date: "4/19")
+    series_event = TestEvent.new(name: 'Bend TT Series', short_date: "4/19", parent: series)
     assert_equal('Bend TT Series (4/19)', series_event.full_name_with_date, 'full_name when series name is same as event')
 
     stage_race = TestEvent.new(name: "Mt. Hood Classic")
-    stage = TestEvent.new(name: "Mt. Hood Classic", date: Date.new(2009, 4, 19), parent: stage_race)
+    stage = TestEvent.new(name: "Mt. Hood Classic", short_date: "4/19", parent: stage_race)
     assert_equal('Mt. Hood Classic (4/19)', stage.full_name_with_date, 'stage race stage full_name')
 
     stage_race = TestEvent.new(name: "Mt. Hood Classic")
-    stage = TestEvent.new(name: "Cooper Spur Road Race", date: Date.new(2009, 4, 19), parent: stage_race)
+    stage = TestEvent.new(name: "Cooper Spur Road Race", short_date: "4/19", parent: stage_race)
     assert_equal('Mt. Hood Classic: Cooper Spur Road Race (4/19)', stage.full_name_with_date, 'stage race event full_name')
   end
 end
