@@ -1,3 +1,5 @@
+require "countries"
+
 module RacingOnRails
   # Label + form fields HTML. Wrap checkboxes in divs (probably should do this for all label + field chunks).
   class FormBuilder < ActionView::Helpers::FormBuilder
