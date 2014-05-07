@@ -1,4 +1,5 @@
 require "array/each_row"
+require "array/stable_sort"
 
 module ResultsHelper
   # TODO Move to module in Race?
