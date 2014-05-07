@@ -1,17 +1,8 @@
-#!/usr/bin/env bash
+#! /usr/bin/env ruby
 
-./script/local aba
-cap deploy:migrations
+[ "aba", "atra", "mbra", "nabra", "obra", "wsba" ].shuffle.each do |association|
 
-./script/local atra
-cap deploy:migrations
+  `script/local #{association}`
 
-./script/local obra
-cap deploy:migrations
-
-./script/local mbra
-cap deploy:migrations
-
-./script/local wsba
-cap deploy:migrations
-
+  puts `cap deploy:migrations`
+end
