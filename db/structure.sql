@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.5.30, for osx10.9 (i386)
 --
--- Host: localhost    Database: racing_on_rails_development
+-- Host: localhost    Database: atra_development
 -- ------------------------------------------------------
 -- Server version	5.5.30
 
@@ -753,8 +753,8 @@ CREATE TABLE `racing_associations` (
   `usac_results_format` tinyint(1) NOT NULL DEFAULT '0',
   `cat4_womens_race_series_category_id` int(11) DEFAULT NULL,
   `masters_age` int(11) NOT NULL DEFAULT '35',
-  `rental_numbers_end` int(11) DEFAULT '99',
-  `rental_numbers_start` int(11) DEFAULT '51',
+  `rental_numbers_end` int(11) DEFAULT NULL,
+  `rental_numbers_start` int(11) DEFAULT NULL,
   `search_results_limit` int(11) NOT NULL DEFAULT '100',
   `cat4_womens_race_series_points` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `administrator_tabs` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1023,7 +1023,7 @@ CREATE TABLE `versions` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-04-30 15:27:20
+-- Dump completed on 2014-05-06 21:46:15
 INSERT INTO schema_migrations (version) VALUES ('1');
 
 INSERT INTO schema_migrations (version) VALUES ('10');
@@ -1292,17 +1292,9 @@ INSERT INTO schema_migrations (version) VALUES ('20140303223128');
 
 INSERT INTO schema_migrations (version) VALUES ('20140304153913');
 
-INSERT INTO schema_migrations (version) VALUES ('20140306011719');
-
 INSERT INTO schema_migrations (version) VALUES ('20140306165856');
 
-INSERT INTO schema_migrations (version) VALUES ('20140319234206');
-
 INSERT INTO schema_migrations (version) VALUES ('20140325180308');
-
-INSERT INTO schema_migrations (version) VALUES ('20140326210703');
-
-INSERT INTO schema_migrations (version) VALUES ('20140327214203');
 
 INSERT INTO schema_migrations (version) VALUES ('20140330010812');
 

@@ -1,8 +1,7 @@
 #! /usr/bin/env ruby
 
-[ "aba", "atra", "mbra", "nabra", "obra", "wsba" ].shuffle.each do |association|
-
+[ "aba", "atra", "mbra", "nabra", "obra", "wsba" ].each do |association|
+  puts "Deploy #{association}"
   `script/local #{association}`
-
   puts `cap deploy:migrations`
 end
