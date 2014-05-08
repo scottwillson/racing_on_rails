@@ -48,8 +48,10 @@ class Category < ActiveRecord::Base
       name = name.gsub(/\s+/, " ")
       # E.g., 30 - 39
       name = name.gsub(/(\d+)\s?-\s?(\d+)/, '\1-\2')
+
       # 1 / 2 => 1/2
       name = name.gsub(/\s?\/\s?/, "/")
+
       # 6- race
       name = name.gsub(/\s+-\s?/, " - ")
       name = name.gsub(/\s?-\s+/, " - ")
@@ -81,6 +83,12 @@ class Category < ActiveRecord::Base
 
       # Men (Juniors)
       name = name.gsub(/\((masters|master|juniors|junior|men|women)\)/i, '\1')
+
+      # 1 2, 2 3
+      categories = name[/ ?(1? ?2? ?3? ?4? ?5?) ?/, 1]
+      if categories[/\d \d/]
+        name = name.gsub(categories, categories.tr(" ", "/"))
+      end
 
       name = name.gsub(%r{//+}, "/")
 

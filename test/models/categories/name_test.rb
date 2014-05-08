@@ -76,6 +76,8 @@ module Categories
 
       assert_equal "Category 4/5", Category.cleanup_punctuation("Category 4//5"), "Category 4//5"
 
+      assert_equal "1/2/3", Category.cleanup_punctuation("1 2 3"), "1 2 3"
+
       assert_equal "2-Person", Category.cleanup_punctuation("2 Person"), "2 Person"
       assert_equal "4-Man", Category.cleanup_punctuation("4 man"), "4 Man"
       assert_equal "3-Day", Category.cleanup_punctuation("3 day"), "3 day"
