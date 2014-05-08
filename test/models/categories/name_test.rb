@@ -134,6 +134,13 @@ module Categories
       assert_equal "3-Day", Category.expand_abbreviations("3 day"), "3 day"
       assert_equal "10-Mile", Category.expand_abbreviations("10 Mile"), "10 Mile"
       assert_equal "24-Hour", Category.expand_abbreviations("24 hour"), "24 hour"
+
+      assert_equal "Category 4 Men Points Race 75 Laps", Category.expand_abbreviations("Category 4 Men Points Race 75 Laps"), "Category 4 Men Points Race 75 Laps"
+      assert_equal "Flying Laps - Men", Category.expand_abbreviations("Flying Laps - Men"), "Flying Laps - Men"
+      assert_equal "Flying Lap", Category.expand_abbreviations("Flying Lap"), "Flying Lap"
+      assert_equal "6-Lap Scratch Junior 13-14", Category.expand_abbreviations("6-Lap Scratch Junior 13-14"), "6-Lap Scratch Junior 13-14"
+      assert_equal "Junior 2-Lap 10-12 Men", Category.expand_abbreviations("Junior 2 Lap 10-12 Men"), "Junior 2 Lap 10-12 Men"
+      assert_equal "Team 8-Lap", Category.expand_abbreviations("Team 8 Lap"), "Team 8 Lap"
     end
   end
 end

@@ -135,6 +135,10 @@ class Category < ActiveRecord::Base
       name = name.gsub(/(\d+) mile/i, '\1-Mile')
       name = name.gsub(/(\d+) person/i, '\1-Person')
 
+      unless name[/laps/i]
+        name = name.gsub(/(\d+) lap/i, '\1-Lap')
+      end
+
       name = name.gsub(/\d+\) ?/, "")
     end
     name
