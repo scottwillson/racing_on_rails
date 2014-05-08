@@ -187,6 +187,11 @@ module Categories
       assert_equal "6-Lap Scratch Junior 13-14", Category.expand_abbreviations("6-Lap Scratch Junior 13-14"), "6-Lap Scratch Junior 13-14"
       assert_equal "Junior 2-Lap 10-12 Men", Category.expand_abbreviations("Junior 2 Lap 10-12 Men"), "Junior 2 Lap 10-12 Men"
       assert_equal "Team 8-Lap", Category.expand_abbreviations("Team 8 Lap"), "Team 8 Lap"
+
+      assert_equal "Six-day", Category.expand_abbreviations("Six-day"), "Six-day"
+      assert_equal "Six-day", Category.expand_abbreviations("Six day"), "Six day"
+      assert_equal "Six-day", Category.expand_abbreviations("Sixday"), "Sixday"
+      assert_equal "Six-day", Category.expand_abbreviations("Six-Day"), "Six-Day"
     end
   end
 end

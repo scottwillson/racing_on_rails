@@ -172,6 +172,8 @@ class Category < ActiveRecord::Base
       name = name.gsub(/(\d+) ?k/i, '\1K')
       name = name.gsub(/(\d+) ?km/i, '\1K')
 
+      name = name.gsub(/six[ -]?day/i, "Six-day")
+
       name = name.gsub(/(\d+) day/i, '\1-Day')
       name = name.gsub(/(\d+) hour/i, '\1-Hour')
       name = name.gsub(/(\d+) man/i, '\1-Man')
