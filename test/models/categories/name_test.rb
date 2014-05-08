@@ -107,6 +107,9 @@ module Categories
       assert_equal "Tandem", Category.expand_abbreviations("Tan"), "Tan"
       assert_equal "Tandem", Category.expand_abbreviations("Tand"), "Tand"
       assert_equal "Tandem", Category.expand_abbreviations("Tandems"), "Tandems"
+
+      assert_equal "U18", Category.expand_abbreviations("18 and Under"), "18 and Under"
+      assert_equal "U18", Category.expand_abbreviations("18 & Under"), "18 & Under"
     end
   end
 end

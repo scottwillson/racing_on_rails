@@ -113,6 +113,8 @@ class Category < ActiveRecord::Base
       name = name.gsub(/single speeds?/i, "Singlespeed")
       name = name.gsub(/sgl spd/i, "Singlespeed")
       name = name.gsub(/sgl speed/i, "Singlespeed")
+
+      name = name.gsub(/(\d+) and under/i, 'U\1')
     end
     name
   end
