@@ -73,6 +73,8 @@ class Category < ActiveRecord::Base
 
       # Men (Juniors)
       name = name.gsub(/\((masters|master|juniors|junior|men|women)\)/i, '\1')
+
+      name = name.gsub(%r{//+}, "/")
     end
     name
   end

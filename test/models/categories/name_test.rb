@@ -70,6 +70,8 @@ module Categories
 
       assert_equal "Category 4/5 Junior", Category.cleanup_punctuation("Category 4/5 (Junior)"), "Category 4/5 (Junior)"
       assert_equal "Category 4/5 Men", Category.cleanup_punctuation("Category 4/5 (Men)"), "Category 4/5 (Men)"
+
+      assert_equal "Category 4/5", Category.cleanup_punctuation("Category 4//5"), "Category 4//5"
     end
 
     test "#expand_abbreviations" do
