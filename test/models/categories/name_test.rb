@@ -76,6 +76,8 @@ module Categories
       assert_equal "Men Keirin", Category.expand_abbreviations("Mens Keirin"), "Mens Keirin"
       assert_equal "Women Keirin", Category.expand_abbreviations("Women's Keirin"), "Men's Keirin"
       assert_equal "Women Keirin", Category.expand_abbreviations("Womens Keirin"), "Mens Keirin"
+      assert_equal "50+ Sport Men", Category.expand_abbreviations("50+ Sport Male"), "50+ Sport Male"
+      assert_equal "Beginner 19+ Women", Category.expand_abbreviations("Beginner 19+ Female"), "Beginner 19+ Female"
 
       assert_equal "Beginner Men", Category.expand_abbreviations("Beg Men"), "Beg Men"
       assert_equal "Beginner Men", Category.expand_abbreviations("Beg. Men"), "Beg. Men"

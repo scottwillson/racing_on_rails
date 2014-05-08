@@ -94,12 +94,14 @@ class Category < ActiveRecord::Base
           "Veteran"
         elsif token[/\Aclydesdales\z/i]
           "Clydesdale"
-        elsif token[/\Amen'?s\z/i]
-          "Men"
         elsif token[/\Awomen'?s\z/i] || token[/\Awoman'?s\z/i]
           "Women"
         elsif token[/\Awmn?\.?\z/i] || token[/\Awom\.?\z/i] || token[/\Aw\z/i] || token[/\Awmen?\.?\z/i]
           "Women"
+        elsif token[/\Afemale\z/i]
+          "Women"
+        elsif token[/\Amen'?s\z/i] || token[/\Amale\Z/i]
+          "Men"
         elsif token[/\Abeg?\.?\z/i] || token[/\Abegin?\.?\z/i] || token[/\Abeginners\z/i] || token[/\Abeg:\z/i]
           "Beginner"
         elsif token[/\Aexp\.?\z/i] || token[/\Aexpt\.?\z/i]
