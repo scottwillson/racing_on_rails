@@ -126,7 +126,11 @@ class Category < ActiveRecord::Base
         elsif token[/\Atand?\z/i] || token[/\Atandems\z/i]
           "Tandem"
         elsif token[/\A\d\d>\z/i]
+          # Example: Men 30> => Men 30+
           token.gsub(/(\d\d)>/, '\1+')
+        elsif token[/\A\d([,-]\d){1,4}\z/i]
+          # 1-2-3, 1,2,3,4
+          token.split(/[,-]/).join("/")
         elsif token == "&"
           "and"
         else

@@ -69,6 +69,11 @@ module Categories
       assert_equal "Women (All Categories)", Category.expand_abbreviations("Women (All Categories)"), "Women (All Categories)"
       assert_equal "Category 3", Category.expand_abbreviations("cat3"), "cat3"
 
+      assert_equal "1/2", Category.expand_abbreviations("1,2"), "1,2"
+      assert_equal "1/2", Category.expand_abbreviations("1-2"), "1-2"
+      assert_equal "1/2/3", Category.expand_abbreviations("1,2,3"), "1,2,3"
+      assert_equal "1/2/3", Category.expand_abbreviations("1-2-3"), "1-2-3"
+
       assert_equal "Junior 10-12", Category.expand_abbreviations("Jr 10-12"), "Jr 10-12"
       assert_equal "Junior 10-12", Category.expand_abbreviations("Jr. 10-12"), "Jr. 10-12"
       assert_equal "Junior 10-12", Category.expand_abbreviations("Junior 10-12"), "Junior 10-12"
