@@ -37,6 +37,8 @@ module Categories
       assert_equal "TT-tandem", Category.cleanup_case("Tt-tandem"), "Tt-tandem"
       assert_equal "Junior TT-tandem", Category.cleanup_case("Junior Tt-tandem"), "Junior Tt-tandem"
       assert_equal "Attendee", Category.cleanup_case("Attendee"), "Attendee"
+      assert_equal "CCX", Category.cleanup_case("Ccx"), "Ccx"
+      assert_equal "CX", Category.cleanup_case("Cx"), "Cx"
     end
 
     test "strip_whitespace" do

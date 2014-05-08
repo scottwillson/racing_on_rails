@@ -68,6 +68,8 @@ class Category < ActiveRecord::Base
           "of"
         elsif token[/\Ai+\z/i] || token[/\A\d[a-z]/i]
           token.upcase
+        elsif token[/\Ac{1,2}x\z/i]
+          token.upcase
         elsif token[/\Att-?\w*/i] || token[/\A-?tt\w*/i]
           token.gsub /tt/i, "TT"
         elsif token[/\Attt-?\w*/i] || token[/\A-?ttt\w*/i]
