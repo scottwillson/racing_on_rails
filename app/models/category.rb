@@ -274,9 +274,10 @@ class Category < ActiveRecord::Base
 
       name = name.gsub(/ ?meter(s)?/i, "m")
 
+      name = name.gsub(/(\d+) ?m /i, '\1m ')
       name = name.gsub(/(\d+) ?m\z/i, '\1m')
-      name = name.gsub(/(\d+) ?m(\s+)/i, '\1m\2')
-      name = name.gsub(/(\d+) ?k/i, '\1K')
+      name = name.gsub(/(\d+) ?k /i, '\1K ')
+      name = name.gsub(/(\d+) ?k\z/i, '\1K')
       name = name.gsub(/(\d+) ?km/i, '\1K')
 
       name = name.gsub(/\d+\) ?/, "")
