@@ -169,6 +169,8 @@ class Category < ActiveRecord::Base
           "Category"
         elsif token[/\ds\z/i]
           token.gsub(/(\d)s\z/i, '\1')
+        elsif token == "1/23" || token == "12/3" || token == "123"
+          "1/2/3"
         elsif token[/\Asr\.?\z/i] || token[/\Aseniors\z/i] || token[/\Asenoir\z/i]
           "Senior"
         elsif token[/\Ajr\.?\z/i] || token[/\Ajuniors\z/i] || token[/\Ajrs\.?\z/i] || token[/\Ajunior(s)?:\z/i] ||
