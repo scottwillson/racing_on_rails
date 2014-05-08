@@ -15,6 +15,10 @@ module Categories
       assert_equal "Team 12-Hour", Category.new(name: "Team 12 Hr").name, "Team 12 Hr"
       assert_equal "Pro Women 1-3", Category.new(name: "Pro Women 1-3").name, "Pro Women 1-3"
       assert_equal "Masters Men 30-34 Keirin", Category.new(name: "Masters Men 30-34 Keirin").name, "Masters Men 30-34 Keirin"
+      assert_equal "Men Pro/1/2", Category.new(name: "Men Pro, 1/2").name, "Men Pro, 1/2"
+      assert_equal "Men Pro/1/2", Category.new(name: "Men Pro,1/2").name, "Men Pro,1/2"
+      assert_equal "Men Pro/1/2", Category.new(name: "Men Pro 1/2").name, "Men Pro 1/2"
+      assert_equal "Men Pro/1/2", Category.new(name: "Men Pro 1-2").name, "Men Pro 1-2"
     end
 
     test "find_or_create_by_normalized_name" do

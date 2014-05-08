@@ -248,6 +248,7 @@ class Category < ActiveRecord::Base
 
       name = name.gsub(%r{M P/1/2}i, "Men Pro/1/2")
       name = name.gsub(%r{P/1/2}i, "Pro/1/2")
+      name = name.gsub(/Pro.*1\/2/i, "Pro/1/2")
 
       name = name.gsub(/semi( ?)pro/i, "Semi-Pro")
       name = name.gsub(/varsity junior/i, "Junior Varsity")
