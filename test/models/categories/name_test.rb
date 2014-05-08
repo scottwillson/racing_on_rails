@@ -126,6 +126,12 @@ module Categories
       assert_equal "500m", Category.expand_abbreviations("500M"), "500M"
       assert_equal "500m", Category.expand_abbreviations("500 M"), "500 M"
       assert_equal "5K", Category.expand_abbreviations("5 k"), "5 k"
+
+      assert_equal "2-Person", Category.expand_abbreviations("2 Person"), "2 Person"
+      assert_equal "4-Man", Category.expand_abbreviations("4 man"), "2 Man"
+      assert_equal "3-Day", Category.expand_abbreviations("3 day"), "3 day"
+      assert_equal "10-Mile", Category.expand_abbreviations("10 Mile"), "10 Mile"
+      assert_equal "24-Hour", Category.expand_abbreviations("24 hour"), "24 hour"
     end
   end
 end
