@@ -76,9 +76,9 @@ class Category < ActiveRecord::Base
         elsif token[/\Ac{1,2}x\z/i]
           token.upcase
         elsif token[/\Att-?\w*/i] || token[/\A-?tt\w*/i]
-          token.gsub /tt/i, "TT"
+          token.gsub(/tt/i, "TT")
         elsif token[/\Attt-?\w*/i] || token[/\A-?ttt\w*/i]
-          token.gsub /ttt/i, "TTT"
+          token.gsub(/ttt/i, "TTT")
         elsif token.in?(RACING_ASSOCIATIONS) || token.in?(%w{ MTB SS TT TTT }) || token[/\A[A-Z][a-z]/]
           token
         else
@@ -127,6 +127,9 @@ class Category < ActiveRecord::Base
           "Singlespeed"
         elsif token[/\Atand?\z/i] || token[/\Atandems\z/i]
           "Tandem"
+        elsif token[/\A\d\dU\z/i]
+          # 14U => U14
+          token.gsub(/(\d\d)U/, 'U\1')
         elsif token[/\A\d\d>\z/i]
           # Example: Men 30> => Men 30+
           token.gsub(/(\d\d)>/, '\1+')
@@ -146,10 +149,14 @@ class Category < ActiveRecord::Base
       name = name.gsub(/sgl spd/i, "Singlespeed")
       name = name.gsub(/sgl speed/i, "Singlespeed")
 
+      # 14 and Under, 14U, 14 & U
+      name = name.gsub(/(\d+) (and|&) U\z/i, 'U\1')
+      name = name.gsub(/(\d+)& U\z/i, 'U\1')
       name = name.gsub(/under (\d{2,3})/i, 'U\1')
-      name = name.gsub(/(\d+) ?and ?under/i, 'U\1')
+      name = name.gsub(/(\d+) ?(and)? ?under/i, 'U\1')
       name = name.gsub(/(\d+) ?& ?under/i, 'U\1')
       name = name.gsub(/ 0-(\d+)/i, ' U\1')
+      name = name.gsub(/ U (\d+)/i, ' U\1')
 
       name = name.gsub(/(\d+) ?and ?(over|older)/i, '\1+')
       name = name.gsub(/(\d+) ?& ?(over|older)/i, '\1+')

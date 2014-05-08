@@ -151,10 +151,15 @@ module Categories
       assert_equal "Tandem", Category.expand_abbreviations("Tandems"), "Tandems"
 
       assert_equal "U18", Category.expand_abbreviations("18 and Under"), "18 and Under"
+      assert_equal "U18", Category.expand_abbreviations("18 Under"), "18 Under"
       assert_equal "U18", Category.expand_abbreviations("18 & Under"), "18 & Under"
       assert_equal "U14", Category.expand_abbreviations("14&Under"), "14&Under"
       assert_equal "Men U18", Category.expand_abbreviations("Men 0-18"), "Men 0-18"
       assert_equal "U14", Category.expand_abbreviations("Under 14"), "Under 14"
+      assert_equal "U14", Category.expand_abbreviations("14U"), "14U"
+      assert_equal "U14", Category.expand_abbreviations("14 and U"), "14 and U"
+      assert_equal "Category 2 U18", Category.expand_abbreviations("Category 2 U 18"), "Category 2 U 18"
+      assert_equal "U14", Category.expand_abbreviations("14& U"), "14& U"
 
       assert_equal "Masters Men 60+", Category.expand_abbreviations("13) Masters Men 60+"), "13) Masters Men 60+"
 
