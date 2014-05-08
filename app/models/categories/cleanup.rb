@@ -3,11 +3,16 @@ module Categories
     extend ActiveSupport::Concern
 
     included do
-      def self.cleanup!(dry_run = false)
+      def self.cleanup!(commit_changes = true)
         transaction do
+          logger.debug "#{Category.count} categories before cleanup"
+
           destroy_unused!
           cleanup_names!
-          rollback if dry_run
+
+          logger.debug "#{Category.count} categories after cleanup"
+
+          raise ActiveRecord::Rollback unless commit_changes
         end
         true
       end
