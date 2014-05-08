@@ -102,6 +102,8 @@ module Categories
       assert_equal "Six-day", Category.cleanup_punctuation("Six day"), "Six day"
       assert_equal "Six-day", Category.cleanup_punctuation("Sixday"), "Sixday"
       assert_equal "Six-day", Category.cleanup_punctuation("Six-Day"), "Six-Day"
+
+      assert_equal "Men 40+ B", Category.cleanup_punctuation("Men 40+ - B"), "Men 40+ - B"
     end
 
     test "#replace_roman_numeral_categories" do

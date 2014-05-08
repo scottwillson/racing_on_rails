@@ -96,6 +96,8 @@ class Category < ActiveRecord::Base
 
       name = name.gsub(%r{//+}, "/")
 
+      name = name.gsub(%r{\+ -( ?)}, "+ ")
+
       name = name.gsub(/six[ -]?day/i, "Six-day")
 
       name = name.gsub(/(\d+) day/i, '\1-Day')
