@@ -47,7 +47,10 @@ module Categories
       assert_equal "Men 30-39", Category.strip_whitespace("Men 30 -39"), "Men 30 -39"
 
       assert_equal "Men 30+", Category.strip_whitespace("Men 30+"), "Men 30+"
+      assert_equal "Men 30+", Category.strip_whitespace("Men30+"), "Men30+"
       assert_equal "Men 30+", Category.strip_whitespace("Men 30 +"), "Men 30 +"
+
+      assert_equal "Women 30+", Category.strip_whitespace("Women30+"), "Women30+"
 
       assert_equal "U14", Category.strip_whitespace("U 14"), "U 14"
       assert_equal "U14", Category.strip_whitespace("U-14"), "U-14"

@@ -63,7 +63,11 @@ class Category < ActiveRecord::Base
       # trailing punctuation
       name = name.gsub(/[\/:.,]\z/, "")
 
+      # Men (Juniors)
       name = name.gsub(/\((masters|master|juniors|junior|men|women)\)/i, '\1')
+
+      # Men30+
+      name = name.gsub(/(masters|master|men|women)(\d\d\+)/i, '\1 \2')
     end
     name
   end
