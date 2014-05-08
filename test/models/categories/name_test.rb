@@ -34,8 +34,9 @@ module Categories
       assert_equal "Category 5A", Category.cleanup_case("Category 5A"), "Category 5A"
       assert_equal "Team of 4 - 40+", Category.cleanup_case("TEAM OF 4 - 40+"), "TEAM OF 4 - 40+"
       assert_equal "TTT", Category.cleanup_case("TTT"), "TTT"
-      # Nothing is perfect
-      assert_equal "Tt-tandem", Category.cleanup_case("Tt-tandem"), "Tt-tandem"
+      assert_equal "TT-tandem", Category.cleanup_case("Tt-tandem"), "Tt-tandem"
+      assert_equal "Junior TT-tandem", Category.cleanup_case("Junior Tt-tandem"), "Junior Tt-tandem"
+      assert_equal "Attendee", Category.cleanup_case("Attendee"), "Attendee"
     end
 
     test "strip_whitespace" do

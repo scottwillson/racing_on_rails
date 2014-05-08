@@ -65,6 +65,10 @@ class Category < ActiveRecord::Base
           "of"
         elsif token[/\Ai+\z/i] || token[/\A\d[a-z]/i]
           token.upcase
+        elsif token[/\Att-?\w*/i] || token[/\A-?tt\w*/i]
+          token.gsub /tt/i, "TT"
+        elsif token[/\Attt-?\w*/i] || token[/\A-?ttt\w*/i]
+          token.gsub /ttt/i, "TTT"
         elsif token.in?(RACING_ASSOCIATIONS) || token.in?(%w{ MTB SS TT TTT }) || token[/\A[A-Z][a-z]/]
           token
         else
