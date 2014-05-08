@@ -42,10 +42,13 @@ module Categories
       assert_equal "Men 30-39", Category.strip_whitespace("Men 30 - 39"), "Men 30 - 39"
       assert_equal "Men 30-39", Category.strip_whitespace("Men 30- 39"), "Men 30- 39"
       assert_equal "Men 30-39", Category.strip_whitespace("Men 30 -39"), "Men 30 -39"
+
       assert_equal "Pro 1/2", Category.strip_whitespace("Pro 1 / 2"), "Pro 1 / 2"
       assert_equal "Pro 1/2", Category.strip_whitespace("Pro 1/ 2"), "Pro 1/ 2"
       assert_equal "Pro 1/2", Category.strip_whitespace("Pro 1 /2"), "Pro 1 /2"
       assert_equal "Pro/Expert Women", Category.strip_whitespace("Pro / Expert Women"), "Pro / Expert Women"
+
+      assert_equal "6 - race", Category.strip_whitespace("6- race"), "6 - race"
     end
 
     test "#expand_abbreviations" do
@@ -118,6 +121,7 @@ module Categories
 
       assert_equal "Masters Men 60+", Category.expand_abbreviations("13) Masters Men 60+"), "13) Masters Men 60+"
 
+      assert_equal "4000m pursuit", Category.expand_abbreviations("4000M pursuit"), "4000M pursuit"
       assert_equal "500m", Category.expand_abbreviations("500M"), "500M"
       assert_equal "500m", Category.expand_abbreviations("500 M"), "500 M"
       assert_equal "5K", Category.expand_abbreviations("5 k"), "5 k"
