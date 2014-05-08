@@ -96,9 +96,17 @@ module Categories
       assert_equal "Clydesdale", Category.expand_abbreviations("Clydesdales"), "Clydesdales"
 
       assert_equal "Masters Men", Category.expand_abbreviations("Masters Men"), "Masters Men"
+      assert_equal "Masters Men", Category.expand_abbreviations("Master's Men"), "Master's Men"
       assert_equal "Masters Men", Category.expand_abbreviations("Master Men"), "Master Men"
       assert_equal "Masters men", Category.expand_abbreviations("mstr men"), "mstr men"
       assert_equal "Masters Men", Category.expand_abbreviations("Mas Men"), "Mas Men"
+      assert_equal "Masters", Category.expand_abbreviations("Mas"), "Mas"
+      assert_equal "Masters Men", Category.expand_abbreviations("Mast. Men"), "Mast. Men"
+      assert_equal "Masters Men", Category.expand_abbreviations("Mast Men"), "Mast Men"
+      assert_equal "Masters Men", Category.expand_abbreviations("Maasters Men"), "Maasters Men"
+      assert_equal "Masters Men", Category.expand_abbreviations("Mastes Men"), "Mastes Men"
+      assert_equal "Masters Men", Category.expand_abbreviations("Mastres Men"), "Mastres Men"
+      assert_equal "Masters Men", Category.expand_abbreviations("Mater Men"), "Mater Men"
 
       assert_equal "Expert Men", Category.expand_abbreviations("Exp. Men"), "Exp. Men"
       assert_equal "Sport Men", Category.expand_abbreviations("Sprt Men"), "Sprt Men"

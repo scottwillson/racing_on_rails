@@ -91,7 +91,10 @@ class Category < ActiveRecord::Base
           "Senior"
         elsif token[/\Ajr\.?\z/i] || token[/\Ajuniors\z/i]
           "Junior"
-        elsif token[/\Amaster\z/i] || token[/\Amas\z/i] || token[/\Amstr?\z/i]
+        elsif token[/\Amaster\z/i] || token[/\Amas\z/i] || token[/\Amstr?\z/i] || token[/\Amaster's\z/i] ||
+          token[/\Amast.?\z/i] || token[/\Amaasters\z/i] || token[/\Amastes\z/i] || token[/\Amastres\z/i] ||
+          token[/\Amater\z/i]
+
           "Masters"
         elsif token[/\Aveteran'?s\z/i] || token[/\Aveteren\z/i] || token[/\Avet\.?\z/i]
           "Veteran"
