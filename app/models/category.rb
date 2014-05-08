@@ -77,7 +77,7 @@ class Category < ActiveRecord::Base
   def self.cleanup_punctuation(name)
     if name
       # trailing punctuation
-      name = name.gsub(/[\/:.,]\z/, "")
+      name = name.gsub(/[\/:.,"]\z/, "")
 
       # Men (Juniors)
       name = name.gsub(/\((masters|master|juniors|junior|men|women)\)/i, '\1')
