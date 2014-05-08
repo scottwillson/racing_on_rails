@@ -146,6 +146,7 @@ class Category < ActiveRecord::Base
       end.join(" ")
 
       name = name.gsub(/cat(\d+)/i, 'Category \1')
+      name = name.gsub(/category (\d)\/ /i, 'Category \1 ')
 
       name = name.gsub(/single speeds?/i, "Singlespeed")
       name = name.gsub(/sgl spd/i, "Singlespeed")

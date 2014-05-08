@@ -73,6 +73,7 @@ module Categories
       assert_equal "Women (All Categories)", Category.expand_abbreviations("Women (All Categories)"), "Women (All Categories)"
       assert_equal "Category 3", Category.expand_abbreviations("cat3"), "cat3"
       assert_equal "Category 1 Men 40+", Category.expand_abbreviations("Category 1MEN 40+"), "Category 1MEN 40+"
+      assert_equal "Category 4 Men", Category.expand_abbreviations("Category 4/ Men"), "Category 4/ Men"
 
       assert_equal "1/2", Category.expand_abbreviations("1,2"), "1,2"
       assert_equal "1/2", Category.expand_abbreviations("1-2"), "1-2"
