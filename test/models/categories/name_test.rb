@@ -124,6 +124,7 @@ module Categories
       assert_equal "Junior 10-12", Category.expand_abbreviations("Jr. 10-12"), "Jr. 10-12"
       assert_equal "Junior 10-12", Category.expand_abbreviations("Junior 10-12"), "Junior 10-12"
       assert_equal "Junior 10-12", Category.expand_abbreviations("Juniors 10-12"), "Juniors 10-12"
+      assert_equal "Junior 10-12", Category.expand_abbreviations("Juniors: 10-12"), "Juniors: 10-12"
 
       assert_equal "Junior Women 13-14", Category.expand_abbreviations("Jr Wm 13-14"), "Jr Wm 13-14"
       assert_equal "Junior Women 13-14", Category.expand_abbreviations("Jr Wmen 13-14"), "Jr Wmen 13-14"
