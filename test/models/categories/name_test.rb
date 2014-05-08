@@ -138,6 +138,9 @@ module Categories
       assert_equal "Women 30+", Category.expand_abbreviations("Women 30>"), "Women 30>"
 
       assert_equal "Clydesdale", Category.expand_abbreviations("Clydesdales"), "Clydesdales"
+      assert_equal "Clydesdale", Category.expand_abbreviations("Clydsdales"), "Clydsdales"
+      assert_equal "Clydesdale 200+", Category.expand_abbreviations("Clyde 200+"), "Clyde 200+"
+      assert_equal "Clydesdale", Category.expand_abbreviations("Clydes"), "Clydes"
 
       assert_equal "Masters Men", Category.expand_abbreviations("Masters Men"), "Masters Men"
       assert_equal "Masters Men", Category.expand_abbreviations("Master's Men"), "Master's Men"

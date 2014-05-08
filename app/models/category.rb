@@ -140,7 +140,7 @@ class Category < ActiveRecord::Base
           "Masters"
         elsif token[/\Aveteran'?s\z/i] || token[/\Aveteren\z/i] || token[/\Avet\.?\z/i]
           "Veteran"
-        elsif token[/\Aclydesdales\z/i]
+        elsif token[/\Aclydesdales\z/i] || token[/\Aclyde(s)?\z/i] || token[/\Aclydsdales\z/i]
           "Clydesdale"
         elsif token[/\Awomen'?s\z/i] || token[/\Awoman'?s\z/i]
           "Women"
