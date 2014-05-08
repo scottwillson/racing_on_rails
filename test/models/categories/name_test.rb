@@ -190,6 +190,9 @@ module Categories
       assert_equal "Veteran Men", Category.expand_abbreviations("Veterans Men"), "Veterans Men"
       assert_equal "Veteran Men", Category.expand_abbreviations("Vet Men"), "Vet Men"
       assert_equal "Veteran Men", Category.expand_abbreviations("Vet. Men"), "Vet. Men"
+      assert_equal "Pro/Semi-Pro", Category.expand_abbreviations("Pro/SemiPro"), "Pro/SemiPro"
+      assert_equal "Pro/Semi-Pro", Category.expand_abbreviations("Pro/Semi Pro"), "Pro/Semi Pro"
+      assert_equal "Pro/Semi-Pro", Category.expand_abbreviations("Pro/Semi-Pro"), "Pro/Semi-Pro"
 
       assert_equal "Singlespeed", Category.expand_abbreviations("Singlespeed"), "Singlespeed"
       assert_equal "Singlespeed", Category.expand_abbreviations("Singlespeeds"), "Singlespeeds"
