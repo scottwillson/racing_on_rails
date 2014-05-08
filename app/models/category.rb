@@ -47,9 +47,9 @@ class Category < ActiveRecord::Base
       name = name.strip
       name = name.gsub(/\s+/, " ")
       # E.g., 30 - 39
-      name = name.gsub(/(\d+)\s+-\s+(\d+)/, "\\1-\\2")
+      name = name.gsub(/(\d+)\s?-\s?(\d+)/, "\\1-\\2")
       # 1 / 2 => 1/2
-      name = name.gsub(/\s+\/\s+/, "/")
+      name = name.gsub(/\s?\/\s?/, "/")
     end
     name
   end

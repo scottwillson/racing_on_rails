@@ -40,7 +40,11 @@ module Categories
 
     test "strip_whitespace" do
       assert_equal "Men 30-39", Category.strip_whitespace("Men 30 - 39"), "Men 30 - 39"
+      assert_equal "Men 30-39", Category.strip_whitespace("Men 30- 39"), "Men 30- 39"
+      assert_equal "Men 30-39", Category.strip_whitespace("Men 30 -39"), "Men 30 -39"
       assert_equal "Pro 1/2", Category.strip_whitespace("Pro 1 / 2"), "Pro 1 / 2"
+      assert_equal "Pro 1/2", Category.strip_whitespace("Pro 1/ 2"), "Pro 1/ 2"
+      assert_equal "Pro 1/2", Category.strip_whitespace("Pro 1 /2"), "Pro 1 /2"
       assert_equal "Pro/Expert Women", Category.strip_whitespace("Pro / Expert Women"), "Pro / Expert Women"
     end
 
