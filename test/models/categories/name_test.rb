@@ -233,6 +233,11 @@ module Categories
       assert_equal "Hardtail", Category.expand_abbreviations("Hard tail"), "Hard tail"
       assert_equal "Ironman", Category.expand_abbreviations("Iron man"), "Iron man"
       assert_equal "Hotspot", Category.expand_abbreviations("Hot spot"), "Hot spot"
+
+      assert_equal "Varsity", Category.expand_abbreviations("Vsty"), "Vsty"
+      assert_equal "Junior Varsity", Category.expand_abbreviations("JV"), "JV"
+      assert_equal "Junior Varsity", Category.expand_abbreviations("Jv"), "Jv"
+      assert_equal "Junior Varsity", Category.expand_abbreviations("Varsity Junior"), "Varsity Junior"
     end
   end
 end

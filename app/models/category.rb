@@ -152,11 +152,15 @@ class Category < ActiveRecord::Base
           "Junior"
         elsif token[/\Amaster\z/i] || token[/\Amas\z/i] || token[/\Amstr?\z/i] || token[/\Amaster's\z/i] ||
           token[/\Amast.?\z/i] || token[/\Amaasters\z/i] || token[/\Amastes\z/i] || token[/\Amastres\z/i] ||
-          token[/\Amater\z/i]
+          token[/\Amater\z/i] || token[/\Amaser\z/i]
 
           "Masters"
         elsif token[/\Aveteran'?s\z/i] || token[/\Aveteren\z/i] || token[/\Avet\.?\z/i]
           "Veteran"
+        elsif token[/\Avsty\z/i]
+          "Varsity"
+        elsif token[/\Ajv\z/i] || token == "Varsity Junior"
+          "Junior Varsity"
         elsif token[/\Aclydesdales\z/i] || token[/\Aclyde(s)?\z/i] || token[/\Aclydsdales\z/i]
           "Clydesdale"
         elsif token[/\Awomen'?s\z/i] || token[/\Awoman'?s\z/i]
