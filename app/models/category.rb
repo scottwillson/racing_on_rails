@@ -90,7 +90,7 @@ class Category < ActiveRecord::Base
   def self.expand_abbreviations(name)
     if name
       name = name.split.map do |token|
-        if token[/\Acat\.?\z/i]
+        if token[/\Acat\.?\z/i] || token[/\Acaat\.?\z/i]
           "Category"
         elsif token[/\Asr\.?\z/i] || token[/\Aseniors\z/i] || token[/\Asenoir\z/i]
           "Senior"
@@ -131,6 +131,8 @@ class Category < ActiveRecord::Base
           token
         end
       end.join(" ")
+
+      name = name.gsub(/cat(\d+)/i, 'Category \1')
 
       name = name.gsub(/single speeds?/i, "Singlespeed")
       name = name.gsub(/sgl spd/i, "Singlespeed")
