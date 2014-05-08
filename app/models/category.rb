@@ -114,9 +114,9 @@ class Category < ActiveRecord::Base
           "Women"
         elsif token[/\Awmn?\.?\z/i] || token[/\Awom\.?\z/i] || token[/\Aw\z/i] || token[/\Awmen?\.?\z/i]
           "Women"
-        elsif token[/\Afemale\z/i]
+        elsif token[/\Afemale\z/i] || token[/\Awommen:\z/i]
           "Women"
-        elsif token[/\Amen'?s\z/i] || token[/\Amale\Z/i]
+        elsif token[/\Amen'?s\z/i] || token[/\Amale\Z/i] || token[/\Amen:\z/i]
           "Men"
         elsif token[/\A\dmen\z/i]
           token.gsub(/\A(\d)men\z/i, '\1 Men')
