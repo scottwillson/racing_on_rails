@@ -60,14 +60,19 @@ class Category < ActiveRecord::Base
       # U 14, U-14
       name = name.gsub(/U[ -](\d\d)/, 'U\1')
 
+      # Men30+
+      name = name.gsub(/(masters|master|men|women)(\d\d\+)/i, '\1 \2')
+    end
+    name
+  end
+
+  def self.cleanup_punctuation(name)
+    if name
       # trailing punctuation
       name = name.gsub(/[\/:.,]\z/, "")
 
       # Men (Juniors)
       name = name.gsub(/\((masters|master|juniors|junior|men|women)\)/i, '\1')
-
-      # Men30+
-      name = name.gsub(/(masters|master|men|women)(\d\d\+)/i, '\1 \2')
     end
     name
   end
@@ -195,6 +200,7 @@ class Category < ActiveRecord::Base
 
   def self.normalized_name(name)
     _name = strip_whitespace(name)
+    _name = cleanup_punctuation(name)
     _name = cleanup_case(_name)
     expand_abbreviations _name
   end

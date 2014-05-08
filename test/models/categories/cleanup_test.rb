@@ -9,18 +9,6 @@ module Categories
       Category.cleanup!
     end
 
-    test "cleanup_names!" do
-      senior_men = FactoryGirl.create(:category, name: "Senior Men")
-      Category.connection.execute "insert into categories (name, friendly_param) values (' Senior Men ', 'sr2')"
-      Category.connection.execute "insert into categories (name, friendly_param) values (' Men A', 'men_a')"
-
-      Category.cleanup_names!
-
-      assert_equal 2, Category.count, "Should remove duplicate category"
-      assert Category.where(id: senior_men.id).exists?, "Should keep 'good' category"
-      assert Category.where(name: "Men A").exists?, "Should fix category name"
-    end
-
     test "in_use?" do
       senior_men = FactoryGirl.create(:category, name: "Senior Men")
       men_c = FactoryGirl.create(:category, name: "Men C", parent: senior_men)

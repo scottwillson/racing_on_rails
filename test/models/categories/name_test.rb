@@ -61,13 +61,15 @@ module Categories
       assert_equal "Pro/Expert Women", Category.strip_whitespace("Pro / Expert Women"), "Pro / Expert Women"
 
       assert_equal "6 - race", Category.strip_whitespace("6- race"), "6 - race"
+    end
 
-      assert_equal "Category 1/2", Category.strip_whitespace("Category 1/2/"), "Category 1/2/"
-      assert_equal "Category 1/2", Category.strip_whitespace("Category 1/2:"), "Category 1/2:"
-      assert_equal "Category 1/2", Category.strip_whitespace("Category 1/2."), "Category 1/2."
+    test "#cleanup_punctuation" do
+      assert_equal "Category 1/2", Category.cleanup_punctuation("Category 1/2/"), "Category 1/2/"
+      assert_equal "Category 1/2", Category.cleanup_punctuation("Category 1/2:"), "Category 1/2:"
+      assert_equal "Category 1/2", Category.cleanup_punctuation("Category 1/2."), "Category 1/2."
 
-      assert_equal "Category 4/5 Junior", Category.strip_whitespace("Category 4/5 (Junior)"), "Category 4/5 (Junior)"
-      assert_equal "Category 4/5 Men", Category.strip_whitespace("Category 4/5 (Men)"), "Category 4/5 (Men)"
+      assert_equal "Category 4/5 Junior", Category.cleanup_punctuation("Category 4/5 (Junior)"), "Category 4/5 (Junior)"
+      assert_equal "Category 4/5 Men", Category.cleanup_punctuation("Category 4/5 (Men)"), "Category 4/5 (Men)"
     end
 
     test "#expand_abbreviations" do
