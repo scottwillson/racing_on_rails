@@ -5,12 +5,12 @@ module Categories
     included do
       def self.cleanup!(commit_changes = true)
         transaction do
-          logger.debug "#{Category.count} categories before cleanup"
+          logger.info "#{Category.count} categories before cleanup"
 
           destroy_unused!
           cleanup_names!
 
-          logger.debug "#{Category.count} categories after cleanup"
+          logger.info "#{Category.count} categories after cleanup"
 
           raise ActiveRecord::Rollback unless commit_changes
         end
@@ -20,7 +20,7 @@ module Categories
       def self.destroy_unused!
         Category.all.each do |category|
           if !category.in_use?
-            logger.debug "Destroy unused Category #{category.id} #{category.name}"
+            logger.info "Destroy unused Category #{category.id} #{category.name}"
             category.destroy!
           end
         end
@@ -36,7 +36,7 @@ module Categories
             if existing_category
               category.replace_with existing_category
             else
-              logger.debug "Cleanup Category name from '#{category.name}' to '#{normalized_name}'"
+              logger.info "Cleanup Category name from '#{category.name}' to '#{normalized_name}'"
               category.update! raw_name: normalized_name
             end
           end
@@ -54,7 +54,7 @@ module Categories
     end
 
     def replace_with(existing_category)
-      logger.debug "Replace #{id} '#{name}' with #{existing_category.id} '#{existing_category.name}'"
+      logger.info "Replace #{id} '#{name}' with #{existing_category.id} '#{existing_category.name}'"
       Category.where(parent_id: id).update_all(parent_id: existing_category.id)
       Discipline.connection.execute "update discipline_bar_categories set category_id = #{existing_category.id} where category_id = #{id}"
       Race.where(category_id: id).update_all(category_id: existing_category.id)
