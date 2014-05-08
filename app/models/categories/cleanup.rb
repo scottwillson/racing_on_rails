@@ -18,6 +18,7 @@ module Categories
             category.destroy!
           end
         end
+        true
       end
 
       def self.cleanup_names!
@@ -25,6 +26,7 @@ module Categories
         Category.all.each(&:cleanup_whitespace!)
         Category.all.each(&:cleanup_case!)
         Category.all.each(&:cleanup_name!)
+        true
       end
     end
 
