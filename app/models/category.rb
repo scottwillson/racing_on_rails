@@ -127,7 +127,7 @@ class Category < ActiveRecord::Base
   def self.expand_abbreviations(name)
     if name
       name = name.split.map do |token|
-        if token[/\Acat\.?\z/i] || token[/\Acaat\.?\z/i]
+        if token[/\A(cat|caat|categpry|categroy|cateogry|categegory|catgory|ct)\.?\z/i]
           "Category"
         elsif token[/\Asr\.?\z/i] || token[/\Aseniors\z/i] || token[/\Asenoir\z/i]
           "Senior"
