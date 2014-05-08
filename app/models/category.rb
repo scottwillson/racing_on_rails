@@ -158,7 +158,7 @@ class Category < ActiveRecord::Base
           token[/\ABeginning\z/i]
 
           "Beginner"
-        elsif token[/\Aexp\.?\z/i] || token[/\Aexpt\.?\z/i]
+        elsif token[/\A(exp|expt|ex|exeprt|exb|exper)\.?\z/i]
           "Expert"
         elsif token[/\Asprt\.?\z/i]
           "Sport"

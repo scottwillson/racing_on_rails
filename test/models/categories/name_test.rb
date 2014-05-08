@@ -159,6 +159,10 @@ module Categories
       assert_equal "Masters Men", Category.expand_abbreviations("Mater Men"), "Mater Men"
 
       assert_equal "Expert Men", Category.expand_abbreviations("Exp. Men"), "Exp. Men"
+      assert_equal "Expert Men", Category.expand_abbreviations("Ex Men"), "Ex Men"
+      assert_equal "Expert Men", Category.expand_abbreviations("Exb. Men"), "Exb. Men"
+      assert_equal "Expert Men", Category.expand_abbreviations("Exeprt Men"), "Exeprt Men"
+      assert_equal "Expert Men", Category.expand_abbreviations("Exper Men"), "Exper Men"
       assert_equal "Sport Men", Category.expand_abbreviations("Sprt Men"), "Sprt Men"
       assert_equal "Veteran Men", Category.expand_abbreviations("Veteren Men"), "Veteren Men"
       assert_equal "Veteran Men", Category.expand_abbreviations("Veterans Men"), "Veterans Men"
