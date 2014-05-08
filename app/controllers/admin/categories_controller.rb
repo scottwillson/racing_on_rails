@@ -19,7 +19,17 @@ module Admin
 
     def update
       @category = Category.find(params[:id])
-      @category.update(category_params)
+      @category.assign_attributes category_params
+
+      if @category.name_changed?
+        existing_category = Category.where(name: @category.name).where.not(id: @category.id).first
+        if existing_category
+          @category.replace_with existing_category
+          @category = existing_category
+        end
+      end
+      @category.save!
+
       # parent_id could be nil, so can't use @category.children
       if @category.parent_id
         @children = @category.parent.children
