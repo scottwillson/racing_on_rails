@@ -169,6 +169,8 @@ class Category < ActiveRecord::Base
           "Veteran"
         elsif token[/\Avsty\z/i]
           "Varsity"
+        elsif token[/\Aspt\z/i]
+          "Sport"
         elsif token[/\Ajv\z/i]
           "Junior Varsity"
         elsif token[/\Aclydesdales\z/i] || token[/\Aclyde(s)?\z/i] || token[/\Aclydsdales\z/i]
@@ -206,6 +208,10 @@ class Category < ActiveRecord::Base
         elsif token[/\A\d([,-\.]\d){1,4}\z/i]
           # 1-2-3, 1,2,3,4
           token.split(/[,-\.]/).join("/")
+        elsif token == "Mdison"
+          "Madison"
+        elsif token == "Siixday"
+          "Six-day"
         elsif token == "&"
           "and"
         else
@@ -237,6 +243,7 @@ class Category < ActiveRecord::Base
       name = name.gsub(/hard tail/i, "Hardtail")
       name = name.gsub(/hot spot/i, "Hotspot")
       name = name.gsub(/iron man/i, "Ironman")
+      name = name.gsub(/multi[ -]person/i, "Multiperson")
 
       # 14 and Under, 14U, 14 & U
       name = name.gsub(/(\d+) (and|&) U\z/i, 'U\1')
