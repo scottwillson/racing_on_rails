@@ -260,6 +260,7 @@ class Category < ActiveRecord::Base
       name = name.gsub(/hot spot/i, "Hotspot")
       name = name.gsub(/iron man/i, "Ironman")
       name = name.gsub(/multi[ -]person/i, "Multiperson")
+      name = name.gsub(/miss.*out/i, "Miss and Out")
 
       # 14 and Under, 14U, 14 & U
       name = name.gsub(/(\d+) (and|&) U\z/i, 'U\1')

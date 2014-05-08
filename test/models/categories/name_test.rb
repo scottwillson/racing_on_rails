@@ -242,6 +242,8 @@ module Categories
       assert_equal "Category 4 Men Points Race 75 Laps", Category.expand_abbreviations("Category 4 Men Points Race 75 Laps"), "Category 4 Men Points Race 75 Laps"
       assert_equal "Flying Laps - Men", Category.expand_abbreviations("Flying Laps - Men"), "Flying Laps - Men"
       assert_equal "Flying Lap", Category.expand_abbreviations("Flying Lap"), "Flying Lap"
+      assert_equal "Miss and Out", Category.expand_abbreviations("Miss N' Out"), "Miss N' Out"
+      assert_equal "Miss and Out", Category.expand_abbreviations("Miss-n-Out"), "Miss-n-Out"
 
       assert_equal "Hardtail", Category.expand_abbreviations("Hard tail"), "Hard tail"
       assert_equal "Ironman", Category.expand_abbreviations("Iron man"), "Iron man"
