@@ -84,10 +84,14 @@ class Category < ActiveRecord::Base
       # Men (Juniors)
       name = name.gsub(/\((masters|master|juniors|junior|men|women)\)/i, '\1')
 
-      # 1 2, 2 3
-      categories = name[/ ?(1? ?2? ?3? ?4? ?5?) ?/, 1]
-      if categories[/\d \d/]
-        name = name.gsub(categories, categories.tr(" ", "/"))
+      # 1 2, 2 3, 3.4.5, 2-3-4 to 1/2/3
+      5.downto(2).each do |length|
+        [ "P", 1, 2, 3, 4, 5 ].each_cons(length) do |cats|
+          [ " ", ".", "-" ].each do |delimiter|
+            name = name.gsub(%r{( ?)#{cats.join(delimiter)}( ?)},
+            "\\1#{cats.join("/")}\\2")
+          end
+        end
       end
 
       name = name.gsub(%r{//+}, "/")
@@ -213,9 +217,6 @@ class Category < ActiveRecord::Base
         elsif token[/\A\d\d>\z/i]
           # Example: Men 30> => Men 30+
           token.gsub(/(\d\d)>/, '\1+')
-        elsif token[/\A\d([,-\.]\d){1,4}\z/i]
-          # 1-2-3, 1,2,3,4
-          token.split(/[,-\.]/).join("/")
         elsif token == "Mdison"
           "Madison"
         elsif token == "Siixday"

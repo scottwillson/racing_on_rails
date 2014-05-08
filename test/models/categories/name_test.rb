@@ -13,6 +13,8 @@ module Categories
       assert_equal "Masters 50+", Category.new(name: "Mas50+").name, "Mas50+"
       assert_equal "Masters Men", Category.new(name: "MasterMen").name, "MasterMen"
       assert_equal "Team 12-Hour", Category.new(name: "Team 12 Hr").name, "Team 12 Hr"
+      assert_equal "Pro Women 1-3", Category.new(name: "Pro Women 1-3").name, "Pro Women 1-3"
+      assert_equal "Masters Men 30-34 Keirin", Category.new(name: "Masters Men 30-34 Keirin").name, "Masters Men 30-34 Keirin"
     end
 
     test "find_or_create_by_normalized_name" do
@@ -77,6 +79,13 @@ module Categories
       assert_equal "Category 4/5", Category.cleanup_punctuation("Category 4//5"), "Category 4//5"
 
       assert_equal "1/2/3", Category.cleanup_punctuation("1 2 3"), "1 2 3"
+      assert_equal "4/5", Category.cleanup_punctuation("4 5"), "4 5"
+      assert_equal "Men 3/4/5 50+", Category.cleanup_punctuation("Men 3.4.5 50+"), "Men 3.4.5 50+"
+      assert_equal "1/2", Category.cleanup_punctuation("1,2"), "1,2"
+      assert_equal "1/2", Category.cleanup_punctuation("1-2"), "1-2"
+      assert_equal "1/2/3", Category.cleanup_punctuation("1,2,3"), "1,2,3"
+      assert_equal "1/2/3", Category.cleanup_punctuation("1-2-3"), "1-2-3"
+      assert_equal "3/4/5", Category.cleanup_punctuation("3.4.5"), "3.4.5"
 
       assert_equal "2-Person", Category.cleanup_punctuation("2 Person"), "2 Person"
       assert_equal "4-Man", Category.cleanup_punctuation("4 man"), "4 Man"
@@ -118,12 +127,6 @@ module Categories
       assert_equal "Category 4", Category.expand_abbreviations("Categpry 4"), "Categpry 4"
       assert_equal "Category 4", Category.expand_abbreviations("ct 4"), "ct 4"
       assert_equal "Category 4", Category.expand_abbreviations("Catgory 4"), "Catgory 4"
-
-      assert_equal "1/2", Category.expand_abbreviations("1,2"), "1,2"
-      assert_equal "1/2", Category.expand_abbreviations("1-2"), "1-2"
-      assert_equal "1/2/3", Category.expand_abbreviations("1,2,3"), "1,2,3"
-      assert_equal "1/2/3", Category.expand_abbreviations("1-2-3"), "1-2-3"
-      assert_equal "3/4/5", Category.expand_abbreviations("3.4.5"), "3.4.5"
 
       assert_equal "Junior 10-12", Category.expand_abbreviations("Jr 10-12"), "Jr 10-12"
       assert_equal "Junior 10-12", Category.expand_abbreviations("Jr. 10-12"), "Jr. 10-12"
