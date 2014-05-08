@@ -125,6 +125,8 @@ class Category < ActiveRecord::Base
           "Singlespeed"
         elsif token[/\Atand?\z/i] || token[/\Atandems\z/i]
           "Tandem"
+        elsif token[/\A\d\d>\z/i]
+          token.gsub(/(\d\d)>/, '\1+')
         elsif token == "&"
           "and"
         else

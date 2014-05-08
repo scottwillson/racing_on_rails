@@ -99,6 +99,7 @@ module Categories
       assert_equal "Women 30+", Category.expand_abbreviations("Women 30 & Over"), "Women 30 & Over"
       assert_equal "Women 30+", Category.expand_abbreviations("Women 30 and Over"), "Women 30 and Over"
       assert_equal "Women 30+", Category.expand_abbreviations("Women 30 and older"), "Women 30 and older"
+      assert_equal "Women 30+", Category.expand_abbreviations("Women 30>"), "Women 30>"
 
       assert_equal "Clydesdale", Category.expand_abbreviations("Clydesdales"), "Clydesdales"
 
