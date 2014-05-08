@@ -159,13 +159,13 @@ class Category < ActiveRecord::Base
           "Veteran"
         elsif token[/\Avsty\z/i]
           "Varsity"
-        elsif token[/\Ajv\z/i] || token == "Varsity Junior"
+        elsif token[/\Ajv\z/i]
           "Junior Varsity"
         elsif token[/\Aclydesdales\z/i] || token[/\Aclyde(s)?\z/i] || token[/\Aclydsdales\z/i]
           "Clydesdale"
         elsif token[/\Awomen'?s\z/i] || token[/\Awoman'?s\z/i]
           "Women"
-        elsif token[/\Awmn?\.?\z/i] || token[/\Awom\.?\z/i] || token[/\Aw\z/i] || token[/\Awmen?\.?\z/i]
+        elsif token[/\Awmn?\.?\z/i] || token[/\Awom\.?\z/i] || token[/\Aw\z/i] || token[/\Awmen?\.?\z/i] || token[/\Awomenen\z/i]
           "Women"
         elsif token[/\Afemale\z/i] || token[/\Awommen:\z/i]
           "Women"
@@ -206,6 +206,8 @@ class Category < ActiveRecord::Base
       name = name.gsub(/cat(\d+)/i, 'Category \1')
       name = name.gsub(/category(\d+)/i, 'Category \1')
       name = name.gsub(/category (\d)\/ /i, 'Category \1 ')
+
+      name = name.gsub(/\Avarsity junior\z/i, "Junior Varsity")
 
       name = name.gsub(/single speeds?/i, "Singlespeed")
       name = name.gsub(/sgl spd/i, "Singlespeed")
