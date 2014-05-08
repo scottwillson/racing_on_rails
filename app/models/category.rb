@@ -67,8 +67,9 @@ class Category < ActiveRecord::Base
   end
 
   def self.split_camelcase(name)
-    if name
-      name = name.split(/(?=[A-Z])/).join(" ")
+    if name && !(name.downcase == name || name.upcase == name)
+      name = name.gsub(/([A-Z\d]+)([A-Z][a-z])/,'\1 \2')
+      name = name.gsub(/([a-z\d])([A-Z])/,'\1 \2')
     end
     name
   end
@@ -162,6 +163,8 @@ class Category < ActiveRecord::Base
           token[/\Amater\z/i] || token[/\Amaser\z/i]
 
           "Masters"
+        elsif token[/\Amas\d\d\+\z/i]
+          token.gsub(/\Amas(\d\d\+)\z/i, 'Masters \1')
         elsif token[/\Aveteran'?s\z/i] || token[/\Aveteren\z/i] || token[/\Avet\.?\z/i]
           "Veteran"
         elsif token[/\Avsty\z/i]
@@ -214,6 +217,16 @@ class Category < ActiveRecord::Base
       name = name.gsub(/category(\d+)/i, 'Category \1')
       name = name.gsub(/category (\d)\/ /i, 'Category \1 ')
 
+      name = name.gsub(/mm (\d\d)\+/i, 'Masters Men \1+')
+      name = name.gsub(/m (\d\d)\+/i, 'Masters \1+')
+      if name[/M \d+/i]
+        categories = name[/M (\d+)/i, 1].split("")
+        name = name.gsub(/M \d+/i, "Men #{categories.join("/")}")
+      end
+
+      name = name.gsub(%r{M P/1/2}i, "Men Pro/1/2")
+      name = name.gsub(%r{P/1/2}i, "Pro/1/2")
+
       name = name.gsub(/\Avarsity junior\z/i, "Junior Varsity")
 
       name = name.gsub(/single speeds?/i, "Singlespeed")
@@ -252,8 +265,8 @@ class Category < ActiveRecord::Base
 
   def self.normalized_name(name)
     _name = strip_whitespace(name)
-    _name = split_camelcase(name)
-    _name = cleanup_punctuation(name)
+    _name = split_camelcase(_name)
+    _name = cleanup_punctuation(_name)
     _name = cleanup_case(_name)
     _name = replace_roman_numeral_categories(_name)
     expand_abbreviations _name

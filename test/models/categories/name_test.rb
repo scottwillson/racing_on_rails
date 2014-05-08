@@ -8,8 +8,10 @@ module Categories
       assert_equal "Senior Men", Category.new(name: " Senior Men ").name, "' Senior Men '"
       assert_equal "Senior Men", Category.new(name: "     Senior Men").name, "'     Senior Men'"
       assert_equal "Senior Men", Category.new(name: "Senior    Men").name, "'Senior    Men'"
-      assert_equal "Senior Men", Category.new(name: "Senior	Men").name, "'Senior	Men'"
+      assert_equal "Senior Men", Category.new(name: "Senior  Men").name, "'Senior  Men'"
       assert_equal "Category 3 Men", Category.new(name: "cat 3 Men").name, "cat 3 Men"
+      assert_equal "Masters 50+", Category.new(name: "Mas50+").name, "Mas50+"
+      assert_equal "Masters Men", Category.new(name: "MasterMen").name, "MasterMen"
     end
 
     test "find_or_create_by_normalized_name" do
@@ -238,10 +240,22 @@ module Categories
       assert_equal "Junior Varsity", Category.expand_abbreviations("JV"), "JV"
       assert_equal "Junior Varsity", Category.expand_abbreviations("Jv"), "Jv"
       assert_equal "Junior Varsity", Category.expand_abbreviations("Varsity Junior"), "Varsity Junior"
+
+      assert_equal "Men 2/3/4", Category.expand_abbreviations("M 234"), "M 234"
+      assert_equal "Men 3", Category.expand_abbreviations("M 3"), "M 3"
+      assert_equal "Men 4/5", Category.expand_abbreviations("M 4/5"), "M 4/5"
+      assert_equal "Men Pro/1/2", Category.expand_abbreviations("M P/1/2"), "M P/1/2"
+
+      assert_equal "Masters 30+", Category.expand_abbreviations("M 30+"), "M 30+"
+      assert_equal "Masters Men 30+", Category.expand_abbreviations("Mm 30+"), "Mm 30+"
     end
 
     test "#split_camelcase" do
       assert_equal "Junior Men", Category.split_camelcase("JuniorMen"), "JuniorMen"
+      assert_equal "Master Men", Category.split_camelcase("MasterMen"), "MasterMen"
+      assert_equal "SENIOR MEN", Category.split_camelcase("SENIOR MEN"), "SENIOR MEN"
+      assert_equal "senior men", Category.split_camelcase("senior men"), "senior men"
+      assert_equal "Singlespeed/Fixed", Category.split_camelcase("Singlespeed/Fixed"), "Singlespeed/Fixed"
     end
   end
 end
