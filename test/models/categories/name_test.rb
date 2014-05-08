@@ -223,6 +223,7 @@ module Categories
       assert_equal "5K", Category.expand_abbreviations("5 k"), "5 k"
       assert_equal "2K", Category.expand_abbreviations("2 km"), "2 km"
       assert_equal "2K", Category.expand_abbreviations("2km"), "2km"
+      assert_equal "200m", Category.expand_abbreviations("200 meter"), "200 meter"
 
       assert_equal "Category 4 Men Points Race 75 Laps", Category.expand_abbreviations("Category 4 Men Points Race 75 Laps"), "Category 4 Men Points Race 75 Laps"
       assert_equal "Flying Laps - Men", Category.expand_abbreviations("Flying Laps - Men"), "Flying Laps - Men"
