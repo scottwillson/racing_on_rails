@@ -72,6 +72,22 @@ module Categories
       assert_equal "Category 4/5 Men", Category.cleanup_punctuation("Category 4/5 (Men)"), "Category 4/5 (Men)"
 
       assert_equal "Category 4/5", Category.cleanup_punctuation("Category 4//5"), "Category 4//5"
+
+      assert_equal "2-Person", Category.cleanup_punctuation("2 Person"), "2 Person"
+      assert_equal "4-Man", Category.cleanup_punctuation("4 man"), "4 Man"
+      assert_equal "3-Day", Category.cleanup_punctuation("3 day"), "3 day"
+      assert_equal "10-Mile", Category.cleanup_punctuation("10 Mile"), "10 Mile"
+      assert_equal "24-Hour", Category.cleanup_punctuation("24 hour"), "24 hour"
+      assert_equal "Four-Man Team", Category.cleanup_punctuation("Four Man Team"), "Four Man Team"
+      assert_equal "Junior 2-Lap 10-12 Men", Category.cleanup_punctuation("Junior 2 Lap 10-12 Men"), "Junior 2 Lap 10-12 Men"
+      assert_equal "Team 8-Lap", Category.cleanup_punctuation("Team 8 Lap"), "Team 8 Lap"
+
+      assert_equal "6-Lap Scratch Junior 13-14", Category.cleanup_punctuation("6-Lap Scratch Junior 13-14"), "6-Lap Scratch Junior 13-14"
+
+      assert_equal "Six-day", Category.cleanup_punctuation("Six-day"), "Six-day"
+      assert_equal "Six-day", Category.cleanup_punctuation("Six day"), "Six day"
+      assert_equal "Six-day", Category.cleanup_punctuation("Sixday"), "Sixday"
+      assert_equal "Six-day", Category.cleanup_punctuation("Six-Day"), "Six-Day"
     end
 
     test "#replace_roman_numeral_categories" do
@@ -208,23 +224,13 @@ module Categories
       assert_equal "2K", Category.expand_abbreviations("2 km"), "2 km"
       assert_equal "2K", Category.expand_abbreviations("2km"), "2km"
 
-      assert_equal "2-Person", Category.expand_abbreviations("2 Person"), "2 Person"
-      assert_equal "4-Man", Category.expand_abbreviations("4 man"), "2 Man"
-      assert_equal "3-Day", Category.expand_abbreviations("3 day"), "3 day"
-      assert_equal "10-Mile", Category.expand_abbreviations("10 Mile"), "10 Mile"
-      assert_equal "24-Hour", Category.expand_abbreviations("24 hour"), "24 hour"
-
       assert_equal "Category 4 Men Points Race 75 Laps", Category.expand_abbreviations("Category 4 Men Points Race 75 Laps"), "Category 4 Men Points Race 75 Laps"
       assert_equal "Flying Laps - Men", Category.expand_abbreviations("Flying Laps - Men"), "Flying Laps - Men"
       assert_equal "Flying Lap", Category.expand_abbreviations("Flying Lap"), "Flying Lap"
-      assert_equal "6-Lap Scratch Junior 13-14", Category.expand_abbreviations("6-Lap Scratch Junior 13-14"), "6-Lap Scratch Junior 13-14"
-      assert_equal "Junior 2-Lap 10-12 Men", Category.expand_abbreviations("Junior 2 Lap 10-12 Men"), "Junior 2 Lap 10-12 Men"
-      assert_equal "Team 8-Lap", Category.expand_abbreviations("Team 8 Lap"), "Team 8 Lap"
 
-      assert_equal "Six-day", Category.expand_abbreviations("Six-day"), "Six-day"
-      assert_equal "Six-day", Category.expand_abbreviations("Six day"), "Six day"
-      assert_equal "Six-day", Category.expand_abbreviations("Sixday"), "Sixday"
-      assert_equal "Six-day", Category.expand_abbreviations("Six-Day"), "Six-Day"
+      assert_equal "Hardtail", Category.expand_abbreviations("Hard tail"), "Hard tail"
+      assert_equal "Ironman", Category.expand_abbreviations("Iron man"), "Iron man"
+      assert_equal "Hotspot", Category.expand_abbreviations("Hot spot"), "Hot spot"
     end
   end
 end

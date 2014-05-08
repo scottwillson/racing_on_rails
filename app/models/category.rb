@@ -75,6 +75,22 @@ class Category < ActiveRecord::Base
       name = name.gsub(/\((masters|master|juniors|junior|men|women)\)/i, '\1')
 
       name = name.gsub(%r{//+}, "/")
+
+      name = name.gsub(/six[ -]?day/i, "Six-day")
+
+      name = name.gsub(/(\d+) day/i, '\1-Day')
+      name = name.gsub(/(\d+) hour/i, '\1-Hour')
+      name = name.gsub(/(\d+) mile/i, '\1-Mile')
+
+      name = name.gsub(/(\d+) man/i, '\1-Man')
+      name = name.gsub(/(\d+) person/i, '\1-Person')
+
+      name = name.gsub(/(one|two|three|four|five|six)[ -]man/i, '\1-Man')
+      name = name.gsub(/(one|two|three|four|five|six)[ -]person/i, '\1-Person')
+
+      unless name[/laps/i]
+        name = name.gsub(/(\d+) lap/i, '\1-Lap')
+      end
     end
     name
   end
@@ -190,6 +206,10 @@ class Category < ActiveRecord::Base
       name = name.gsub(/sgl spd/i, "Singlespeed")
       name = name.gsub(/sgl speed/i, "Singlespeed")
 
+      name = name.gsub(/hard tail/i, "Hardtail")
+      name = name.gsub(/hot spot/i, "Hotspot")
+      name = name.gsub(/iron man/i, "Ironman")
+
       # 14 and Under, 14U, 14 & U
       name = name.gsub(/(\d+) (and|&) U\z/i, 'U\1')
       name = name.gsub(/(\d+)& U\z/i, 'U\1')
@@ -208,18 +228,6 @@ class Category < ActiveRecord::Base
       name = name.gsub(/(\d+) ?m(\s+)/i, '\1m\2')
       name = name.gsub(/(\d+) ?k/i, '\1K')
       name = name.gsub(/(\d+) ?km/i, '\1K')
-
-      name = name.gsub(/six[ -]?day/i, "Six-day")
-
-      name = name.gsub(/(\d+) day/i, '\1-Day')
-      name = name.gsub(/(\d+) hour/i, '\1-Hour')
-      name = name.gsub(/(\d+) man/i, '\1-Man')
-      name = name.gsub(/(\d+) mile/i, '\1-Mile')
-      name = name.gsub(/(\d+) person/i, '\1-Person')
-
-      unless name[/laps/i]
-        name = name.gsub(/(\d+) lap/i, '\1-Lap')
-      end
 
       name = name.gsub(/\d+\) ?/, "")
     end
