@@ -3,10 +3,11 @@ module Categories
     extend ActiveSupport::Concern
 
     included do
-      def self.cleanup!
+      def self.cleanup!(dry_run = false)
         transaction do
           destroy_unused!
           cleanup_names!
+          rollback if dry_run
         end
         true
       end
