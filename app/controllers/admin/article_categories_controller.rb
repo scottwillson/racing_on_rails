@@ -32,7 +32,7 @@ module Admin
     def update
       @article_category = ArticleCategory.find(params[:id])
 
-      if @article_category.update_attributes(article_category_params)
+      if @article_category.update(article_category_params)
         flash[:notice] = 'ArticleCategory was successfully updated.'
         redirect_to(admin_article_categories_url)
       else

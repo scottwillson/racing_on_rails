@@ -29,7 +29,7 @@ module Admin
       expire_cache
       @velodrome = Velodrome.find(params[:id])
 
-      if @velodrome.update_attributes(velodrome_params)
+      if @velodrome.update(velodrome_params)
         flash[:notice] = "Updated #{@velodrome.name}"
         return redirect_to(edit_admin_velodrome_path(@velodrome))
       end
@@ -40,7 +40,7 @@ module Admin
       respond_to do |format|
         format.js {
           @velodrome = Velodrome.find(params[:id])
-          @velodrome.update_attributes! params[:name] => params[:value]
+          @velodrome.update! params[:name] => params[:value]
           expire_cache
           render plain: @velodrome.send(params[:name])
         }

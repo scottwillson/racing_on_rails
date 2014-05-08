@@ -11,7 +11,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     FactoryGirl.create(:discipline, name: "Cyclocross")
 
     racing_association = RacingAssociation.current
-    racing_association.update_attributes! default_discipline: "Track"
+    racing_association.update! default_discipline: "Track"
 
     person = FactoryGirl.create(:person)
     race_number = RaceNumber.create!(value: '999', person: person)

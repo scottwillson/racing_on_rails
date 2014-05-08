@@ -35,7 +35,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal another_admin, person.updated_by_person, "updated_by_person"
 
     file = ImportFile.new(name: "/tmp/import.xls")
-    assert person.update_attributes(name: "Andrew Hampsten", updated_by: file), "update_attributes"
+    assert person.update(name: "Andrew Hampsten", updated_by: file), "update"
     assert_equal admin, person.created_by, "created_by"
     assert_equal file, person.updated_by_person, "updated_by_person"
   end

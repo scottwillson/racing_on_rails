@@ -59,7 +59,7 @@ class HomeController < ApplicationController
 
   def update
     assign_home
-    if @home.update_attributes(home_params)
+    if @home.update(home_params)
       expire_cache
       redirect_to edit_home_path
     else

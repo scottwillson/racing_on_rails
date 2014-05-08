@@ -183,7 +183,7 @@ class EventTest < ActiveSupport::TestCase
   test "remove promoter" do
     FactoryGirl.create(:person, name: "Mollie Cameron")
     event = SingleDayEvent.create!(promoter_name: "Mollie Cameron")
-    event.update_attributes(promoter_name: "")
+    event.update(promoter_name: "")
     assert_nil event.promoter, "Blank promoter name should remove promoter"
   end
 
@@ -236,7 +236,7 @@ class EventTest < ActiveSupport::TestCase
 
   test "remove team" do
     event = SingleDayEvent.create!(team_name: "Vanilla Bicycles")
-    event.update_attributes(team_name: "")
+    event.update(team_name: "")
     assert_nil event.team, "Blank team name should remove team"
   end
 

@@ -93,7 +93,7 @@ module Admin
         @event = Event.find(params[:id])
       end
 
-      if @event.update_attributes(event_params)
+      if @event.update(event_params)
         flash[:notice] = "Updated #{@event.name}"
         expire_cache
         redirect_to edit_admin_event_path(@event)
@@ -106,7 +106,7 @@ module Admin
       respond_to do |format|
         format.js {
           @event = Event.find(params[:id])
-          @event.update_attributes! params[:name] => params[:value]
+          @event.update! params[:name] => params[:value]
           expire_cache
           render plain: @event.send(params[:name])
         }

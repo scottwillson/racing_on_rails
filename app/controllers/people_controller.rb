@@ -32,7 +32,7 @@ class PeopleController < ApplicationController
   end
 
   def update
-    if @person.update_attributes(person_params)
+    if @person.update(person_params)
       flash[:notice] = "Updated #{@person.name}"
       redirect_to edit_person_path(@person)
     else
@@ -84,7 +84,7 @@ class PeopleController < ApplicationController
         return redirect_to(login_path)
       end
 
-      if @person.update_attributes(person_params)
+      if @person.update(person_params)
         @person.reset_perishable_token!
         flash[:notice] = "Created your new login"
         PersonMailer.new_login_confirmation(@person).deliver rescue nil
@@ -149,7 +149,7 @@ class PeopleController < ApplicationController
       return render(:new_login)
     end
 
-    if @person.update_attributes(person_params)
+    if @person.update(person_params)
       flash[:notice] = "Created your new login"
       PersonSession.create @person
       PersonMailer.new_login_confirmation(@person).deliver rescue nil

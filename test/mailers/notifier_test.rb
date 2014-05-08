@@ -15,7 +15,7 @@ class NotifierTest < ActionMailer::TestCase
 
   test "password reset instructions no name" do
     person = FactoryGirl.create(:person_with_login)
-    person.update_attributes! first_name: "", last_name: ""
+    person.update! first_name: "", last_name: ""
 
     email = Notifier.password_reset_instructions([person])
 

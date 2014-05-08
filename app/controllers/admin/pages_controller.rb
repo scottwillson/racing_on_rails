@@ -34,7 +34,7 @@ module Admin
 
     def update
       @page = Page.find(params[:id])
-      if @page.update_attributes(page_params)
+      if @page.update(page_params)
         flash[:notice] = "Updated #{@page.title}"
         expire_cache
         redirect_to(edit_admin_page_path(@page))
@@ -47,7 +47,7 @@ module Admin
       respond_to do |format|
         format.js {
           @page = Page.find(params[:id])
-          @page.update_attributes! params[:name] => params[:value]
+          @page.update! params[:name] => params[:value]
           expire_cache
           render plain: @page.send(params[:name])
         }

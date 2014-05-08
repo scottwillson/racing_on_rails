@@ -5,7 +5,7 @@ class RacingAssociationsController < Admin::AdminController
 
   def update
     @racing_association = RacingAssociation.find(params[:id])
-    if @racing_association.update_attributes(racing_association_params)
+    if @racing_association.update(racing_association_params)
       flash[:notice] = "Updated #{@racing_association.name}"
       redirect_to edit_racing_association_path(@racing_association)
     else

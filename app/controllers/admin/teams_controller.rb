@@ -48,7 +48,7 @@ module Admin
     def update
       @team = Team.find(params[:id])
 
-      if @team.update_attributes(team_params)
+      if @team.update(team_params)
         expire_cache
         redirect_to(edit_admin_team_path(@team))
       else

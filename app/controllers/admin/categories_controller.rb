@@ -19,7 +19,7 @@ module Admin
 
     def update
       @category = Category.find(params[:id])
-      @category.update_attributes(category_params)
+      @category.update(category_params)
       # parent_id could be nil, so can't use @category.children
       if @category.parent_id
         @children = @category.parent.children

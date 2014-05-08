@@ -89,7 +89,7 @@ class PageTest < ActiveSupport::TestCase
     assert_equal admin, last_version.user, "version updated"
   end
 
-  test "Versions updated on update_attributes" do
+  test "Versions updated on update" do
     parent = FactoryGirl.create(:page)
     admin = FactoryGirl.create(:administrator)
     Person.current = admin
@@ -100,7 +100,7 @@ class PageTest < ActiveSupport::TestCase
     page.updated_by = nil
     Person.current = new_person
     assert_equal(1, page.versions.count, "versions")
-    page.update_attributes! parent_id: new_parent.id, title: "Revised Title", body: "Revised content"
+    page.update! parent_id: new_parent.id, title: "Revised Title", body: "Revised content"
 
     assert_equal(2, page.versions.count, "versions")
     assert_equal(new_parent.id, page.parent_id, "parent_id")

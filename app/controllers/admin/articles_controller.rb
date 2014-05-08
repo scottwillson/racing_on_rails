@@ -45,7 +45,7 @@ module Admin
     def update
       @article = Article.find(params[:id])
 
-      if @article.update_attributes(article_params)
+      if @article.update(article_params)
         expire_cache
         flash[:notice] = 'Article was successfully updated.'
         redirect_to admin_articles_url

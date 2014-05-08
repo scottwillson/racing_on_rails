@@ -104,17 +104,17 @@ module Schedule
 
       if promoter
         if promoter.name.blank?
-          promoter.update_attributes!(name: row[:promoter_name])
+          promoter.update!(name: row[:promoter_name])
         end
 
         if promoter.home_phone.blank?
-          promoter.update_attributes!(home_phone: row[:promoter_phone])
+          promoter.update!(home_phone: row[:promoter_phone])
         else
           event_hash[:phone] = row[:promoter_phone]
         end
 
         if promoter.email.blank?
-          promoter.update_attributes!(email: row[:promoter_email])
+          promoter.update!(email: row[:promoter_email])
         else
           event_hash[:email] = row[:promoter_email]
         end

@@ -261,7 +261,7 @@ class Race < ActiveRecord::Base
             result.members_only_place = last_members_only_place.to_s
           end
           # Slight optimization. Most of the time, no point in saving a result that hasn't changed
-          result.update_attributes(members_only_place: result.members_only_place) if place_before != result.members_only_place
+          result.update(members_only_place: result.members_only_place) if place_before != result.members_only_place
           # store to know when switching to new placement (team result feature)
           last_result_place = result.place.to_i
         end

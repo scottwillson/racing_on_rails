@@ -154,7 +154,7 @@ module Admin
       expire_cache
       @person = Person.find(params[:id])
 
-      if @person.update_attributes(person_params)
+      if @person.update(person_params)
         if @event
           return redirect_to(edit_admin_person_path(@person, event_id: @event.id))
         else
@@ -263,7 +263,7 @@ module Admin
           if params[:name] == "name"
             update_name
           else
-            @person.update_attributes! params[:name] => params[:value]
+            @person.update! params[:name] => params[:value]
             expire_cache
             render plain: @person.send(params[:name])
           end

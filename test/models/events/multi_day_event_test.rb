@@ -26,8 +26,8 @@ class MultiDayEventTest < ActiveSupport::TestCase
     series.children.create!(date: "2005-07-26")
     series.children.create!(date: "2005-08-04")
 
-    series.children.sort_by(&:date)[0].update_attributes! postponed: true
-    series.children.sort_by(&:date)[1].update_attributes! cancelled: true
+    series.children.sort_by(&:date)[0].update! postponed: true
+    series.children.sort_by(&:date)[1].update! cancelled: true
 
     series.reload.children(true)
     assert_equal_dates("2005-07-12", series.start_date, "PIR series start date")

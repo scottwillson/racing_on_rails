@@ -52,7 +52,7 @@ module Admin
       respond_to do |format|
         format.js do
           @result = Result.find(params[:id])
-          @result.update_attributes! params[:name] => params[:value]
+          @result.update! params[:name] => params[:value]
           expire_cache
 
           if @result.respond_to?("#{params[:name]}_s")
