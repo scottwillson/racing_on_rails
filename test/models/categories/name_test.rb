@@ -239,5 +239,9 @@ module Categories
       assert_equal "Junior Varsity", Category.expand_abbreviations("Jv"), "Jv"
       assert_equal "Junior Varsity", Category.expand_abbreviations("Varsity Junior"), "Varsity Junior"
     end
+
+    test "#split_camelcase" do
+      assert_equal "Junior Men", Category.split_camelcase("JuniorMen"), "JuniorMen"
+    end
   end
 end

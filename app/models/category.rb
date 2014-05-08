@@ -66,6 +66,13 @@ class Category < ActiveRecord::Base
     name
   end
 
+  def self.split_camelcase(name)
+    if name
+      name = name.split(/(?=[A-Z])/).join(" ")
+    end
+    name
+  end
+
   def self.cleanup_punctuation(name)
     if name
       # trailing punctuation
@@ -245,6 +252,7 @@ class Category < ActiveRecord::Base
 
   def self.normalized_name(name)
     _name = strip_whitespace(name)
+    _name = split_camelcase(name)
     _name = cleanup_punctuation(name)
     _name = cleanup_case(_name)
     _name = replace_roman_numeral_categories(_name)
