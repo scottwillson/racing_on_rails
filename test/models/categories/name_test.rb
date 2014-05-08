@@ -228,6 +228,7 @@ module Categories
       assert_equal "U14", Category.expand_abbreviations("14 and U"), "14 and U"
       assert_equal "Category 2 U18", Category.expand_abbreviations("Category 2 U 18"), "Category 2 U 18"
       assert_equal "U14", Category.expand_abbreviations("14& U"), "14& U"
+      assert_equal "U18", Category.expand_abbreviations("18 and Younger"), "18 and Younger"
 
       assert_equal "Masters Men 60+", Category.expand_abbreviations("13) Masters Men 60+"), "13) Masters Men 60+"
 
