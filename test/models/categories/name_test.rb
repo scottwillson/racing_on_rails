@@ -113,6 +113,9 @@ module Categories
       assert_equal "U14", Category.expand_abbreviations("14&Under"), "14&Under"
 
       assert_equal "Masters Men 60+", Category.expand_abbreviations("13) Masters Men 60+"), "13) Masters Men 60+"
+
+      assert_equal "500m", Category.expand_abbreviations("500M"), "500M"
+      assert_equal "500m", Category.expand_abbreviations("500 M"), "500 M"
     end
   end
 end

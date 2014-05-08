@@ -117,6 +117,8 @@ class Category < ActiveRecord::Base
       name = name.gsub(/(\d+) ?and ?under/i, 'U\1')
       name = name.gsub(/(\d+) ?& ?under/i, 'U\1')
 
+      name = name.gsub(/(\d+) ?m/i, '\1m')
+
       name = name.gsub(/\d+\) ?/, "")
     end
     name
