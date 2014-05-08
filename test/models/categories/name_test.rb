@@ -259,6 +259,8 @@ module Categories
 
       assert_equal "Masters 30+", Category.expand_abbreviations("M 30+"), "M 30+"
       assert_equal "Masters Men 30+", Category.expand_abbreviations("Mm 30+"), "Mm 30+"
+
+      assert_equal "Men 4/5", Category.expand_abbreviations("Men 4/5s"), "Men 4/5s"
     end
 
     test "#split_camelcase" do

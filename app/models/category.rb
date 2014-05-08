@@ -167,6 +167,8 @@ class Category < ActiveRecord::Base
       name = name.split.map do |token|
         if token[/\A(cat|caat|categpry|categroy|cateogry|categegory|catgory|caegory|ct)\.?\z/i]
           "Category"
+        elsif token[/\ds\z/i]
+          token.gsub(/(\d)s\z/i, '\1')
         elsif token[/\Asr\.?\z/i] || token[/\Aseniors\z/i] || token[/\Asenoir\z/i]
           "Senior"
         elsif token[/\Ajr\.?\z/i] || token[/\Ajuniors\z/i] || token[/\Ajrs\.?\z/i] || token[/\Ajunior(s)?:\z/i] ||
