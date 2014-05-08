@@ -58,6 +58,10 @@ module Categories
       assert_equal "Pro/Expert Women", Category.strip_whitespace("Pro / Expert Women"), "Pro / Expert Women"
 
       assert_equal "6 - race", Category.strip_whitespace("6- race"), "6 - race"
+
+      assert_equal "Category 1/2", Category.strip_whitespace("Category 1/2/"), "Category 1/2/"
+      assert_equal "Category 1/2", Category.strip_whitespace("Category 1/2:"), "Category 1/2:"
+      assert_equal "Category 1/2", Category.strip_whitespace("Category 1/2."), "Category 1/2."
     end
 
     test "#expand_abbreviations" do

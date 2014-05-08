@@ -59,6 +59,8 @@ class Category < ActiveRecord::Base
 
       # U 14, U-14
       name = name.gsub(/U[ -](\d\d)/, 'U\1')
+
+      name = name.gsub(/[\/:.,]\z/, "")
     end
     name
   end
