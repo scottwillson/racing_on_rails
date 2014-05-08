@@ -110,6 +110,7 @@ module Categories
 
       assert_equal "U18", Category.expand_abbreviations("18 and Under"), "18 and Under"
       assert_equal "U18", Category.expand_abbreviations("18 & Under"), "18 & Under"
+      assert_equal "U14", Category.expand_abbreviations("14&Under"), "14&Under"
     end
   end
 end
