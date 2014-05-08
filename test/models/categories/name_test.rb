@@ -74,6 +74,14 @@ module Categories
       assert_equal "Category 4/5", Category.cleanup_punctuation("Category 4//5"), "Category 4//5"
     end
 
+    test "#replace_roman_numeral_categories" do
+      assert_equal "Category 1", Category.replace_roman_numeral_categories("Category I"), "Category I"
+      assert_equal "Category 2", Category.replace_roman_numeral_categories("Category II"), "Category II"
+      assert_equal "Category 3", Category.replace_roman_numeral_categories("Category III"), "Category III"
+      assert_equal "Category 4", Category.replace_roman_numeral_categories("Category IV"), "Category IV"
+      assert_equal "Category 5", Category.replace_roman_numeral_categories("Category V"), "Category V"
+    end
+
     test "#expand_abbreviations" do
       assert_equal "senior men", Category.expand_abbreviations("senior men"), "senior men"
       assert_equal "Category 3", Category.expand_abbreviations("Cat 3"), "Cat 3"

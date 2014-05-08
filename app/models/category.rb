@@ -103,6 +103,27 @@ class Category < ActiveRecord::Base
     name
   end
 
+  def self.replace_roman_numeral_categories(name)
+    if name
+      name = name.split.map do |token|
+        if token == "I"
+          "1"
+        elsif token == "II"
+          "2"
+        elsif token == "III"
+          "3"
+        elsif token == "IV"
+          "4"
+        elsif token == "V"
+          "5"
+        else
+          token
+        end
+      end.join(" ")
+    end
+    name
+  end
+
   def self.expand_abbreviations(name)
     if name
       name = name.split.map do |token|
@@ -204,6 +225,7 @@ class Category < ActiveRecord::Base
     _name = strip_whitespace(name)
     _name = cleanup_punctuation(name)
     _name = cleanup_case(_name)
+    _name = replace_roman_numeral_categories(_name)
     expand_abbreviations _name
   end
 
