@@ -116,6 +116,7 @@ module Categories
 
       assert_equal "500m", Category.expand_abbreviations("500M"), "500M"
       assert_equal "500m", Category.expand_abbreviations("500 M"), "500 M"
+      assert_equal "5K", Category.expand_abbreviations("5 k"), "5 k"
     end
   end
 end
