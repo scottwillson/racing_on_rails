@@ -49,6 +49,9 @@ module Categories
       assert_equal "Men 30+", Category.strip_whitespace("Men 30+"), "Men 30+"
       assert_equal "Men 30+", Category.strip_whitespace("Men 30 +"), "Men 30 +"
 
+      assert_equal "U14", Category.strip_whitespace("U 14"), "U 14"
+      assert_equal "U14", Category.strip_whitespace("U-14"), "U-14"
+
       assert_equal "Pro 1/2", Category.strip_whitespace("Pro 1 / 2"), "Pro 1 / 2"
       assert_equal "Pro 1/2", Category.strip_whitespace("Pro 1/ 2"), "Pro 1/ 2"
       assert_equal "Pro 1/2", Category.strip_whitespace("Pro 1 /2"), "Pro 1 /2"
@@ -138,6 +141,7 @@ module Categories
       assert_equal "U18", Category.expand_abbreviations("18 & Under"), "18 & Under"
       assert_equal "U14", Category.expand_abbreviations("14&Under"), "14&Under"
       assert_equal "Men U18", Category.expand_abbreviations("Men 0-18"), "Men 0-18"
+      assert_equal "U14", Category.expand_abbreviations("Under 14"), "Under 14"
 
       assert_equal "Masters Men 60+", Category.expand_abbreviations("13) Masters Men 60+"), "13) Masters Men 60+"
 

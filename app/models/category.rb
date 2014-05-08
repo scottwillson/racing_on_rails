@@ -56,6 +56,9 @@ class Category < ActiveRecord::Base
 
       # 40 + => 40+
       name = name.gsub(/(\d+)\s+\+/, '\1+')
+
+      # U 14, U-14
+      name = name.gsub(/U[ -](\d\d)/, 'U\1')
     end
     name
   end
@@ -131,6 +134,7 @@ class Category < ActiveRecord::Base
       name = name.gsub(/sgl spd/i, "Singlespeed")
       name = name.gsub(/sgl speed/i, "Singlespeed")
 
+      name = name.gsub(/under (\d{2,3})/i, 'U\1')
       name = name.gsub(/(\d+) ?and ?under/i, 'U\1')
       name = name.gsub(/(\d+) ?& ?under/i, 'U\1')
       name = name.gsub(/ 0-(\d+)/i, ' U\1')
