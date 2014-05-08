@@ -113,7 +113,9 @@ class Category < ActiveRecord::Base
           "Women"
         elsif token[/\Amen'?s\z/i] || token[/\Amale\Z/i]
           "Men"
-        elsif token[/\Abeg?\.?\z/i] || token[/\Abegin?\.?\z/i] || token[/\Abeginners\z/i] || token[/\Abeg:\z/i]
+        elsif token[/\Abeg?\.?\z/i] || token[/\Abegin?\.?\z/i] || token[/\Abeginners\z/i] || token[/\Abeg:\z/i] ||
+          token[/\ABeginning\z/i]
+
           "Beginner"
         elsif token[/\Aexp\.?\z/i] || token[/\Aexpt\.?\z/i]
           "Expert"
