@@ -19,6 +19,7 @@ module Categories
       assert_equal "Men Pro/1/2", Category.new(name: "Men Pro,1/2").name, "Men Pro,1/2"
       assert_equal "Men Pro/1/2", Category.new(name: "Men Pro 1/2").name, "Men Pro 1/2"
       assert_equal "Men Pro/1/2", Category.new(name: "Men Pro 1-2").name, "Men Pro 1-2"
+      assert_equal "Men 1/2", Category.new(name: "Men1-2").name, "Men1-2"
     end
 
     test "find_or_create_by_normalized_name" do

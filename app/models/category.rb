@@ -72,6 +72,7 @@ class Category < ActiveRecord::Base
     if name && !(name.downcase == name || name.upcase == name)
       name = name.gsub(/([A-Z\d]+)([A-Z][a-z])/,'\1 \2')
       name = name.gsub(/([a-z\d])([A-Z])/,'\1 \2')
+      name = name.gsub(/(men)(\d)/i, '\1 \2')
     end
     name
   end
