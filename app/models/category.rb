@@ -53,6 +53,9 @@ class Category < ActiveRecord::Base
       # 6- race
       name = name.gsub(/\s+-\s?/, " - ")
       name = name.gsub(/\s?-\s+/, " - ")
+
+      # 40 + => 40+
+      name = name.gsub(/(\d+)\s+\+/, '\1+')
     end
     name
   end
