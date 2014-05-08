@@ -77,6 +77,7 @@ module Categories
       assert_equal "1/2", Category.expand_abbreviations("1-2"), "1-2"
       assert_equal "1/2/3", Category.expand_abbreviations("1,2,3"), "1,2,3"
       assert_equal "1/2/3", Category.expand_abbreviations("1-2-3"), "1-2-3"
+      assert_equal "3/4/5", Category.expand_abbreviations("3.4.5"), "3.4.5"
 
       assert_equal "Junior 10-12", Category.expand_abbreviations("Jr 10-12"), "Jr 10-12"
       assert_equal "Junior 10-12", Category.expand_abbreviations("Jr. 10-12"), "Jr. 10-12"
