@@ -179,6 +179,8 @@ class Category < ActiveRecord::Base
         elsif token[/\Ajr\.?\z/i] || token[/\Ajuniors\z/i] || token[/\Ajrs\.?\z/i] || token[/\Ajunior(s)?:\z/i] ||
            token[/\Ajnr\.?\z/i]
           "Junior"
+        elsif token[/\Awjr\z/i]
+          "Junior Women"
         elsif token[/\Amaster\z/i] || token[/\Amas\z/i] || token[/\Amstr?\z/i] || token[/\Amaster's\z/i] ||
           token[/\Amast.?\z/i] || token[/\Amaasters\z/i] || token[/\Amastes\z/i] || token[/\Amastres\z/i] ||
           token[/\Amater\z/i] || token[/\Amaser\z/i]
@@ -186,6 +188,8 @@ class Category < ActiveRecord::Base
           "Masters"
         elsif token[/\Amas\d\d\+\z/i]
           token.gsub(/\Amas(\d\d\+)\z/i, 'Masters \1')
+        elsif token[/\Awmas\z/i]
+          "Masters Women"
         elsif token[/\Aveteran'?s\z/i] || token[/\Aveteren\z/i] || token[/\A(vet|vt)\.?\z/i]
           "Veteran"
         elsif token[/\Avsty\z/i]
