@@ -95,6 +95,8 @@ class Category < ActiveRecord::Base
         end
       end
 
+      name = name.gsub(/(\b[1-5]) *([A-E]\b)/, '\1 \2')
+
       name = name.gsub(%r{//+}, "/")
 
       name = name.gsub(%r{\+ -( ?)}, "+ ")
@@ -184,7 +186,7 @@ class Category < ActiveRecord::Base
           "Masters"
         elsif token[/\Amas\d\d\+\z/i]
           token.gsub(/\Amas(\d\d\+)\z/i, 'Masters \1')
-        elsif token[/\Aveteran'?s\z/i] || token[/\Aveteren\z/i] || token[/\Avet\.?\z/i]
+        elsif token[/\Aveteran'?s\z/i] || token[/\Aveteren\z/i] || token[/\A(vet|vt)\.?\z/i]
           "Veteran"
         elsif token[/\Avsty\z/i]
           "Varsity"
@@ -206,11 +208,11 @@ class Category < ActiveRecord::Base
           token.gsub(/\A(\d)men\z/i, '\1 Men')
         elsif token[/\Aco(-)?ed\z/i]
           "Co-ed"
-        elsif token[/\Abeg?\.?\z/i] || token[/\Abegin?\.?\z/i] || token[/\Abeginners\z/i] || token[/\Abeg:\z/i] ||
+        elsif token[/\Abeg?\.?\z/i] || token[/\Abg?\.?\z/i] || token[/\Abegin?\.?\z/i] || token[/\Abeginners\z/i] || token[/\Abeg:\z/i] ||
           token[/\ABeginning\z/i]
 
           "Beginner"
-        elsif token[/\A(exp|expt|ex|exeprt|exb|exper)\.?\z/i]
+        elsif token[/\A(exp|expt|ex|exeprt|exb|exper|exprert)\.?\z/i]
           "Expert"
         elsif token[/\Asprt\.?\z/i]
           "Sport"
@@ -226,6 +228,8 @@ class Category < ActiveRecord::Base
         elsif token[/\A\d\d>\z/i]
           # Example: Men 30> => Men 30+
           token.gsub(/(\d\d)>/, '\1+')
+        elsif token[/\Apursuite\z/i]
+          "Pursuit"
         elsif token == "Mdison"
           "Madison"
         elsif token == "Siixday"
@@ -255,6 +259,7 @@ class Category < ActiveRecord::Base
 
       name = name.gsub(/semi( ?)pro/i, "Semi-Pro")
       name = name.gsub(/varsity junior/i, "Junior Varsity")
+      name = name.gsub(/jr. varsity/i, "Junior Varsity")
 
       name = name.gsub(/single speeds?/i, "Singlespeed")
       name = name.gsub(/sgl spd/i, "Singlespeed")
@@ -265,6 +270,7 @@ class Category < ActiveRecord::Base
       name = name.gsub(/iron man/i, "Ironman")
       name = name.gsub(/multi[ -]person/i, "Multiperson")
       name = name.gsub(/miss.*out/i, "Miss and Out")
+      name = name.gsub(/win.*out/i, "Win and Out")
 
       # 14 and Under, 14U, 14 & U
       name = name.gsub(/(\d+) (and|&) U\z/i, 'U\1')
@@ -284,6 +290,8 @@ class Category < ActiveRecord::Base
       name = name.gsub(/(\d+) hour/i, '\1-Hour')
 
       name = name.gsub(/ ?meter(s)?/i, "m")
+      name = name.gsub(/metre/i, "m")
+      name = name.gsub(/kilometer|kilometre|kilos|kilo|km/i, "K")
 
       name = name.gsub(/(\d+) ?m /i, '\1m ')
       name = name.gsub(/(\d+) ?m\z/i, '\1m')
