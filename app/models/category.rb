@@ -237,7 +237,7 @@ class Category < ActiveRecord::Base
           token.gsub(/\A(\d)men\z/i, '\1 Men')
         elsif token[/\Aco(-)?ed\z/i]
           "Co-ed"
-        elsif token[/\Abeg?\.?\z/i] || token[/\Abg?\.?\z/i] || token[/\Abegin?\.?\z/i] || token[/\Abeginners\z/i] || token[/\Abeg:\z/i] ||
+        elsif token[/\Abeg?\.?\z/i] || token[/\Abg\.?\z/i] || token[/\Abegin?\.?\z/i] || token[/\Abeginners\z/i] || token[/\Abeg:\z/i] ||
           token[/\ABeginning\z/i]
 
           "Beginner"
