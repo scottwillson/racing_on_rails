@@ -95,6 +95,23 @@ class Category < ActiveRecord::Base
         end
       end
 
+      (10..17).each do |age|
+        name = name.gsub(%r{#{age}/#{age + 1}}, "#{age}-#{age + 1}")
+      end
+
+      (10..16).each do |age|
+        name = name.gsub(%r{#{age}/#{age + 2}}, "#{age}-#{age + 2}")
+      end
+
+      (10..15).each do |age|
+        name = name.gsub(%r{#{age}/#{age + 3}}, "#{age}-#{age + 3}")
+      end
+
+      (30..90).each do |age|
+        name = name.gsub(%r{#{age}/#{age + 9}}, "#{age}-#{age + 5}")
+        name = name.gsub(%r{#{age}/#{age + 4}}, "#{age}-#{age + 9}")
+      end
+
       name = name.gsub(/(\b[1-5]) *([A-E]\b)/, '\1 \2')
 
       name = name.gsub(%r{//+}, "/")
@@ -260,21 +277,23 @@ class Category < ActiveRecord::Base
       name = name.gsub(/mm (\d\d)\+/i, 'Masters Men \1+')
       name = name.gsub(/\Am (\d\d)\+/i, 'Masters \1+')
       name = name.gsub(/ m (\d\d)\+/i, ' Masters \1+')
-      if name[/\AM \d+/i] || name[/ M \d+/i]
-        categories = name[/M (\d+)/i, 1].split("")
-        name = name.gsub(/M \d+/i, "Men #{categories.join("/")}")
+      if name[/\bM [1-5]+\b/i]
+        categories = name[/M ([1-5]+)/i, 1].split("")
+        name = name.gsub(/M [1-5]+/i, "Men #{categories.join("/")}")
       end
       name = name.gsub(/masters (\d\d)\Z/i, 'Masters \1+')
       name = name.gsub(/masters (\d\d) /i, 'Masters \1+ ')
+
+      name = name.gsub(/junior m /i, 'Junior Men ')
 
       name = name.gsub(%r{M P/1/2}i, "Men Pro/1/2")
       name = name.gsub(%r{P/1/2}i, "Pro/1/2")
       name = name.gsub(/Pro.*1\/2/i, "Pro/1/2")
 
       name = name.gsub(/semi( ?)pro/i, "Semi-Pro")
+      name = name.gsub(/exp\/pro/i, "Pro/Expert")
       name = name.gsub(/varsity junior/i, "Junior Varsity")
       name = name.gsub(/jr. varsity/i, "Junior Varsity")
-      name = name.gsub(/exp\/pro/i, "Pro/Expert")
 
       name = name.gsub(/single speeds?/i, "Singlespeed")
       name = name.gsub(/sgl spd/i, "Singlespeed")
