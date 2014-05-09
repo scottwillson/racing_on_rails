@@ -261,6 +261,8 @@ class Category < ActiveRecord::Base
           "Pursuit"
         elsif token == "Mdison"
           "Madison"
+        elsif token == "Kilom"
+          "Kilometer"
         elsif token == "Siixday"
           "Six-day"
         elsif token == "&"
@@ -326,16 +328,16 @@ class Category < ActiveRecord::Base
       name = name.gsub(/( ?)hr( ?)/i, '\1Hour\2')
       name = name.gsub(/(\d+) ?hour/i, '\1-Hour')
 
-      name = name.gsub(/ ?meter(s)?/i, "m")
+      name = name.gsub(/\bmeter(s)?/i, "m")
       name = name.gsub(/metre/i, "m")
-      # Not Kilo
-      name = name.gsub(/kilometer|kilometre|kilos|km/i, "K")
 
-      name = name.gsub(/(\d+) ?m /i, '\1m ')
-      name = name.gsub(/(\d+) ?m\z/i, '\1m')
-      name = name.gsub(/(\d+) ?k /i, '\1K ')
-      name = name.gsub(/(\d+) ?k\z/i, '\1K')
-      name = name.gsub(/(\d+) ?km/i, '\1K')
+      name = name.gsub(/(\d) ?m\b/i, '\1m')
+      name = name.gsub(/(\d\d\d\d) ?m\b/i, '\1m')
+
+      # Not masters Kilometer
+      unless name[/\d\d-\d\d Kilometer/]
+        name = name.gsub(/(\d+) ?(kilometer|kilometre|kilos|km|k)\b/i, '\1K')
+      end
 
       name = name.gsub(/\bAnd\b/, "and")
 
