@@ -20,6 +20,8 @@ module Categories
       assert_equal "Men Pro/1/2", Category.new(name: "Men Pro 1/2").name, "Men Pro 1/2"
       assert_equal "Men Pro/1/2", Category.new(name: "Men Pro 1-2").name, "Men Pro 1-2"
       assert_equal "Men 1/2", Category.new(name: "Men1-2").name, "Men1-2"
+      assert_equal "Women 1/2", Category.new(name: "W1/2").name, "W1/2"
+      assert_equal "Women 4", Category.new(name: "W4").name, "W4"
     end
 
     test "find_or_create_by_normalized_name" do
@@ -57,11 +59,8 @@ module Categories
       assert_equal "Men 30-39", Category.strip_whitespace("Men 30- 39"), "Men 30- 39"
       assert_equal "Men 30-39", Category.strip_whitespace("Men 30 -39"), "Men 30 -39"
 
-      assert_equal "Men 30+", Category.strip_whitespace("Men 30+"), "Men 30+"
-      assert_equal "Men 30+", Category.strip_whitespace("Men30+"), "Men30+"
       assert_equal "Men 30+", Category.strip_whitespace("Men 30 +"), "Men 30 +"
-
-      assert_equal "Women 30+", Category.strip_whitespace("Women30+"), "Women30+"
+      assert_equal "Men 30+", Category.strip_whitespace("Men 30+"), "Men 30+"
 
       assert_equal "U14", Category.strip_whitespace("U 14"), "U 14"
       assert_equal "U14", Category.strip_whitespace("U-14"), "U-14"
@@ -280,6 +279,8 @@ module Categories
       assert_equal "SENIOR MEN", Category.split_camelcase("SENIOR MEN"), "SENIOR MEN"
       assert_equal "senior men", Category.split_camelcase("senior men"), "senior men"
       assert_equal "Singlespeed/Fixed", Category.split_camelcase("Singlespeed/Fixed"), "Singlespeed/Fixed"
+      assert_equal "Men 30+", Category.split_camelcase("Men30+"), "Men30+"
+      assert_equal "Women 30+", Category.split_camelcase("Women30+"), "Women30+"
     end
   end
 end

@@ -61,9 +61,6 @@ class Category < ActiveRecord::Base
 
       # U 14, U-14
       name = name.gsub(/U[ -](\d\d)/, 'U\1')
-
-      # Men30+
-      name = name.gsub(/(masters|master|men|women)(\d\d\+)/i, '\1 \2')
     end
     name
   end
@@ -72,8 +69,11 @@ class Category < ActiveRecord::Base
     if name && !(name.downcase == name || name.upcase == name)
       name = name.gsub(/([A-Z\d]+)([A-Z][a-z])/,'\1 \2')
       name = name.gsub(/([a-z\d])([A-Z])/,'\1 \2')
-      name = name.gsub(/(men)(\d)/i, '\1 \2')
     end
+
+    # Men30+, W4
+    name = name.gsub(/(masters|master|men|women|m|w)(\d)/i, '\1 \2')
+
     name
   end
 
@@ -200,7 +200,7 @@ class Category < ActiveRecord::Base
           "Women"
         elsif token[/\Awmn?\.?\z/i] || token[/\Awom\.?\z/i] || token[/\Aw\z/i] || token[/\Awmen?\.?\z/i] || token[/\Awomenen\z/i]
           "Women"
-        elsif token[/\Afemale\z/i] || token[/\Awommen:\z/i]
+        elsif token[/\Afemale\z/i] || token[/\Awommen:\z/i] || token[/\Aw\z/i]
           "Women"
         elsif token[/\Amen'?s\z/i] || token[/\Amale\Z/i] || token[/\Amen:\z/i]
           "Men"
