@@ -89,8 +89,10 @@ class Category < ActiveRecord::Base
       5.downto(2).each do |length|
         [ "P", 1, 2, 3, 4, 5 ].each_cons(length) do |cats|
           [ " ", ".", "-" ].each do |delimiter|
-            name = name.gsub(%r{( ?)#{cats.join(delimiter)}( ?)},
-            "\\1#{cats.join("/")}\\2")
+            # Don't combine 1/2/3 40+
+            unless name[%r{/\d#{delimiter}\d\d}]
+              name = name.gsub(%r{( ?)#{cats.join(delimiter)}( ?)}, "\\1#{cats.join("/")}\\2")
+            end
           end
         end
       end
@@ -111,8 +113,6 @@ class Category < ActiveRecord::Base
         name = name.gsub(%r{#{age}/#{age + 9}}, "#{age}-#{age + 5}")
         name = name.gsub(%r{#{age}/#{age + 4}}, "#{age}-#{age + 9}")
       end
-
-      name = name.gsub(/(\b[1-5]) *([A-E]\b)/, '\1 \2')
 
       name = name.gsub(%r{//+}, "/")
 
