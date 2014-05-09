@@ -16,6 +16,7 @@ module Categories
       assert_equal "Pro Women 1-3", Category.new(name: "Pro Women 1-3").name, "Pro Women 1-3"
       assert_equal "Pro 1-3", Category.new(name: "Pro 1-3").name, "Pro 1-3"
       assert_equal "Masters Men 30-34 Keirin", Category.new(name: "Masters Men 30-34 Keirin").name, "Masters Men 30-34 Keirin"
+      assert_equal "Masters 50+ Category 3/4/5", Category.new(name: "Masters 50 Category 3/4/5").name, "Masters 50 Category 3/4/5"
       assert_equal "Men Pro/1/2", Category.new(name: "Men Pro, 1/2").name, "Men Pro, 1/2"
       assert_equal "Men Pro/1/2", Category.new(name: "Men Pro,1/2").name, "Men Pro,1/2"
       assert_equal "Men Pro/1/2", Category.new(name: "Men Pro 1/2").name, "Men Pro 1/2"

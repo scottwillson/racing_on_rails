@@ -261,6 +261,8 @@ class Category < ActiveRecord::Base
         categories = name[/M (\d+)/i, 1].split("")
         name = name.gsub(/M \d+/i, "Men #{categories.join("/")}")
       end
+      name = name.gsub(/masters (\d\d)\Z/i, 'Masters \1+')
+      name = name.gsub(/masters (\d\d) /i, 'Masters \1+ ')
 
       name = name.gsub(%r{M P/1/2}i, "Men Pro/1/2")
       name = name.gsub(%r{P/1/2}i, "Pro/1/2")
