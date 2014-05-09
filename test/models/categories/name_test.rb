@@ -26,10 +26,14 @@ module Categories
       assert_equal "Women 4", Category.new(name: "W4").name, "W4"
       assert_equal "Women A", Category.new(name: "WomenA").name, "WomenA"
       assert_equal "Category 3 Keirin", Category.new(name: "Category 3 Keirin").name, "Category 3 Keirin"
+      assert_equal "Category 3 Keirin", Category.new(name: "Category 3Keirin").name, "Category 3 Keirin"
+      assert_equal "Category 3 Kilo", Category.new(name: "Category 3Kilo").name, "Category 3 Kilo"
       assert_equal "Category 2 Junior Men 15-18", Category.new(name: "CAT 2 Junior Men 15-18").name, "CAT 2 Junior Men 15-18"
       assert_equal "Clydesdale Men 200+", Category.new(name: "Clydesdale Men (200+)").name, "Clydesdale Men (200+)"
       assert_equal "Clydesdale Open 200+", Category.new(name: "Clydesdale Open (200+)").name, "Clydesdale Open (200+)"
       assert_equal "Clydesdale 200+", Category.new(name: "Clydesdale (200 Lbs+)").name, "Clydesdale Open (200 Lbs+)"
+      assert_equal "Senior Women 3K Pursuit", Category.new(name: "Senior Women (3K Pursuit)").name, "Senior Women (3K Pursuit)"
+      assert_equal "Senior Women 3K", Category.new(name: "Senior Women (3K)").name, "Senior Women (3K)"
     end
 
     test "find_or_create_by_normalized_name" do

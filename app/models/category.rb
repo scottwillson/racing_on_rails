@@ -106,6 +106,9 @@ class Category < ActiveRecord::Base
       # (200+)
       name = name.gsub(/\((\d\d+\+)\)/i, '\1')
 
+      # split_camelcase will have have alredy split this
+      name = name.gsub(/\((\d k pursuit)\)/i, '\1')
+      name = name.gsub(/\((\d k)\)/i, '\1')
       name = name.gsub(/six[ -]?day/i, "Six-day")
 
       name = name.gsub(/(\d+) day/i, '\1-Day')
@@ -306,7 +309,8 @@ class Category < ActiveRecord::Base
 
       name = name.gsub(/ ?meter(s)?/i, "m")
       name = name.gsub(/metre/i, "m")
-      name = name.gsub(/kilometer|kilometre|kilos|kilo|km/i, "K")
+      # Not Kilo
+      name = name.gsub(/kilometer|kilometre|kilos|km/i, "K")
 
       name = name.gsub(/(\d+) ?m /i, '\1m ')
       name = name.gsub(/(\d+) ?m\z/i, '\1m')
