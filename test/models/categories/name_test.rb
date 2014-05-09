@@ -49,6 +49,7 @@ module Categories
       assert_equal "Attendee", Category.cleanup_case("Attendee"), "Attendee"
       assert_equal "CCX", Category.cleanup_case("Ccx"), "Ccx"
       assert_equal "CX", Category.cleanup_case("Cx"), "Cx"
+      assert_equal "BMX", Category.cleanup_case("Bmx"), "Bmx"
     end
 
     test "strip_whitespace" do

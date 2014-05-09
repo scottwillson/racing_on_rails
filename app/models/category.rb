@@ -126,7 +126,7 @@ class Category < ActiveRecord::Base
           "of"
         elsif token[/\Ai+\z/i] || token[/\A\d[a-z]/i]
           token.upcase
-        elsif token[/\Ac{1,2}x\z/i]
+        elsif token[/\Ac{1,2}x\z/i] || token[/\At{2,3}\z/i] || token[/\Abmx\z/i]
           token.upcase
         elsif token[/\Att-?\w*/i] || token[/\A-?tt\w*/i]
           token.gsub(/tt/i, "TT")
