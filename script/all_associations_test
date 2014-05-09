@@ -16,9 +16,9 @@
   puts `bundle exec rake test:ruby`
   # Ensure DB state is good
   puts `bundle exec rake db:migrate; bundle exec rake db:structure:dump; bundle exec rake db:test:prepare`
-  puts `bundle exec rake; bundle exec rake test:acceptance`
+  puts `bundle exec rake test:ruby; rake; rake test:acceptance`
 
   if association == "obra" || association == "nabra"
-    puts `bundle exec rake registration_engine:test; bundle exec rake registration_engine:test:acceptance`
+    puts `rake registration_engine:test; rake registration_engine:test:acceptance`
   end
 end
