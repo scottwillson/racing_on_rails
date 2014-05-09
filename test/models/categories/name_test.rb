@@ -34,6 +34,7 @@ module Categories
       assert_equal "Clydesdale 200+", Category.new(name: "Clydesdale (200 Lbs+)").name, "Clydesdale Open (200 Lbs+)"
       assert_equal "Senior Women 3K Pursuit", Category.new(name: "Senior Women (3K Pursuit)").name, "Senior Women (3K Pursuit)"
       assert_equal "Senior Women 3K", Category.new(name: "Senior Women (3K)").name, "Senior Women (3K)"
+      assert_equal "Junior Men 2K Pursuit", Category.new(name: "Junior Men (2k Pursuit)").name, "Junior Men (2k Pursuit)"
       assert_equal "Junior Men 10-12", Category.new(name: "Junior M 10/12").name, "Junior M 10/12"
       assert_equal "Junior B - Australian Pursuit", Category.new(name: "Junior B - Australian Pursuit").name, "Junior B - Australian Pursuit"
     end
