@@ -24,6 +24,11 @@ module Categories
       assert_equal "Women 1/2", Category.new(name: "W1/2").name, "W1/2"
       assert_equal "Women 4", Category.new(name: "W4").name, "W4"
       assert_equal "Women A", Category.new(name: "WomenA").name, "WomenA"
+      assert_equal "Category 3 Keirin", Category.new(name: "Category 3 Keirin").name, "Category 3 Keirin"
+      assert_equal "Category 2 Junior Men 15-18", Category.new(name: "CAT 2 Junior Men 15-18").name, "CAT 2 Junior Men 15-18"
+      assert_equal "Clydesdale Men 200+", Category.new(name: "Clydesdale Men (200+)").name, "Clydesdale Men (200+)"
+      assert_equal "Clydesdale Open 200+", Category.new(name: "Clydesdale Open (200+)").name, "Clydesdale Open (200+)"
+      assert_equal "Clydesdale 200+", Category.new(name: "Clydesdale (200 Lbs+)").name, "Clydesdale Open (200 Lbs+)"
     end
 
     test "find_or_create_by_normalized_name" do
@@ -182,6 +187,12 @@ module Categories
       assert_equal "Clydesdale", Category.expand_abbreviations("Clydes"), "Clydes"
 
       assert_equal "Clydesdale 200+", Category.expand_abbreviations("Clyde 200+ Lbs"), "Clyde 200+ Lbs"
+      assert_equal "Clydesdale 210+", Category.expand_abbreviations("Clyde 210+ Lbs"), "Clyde 210+ Lbs"
+      assert_equal "Clydesdale 210+", Category.expand_abbreviations("Clyde 210 Lbs +"), "Clyde 210 Lbs +"
+      assert_equal "Clydesdale 210+", Category.expand_abbreviations("Clyde 210lbs+"), "Clyde 210lbs+"
+      assert_equal "Clydesdale 200+", Category.expand_abbreviations("Clyde 200 Lbs+"), "Clyde 200 Lbs+"
+      assert_equal "Clydesdale 200+", Category.expand_abbreviations("Clyde 200 Lb+"), "Clyde 200 Lb+"
+      assert_equal "Clydesdale 200+", Category.expand_abbreviations("Clyde 200 Lbs.+"), "Clyde 200 Lbs.+"
 
       assert_equal "Masters Men", Category.expand_abbreviations("Masters Men"), "Masters Men"
       assert_equal "Masters Men", Category.expand_abbreviations("Master's Men"), "Master's Men"

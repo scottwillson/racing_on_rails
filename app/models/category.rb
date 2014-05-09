@@ -101,6 +101,11 @@ class Category < ActiveRecord::Base
 
       name = name.gsub(%r{\+ -( ?)}, "+ ")
 
+      name = name.gsub(%r{\+ -( ?)}, "+ ")
+
+      # (200+)
+      name = name.gsub(/\((\d\d+\+)\)/i, '\1')
+
       name = name.gsub(/six[ -]?day/i, "Six-day")
 
       name = name.gsub(/(\d+) day/i, '\1-Day')
@@ -289,7 +294,10 @@ class Category < ActiveRecord::Base
       name = name.gsub(/(\d+) ?and ?(over|older)/i, '\1+')
       name = name.gsub(/(\d+) ?& ?(over|older)/i, '\1+')
 
-      name = name.gsub(/(\d+)\+ lbs(\.)?/i, '\1+')
+      name = name.gsub(/(\d{3})\+ (lbs|lb)(\.)?/i, '\1+')
+      name = name.gsub(/(\d{3})( )?(lbs|lb) \+/i, '\1+')
+      name = name.gsub(/(\d{3})( )?(lbs|lb)(.)?\+/i, '\1+')
+      name = name.gsub(/\((\d\d+\+)\)/i, '\1')
 
       name = name.gsub(/( ?)hr( ?)/i, '\1Hour\2')
       name = name.gsub(/(\d+) hour/i, '\1-Hour')
