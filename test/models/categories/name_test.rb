@@ -37,6 +37,7 @@ module Categories
       assert_equal "Junior Men 2K Pursuit", Category.new(name: "Junior Men (2k Pursuit)").name, "Junior Men (2k Pursuit)"
       assert_equal "Junior Men 10-12", Category.new(name: "Junior M 10/12").name, "Junior M 10/12"
       assert_equal "Junior B - Australian Pursuit", Category.new(name: "Junior B - Australian Pursuit").name, "Junior B - Australian Pursuit"
+      assert_equal "Men U50 24-Hour", Category.new(name: "Men U50 24hr").name, "Men U50 24hr"
     end
 
     test "find_or_create_by_normalized_name" do

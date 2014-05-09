@@ -324,7 +324,7 @@ class Category < ActiveRecord::Base
       name = name.gsub(/\((\d\d+\+)\)/i, '\1')
 
       name = name.gsub(/( ?)hr( ?)/i, '\1Hour\2')
-      name = name.gsub(/(\d+) hour/i, '\1-Hour')
+      name = name.gsub(/(\d+) ?hour/i, '\1-Hour')
 
       name = name.gsub(/ ?meter(s)?/i, "m")
       name = name.gsub(/metre/i, "m")
