@@ -102,7 +102,7 @@ module Competitions
     end
 
     def source_event_types
-      %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries TaborOverall }
+      %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries Competitions::TaborOverall }
     end
 
     def create_races
