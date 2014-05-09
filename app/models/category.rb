@@ -183,7 +183,7 @@ class Category < ActiveRecord::Base
           "Junior Women"
         elsif token[/\Amaster\z/i] || token[/\Amas\z/i] || token[/\Amstr?\z/i] || token[/\Amaster's\z/i] ||
           token[/\Amast.?\z/i] || token[/\Amaasters\z/i] || token[/\Amastes\z/i] || token[/\Amastres\z/i] ||
-          token[/\Amater\z/i] || token[/\Amaser\z/i]
+          token[/\Amater\z/i] || token[/\Amaser\z/i] || token[/\Amst\z/i]
 
           "Masters"
         elsif token[/\Amas\d\d\+\z/i]
@@ -264,6 +264,7 @@ class Category < ActiveRecord::Base
       name = name.gsub(/semi( ?)pro/i, "Semi-Pro")
       name = name.gsub(/varsity junior/i, "Junior Varsity")
       name = name.gsub(/jr. varsity/i, "Junior Varsity")
+      name = name.gsub(/exp\/pro/i, "Pro/Expert")
 
       name = name.gsub(/single speeds?/i, "Singlespeed")
       name = name.gsub(/sgl spd/i, "Singlespeed")
