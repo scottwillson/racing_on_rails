@@ -235,8 +235,8 @@ class Category < ActiveRecord::Base
         end
       end.join(" ")
 
-      name = name.gsub(/cat(\d+)/i, 'Category \1')
-      name = name.gsub(/category(\d+)/i, 'Category \1')
+      name = name.gsub(/cat ?(\d)/i, 'Category \1')
+      name = name.gsub(/category(\d)/i, 'Category \1')
       name = name.gsub(/category (\d)\/ /i, 'Category \1 ')
 
       name = name.gsub(/mm (\d\d)\+/i, 'Masters Men \1+')
@@ -289,7 +289,7 @@ class Category < ActiveRecord::Base
       name = name.gsub(/(\d+) ?k\z/i, '\1K')
       name = name.gsub(/(\d+) ?km/i, '\1K')
 
-      name = name.gsub(/\d+\) ?/, "")
+      name = name.gsub(/\A\d+\) ?/, "")
     end
     name
   end

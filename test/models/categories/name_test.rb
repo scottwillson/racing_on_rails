@@ -120,6 +120,8 @@ module Categories
     end
 
     test "#expand_abbreviations" do
+      assert_equal "Sport (Category 2) Men 14-18", Category.expand_abbreviations("Sport (Cat 2) Men 14-18"), "Sport (Cat 2) Men 14-18"
+
       assert_equal "senior men", Category.expand_abbreviations("senior men"), "senior men"
       assert_equal "Category 3", Category.expand_abbreviations("Cat 3"), "Cat 3"
       assert_equal "Category 3", Category.expand_abbreviations("cat 3"), "cat 3"
