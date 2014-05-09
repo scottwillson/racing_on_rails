@@ -11,7 +11,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
 
   test "find associated records 2" do
     event = SingleDayEvent.create!(name: "Tabor CR")
-    category = Category.find_or_create_by(name: "Senior Men Pro 1/2")
+    category = Category.find_or_create_by(name: "Senior Men Pro/1/2")
     race = event.races.create!(category: category)
     result1 = race.results.create!(
       first_name: "Tom", last_name: "Boonen", team_name: "Davitamon"

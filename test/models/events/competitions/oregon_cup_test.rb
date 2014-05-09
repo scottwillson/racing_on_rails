@@ -16,7 +16,7 @@ module Competitions
       # 2. Molly      15
 
       senior_men = FactoryGirl.create(:category, name: "Senior Men")
-      senior_men_p_1_2 = FactoryGirl.create(:category, name: "Senior Men Pro 1/2", parent: senior_men)
+      senior_men_p_1_2 = FactoryGirl.create(:category, name: "Senior Men Pro/1/2", parent: senior_men)
       senior_women = FactoryGirl.create(:category, name: "Senior Women")
       # Set BAR point bonus -- it should be ignored
       kings_valley_2004 = FactoryGirl.create(:event, date: Date.new(2004))

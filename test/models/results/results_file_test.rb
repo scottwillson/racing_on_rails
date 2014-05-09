@@ -312,7 +312,7 @@ module Results
       # Other combinations are invalid
 
       event = SingleDayEvent.create!(date: Time.zone.today + 3)
-      pro_1_2_race = event.races.create! category: Category.find_or_create_by(name: "Pro 1/2")
+      pro_1_2_race = event.races.create! category: Category.find_or_create_by(name: "Pro/1/2")
       event.races.create! category: Category.find_or_create_by(name: "Cat 3")
       event.races.create! category: Category.find_or_create_by(name: "Cat 4")
       event.races.create! category: Category.find_or_create_by(name: "Cat 5")
@@ -326,12 +326,12 @@ module Results
       event.reload
 
       assert_equal 5, event.races.count, "Races"
-      [ "Pro 1/2", "Category 3", "Category 4", "Category 5", "Women 1/2" ].each do |cat_name|
+      [ "Pro/1/2", "Category 3", "Category 4", "Category 5", "Women 1/2" ].each do |cat_name|
         assert event.races.detect { |race| race.name == cat_name }, "Should have race #{cat_name}"
         assert_equal 1, event.races.select { |race| race.name == cat_name }.size, "Should only one of race #{cat_name}"
       end
 
-      [ "Pro 1/2", "Category 3", "Women 1/2" ].each do |cat_name|
+      [ "Pro/1/2", "Category 3", "Women 1/2" ].each do |cat_name|
         assert_equal 3, event.races.detect { |race| race.name == cat_name }.results.count, "Race #{cat_name} results"
       end
     end
@@ -503,7 +503,7 @@ module Results
 
       expected_races << race
 
-      race = Race.new(category: Category.new(name: "Pro 1/2"))
+      race = Race.new(category: Category.new(name: "Pro/1/2"))
 
       build_result(race, "1", "Erik", "Tonkin", "Team S&M")
       build_result(race, "2", "Barry", "Wicks", "Kona")
@@ -541,7 +541,7 @@ module Results
     def get_expected_races
       races = []
 
-      race = Race.new(category: Category.new(name: "Senior Men Pro 1/2/3"))
+      race = Race.new(category: Category.new(name: "Senior Men Pro/1/2/3"))
       race.results << Result.new(place: "1", first_name: "Evan", last_name: "Elken", number:"154", license:"999999999", team_name:"Jittery Joe's", points: "23.0")
       if RacingAssociation.current.sanctioning_organizations.include?("USA Cycling")
         race.results << Result.new(place: "2", first_name: "Erik", last_name: "Tonkin", number:"102", license:"7123811", team_name:"Bike Gallery/Trek/VW", points: "19.0")

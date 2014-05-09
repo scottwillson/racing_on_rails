@@ -16,7 +16,7 @@ module Competitions
       association_category = FactoryGirl.create(:category, name: "CBRA")
       senior_men           = FactoryGirl.create(:category, name: "Senior Men", parent: association_category)
       men_a                = FactoryGirl.create(:category, name: "Men A", parent: senior_men)
-      sr_p_1_2             = FactoryGirl.create(:category, name: "Senior Men Pro 1/2", parent: senior_men)
+      sr_p_1_2             = FactoryGirl.create(:category, name: "Senior Men Pro/1/2", parent: senior_men)
       senior_women         = FactoryGirl.create(:category, name: "Senior Women", parent: association_category)
 
       discipline = FactoryGirl.create(:discipline, name: "Road")

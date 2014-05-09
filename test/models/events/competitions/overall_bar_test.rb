@@ -17,7 +17,7 @@ module Competitions
       association_category = FactoryGirl.create(:category, name: "CBRA")
       senior_men           = FactoryGirl.create(:category, name: "Senior Men", parent: association_category)
       men_a                = FactoryGirl.create(:category, name: "Men A", parent: senior_men)
-      sr_p_1_2             = FactoryGirl.create(:category, name: "Senior Men Pro 1/2", parent: senior_men)
+      sr_p_1_2             = FactoryGirl.create(:category, name: "Senior Men Pro/1/2", parent: senior_men)
       senior_women         = FactoryGirl.create(:category, name: "Senior Women", parent: association_category)
       senior_women_1_2_3 = FactoryGirl.create(:category, name: "Senior Women 1/2/3", parent: senior_women)
 
@@ -246,7 +246,7 @@ module Competitions
       association_category = FactoryGirl.create(:category, name: "CBRA")
       senior_men           = FactoryGirl.create(:category, name: "Senior Men", parent: association_category)
       men_a                = FactoryGirl.create(:category, name: "Men A", parent: senior_men)
-                             FactoryGirl.create(:category, name: "Senior Men Pro 1/2", parent: senior_men)
+                             FactoryGirl.create(:category, name: "Senior Men Pro/1/2", parent: senior_men)
       senior_women         = FactoryGirl.create(:category, name: "Senior Women", parent: association_category)
                              FactoryGirl.create(:category, name: "Senior Women 1/2/3", parent: senior_women)
       category_3_men       = FactoryGirl.create(:category, name: "Category 3 Men", parent: association_category)

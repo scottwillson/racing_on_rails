@@ -1,11 +1,11 @@
 require_dependency "acts_as_tree/validation"
 
-# Senior Men, Pro 1/2, Novice Masters 45+
+# Senior Men, Pro/1/2, Novice Masters 45+
 #
 # Categories are just a simple hierarchy of names
 #
-# Categories are basically labels and there is no complex hierarchy. In other words, Senior Men Pro 1/2 and
-# Pro 1/2 are two distinct categories. They are not combinations of Pro and Senior and Men and Cat 1
+# Categories are basically labels and there is no complex hierarchy. In other words, Senior Men Pro/1/2 and
+# Pro/1/2 are two distinct categories. They are not combinations of Pro and Senior and Men and Cat 1
 #
 # +friendly_param+ is used for friendly links on BAR pages. Example: senior_men
 class Category < ActiveRecord::Base

@@ -59,7 +59,7 @@ class ResultTest < ActiveSupport::TestCase
 
   test "save" do
     event = SingleDayEvent.create!(name: "Tabor CR", discipline: 'Road')
-    category = Category.find_or_create_by(name: "Senior Men Pro 1/2")
+    category = Category.find_or_create_by(name: "Senior Men Pro/1/2")
     race = event.races.create!(category: category)
     race.save!
     assert_equal(0, race.results.size, "Results before save")
@@ -131,16 +131,16 @@ class ResultTest < ActiveSupport::TestCase
     result = Result.new(place: "22", last_name: "Ulrich")
     assert_equal(nil, result.category_name, "category_name")
 
-    result.category = Category.find_or_create_by(name: "Senior Men Pro 1/2")
-    assert_equal("Senior Men Pro 1/2", result.category.name, "category_name")
+    result.category = Category.find_or_create_by(name: "Senior Men Pro/1/2")
+    assert_equal("Senior Men Pro/1/2", result.category.name, "category_name")
     assert_equal(nil, result.category_name, "category_name")
     result.race = FactoryGirl.create(:race)
     result.save!
-    assert_equal("Senior Men Pro 1/2", result.category_name, "category_name")
+    assert_equal("Senior Men Pro/1/2", result.category_name, "category_name")
 
     result = Result.new
-    result.category_name = "Senior Men Pro 1/2"
-    assert_equal("Senior Men Pro 1/2", result.category_name, "category_name")
+    result.category_name = "Senior Men Pro/1/2"
+    assert_equal("Senior Men Pro/1/2", result.category_name, "category_name")
 
     result.category_name = ""
     assert_equal("", result.category_name, "category_name")
@@ -348,7 +348,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(!result.last_event?, "New result should not be last event")
 
     event = MultiDayEvent.create!.children.create!(name: "Tabor CR")
-    category = Category.find_or_create_by(name: "Senior Men Pro 1/2")
+    category = Category.find_or_create_by(name: "Senior Men Pro/1/2")
     race = event.races.create!(category: category)
     result = race.results.create!
     assert(result.last_event?, "Only event should be last event")
@@ -370,7 +370,7 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   test "finished?" do
-    category = Category.find_or_create_by(name: "Senior Men Pro 1/2")
+    category = Category.find_or_create_by(name: "Senior Men Pro/1/2")
     race = SingleDayEvent.create!.races.create!(category: category)
 
     result = race.results.create!(place: "1")
@@ -409,7 +409,7 @@ class ResultTest < ActiveSupport::TestCase
 
   test "make member if association number" do
     event = SingleDayEvent.create!(name: "Tabor CR")
-    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
+    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro/1/2"))
     result = race.results.create!(
       first_name: "Tom", last_name: "Boonen", team_name: "Davitamon", number: "702"
     )
@@ -427,7 +427,7 @@ class ResultTest < ActiveSupport::TestCase
   test "do not make member if not association number" do
     number_issuer = NumberIssuer.create!(name: "Tabor")
     event = SingleDayEvent.create!(name: "Tabor CR", number_issuer: number_issuer)
-    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
+    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro/1/2"))
     result = race.results.create!(
       first_name: "Tom", last_name: "Boonen", team_name: "Davitamon", number: "702"
     )
@@ -442,7 +442,7 @@ class ResultTest < ActiveSupport::TestCase
 
   test "only make member if full name" do
     event = SingleDayEvent.create!(name: "Tabor CR")
-    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
+    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro/1/2"))
     result = race.results.create!(
       first_name: "Tom", team_name: "Davitamon", number: "702"
     )
@@ -474,7 +474,7 @@ class ResultTest < ActiveSupport::TestCase
 
   test "bar" do
     event = SingleDayEvent.create!(name: "Tabor CR")
-    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
+    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro/1/2"))
     result = race.results.create!(
       first_name: "Tom", team_name: "Davitamon", number: "702"
     )
@@ -485,7 +485,7 @@ class ResultTest < ActiveSupport::TestCase
 
   test "dont delete team names if used by person" do
     event = SingleDayEvent.create!
-    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro 1/2"))
+    race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro/1/2"))
     race.results.create!(
       first_name: "Tom", team_name: "Blow", team_name: "QuickStep"
     )

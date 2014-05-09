@@ -8,7 +8,7 @@ class EventsTest < AcceptanceTest
     candi = FactoryGirl.create(:person, name: "Candi Murray", home_phone: "(503) 555-1212", email: "admin@example.com")
     gl = FactoryGirl.create(:team, name: "Gentle Lovers")
     kings_valley = FactoryGirl.create(:event, name: "Kings Valley Road Race", date: "2003-12-31")
-    race_1 = kings_valley.races.create!(category: FactoryGirl.create(:category, name: "Senior Men Pro 1/2"))
+    race_1 = kings_valley.races.create!(category: FactoryGirl.create(:category, name: "Senior Men Pro/1/2"))
     kings_valley.races.create!(category: FactoryGirl.create(:category, name: "Senior Men 3"))
 
     visit "/"
@@ -128,8 +128,8 @@ class EventsTest < AcceptanceTest
 
     visit_event kings_valley
 
-    wait_for_page_content "Senior Men Pro 1/2"
-    assert_page_has_content "Senior Men Pro 1/2"
+    wait_for_page_content "Senior Men Pro/1/2"
+    assert_page_has_content "Senior Men Pro/1/2"
     assert_page_has_content "Senior Men 3"
 
     kings_valley = Event.find_by_name_and_date("Kings Valley Road Race", "2003-12-31")
@@ -144,7 +144,7 @@ class EventsTest < AcceptanceTest
     visit "/admin/events?year=2003"
 
     visit_event kings_valley
-    assert_page_has_no_content "Senior Men Pro 1/2"
+    assert_page_has_no_content "Senior Men Pro/1/2"
     assert_page_has_no_content "Senior Men 3"
 
     click_link "new_event"

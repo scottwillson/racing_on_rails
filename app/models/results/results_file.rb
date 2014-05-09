@@ -4,7 +4,7 @@ module Results
   # Result time limited to hundredths of seconds
   #
   # Notes example:
-  # Senior Men Pro 1/2 | Field size: 79 riders | Laps: 2
+  # Senior Men Pro/1/2 | Field size: 79 riders | Laps: 2
   #
   # Set DEBUG_RESULTS to Toggle expensive debug logging. E.g., DEBUG_RESULTS=yes ./script/server
   class ResultsFile
