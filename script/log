@@ -1,9 +1,0 @@
-File.open("test.log", "w") do |out|
-  File.open("obra-access.log.0").readlines.each do |l|
-    if l["GET"]
-      out.puts l[/GET ([^ ]+)/, 1]
-      putc "."
-    end
-  end
-end
-
