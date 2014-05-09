@@ -218,6 +218,8 @@ class Category < ActiveRecord::Base
           "Singlespeed"
         elsif token[/\Atand?\z/i] || token[/\Atandems\z/i]
           "Tandem"
+        elsif token[/\Auni\z/i] || token[/\AUnicycles\z/i]
+          "Unicycle"
         elsif token[/\A\d\dU\z/i]
           # 14U => U14
           token.gsub(/(\d\d)U/, 'U\1')
