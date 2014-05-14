@@ -123,6 +123,8 @@ class Category < ActiveRecord::Base
       # (200+)
       name = name.gsub(/\((\d\d+\+)\)/i, '\1')
 
+      name = name.gsub("*", "")
+
       # split_camelcase may have alredy split this
       name = name.gsub(/\((\d ?k pursuit)\)/i, '\1')
       name = name.gsub(/\((\d ?k)\)/i, '\1')
@@ -199,7 +201,7 @@ class Category < ActiveRecord::Base
           token.gsub(/(\d)s\z/i, '\1')
         elsif token == "1/23" || token == "12/3" || token == "123"
           "1/2/3"
-        elsif token[/\Asr\.?\z/i] || token[/\Aseniors\z/i] || token[/\Asenoir\z/i]
+        elsif token[/\A(sr|sen)\.?\z/i] || token[/\Aseniors\z/i] || token[/\Asenoir\z/i]
           "Senior"
         elsif token[/\Ajr\.?\z/i] || token[/\Ajuniors\z/i] || token[/\Ajrs\.?\z/i] || token[/\Ajunior(s)?:\z/i] ||
            token[/\Ajnr\.?\z/i]
@@ -231,7 +233,7 @@ class Category < ActiveRecord::Base
           "Women"
         elsif token[/\Afemale\z/i] || token[/\Awommen:\z/i] || token[/\Aw\z/i]
           "Women"
-        elsif token[/\Amen'?s\z/i] || token[/\Amale\Z/i] || token[/\Amen:\z/i]
+        elsif token[/\Amen'?s\z/i] || token[/\Amale\Z/i] || token[/\Amen:\z/i] || token[/\Amed\z/i] || token[/\Amens's\z/i]
           "Men"
         elsif token[/\A\dmen\z/i]
           token.gsub(/\A(\d)men\z/i, '\1 Men')
@@ -287,6 +289,8 @@ class Category < ActiveRecord::Base
       name = name.gsub(/masters (\d\d) /i, 'Masters \1+ ')
 
       name = name.gsub(/junior m /i, 'Junior Men ')
+
+      name = name.gsub(/Espior/i, 'Espoir ')
 
       name = name.gsub(%r{M P/1/2}i, "Men Pro/1/2")
       name = name.gsub(%r{P/1/2}i, "Pro/1/2")
