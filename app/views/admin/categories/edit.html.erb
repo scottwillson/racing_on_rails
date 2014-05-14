@@ -21,7 +21,7 @@
       <li><%= link_to category.name, edit_admin_category_path(category) %></li>
       <% end %>
       <li><strong><%= @category.name %></strong></li>
-      <% @category.children.sort_by(&:name).each do |category| %>
+      <% @category.descendants.sort_by(&:name).each do |category| %>
       <li><em><%= link_to category.name, edit_admin_category_path(category) %></em></li>
       <% end %>
     </ul>
