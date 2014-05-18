@@ -456,6 +456,8 @@ Competitions::Bar.calculate!
 # if "expert, sport, etc." put in MTB numberic category (example)
 # beginers should always be under category 5
 # Novice: cat 3 if MTB; otherwise Cat 5
+# Juniors go in the highest age bracket. Example: Junior Men 12-18 goes in Junior Men 17-18
+# Masters go in the lowest age bracket. Example: Masters Men 30-39 goes in Masters 30-34.
 
 
 true
