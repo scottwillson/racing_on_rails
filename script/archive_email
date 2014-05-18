@@ -8,4 +8,4 @@ export HOME=/var/lib/mailman
 cd  /var/www/rails/obra/current
 
 export NEWRELIC_ENABLE=false
-bundle exec /var/www/rails/obra/current/script/rails runner -e "production" "MailingListMailer.receive(STDIN.read)" >> /var/log/mailman_archiver.log 2>&1
+bundle exec rails runner -e "production" "MailingListMailer.receive(STDIN.read)" >> /var/log/mailman_archiver.log 2>&1
