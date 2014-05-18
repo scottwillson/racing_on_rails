@@ -3,7 +3,7 @@ count = 0
 posts_count = Post.count
 
 MailingList.transaction do
-  File.readlines(ARGV[0]).each do |line|
+  File.readlines(ARGV.last).each do |line|
     begin
       if (line.match(/\AFrom /))
         puts line
