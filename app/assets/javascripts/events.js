@@ -18,7 +18,10 @@ jQuery(document).ready(function() {
   });
 
   jQuery('#edit_promoter_link').click(function() {
-    window.location.href = '/admin/people/' + jQuery('#event_promoter_id').val() + '/edit?event_id=' + jQuery('#edit_promoter_link').attr('data-event-id');
+    window.location.href = '/admin/people/' +
+                           jQuery('#event_promoter_id').val() +
+                           '/edit?event_id=' +
+                           jQuery('#edit_promoter_link').attr('data-event-id');
     return false;
   });
     //
