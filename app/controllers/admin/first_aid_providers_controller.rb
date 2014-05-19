@@ -1,3 +1,5 @@
+require "grid/base"
+
 module Admin
   # Work assignments for Event. First aid provider and chief official.
   # Officials can view, but not edit, this page.
