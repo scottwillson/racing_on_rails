@@ -24,7 +24,7 @@ jQuery(document).ready(function() {
                            jQuery('#edit_promoter_link').attr('data-event-id');
     return false;
   });
-    //
+
   jQuery('[data-behaviour~=datepicker]').datepicker(
     { autoclose: true }
   ).on('changeDate', function(e) {
