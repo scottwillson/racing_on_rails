@@ -51,6 +51,7 @@ group :development do
   gem "capistrano"
   gem "capistrano-unicorn", require: false
   gem "guard-livereload", require: false
+  gem "puma"
   gem "rubocop", require: false
   gem "quiet_assets"
   gem "rack-livereload"
