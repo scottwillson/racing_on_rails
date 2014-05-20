@@ -17,7 +17,7 @@ set :unicorn_rack_env, "staging"
 set :unicorn_pid, "#{shared_path}/pids/unicorn.pid"
 
 require "rvm/capistrano"
-set :rvm_ruby_string, "ruby-2.1.1"
+set :rvm_ruby_string, "ruby-2.1.2"
 set :rvm_install_ruby_params, "--patch railsexpress"
 
 set :scm, "git"
