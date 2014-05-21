@@ -400,7 +400,7 @@ class EventTest < ActiveSupport::TestCase
     race_2.results.create!
     women_4 = FactoryGirl.create(:category)
     bb3.races.create!(category: women_4)
-    assert_equal([race_2, race_1], bb3.races_with_results.sort, 'Two races with results')
+    assert_same_elements [ race_2, race_1 ], bb3.races_with_results, 'Two races with results'
   end
 
   test "updated at" do
