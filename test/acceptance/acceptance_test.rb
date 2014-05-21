@@ -167,7 +167,7 @@ class AcceptanceTest < ActiveSupport::TestCase
         end
       end
     rescue Timeout::Error
-      fail "'#{text}' did not appear in page source within 10 seconds"
+      fail "'#{link_css}' did not appear in page source within 10 seconds"
     end
   end
 
