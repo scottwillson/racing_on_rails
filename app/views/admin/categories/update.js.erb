@@ -1,11 +1,13 @@
+jQuery('.category').removeClass('hovering');
 jQuery('#category_<%= @category.id %>_row').fadeOut();
-jQuery('#category_<%= @category.id %>_row').remove();
 
 <% if @category.parent && @category.parent.name != RacingAssociation.current.short_name %>
-  expandDisclosure('<%= @category.parent_id %>');
+  jQuery('#category_<%= @category.parent_id %>_row').html('<%= escape_javascript(render("category", category: @category.parent)) %>');
+  jQuery('#category_<%= @category.parent_id %>_row').effect("highlight", {}, 3000);
+  jQuery('#category_<%= @category.id %>_row').remove();
 <% else %>
   jQuery('#category_<%= @category.parent_id %>_row').html("<%= escape_javascript(render(@children.sort_by(&:name))) %>");
 <% end %>
 
-jQuery('#category_<%= @category.id %>_row').effect("highlight", {}, 3000);
+
 bindCategoryEvents();
