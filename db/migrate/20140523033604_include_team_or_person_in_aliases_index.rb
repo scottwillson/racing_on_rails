@@ -29,7 +29,7 @@ class IncludeTeamOrPersonInAliasesIndex < ActiveRecord::Migration
     execute "alter table aliases drop foreign key aliases_team_id_fk"
 
     remove_column :aliases, :alias
-    remove_column :aliases, :team_id
+    remove_column :aliases, :person_id
     remove_column :aliases, :team_id
   end
 
