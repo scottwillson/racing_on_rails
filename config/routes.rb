@@ -212,6 +212,9 @@ Rails.application.routes.draw do
     end
     get '/schedule/:year/calendar' => 'schedule#index', constraints: { year: /\d\d\d\d/ }
     get '/schedule/:year/calendar' => 'schedule#calendar', constraints: { year: /\d\d\d\d/ }
+    get '/schedule/calendar.xls' => redirect("/calendar.xls")
+    get '/schedule/calendar.ics' => redirect("/calendar.ics")
+    get '/schedule/calendar.atom' => redirect("/calendar.atom")
     get '/schedule/calendar' => 'schedule#calendar'
     get '/schedule/list/:discipline' => 'schedule#list'
     get '/schedule/:year/list/:discipline' => 'schedule#list', constraints: { year: /\d\d\d\d/ }

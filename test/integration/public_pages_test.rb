@@ -50,4 +50,15 @@ class PublicPagesTest < RacingOnRails::IntegrationTest
       assert_equal event, assigns(:event), "@event"
     end
   end
+
+  test "redirect old schedule URLs" do
+    get "/schedule/calendar.xls"
+    assert_response :redirect
+
+    get "/schedule/calendar.ics"
+    assert_response :redirect
+
+    get "/schedule/calendar.atom"
+    assert_response :redirect
+  end
 end
