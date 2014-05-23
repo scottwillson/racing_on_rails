@@ -104,7 +104,10 @@ module Teams
 
       Team.create!(name: "Team o IRCB")
 
-      team_to_keep.merge(team_to_merge)
+      person_with_team_name = Person.create!
+      person_with_team_name.aliases.create! name: "Team Oregon/River City Bicycles"
+
+      team_to_keep.merge team_to_merge
     end
   end
 end

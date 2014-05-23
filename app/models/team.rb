@@ -112,9 +112,8 @@ class Team < ActiveRecord::Base
 
       Team.delete team.id
 
-      existing_alias = aliases.detect{ |a| a.name.casecmp(team.name) == 0 }
-      if existing_alias.nil? && !Team.where(name: team.name).exists?
-        aliases.create(name: team.name)
+      if !Alias.where(name: team.name).where.not(team_id: nil).exists? && !Team.where(name: team.name).exists?
+        aliases.create! name: team.name
       end
 
       related_events.each(&:enable_notification!)
