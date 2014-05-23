@@ -96,21 +96,28 @@ class Team < ActiveRecord::Base
     Team.transaction do
       reload
       team.reload
-      team.results.collect do |result|
-        result.event
-      end || []
+      results true
+      team.results true
+
+      related_events = (results.map(&:event) + team.results.map(&:event) + events + team.events).compact.uniq
+      related_events.each(&:disable_notification!)
 
       team.create_team_for_historical_results!
+      team.results true
 
       aliases << team.aliases
       events << team.events
-      results(true) << team.results(true)
+      results << team.results
       people << team.people
-      Team.delete(team.id)
+
+      Team.delete team.id
+
       existing_alias = aliases.detect{ |a| a.name.casecmp(team.name) == 0 }
       if existing_alias.nil? && !Team.where(name: team.name).exists?
         aliases.create(name: team.name)
       end
+
+      related_events.each(&:enable_notification!)
     end
   end
 
