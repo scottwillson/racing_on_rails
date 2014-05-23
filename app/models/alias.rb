@@ -4,27 +4,33 @@
 # This could probably be combined with Name.
 class Alias < ActiveRecord::Base
   include Export::Aliases
-  belongs_to :person
-  belongs_to :team
+  belongs_to :aliasable, polymorphic: true
 
   validates_presence_of :name
-  validate :person_or_team
-  validate :cannot_shadow_person
-  validate :cannot_shadow_team
+  validate :cannot_shadow
 
   def self.find_all_people_by_name(name)
-    Alias.includes(:person).where("aliases.name" => name).where("person_id is not null").map(&:person)
+    Alias.includes(:aliasable).where("aliases.name" => name).where(aliasable_type: "Person").map(&:aliasable)
   end
 
   def self.find_all_teams_by_name(name)
-    logger.debug "Alias find_all_teams_by_name #{name}"
-    Alias.includes(:team).where("aliases.name" => name).where("team_id is not null").map(&:team)
+    Alias.includes(:aliasable).where("aliases.name" => name).where(aliasable_type: "Team").map(&:aliasable)
   end
 
-  def person_or_team
-    unless (person && !team) || (!person && team)
-      errors.add "person or team", "Must have exactly one person or team"
-    end
+  def person
+    self.aliasable
+  end
+
+  def person=(person)
+    self.aliasable = person
+  end
+
+  def team
+    self.aliasable
+  end
+
+  def team=(team)
+    self.aliasable = team
   end
 
   def to_s
@@ -34,15 +40,9 @@ class Alias < ActiveRecord::Base
 
   private
 
-  def cannot_shadow_person
-    if person_id && Person.where(name: name).exists?
-      errors.add('name', "Person named '#{name}' already exists. Cannot create alias that shadows a person's real name.")
-    end
-  end
-
-  def cannot_shadow_team
-    if team_id && Team.where(name: name).exists?
-      errors.add('name', "Team named '#{name}' already exists. Cannot create alias that shadows a team's real name.")
+  def cannot_shadow
+    if aliasable_id && aliasable_type.safe_constantize.where(name: name).exists?
+      errors.add :name, "#{aliasable_type} named '#{name}' already exists. Cannot create alias that shadows a real name."
     end
   end
 end

@@ -38,7 +38,7 @@ class Person < ActiveRecord::Base
   after_save :add_alias_for_old_name
   before_destroy :ensure_no_results
 
-  has_many :aliases
+  has_many :aliases, as: :aliasable, dependent: :destroy
   has_and_belongs_to_many :editable_people, class_name: "Person", foreign_key: "editor_id", before_add: :validate_unique_editors
   has_and_belongs_to_many :editors, class_name: "Person", association_foreign_key: "editor_id", before_add: :validate_unique_editors
   has_many :editor_requests, dependent: :destroy
@@ -949,7 +949,7 @@ class Person < ActiveRecord::Base
        name_was.present? &&
        name.present? &&
        name_was.casecmp(name) != 0 &&
-       !Alias.exists?(['name = ? and person_id = ?', name_was, id]) &&
+       !Alias.exists?(['name = ? and aliasable_id = ? and aliasable_type = ?', name_was, id, "Person"]) &&
        !Person.exists?(["name = ?", name_was])
 
       new_alias = Alias.new(name: name_was, person: self)

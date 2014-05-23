@@ -24,12 +24,12 @@ module Teams
       assert_not_nil(Team.find_by_name(team_to_keep.name), "#{team_to_keep.name} should be in DB")
       assert_equal(3, Result.where(team_id: team_to_keep.id).count, "Vanilla's results")
       assert_equal(1, Person.where(team_id: team_to_keep.id).count, "Vanilla's people")
-      assert_equal(1, Alias.where(team_id: team_to_keep.id).count, "Vanilla's aliases")
+      assert_equal(1, Alias.where(aliasable_id: team_to_keep.id).count, "Vanilla's aliases")
 
       assert_not_nil(Team.find_by_name(team_to_merge.name), "#{team_to_merge.name} should be in DB")
       assert_equal(2, Result.where(team_id: team_to_merge.id).count, "Gentle Lovers's results")
       assert_equal(3, Person.where(team_id: team_to_merge.id).count, "Gentle Lovers's people")
-      assert_equal(1, Alias.where(team_id: team_to_merge.id).count, "Gentle Lovers's aliases")
+      assert_equal(1, Alias.where(aliasable_id: team_to_merge.id).count, "Gentle Lovers's aliases")
 
       promoter_events = [ Event.create!(team: team_to_keep), Event.create!(team: team_to_merge) ]
 
@@ -38,7 +38,7 @@ module Teams
       assert_not_nil(Team.find_by_name(team_to_keep.name), "#{team_to_keep.name} should be in DB")
       assert_equal(5, Result.where(team_id: team_to_keep.id).count, "Vanilla's results")
       assert_equal(4, Person.where(team_id: team_to_keep.id).count, "Vanilla's people")
-      aliases = Alias.where(team_id: team_to_keep.id)
+      aliases = Alias.where(aliasable_id: team_to_keep.id)
       lovers_alias = aliases.detect{|a| a.name == 'Gentle Lovers'}
       assert_not_nil(lovers_alias, 'Vanilla should have Gentle Lovers alias')
       assert_equal(3, aliases.size, "Vanilla's aliases")
@@ -46,7 +46,7 @@ module Teams
       assert_nil(Team.find_by_name(team_to_merge.name), "#{team_to_merge.name} should not be in DB")
       assert_equal(0, Result.where(team_id: team_to_merge.id).count, "Gentle Lovers's results")
       assert_equal(0, Person.where(team_id: team_to_merge.id).count, "Gentle Lovers's people")
-      assert_equal(0, Alias.where(team_id: team_to_merge.id).count, "Gentle Lovers's aliases")
+      assert_equal(0, Alias.where(aliasable_id: team_to_merge.id).count, "Gentle Lovers's aliases")
       assert_same_elements(promoter_events, team_to_keep.events(true), "Should merge sponsored events")
     end
 

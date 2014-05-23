@@ -15,7 +15,7 @@ class Team < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  has_many :aliases
+  has_many :aliases, as: :aliasable, dependent: :destroy
   has_many :events
   has_many :people
   has_many :results
@@ -71,7 +71,7 @@ class Team < ActiveRecord::Base
       name_was.present? &&
       name.present? &&
       name_was.casecmp(name) != 0 &&
-      !Alias.exists?(['name = ? and team_id = ?', name_was, id]) &&
+      !Alias.exists?(['name = ? and aliasable_id = ? and aliasable_type = ?', name_was, id, "Team"]) &&
       !Team.exists?(["name = ?", name_was])
 
       new_alias = Alias.create!(name: name_was, team: self)
@@ -112,7 +112,7 @@ class Team < ActiveRecord::Base
 
       Team.delete team.id
 
-      if !Alias.where(name: team.name).where.not(team_id: nil).exists? && !Team.where(name: team.name).exists?
+      if !Alias.where(name: team.name, aliasable_type: "Team").where.not(aliasable_id: nil).exists? && !Team.where(name: team.name).exists?
         aliases.create! name: team.name
       end
 

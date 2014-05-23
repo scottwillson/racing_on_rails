@@ -29,11 +29,11 @@ class AliasTest < ActiveSupport::TestCase
 
   test "no dupe teams" do
     alias_record = FactoryGirl.create(:team_alias)
-    assert_raise(ActiveRecord::RecordNotUnique, "Alias should be invalid") { Alias.create(name: alias_record.name, team: FactoryGirl.create(:team)) }
+    assert_raise(ActiveRecord::RecordNotUnique, "Alias should be invalid") { Alias.create!(name: alias_record.name, team: FactoryGirl.create(:team)) }
   end
 
   test "no dupe people" do
     alias_record = FactoryGirl.create(:person_alias)
-    assert_raise(ActiveRecord::RecordNotUnique, "Alias should be invalid") { Alias.create(name: alias_record.name, person: FactoryGirl.create(:person)) }
+    assert_raise(ActiveRecord::RecordNotUnique, "Alias should be invalid") { Alias.create!(name: alias_record.name, person: FactoryGirl.create(:person)) }
   end
 end

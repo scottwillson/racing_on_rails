@@ -101,7 +101,7 @@ class PersonTest < ActiveSupport::TestCase
 
     assert Person.where(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
     assert_equal(3, Result.where(person_id: person_to_keep.id).count, "Molly's results")
-    assert_equal(1, Alias.where(person_id: person_to_keep.id).count, "Mollys's aliases")
+    assert_equal(1, Alias.where(aliasable_id: person_to_keep.id).count, "Mollys's aliases")
     assert_equal(1, person_to_keep.race_numbers.count, "Target person's race numbers")
     assert_equal("202", person_to_keep.race_numbers.first.value, "Target person's race number value")
     association = NumberIssuer.find_by_name(RacingAssociation.current.short_name)
@@ -109,7 +109,7 @@ class PersonTest < ActiveSupport::TestCase
 
     assert Person.where(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name).exists?, "#{person_to_merge.name} should be in DB"
     assert_equal(2, Result.where(person_id: person_to_merge.id).count, "Tonkin's results")
-    assert_equal(1, Alias.where(person_id: person_to_merge.id).count, "Tonkin's aliases")
+    assert_equal(1, Alias.where(aliasable_id: person_to_merge.id).count, "Tonkin's aliases")
     assert_equal(2, person_to_merge.race_numbers.count, "Merging person's race numbers")
     race_numbers = person_to_merge.race_numbers.sort
     assert_equal("102", race_numbers.first.value, "Merging person's race number value")
@@ -127,10 +127,10 @@ class PersonTest < ActiveSupport::TestCase
     person_to_keep.reload
     assert Person.where(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
     assert_equal(5, Result.where(person_id: person_to_keep.id).count, "Molly's results")
-    aliases = Alias.where(person_id: person_to_keep.id)
+    aliases = Alias.where(aliasable_id: person_to_keep.id)
     erik_alias = aliases.detect{|a| a.name == person_to_merge.name }
     assert_not_nil(erik_alias, "Molly should have merged person's name as an alias")
-    assert_equal(3, Alias.where(person_id: person_to_keep.id).count, "Molly's aliases")
+    assert_equal(3, Alias.where(aliasable_id: person_to_keep.id).count, "Molly's aliases")
     assert_equal(3, person_to_keep.race_numbers(true).size, "Target person's race numbers: #{person_to_keep.race_numbers.map(&:value)}")
     race_numbers = person_to_keep.race_numbers.sort
     assert_equal("102", race_numbers[0].value, "Person's race number value")
@@ -142,7 +142,7 @@ class PersonTest < ActiveSupport::TestCase
 
     assert !Person.where(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name).exists?, "#{person_to_merge.name} should not be in DB"
     assert_equal(0, Result.where(person_id: person_to_merge.id).count, "Tonkin's results")
-    assert_equal(0, Alias.where(person_id: person_to_merge.id).count, "Tonkin's aliases")
+    assert_equal(0, Alias.where(aliasable_id: person_to_merge.id).count, "Tonkin's aliases")
     assert_same_elements(promoter_events, person_to_keep.events(true), "Should merge promoter events")
 
     assert_equal "molly", person_to_keep.login, "Should preserve login"
@@ -213,24 +213,24 @@ class PersonTest < ActiveSupport::TestCase
 
     assert Person.where(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
     assert_equal(3, Result.where(person_id: person_to_keep.id).count, "Molly's results")
-    assert_equal(1, Alias.where(person_id: person_to_keep.id).count, "Mollys's aliases")
+    assert_equal(1, Alias.where(aliasable_id: person_to_keep.id).count, "Mollys's aliases")
 
     assert Person.where(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name).exists?, "#{person_to_merge.name} should be in DB"
     assert_equal(2, Result.where(person_id: person_to_merge.id).count, "Tonkin's results")
-    assert_equal(1, Alias.where(person_id: person_to_merge.id).count, "Tonkin's aliases")
+    assert_equal(1, Alias.where(aliasable_id: person_to_merge.id).count, "Tonkin's aliases")
 
     person_to_keep.merge(person_to_merge)
 
     assert Person.where(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
     assert_equal(5, Result.where(person_id: person_to_keep.id).count, "Molly's results")
-    aliases = Alias.where(person_id: person_to_keep.id)
+    aliases = Alias.where(aliasable_id: person_to_keep.id)
     erik_alias = aliases.detect{|a| a.name == 'Erik Tonkin'}
     assert_nil(erik_alias, 'Molly should not have Erik Tonkin alias because there is another Erik Tonkin')
-    assert_equal(2, Alias.where(person_id: person_to_keep.id).count, "Molly's aliases")
+    assert_equal(2, Alias.where(aliasable_id: person_to_keep.id).count, "Molly's aliases")
 
     assert Person.where(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name).exists?, "#{person_to_merge.name} should still be in DB"
     assert_equal(0, Result.where(person_id: person_to_merge.id).count, "Tonkin's results")
-    assert_equal(0, Alias.where(person_id: person_to_merge.id).count, "Tonkin's aliases")
+    assert_equal(0, Alias.where(aliasable_id: person_to_merge.id).count, "Tonkin's aliases")
   end
 
   test "name" do
