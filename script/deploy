@@ -1,7 +1,13 @@
 #! /usr/bin/env ruby
 
+# [ "aba", "atra", "mbra", "nabra", "obra", "wsba" ].each do |association|
+#   puts "Deploy #{association}"
+#   `script/local #{association}`
+#   puts `cap deploy:migrations`
+# end
+
 [ "aba", "atra", "mbra", "nabra", "obra", "wsba" ].each do |association|
-  puts "Deploy #{association}"
+  puts "Clean up #{association}"
   `script/local #{association}`
-  puts `cap deploy:migrations`
+  puts `cap deploy:cleanup`
 end
