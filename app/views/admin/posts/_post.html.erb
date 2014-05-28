@@ -4,7 +4,7 @@
   <td class="subject">
     <%= link_to post.subject, edit_admin_mailing_list_post_path(post.mailing_list, post) %>
   </td>
-  <td class="sender"><%= mail_to post.sender, post.sender %></td>
+  <td class="sender"><%= mail_to post.from_email, post.from_name %></td>
   <td class="actions">
     <%= link_to "Edit", edit_admin_mailing_list_post_path(post.mailing_list, post)%>
     <%= link_to "Delete", admin_mailing_list_post_path(post.mailing_list, post), method: :delete, class: "btn btn-default btn-sm", id: "delete" %>

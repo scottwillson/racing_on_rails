@@ -61,7 +61,7 @@ module Admin
     private
 
     def post_params
-      params_without_mobile.require(:post).permit(:body, :date, :from_name, :from_email, :path, :sender, :subject, :title)
+      params_without_mobile.require(:post).permit(:body, :date, :from_name, :from_email, :path, :subject, :title)
     end
 
     def assign_mailing_list

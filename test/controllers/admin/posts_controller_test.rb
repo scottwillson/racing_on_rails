@@ -7,8 +7,8 @@ module Admin
 
     test "index" do
       login_as FactoryGirl.create(:administrator)
-      mailing_list = FactoryGirl.create(:mailing_list)
-      get :index, mailing_list_id: mailing_list.to_param
+      post = FactoryGirl.create(:post)
+      get :index, mailing_list_id: post.mailing_list.to_param
       assert_response :success
       assert_template layout: "admin/application"
     end
