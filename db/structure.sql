@@ -296,7 +296,6 @@ CREATE TABLE `events` (
   `updated_at` datetime DEFAULT NULL,
   `flyer_approved` tinyint(1) NOT NULL DEFAULT '0',
   `cancelled` tinyint(1) DEFAULT '0',
-  `notification` tinyint(1) DEFAULT '1',
   `number_issuer_id` int(11) DEFAULT NULL,
   `first_aid_provider` varchar(255) DEFAULT NULL,
   `pre_event_fees` float DEFAULT NULL,
@@ -1020,7 +1019,7 @@ CREATE TABLE `versions` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-05-22 22:03:58
+-- Dump completed on 2014-05-29 21:40:41
 INSERT INTO schema_migrations (version) VALUES ('1');
 
 INSERT INTO schema_migrations (version) VALUES ('10');
@@ -1314,6 +1313,8 @@ INSERT INTO schema_migrations (version) VALUES ('20140415022407');
 INSERT INTO schema_migrations (version) VALUES ('20140430213503');
 
 INSERT INTO schema_migrations (version) VALUES ('20140523033604');
+
+INSERT INTO schema_migrations (version) VALUES ('20140530044004');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

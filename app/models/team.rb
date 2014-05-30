@@ -100,7 +100,6 @@ class Team < ActiveRecord::Base
       team.results true
 
       related_events = (results.map(&:event) + team.results.map(&:event) + events + team.events).compact.uniq
-      related_events.each(&:disable_notification!)
 
       team.create_team_for_historical_results!
       team.results true
@@ -115,8 +114,6 @@ class Team < ActiveRecord::Base
       if !Alias.where(name: team.name, aliasable_type: "Team").where.not(aliasable_id: nil).exists? && !Team.where(name: team.name).exists?
         aliases.create! name: team.name
       end
-
-      related_events.each(&:enable_notification!)
     end
   end
 

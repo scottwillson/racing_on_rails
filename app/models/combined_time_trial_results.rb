@@ -29,25 +29,6 @@ class CombinedTimeTrialResults < Event
     Event.where("id in (select parent_id from events where type='CombinedTimeTrialResults')")
   end
 
-  def self.create_or_destroy_for!(event)
-    return event.combined_results unless event.notification_enabled?
-    event.disable_notification!
-
-    if destroy_combined_results?(event)
-      destroy_combined_results(event)
-    elsif requires_combined_results?(event)
-      create_combined_results(event)
-      destroy_combined_results(event) unless event.combined_results.has_results?
-    end
-
-    event.enable_notification!
-    event.combined_results
-  end
-
-  def self.destroy_combined_results?(event)
-    !requires_combined_results?(event) || (event.combined_results(true) && !event.combined_results.has_results?)
-  end
-
   def self.destroy_combined_results(event)
     if event.combined_results
       event.combined_results.destroy_races
@@ -85,14 +66,6 @@ class CombinedTimeTrialResults < Event
 
   def default_name
     "Combined"
-  end
-
-  def enable_notification!
-    false
-  end
-
-  def disable_notification!
-    false
   end
 
   def should_calculate?

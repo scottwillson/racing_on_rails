@@ -216,11 +216,9 @@ class Result < ActiveRecord::Base
 
   def cache_attributes!(*args)
     args = args.extract_options!
-    event.disable_notification!
     cache_event_attributes if args.include?(:event)
     cache_non_event_attributes if args.empty? || args.include?(:non_event)
     save!
-    event.enable_notification!
   end
 
   def ensure_custom_attributes

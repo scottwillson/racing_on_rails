@@ -8,17 +8,13 @@ class EventObserver < ActiveRecord::Observer
       date: event.date
     )
 
-    if event.notification_enabled?
-      event.parent.try :update_date
-    end
+    event.parent.try :update_date
 
     true
   end
 
   def after_destroy(event)
-    if event.notification_enabled?
-      event.parent.try :update_date
-    end
+    event.parent.try :update_date
 
     true
   end

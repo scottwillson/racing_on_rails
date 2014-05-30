@@ -133,7 +133,6 @@ module Schedule
       event_hash.delete :series
 
       event = SingleDayEvent.new(event_hash)
-      event.notification = false
 
       logger.debug("Add #{event.name} to schedule") if logger.debug?
       event

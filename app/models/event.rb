@@ -31,8 +31,6 @@ require_dependency "acts_as_tree/extensions"
 # See propogated_attributes
 #
 # It's debatable whether we need STI subclasses or not.
-#
-# All notification code just supports combined TT results, and should be moved to background processing
 class Event < ActiveRecord::Base
   TYPES =  [ 'Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries' ]
 
@@ -262,7 +260,6 @@ class Event < ActiveRecord::Base
   def attributes_for_duplication
     _attributes = attributes.dup
     _attributes.delete("id")
-    _attributes.delete("notification")
     _attributes.delete("created_at")
     _attributes.delete("updated_at")
     _attributes
@@ -350,7 +347,6 @@ class Event < ActiveRecord::Base
 
   def destroy_races
     ActiveRecord::Base.lock_optimistically = false
-    disable_notification!
     transaction do
       if combined_results
         combined_results.destroy_races
@@ -367,7 +363,6 @@ class Event < ActiveRecord::Base
       races.each(&:destroy)
       races.delete(races.select(&:destroyed?))
     end
-    enable_notification!
     ActiveRecord::Base.lock_optimistically = true
   end
 
@@ -406,40 +401,6 @@ class Event < ActiveRecord::Base
     # Don't trigger callbacks
     Event.where(id: id).update_all(updated_at: Time.zone.now)
     true
-  end
-
-  # Update database immediately with save!
-  def disable_notification!
-    if notification_enabled?
-      ActiveRecord::Base.lock_optimistically = false
-      # Don't trigger after_save callback just because we're enabling notification
-      self.notification = false
-      Event.where(id: id).update_all("notification = false")
-      children.each(&:disable_notification!)
-      ActiveRecord::Base.lock_optimistically = true
-    end
-    false
-  end
-
-  # Update database immediately with save!
-  def enable_notification!
-    unless notification_enabled?
-      ActiveRecord::Base.lock_optimistically = false
-      # Don't trigger after_save callback just because we're enabling notification
-      self.notification = true
-      Event.where(id: id).update_all("notification = true")
-      children.each(&:enable_notification!)
-      ActiveRecord::Base.lock_optimistically = true
-    end
-    true
-  end
-
-  # Child results fire change notifications? Set to false before bulk changes
-  # like event results import to prevent many pointless change notifications
-  # and CombinedTimeTrialResults recalcs
-  # Check database to ensure most recent value is used, and not a association's out-of-date cached value
-  def notification_enabled?
-    Event.connection.select_value("select notification from events where id = #{id}") == 1
   end
 
   # Set point value/factor for this Competition. Convenience method to hide CompetitionEventMembership complexity.

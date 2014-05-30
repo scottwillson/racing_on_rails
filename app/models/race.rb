@@ -244,30 +244,24 @@ class Race < ActiveRecord::Base
   end
 
   def calculate_members_only_places!
-    event_notification_was_enabled = event.notification_enabled?
-    event.disable_notification!
-    begin
-      # count up from zero
-      last_members_only_place = 0
-      # assuming first result starting at zero+one (better than sorting results twice?)
-      last_result_place = 0
-      results.sort.each do |result|
-        place_before = result.members_only_place.to_i
-        result.members_only_place = ''
-        if result.place.to_i > 0
-          if ((result.person.nil? || (result.person && result.person.member?(result.date))) && !non_members_on_team(result))
-            # only increment if we have moved onto a new place
-            last_members_only_place += 1 if (result.place.to_i != last_members_only_place && result.place.to_i!=last_result_place)
-            result.members_only_place = last_members_only_place.to_s
-          end
-          # Slight optimization. Most of the time, no point in saving a result that hasn't changed
-          result.update(members_only_place: result.members_only_place) if place_before != result.members_only_place
-          # store to know when switching to new placement (team result feature)
-          last_result_place = result.place.to_i
+    # count up from zero
+    last_members_only_place = 0
+    # assuming first result starting at zero+one (better than sorting results twice?)
+    last_result_place = 0
+    results.sort.each do |result|
+      place_before = result.members_only_place.to_i
+      result.members_only_place = ''
+      if result.place.to_i > 0
+        if ((result.person.nil? || (result.person && result.person.member?(result.date))) && !non_members_on_team(result))
+          # only increment if we have moved onto a new place
+          last_members_only_place += 1 if (result.place.to_i != last_members_only_place && result.place.to_i!=last_result_place)
+          result.members_only_place = last_members_only_place.to_s
         end
+        # Slight optimization. Most of the time, no point in saving a result that hasn't changed
+        result.update(members_only_place: result.members_only_place) if place_before != result.members_only_place
+        # store to know when switching to new placement (team result feature)
+        last_result_place = result.place.to_i
       end
-    ensure
-      event.enable_notification! if event_notification_was_enabled
     end
   end
 

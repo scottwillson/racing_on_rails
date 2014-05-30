@@ -61,12 +61,9 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert(event.combined_results(true), "TT event should have combined results")
     event.reload
     assert(CombinedTimeTrialResults.requires_combined_results?(event), "requires_combined_results?")
-    assert(!CombinedTimeTrialResults.destroy_combined_results?(event), "destroy_combined_results?")
 
     event.auto_combined_results = false
-    assert(CombinedTimeTrialResults.destroy_combined_results?(event), "destroy_combined_results?")
     event.save!
-    assert(CombinedTimeTrialResults.destroy_combined_results?(event), "destroy_combined_results?")
 
     event.reload
     assert(!event.auto_combined_results, "auto_combined_results")

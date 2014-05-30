@@ -178,7 +178,7 @@ module Admin
     test "destroy races" do
       jack_frost = FactoryGirl.create(:time_trial_event)
       jack_frost.races.create!(category: FactoryGirl.create(:category)).results.create!(place: "1", person: FactoryGirl.create(:person), time: 1200)
-      CombinedTimeTrialResults.create_or_destroy_for!(jack_frost)
+      CombinedTimeTrialResults.calculate!
       assert_not_nil(jack_frost.combined_results, "Event should have combined results before destroying races")
       assert_equal(1, jack_frost.races.count, "Races before destroy")
       xhr :delete, :destroy_races, id: jack_frost.id, commit: 'Delete'

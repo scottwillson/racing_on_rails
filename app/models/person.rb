@@ -869,7 +869,6 @@ class Person < ActiveRecord::Base
       self.merge_version do
         events_with_results = other_person.results.collect do |result|
           event = result.event
-          event.disable_notification! if event
           event
         end.compact || []
         if login.blank? && other_person.login.present?
@@ -912,10 +911,6 @@ class Person < ActiveRecord::Base
         existing_alias = aliases.detect{ |a| a.name.casecmp(other_person.name) == 0 }
         if existing_alias.nil? and Person.find_all_by_name(other_person.name).empty?
           aliases.create(name: other_person.name)
-        end
-        events_with_results.each do |event|
-          event.reload
-          event.enable_notification!
         end
       end
       ActiveRecord::Base.lock_optimistically = true

@@ -22,10 +22,8 @@ class EventTest < ActiveSupport::TestCase
     assert_equal(RacingAssociation.current.default_sanctioned_by, event.sanctioned_by, 'sanctioned_by')
     assert_equal(number_issuer, event.number_issuer(true), 'number_issuer')
 
-    assert_equal true, event.notification?, "event notification?"
     event.save!
     event.reload
-    assert_equal true, event.notification?, "event notification?"
   end
 
   test "set promoter by name no id" do
@@ -417,7 +415,6 @@ class EventTest < ActiveSupport::TestCase
   test "attributes_for_duplication" do
     attributes = FactoryGirl.create(:event).attributes_for_duplication
     assert !attributes.include?("id"), "attributes_for_duplication should not include id"
-    assert !attributes.include?("notification"), "attributes_for_duplication should not include notification"
     assert !attributes.include?("updated_at"), "attributes_for_duplication should not include updated_at"
     assert attributes.include?("name"), "attributes_for_duplication should include name"
     assert attributes.include?("city"), "attributes_for_duplication should include city"
