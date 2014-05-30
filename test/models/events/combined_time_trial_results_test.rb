@@ -3,11 +3,11 @@ require File.expand_path("../../../test_helper", __FILE__)
 # :stopdoc:
 class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
   test "create" do
-    combined_results = CombinedTimeTrialResults.create!(parent: FactoryGirl.create(:time_trial_event))
+    combined_results = CombinedTimeTrialResults.create_combined_results(FactoryGirl.create(:time_trial_event))
     assert_equal('Combined', combined_results.name, 'name')
     assert_equal(false, combined_results.ironman, 'Ironman')
     assert_equal(0, combined_results.bar_points, 'bar points')
-    assert_equal(1, combined_results.races.size, 'combined_results.races')
+    assert_equal(0, combined_results.races.size, 'combined_results.races')
   end
 
   test "combined tt" do

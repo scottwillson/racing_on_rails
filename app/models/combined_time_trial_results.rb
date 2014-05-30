@@ -43,7 +43,7 @@ class CombinedTimeTrialResults < Event
 
   def self.create_combined_results(event)
     unless event.combined_results
-      event.create_combined_results
+      event.create_combined_results(name: "Combined")
     end
     event.combined_results
   end
@@ -58,10 +58,6 @@ class CombinedTimeTrialResults < Event
 
   def default_ironman
     false
-  end
-
-  def default_name
-    "Combined"
   end
 
   def should_calculate?
