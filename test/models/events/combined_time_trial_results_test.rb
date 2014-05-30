@@ -51,67 +51,6 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert_equal('35:12.00', result.time_s, 'time_s')
   end
 
-  test "honor auto combined results" do
-    event = FactoryGirl.create(:time_trial_event)
-    race = FactoryGirl.create(:race, event: event)
-    FactoryGirl.create(:result, race: race, place: "1", time: 1800)
-
-    CombinedTimeTrialResults.calculate!
-
-    assert(event.combined_results(true), "TT event should have combined results")
-    event.reload
-    assert(CombinedTimeTrialResults.requires_combined_results?(event), "requires_combined_results?")
-
-    event.auto_combined_results = false
-    event.save!
-
-    event.reload
-    assert(!event.auto_combined_results, "auto_combined_results")
-
-    CombinedTimeTrialResults.calculate!
-    assert(event.combined_results(true).nil?, "TT event should not have combined results")
-
-    event.auto_combined_results = true
-    event.save!
-
-    CombinedTimeTrialResults.calculate!
-
-    event.reload
-    assert(event.auto_combined_results, "auto_combined_results")
-    assert(!event.combined_results(true).nil?, "TT event should have combined results")
-  end
-
-  test "requires combined results for children" do
-    event = FactoryGirl.create(:time_trial_event)
-
-    event.reload
-    ten_mile = event.children.create!(name: "10 mile")
-    twenty_mile = event.children.create!(name: "20 mile")
-
-    ten_mile.reload
-    assert_equal("Time Trial", ten_mile.discipline, "10 mile child event discipline")
-    twenty_mile.reload
-    assert_equal("Time Trial", twenty_mile.discipline, "20 mile child event discipline")
-
-    FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: ten_mile), place: "1", time: 1000)
-    FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: twenty_mile), place: "1", time: 1000)
-
-    assert_equal("Time Trial", ten_mile.discipline, "10 mile child event discipline")
-    assert(ten_mile.auto_combined_results?, "ten_mile auto_combined_results?")
-    assert(ten_mile.has_results?(true), "ten_mile has_results?")
-    assert(CombinedTimeTrialResults.requires_combined_results?(ten_mile), "10 mile requires_combined_results?")
-    assert(CombinedTimeTrialResults.requires_combined_results?(twenty_mile), "20 mile requires_combined_results?")
-
-    CombinedTimeTrialResults.calculate!
-
-    assert_not_nil(ten_mile.combined_results(true), "10 mile should have combined_results")
-    assert_not_nil(twenty_mile.combined_results(true), "20 mile should have combined_results")
-    assert_nil(event.combined_results(true), "Parent event should not have combined_results")
-
-    assert_equal("Combined", ten_mile.combined_results.name, "10 mile combined results")
-    assert_equal("Combined", twenty_mile.combined_results.name, "20 mile combined results")
-  end
-
   test "destroy" do
     series = Series.create!(discipline: "Time Trial")
     FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: series), place: "1", time: 1000)

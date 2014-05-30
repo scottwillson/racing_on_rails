@@ -250,10 +250,6 @@ module Competitions
       false
     end
 
-    def requires_combined_results?
-      false
-    end
-
     def results_per_event
       Competition::UNLIMITED
     end

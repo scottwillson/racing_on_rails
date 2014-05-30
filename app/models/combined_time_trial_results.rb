@@ -37,10 +37,6 @@ class CombinedTimeTrialResults < Event
     end
   end
 
-  def self.requires_combined_results?(event)
-    allows_combined_results?(event) && event.auto_combined_results? && event.has_results?(true)
-  end
-
   def self.allows_combined_results?(event)
     event.discipline == "Time Trial"
   end
