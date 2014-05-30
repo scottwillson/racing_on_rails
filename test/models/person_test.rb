@@ -1117,8 +1117,8 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal("Weavedog", person.last_name(2002), "Historical last_name 2002")
 
     assert_equal("Ryan Farris", person.name(2003), "Historical name 2003")
-    assert_equal("Ryan Farris", person.name(2004), "Historical name 2004")
-    assert_equal("Ryan Farris", person.name(Time.zone.today.year - 1), "Historical name last year")
+    assert_equal("Ryan Weaver", person.name(2004), "Historical name 2004")
+    assert_equal("Ryan Weaver", person.name(Time.zone.today.year - 1), "Historical name last year")
     assert_equal("Ryan Weaver", person.name(Time.zone.today.year), "Name this year")
     assert_equal("Ryan Weaver", person.name(Time.zone.today.year + 1), "Name next year")
   end

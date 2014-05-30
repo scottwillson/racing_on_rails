@@ -6,20 +6,17 @@ module Teams
   # :stopdoc:
   class NameTest < ActiveSupport::TestCase
     test "name with date" do
-      team = Team.create!(name: "Tecate-Una Mas")
-      assert_equal(0, team.names(true).size, "names")
+      team = Team.create! name: "Tecate-Una Mas"
+      team.names.create! name: "Twin Peaks", date: Time.zone.local(2010)
+      team.names.create! name: "Team Tecate", date: Time.zone.local(2011)
 
-      team.names.create!(name: "Team Tecate", date: 1.years.ago)
-      assert_equal(1, team.names(true).size, "names")
-
-      team.names.create!(name: "Twin Peaks", date: 2.years.ago)
-      assert_equal(2, team.names(true).size, "names")
-
-      assert_equal("Tecate-Una Mas", team.name)
-      assert_equal("Tecate-Una Mas", team.name(Time.zone.today))
-      assert_equal("Team Tecate", team.name(1.years.ago))
-      assert_equal("Twin Peaks", team.name(2.years.ago))
-      assert_equal("Tecate-Una Mas", team.name(Time.zone.today.next_year))
+      assert_equal "Twin Peaks",     team.name(2009)
+      assert_equal "Twin Peaks",     team.name(2010)
+      assert_equal "Team Tecate",    team.name(2011)
+      assert_equal "Tecate-Una Mas",    team.name(2012)
+      assert_equal "Tecate-Una Mas", team.name(Time.zone.today)
+      assert_equal "Tecate-Una Mas", team.name(Time.zone.today.next_year)
+      assert_equal "Tecate-Una Mas", team.name
     end
 
     test "create new name if there are results from previous year" do
@@ -116,7 +113,7 @@ module Teams
       assert_equal("Mapei-Clas", team.name(2002), "Historical name 2002")
       assert_equal("Quick Step", team.name(2003), "Historical name 2003")
       assert_equal("Quick Step", team.name(2003), "Historical name 2004")
-      assert_equal("Quick Step", team.name(Time.zone.today.year - 1), "Historical name last year")
+      assert_equal("Vanilla", team.name(Time.zone.today.year - 1), "Last year (after last historical name so should use current name)")
       assert_equal("Vanilla", team.name(Time.zone.today.year), "Name this year")
       assert_equal("Vanilla", team.name(Time.zone.today.year + 1), "Name next year")
     end
