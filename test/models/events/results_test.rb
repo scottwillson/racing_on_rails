@@ -168,5 +168,16 @@ module Events
       assert(series_event.has_results_including_children?, "Series Event has_results_including_children?")
       assert(child_event.has_results_including_children?, "Series Event child has_results_including_children?")
     end
+
+    test "results_updated_at" do
+      event = FactoryGirl.create(:event)
+      assert_equal nil, event.results_updated_at, "results_updated_at with no results"
+
+      result = nil
+      travel_to 1.day.ago do
+        result = FactoryGirl.create(:result)
+      end
+      assert_equal result.reload.updated_at, result.event.results_updated_at, "results_updated_at should use result updated_at"
+    end
   end
 end

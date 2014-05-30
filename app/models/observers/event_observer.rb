@@ -10,7 +10,6 @@ class EventObserver < ActiveRecord::Observer
 
     if event.notification_enabled?
       event.parent.try :update_date
-      CombinedTimeTrialResults.create_or_destroy_for! event
     end
 
     true

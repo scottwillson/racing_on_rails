@@ -3,10 +3,31 @@
 # Destroy +combined_results+ if they exist, but should not
 # All the calculation happens synchronously, which isn't ideal. Logic overlaps heavily with Competition as well.
 class CombinedTimeTrialResults < Event
-  before_save :set_mandatory_defaults
-  after_create :calculate!
   validates_uniqueness_of :parent_id, message: "Event can only have one CombinedTimeTrialResults"
   validate { |combined_results| combined_results.combined_results.nil? }
+
+  default_value_for :auto_combined_results, false
+
+  def self.calculate!
+    requires_combined_results_events.each do |e|
+      combined_results = create_combined_results(e)
+      combined_results.calculate!
+    end
+
+    (has_combined_results_events - requires_combined_results_events).each do |e|
+      destroy_combined_results e
+    end
+  end
+
+  def self.requires_combined_results_events
+    Event.
+      where(discipline: "Time Trial", auto_combined_results: true).
+      select(&:has_results?)
+  end
+
+  def self.has_combined_results_events
+    Event.where("id in (select parent_id from events where type='CombinedTimeTrialResults')")
+  end
 
   def self.create_or_destroy_for!(event)
     return event.combined_results unless event.notification_enabled?
@@ -44,7 +65,10 @@ class CombinedTimeTrialResults < Event
   end
 
   def self.create_combined_results(event)
-    event.create_combined_results unless event.combined_results
+    unless event.combined_results
+      event.create_combined_results
+    end
+    event.combined_results
   end
 
   def default_bar_points
@@ -71,17 +95,15 @@ class CombinedTimeTrialResults < Event
     false
   end
 
-  def set_mandatory_defaults
-    self.bar_points = default_bar_points
-    self.discipline = default_discipline
-    self.ironman = default_ironman
-    self.name = default_name
-    self.auto_combined_results = false
-    self.notification = false
-    true
+  def should_calculate?
+    parent.results_updated_at && (results_updated_at.nil? || parent.results_updated_at > results_updated_at)
   end
 
   def calculate!
+    if !should_calculate?
+      return false
+    end
+
     destroy_races
     combined_race = races.create!(category: Category.find_or_create_by(name: "Combined"))
     parent.races.each do |race|

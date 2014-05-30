@@ -316,6 +316,11 @@ class Event < ActiveRecord::Base
     true
   end
 
+  # Result updated_at should propagate to Event updated_at but does not yet
+  def results_updated_at
+    races.map(&:results).flatten.map(&:updated_at).max
+  end
+
   # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
   # The results page should show the results in that case.
   def has_results?(reload = false)

@@ -25,7 +25,7 @@ module RacingOnRails
     config.active_record.schema_format = :sql
 
     unless ENV["SKIP_OBSERVERS"]
-      config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :result_observer, :team_observer
+      config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :team_observer
     end
 
     # HP's proxy, among others, gets this wrong
