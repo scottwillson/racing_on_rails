@@ -321,7 +321,7 @@ class Event < ActiveRecord::Base
   # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
   # The results page should show the results in that case.
   def has_results?(reload = false)
-    self.races(reload).any? { |r| !r.results(reload).empty? }
+    races(reload).any? { |r| !r.results(reload).empty? }
   end
 
   # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
@@ -342,7 +342,11 @@ class Event < ActiveRecord::Base
 
   # Returns only the Races with +results+
   def races_with_results
-    races.select { |race| !race.results.empty? }.sort
+    races.select { |race| race.results.present? }.sort
+  end
+
+  def time_trial_finishes?
+    races.map(&:results).flatten.any?(&:finished_time_trial?)
   end
 
   def destroy_races

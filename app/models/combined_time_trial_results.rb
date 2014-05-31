@@ -20,9 +20,10 @@ class CombinedTimeTrialResults < Event
   end
 
   def self.requires_combined_results_events
+    # TODO use SQL for this
     Event.
       where(discipline: "Time Trial", auto_combined_results: true).
-      select(&:has_results?)
+      select(&:time_trial_finishes?)
   end
 
   def self.has_combined_results_events
@@ -61,7 +62,9 @@ class CombinedTimeTrialResults < Event
   end
 
   def should_calculate?
-    parent.results_updated_at && (results_updated_at.nil? || parent.results_updated_at > results_updated_at)
+    parent.results_updated_at &&
+    (results_updated_at.nil? || parent.results_updated_at > results_updated_at) &&
+    parent.time_trial_finishes?
   end
 
   def calculate!
@@ -69,36 +72,39 @@ class CombinedTimeTrialResults < Event
       return false
     end
 
-    destroy_races
-    combined_race = races.create!(category: Category.find_or_create_by(name: "Combined"))
-    parent.races.each do |race|
-      race.results.each do |result|
-        if result.place.to_i > 0 && result.time && result.time > 0
-          combined_race.results.create!(
-            person: result.person,
-            team: result.team,
-            time: result.time,
-            category: race.category
-          )
+    transaction do
+      destroy_races
+      combined_race = races.create!(category: Category.find_or_create_by(name: "Combined"))
+      parent.races.each do |race|
+        race.results.each do |result|
+          if result.finished_time_trial?
+            combined_race.results.create!(
+              person: result.person,
+              team: result.team,
+              time: result.time,
+              category: race.category
+            )
+          end
         end
       end
-    end
-    _results = combined_race.results.to_a.sort do |x, y|
-      if x.time
-        if y.time
-          x.time <=> y.time
+      _results = combined_race.results.to_a.sort do |x, y|
+        if x.time
+          if y.time
+            x.time <=> y.time
+          else
+            1
+          end
         else
-          1
+          -1
         end
-      else
-        -1
+      end
+      place = 1
+      _results.each do |result|
+        result.update(place: place.to_s)
+        place = place + 1
       end
     end
-    place = 1
-    _results.each do |result|
-      result.update(place: place.to_s)
-      place = place + 1
-    end
+
     true
   end
 end

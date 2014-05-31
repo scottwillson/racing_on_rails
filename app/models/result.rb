@@ -324,6 +324,10 @@ class Result < ActiveRecord::Base
     place.to_i > 0
   end
 
+  def finished_time_trial?
+    place.to_i > 0 && time && time > 0
+  end
+
   # Does this result belong to the last event in a MultiDayEvent?
   def last_event?
     return false unless self.event && event.parent
