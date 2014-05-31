@@ -14,14 +14,13 @@ module Names
     def name_record_for_year(year)
       return nil if year.blank? || year >= Time.zone.today.year || names.none?
 
-      # Assume names always sorted
-      if year <= names.first.year
-        return names.first
-      elsif year >= names.last.year
-        return names.last
+      # Assume names always sorted in year ascending
+      name_for_year = names.detect { |n| n.year == year }
+      if name_for_year
+        name_for_year
+      elsif year <= names.first.year
+        names.first
       end
-
-      names.detect { |n| n.year == year }
     end
 
     # Remember names from previous years. Keeps the correct name on old results without creating additional teams.

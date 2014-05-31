@@ -3,8 +3,11 @@ require File.expand_path("../../../test_helper", __FILE__)
 # :stopdoc:
 class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
   test "create" do
-    combined_results = CombinedTimeTrialResults.create!(parent: FactoryGirl.create(:time_trial_event))
-    assert_equal(false, combined_results.notification?, "CombinedTimeTrialResults should not send notification updates")
+    combined_results = CombinedTimeTrialResults.create_combined_results(FactoryGirl.create(:time_trial_event))
+    assert_equal('Combined', combined_results.name, 'name')
+    assert_equal(false, combined_results.ironman, 'Ironman')
+    assert_equal(0, combined_results.bar_points, 'bar points')
+    assert_equal(0, combined_results.races.size, 'combined_results.races')
   end
 
   test "combined tt" do
@@ -23,12 +26,8 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     FactoryGirl.create(:result, race: race_1, place: "DNF", time: 0)
     FactoryGirl.create(:result, race: race_1, place: "DQ", time: 12)
 
-    event.save!
+    CombinedTimeTrialResults.calculate!
     combined_results = event.combined_results(true)
-    assert_equal(false, combined_results.ironman, 'Ironman')
-    assert_equal('Combined', combined_results.name, 'name')
-    assert_equal(0, combined_results.bar_points, 'bar points')
-    assert_equal(1, combined_results.races.size, 'combined_results.races')
     combined = combined_results.races.first
     assert_equal(3, combined.results.size, 'combined.results')
     _results = combined.results.sort
@@ -52,87 +51,20 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert_equal('35:12.00', result.time_s, 'time_s')
   end
 
-  test "honor auto combined results" do
-    event = FactoryGirl.create(:time_trial_event)
-    race = FactoryGirl.create(:race, event: event)
-    FactoryGirl.create(:result, race: race, place: "1", time: 1800)
-
-    assert(event.combined_results(true), "TT event should have combined results")
-    event.reload
-    assert(CombinedTimeTrialResults.requires_combined_results?(event), "requires_combined_results?")
-    assert(!CombinedTimeTrialResults.destroy_combined_results?(event), "destroy_combined_results?")
-    assert_equal(true, event.notification?, "Event notification should be enabled")
-
-    event.auto_combined_results = false
-    assert(CombinedTimeTrialResults.destroy_combined_results?(event), "destroy_combined_results?")
-    event.save!
-    assert(CombinedTimeTrialResults.destroy_combined_results?(event), "destroy_combined_results?")
-
-    event.reload
-    assert_equal(true, event.notification?, "Event notification should be enabled")
-    assert(!event.auto_combined_results, "auto_combined_results")
-    assert(event.combined_results(true).nil?, "TT event should not have combined results")
-
-    event.auto_combined_results = true
-    event.save!
-
-    event.reload
-    assert_equal(true, event.notification?, "Event notification should be enabled")
-    assert(event.auto_combined_results, "auto_combined_results")
-    assert(!event.combined_results(true).nil?, "TT event should have combined results")
-  end
-
-  test "requires combined results for children" do
-    event = FactoryGirl.create(:time_trial_event)
-
-    event.reload
-    assert_equal(true, event.notification?, "event notification?")
-    ten_mile = event.children.create!(name: "10 mile")
-    twenty_mile = event.children.create!(name: "20 mile")
-
-    ten_mile.reload
-    assert_equal("Time Trial", ten_mile.discipline, "10 mile child event discipline")
-    assert_equal(true, ten_mile.notification?, "10 mile child event notification?")
-    twenty_mile.reload
-    assert_equal("Time Trial", twenty_mile.discipline, "20 mile child event discipline")
-    assert_equal(true, twenty_mile.notification?, "20 mile child event notification?")
-
-    FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: ten_mile), place: "1", time: 1000)
-    FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: twenty_mile), place: "1", time: 1000)
-
-    assert_equal("Time Trial", ten_mile.discipline, "10 mile child event discipline")
-    assert(ten_mile.auto_combined_results?, "ten_mile auto_combined_results?")
-    assert(ten_mile.has_results?(true), "ten_mile has_results?")
-    assert(CombinedTimeTrialResults.requires_combined_results?(ten_mile), "10 mile requires_combined_results?")
-    assert(CombinedTimeTrialResults.requires_combined_results?(twenty_mile), "20 mile requires_combined_results?")
-
-    assert_not_nil(ten_mile.combined_results(true), "10 mile should have combined_results")
-    assert_not_nil(twenty_mile.combined_results(true), "20 mile should have combined_results")
-    assert_nil(event.combined_results(true), "Parent event should not have combined_results")
-
-    assert_equal("Combined", ten_mile.combined_results.name, "10 mile combined results")
-    assert_equal("Combined", twenty_mile.combined_results.name, "20 mile combined results")
-  end
-
   test "destroy" do
     series = Series.create!(discipline: "Time Trial")
-    assert_equal true, series.notification?, "event notification?"
-    assert_equal true, series.notification_enabled?, "event notification_enabled?"
     FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: series), place: "1", time: 1000)
 
     event = series.children.create!
     FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: event), place: "1", time: 500)
-    assert_equal true, event.notification?, "event notification?"
+
+    CombinedTimeTrialResults.calculate!
 
     assert_not_nil(series.combined_results(true), "Series parent should have combined results")
     assert_not_nil(event.combined_results(true), "Series child event parent should have combined results")
 
     series.reload
     event.reload
-    assert_equal true, series.notification?, "event notification?"
-    assert_equal true, series.notification?, "event notification_enabled?"
-    assert_equal true, event.notification?, "event notification?"
-    assert_equal true, event.notification_enabled?, "event notification_enabled?"
     event.destroy_races
     event.combined_results.destroy_races
     assert_nil(event.combined_results(true), "Series child event parent should not have combined results")
@@ -143,6 +75,8 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     race = FactoryGirl.create(:race, event: event)
     FactoryGirl.create(:result, race: race, place: "1", time: 1800)
 
+    CombinedTimeTrialResults.calculate!
+
     assert_not_nil(event.combined_results(true), "TT event should have combined results")
     result_id = event.combined_results.races.first.results.first.id
 
@@ -151,5 +85,65 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     event.reload
     result_id_after_member_place = event.combined_results(true).races.first.results.first.id
     assert_equal(result_id, result_id_after_member_place, "calculate_members_only_places! should not trigger combined results recalc")
+  end
+
+  test "class calculate! with no results" do
+    assert_difference "CombinedTimeTrialResults.count", 0 do
+      CombinedTimeTrialResults.calculate!
+    end
+  end
+
+  test "class calculate!" do
+    tt_result_1 = nil
+    tt_result_2 = nil
+
+    travel_to 1.day.ago do
+      tt_result_1 = FactoryGirl.create(:time_trial_result)
+
+      # Create TT result + combined results, then remove result
+      # Should destroy
+      result = FactoryGirl.create(:time_trial_result)
+      tt_with_no_results = result.event
+      CombinedTimeTrialResults.calculate!
+      assert_equal 2, CombinedTimeTrialResults.count, "CombinedTimeTrialResults"
+      result.destroy!
+
+      tt_result_2 = FactoryGirl.create(:time_trial_result)
+      FactoryGirl.create(:result)
+      FactoryGirl.create(:event)
+      FactoryGirl.create(:event, discipline: "Time Trial")
+
+      CombinedTimeTrialResults.calculate!
+      assert_equal 2, CombinedTimeTrialResults.count, "CombinedTimeTrialResults"
+      assert tt_result_1.event.combined_results.present?, "combined_results"
+      assert tt_result_2.event.combined_results.present?, "combined_results"
+      assert tt_with_no_results.combined_results.blank?, "combined_results"
+    end
+
+    # No new results, nothing should change
+    CombinedTimeTrialResults.calculate!
+    CombinedTimeTrialResults.all.each do |e|
+      assert e.updated_at < 1.hour.ago, "CombinedTimeTrialResults updated_at should be in past"
+    end
+
+    tt_1 = tt_result_1.event
+    tt_1.races.first.results.create!(place: 2, time: 1000)
+    CombinedTimeTrialResults.calculate!
+    assert tt_1.combined_results(true).updated_at > 1.hour.ago, "CombinedTimeTrialResults updated_at should be recent"
+    assert_equal 2, tt_1.combined_results.races.first.results.count, "combined_results"
+    assert tt_result_2.event.updated_at < 1.hour.ago, "CombinedTimeTrialResults updated_at should be in past"
+  end
+
+  test "requires_combined_results_events" do
+    tt = FactoryGirl.create(:time_trial_result).event
+
+    FactoryGirl.create(:result)
+
+    event = FactoryGirl.create(:time_trial_result).event
+    event.update_attributes auto_combined_results: false
+
+    FactoryGirl.create(:event, discipline: "Time Trial")
+
+    assert_equal [ tt ], CombinedTimeTrialResults.requires_combined_results_events
   end
 end

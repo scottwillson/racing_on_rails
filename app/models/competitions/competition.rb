@@ -38,8 +38,6 @@ module Competitions
     UNLIMITED = Float::INFINITY
 
     after_create  :create_races
-    # return true from before_save callback or Competition won't save
-    before_save   { |competition| competition.notification = false; true }
     after_save    :expire_cache
 
     has_many :competition_event_memberships
@@ -87,7 +85,6 @@ module Competitions
 
     def delete_races
       ActiveRecord::Base.lock_optimistically = false
-      disable_notification!
 
       if races.present?
         race_ids = races.map(&:id)
@@ -96,7 +93,6 @@ module Competitions
       end
       races.clear
 
-      enable_notification!
       ActiveRecord::Base.lock_optimistically = true
     end
 
@@ -254,10 +250,6 @@ module Competitions
       false
     end
 
-    def requires_combined_results?
-      false
-    end
-
     def results_per_event
       Competition::UNLIMITED
     end
@@ -272,21 +264,6 @@ module Competitions
 
     # Team-based competition? False (default) implies it is person-based?
     def team?
-      false
-    end
-
-    # This method does nothing, and always returns true. Competitions don't participate in event notification.
-    def disable_notification!
-      true
-    end
-
-    # This method does nothing, and always returns true. Competitions don't participate in event notification.
-    def enable_notification!
-      true
-    end
-
-    # This method always returns false. Competitions don't participate in event notification.
-    def notification_enabled?
       false
     end
 

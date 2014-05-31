@@ -80,13 +80,11 @@ class MultiDayEvent < Event
 
     new_multi_day_event_class = MultiDayEvent.guess_type(children)
     multi_day_event = new_multi_day_event_class.create!(new_event_attributes)
-    multi_day_event.disable_notification!
 
     children.each do |child|
       multi_day_event.children << child
     end
 
-    multi_day_event.enable_notification!
     multi_day_event
   end
 

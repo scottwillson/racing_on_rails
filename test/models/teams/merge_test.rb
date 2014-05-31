@@ -19,7 +19,7 @@ module Teams
       FactoryGirl.create(:person, team: team_to_merge)
       FactoryGirl.create(:person, team: team_to_merge)
 
-      Event.all.each { |e| CombinedTimeTrialResults.create_or_destroy_for!(e) }
+      CombinedTimeTrialResults.calculate!
 
       assert_not_nil(Team.find_by_name(team_to_keep.name), "#{team_to_keep.name} should be in DB")
       assert_equal(3, Result.where(team_id: team_to_keep.id).count, "Vanilla's results")

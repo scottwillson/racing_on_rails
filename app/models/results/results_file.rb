@@ -91,7 +91,6 @@ module Results
       Rails.logger.info("Results::ResultsFile #{Time.zone.now} import")
 
       Event.transaction do
-        event.disable_notification!
         book = ::Spreadsheet.open(source.path)
         book.worksheets.each do |worksheet|
           race = nil
@@ -110,8 +109,6 @@ module Results
             end
           end
         end
-        event.enable_notification!
-        CombinedTimeTrialResults.create_or_destroy_for!(event)
       end
 
       if import_warnings.to_a.size > 10

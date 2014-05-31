@@ -216,11 +216,9 @@ class Result < ActiveRecord::Base
 
   def cache_attributes!(*args)
     args = args.extract_options!
-    event.disable_notification!
     cache_event_attributes if args.include?(:event)
     cache_non_event_attributes if args.empty? || args.include?(:non_event)
     save!
-    event.enable_notification!
   end
 
   def ensure_custom_attributes
@@ -324,6 +322,10 @@ class Result < ActiveRecord::Base
     return false if place.blank?
     return false if ["DNF", "DNS", "DQ"].include?(place)
     place.to_i > 0
+  end
+
+  def finished_time_trial?
+    place.to_i > 0 && time && time > 0
   end
 
   # Does this result belong to the last event in a MultiDayEvent?

@@ -387,6 +387,8 @@ class RaceTest < ActiveSupport::TestCase
     assert(weaver.member?, "Person member?")
     race.results.create!(place: "2", person: weaver, time: 102)
 
+    CombinedTimeTrialResults.calculate!
+
     assert_not_nil(event.combined_results(true), "TT event should have combined results")
     result_id = event.combined_results.races.first.results.first.id
 
