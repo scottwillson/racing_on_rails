@@ -9,21 +9,27 @@ class CombinedTimeTrialResults < Event
   default_value_for :auto_combined_results, false
 
   def self.calculate!
-    requires_combined_results_events.each do |e|
+    events = requires_combined_results_events
+    events.each do |e|
       combined_results = create_combined_results(e)
       combined_results.calculate!
     end
 
-    (has_combined_results_events - requires_combined_results_events).each do |e|
+    (has_combined_results_events - events).each do |e|
       destroy_combined_results e
     end
   end
 
   def self.requires_combined_results_events
-    # TODO use SQL for this
-    Event.
-      where(discipline: "Time Trial", auto_combined_results: true).
-      select(&:time_trial_finishes?)
+    event_ids = Result.
+      joins(:event).
+      where("place is not null and cast(place as signed) > 0").
+      where("results.time > 0").
+      where(events: { discipline: "Time Trial", auto_combined_results: true }).
+      pluck(:event_id).
+      uniq
+
+      Event.find(event_ids)
   end
 
   def self.has_combined_results_events
@@ -62,9 +68,7 @@ class CombinedTimeTrialResults < Event
   end
 
   def should_calculate?
-    parent.results_updated_at &&
-    (results_updated_at.nil? || parent.results_updated_at > results_updated_at) &&
-    parent.time_trial_finishes?
+    parent.results_updated_at && (results_updated_at.nil? || parent.results_updated_at > results_updated_at)
   end
 
   def calculate!

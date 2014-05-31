@@ -315,7 +315,7 @@ class Event < ActiveRecord::Base
 
   # Result updated_at should propagate to Event updated_at but does not yet
   def results_updated_at
-    races.map(&:results).flatten.map(&:updated_at).max
+    Result.where(race_id: races.map(&:id)).maximum(:updated_at)
   end
 
   # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
@@ -343,10 +343,6 @@ class Event < ActiveRecord::Base
   # Returns only the Races with +results+
   def races_with_results
     races.select { |race| race.results.present? }.sort
-  end
-
-  def time_trial_finishes?
-    races.map(&:results).flatten.any?(&:finished_time_trial?)
   end
 
   def destroy_races
