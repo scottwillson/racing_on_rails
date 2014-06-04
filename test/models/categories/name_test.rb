@@ -41,6 +41,8 @@ module Categories
       assert_equal "Masters Men 30-34", Category.new(name: "Men Masters 30-34").name, "Men Masters 30-34"
       assert_equal "Masters Men 1/2/3 40+", Category.new(name: "Masters Men 1/2/3 40+").name, "Masters Men 1/2/3 40+"
       assert_equal "Masters 30-34 Kilometer", Category.new(name: "Masters 30-34 Kilometer").name, "Masters 30-34 Kilometer"
+      assert_equal "4", Category.new(name: "4").name, "4"
+      assert_equal "4", Category.new(name: 4).name, "4 (Number)"
     end
 
     test "find_or_create_by_normalized_name" do
@@ -90,6 +92,8 @@ module Categories
       assert_equal "Pro/Expert Women", Category.strip_whitespace("Pro / Expert Women"), "Pro / Expert Women"
 
       assert_equal "6 - race", Category.strip_whitespace("6- race"), "6 - race"
+
+      assert_equal "3", Category.strip_whitespace(3), "Number 3"
     end
 
     test "#cleanup_punctuation" do

@@ -44,7 +44,7 @@ class Category < ActiveRecord::Base
 
   def self.strip_whitespace(name)
     if name
-      name = name.strip
+      name = name.to_s.strip
       name = name.gsub(/\s+/, " ")
       # E.g., 30 - 39
       name = name.gsub(/(\d+)\s?-\s?(\d+)/, '\1-\2')
