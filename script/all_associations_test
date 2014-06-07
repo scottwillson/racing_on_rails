@@ -13,7 +13,6 @@
 
   `script/local #{association}`
 
-  puts `bundle exec rake test:ruby`
   # Ensure DB state is good
   puts `bundle exec rake db:migrate; bundle exec rake db:structure:dump; bundle exec rake db:test:prepare`
   puts `bundle exec rake test:ruby; rake; rake test:acceptance`
