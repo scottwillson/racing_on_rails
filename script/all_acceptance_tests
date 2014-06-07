@@ -1,0 +1,8 @@
+#! /usr/bin/env ruby
+
+%w{ firefox chrome poltergeist webkit }.shuffle.each do |javascript_driver|
+  puts "=" * javascript_driver.size
+  puts javascript_driver
+  puts "=" * javascript_driver.size
+  puts `JAVASCRIPT_DRIVER=#{javascript_driver} rake test:acceptance`
+end
