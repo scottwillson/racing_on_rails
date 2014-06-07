@@ -53,9 +53,12 @@ group :development do
   gem "guard-livereload", require: false
   gem "puma"
   gem "rubocop", require: false
-  gem "quiet_assets"
   gem "rack-livereload"
   gem "spring"
+end
+
+group :development, :test do
+  gem "quiet_assets"
 end
 
 group :test do
@@ -64,8 +67,7 @@ end
 
 group :acceptance do
   gem "capybara"
-  gem "launchy"
-  gem "selenium-webdriver"
+  gem "poltergeist"
 end
 
 group :test, :acceptance do
