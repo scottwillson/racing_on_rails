@@ -87,9 +87,10 @@ function makeEditable() {
   jQuery('.editable').editable(
     function(value, settings) {
       var element = jQuery(this);
+      element.find("input").attr("disabled", "disabled");
       element.addClass('saving');
       var ajaxoptions = {
-        type    : 'PATCH',
+        type    : 'POST',
         data    : {
           '_method': 'PATCH',
           name: element.data('attribute'),
@@ -118,12 +119,11 @@ function makeEditable() {
           element.html(element.data('original'));
         }
       };
-      element.find("input").attr("disabled", "disabled");
       jQuery.ajax(ajaxoptions);
     },
     {
       cssclass: 'editor_field',
-      method: 'PATCH',
+      method: 'POST',
       placeholder: '',
       select: true,
       onblur: 'ignore',

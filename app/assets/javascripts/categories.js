@@ -8,9 +8,9 @@ function bindCategoryEvents() {
     drop: function(ev, ui) {
       var droppedOn = jQuery(this);
       jQuery.ajax({
-        type: 'PATCH',
+        type: 'POST',
         url: '/admin/categories/' + encodeURIComponent(jQuery(ui.draggable).attr('data-id')) + '.js',
-        data: { category: { parent_id: jQuery(this).attr('data-id') } }
+        data: { '_method': 'PATCH', category: { parent_id: jQuery(this).attr('data-id') } }
       });
     },
     hoverClass: 'hovering'

@@ -2,7 +2,7 @@
 function bindBarCheckBox() {
   jQuery('.bar_check_box').change(function(e) {
     var ajaxoptions = {
-      type    : 'PATCH',
+      type    : 'POST',
       data    : {
         '_method': 'PATCH',
         name: 'bar'
