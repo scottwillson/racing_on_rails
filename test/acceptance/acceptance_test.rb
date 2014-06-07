@@ -196,6 +196,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   def fill_in_inline(locator, options)
     options[:with] = options[:with] + "\n"
     find(locator).click
+    wait_for "form.editor_field"
     within "form.editor_field" do
       fill_in "value", options
     end
