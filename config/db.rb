@@ -22,8 +22,9 @@ namespace :db do
 
   # Downloads db/production_data.sql from the remote production environment to your local machine
   task :remote_db_download, roles: :db, only: { primary: true } do
-    system "rm -f db/production.sql.bz2"
-    get "db/production.sql.bz2", "db/production.sql.bz2"
+    system "mkdir -p tmp/db"
+    system "rm -f tmp/db/production.sql.bz2"
+    get "db/production.sql.bz2", "tmp/db/production.sql.bz2"
   end
 
   # Load the production data downloaded into db/production_data.sql into your local development database
@@ -35,15 +36,15 @@ namespace :db do
     dev_db = abcs[::Rails.env]["database"]
     `mysql -u #{abcs[::Rails.env]["username"]} -e 'drop database if exists #{dev_db}'`
     `mysql -u #{abcs[::Rails.env]["username"]} -e 'create database #{dev_db}'`
-    if File.exist?("db/production.sql.bz2")
-      system "rm -f db/production.sql" if File.exist?("db/production.sql")
-      system "bzip2 -d db/production.sql.bz2"
+    if File.exist?("tmp/db/production.sql.bz2")
+      system "rm -f tmp/db/production.sql" if File.exist?("tmp/db/production.sql")
+      system "bzip2 -d tmp/db/production.sql.bz2"
     end
-    `mysql -u #{abcs[::Rails.env]["username"]} #{dev_db} < db/production.sql`
-    exec("rm db/production.sql") if File.exist?("db/production.sql") && ENV["SAVE"].nil?
+    `mysql -u #{abcs[::Rails.env]["username"]} #{dev_db} < tmp/db/production.sql`
+    exec("rm tmp/db/production.sql") if File.exist?("tmp/db/production.sql") && ENV["SAVE"].nil?
   end
 
-   #Cleans up data dump file
+   # Cleans up data dump file
   task :remote_db_cleanup, roles: :db, only: { primary: true } do
     run "rm db/production.sql.bz2"
   end
