@@ -26,7 +26,7 @@ class EventsTest < AcceptanceTest
 
     assert_equal "", find("#event_promoter_id", visible: false).value
     assert_equal "", find("#promoter_auto_complete").value
-    find("#promoter_auto_complete").native.send_keys("Tom Brown")
+    type_in "promoter_auto_complete", with: "Tom Brown"
 
     click_button "Save"
     assert_match %r{\d+}, find("#event_promoter_id", visible: false).value
@@ -50,7 +50,7 @@ class EventsTest < AcceptanceTest
     assert_match %r{\d+}, find("#event_promoter_id", visible: false).value
     assert page.has_field?("promoter_auto_complete", with: "Tim Brown")
 
-    fill_in "promoter_auto_complete", with: "candi m"
+    type_in "promoter_auto_complete", with: "candi m"
     find("li#person_#{candi.id} a").click
     assert page.has_field?("promoter_auto_complete", with: "Candi Murray")
 
@@ -85,7 +85,7 @@ class EventsTest < AcceptanceTest
     visit "/admin/events"
     click_link "Sausalito Criterium"
 
-    fill_in "team_auto_complete", with: "Gentle Lovers"
+    type_in "team_auto_complete", with: "Gentle Lovers"
     find("li#team_#{gl.id} a").click
     assert page.has_field?("team_auto_complete", with: "Gentle Lovers")
 
@@ -157,18 +157,5 @@ class EventsTest < AcceptanceTest
 
     visit "/admin/events/#{kings_valley.id}/edit"
     assert_page_has_content "Fancy New Child Event"
-  end
-
-  test "lost children" do
-    login_as FactoryGirl.create(:administrator)
-    FactoryGirl.create(:series, name: "PIR")
-    event = FactoryGirl.create(:event, name: "PIR")
-
-    visit "/admin/events/#{event.id}/edit"
-    assert_page_has_content "has no parent"
-    click_link "set_parent"
-    assert_page_has_no_content "error"
-    assert_page_has_no_content "Unknown action"
-    assert_page_has_no_content "has no parent"
   end
 end

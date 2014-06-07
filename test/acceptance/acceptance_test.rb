@@ -3,20 +3,24 @@ ENV["RAILS_ENV"] = "acceptance"
 require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
 require "capybara/rails"
 require "minitest/autorun"
+require "capybara/poltergeist"
 
 # Capybara supports a number of drivers/browsers. AcceptanceTest default is RackTest for non-JavaScript tests
-# and Firefox for JS test. Note that most tests require JS.
+# and Poltergeist for JS test. Note that most tests require JS.
 #
 # Use DEFAULT_DRIVER and JAVASCRIPT_DRIVER to set Capybara drivers:
-# :rack_test, :firefox, :chrome, :webkit
+# :rack_test, :firefox, :chrome, :poltergeist, :webkit
 #
 # RackTest is fastest *about 20% faster than Chrome) and has no dependencies, but does not execute JS.
-# Firefox is slowest option. Executes JS, has no dependencies and tests pass.
-# Chrome is faster (about 40%) than Firefox but requires Chromedriver binary from https://code.google.com/p/chromedriver/downloads/list.
-# Occasionally hangs, and current version can't set download directory.
-# Capybara-Webkit is very fast. Executes JS, requires Qt library, capybara-webkit gem. Several tests fail and gem is large. Not included.
-#
-# Firefox driver uses a custom profile to test downloads.
+# Firefox via Selenium is slowest option. It executes JS, has no dependencies and is the most reliable. Uses a custom profile to
+# test downloads.
+# Chrome is faster (about 9%) than Firefox but requires Chromedriver binary from https://code.google.com/p/chromedriver/downloads/list.
+# Capybara-Webkit is the fastest (about 50% faster than Firefox). Executes JS, requires Qt library, capybara-webkit gem.
+# Need to fake downloads and tends to be less stable. Not included by default. Need 'require "capybara/webkit"' in AcceptanceTest
+# and a custom Gemfile with 'gem "capybara-webkit"'.
+# Poltergeist is another headless JS driver. Almost as fast as capybara-webkit. Also has hefty dependencies, needs a hack for downloads,
+# and can be fragile. Checks for JS errors. The default driver for acceptance tests because it is slightly easier to work with than
+# capybara-webkit.
 class AcceptanceTest < ActiveSupport::TestCase
   include Capybara::DSL
 
@@ -24,14 +28,14 @@ class AcceptanceTest < ActiveSupport::TestCase
   # transaction, the server won't see it.
   DatabaseCleaner.strategy = :truncation
 
-  setup :clean_database, :clear_downloads, :set_capybara_driver
+  setup :clean_database, :set_capybara_driver
   teardown :reset_session
 
   def self.javascript_driver
     if ENV["JAVASCRIPT_DRIVER"].present?
       ENV["JAVASCRIPT_DRIVER"].to_sym
     else
-      :firefox
+      :poltergeist
     end
   end
 
@@ -44,11 +48,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def self.download_directory
-    if AcceptanceTest.javascript_driver == :chrome
-      File.expand_path "~/Downloads"
-    else
-      "/tmp/webdriver-downloads"
-    end
+    "/tmp/webdriver-downloads"
   end
 
   def assert_page_has_content(text)
@@ -72,16 +72,38 @@ class AcceptanceTest < ActiveSupport::TestCase
     end
   end
 
-  def wait_for_download(glob_pattern)
-    raise ArgumentError if glob_pattern.blank? || (glob_pattern.respond_to?(:empty?) && glob_pattern.empty?)
+  def assert_download(link_id, filename)
+    raise ArgumentError if filename.blank? || (filename.respond_to?(:empty?) && filename.empty?)
+
+    make_download_directory
+    remove_download filename
+
+    if Capybara.current_driver == :poltergeist || Capybara.current_driver == :webkit
+      assert_download_via_ajax link_id, filename
+    else
+      wait_for_download_in_download_directory link_id, filename
+    end
+  end
+
+  def assert_download_via_ajax(link_id, filename)
+    href = find("##{link_id}")["href"]
+    page.execute_script "window.downloadCSVXHR = function(){var url = '#{href}'; return getFile(url);}"
+    page.execute_script "window.getFile = function(url) { var xhr = new XMLHttpRequest();  xhr.open('GET', url, false);  xhr.send(null); return xhr.responseText; }"
+    data = page.evaluate_script("downloadCSVXHR()")
+    File.open(File.join(AcceptanceTest.download_directory, filename), "w") { |f| f.write(data) }
+    assert Dir.glob("#{AcceptanceTest.download_directory}/#{filename}").present?
+  end
+
+  def wait_for_download_in_download_directory(link_id, filename)
+    click_on link_id
     begin
       Timeout::timeout(10) do
-        while Dir.glob("#{AcceptanceTest.download_directory}/#{glob_pattern}").empty?
+        while Dir.glob("#{AcceptanceTest.download_directory}/#{filename}").empty?
           sleep 0.25
         end
       end
     rescue Timeout::Error
-      raise Timeout::Error, "Did not find '#{glob_pattern}' in #{AcceptanceTest.download_directory} within seconds 10 seconds. Found: #{Dir.entries(AcceptanceTest.download_directory).join(", ")}"
+      raise Timeout::Error, "Did not find '#{filename}' in #{AcceptanceTest.download_directory} within seconds 10 seconds. Found: #{Dir.entries(AcceptanceTest.download_directory).join(", ")}"
     end
   end
 
@@ -172,28 +194,43 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def fill_in_inline(locator, options)
+    options[:with] = options[:with] + "\n"
     find(locator).click
     within "form.editor_field" do
       fill_in "value", options
-      press_return "value"
     end
+    wait_for_no ".editing"
+    wait_for_no ".saving"
     within locator do
       assert page.has_content?(text)
     end
+  end
 
-    wait_for_no ".editing"
+  def fill_in(locator, options)
+    if Capybara.current_driver == :poltergeist &&
+      options[:with] &&
+      options[:with]["\n"]
+
+      options[:with] = options[:with].delete("\n")
+      super locator, options
+      press_return locator
+    else
+      super locator, options
+    end
   end
 
   def press_return(field)
-    press :return, field
+    if Capybara.current_driver == :poltergeist
+      press :Enter, field
+    else
+      press :return, field
+    end
   end
 
   def press(key, field)
-    case Capybara.current_driver
-    when :firefox, :chrome
-      find_field(field).native.send_keys(key)
-    when :webkit
-      find_field(field).base.invoke('keypress', false, false, false, false, key_code(key), 0)
+    if Capybara.current_driver == :webkit
+      keypress_script = "var e = $.Event('keypress', { keyCode: #{key_code(key)} }); $('##{field}').trigger(e);"
+      page.driver.browser.execute_script(keypress_script)
     else
       find_field(field).native.send_keys(key)
     end
@@ -210,7 +247,17 @@ class AcceptanceTest < ActiveSupport::TestCase
     when :tab
       9
     else
-      raise "No code for #{key}"
+      key.ord
+    end
+  end
+
+  # keypress: function(index, altKey, ctrlKey, shiftKey, metaKey, keyCode, charCode) {
+  def type_in(selector, text)
+    if Capybara.current_driver == :webkit
+      fill_in selector, text
+    else
+      fill_in selector, with: ""
+      find("##{selector}").native.send_keys(text[:with])
     end
   end
 
@@ -249,6 +296,12 @@ class AcceptanceTest < ActiveSupport::TestCase
     Discipline.reset
   end
 
+  def make_download_directory
+    unless Dir.exist?(AcceptanceTest.download_directory)
+      FileUtils.mkdir_p AcceptanceTest.download_directory
+    end
+  end
+
   def remove_download(filename)
     FileUtils.rm_f "#{AcceptanceTest.download_directory}/#{filename}"
   end
@@ -259,18 +312,6 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   def set_capybara_driver
     Capybara.current_driver = AcceptanceTest.default_driver
-  end
-
-  def clear_downloads
-    unless AcceptanceTest.javascript_driver == :chrome
-      if Dir.exist?(AcceptanceTest.download_directory)
-        FileUtils.rm_rf AcceptanceTest.download_directory
-      end
-    end
-
-    unless Dir.exist?(AcceptanceTest.download_directory)
-      FileUtils.mkdir_p AcceptanceTest.download_directory
-    end
   end
 
   def reset_session
@@ -298,19 +339,14 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   Capybara.register_driver :chrome do |app|
-    if Dir.exist?("#{Rails.root}/tmp/chrome-profile")
-      FileUtils.rm_rf "#{Rails.root}/tmp/chrome-profile"
-    end
-
-    unless Dir.exist?("#{Rails.root}/tmp/chrome-profile")
-      FileUtils.mkdir "#{Rails.root}/tmp/chrome-profile"
-    end
-
-    Capybara::Selenium::Driver.new(
-      app,
-      browser: :chrome,
-      switches: ["--user-data-dir=#{Rails.root}/tmp/chrome-profile", "--ignore-certificate-errors", "--silent"]
-    )
+    prefs = {
+      download: {
+        prompt_for_download: false,
+        default_directory: AcceptanceTest.download_directory
+      }
+    }
+    args = ["--window-size=1024,768"]
+    Capybara::Selenium::Driver.new(app, browser: :chrome, prefs: prefs, args: args)
   end
 
   Capybara.register_driver :firefox do |app|

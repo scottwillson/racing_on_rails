@@ -13,12 +13,7 @@ class PagesTest < AcceptanceTest
 
     fill_in "page_title", with: "Schedule"
     fill_in "page_body", with: "This year is cancelled"
-
     click_button "Save"
-    page = Page.last
-    assert_equal "Schedule", page.title, "New page title"
-    assert_equal "schedule", page.path, "New page path"
-    assert_equal "schedule", page.slug, "New page slug"
 
     visit "/schedule"
     assert_page_has_content "This year is cancelled"

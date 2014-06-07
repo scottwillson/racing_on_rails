@@ -19,8 +19,7 @@ class PeopleTest < AcceptanceTest
     weaver = FactoryGirl.create(:person, first_name: "Ryan", last_name: "Weaver", team_name: "Gentle Lovers", license: "341")
 
     visit '/admin/people'
-    fill_in "name", with: "a"
-    press_return "name"
+    fill_in "name", with: "a\n"
 
     assert_table("people_table", 1, 2, "Molly Cameron")
     assert_table("people_table", 2, 2, "Mark Matson")
@@ -83,8 +82,9 @@ class PeopleTest < AcceptanceTest
     visit "/admin/people/#{matson.id}/edit"
     assert_page_has_content "Mark Matson"
     if Time.zone.today.month < 12
+      wait_for "input.number[value='765']"
       click_link "destroy_number_#{matson.race_numbers.first.id}"
-      assert_page_has_no_content "input.number[value='765']"
+      wait_for_no "input.number[value='765']"
 
       click_button "Save"
 
@@ -104,13 +104,11 @@ class PeopleTest < AcceptanceTest
     assert_page_has_no_content 'Unknown action'
     assert_page_has_no_content 'has no parent'
 
-    fill_in "name", with: "Brad"
-    press_return "name"
+    fill_in "name", with: "Brad\n"
     assert_page_has_no_content "Ross"
 
     visit "/admin/people"
-    fill_in "name", with: "a"
-    press_return "name"
+    fill_in "name", with: "a\n"
 
     find("#person_#{alice.id}").drag_to(find("#person_#{molly.id}_row"))
     wait_for_page_content "Merged A Penn into Molly Cameron"
@@ -126,8 +124,7 @@ class PeopleTest < AcceptanceTest
     FactoryGirl.create(:person, name: "Mark Matson")
 
     visit "/admin/people"
-    fill_in "name", with: "a"
-    press_return "name"
+    fill_in "name", with: "a\n"
 
     assert_table("people_table", 1, 2, "Molly Cameron")
     assert_table("people_table", 2, 2, "Mark Matson")
@@ -179,16 +176,14 @@ class PeopleTest < AcceptanceTest
     assert page.has_field? 'include', with: 'members_only'
     assert page.has_field? 'format', with: 'xls'
 
-    click_button "Export"
     today = RacingAssociation.current.effective_today
-    wait_for_download "people_#{Time.zone.now.year}_#{today.month}_#{today.day}.xls"
+    assert_download "export_button", "people_#{Time.zone.now.year}_#{today.month}_#{today.day}.xls"
 
     visit '/admin/teams'
 
     visit '/admin/people'
 
-    fill_in "name", with: "tonkin"
-    press_return "name"
+    fill_in "name", with: "tonkin\n"
     assert_page_has_content 'Erik Tonkin'
     assert_page_has_content 'Kona'
     if Time.zone.today.month < 12
@@ -198,18 +193,14 @@ class PeopleTest < AcceptanceTest
 
     select "All", from: "include"
     select "FinishLynx", from: "format"
-    click_button "Export"
-    wait_for_download "lynx.ppl"
+    assert_download "export_button", "lynx.ppl"
 
     visit '/admin/people'
     select "Current members only", from: "include"
     select "Scoring sheet", from: "format"
-    remove_download "scoring_sheet.xls"
-    click_button "Export"
-    wait_for_download "scoring_sheet.xls"
+    assert_download "export_button", "scoring_sheet.xls"
 
-    fill_in 'name', with: 'tonkin'
-    press_return "name"
+    fill_in 'name', with: "tonkin\n"
     assert_page_has_content 'Erik Tonkin'
     assert_page_has_content 'Kona'
     if Time.zone.today.month < 12

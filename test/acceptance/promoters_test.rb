@@ -30,8 +30,7 @@ class PromotersTest < AcceptanceTest
 
     click_link "create_race"
     within "form.editor_field" do
-      fill_in "value", with: "Senior Women"
-      press_return "value"
+      fill_in "value", with: "Senior Women\n"
     end
     assert_page_has_no_content "form.editor_field input"
     assert_page_has_content "Senior Women"
@@ -46,8 +45,7 @@ class PromotersTest < AcceptanceTest
 
     click_link "create_race"
     within "form.editor_field" do
-      fill_in "value", with: "Masters Women 40+"
-      press_return "value"
+      fill_in "value", with: "Masters Women 40+\n"
     end
     assert_page_has_no_content "form.editor_field input"
     assert_page_has_content "Masters Women 40+"
@@ -58,9 +56,7 @@ class PromotersTest < AcceptanceTest
     click_button "Save"
 
     click_link "people_tab"
-    remove_download "scoring_sheet.xls"
-    click_link "export_link"
-    wait_for_download "scoring_sheet.xls"
+    assert_download "export_link", "scoring_sheet.xls"
 
     visit "/admin/events/#{series.id}/edit"
     click_ok_on_alert_dialog

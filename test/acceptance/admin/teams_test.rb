@@ -20,8 +20,7 @@ class TeamsTest < AcceptanceTest
 
     visit "/admin/teams"
     assert_page_has_content "Enter part of a team's name"
-    fill_in "name", with: "e"
-    press_return "name"
+    fill_in "name", with: "e\n"
 
     assert_table("teams_table", 2, 2, "Chocolate")
     assert_table("teams_table", 3, 2, "Gentle Lovers")
@@ -53,8 +52,7 @@ class TeamsTest < AcceptanceTest
     click_button "Save"
 
     visit "/admin/teams"
-    fill_in "name", with: "vagen"
-    press_return "name"
+    fill_in "name", with: "vagen\n"
 
     assert_table("teams_table", 2, 2, "SpeedVagen")
 
@@ -81,8 +79,7 @@ class TeamsTest < AcceptanceTest
     login_as FactoryGirl.create(:administrator)
 
     visit "/admin/teams"
-    fill_in "name", with: "a"
-    press_return "name"
+    fill_in "name", with: "a\n"
 
     find("#team_#{kona.id}").drag_to(find("#team_#{vanilla.id}_row"))
     assert_page_has_content "Merged Kona into Vanilla"
@@ -90,8 +87,7 @@ class TeamsTest < AcceptanceTest
     assert Team.exists?(vanilla.id), "Vanilla still exists after merge"
 
     visit "/admin/teams"
-    fill_in "name", with: "e"
-    press_return "name"
+    fill_in "name", with: "e\n"
 
     assert_table("teams_table", 2, 2, "Chocolate")
     assert_table("teams_table", 3, 2, "Gentle Lovers")
@@ -109,8 +105,7 @@ class TeamsTest < AcceptanceTest
     login_as FactoryGirl.create(:administrator)
 
     visit "/admin/teams"
-    fill_in "name", with: "e"
-    press_return "name"
+    fill_in "name", with: "e\n"
 
     assert_table("teams_table", 2, 2, "Chocolate")
     assert_table("teams_table", 3, 2, "Gentle Lovers")

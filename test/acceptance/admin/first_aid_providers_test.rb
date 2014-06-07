@@ -24,8 +24,7 @@ class FirstAidProvidersTest < AcceptanceTest
 
       find(:xpath, "//table[@id='events_table']//tr[2]//td[@class='name']//div[@class='record']//div[@class='editable']").click
       within "form.editor_field" do
-        fill_in "value", with: "Megan Weaver"
-        press_return "value"
+        fill_in "value", with: "Megan Weaver\n"
       end
 
       visit "/admin/first_aid_providers"

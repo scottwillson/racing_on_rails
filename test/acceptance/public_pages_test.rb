@@ -97,8 +97,7 @@ class PublicPagesTest < AcceptanceTest
     assert_page_has_no_content "Weaver"
 
     unless page.has_content?("Montana")
-      fill_in "name", with: "Penn"
-      press_return "name"
+      fill_in "name", with: "Penn\n"
       assert_page_has_content "Pennington"
     end
   end

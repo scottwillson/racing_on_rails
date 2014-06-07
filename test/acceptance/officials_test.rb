@@ -29,8 +29,7 @@ class OfficialsTest < AcceptanceTest
     visit "/admin/first_aid_providers"
 
     visit "/people"
-    remove_download "scoring_sheet.xls"
-    click_link "export_link"
-    wait_for_download "scoring_sheet.xls"
+
+    assert_download "export_link", "scoring_sheet.xls"
   end
 end
