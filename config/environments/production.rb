@@ -5,9 +5,9 @@ RacingOnRails::Application.configure do
   config.active_record.dump_schema_after_migration          = false
   config.active_support.deprecation                         = :notify
   config.assets.compile                                     = false
-  config.assets.css_compressor                              = :yui
+  # config.assets.css_compressor                              = :yui
   config.assets.digest                                      = true
-  config.assets.js_compressor                               = :uglifier
+  # config.assets.js_compressor                               = :uglifier
   config.assets.version                                     = "2.0"
   config.cache_classes                                      = true
   config.consider_all_requests_local                        = false
