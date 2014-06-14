@@ -151,6 +151,7 @@ class PeopleTest < AcceptanceTest
     assert_table("people_table", 2, 2, "Mark Matson")
 
     fill_in_inline "#person_#{matson.id}_name", with: "Molly Cameron"
+    wait_for ".ui-dialog-buttonset button:first-child"
     find(".ui-dialog-buttonset button:first-child").click
 
     assert_page_has_content "Merged Mark Matson into Molly Cameron"
