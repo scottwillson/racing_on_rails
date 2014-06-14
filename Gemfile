@@ -32,7 +32,7 @@ gem "rake"
 gem "redcarpet"
 gem "registration_engine", path: "lib/registration_engine"
 gem "ri_cal"
-gem "rmagick", require: false
+gem "rmagick"
 gem "ruby-ole", git: "https://github.com/scottwillson/ruby-ole.git"
 gem "sass-rails", "~> 4.0.3"
 gem "scrypt"
