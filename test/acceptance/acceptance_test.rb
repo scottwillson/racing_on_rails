@@ -87,11 +87,26 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   def assert_download_via_ajax(link_id, filename)
     href = find("##{link_id}")["href"]
-    page.execute_script "window.downloadCSVXHR = function(){var url = '#{href}'; return getFile(url);}"
-    page.execute_script "window.getFile = function(url) { var xhr = new XMLHttpRequest();  xhr.open('GET', url, false);  xhr.send(null); return xhr.responseText; }"
+    downloadCSVXHR = "
+      window.downloadCSVXHR = function() {
+        var url = '#{href}';
+        return getFile(url);
+      }
+
+      window.getFile = function(url) {
+        var responseData;
+        var x = jQuery.ajax({
+          url: url,
+          async: false,
+          success: function(data, textStatus) {
+            responseData = data;
+          }
+        });
+        return responseData;
+      }"
+    page.execute_script downloadCSVXHR
     data = page.evaluate_script("downloadCSVXHR()")
-    File.open(File.join(AcceptanceTest.download_directory, filename), "w") { |f| f.write(data) }
-    assert Dir.glob("#{AcceptanceTest.download_directory}/#{filename}").present?
+    assert data.present?, "download"
   end
 
   def wait_for_download_in_download_directory(link_id, filename)
@@ -221,15 +236,22 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def press_return(field)
-    if Capybara.current_driver == :poltergeist
-      press :Enter, field
-    else
-      press :return, field
-    end
+    press :return, field
   end
 
   def press(key, field)
-    if Capybara.current_driver == :webkit
+    if Capybara.current_driver == :poltergeist
+      case key
+      when :down
+        find_field(field).native.send_keys(:Down)
+      when :enter, :return
+        find_field(field).native.send_keys(:Enter)
+      when :tab
+        find_field(field).native.send_keys(:Tab)
+      else
+        find_field(field).native.send_keys(key)
+      end
+    elsif Capybara.current_driver == :webkit
       keypress_script = "var e = $.Event('keypress', { keyCode: #{key_code(key)} }); $('##{field}').trigger(e);"
       page.driver.browser.execute_script(keypress_script)
     else
@@ -357,6 +379,14 @@ class AcceptanceTest < ActiveSupport::TestCase
     profile['browser.helperApps.neverAsk.saveToDisk'] = "application/vnd.ms-excel,application/vnd.ms-excel; charset=utf-8"
 
     Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
+  end
+
+  Capybara.register_driver :poltergeist do |app|
+    options = {
+      js_errors: true,
+      phantomjs_options: [ '--ignore-ssl-errors=yes' ]
+    }
+    Capybara::Poltergeist::Driver.new app, options
   end
 
   Capybara.configure do |config|

@@ -25,7 +25,16 @@
     <% end -%>
 
     <% if (promoter? || administrator? || official?) %>
-    <%= link_to("Export current members to Excel", admin_people_path(format: "xls", excel_layout: "scoring_sheet", include: "members_only"), id: "export_link") %>
+    <%= link_to(
+          "Export current members to Excel",
+          admin_people_url(
+            format: "xls",
+            excel_layout: "scoring_sheet",
+            include: "members_only",
+            protocol: RacingAssociation.current.ssl? ? "https" : "http"
+          ),
+          id: "export_link"
+    ) %>
     <% end -%>
   </div>
 </div>
