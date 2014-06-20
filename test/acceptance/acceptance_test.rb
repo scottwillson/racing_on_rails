@@ -106,7 +106,7 @@ class AcceptanceTest < ActiveSupport::TestCase
       }"
     page.execute_script downloadCSVXHR
     data = page.evaluate_script("downloadCSVXHR()")
-    assert data.present?, "download"
+    assert data.present?, "Download for #{filename} at #{href} from #{link_id} empty"
   end
 
   def wait_for_download_in_download_directory(link_id, filename)
