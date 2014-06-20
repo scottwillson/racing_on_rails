@@ -68,6 +68,7 @@ end
 group :acceptance do
   gem "capybara"
   gem "poltergeist"
+  gem "selenium-webdriver"
 end
 
 group :test, :acceptance do
