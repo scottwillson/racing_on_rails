@@ -276,11 +276,11 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   # keypress: function(index, altKey, ctrlKey, shiftKey, metaKey, keyCode, charCode) {
   def type_in(selector, text)
-    if Capybara.current_driver == :webkit
-      fill_in selector, text
-    else
+    if selector["auto_complete"] || selector["autocomplete"]
       fill_in selector, with: ""
       find("##{selector}").native.send_keys(text[:with])
+    else
+      fill_in selector, text
     end
   end
 
