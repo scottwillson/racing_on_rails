@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "4.1.1"
+gem "rails", "4.1.2"
 
 gem "actionpack-page_caching"
 gem "activemerchant"
@@ -41,7 +41,7 @@ gem "tabular", ">=0.2.4"
 gem "truncate_html"
 gem "uglifier"
 gem "vestal_versions", git: "https://github.com/scottwillson/vestal_versions.git", branch: "rails-4-1"
-gem "will_paginate"
+gem "will_paginate", git: "https://github.com/mislav/will_paginate"
 gem "will_paginate-bootstrap"
 gem "yui-compressor"
 
