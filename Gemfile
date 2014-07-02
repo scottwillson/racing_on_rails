@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "4.1.2"
+gem "rails", "4.1.3"
 
 gem "actionpack-page_caching"
 gem "activemerchant"
