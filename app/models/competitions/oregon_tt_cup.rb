@@ -88,5 +88,27 @@ module Competitions
 
       Result.connection.select_all query
     end
+
+    def category_ids_for(race)
+      ids = [ race.category_id ] + race.category.descendants.map(&:id)
+
+      case race.category.name
+      when "Masters Men 40-49"
+        [ "Masters Men 40-44", "Masters Men 45-49" ]
+      when "Masters Men 50-59"
+        [ "Masters Men 50-54", "Masters Men 55-59" ]
+      when "Masters Women 50-59"
+        [ "Masters Women 50-54", "Masters Women 55-59" ]
+      else
+        []
+      end.each do |name|
+        category = Category.where(name: name).first
+        if category
+          ids << category.id
+        end
+      end
+
+      ids
+    end
   end
 end
