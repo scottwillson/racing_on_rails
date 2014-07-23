@@ -99,6 +99,12 @@ module Competitions
         [ "Masters Men 50-54", "Masters Men 55-59" ]
       when "Masters Women 50-59"
         [ "Masters Women 50-54", "Masters Women 55-59" ]
+      when "Senior Women 1/2"
+        [ "Senior Women" ]
+      when "Category 4/5 Women"
+        [ "Women Category 4" ]
+      when "Category 3 Women"
+        [ "Women Category 3" ]
       else
         []
       end.each do |name|
