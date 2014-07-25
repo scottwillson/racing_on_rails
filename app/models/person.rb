@@ -36,6 +36,7 @@ class Person < ActiveRecord::Base
   validate :membership_dates
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
+  after_update :update_results
   before_destroy :ensure_no_results
 
   has_many :aliases, as: :aliasable, dependent: :destroy
@@ -953,6 +954,18 @@ class Person < ActiveRecord::Base
       end
       new_alias
     end
+  end
+
+  def update_results
+    if first_name_changed? || last_name_changed?
+      results.each do |result|
+        if result[:name] != name(result.year)
+          result.cache_attributes! :non_event
+        end
+      end
+    end
+
+    true
   end
 
   def ensure_no_results

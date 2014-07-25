@@ -24,6 +24,7 @@ class Race < ActiveRecord::Base
   before_validation :find_associated_records
 
   before_save :symbolize_custom_columns
+  after_update :update_results_race_names
 
   belongs_to :category
   serialize :result_columns, Array
@@ -187,6 +188,11 @@ class Race < ActiveRecord::Base
 
   def symbolize_custom_columns
     self.custom_columns.map! { |col| col.to_s.to_sym }
+  end
+
+  def update_results_race_names
+    Result.where(race_id: id).update_all(race_name: name, race_full_name: full_name)
+    true
   end
 
   # Ensure child team and people are not duplicates of existing records

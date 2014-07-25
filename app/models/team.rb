@@ -10,6 +10,7 @@ class Team < ActiveRecord::Base
 
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
+  after_update :update_results
   before_destroy :ensure_no_results
 
   validates_presence_of :name
@@ -84,6 +85,18 @@ class Team < ActiveRecord::Base
 
   def has_alias?(alias_name)
     aliases.detect { |a| a.name.casecmp(alias_name) == 0 }
+  end
+
+  def update_results
+    if name_changed?
+      results.each do |result|
+        if result.team_name != name(result.year)
+          result.cache_attributes! :non_event
+        end
+      end
+    end
+
+    true
   end
 
   # Moves another Team's aliases, results, and people to this Team,

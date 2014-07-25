@@ -7,7 +7,6 @@ Bundler.require(*Rails.groups)
 module RacingOnRails
   class Application < Rails::Application
     config.autoload_paths += %W(
-      #{config.root}/app/models/observers
       #{config.root}/app/pdfs
       #{config.root}/app/rack
     )
@@ -23,10 +22,6 @@ module RacingOnRails
 
     # Racing on Rails has many foreign key constraints, so :sql is required
     config.active_record.schema_format = :sql
-
-    unless ENV["SKIP_OBSERVERS"]
-      config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :team_observer
-    end
 
     # HP's proxy, among others, gets this wrong
     config.action_dispatch.ip_spoofing_check = false
