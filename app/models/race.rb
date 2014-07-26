@@ -27,11 +27,12 @@ class Race < ActiveRecord::Base
   after_update :update_results_race_names
 
   belongs_to :category
-  serialize :result_columns, Array
-  serialize :custom_columns, Array
   belongs_to :event, inverse_of: :races
   has_one :promoter, through: :event
   has_many :results, dependent: :destroy
+
+  serialize :result_columns, Array
+  serialize :custom_columns, Array
 
   scope :year, lambda { |year|
     where(
