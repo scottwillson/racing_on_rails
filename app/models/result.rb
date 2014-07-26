@@ -40,6 +40,8 @@ class Result < ActiveRecord::Base
   after_save :update_person_number
   after_destroy :destroy_people
   after_destroy :destroy_teams
+  after_destroy :touch_event
+  after_update :touch_event
 
   has_many :scores,
            class_name: "Competitions::Score",
@@ -49,7 +51,7 @@ class Result < ActiveRecord::Base
   has_many :dependent_scores, class_name: 'Competitions::Score', foreign_key: 'source_result_id', dependent: :destroy
   belongs_to :category
   belongs_to :event
-  belongs_to :race
+  belongs_to :race, touch: true
   belongs_to :person
   belongs_to :team
 
@@ -257,6 +259,13 @@ class Result < ActiveRecord::Base
   def validate_person_name
     if first_name.blank? && last_name.blank?
       errors.add(:first_name, "and last name cannot both be blank")
+    end
+  end
+
+  def touch_event
+    # Rails touch option doesn't work with namespaced STI models
+    if event.present?
+      event.update_column :updated_at, updated_at
     end
   end
 
