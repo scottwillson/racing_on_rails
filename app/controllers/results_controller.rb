@@ -1,7 +1,7 @@
 # What appear to be duplicate finds are actually existence tests.
 # Many methods to handle old URLs that search engines still hit. Will be removed.
 class ResultsController < ApplicationController
-  caches_page :index, :event, :person, :person_event, :team
+  caches_page :index, :person, :person_event, :team
 
   # HTML: Formatted links to Events with Results
   # == Params
@@ -36,10 +36,14 @@ class ResultsController < ApplicationController
       return redirect_to(rider_rankings_path(year: @event.year))
     end
 
+    @event = Event.find(params[:event_id])
+
     respond_to do |format|
       format.html {
         benchmark "Load results", level: :debug do
-          @event = Event.includes(races: [ :category, { results: :team } ]).find(params[:event_id])
+          if stale?(@event)
+            @event = Event.includes(races: [ :category, { results: :team } ]).find(params[:event_id])
+          end
         end
         assign_start_list
       }

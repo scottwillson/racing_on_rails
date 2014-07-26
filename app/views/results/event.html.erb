@@ -80,16 +80,20 @@
   <% end -%>
 
   <% benchmark("Render results for event #{@event.id}", silence: false) do %>
-  <% @event.races_with_results.sort.each do |race| %>
-  <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
-  <%= results_table race %>
-  <%- end -%>
+    <% @event.races_with_results.sort.each do |race| %>
+      <% cache race do %>
+        <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
+        <%= results_table race %>
+      <% end -%>
+    <%- end -%>
 
   <% if @event.races_with_results.empty? && @event.overall.present? && @event.overall.races_with_results.present? %>
     <%= render partial: "races", locals: { event: @event.overall } %>
     <% @event.overall.races_with_results.sort.each do |race| %>
-    <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
-    <%= results_table race %>
+      <% cache race do %>
+        <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
+        <%= results_table race %>
+      <% end %>
     <% end %>
   <% end %>
 <%- end -%>
