@@ -34,7 +34,6 @@ module Admin
       @article = Article.new(article_params)
 
       if @article.save
-        expire_cache
         flash[:notice] = 'Article was successfully created.'
         redirect_to admin_articles_url
       else
@@ -46,7 +45,6 @@ module Admin
       @article = Article.find(params[:id])
 
       if @article.update(article_params)
-        expire_cache
         flash[:notice] = 'Article was successfully updated.'
         redirect_to admin_articles_url
       else
@@ -55,7 +53,6 @@ module Admin
     end
 
     def destroy
-      expire_cache
       @article = Article.find(params[:id])
       @article.destroy
       redirect_to admin_articles_url
