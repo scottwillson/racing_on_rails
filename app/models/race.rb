@@ -202,7 +202,9 @@ class Race < ActiveRecord::Base
     # Rails touch option doesn't work with namespaced STI models
     if event.present?
       event.update_column :updated_at, updated_at
+      event.touch_parent
     end
+    true
   end
 
   # Ensure child team and people are not duplicates of existing records
