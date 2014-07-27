@@ -539,4 +539,24 @@ class ResultTest < ActiveSupport::TestCase
     result = race.results.create!(place: "1", custom_attributes: { "20100929" => "A" })
     assert_equal "A", result.custom_attribute(:"20100929"), "numerical column"
   end
+
+  test "touch" do
+    result = nil
+    Timecop.freeze(1.day.ago) do
+      result = FactoryGirl.create(:result)
+    end
+
+    person = Person.find(result.person)
+    person.name = "Ryan Hieb"
+    person.save!
+
+    result = Result.find(result)
+    assert result.updated_at > 1.day.ago, "result updated_at should be updated when result person changes"
+
+    race = Race.find(result.race)
+    assert race.updated_at > 1.day.ago, "race updated_at should be updated when result person changes"
+
+    event = Event.find(result.event)
+    assert event.updated_at > 1.day.ago, "event updated_at should be updated when result person changes"
+  end
 end
