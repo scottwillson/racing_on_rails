@@ -108,7 +108,9 @@ class EventsTest < AcceptanceTest
     assert_equal "Wednesday, November 13, 2013", find("#event_human_date").value
     assert_equal Time.zone.local(2013, 11, 13).to_date, event.reload.date, "date should be updated in DB"
 
+    wait_for "#event_human_date_picker"
     find("#event_human_date_picker").click
+    wait_for ".datepicker-days td.day.old"
     first(".datepicker-days td.day.old", text: "31").click
     click_button "Save"
 
