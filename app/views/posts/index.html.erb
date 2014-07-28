@@ -29,7 +29,9 @@
     </tr>
   </thead>
   <tbody>
-    <%= render collection: @posts, partial: "post", locals: { current_page: @posts.current_page } %>
+		<% cache [ @posts, @posts.current_page ] do %>
+			<%= render collection: @posts, partial: "post", locals: { current_page: @posts.current_page } %>
+		<% end %>
   </tbody>
 <% end -%>
 

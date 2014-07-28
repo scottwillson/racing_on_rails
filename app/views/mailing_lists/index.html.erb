@@ -1,18 +1,20 @@
 <% @page_title = "Mailing Lists" %>
 
-<% @mailing_lists.each do |mailing_list| %>
-<div class="row">
-  <div class="col-sm-12">
-    <h4><%= link_to mailing_list.friendly_name, mailing_list_posts_path(mailing_list) %></h4>
-    <p><%= mailing_list.description %></p>
-    <ul class="list-inline">
-      <li><a href="/mailman/listinfo/<%= mailing_list.name %>">Subscribe</a></li>
-      <li><a href="/mailman/listinfo/<%= mailing_list.name %>#subscribers">Subscription Options</a></li>
-      <li><%= link_to "New Post", new_mailing_list_post_path(mailing_list) %></li>
-      <li><%= link_to_unless_current "View Posts", mailing_list_posts_path(mailing_list) %></li>
-    </ul>
-  </div>
-</div>
+<% cache @mailing_lists do %>
+	<% @mailing_lists.each do |mailing_list| %>
+		<div class="row">
+		  <div class="col-sm-12">
+		    <h4><%= link_to mailing_list.friendly_name, mailing_list_posts_path(mailing_list) %></h4>
+		    <p><%= mailing_list.description %></p>
+		    <ul class="list-inline">
+		      <li><a href="/mailman/listinfo/<%= mailing_list.name %>">Subscribe</a></li>
+		      <li><a href="/mailman/listinfo/<%= mailing_list.name %>#subscribers">Subscription Options</a></li>
+		      <li><%= link_to "New Post", new_mailing_list_post_path(mailing_list) %></li>
+		      <li><%= link_to_unless_current "View Posts", mailing_list_posts_path(mailing_list) %></li>
+		    </ul>
+		  </div>
+		</div>
+	<% end %>
 <% end %>
 
 <p>Having trouble? Please don't email the entire list. Contact the

@@ -86,9 +86,8 @@ class ResultsController < ApplicationController
       format.html do
         if stale?([ @person, @year ], public: true)
           assign_person_results @person, @year
+          render layout: !request.xhr?
         end
-
-        render layout: !request.xhr?
       end
 
       format.json do
@@ -110,9 +109,8 @@ class ResultsController < ApplicationController
       format.html do
         if stale?([ @team, @year ], public: true)
           assign_team_results @team, @year
+          render layout: !request.xhr?
         end
-
-        render layout: !request.xhr?
       end
 
       format.json do

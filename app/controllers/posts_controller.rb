@@ -23,10 +23,13 @@ class PostsController < ApplicationController
       end
     end
 
-    @posts = @posts.paginate(page: page)
-
     respond_to do |format|
-      format.html
+      format.html do
+        if stale?([ Post.maximum(:updated_at), @subject])
+          @posts = @posts.paginate(page: page)
+        end
+      end
+
       format.rss do
         redirect_to mailing_list_posts_path(@mailing_list, format: :atom), status: :moved_permanently
       end
