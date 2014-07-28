@@ -84,13 +84,13 @@ group :production do
 end
 
 group :staging, :production do
+  gem "libv8", git: "git://github.com/cowboyd/libv8.git", submodules: true
   gem "raygun4ruby"
+  gem "therubyracer"
   gem "unicorn"
 end
 
 group :acceptance, :staging, :production do
   gem "execjs"
   gem "rvm-capistrano"
-  gem "libv8", git: "git://github.com/cowboyd/libv8.git", submodules: true
-  gem "therubyracer"
 end
