@@ -3,4 +3,7 @@
 <h2><%= @team.name %></h2>
 
 <%= render_page "years", year: @year %>
-<%= participant_event_results_table @team, @event_results %>
+
+<% cache [ @team, @event_results ] do %>
+	<%= participant_event_results_table @team, @event_results %>
+<% end %>
