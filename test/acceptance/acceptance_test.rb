@@ -215,6 +215,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     find(locator).click
     wait_for "form.editor_field"
     within "form.editor_field" do
+      wait_for "input[name='value']"
       fill_in "value", options
     end
     wait_for_no ".editing"
