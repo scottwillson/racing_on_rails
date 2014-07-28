@@ -25,11 +25,9 @@ class Race < ActiveRecord::Base
 
   before_save :symbolize_custom_columns
   after_update :update_results_race_names
-  after_update :touch_event
-  after_destroy :touch_event
 
   belongs_to :category
-  belongs_to :event, inverse_of: :races
+  belongs_to :event, inverse_of: :races, touch: true
   has_one :promoter, through: :event
   has_many :results, dependent: :destroy
 
@@ -195,15 +193,6 @@ class Race < ActiveRecord::Base
 
   def update_results_race_names
     Result.where(race_id: id).update_all(race_name: name, race_full_name: full_name)
-    true
-  end
-
-  def touch_event
-    # Rails touch option doesn't work with namespaced STI models
-    if event.present?
-      event.update_column :updated_at, updated_at
-      event.touch_parent
-    end
     true
   end
 

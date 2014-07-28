@@ -38,10 +38,7 @@ class Event < ActiveRecord::Base
   before_destroy :validate_no_results
   before_save :set_promoter, :set_team
   after_save :update_results
-  after_update :touch_parent
-  after_touch :touch_parent
   after_destroy :update_parent_date
-  after_destroy :touch_parent
 
   validates_presence_of :date, :name
 
@@ -50,7 +47,7 @@ class Event < ActiveRecord::Base
   validate :inclusion_of_discipline
   validate :inclusion_of_sanctioned_by
 
-  belongs_to :parent, foreign_key: "parent_id", class_name: "Event"
+  belongs_to :parent, foreign_key: "parent_id", class_name: "Event", touch: true
   has_many :children,
            -> { order :date },
            class_name: "Event",
@@ -529,15 +526,6 @@ class Event < ActiveRecord::Base
 
   def update_parent_date
     parent.try :update_date
-    true
-  end
-
-  def touch_parent
-    # Rails touch option doesn't work with namespaced STI models
-    if parent.present? && !parent.new_record?
-      parent.update_column :updated_at, updated_at
-      parent.touch_parent
-    end
     true
   end
 
