@@ -50,8 +50,8 @@ class Result < ActiveRecord::Base
   belongs_to :category
   belongs_to :event, touch: true
   belongs_to :race, touch: true
-  belongs_to :person
-  belongs_to :team
+  belongs_to :person, touch: true
+  belongs_to :team, touch: true
 
   validates_presence_of :race
 
