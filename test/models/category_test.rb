@@ -73,4 +73,42 @@ class CategoryTest < ActiveSupport::TestCase
     assert_equal('senior_men', senior_men_2.friendly_param)
     assert_raises(Categories::AmbiguousParamException) { Category.find_by_friendly_param('senior_men') }
   end
+
+  test "touch race" do
+    result = nil
+    Timecop.freeze(1.day.ago) do
+      result = FactoryGirl.create(:weekly_series_event_result)
+    end
+
+    category = Category.find(result.race.category)
+    category.name = "Eddy Men"
+    category.save!
+
+    # result = Result.find(result)
+    # assert result.updated_at > 1.day.ago, "result updated_at should be updated when result person changes"
+
+    race = Race.find(result.race)
+    assert race.updated_at > 1.day.ago, "race updated_at should be updated when result person changes"
+
+    event = Event.find(result.event)
+    assert event.updated_at > 1.day.ago, "event updated_at should be updated when result person changes"
+
+    parent = Event.find(result.event.parent)
+    assert parent.updated_at > 1.day.ago, "parent event updated_at should be updated when result person changes"
+  end
+
+  test "touch results" do
+    category = FactoryGirl.create(:category)
+    result = nil
+    Timecop.freeze(1.day.ago) do
+      result = FactoryGirl.create(:weekly_series_event_result, category: category)
+    end
+
+    category = Category.find(category)
+    category.name = "Eddy Men"
+    category.save!
+
+    result = Result.find(result)
+    assert result.updated_at > 1.day.ago, "result updated_at should be updated when result person changes"
+  end
 end
