@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/cowboyd/libv8.git
+  revision: 4e644f786a8f947fa802a8743d158114eda5ff8d
+  submodules: true
+  specs:
+    libv8 (3.16.14.3)
+
+GIT
   remote: https://github.com/amerine/acts_as_tree.git
   revision: ec2d1dc0d3c7d28e19e4c79f0398506fb57f880a
   specs:
@@ -211,7 +218,6 @@ GEM
       railties (>= 3.2.16)
     json (1.8.1)
     kgio (2.9.2)
-    libv8 (3.16.14.3)
     listen (2.7.9)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
@@ -240,7 +246,7 @@ GEM
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
     newrelic_rpm (3.9.0.229)
-    nokogiri (1.6.2.1)
+    nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
     oj (2.9.9)
     parser (2.2.0.pre.3)
@@ -299,7 +305,7 @@ GEM
       ffi (>= 0.5.0)
     redcarpet (3.1.2)
     ref (1.0.5)
-    request_store (1.0.7)
+    request_store (1.0.8)
     ri_cal (0.8.8)
     rmagick (2.13.2)
     rubocop (0.24.1)
@@ -414,6 +420,7 @@ DEPENDENCIES
   in_place_editing
   jquery-rails
   jquery-ui-rails
+  libv8!
   minitest
   mocha
   money
