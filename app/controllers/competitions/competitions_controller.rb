@@ -1,7 +1,5 @@
 module Competitions
   class CompetitionsController < ApplicationController
-    caches_page :show
-
     def show
       # Very explicit because we don't want to call something like 'eval' on a request parameter!
       if params[:type] == "rider_rankings"
@@ -22,7 +20,9 @@ module Competitions
 
       @event = competition_class.year(@year).first || competition_class.new(date: Time.zone.local(@year))
 
-      render "results/event"
+      if stale?(@event, public: true)
+        render "results/event"
+      end
     end
   end
 end
