@@ -56,22 +56,26 @@ class ResultsController < ApplicationController
   def person_event
     @event = Event.find(params[:event_id])
     @person = Person.find(params[:person_id])
-    @results = Result.
-                includes(scores: [ :source_result, :competition_result ]).
-                where(event_id: params[:event_id]).
-                where(person_id: params[:person_id])
+    if stale?([ @event, @person, @year ], public: true)
+      @results = Result.
+                  includes(scores: [ :source_result, :competition_result ]).
+                  where(event_id: params[:event_id]).
+                  where(person_id: params[:person_id])
+    end
   end
 
   # Single Team's Results for a single Event
   def team_event
     @team = Team.find(params[:team_id])
     @event = Event.find(params[:event_id])
-    @result = Result.
-              includes(scores: [ :source_result, :competition_result ]).
-              where("results.event_id" => params[:event_id]).
-              where(team_id: params[:team_id]).
-              first!
-    raise ActiveRecord::RecordNotFound unless @result
+    if stale?([ @event, @team, @year ], public: true)
+      @result = Result.
+                includes(scores: [ :source_result, :competition_result ]).
+                where("results.event_id" => params[:event_id]).
+                where(team_id: params[:team_id]).
+                first!
+      raise ActiveRecord::RecordNotFound unless @result
+    end
   end
 
   # Person's Results for an entire year
@@ -80,7 +84,9 @@ class ResultsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        assign_person_results @person, @year
+        if stale?([ @person, @year ], public: true)
+          assign_person_results @person, @year
+        end
 
         render layout: !request.xhr?
       end
@@ -102,7 +108,9 @@ class ResultsController < ApplicationController
     @team = Team.find(params[:team_id])
     respond_to do |format|
       format.html do
-        assign_team_results @team, @year
+        if stale?([ @team, @year ], public: true)
+          assign_team_results @team, @year
+        end
 
         render layout: !request.xhr?
       end
