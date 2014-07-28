@@ -132,7 +132,7 @@ class PeopleTest < AcceptanceTest
     molly = Person.find_by_name("Molly Cameron")
     matson = Person.find_by_name("Mark Matson")
 
-    fill_in_inline "#person_#{matson.id}_name", with: "Molly Cameron"
+    fill_in_inline "#person_#{matson.id}_name", with: "Molly Cameron", assert_edit: false
 
     find(".ui-dialog-buttonset button:last-child").click
 
@@ -150,7 +150,7 @@ class PeopleTest < AcceptanceTest
     assert_table("people_table", 1, 2, "Molly Cameron")
     assert_table("people_table", 2, 2, "Mark Matson")
 
-    fill_in_inline "#person_#{matson.id}_name", with: "Molly Cameron"
+    fill_in_inline "#person_#{matson.id}_name", with: "Molly Cameron", assert_edit: false
     wait_for ".ui-dialog-buttonset button:first-child"
     find(".ui-dialog-buttonset button:first-child").click
 

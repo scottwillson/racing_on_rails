@@ -209,6 +209,8 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def fill_in_inline(locator, options)
+    assert_edit = options.delete(:assert_edit)
+    text = options[:with]
     options[:with] = options[:with] + "\n"
     find(locator).click
     wait_for "form.editor_field"
@@ -217,8 +219,10 @@ class AcceptanceTest < ActiveSupport::TestCase
     end
     wait_for_no ".editing"
     wait_for_no ".saving"
-    within locator do
-      assert page.has_content?(text)
+    if assert_edit
+      within locator do
+        assert page.has_content?(text)
+      end
     end
   end
 
