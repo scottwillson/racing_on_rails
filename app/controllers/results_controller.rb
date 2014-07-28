@@ -7,13 +7,15 @@ class ResultsController < ApplicationController
   # == Params
   # * year (optional)
   def index
-    @discipline = Discipline[params["discipline"]]
-    @discipline_names = Discipline.names
-    @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
+    if stale?([ Event.maximum(:updated_at), @year ], public: true)
+      @discipline = Discipline[params["discipline"]]
+      @discipline_names = Discipline.names
+      @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
 
-    respond_to do |format|
-      format.html
-      format.xml
+      respond_to do |format|
+        format.html
+        format.xml
+      end
     end
   end
 
@@ -36,12 +38,10 @@ class ResultsController < ApplicationController
       return redirect_to(rider_rankings_path(year: @event.year))
     end
 
-    @event = Event.find(params[:event_id])
-
     respond_to do |format|
       format.html {
         benchmark "Load results", level: :debug do
-          if stale?(@event)
+          if stale?(@event, public: true)
             @event = Event.includes(races: [ :category, { results: :team } ]).find(params[:event_id])
           end
         end
