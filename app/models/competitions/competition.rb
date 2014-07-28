@@ -11,7 +11,6 @@ module Competitions
   # +calculate!+ is the main method
   class Competition < Event
     # TODO Try using result dates, not event dates to find results
-    include FileUtils
     include Competitions::Categories
     include Competitions::Dates
     include Competitions::Naming
