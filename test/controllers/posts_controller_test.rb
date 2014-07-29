@@ -345,11 +345,11 @@ class PostsControllerTest < ActionController::TestCase
 
   test "spam post should not cause error" do
     obra_chat = FactoryGirl.create(:mailing_list)
-    post(:create, { "commit"=>"Post", "mailing_list_id"=> obra_chat.to_param,
-                  "post" => { "from_name"=>"strap",
-                               "body"=>"<a href= http://www.blogextremo.com/elroybrito >strap on gallery</a> <a href= http://emmittmcclaine.blogownia.pl >lesbian strap on</a> <a href= http://www.cherryade.com/margenemohabeer >strap on sex</a> ",
-                               "subject"=>"onstrapdildo@mail.com",
-                               "from_email"=>"onstrapdildo@mail.com"}
+    post(:create, { "commit" => "Post", "mailing_list_id" => obra_chat.to_param,
+                  "post" => { "from_name" => "strap",
+                               "body" => "<a href= http://www.blogextremo.com/elroybrito >strap on gallery</a> <a href= http://emmittmcclaine.blogownia.pl >lesbian strap on</a> <a href= http://www.cherryade.com/margenemohabeer >strap on sex</a> ",
+                               "subject" => "onstrapdildo@mail.com",
+                               "from_email" => "onstrapdildo@mail.com"}
     })
     assert_response(:redirect)
   end
