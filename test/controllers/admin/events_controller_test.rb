@@ -34,9 +34,9 @@ module Admin
       assert_nil(SingleDayEvent.find_by_name('Silverton'), 'Silverton should not be in database')
       # New event, no changes, single day, no promoter
       post(:create,
-           "commit"=>"Save",
+           "commit" => "Save",
            'same_promoter' => 'true',
-           "event"=>{"name"=>"Silverton",
+           "event" => {"name" => "Silverton",
                     'type' => 'SingleDayEvent',
                     'promoter_id' => ""}
       )
@@ -51,11 +51,11 @@ module Admin
       banana_belt = FactoryGirl.create(:event, promoter: promoter)
 
       post(:update,
-           "commit"=>"Save",
+           "commit" => "Save",
            id: banana_belt.to_param,
-           "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
-                     "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1",
-                     "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR", 'type' => 'SingleDayEvent',
+           "event" => {"city" => "Forest Grove", "name" => "Banana Belt One","date" => "2006-03-12",
+                     "flyer" => "../../flyers/2006/banana_belt.html", "sanctioned_by" => "UCI", "flyer_approved" => "1",
+                     "discipline" => "Track", "cancelled" => "1", "state" => "OR", 'type' => 'SingleDayEvent',
                     "promoter_id"  => promoter.to_param}
       )
       assert_nil(flash[:warn], 'flash[:warn]')
