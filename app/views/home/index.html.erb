@@ -1,21 +1,30 @@
 <div class="home">
-  <%= render "photo_row",
+  <% cache [ @photo, @most_recent_event_with_recent_result, @home.weeks_of_recent_results, @today ] do %>
+    <%= render "photo_row",
         photo: @photo,
         most_recent_event_with_recent_result: @most_recent_event_with_recent_result,
         weeks_of_recent_results: @home.weeks_of_recent_results %>
+  <% end %>
 
   <div class="row">
     <div class="col-sm-6">
-      <%= render_page "home/upcoming_events", upcoming_events: @upcoming_events %>
+      <% cache @upcoming_events, @today do %>
+        <%= render_page "home/upcoming_events", upcoming_events: @upcoming_events %>
+      <% end %>
     </div>
     <div class="col-sm-6">
-      <%= render_page "home/recent_results",
+      <% cache [ @most_recent_event_with_recent_result, @home.weeks_of_recent_results, @today ] do %>
+        <%= render_page "home/recent_results",
             events_with_recent_results: @events_with_recent_results,
             weeks_of_recent_results: @home.weeks_of_recent_results %>
+        <% end %>
     </div>
   </div>
 
-  <%= render_page "home/posts", posts: @posts %>
+  <% cache @posts do %>
+    <%= render_page "home/posts", posts: @posts %>
+  <% end %>
+
   <%= render_page "home/ads" %>
   <%= render_page "home/links" %>
   <%= render_page "home/associated" %>
