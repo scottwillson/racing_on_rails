@@ -25,9 +25,9 @@ module Admin
         assert_not_equal('Cyclocross', event.discipline, 'discipline')
 
         post(:update,
-             "commit"=>"Save",
+             "commit" => "Save",
              id: event.to_param,
-             "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Cyclocross"}
+             "event" => {"bar_points" => "2", "name" => "Banana Belt One", "discipline" => "Cyclocross"}
         )
         assert_redirected_to edit_admin_event_path(event)
 
@@ -44,9 +44,9 @@ module Admin
         assert_equal('Road', event.parent.discipline, 'Parent event discipline')
 
         post(:update,
-             "commit"=>"Save",
+             "commit" => "Save",
              id: event.to_param,
-             "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Road"}
+             "event" => {"bar_points" => "2", "name" => "Banana Belt One", "discipline" => "Road"}
         )
         assert_redirected_to edit_admin_event_path(event)
 
@@ -61,9 +61,9 @@ module Admin
         assert_equal('Road', event.discipline, 'Parent event discipline')
 
         post(:update,
-             "commit"=>"Save",
+             "commit" => "Save",
              id: event.to_param,
-             "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Road"}
+             "event" => {"bar_points" => "2", "name" => "Banana Belt One", "discipline" => "Road"}
         )
         assert_redirected_to edit_admin_event_path(event)
 
@@ -82,11 +82,11 @@ module Admin
         event = CombinedTimeTrialResults.create!(parent: source_event)
 
         post(:update, "id" => event.id,
-                      "event"=>{ "auto_combined_results"=>"1",
-                                      "name"=>"Portland MTB Short Track Series",
-                                      "bar_points"=>"0",
-                                      "ironman"=>"1",
-                                      "discipline"=>"Mountain Bike"})
+                      "event" => { "auto_combined_results" => "1",
+                                      "name" => "Portland MTB Short Track Series",
+                                      "bar_points" => "0",
+                                      "ironman" => "1",
+                                      "discipline" => "Mountain Bike"})
 
         assert_nil(flash[:warn], "flash[:warn] should be empty, but was: #{flash[:empty]}")
         assert_redirected_to edit_admin_event_path(event)
@@ -112,11 +112,11 @@ module Admin
         assert_not_equal(norba, event.number_issuer, 'number_issuer')
 
         post(:update,
-             "commit"=>"Save",
+             "commit" => "Save",
              id: event.to_param,
-             "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
-                       "flyer"=>"http://#{RacingAssociation.current.static_host}/flyers/2006/event.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1",
-                       "discipline"=>"Track", "cancelled"=>"1", "state"=>"WA",
+             "event" => {"city" => "Forest Grove", "name" => "Banana Belt One","date" => "2006-03-12",
+                       "flyer" => "http://#{RacingAssociation.current.static_host}/flyers/2006/event.html", "sanctioned_by" => "UCI", "flyer_approved" => "1",
+                       "discipline" => "Track", "cancelled" => "1", "state" => "WA",
                       "promoter_id" => brad_ross.to_param, 'number_issuer_id' => norba.to_param}
         )
         assert_redirected_to edit_admin_event_path(event)
@@ -144,12 +144,12 @@ module Admin
           event = FactoryGirl.create(:event)
 
           post(:update,
-               "commit"=>"Save",
+               "commit" => "Save",
                id: event.to_param,
-               "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
-                         "flyer"=>"../../flyers/2006/event.html", "sanctioned_by"=>"UCI",
-                         "flyer_approved"=>"1",
-                         "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
+               "event" => {"city" => "Forest Grove", "name" => "Banana Belt One","date" => "2006-03-12",
+                         "flyer" => "../../flyers/2006/event.html", "sanctioned_by" => "UCI",
+                         "flyer_approved" => "1",
+                         "discipline" => "Track", "cancelled" => "1", "state" => "OR",
                          "promoter_id" => event.promoter.to_param,
                          'number_issuer_id' => number_issuer.to_param,
                          'type' => type}
@@ -168,12 +168,12 @@ module Admin
           event = type.create!
 
           post(:update,
-               "commit"=>"Save",
+               "commit" => "Save",
                id: event.to_param,
-               "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
-                         "flyer"=>"../../flyers/2006/event.html", "sanctioned_by"=>"UCI",
-                         "flyer_approved"=>"1",
-                         "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
+               "event" => {"city" => "Forest Grove", "name" => "Banana Belt One","date" => "2006-03-12",
+                         "flyer" => "../../flyers/2006/event.html", "sanctioned_by" => "UCI",
+                         "flyer_approved" => "1",
+                         "discipline" => "Track", "cancelled" => "1", "state" => "OR",
                          "promoter_id" => event.promoter.to_param,
                          'number_issuer_id' => number_issuer.to_param,
                          'type' => "Event" }
@@ -189,11 +189,11 @@ module Admin
         original_attributes = event.attributes.clone
 
         post(:update,
-             "commit"=>"Save",
+             "commit" => "Save",
              id: event.to_param,
-             "event"=>{"city"=>event.city, "name"=>"Mt. Hood One Day",
-                       "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved,
-                       "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
+             "event" => {"city" => event.city, "name" => "Mt. Hood One Day",
+                       "flyer" => event.flyer, "sanctioned_by" => event.sanctioned_by, "flyer_approved" => event.flyer_approved,
+                       "discipline" => event.discipline, "cancelled" => event.cancelled, "state" => event.state,
                       'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'SingleDayEvent'}
         )
         event = assigns(:event)
@@ -221,11 +221,11 @@ module Admin
         original_attributes = event.attributes.clone
 
         put(:update,
-             "commit"=>"Save",
+             "commit" => "Save",
              id: event.to_param,
-             "event"=>{"city"=>event.city, "name"=>"Mt. Hood Series","date"=>event.date.to_date,
-                       "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved,
-                       "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
+             "event" => {"city" => event.city, "name" => "Mt. Hood Series","date" => event.date.to_date,
+                       "flyer" => event.flyer, "sanctioned_by" => event.sanctioned_by, "flyer_approved" => event.flyer_approved,
+                       "discipline" => event.discipline, "cancelled" => event.cancelled, "state" => event.state,
                       'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'Series'}
         )
         assert_redirected_to edit_admin_event_path(event)
