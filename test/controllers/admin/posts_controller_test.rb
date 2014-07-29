@@ -45,9 +45,9 @@ module Admin
         from_email: "mmurray@obra.org",
         subject: "No More Masters Races",
         body: "That is all",
-        "date(1i)"=>"2009",
-        "date(2i)"=>"11",
-        "date(3i)"=>"22"
+        "date(1i)" => "2009",
+        "date(2i)" => "11",
+        "date(3i)" => "22"
       }
       assert_not_nil assigns(:post), @post
       assert assigns(:post).errors.empty?, assigns(:post).errors.full_messages.join(", ")
@@ -87,9 +87,9 @@ module Admin
         from_email: "mmurray@obra.org",
         subject: "No More Masters Races",
         body: "That is all",
-        "date(1i)"=>"2009",
-        "date(2i)"=>"11",
-        "date(3i)"=>"22"
+        "date(1i)" => "2009",
+        "date(2i)" => "11",
+        "date(3i)" => "22"
       }
       assert_not_nil assigns(:post), @post
       assert assigns(:post).errors.empty?, assigns(:post).errors.full_messages.join(", ")
