@@ -957,10 +957,12 @@ class Person < ActiveRecord::Base
   end
 
   def update_results
-    if first_name_changed? || last_name_changed?
-      results.each do |result|
-        if result[:name] != name(result.year)
-          result.cache_attributes! :non_event
+    Person.no_touching do
+      if first_name_changed? || last_name_changed?
+        results.each do |result|
+          if result[:name] != name(result.year)
+            result.cache_attributes! :non_event
+          end
         end
       end
     end
