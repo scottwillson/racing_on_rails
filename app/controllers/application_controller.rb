@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   include SentientController
 
 
-  before_filter :clear_racing_association, :toggle_tabs, :assign_year
+  before_filter :clear_racing_association, :toggle_tabs, :assign_year, :assign_today
 
   def self.expire_cache
     begin
@@ -125,6 +125,10 @@ class ApplicationController < ActionController::Base
     if @year.nil? || @year < 1900 || @year > 2100
       @year = RacingAssociation.current.effective_year
     end
+  end
+
+  def assign_today
+    @today = Time.zone.today
   end
 
   def page
