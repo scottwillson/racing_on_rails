@@ -5,8 +5,6 @@ class ScheduleController < ApplicationController
   before_filter :assign_schedule
   before_filter :assign_sanctioning_organizations
 
-  caches_page :index, :list, :calendar
-
   # Default calendar format
   # === Params
   # * year: default to current year
@@ -18,7 +16,11 @@ class ScheduleController < ApplicationController
     @calendar_tab = "Calendar"
 
     respond_to do |format|
-      format.html { render_page }
+      format.html do
+        if stale?([ Event.maximum(:updated_at), @today ])
+          render_page
+        end
+      end
       format.rss do
         redirect_to schedule_path(format: :atom), status: :moved_permanently
       end
@@ -53,7 +55,11 @@ class ScheduleController < ApplicationController
     @calendar_tab = "List with race organizer contact information"
 
     respond_to do |format|
-      format.html { render_page }
+      format.html do
+        if stale?([ Event.maximum(:updated_at), @today ])
+          render_page
+        end
+      end
       format.rss do
         redirect_to schedule_path(format: :atom), status: :moved_permanently
       end
