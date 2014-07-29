@@ -63,19 +63,19 @@ module Admin
     test "create" do
       assert_equal([], Person.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
 
-      post(:create, {"person"=>{
-                          "member_from(1i)"=>"", "member_from(2i)"=>"", "member_from(3i)"=>"",
-                          "member_to(1i)"=>"", "member_to(2i)"=>"", "member_to(3i)"=>"",
-                          "date_of_birth(2i)"=>"", "date_of_birth(1i)"=>"", "date_of_birth(3i)"=>"",
-                          "work_phone"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"",
-                          "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"",
-                          "team_name"=>"", "road_category"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"",
-                          "first_name"=>"Jon", "last_name"=>"Knowlson",
-                          "email"=>"", "state"=>"",
-                          "race_numbers_attributes"=>{
-                            "0"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@road.id, "year"=>"2013", "value"=>""}
+      post(:create, {"person" => {
+                          "member_from(1i)" => "", "member_from(2i)" => "", "member_from(3i)" => "",
+                          "member_to(1i)" => "", "member_to(2i)" => "", "member_to(3i)" => "",
+                          "date_of_birth(2i)" => "", "date_of_birth(1i)" => "", "date_of_birth(3i)" => "",
+                          "work_phone" => "", "occupation" => "", "city" => "Brussels", "cell_fax" => "", "zip" => "",
+                          "mtb_category" => "", "dh_category" => "", "member" => "1", "gender" => "", "ccx_category" => "",
+                          "team_name" => "", "road_category" => "", "street" => "", "track_category" => "", "home_phone" => "",
+                          "first_name" => "Jon", "last_name" => "Knowlson",
+                          "email" => "", "state" => "",
+                          "race_numbers_attributes" => {
+                            "0" => {"number_issuer_id" => @association.id, "discipline_id" => @road.id, "year" => "2013", "value" => ""}
                           }
-                    }, "commit"=>"Save"})
+                    }, "commit" => "Save"})
 
       assert assigns['person'].errors.empty?, assigns['person'].errors.full_messages.join
 
@@ -97,27 +97,27 @@ module Admin
         molly_road_number = RaceNumber.last
         year = Time.zone.today.year.to_s
 
-        put(:update, {"commit"=>"Save",
+        put(:update, {"commit" => "Save",
                        "number_year" => year,
-                       "number_issuer_id"=>[@association.to_param], "number_value"=>["AZY"],
+                       "number_issuer_id" => [@association.to_param], "number_value" => ["AZY"],
                        "discipline_id" => [@mountain_bike.id.to_s],
-                       "person"=>{
-                         "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville",
-                         "cell_fax"=>"", "zip"=>"97070",
-                         "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "dh_category"=>"",
-                         "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5",
-                         "street"=>"31153 SW Willamette Hwy W",
-                         "track_category"=>"", "home_phone"=>"503-582-8823", "first_name"=>"Paul", "last_name"=>"Formiller",
-                         "date_of_birth(1i)"=>"1969",
-                         "member_from(1i)"=>"", "member_from(2i)"=>"", "member_from(3i)"=>"",
-                         "member_to(1i)"=>"", "member_to(2i)"=>"", "member_to(3i)"=>"",
-                         "email"=>"paul.formiller@verizon.net", "state"=>"OR",
-                         "race_numbers_attributes"=>{
-                           "0"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@road.id, "year"=>year, "value"=>"202", "id" => molly_road_number.to_param},
-                           "1"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@mountain_bike.id, "year"=>year, "value"=>"AZY"}
+                       "person" => {
+                         "work_phone" => "", "date_of_birth(2i)" => "1", "occupation" => "engineer", "city" => "Wilsonville",
+                         "cell_fax" => "", "zip" => "97070",
+                         "date_of_birth(3i)" => "1", "mtb_category" => "Spt", "dh_category" => "",
+                         "member" => "1", "gender" => "M", "notes" => "rm", "ccx_category" => "", "team_name" => "", "road_category" => "5",
+                         "street" => "31153 SW Willamette Hwy W",
+                         "track_category" => "", "home_phone" => "503-582-8823", "first_name" => "Paul", "last_name" => "Formiller",
+                         "date_of_birth(1i)" => "1969",
+                         "member_from(1i)" => "", "member_from(2i)" => "", "member_from(3i)" => "",
+                         "member_to(1i)" => "", "member_to(2i)" => "", "member_to(3i)" => "",
+                         "email" => "paul.formiller@verizon.net", "state" => "OR",
+                         "race_numbers_attributes" => {
+                           "0" => {"number_issuer_id" => @association.id, "discipline_id" => @road.id, "year" => year, "value" => "202", "id" => molly_road_number.to_param},
+                           "1" => {"number_issuer_id" => @association.id, "discipline_id" => @mountain_bike.id, "year" => year, "value" => "AZY"}
                          }
                        },
-                       "id"=>molly.to_param}
+                       "id" => molly.to_param}
         )
         assert assigns(:person).errors.empty?, assigns(:person).errors.full_messages.join(", ")
         assert(flash.empty?, "flash empty? but was: #{flash}")
@@ -136,19 +136,19 @@ module Admin
       assert_equal([], Person.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
 
       post(:create, {
-        "person"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"",
-          "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16",
-          "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31",
-          "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"",
-          "team_name"=>"", "road_category"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", "first_name"=>"Jon",
-           "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>"",
-          "race_numbers_attributes"=>{
-            "0"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@road.id, "year"=>"2007", "value"=>"8977"},
-            "1"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@mountain_bike.id, "year"=>"2007", "value"=>"BBB9"}
+        "person" => {"work_phone" => "", "date_of_birth(2i)" => "", "occupation" => "", "city" => "Brussels", "cell_fax" => "", "zip" => "",
+          "member_from(1i)" => "2004", "member_from(2i)" => "2", "member_from(3i)" => "16",
+          "member_to(1i)" => "2004", "member_to(2i)" => "12", "member_to(3i)" => "31",
+          "date_of_birth(3i)" => "", "mtb_category" => "", "dh_category" => "", "member" => "1", "gender" => "", "ccx_category" => "",
+          "team_name" => "", "road_category" => "", "street" => "", "track_category" => "", "home_phone" => "", "first_name" => "Jon",
+           "last_name" => "Knowlson", "date_of_birth(1i)" => "", "email" => "", "state" => "",
+          "race_numbers_attributes" => {
+            "0" => {"number_issuer_id" => @association.id, "discipline_id" => @road.id, "year" => "2007", "value" => "8977"},
+            "1" => {"number_issuer_id" => @association.id, "discipline_id" => @mountain_bike.id, "year" => "2007", "value" => "BBB9"}
           }
         },
           number_year: '2007', "official" => "0",
-        "commit"=>"Save"})
+        "commit" => "Save"})
 
       assert assigns['person'].errors.empty?, assigns['person'].errors.full_messages.join
 
@@ -181,18 +181,18 @@ module Admin
       assert_equal([], Person.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
 
       post(:create, {
-        "person"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"",
-          "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16",
-          "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31",
-          "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"",
-          "team_name"=>"", "road_category"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"",
-          "first_name"=>"Jon", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>"",
-          "race_numbers_attributes"=>{
-            "0"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@road.id, "year"=>"2004", "value"=>"104"},
-            "1"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@road.id, "year"=>"2004", "value"=>"BBB9"}
+        "person" => {"work_phone" => "", "date_of_birth(2i)" => "", "occupation" => "", "city" => "Brussels", "cell_fax" => "", "zip" => "",
+          "member_from(1i)" => "2004", "member_from(2i)" => "2", "member_from(3i)" => "16",
+          "member_to(1i)" => "2004", "member_to(2i)" => "12", "member_to(3i)" => "31",
+          "date_of_birth(3i)" => "", "mtb_category" => "", "dh_category" => "", "member" => "1", "gender" => "", "ccx_category" => "",
+          "team_name" => "", "road_category" => "", "street" => "", "track_category" => "", "home_phone" => "",
+          "first_name" => "Jon", "last_name" => "Knowlson", "date_of_birth(1i)" => "", "email" => "", "state" => "",
+          "race_numbers_attributes" => {
+            "0" => {"number_issuer_id" => @association.id, "discipline_id" => @road.id, "year" => "2004", "value" => "104"},
+            "1" => {"number_issuer_id" => @association.id, "discipline_id" => @road.id, "year" => "2004", "value" => "BBB9"}
           }
         },
-        "commit"=>"Save"})
+        "commit" => "Save"})
 
       assert_not_nil(assigns['person'], "Should assign person")
       assert(assigns['person'].errors.empty?, "Person should not have errors")
@@ -215,27 +215,29 @@ module Admin
     test "update" do
       vanilla = FactoryGirl.create(:team)
       molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron", road_number: "2", team: vanilla)
+      Alias.create!(name: "Mollie Cameron", person: molly)
+      FactoryGirl.create :result, person: molly, team: vanilla
       assert_equal 1, molly.versions.size, "versions"
       molly_road_number = RaceNumber.first
 
-      put(:update, {"commit"=>"Save",
+      put(:update, {"commit" => "Save",
                      "number_year" => Time.zone.today.year.to_s,
-                     "person"=>{
-                       "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16",
-                       "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31",
-                       "print_card" => "1", "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville",
-                       "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "dh_category"=>"",
-                       "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5",
-                       "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823",
-                       "first_name"=>"Paul", "last_name"=>"Formiller",
-                       "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR", "ccx_only" => "1",
+                     "person" => {
+                       "member_from(1i)" => "2004", "member_from(2i)" => "2", "member_from(3i)" => "16",
+                       "member_to(1i)" => "2004", "member_to(2i)" => "12", "member_to(3i)" => "31",
+                       "print_card" => "1", "work_phone" => "", "date_of_birth(2i)" => "1", "occupation" => "engineer", "city" => "Wilsonville",
+                       "cell_fax" => "", "zip" => "97070", "date_of_birth(3i)" => "1", "mtb_category" => "Spt", "dh_category" => "",
+                       "member" => "1", "gender" => "M", "notes" => "rm", "ccx_category" => "", "team_name" => "", "road_category" => "5",
+                       "street" => "31153 SW Willamette Hwy W", "track_category" => "", "home_phone" => "503-582-8823",
+                       "first_name" => "Paul", "last_name" => "Formiller",
+                       "date_of_birth(1i)" => "1969", "email" => "paul.formiller@verizon.net", "state" => "OR", "ccx_only" => "1",
                        "official" => "1",
                        "race_numbers_attributes" => {
-                         "0" => { "value"=>"222", "id"=>molly_road_number.id },
-                         "1" => { "number_issuer_id"=>@association.to_param, "discipline_id"=>@cyclocross.id, "year"=> Time.zone.today.year.to_s }
+                         "0" => { "value" => "222", "id" => molly_road_number.id },
+                         "1" => { "number_issuer_id" => @association.to_param, "discipline_id" => @cyclocross.id, "year" => Time.zone.today.year.to_s }
                        }
                       },
-                     "id"=>molly.to_param}
+                     "id" => molly.to_param}
       )
       assert(flash.empty?, "Expected flash.empty? but was: #{flash[:warn]}")
       assert_redirected_to edit_admin_person_path(molly)
@@ -260,18 +262,18 @@ module Admin
 
     test "update bad member from date" do
       person = FactoryGirl.create(:person)
-      put(:update, "commit"=>"Save", "person"=>{
-                   "member_from(1i)"=>"","member_from(2i)"=>"10", "member_from(3i)"=>"19",
-                   "member_to(3i)"=>"31", "date_of_birth(2i)"=>"1", "city"=>"Hood River",
-                   "work_phone"=>"541-387-8883 x 213", "occupation"=>"Sales Territory Manager", "cell_fax"=>"541-387-8884",
-                   "date_of_birth(3i)"=>"1", "zip"=>"97031", "license"=>"583", "mtb_category"=>"Beg",
-                   "dh_category"=>"Beg", "notes"=>"interests: 6\r\nr\r\ninterests: 4\r\nr\r\ninterests: 4\r\n", "gender"=>"M",
-                   "ccx_category"=>"B", "team_name"=>"River City Specialized", "print_card"=>"1",
-                   "street"=>"3541 Avalon Drive", "home_phone"=>"503-367-5193", "road_category"=>"3",
-                   "track_category"=>"5", "first_name"=>"Karsten", "last_name"=>"Hagen",
-                   "member_to(1i)"=>"2008", "member_to(2i)"=>"12", "email"=>"khagen69@hotmail.com", "date_of_birth(1i)"=>"1969",
-                   "state"=>"OR"}, "id"=>person.to_param,
-                   "number_year"=>"2008"
+      put(:update, "commit" => "Save", "person" => {
+                   "member_from(1i)" => "","member_from(2i)" => "10", "member_from(3i)" => "19",
+                   "member_to(3i)" => "31", "date_of_birth(2i)" => "1", "city" => "Hood River",
+                   "work_phone" => "541-387-8883 x 213", "occupation" => "Sales Territory Manager", "cell_fax" => "541-387-8884",
+                   "date_of_birth(3i)" => "1", "zip" => "97031", "license" => "583", "mtb_category" => "Beg",
+                   "dh_category" => "Beg", "notes" => "interests: 6\r\nr\r\ninterests: 4\r\nr\r\ninterests: 4\r\n", "gender" => "M",
+                   "ccx_category" => "B", "team_name" => "River City Specialized", "print_card" => "1",
+                   "street" => "3541 Avalon Drive", "home_phone" => "503-367-5193", "road_category" => "3",
+                   "track_category" => "5", "first_name" => "Karsten", "last_name" => "Hagen",
+                   "member_to(1i)" => "2008", "member_to(2i)" => "12", "email" => "khagen69@hotmail.com", "date_of_birth(1i)" => "1969",
+                   "state" => "OR"}, "id" => person.to_param,
+                   "number_year" => "2008"
       )
       assert_not_nil(assigns(:person), "@person")
       assert(assigns(:person).errors.empty?, "Should not have errors")
