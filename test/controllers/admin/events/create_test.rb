@@ -17,10 +17,10 @@ module Admin
         person = FactoryGirl.create(:person)
 
         post(:create,
-             "commit"=>"Save",
-             "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"USA Cycling", "flyer_approved"=>"1",
-                       "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
+             "commit" => "Save",
+             "event" => {"city" => "Smith Rock", "name" => "Skull Hollow Roubaix","date" => "2010-01-02",
+                       "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
+                       "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
                       'promoter_id' => person.to_param, 'type' => 'SingleDayEvent'}
         )
 
@@ -49,10 +49,10 @@ module Admin
         assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
 
         post(:create,
-             "commit"=>"Save",
-             "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"USA Cycling", "flyer_approved"=>"1",
-                       "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
+             "commit" => "Save",
+             "event" => {"city" => "Smith Rock", "name" => "Skull Hollow Roubaix","date" => "2010-01-02",
+                       "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
+                       "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
                        "parent_id" => parent.to_param,
                       'promoter_id' => person.to_param, 'type' => 'Event'}
         )
@@ -83,10 +83,10 @@ module Admin
         person = FactoryGirl.create(:person)
 
         post(:create,
-             "commit"=>"Save",
-             "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"USA Cycling", "flyer_approved"=>"1",
-                       "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
+             "commit" => "Save",
+             "event" => {"city" => "Smith Rock", "name" => "Skull Hollow Roubaix","date" => "2010-01-02",
+                       "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
+                       "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
                        "parent_id" => parent.to_param,
                       'promoter_id' => person.to_param, 'type' => 'SingleDayEvent'}
         )
@@ -115,10 +115,10 @@ module Admin
         person = FactoryGirl.create(:person)
 
         post(:create,
-             "commit"=>"Save",
-             "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"USA Cycling", "flyer_approved"=>"1",
-                       "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
+             "commit" => "Save",
+             "event" => {"city" => "Smith Rock", "name" => "Skull Hollow Roubaix","date" => "2010-01-02",
+                       "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
+                       "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
                       "promoter_id"  => person.to_param, 'type' => 'Series'}
         )
 
@@ -134,10 +134,10 @@ module Admin
         person = FactoryGirl.create(:person)
 
         post(:create,
-             "commit"=>"Save",
-             "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"USA Cycling", "flyer_approved"=>"1",
-                       "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
+             "commit" => "Save",
+             "event" => {"city" => "Smith Rock", "name" => "Skull Hollow Roubaix","date" => "2010-01-02",
+                       "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
+                       "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
                       "promoter_id"  => person.to_param, 'type' => 'SingleDayEvent'}
         )
 
@@ -159,7 +159,7 @@ module Admin
       end
 
       test "create without promoter id" do
-        post :create, "event"=>{"promoter_name"=>"Tour de Nuit", "city"=>"Calgary ", "name"=>"Ride the Road Tour", "date(1i)"=>"2010", "flyer_approved"=>"0", "number_issuer_id"=>"1", "sanctioned_by"=>"CBRA", "date(2i)"=>"6", "notes"=>"", "pre_event_fees"=>"", "first_aid_provider"=>"", "date(3i)"=>"6", "post_event_fees"=>"", "flyer"=>"", "beginner_friendly"=>"0", "time"=>"", "instructional"=>"0", "postponed"=>"0", "team_name"=>"", "type"=>"SingleDayEvent", "phone"=>"", "practice"=>"0", "discipline"=>"", "parent_id"=>"", "cancelled"=>"0", "flyer_ad_fee"=>"", "team_id"=>"", "chief_referee"=>"", "email"=>"gary@morepeoplecycling.ca", "promoter_id"=>"", "state"=>"AB"}
+        post :create, "event" => {"promoter_name" => "Tour de Nuit", "city" => "Calgary ", "name" => "Ride the Road Tour", "date(1i)" => "2010", "flyer_approved" => "0", "number_issuer_id" => "1", "sanctioned_by" => "CBRA", "date(2i)" => "6", "notes" => "", "pre_event_fees" => "", "first_aid_provider" => "", "date(3i)" => "6", "post_event_fees" => "", "flyer" => "", "beginner_friendly" => "0", "time" => "", "instructional" => "0", "postponed" => "0", "team_name" => "", "type" => "SingleDayEvent", "phone" => "", "practice" => "0", "discipline" => "", "parent_id" => "", "cancelled" => "0", "flyer_ad_fee" => "", "team_id" => "", "chief_referee" => "", "email" => "gary@morepeoplecycling.ca", "promoter_id" => "", "state" => "AB"}
 
         assert_not_nil assigns(:event), "@event"
         assert assigns(:event).errors.empty?, assigns(:event).errors.full_messages.join
