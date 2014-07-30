@@ -174,7 +174,6 @@ module Competitions
       event = FactoryGirl.build(:event, date: Date.new(2003))
       FactoryGirl.build(:result, race: FactoryGirl.build(:race, event: event))
 
-      Bar.any_instance.expects(:expire_cache).at_least_once
       assert_difference "Result.count", 10 do
         Bar.calculate! 2004
       end

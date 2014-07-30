@@ -108,7 +108,6 @@ module Admin
     # number_year: year (not array)
     # New blank numbers are ignored
     def create
-      expire_cache
       @person = Person.create(person_params)
 
       if params[:number_value]
@@ -151,7 +150,6 @@ module Admin
     # number_year: year (not array)
     # New blank numbers are ignored
     def update
-      expire_cache
       @person = Person.find(params[:id])
 
       if @person.update(person_params)
@@ -214,7 +212,6 @@ module Admin
           flash[:warn] = 'Some names in the import file already exist more than once. Match with an existing person or create a new person with the same name.'
           redirect_to duplicates_admin_people_path
         end
-        expire_cache
 
       else
         raise "Expected 'Import' or 'Cancel'"
@@ -264,7 +261,6 @@ module Admin
             update_name
           else
             @person.update! params[:name] => params[:value]
-            expire_cache
             render plain: @person.send(params[:name])
           end
         }
@@ -283,7 +279,6 @@ module Admin
       if @person.destroy
         flash.notice = "Deleted #{@person.name}"
         redirect_to admin_people_path
-        expire_cache
       else
         flash[:warn] = "Could not delete #{@person.name}. #{@person.errors.full_messages.join(". ")}"
         assign_race_numbers
@@ -296,7 +291,6 @@ module Admin
       @person = Person.find(params[:id])
       @other_person = Person.find(params[:other_person_id])
       @merged = @person.merge(@other_person)
-      expire_cache
     end
 
     def number_year_changed
@@ -359,7 +353,6 @@ module Admin
       @other_people = @person.people_with_same_name
       if @other_people.empty?
         @person.save
-        expire_cache
         render plain: @person.name
       else
         render "merge_confirm"

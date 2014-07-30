@@ -12,7 +12,6 @@ class PhotosController < Admin::AdminController
   end
 
   def create
-    expire_cache
     @photo = Photo.create(photo_params)
 
     if @photo.errors.empty?
@@ -27,7 +26,6 @@ class PhotosController < Admin::AdminController
   end
 
   def update
-    expire_cache
     @photo = Photo.find(params[:id])
 
     if @photo.update(photo_params)

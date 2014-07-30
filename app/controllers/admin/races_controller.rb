@@ -43,7 +43,6 @@ module Admin
     # * warn
     def update
       if @race.update(race_params)
-        expire_cache
         flash[:notice] = "Updated #{@race.name}"
         return redirect_to(edit_admin_race_path(@race))
       end
@@ -54,7 +53,6 @@ module Admin
       respond_to do |format|
         format.js {
           @race.update! params[:name] => params[:value]
-          expire_cache
           render plain: @race.send(params[:name])
         }
       end

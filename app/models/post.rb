@@ -44,8 +44,6 @@ class Post < ActiveRecord::Base
 
       post.add_post_text
       original.reposition! if original
-      # This will move out of view code
-      ApplicationController.expire_cache
     end
 
     true

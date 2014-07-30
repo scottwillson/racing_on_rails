@@ -54,7 +54,6 @@ module Admin
     def create
       assign_new_event
       if @event.save
-        expire_cache
         flash[:notice] = "Created #{@event.name}"
         redirect_to edit_admin_event_path(@event)
       else
@@ -71,7 +70,6 @@ module Admin
     def create_from_children
       single_day_event = Event.find(params[:id])
       new_parent = MultiDayEvent.create_from_children(single_day_event.multi_day_event_children_with_no_parent)
-      expire_cache
       redirect_to(action: :edit, id: new_parent.to_param)
     end
 
@@ -95,7 +93,6 @@ module Admin
 
       if @event.update(event_params)
         flash[:notice] = "Updated #{@event.name}"
-        expire_cache
         redirect_to edit_admin_event_path(@event)
       else
         render :edit
@@ -107,7 +104,6 @@ module Admin
         format.js {
           @event = Event.find(params[:id])
           @event.update! params[:name] => params[:value]
-          expire_cache
           render plain: @event.send(params[:name])
         }
       end
@@ -145,7 +141,6 @@ module Admin
         return render(:edit)
       end
 
-      expire_cache
       FileUtils.rm temp_file rescue nil
 
       flash[:notice] = "Imported #{uploaded_file.original_filename}. "
@@ -179,7 +174,6 @@ module Admin
       end
 
       Schedule::Schedule.import(path)
-      expire_cache
       flash[:notice] = "Uploaded schedule from #{uploaded_file.original_filename}"
 
       redirect_to(admin_events_path)
@@ -195,7 +189,6 @@ module Admin
     def destroy
       @event = Event.find(params[:id])
       if @event.destroy
-        expire_cache
         respond_to do |format|
           format.html {
             flash[:notice] = "Deleted #{@event.name}"
@@ -227,7 +220,6 @@ module Admin
           @combined_results = @event.combined_results
           @event.destroy_races
           @races = @races.reject { |race| Race.exists?(race.id) }
-          expire_cache
         }
       end
     end

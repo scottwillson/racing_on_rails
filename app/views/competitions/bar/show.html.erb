@@ -11,4 +11,6 @@
   <%= render "years", overall_bar: @overall_bar, race: @race, year: @year %>
 <% end %>
 
-<%= results_table @race %>
+<% cache [ @race, RacingAssociation.current.year ] do %>
+  <%= results_table @race %>
+<% end %>

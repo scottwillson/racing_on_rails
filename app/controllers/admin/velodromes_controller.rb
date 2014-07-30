@@ -11,7 +11,6 @@ module Admin
     end
 
     def create
-      expire_cache
       @velodrome = Velodrome.create(velodrome_params)
 
       if @velodrome.errors.empty?
@@ -26,7 +25,6 @@ module Admin
     end
 
     def update
-      expire_cache
       @velodrome = Velodrome.find(params[:id])
 
       if @velodrome.update(velodrome_params)
@@ -38,12 +36,11 @@ module Admin
 
     def update_attribute
       respond_to do |format|
-        format.js {
+        format.js do
           @velodrome = Velodrome.find(params[:id])
           @velodrome.update! params[:name] => params[:value]
-          expire_cache
           render plain: @velodrome.send(params[:name])
-        }
+        end
       end
     end
 
@@ -52,7 +49,6 @@ module Admin
       flash[:notice] = "Deleted #{@velodrome.name}"
       @velodrome.destroy
       redirect_to(admin_velodromes_path)
-      expire_cache
     end
 
     protected

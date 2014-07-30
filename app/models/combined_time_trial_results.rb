@@ -107,8 +107,6 @@ class CombinedTimeTrialResults < Event
         result.update(place: place.to_s)
         place = place + 1
       end
-
-      ApplicationController.expire_cache
     end
 
     true

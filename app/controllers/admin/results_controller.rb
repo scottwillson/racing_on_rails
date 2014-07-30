@@ -45,7 +45,6 @@ module Admin
       @person = Person.find(params[:person_id])
       @result.person = @person
       @result.save!
-      expire_cache
     end
 
     def update_attribute
@@ -53,7 +52,6 @@ module Admin
         format.js do
           @result = Result.find(params[:id])
           @result.update! params[:name] => params[:value]
-          expire_cache
 
           if @result.respond_to?("#{params[:name]}_s")
             text = @result.send("#{params[:name]}_s")
@@ -75,7 +73,6 @@ module Admin
     def create
       @race = Race.find(params[:race_id])
       @result = @race.create_result_before(params[:before_result_id])
-      expire_cache
     end
 
     # Permanently destroy Result
