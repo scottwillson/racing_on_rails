@@ -14,7 +14,7 @@
 <%- end %>
 
 <%- @schedule.months.each do |month| -%>
-  <% cache [ :schedule_month, month.updated_at, @today ] do %>
+  <% cache [ :schedule_month, month.updated_at, @year ] do %>
     <div class="row">
       <div class="col-sm-12">
         <h3 class="month"><a name='<%= month.name.downcase %>'><%= month.name %> <%= @year %></a></h3>

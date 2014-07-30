@@ -212,6 +212,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     assert_edit = options.delete(:assert_edit)
     text = options[:with]
     options[:with] = options[:with] + "\n"
+    wait_for locator
     find(locator).click
     wait_for "form.editor_field"
     within "form.editor_field" do
