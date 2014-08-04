@@ -15,6 +15,7 @@ RacingOnRails::Application.configure do
   config.i18n.fallbacks                                     = true
   config.logger                                             = Logger::Syslog.new("racing_on_rails", Syslog::LOG_LOCAL4)
   config.logger.level                                       = :info
+  config.logstasher.enabled                                 = true
   config.log_formatter                                      = ::Logger::Formatter.new
   config.serve_static_assets                                = false
 end
