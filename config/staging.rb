@@ -68,12 +68,6 @@ namespace :deploy do
     CMD
   end
 
-  task :copy_cache, roles: :app do
-    %w{ bar bar.html events export people index.html results results.html teams teams.html }.each do |cached_path|
-      run("if [ -e \"#{previous_release}/public/#{cached_path}\" ]; then cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}; fi") rescue nil
-    end
-  end
-
   namespace :web do
     desc "Present a maintenance page to visitors"
     task :disable, roles: :web, except: { no_release: true } do
@@ -84,7 +78,7 @@ namespace :deploy do
   end
 end
 
-before "deploy:finalize_update", "deploy:symlinks", "deploy:copy_cache", "deploy:local_code", "deploy:registration_engine"
+before "deploy:finalize_update", "deploy:symlinks", "deploy:local_code", "deploy:registration_engine"
 
 after "deploy:restart", "unicorn:duplicate"
 
