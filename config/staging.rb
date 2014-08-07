@@ -32,7 +32,7 @@ set :user, "app"
 set :use_sudo, false
 set :scm_auth_cache, true
 
-set :shared_children, shared_children + %w{public/uploads}
+set :shared_children, shared_children + %w{public/uploads tmp/sockets}
 
 namespace :deploy do
   desc "Deploy association-specific customizations"
