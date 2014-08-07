@@ -1,8 +1,8 @@
 set :site_local_repository_branch, nil
 
-role :app, "rocketsurgeryllc.com"
-role :web, "rocketsurgeryllc.com"
-role :db, "rocketsurgeryllc.com", primary: true
+role :app, "obra.staging.rocketsurgeryllc.com"
+role :web, "obra.staging.rocketsurgeryllc.com"
+role :db, "obra.staging.rocketsurgeryllc.com", primary: true
 
 load "local/config/staging.rb" if File.exist?("local/config/staging.rb")
 
@@ -31,6 +31,8 @@ set :bundle_without, [ :development, :test, :acceptance ]
 set :user, "app"
 set :use_sudo, false
 set :scm_auth_cache, true
+
+set :shared_children, shared_children + %w{public/uploads}
 
 namespace :deploy do
   desc "Deploy association-specific customizations"
