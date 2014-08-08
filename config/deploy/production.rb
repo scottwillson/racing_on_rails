@@ -1,3 +1,3 @@
-role :app, "obra.staging.rocketsurgeryllc.com"
-role :web, "obra.staging.rocketsurgeryllc.com"
-role :db,  "obra.staging.rocketsurgeryllc.com"
+role :app, "app@obra.org"
+role :web, "app@obra.org"
+role :db,  "app@obra.org"
