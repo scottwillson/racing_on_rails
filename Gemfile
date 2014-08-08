@@ -27,6 +27,7 @@ gem "nokogiri"
 gem "oj"
 gem "pdf-reader", require: "pdf/reader"
 gem "prawn", git: "https://github.com/sandal/prawn.git"
+gem "puma"
 gem "rails-observers"
 gem "rake"
 gem "redcarpet"
@@ -52,7 +53,6 @@ group :development do
   gem "capistrano3-puma"
   gem "capistrano-rvm"
   gem "guard-livereload", require: false
-  gem "puma"
   gem "rubocop", require: false
   gem "rack-livereload"
   gem "spring"
