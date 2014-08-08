@@ -48,8 +48,9 @@ gem "yui-compressor"
 group :development do
   gem "brakeman"
   gem "bundler-audit"
-  gem "capistrano"
-  gem "capistrano-unicorn", require: false
+  gem "capistrano-rails"
+  gem "capistrano3-puma"
+  gem "capistrano-rvm"
   gem "guard-livereload", require: false
   gem "puma"
   gem "rubocop", require: false
@@ -85,11 +86,9 @@ end
 
 group :staging, :production do
   gem "raygun4ruby"
-  gem "unicorn"
 end
 
 group :acceptance, :staging, :production do
   gem "execjs"
-  gem "rvm-capistrano"
   gem "therubyracer"
 end
