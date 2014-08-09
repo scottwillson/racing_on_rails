@@ -1,4 +1,6 @@
 <%= stylesheet_link_tag "application", media: "all" %>
+<% Rails.logger.debug "Views::Layouts _stylesheets" %>
 <% if Dir.exist? "lib/registration_engine/app/assets" %>
+<% Rails.logger.debug "Views::Layouts _stylesheets lib/registration_engine/app/assets exists" %>
 <%= stylesheet_link_tag "registration_engine/application" %>
 <% end %>
