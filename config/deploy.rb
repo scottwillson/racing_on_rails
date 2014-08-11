@@ -63,6 +63,6 @@ namespace :deploy do
   end
 end
 
-after "deploy:updated", "deploy:local_code"
-after "deploy:updated", "deploy:registration_engine"
+before "deploy:updated", "deploy:local_code"
+before "deploy:updated", "deploy:registration_engine"
 after "deploy:updated", "deploy:copy_cache"
