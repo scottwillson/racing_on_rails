@@ -58,7 +58,7 @@ module Competitions
       query = Result.
         select([
           "bar",
-          "coalesce(races.bar_points, events.bar_points, parents_events.bar_points, parents_events_2.bar_points) as multiplier",
+          "1 as multiplier",
           "events.date",
           "events.ironman",
           "events.sanctioned_by",
@@ -105,6 +105,10 @@ module Competitions
         [ "Women Category 4" ]
       when "Category 3 Women"
         [ "Women Category 3" ]
+      when "Junior Women 10-14"
+        [ "Junior Women 13-14" ]
+      when "Junior Women 15-18"
+        [ "Women Junior", "Junior Women 15-16", "Junior Women 17-18" ]
       else
         []
       end.each do |name|
