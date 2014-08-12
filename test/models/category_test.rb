@@ -73,4 +73,12 @@ class CategoryTest < ActiveSupport::TestCase
     assert_equal('senior_men', senior_men_2.friendly_param)
     assert_raises(Categories::AmbiguousParamException) { Category.find_by_friendly_param('senior_men') }
   end
+
+  test "add ages from name" do
+    category = Category.create!(name: "Masters Men 60+")
+    assert_equal 60..999, category.ages
+
+    category = Category.create!(name: "Masters Men 50-59")
+    assert_equal 50..59, category.ages
+  end
 end
