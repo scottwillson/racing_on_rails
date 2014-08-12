@@ -78,16 +78,17 @@ class CombinedTimeTrialResults < Event
 
     transaction do
       destroy_races
-      combined_race = races.create!(category: Category.find_or_create_by(name: "Combined"))
-      create_combined_results combined_race
-      combined_race.place_results_by_time
-      ApplicationController.expire_cache
+      combined_by_time_race = races.create!(category: Category.find_or_create_by(name: "Combined"))
+      create_combined_by_time_results combined_by_time_race
+      combined_by_time_race.place_results_by_time
     end
+
+    ApplicationController.expire_cache
 
     true
   end
 
-  def create_combined_results(combined_race)
+  def create_combined_by_time_results(combined_race)
     parent.races.each do |race|
       race.results.each do |result|
         if result.finished_time_trial?
