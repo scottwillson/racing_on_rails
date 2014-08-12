@@ -24,6 +24,10 @@ module Categories
       end
     end
 
+    def age_group?
+      ages_begin && ages_end && (ages_begin != 0 || ages_end != 999)
+    end
+
     def set_age_from_name
       if ages_begin.nil? || ages_begin == 0
         if name["+"]

@@ -81,4 +81,10 @@ class CategoryTest < ActiveSupport::TestCase
     category = Category.create!(name: "Masters Men 50-59")
     assert_equal 50..59, category.ages
   end
+
+  test "age_group?" do
+    assert !Category.new(name: "Senior Men").age_group?, "Senior Men age_group?"
+    assert Category.new(name: "Masters 60+", ages: 60..999).age_group?, "Masters 60+ age_group?"
+    assert Category.new(name: "Juniors 10-18", ages: 10..18).age_group?, "Juniors 10-18 age_group?"
+  end
 end
