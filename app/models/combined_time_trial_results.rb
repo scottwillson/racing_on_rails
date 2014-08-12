@@ -79,38 +79,26 @@ class CombinedTimeTrialResults < Event
     transaction do
       destroy_races
       combined_race = races.create!(category: Category.find_or_create_by(name: "Combined"))
-      parent.races.each do |race|
-        race.results.each do |result|
-          if result.finished_time_trial?
-            combined_race.results.create!(
-              person: result.person,
-              team: result.team,
-              time: result.time,
-              category: race.category
-            )
-          end
-        end
-      end
-      _results = combined_race.results.to_a.sort do |x, y|
-        if x.time
-          if y.time
-            x.time <=> y.time
-          else
-            1
-          end
-        else
-          -1
-        end
-      end
-      place = 1
-      _results.each do |result|
-        result.update(place: place.to_s)
-        place = place + 1
-      end
-
+      create_combined_results combined_race
+      combined_race.place_results_by_points
       ApplicationController.expire_cache
     end
 
     true
+  end
+
+  def create_combined_results(combined_race)
+    parent.races.each do |race|
+      race.results.each do |result|
+        if result.finished_time_trial?
+          combined_race.results.create!(
+            person: result.person,
+            team: result.team,
+            time: result.time,
+            category: race.category
+          )
+        end
+      end
+    end
   end
 end

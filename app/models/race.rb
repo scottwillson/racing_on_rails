@@ -243,6 +243,25 @@ class Race < ActiveRecord::Base
     end
   end
 
+  def place_results_by_points
+    _results = results.to_a.sort do |x, y|
+      if x.time
+        if y.time
+          x.time <=> y.time
+        else
+          1
+        end
+      else
+        -1
+      end
+    end
+
+    _results.each_with_index do |result, index|
+      result.place = index + 1
+      result.update_column(:place, result.place) if result.place_changed?
+    end
+  end
+
   def calculate_members_only_places!
     # count up from zero
     last_members_only_place = 0
