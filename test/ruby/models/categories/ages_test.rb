@@ -5,6 +5,7 @@ module Categories
   # :stopdoc:
   class AgesTest < Ruby::TestCase
     class Stub
+      def self.before_save(symbol); end
       include Ages
       attr_accessor :ages_begin, :ages_end
     end
