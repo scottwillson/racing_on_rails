@@ -82,6 +82,17 @@ class CategoryTest < ActiveSupport::TestCase
     assert_equal 50..59, category.ages
   end
 
+  test "add gender from name" do
+    category = Category.create!(name: "Masters Men 60+")
+    assert_equal "M", category.gender, "Masters Men 60+ gender"
+
+    category = Category.create!(name: "Junior Women")
+    assert_equal "F", category.gender, "Junior Women gender"
+
+    category = Category.create!(name: "Category 3")
+    assert_equal "M", category.gender, "Category 3 gender"
+  end
+
   test "age_group?" do
     assert !Category.new(name: "Senior Men").age_group?, "Senior Men age_group?"
     assert Category.new(name: "Masters 60+", ages: 60..999).age_group?, "Masters 60+ age_group?"

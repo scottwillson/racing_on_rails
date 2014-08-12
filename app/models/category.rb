@@ -385,6 +385,14 @@ class Category < ActiveRecord::Base
     Category.short_name name
   end
 
+  def gender
+    if name[/women/i]
+      "F"
+    else
+      "M"
+    end
+  end
+
   # Compare by position, then by name
   def <=>(other)
     return 0 if self[:id] && self[:id] == other[:id]
