@@ -243,7 +243,7 @@ class Race < ActiveRecord::Base
     end
   end
 
-  def place_results_by_points
+  def place_results_by_time
     _results = results.to_a.sort do |x, y|
       if x.time
         if y.time

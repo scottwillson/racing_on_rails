@@ -80,7 +80,7 @@ class CombinedTimeTrialResults < Event
       destroy_races
       combined_race = races.create!(category: Category.find_or_create_by(name: "Combined"))
       create_combined_results combined_race
-      combined_race.place_results_by_points
+      combined_race.place_results_by_time
       ApplicationController.expire_cache
     end
 
