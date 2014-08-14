@@ -343,6 +343,8 @@ class Category < ActiveRecord::Base
         name = name.gsub(/(\d+) ?(kilometer|kilometre|kilos|km|k)\b/i, '\1K')
       end
 
+      name = name.gsub(/Eddie/, "Eddy")
+
       name = name.gsub(/\bAnd\b/, "and")
 
       [ "Masters", "Juniors", "Beginner", "Novice", "Sport", "Expert", "Semi-Pro", "Elite", "Singlespeed" ].each do |cat|
