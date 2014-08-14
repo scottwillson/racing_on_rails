@@ -1,20 +1,19 @@
 lock "3.2.1"
 
-load "local/config/deploy.rb" if File.exist?("local/config/deploy.rb")
-
 set :linked_dirs, %w{bin log public/assets public/system public/uploads tmp/pids tmp/cache tmp/sockets vendor/bundle }
 set :linked_files, %w{config/database.yml config/newrelic.yml config/secrets.yml}
 
 set :bundle_jobs, 4
+set :bundle_without, %w{development test acceptance}.join(' ')
 
 set :puma_threads, [ 8, 32 ]
 set :puma_workers, 1
 
 set :site_local_repo_url_branch, "deployment"
 
-set :deploy_to, "/var/www/rails/#{fetch(:application)}"
+load "local/config/deploy.rb" if File.exist?("local/config/deploy.rb")
 
-set :bundle_without, %w{development test acceptance}.join(' ')
+set :deploy_to, "/var/www/rails/#{fetch(:application)}"
 
 set :repo_url, "git://github.com/scottwillson/racing_on_rails.git"
 set :branch, "deployment"
