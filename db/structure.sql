@@ -1019,7 +1019,7 @@ CREATE TABLE `versions` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-05-31  7:11:48
+-- Dump completed on 2014-08-13 20:36:45
 INSERT INTO schema_migrations (version) VALUES ('1');
 
 INSERT INTO schema_migrations (version) VALUES ('10');
@@ -1315,6 +1315,10 @@ INSERT INTO schema_migrations (version) VALUES ('20140430213503');
 INSERT INTO schema_migrations (version) VALUES ('20140523033604');
 
 INSERT INTO schema_migrations (version) VALUES ('20140530044004');
+
+INSERT INTO schema_migrations (version) VALUES ('20140812033621');
+
+INSERT INTO schema_migrations (version) VALUES ('20140813000742');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
