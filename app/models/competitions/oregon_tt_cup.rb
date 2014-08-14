@@ -83,7 +83,7 @@ module Competitions
         where(bar: true).
         where("races.category_id in (?)", category_ids_for(race)).
         where("events.sanctioned_by" => RacingAssociation.current.default_sanctioned_by).
-        where("coalesce(races.bar_points, events.bar_points, parents_events.bar_points, parents_events_2.bar_points) > 0").
+        where("coalesce(events.bar_points, parents_events.bar_points, parents_events_2.bar_points) > 0").
         where("results.year = ?", year)
 
       Result.connection.select_all query
@@ -93,22 +93,14 @@ module Competitions
       ids = [ race.category_id ] + race.category.descendants.map(&:id)
 
       case race.category.name
-      when "Masters Men 40-49"
-        [ "Masters Men 40-44", "Masters Men 45-49" ]
-      when "Masters Men 50-59"
-        [ "Masters Men 50-54", "Masters Men 55-59" ]
-      when "Masters Women 50-59"
-        [ "Masters Women 50-54", "Masters Women 55-59" ]
+      when "Senior Men Pro/1/2"
+        [ "Men Category 1/2" ]
       when "Senior Women 1/2"
-        [ "Senior Women" ]
+        [ "Senior Women", "Women Category 1/2" ]
       when "Category 4/5 Women"
-        [ "Women Category 4" ]
+        [ "Women Category 4", "Women Category 4/5" ]
       when "Category 3 Women"
         [ "Women Category 3" ]
-      when "Junior Women 10-14"
-        [ "Junior Women 13-14" ]
-      when "Junior Women 15-18"
-        [ "Women Junior", "Junior Women 15-16", "Junior Women 17-18" ]
       else
         []
       end.each do |name|
@@ -119,6 +111,116 @@ module Competitions
       end
 
       ids
+    end
+
+    def before_calculate
+      source_events.each do |event|
+        event.races.select { |r| r.created_by.kind_of?(OregonTTCup) }.each(&:destroy)
+      end
+
+      source_events.each do |event|
+        event.races.each do |race|
+          if event.id == 22500 && (race.category.name == "Masters Women 55+" || race.category.name == "Masters Men 65+")
+            race.update_attributes! distance: 12.4
+          end
+
+          if event.id == 22500 && race.category.name.in?([ "Junior Women 10-12", "Junior Men 10-12", "Junior Women 13-14", "Junior Men 13-14" ])
+            race.update_attributes! distance: 6.2
+          end
+        end
+      end
+
+      missing_categories.each do |event, categories|
+        categories.each do |competition_category|
+          races_to_split = event.races.select do |r|
+            r.category.age_group? &&
+            competition_category.age_group? &&
+            ((r.category.ages_end == 999 && competition_category.ages_end == 999) || (r.category.ages_end != 999 && competition_category.ages_end != 99)) &&
+            r.category.gender     == competition_category.gender &&
+            r.category.ages       != competition_category.ages &&
+            r.category.ages_begin <= competition_category.ages_begin &&
+            r.category.ages_end   >= competition_category.ages_end
+          end
+
+          if races_to_split.present?
+            existing_race = event.races.detect { |r| r.category == competition_category }
+            race = existing_race || event.races.create!(category: competition_category, bar_points: 0, updated_by: self)
+            races_to_split.each do |race_to_split|
+              race_to_split.results.select do |result|
+                result.person &&
+                result.person.racing_age &&
+                competition_category.ages.include?(result.person.racing_age) &&
+                result.time &&
+                result.time > 0
+              end.each do |result|
+                race.results.create!(
+                  place: result.place,
+                  person: result.person,
+                  team: result.team,
+                  time: result.time
+                )
+              end
+            end
+            race.place_results_by_time
+          end
+
+          races_to_combine = event.races.select do |r|
+            r.category.age_group? &&
+            competition_category.age_group? &&
+            r.category.gender     == competition_category.gender &&
+            r.category.ages       != competition_category.ages &&
+            (
+              (r.category.ages_begin >= competition_category.ages_begin && r.category.ages_end <= competition_category.ages_end) ||
+              (r.category.ages_begin > competition_category.ages_begin &&
+               r.category.ages_begin < competition_category.ages_end &&
+               r.category.ages_end == 999)
+            )
+          end
+
+          if races_to_combine.present?
+            existing_race = event.races.detect { |r| r.category == competition_category }
+            race = existing_race || event.races.create!(category: competition_category, bar_points: 0, updated_by: self)
+            races_to_combine.each do |race_to_combine|
+              race_to_combine.results.select do |result|
+                result.time &&
+                result.time > 0 &&
+                (result.person.racing_age.nil? || (result.person.racing_age >= competition_category.ages_begin && result.person.racing_age <= competition_category.ages_end))
+              end.each do |result|
+                time = result.time
+                if result.event_id == 22500 && result.race.distance.present? && result.race.distance.to_f < 24.9
+                  time = result.time * 2.2
+                end
+                race.results.create!(
+                  place: result.place,
+                  person: result.person,
+                  team: result.team,
+                  time: time
+                )
+              end
+            end
+            race.place_results_by_time
+          end
+        end
+      end
+    end
+
+    def missing_categories
+      missing_categories = Hash.new { |hash, key| hash[key] = [] }
+      source_events(true).each do |source_event|
+        category_names.each do |category_name|
+          category = Category.where(name: category_name).first
+          if category.age_group?
+            if source_event.races.none? do |race|
+                race.category.gender == category.gender &&
+                race.category.ages == category.ages
+              end
+              missing_categories[source_event] = missing_categories[source_event] << category
+            end
+          end
+        end
+      end
+
+      missing_categories
     end
   end
 end
