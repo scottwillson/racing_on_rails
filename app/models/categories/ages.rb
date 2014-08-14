@@ -30,14 +30,22 @@ module Categories
 
     def set_age_from_name
       if ages_begin.nil? || ages_begin == 0
-        if name["+"]
-          self.ages = (name[/(\d\d)\+/].to_i)..999
-        else
-          age_range_match = /(\d\d)-(\d\d)/.match(name)
-          if age_range_match
-            self.ages = age_range_match[1]..age_range_match[2]
-          end
-        end
+        self.ages = ages_from_name(name)
+      end
+    end
+
+    def ages_from_name(name)
+      if name["+"]
+        (name[/(\d\d)\+/].to_i)..999
+      elsif /(\d\d)-(\d\d)/.match(name)
+        age_range_match = /(\d\d)-(\d\d)/.match(name)
+        age_range_match[1].to_i..age_range_match[2].to_i
+      elsif name["Junior"]
+        10..18
+      elsif name["Master"]
+        30..999
+      else
+        0..999
       end
     end
   end
