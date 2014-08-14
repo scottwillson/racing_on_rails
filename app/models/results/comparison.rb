@@ -21,6 +21,19 @@ module Results
       0
     end
 
+    def compare_by_time(other, break_ties = true)
+      diff = other.time <=> time
+      return diff if diff != 0 || !break_ties
+
+      diff = compare_by_highest_place(other)
+      return diff if diff != 0
+
+      diff = compare_by_most_recent_place(other)
+      return diff if diff != 0
+
+      0
+    end
+
     def compare_by_highest_place(other)
       scores_by_place = scores.sort do |x, y|
         x.source_result <=> y.source_result
