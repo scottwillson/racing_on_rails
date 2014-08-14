@@ -3,6 +3,8 @@ module Competitions
   module CalculatorAdapter
     # Rebuild results
     def calculate!
+      before_calculate
+
       races.each do |race|
         results = source_results_with_benchmark(race)
         results = add_field_size(results)
