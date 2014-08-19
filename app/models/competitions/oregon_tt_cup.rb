@@ -51,7 +51,7 @@ module Competitions
     end
 
     def maximum_events(race)
-      9
+      8
     end
 
     def source_results(race)

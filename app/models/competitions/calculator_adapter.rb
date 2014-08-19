@@ -15,6 +15,7 @@ module Competitions
           break_ties: break_ties?,
           dnf: dnf?,
           field_size_bonus: field_size_bonus?,
+          maximum_events: maximum_events(race),
           point_schedule: point_schedule,
           results_per_event: results_per_event,
           results_per_race: results_per_race,
