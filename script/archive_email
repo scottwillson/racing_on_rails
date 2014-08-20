@@ -1,11 +1,13 @@
 #!/bin/bash
 
+echo `date` >> /var/log/mailman_archiver.log 2>&1
+
 export PATH=$PATH:/usr/local/bin
-export HOME=/var/lib/mailman
+export HOME=/home/app
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+source "/home/app/.rvm/scripts/rvm" 2>&1
 
-cd  /var/www/rails/obra/current
+cd /var/www/rails/obra/current
 
 export NEWRELIC_ENABLE=false
 bundle exec rails runner -e "production" "MailingListMailer.receive(STDIN.read)" >> /var/log/mailman_archiver.log 2>&1
