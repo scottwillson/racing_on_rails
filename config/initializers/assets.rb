@@ -3,6 +3,5 @@ RacingOnRails::Application.configure do
     admin.js
     racing_association.css
     racing_association.js
-    raygun.js
   )
 end
