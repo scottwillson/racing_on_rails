@@ -79,7 +79,8 @@ class CombinedTimeTrialResults < Event
     transaction do
       destroy_races
       combined_by_time_race = races.create!(category: Category.find_or_create_by(name: "Combined"))
-      create_combined_by_time_results combined_by_time_race
+      source_results = select_source_results
+      create_combined_by_time_results combined_by_time_race, source_results
       combined_by_time_race.place_results_by_time
     end
 
@@ -88,18 +89,24 @@ class CombinedTimeTrialResults < Event
     true
   end
 
-  def create_combined_by_time_results(combined_race)
-    parent.races.each do |race|
-      race.results.each do |result|
-        if result.finished_time_trial?
-          combined_race.results.create!(
-            person: result.person,
-            team: result.team,
-            time: result.time,
-            category: race.category
-          )
-        end
+  def select_source_results
+    parent.races.map do |race|
+      race.results.select do |result|
+        result.finished_time_trial?
       end
+    end.
+    flatten.
+    uniq { |r| [ r.person_id, r.time ] }
+  end
+
+  def create_combined_by_time_results(combined_race, source_results)
+    source_results.each do |result|
+      combined_race.results.create!(
+        person: result.person,
+        team: result.team,
+        time: result.time,
+        category: result.race.category
+      )
     end
   end
 end

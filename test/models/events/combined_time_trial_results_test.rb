@@ -14,9 +14,12 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     event = FactoryGirl.create(:time_trial_event)
     race_1 = FactoryGirl.create(:race, event: event)
     race_2 = FactoryGirl.create(:race, event: event)
+    race_3 = FactoryGirl.create(:race, event: event)
     result_1 = FactoryGirl.create(:result, race: race_1, place: "1", time: "1800")
     result_2 = FactoryGirl.create(:result, race: race_1, place: "2", time: "2112")
     result_3 = FactoryGirl.create(:result, race: race_2, place: "9", time: "1801")
+    # Dupe result in different category should be ignored
+    FactoryGirl.create(:result, race: race_3, place: "4", time: "1801", person: result_3.person)
 
     # Results with no time should not be included
     FactoryGirl.create(:result, race: race_2, place: "10")
