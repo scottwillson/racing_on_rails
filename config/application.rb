@@ -34,7 +34,8 @@ module RacingOnRails
     require "#{config.root}/app/helpers/racing_on_rails/form_builder"
     config.action_view.default_form_builder = ::RacingOnRails::FormBuilder
 
-    if File.exist?("#{config.root}/local/config/database.yml")
+    # Production database config handled by Ansible
+    if !Rails.env.production? && !Rails.env.staging? && File.exist?("#{config.root}/local/config/database.yml")
       Rails.configuration.paths["config/database"] = [ "local/config/database.yml", "config/database.yml" ]
     end
 
