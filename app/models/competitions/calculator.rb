@@ -39,6 +39,7 @@ module Competitions
     # * break_ties: true/false. Default to false. Apply tie-breaking rules to results with same points.
     # * dnf: true/false. Count DNFs? Default to true.
     # * field_size_bonus: true/false. Default to false. Give 1.5 X points for fields of 75 or more
+    # * maximum_events: 1 to UNLIMITED. Only score results up to +maximum_events+ count. For rules like: best 7 of 8.
     # * members_only: true/false. Default to true. Only members are counted.
     # * results_per_event: integer. Default to UNLIMITED. How many results in the same event are counted for a participant?
     # * results_per_race: integer. Default to 1. How many results in the same race are counted for a participant?
@@ -60,10 +61,11 @@ module Competitions
       break_ties               = options.has_key?(:break_ties) ? options[:break_ties] : false
       dnf                      = options.has_key?(:dnf) ? options[:dnf] : false
       field_size_bonus         = options.has_key?(:field_size) ? options[:field_size] : false
+      maximum_events           = options[:maximum_events] || UNLIMITED
       members_only             = options.has_key?(:members_only) ? options[:members_only] : true
       point_schedule           = options[:point_schedule]
-      results_per_event        = options.has_key?(:results_per_event) ? options[:results_per_event] : UNLIMITED
-      results_per_race         = options.has_key?(:results_per_race) ? options[:results_per_race] : 1
+      results_per_event        = options[:results_per_event] || UNLIMITED
+      results_per_race         = options[:results_per_race] || 1
       source_event_ids         = options[:source_event_ids]
       team                     = options.has_key?(:team) ? options[:team] : false
       use_source_result_points = options.has_key?(:use_source_result_points) ? options[:use_source_result_points] : false
@@ -75,6 +77,7 @@ module Competitions
       # The whole point: generate scores from sources results and competition results from scores
       scores = map_to_scores(eligible_results, point_schedule, dnf, field_size_bonus, use_source_result_points)
       scores_with_points = scores.select { |s| s.points && s.points > 0.0 && s.participant_id }
+      scores_with_points = reject_scores_greater_than_maximum_events(scores_with_points, maximum_events)
       competition_results = map_to_results(scores_with_points)
 
       place competition_results, break_ties
@@ -164,6 +167,18 @@ module Competitions
           new_score.participant_id   = result.participant_id
           new_score.points           = points(result, point_schedule, dnf, field_size_bonus, use_source_result_points)
         end
+      end
+    end
+
+    def self.reject_scores_greater_than_maximum_events(scores, maximum_events = UNLIMITED)
+      if maximum_events == UNLIMITED
+        scores
+      else
+        scores.group_by(&:participant_id).
+        map do |participant_id, participant_scores|
+          participant_scores.sort_by(&:points).reverse[ 0, maximum_events ]
+        end.
+        flatten
       end
     end
 
@@ -312,8 +327,8 @@ module Competitions
     end
 
     def self.valid_options
-      [ :break_ties, :dnf, :field_size_bonus, :members_only, :results_per_event, :results_per_race, :point_schedule,
-        :source_event_ids, :team, :use_source_result_points ]
+      [ :break_ties, :dnf, :field_size_bonus, :maximum_events, :members_only, :results_per_event, :results_per_race,
+        :point_schedule, :source_event_ids, :team, :use_source_result_points ]
     end
 
     def self.assert_valid_options(options)

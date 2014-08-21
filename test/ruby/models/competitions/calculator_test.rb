@@ -246,8 +246,8 @@ class Competitions::CalculatorTest < Ruby::TestCase
   end
 
   def test_map_to_scores
-    expected = [ Struct::CalculatorScore.new(nil, 1, 1, 1, 1) ]
-    source_results = [ result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: 1, member_from: Date.new(2012)) ]
+    expected = [ Struct::CalculatorScore.new(nil, 5, 4, 1, 1, nil) ]
+    source_results = [ result(id: 1, race_id: 3, participant_id: 4, place: 5, member_from: Date.new(2012)) ]
     actual = Competitions::Calculator.map_to_scores(source_results, nil, true)
     assert_equal expected, actual
   end
@@ -259,10 +259,31 @@ class Competitions::CalculatorTest < Ruby::TestCase
   end
 
   def test_map_to_results
-    scores = [ Struct::CalculatorScore.new(nil, 1, 1, 1, 1) ]
-    expected = [ result(participant_id: 1, points: 1, scores: [ { numeric_place: 1, participant_id: 1, points: 1, source_result_id: 1 } ]) ]
+    scores = [ Struct::CalculatorScore.new(nil, 2, 3, 4, 5) ]
+    expected = [ result(participant_id: 3, points: 4, scores: [ { numeric_place: 2, participant_id: 3, points: 4, source_result_id: 5 } ]) ]
     actual = Competitions::Calculator.map_to_results(scores)
     assert_equal expected, actual
+  end
+
+  def test_reject_scores_greater_than_maximum_events
+    scores = [
+      score(numeric_place: 10, participant_id: 1, points: 1),
+      score(numeric_place: 1, participant_id: 2, points: 10),
+      score(numeric_place: 1, participant_id: 1, points: 10),
+      score(numeric_place: 2, participant_id: 2, points: 9),
+      score(numeric_place: 3, participant_id: 2, points: 8),
+      score(numeric_place: 1, participant_id: 3, points: 10),
+      score(numeric_place: 1, participant_id: 1, points: 10)
+    ]
+    expected = [
+      score(numeric_place: 1, participant_id: 2, points: 10),
+      score(numeric_place: 1, participant_id: 1, points: 10),
+      score(numeric_place: 2, participant_id: 2, points: 9),
+      score(numeric_place: 1, participant_id: 3, points: 10),
+      score(numeric_place: 1, participant_id: 1, points: 10)
+    ]
+    actual = Competitions::Calculator.reject_scores_greater_than_maximum_events(scores, 2)
+    assert_equal_scores expected, actual
   end
 
   def test_map_to_results_empty
@@ -573,6 +594,19 @@ class Competitions::CalculatorTest < Ruby::TestCase
     end
   end
 
+  def assert_equal_scores(expected, actual)
+    [ expected, actual ].each do |scores|
+      scores.sort_by!(&:participant_id)
+      scores.sort_by!(&:numeric_place)
+    end
+
+    unless expected == actual
+      expected_message = pretty_to_string_scores(expected)
+      actual_message = pretty_to_string_scores(actual)
+      flunk("Scores not equal." + "\nExpected:\n" + expected_message + "Actual:\n" + actual_message)
+    end
+  end
+
   def pretty_to_string(results)
     message = ""
     results.each do |r|
@@ -583,6 +617,15 @@ class Competitions::CalculatorTest < Ruby::TestCase
         message << "\n"
       end
       message << "\n" if r.scores.size > 0
+    end
+    message
+  end
+
+  def pretty_to_string_scores(scores)
+    message = ""
+    scores.each do |s|
+      message << "  Score place #{s.numeric_place} participant_id: #{s.participant_id} source_result_id: #{s.source_result_id}"
+      message << "\n"
     end
     message
   end
@@ -604,6 +647,15 @@ class Competitions::CalculatorTest < Ruby::TestCase
       result[key] = value
     end
     result
+  end
+
+  def score(hash = {})
+    score = Struct::CalculatorScore.new
+
+    hash.each do |key, value|
+      score[key] = value
+    end
+    score
   end
 
   def end_of_year

@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "4.1.4"
+gem "rails", "4.1.5"
 
 gem "actionpack-page_caching"
 gem "activemerchant"
@@ -28,6 +28,7 @@ gem "nokogiri"
 gem "oj"
 gem "pdf-reader", require: "pdf/reader"
 gem "prawn", git: "https://github.com/sandal/prawn.git"
+gem "puma"
 gem "rake"
 gem "redcarpet"
 gem "registration_engine", path: "lib/registration_engine"
@@ -48,10 +49,10 @@ gem "yui-compressor"
 group :development do
   gem "brakeman"
   gem "bundler-audit"
-  gem "capistrano"
-  gem "capistrano-unicorn", require: false
+  gem "capistrano-rails"
+  gem "capistrano3-puma"
+  gem "capistrano-rvm"
   gem "guard-livereload", require: false
-  gem "puma"
   gem "rubocop", require: false
   gem "rack-livereload"
   gem "spring"

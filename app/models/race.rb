@@ -10,6 +10,7 @@ class Race < ActiveRecord::Base
 
   include Comparable
   include Export::Races
+  include RacingOnRails::VestalVersions::Versioned
 
   DEFAULT_RESULT_COLUMNS = %W{ place number last_name first_name team_name points time }.freeze
   RESULT_COLUMNS = %W{
@@ -246,6 +247,33 @@ class Race < ActiveRecord::Base
         end
       end
 
+      result.update_column(:place, result.place) if result.place_changed?
+    end
+  end
+
+  def place_results_by_time
+    _results = results.to_a.sort do |x, y|
+      if x.time
+        if y.time
+          x.time <=> y.time
+        else
+          1
+        end
+      else
+        -1
+      end
+    end
+
+    _results.each_with_index do |result, index|
+      if index == 0
+        result.place = 1
+      else
+        if _results[index - 1].compare_by_time(result, true) == 0
+          result.place = _results[index - 1].place
+        else
+          result.place = index + 1
+        end
+      end
       result.update_column(:place, result.place) if result.place_changed?
     end
   end

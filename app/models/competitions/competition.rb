@@ -126,6 +126,8 @@ module Competitions
 
     # Rebuild results
     def calculate!
+      before_calculate
+
       races.each do |race|
         results = source_results_with_benchmark(race)
         create_competition_results_for results, race
@@ -136,6 +138,10 @@ module Competitions
 
       after_calculate
       save!
+    end
+
+    # Callback
+    def before_calculate
     end
 
     # Callback

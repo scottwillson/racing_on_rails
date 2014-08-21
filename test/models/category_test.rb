@@ -84,6 +84,7 @@ class CategoryTest < ActiveSupport::TestCase
     category.name = "Eddy Men"
     category.save!
 
+    # FIXME
     # result = Result.find(result)
     # assert result.updated_at > 1.day.ago, "result updated_at should be updated when result person changes"
 
@@ -110,5 +111,21 @@ class CategoryTest < ActiveSupport::TestCase
 
     result = Result.find(result)
     assert result.updated_at > 1.day.ago, "result updated_at should be updated when result person changes"
+  end
+
+  test "add gender from name" do
+    category = Category.create!(name: "Masters Men 60+")
+    assert_equal "M", category.gender, "Masters Men 60+ gender"
+
+    category = Category.create!(name: "Junior Women")
+    assert_equal "F", category.gender, "Junior Women gender"
+
+    category = Category.create!(name: "Category 3")
+    assert_equal "M", category.gender, "Category 3 gender"
+  end
+
+  test "add ages from name" do
+    category = Category.create!(name: "Masters Men 60+")
+    assert_equal 60..999, category.ages
   end
 end
