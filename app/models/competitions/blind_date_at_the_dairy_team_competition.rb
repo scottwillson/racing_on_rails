@@ -11,7 +11,6 @@ module Competitions
     end
 
     def self.calculate!(year = Time.zone.today.year)
-      puts "BlindDateAtTheDairyTeamCompetition.calculate!"
       benchmark("#{name}#calculate!", level: :info) {
         transaction do
           series = WeeklySeries.where(name: parent_event_name).year(year).first
@@ -29,7 +28,6 @@ module Competitions
           end
         end
       }
-      true
 
       # Don't return the entire populated instance!
       true
@@ -100,19 +98,27 @@ module Competitions
         joins("left outer join people on people.id = results.person_id").
         joins("left outer join events parents_events on parents_events.id = events.parent_id").
         joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
-        where.not("races.category_id" => junior_categories).
+        where("races.category_id" => category_ids).
         where("place between 1 and ?", point_schedule.size).
         where("results.event_id" => source_event_ids(race))
 
       Result.connection.select_all query
     end
 
-    def junior_categories
+    def category_ids
       [
-        "Junior Men 10-13",
-        "Junior Men 14-18",
-        "Junior Women 10-13",
-        "Junior Women 14-18"
+        "Beginner Men",
+        "Beginner Women",
+        "Masters Men A 40+",
+        "Masters Men B 35+",
+        "Masters Men C 35+",
+        "Men A",
+        "Men B",
+        "Men C",
+        "Singlespeed",
+        "Women A",
+        "Women B",
+        "Women C"
       ].map do |category_name|
         Category.find_or_create_by_normalized_name(category_name)
       end
