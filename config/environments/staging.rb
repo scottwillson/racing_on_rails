@@ -15,5 +15,6 @@ RacingOnRails::Application.configure do
   config.consider_all_requests_local                        = true
   config.eager_load                                         = true
   config.i18n.fallbacks                                     = true
+  config.logstasher.enabled                                 = true
   config.serve_static_assets                                = false
 end

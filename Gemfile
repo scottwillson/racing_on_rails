@@ -85,6 +85,7 @@ group :production do
 end
 
 group :staging, :production do
+  gem "logstasher"
   gem "raygun4ruby"
 end
 

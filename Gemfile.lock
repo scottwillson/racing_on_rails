@@ -223,6 +223,10 @@ GEM
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
+    logstash-event (1.1.5)
+    logstasher (0.5.3)
+      logstash-event (~> 1.1.0)
+      request_store
     lumberjack (1.0.9)
     mail (2.5.4)
       mime-types (~> 1.16)
@@ -416,6 +420,7 @@ DEPENDENCIES
   in_place_editing
   jquery-rails
   jquery-ui-rails
+  logstasher
   minitest
   mocha
   money
