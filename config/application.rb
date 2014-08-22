@@ -45,7 +45,7 @@ module RacingOnRails
       config.lograge.enabled = true
       config.lograge.formatter = Lograge::Formatters::Logstash.new
       config.lograge.custom_options = lambda do |event|
-        { racing_association: RacingOnRails.current.short_name }
+        { racing_association: RacingAssociation.current.short_name }
       end
     end
 
