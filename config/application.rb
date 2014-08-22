@@ -41,8 +41,13 @@ module RacingOnRails
 
     config.action_mailer.default_url_options = { mobile: nil }
 
-    config.lograge.enabled = true
-    config.lograge.formatter = Lograge::Formatters::Logstash.new
+    if Rails.env.production? || Rails.env.staging?
+      config.lograge.enabled = true
+      config.lograge.formatter = Lograge::Formatters::Logstash.new
+      config.lograge.custom_options = lambda do |event|
+        { racing_association: RacingOnRails.current.short_name }
+      end
+    end
 
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?
