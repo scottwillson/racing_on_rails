@@ -41,6 +41,9 @@ module RacingOnRails
 
     config.action_mailer.default_url_options = { mobile: nil }
 
+    config.lograge.enabled = true
+    config.lograge.formatter = Lograge::Formatters::Logstash.new
+
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?
         Raygun

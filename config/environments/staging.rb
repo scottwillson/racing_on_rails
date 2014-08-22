@@ -11,7 +11,6 @@ RacingOnRails::Application.configure do
   config.assets.digest                                      = true
   config.assets.js_compressor                               = :uglifier
   config.assets.version                                     = "2.0"
-  config.logstash.port                                      = 5228
   config.cache_classes                                      = true
   config.consider_all_requests_local                        = true
   config.eager_load                                         = true
