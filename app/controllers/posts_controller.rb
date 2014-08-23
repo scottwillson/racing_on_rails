@@ -14,12 +14,14 @@ class PostsController < ApplicationController
     @posts = @mailing_list.posts.original.order("position desc")
 
     if @subject.present?
-      @posts = @posts.joins(:post_text).where("match(text) against (?)", @subject)
+      ActiveSupport::Notifications.instrument "search.posts", subject: @subject do
+        @posts = @posts.joins(:post_text).where("match(text) against (?)", @subject)
 
-      if @subject.size < 4
-        flash[:notice] = "Searches must be at least four letters"
-      elsif @posts.count == 0
-        flash[:notice] = "No posts with subject matching '#{@subject}'"
+        if @subject.size < 4
+          flash[:notice] = "Searches must be at least four letters"
+        elsif @posts.count == 0
+          flash[:notice] = "No posts with subject matching '#{@subject}'"
+        end
       end
     end
 
