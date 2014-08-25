@@ -1,4 +1,6 @@
 RacingOnRails::Application.configure do
+  require "syslog/logger"
+
   config.action_controller.action_on_unpermitted_parameters = :raise
   config.action_controller.perform_caching                  = true
   config.action_dispatch.x_sendfile_header                  = "X-Accel-Redirect"
@@ -16,5 +18,6 @@ RacingOnRails::Application.configure do
   config.eager_load                                         = true
   config.i18n.fallbacks                                     = true
   config.log_level                                          = :info
+  config.logger                                             = Syslog::Logger.new("racing_on_rails", Syslog::LOG_LOCAL4)
   config.serve_static_assets                                = false
 end
