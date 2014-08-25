@@ -14,7 +14,7 @@ class PostsController < ApplicationController
     @posts = @mailing_list.posts.original.order("position desc")
 
     if @subject.present?
-      ActiveSupport::Notifications.instrument "search.posts", subject: @subject do
+      ActiveSupport::Notifications.instrument "search.posts.racing_on_rails", subject: @subject do
         @posts = @posts.joins(:post_text).where("match(text) against (?)", @subject)
 
         if @subject.size < 4

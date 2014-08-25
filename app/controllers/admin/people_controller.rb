@@ -153,6 +153,7 @@ module Admin
     def update
       expire_cache
       @person = Person.find(params[:id])
+      ActiveSupport::Notifications.instrument "update.people.racing_on_rails", person_id: @person.id, person_name: @person.name
 
       if @person.update(person_params)
         if @event
