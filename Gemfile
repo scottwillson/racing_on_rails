@@ -81,8 +81,7 @@ group :test, :acceptance do
 end
 
 group :staging, :production do
-  gem "lograge"
-  gem "logstash-event"
+  gem "logstash-logger"
   gem "raygun4ruby"
 end
 

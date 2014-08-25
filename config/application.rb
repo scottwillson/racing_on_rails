@@ -41,27 +41,6 @@ module RacingOnRails
 
     config.action_mailer.default_url_options = { mobile: nil }
 
-    if Rails.env.production? || Rails.env.staging?
-      config.lograge.enabled = true
-      config.lograge.formatter = Lograge::Formatters::Logstash.new
-      config.lograge.custom_options = lambda do |event|
-        { racing_association: RacingAssociation.current.short_name }
-      end
-    end
-
-    ActiveSupport::Notifications.subscribe(/racing_on_rails/) do |name, start, finish, id, payload|
-      Rails.logger.info JSON.dump(
-        {
-          name: name,
-          start: start,
-          duration: (finish - start),
-          id: id,
-          current_person_name: ::Person.current.try(:name),
-          current_person_id: ::Person.current.try(:id)
-        }.merge(payload)
-      )
-    end
-
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?
         Raygun
