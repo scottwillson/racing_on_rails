@@ -81,11 +81,8 @@ group :test, :acceptance do
 end
 
 group :staging, :production do
+  gem "execjs"
   gem "logstash-logger"
   gem "raygun4ruby"
-end
-
-group :acceptance, :staging, :production do
-  gem "execjs"
   gem "therubyracer"
 end
