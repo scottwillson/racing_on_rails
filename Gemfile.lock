@@ -1,36 +1,15 @@
-GIT
-  remote: https://github.com/amerine/acts_as_tree.git
-  revision: ec2d1dc0d3c7d28e19e4c79f0398506fb57f880a
+PATH
+  remote: lib/registration_engine
   specs:
-    acts_as_tree (2.0.0)
-      activerecord (>= 3.0.0)
+    registration_engine (0.0.1)
+      activemerchant
+      rails (~> 4.1.0)
 
 GIT
   remote: https://github.com/mislav/will_paginate
   revision: 623e9c5390998a2aca283bca28009f7d479d5f0f
   specs:
     will_paginate (3.0.4)
-
-GIT
-  remote: https://github.com/sandal/prawn.git
-  revision: 857f13e919d1bd7120de1ea9ba0429620329865b
-  specs:
-    prawn (1.0.0.rc1)
-      pdf-reader (>= 0.9.0)
-      ttfunk (~> 1.0.3)
-
-GIT
-  remote: https://github.com/scottwillson/ruby-ole.git
-  revision: 6b9d2530b12259ca21af75ed2dcb26ba745a6115
-  specs:
-    ruby-ole (1.2.11.3)
-
-GIT
-  remote: https://github.com/scottwillson/spreadsheet.git
-  revision: e5d97bc43f3db66600a70ace5de638f41a4a700b
-  specs:
-    spreadsheet (0.6.6)
-      ruby-ole
 
 GIT
   remote: https://github.com/scottwillson/vestal_versions.git
@@ -42,19 +21,40 @@ GIT
       activesupport (>= 4.1.0.rc1, < 5)
 
 GIT
+  remote: https://github.com/scottwillson/spreadsheet.git
+  revision: e5d97bc43f3db66600a70ace5de638f41a4a700b
+  specs:
+    spreadsheet (0.6.6)
+      ruby-ole
+
+GIT
+  remote: https://github.com/scottwillson/ruby-ole.git
+  revision: 6b9d2530b12259ca21af75ed2dcb26ba745a6115
+  specs:
+    ruby-ole (1.2.11.3)
+
+GIT
+  remote: https://github.com/sandal/prawn.git
+  revision: 857f13e919d1bd7120de1ea9ba0429620329865b
+  specs:
+    prawn (1.0.0.rc1)
+      pdf-reader (>= 0.9.0)
+      ttfunk (~> 1.0.3)
+
+GIT
+  remote: https://github.com/amerine/acts_as_tree.git
+  revision: ec2d1dc0d3c7d28e19e4c79f0398506fb57f880a
+  specs:
+    acts_as_tree (2.0.0)
+      activerecord (>= 3.0.0)
+
+GIT
   remote: https://github.com/swanandp/acts_as_list.git
   revision: ac4f602d20b679370ed4bb9702ccc3fa61af1be8
   ref: ac4f602d20b679370ed4bb9702ccc3fa61af1be8
   specs:
     acts_as_list (0.4.0)
       activerecord (>= 3.0)
-
-PATH
-  remote: lib/registration_engine
-  specs:
-    registration_engine (0.0.1)
-      activemerchant
-      rails (~> 4.1.0)
 
 GEM
   remote: https://rubygems.org/
