@@ -88,34 +88,35 @@ module Results
 
     # See http://racingonrails.rocketsurgeryllc.com/sample_import_files/ for format details and examples.
     def import
-      Rails.logger.info("Results::ResultsFile #{Time.zone.now} import")
+      ActiveSupport::Notifications.instrument "import.results_file.racing_on_rails", source: source.try(:path) do
+        Event.transaction do
+          book = ::Spreadsheet.open(source.path)
+          book.worksheets.each do |worksheet|
+            race = nil
+            create_rows(worksheet)
 
-      Event.transaction do
-        book = ::Spreadsheet.open(source.path)
-        book.worksheets.each do |worksheet|
-          race = nil
-          create_rows(worksheet)
-
-          rows.each do |row|
-            Rails.logger.debug("Results::ResultsFile #{Time.zone.now} row #{row.spreadsheet_row.to_a.join(', ')}") if debug?
-            if race?(row)
-              race = find_or_create_race(row)
-              # This row is also a result. I.e., no separate race header row.
-              if usac_results_format?
+            ActiveSupport::Notifications.instrument "worksheet.import.results_file.racing_on_rails", rows: rows.size
+            rows.each do |row|
+              Rails.logger.debug("Results::ResultsFile #{Time.zone.now} row #{row.spreadsheet_row.to_a.join(', ')}") if debug?
+              if race?(row)
+                race = find_or_create_race(row)
+                # This row is also a result. I.e., no separate race header row.
+                if usac_results_format?
+                  create_result(row, race)
+                end
+              elsif result?(row)
                 create_result(row, race)
               end
-            elsif result?(row)
-              create_result(row, race)
             end
           end
         end
+
+        if import_warnings.to_a.size > 10
+          self.import_warnings = import_warnings.to_a[0, 10]
+        end
       end
 
-      if import_warnings.to_a.size > 10
-        self.import_warnings = import_warnings.to_a[0, 10]
-      end
-
-      Rails.logger.info("Results::ResultsFile #{Time.zone.now} import done")
+      ActiveSupport::Notifications.instrument "warnings.import.results_file.racing_on_rails", warnings_count: import_warnings.to_a.size
     end
 
     def create_rows(worksheet)
@@ -231,7 +232,9 @@ module Results
       race.result_columns = columns
       race.custom_columns = race_custom_columns.to_a
       race.save!
-      Rails.logger.info("Results::ResultsFile #{Time.zone.now} create race #{category}")
+
+      ActiveSupport::Notifications.instrument "find_or_create_race.import.results_file.racing_on_rails", race_name: race.name, race_id: race.id
+
       race
     end
 

@@ -49,6 +49,8 @@ module Admin
       end
 
       @current_year = current_date.year
+
+      ActiveSupport::Notifications.instrument "search.people.admin.racing_on_rails", name: @name, people_count: @people.size
     end
 
     # == Params
@@ -69,6 +71,7 @@ module Admin
       headers['Content-Disposition'] = "filename=\"#{file_name}\""
 
       @people = Person.find_all_for_export(date, params['include'])
+      ActiveSupport::Notifications.instrument "export.people.admin.racing_on_rails", people_count: @people.size, excel_layout: params[:excel_layout], format: params[:format]
 
       respond_to do |format|
         format.html
@@ -84,6 +87,7 @@ module Admin
     end
 
     def new
+      ActiveSupport::Notifications.instrument "new.people.admin.racing_on_rails"
       @person = Person.new
       assign_race_numbers
       @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
@@ -94,6 +98,7 @@ module Admin
       @person = Person.includes(:race_numbers).find(params[:id])
       assign_race_numbers
       @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+      ActiveSupport::Notifications.instrument "edit.people.admin.racing_on_rails", person_name: @person.name, person_id: params[:id]
     end
 
     # Create new Person
@@ -110,6 +115,7 @@ module Admin
     def create
       expire_cache
       @person = Person.create(person_params)
+      ActiveSupport::Notifications.instrument "create.people.admin.racing_on_rails", person_name: @person.name, person_id: @person.id
 
       if params[:number_value]
         params[:number_value].each_with_index do |number_value, index|
@@ -174,6 +180,8 @@ module Admin
         return redirect_to(action: :index)
       end
 
+      ActiveSupport::Notifications.instrument "preview_import.people.admin.racing_on_rails", original_filename: params[:people_file].original_filename
+
       path = "#{Dir.tmpdir}/#{params[:people_file].original_filename}"
       File.open(path, "wb") do |f|
         f.print(params[:people_file].read)
@@ -198,6 +206,8 @@ module Admin
         redirect_to(action: 'index')
 
       elsif params[:commit] == 'Import'
+        ActiveSupport::Notifications.instrument "import.people.admin.racing_on_rails", people_file_path: session[:people_file_path]
+
         Duplicate.delete_all
         path = session[:people_file_path]
         if path.blank?
@@ -225,6 +235,8 @@ module Admin
     # Unresolved duplicates after import
     def duplicates
       @duplicates = Duplicate.all
+      ActiveSupport::Notifications.instrument "duplicates.people.admin.racing_on_rails", duplicates: @duplicates.size
+
       @duplicates = @duplicates.sort do |x, y|
         diff = (x.person.last_name || '') <=> y.person.last_name
         if diff == 0
@@ -233,6 +245,10 @@ module Admin
           diff
         end
       end
+
+      @duplicates.each do |duplicate|
+        ActiveSupport::Notifications.instrument "duplicate.people.admin.racing_on_rails", person_name: duplicate.person.name, person_id: duplicate.person.id, people_ids: duplicate.people.map(&:ids)
+      end
     end
 
     def resolve_duplicates
@@ -240,12 +256,10 @@ module Admin
       @duplicates.each do |duplicate|
         id = params[duplicate.to_param]
         if id == 'new'
+          ActiveSupport::Notifications.instrument "resolve_duplicates.people.admin.racing_on_rails", resolution: :new, person_name: duplicate.person.name, person_id: duplicate.person.id
           duplicate.person.save!
         elsif id.present?
-          logger.info(
-            "Duplicate Update person #{id} with " +
-            "'#{duplicate.new_attributes[:first_name]} #{duplicate.new_attributes[:last_name]}' lic: #{duplicate.new_attributes[:license]}"
-            )
+          ActiveSupport::Notifications.instrument "resolve_duplicates.people.admin.racing_on_rails", resolution: :update, person_name: duplicate.person.name, person_id: id, new_attributes: duplicate.new_attributes
           person = Person.update(id, duplicate.new_attributes)
           unless person.valid?
             raise ActiveRecord::RecordNotSaved.new(person.errors.full_messages.join(', '))
@@ -281,6 +295,9 @@ module Admin
 
     def destroy
       @person = Person.find(params[:id])
+
+      ActiveSupport::Notifications.instrument "destroy.people.admin.racing_on_rails", person_id: @person.id
+
       if @person.destroy
         flash.notice = "Deleted #{@person.name}"
         redirect_to admin_people_path
@@ -296,7 +313,9 @@ module Admin
     def merge
       @person = Person.find(params[:id])
       @other_person = Person.find(params[:other_person_id])
+      ActiveSupport::Notifications.instrument "merge.people.admin.racing_on_rails", person_id: @person.id, person_name: @person.name, other_id: @other_person.id, other_name: @other_name
       @merged = @person.merge(@other_person)
+      ActiveSupport::Notifications.instrument "success.merge.people.admin.racing_on_rails", person_id: @person.id, person_name: @person.name, other_id: @other_person.id, other_name: @other_name
       expire_cache
     end
 
@@ -318,6 +337,9 @@ module Admin
     # Membership card stickers/labels
     def cards
       @people = Person.where(print_card: true).order("last_name, first_name")
+
+      ActiveSupport::Notifications.instrument "cards.people.admin.racing_on_rails", person_count: @people.count
+
       if @people.empty?
         return redirect_to(no_cards_admin_people_path(format: "html"))
       else
@@ -342,6 +364,8 @@ module Admin
       @person.card_printed_at = Time.zone.now
       @person.save!
 
+      ActiveSupport::Notifications.instrument "card.people.admin.racing_on_rails", person_id: @person.id
+
       respond_to do |format|
         format.pdf do
           send_data Card.new.to_pdf(@person),
@@ -356,8 +380,10 @@ module Admin
     def update_name
       @person = Person.find(params[:id])
       @person.name = params[:value]
-
       @other_people = @person.people_with_same_name
+
+      ActiveSupport::Notifications.instrument "update_name.people.admin.racing_on_rails", person_id: @person.id, person_name_was: "#{@person.first_name_was} #{@person.last_name_was}", person_name: @person.name, other_people_same_name: @other_people.size
+
       if @other_people.empty?
         @person.save
         expire_cache
