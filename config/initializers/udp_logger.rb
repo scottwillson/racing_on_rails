@@ -1,5 +1,6 @@
 if Rails.env.production? || Rails.env.staging?
   udp_logger = ::LogStashLogger.new(port: 5228)
+  parameter_filter = ActionDispatch::Http::ParameterFilter.new(Rails.application.config.filter_parameters)
 
   ActiveSupport::Notifications.subscribe(/fragment|process_action.action_controller|racing_on_rails/) do |name, start, finish, id, payload|
     message = {
@@ -10,7 +11,9 @@ if Rails.env.production? || Rails.env.staging?
       message: name,
       racing_association: RacingAssociation.current.short_name,
       start: start
-    }.merge(payload)
+    }.merge(
+      parameter_filter.filter payload
+    )
 
     # Ideally, would traverse params and fix encodings
     begin
@@ -21,4 +24,4 @@ if Rails.env.production? || Rails.env.staging?
       udp_logger.info message
     end
   end
-end
+# end
