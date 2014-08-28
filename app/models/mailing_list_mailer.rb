@@ -84,6 +84,14 @@ class MailingListMailer < ActionMailer::Base
           Rails.logger.error "Could not save post: #{post.errors.full_messages.join(". ")}"
         end
 
+        ActiveSupport::Notifications.instrument "receive.mailing_list_mailer.racing_on_rails", {
+          mailing_list_id: mailing_list.id,
+          mailing_list_name: mailing_list.name,
+          subject: post.subject,
+          from_email: post.from_email,
+          from_name: post.from_name
+        }
+
         post
       rescue => save_error
         Rails.logger.error "Could not save post: #{save_error}"
