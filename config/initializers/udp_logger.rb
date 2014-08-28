@@ -24,4 +24,4 @@ if Rails.env.production? || Rails.env.staging?
       udp_logger.info message
     end
   end
-# end
+end
