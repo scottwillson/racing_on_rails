@@ -125,6 +125,33 @@ class Event < ActiveRecord::Base
   scope :child, lambda { where("parent_id is not null") }
   scope :not_child, lambda { where("parent_id is null") }
 
+  scope :with_recent_results, lambda { |weeks|
+    query = includes(parent: :parent).
+            where("type != ?", "Event").
+            where("type is not null").
+            where("events.date >= ?", weeks).
+            where("id in (select event_id from results where competition_result = false and team_competition_result = false)").
+            order("updated_at desc")
+
+    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
+      query = query.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
+    end
+
+    query
+  }
+
+  scope :most_recent_with_recent_result, lambda { |weeks, sanctioned_by|
+    includes(races: [ :category, :results ]).
+    includes(:parent).
+    where("type != ?", "Event").
+    where("type is not null").
+    where("events.date >= ?", weeks).
+    where(sanctioned_by: sanctioned_by).
+    where("id in (select event_id from results where competition_result = false and team_competition_result = false)").
+    order("updated_at desc")
+  }
+
+
   attr_reader :new_promoter_name
   attr_reader :new_team_name
 
