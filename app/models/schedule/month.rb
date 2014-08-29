@@ -49,6 +49,15 @@ module Schedule
       end
     end
 
+    def updated_at
+      weeks.
+      map(&:days).
+      flatten.
+      map(&:events).
+      flatten.
+      max_by(&:updated_at)
+    end
+
     def to_s
       "#<Schedule::Month #{name} #{date.strftime('%x') if date}>"
     end
