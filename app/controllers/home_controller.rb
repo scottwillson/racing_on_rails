@@ -42,9 +42,7 @@ class HomeController < ApplicationController
 
     @news_category = ArticleCategory.where(name: "news").first
     if @news_category
-      @recent_news = Article.
-        where("created_at > :cutoff OR updated_at > :cutoff", cutoff: @home.weeks_of_upcoming_events.weeks.ago).
-        where(article_category_id: @news_category.id)
+      @recent_news = Article.recent_news(@home.weeks_of_upcoming_events.weeks.ago, @news_category)
     end
 
     @photo = @home.photo
