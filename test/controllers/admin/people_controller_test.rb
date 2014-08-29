@@ -215,6 +215,8 @@ module Admin
     test "update" do
       vanilla = FactoryGirl.create(:team)
       molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron", road_number: "2", team: vanilla)
+      Alias.create!(name: "Mollie Cameron", person: molly)
+      FactoryGirl.create :result, person: molly, team: vanilla
       assert_equal 1, molly.versions.size, "versions"
       molly_road_number = RaceNumber.first
 
