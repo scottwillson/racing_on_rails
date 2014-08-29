@@ -78,7 +78,7 @@ GEM
     active_utils (2.2.3)
       activesupport (>= 2.3.11)
       i18n
-    activemerchant (1.44.0)
+    activemerchant (1.44.1)
       active_utils (~> 2.2.0)
       activesupport (>= 3.2.14, < 5.0.0)
       builder (>= 2.1.2, < 4.0.0)
