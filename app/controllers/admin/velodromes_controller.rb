@@ -38,12 +38,12 @@ module Admin
 
     def update_attribute
       respond_to do |format|
-        format.js {
+        format.js do
           @velodrome = Velodrome.find(params[:id])
           @velodrome.update! params[:name] => params[:value]
           expire_cache
           render plain: @velodrome.send(params[:name])
-        }
+        end
       end
     end
 
