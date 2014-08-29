@@ -16,29 +16,11 @@ class HomeController < ApplicationController
     @page_title = RacingAssociation.current.name
 
     @upcoming_events = Event.upcoming(@home.weeks_of_upcoming_events)
-
-    @events_with_recent_results = Event.
-      includes(parent: :parent).
-      where("type != ?", "Event").
-      where("type is not null").
-      where("events.date >= ?", @home.weeks_of_recent_results.weeks.ago).
-      where("id in (select event_id from results where competition_result = false and team_competition_result = false)").
-      order("updated_at desc")
-
-    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
-      @events_with_recent_results = @events_with_recent_results.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
-    end
-
-    @most_recent_event_with_recent_result = Event.
-      includes(races: [ :category, :results ]).
-      includes(:parent).
-      where("type != ?", "Event").
-      where("type is not null").
-      where("events.date >= ?", @home.weeks_of_recent_results.weeks.ago).
-      where(sanctioned_by: RacingAssociation.current.default_sanctioned_by).
-      where("id in (select event_id from results where competition_result = false and team_competition_result = false)").
-      order("updated_at desc").
-      first
+    @events_with_recent_results = Event.with_recent_results(@home.weeks_of_recent_results.weeks.ago)
+    @most_recent_event_with_recent_result = Event.most_recent_with_recent_result(
+      @home.weeks_of_recent_results.weeks.ago,
+      RacingAssociation.current.default_sanctioned_by
+    ).first
 
     @news_category = ArticleCategory.where(name: "news").first
     if @news_category
