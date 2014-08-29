@@ -80,10 +80,6 @@ group :test, :acceptance do
   gem "timecop"
 end
 
-group :production do
-  gem "syslog-logger"
-end
-
 group :staging, :production do
   gem "logstasher"
   gem "raygun4ruby"

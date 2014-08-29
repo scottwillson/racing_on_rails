@@ -6,6 +6,7 @@ set :linked_files, %w{config/database.yml config/newrelic.yml config/secrets.yml
 set :bundle_jobs, 4
 set :bundle_without, %w{development test acceptance}.join(' ')
 
+set :puma_preload_app, false
 set :puma_threads, [ 8, 32 ]
 set :puma_workers, 1
 

@@ -123,98 +123,105 @@ class PeopleFile < Grid::GridFile
   # +year+ for RaceNumbers
   # New memberships start on today, but really should start on January 1st of next year, if +year+ is next year
   def import(update_membership, year = nil)
-    logger.debug("PeopleFile import update_membership: #{update_membership}")
-    @update_membership = update_membership
-    @has_print_column = columns.any? do |column|
-      column.field == :print_card
-    end
-    year = year.to_i if year
-
-    logger.debug("#{rows.size} rows")
-    if @update_membership
-      if year && year > Time.zone.today.year
-        @member_from_imported_people = Time.zone.local(year).beginning_of_year.to_date
-      else
-        @member_from_imported_people = Time.zone.today.to_date
+    ActiveSupport::Notifications.instrument "import.people_file.racing_on_rails", update_membership: update_membership, import_file: import_file, rows: rows.size do
+      @update_membership = update_membership
+      @has_print_column = columns.any? do |column|
+        column.field == :print_card
       end
-      @member_to_for_imported_people = Time.zone.local(year || Time.zone.today.year).end_of_year.to_date
-    end
+      year = year.to_i if year
 
-    Person.transaction do
-      rows.each do |row|
-        row_hash = row.to_hash
-        row_hash[:updated_by] = import_file
-        logger.debug(row_hash.inspect) if logger.debug?
-        next if row_hash[:first_name].blank? && row_hash[:first_name].blank? && row_hash[:name].blank?
-
-        combine_categories(row_hash)
-        row_hash.delete(:date_of_birth) if row_hash[:date_of_birth] == 'xx'
-
-        # TODO or by USAC license number
-        people = []
-
-        if row_hash[:license].present? && row_hash[:license].to_i > 0
-          people = Person.where(license: row_hash[:license])
-        end
-
-        if people.empty?
-          people = Person.find_all_by_name_or_alias(first_name: row_hash[:first_name], last_name: row_hash[:last_name])
-        end
-
-        logger.info("PeopleFile Found #{people.size} people for '#{row_hash[:first_name]} #{row_hash[:last_name]}' lic:  #{row_hash[:license]}")
-
-        person = nil
-        row_hash[:member_to] = @member_to_for_imported_people if @update_membership
-        if people.empty?
-          logger.info("PeopleFile Create new person")
-          delete_unwanted_member_from(row_hash, person)
-          add_print_card_and_label(row_hash)
-          person = Person.new(updated_by: import_file)
-          if year
-            person.year = year
-          end
-          person.attributes = row_hash
-          person.save!
-          @created = @created + 1
-        elsif people.size == 1
-          person = people.first
-          logger.info("PeopleFile Update #{person.id} '#{person.name}' lic: #{person.license}")
-          # Don't want to overwrite existing categories
-          delete_blank_categories(row_hash)
-          delete_unwanted_member_from(row_hash, person)
-          unless person.notes.blank?
-            row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
-          end
-          add_print_card_and_label(row_hash, person)
-
-          if year
-            person.year = year
-          end
-          person.updated_by = import_file
-          person.attributes = row_hash
-          person.save!
-          unless person.valid?
-            raise ActiveRecord::RecordNotSaved.new(person.errors.full_messages.join(', '))
-          end
-          @updated = @updated + 1
+      if @update_membership
+        if year && year > Time.zone.today.year
+          @member_from_imported_people = Time.zone.local(year).beginning_of_year.to_date
         else
-          logger.info("PeopleFile Add duplicate")
-          delete_blank_categories(row_hash)
-          person = Person.new(row_hash)
-          if year
-            person.year = year
-          end
-          delete_unwanted_member_from(row_hash, person)
-          unless person.notes.blank?
-            row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
-          end
-          add_print_card_and_label(row_hash, person)
+          @member_from_imported_people = Time.zone.today.to_date
+        end
+        @member_to_for_imported_people = Time.zone.local(year || Time.zone.today.year).end_of_year.to_date
+      end
 
-          row_hash.delete(:persistence_token)
-          row_hash.delete(:single_access_token)
-          row_hash.delete(:perishable_token)
+      Person.transaction do
+        rows.each do |row|
+          row_hash = row.to_hash
+          row_hash[:updated_by] = import_file
+          logger.debug(row_hash.inspect) if logger.debug?
+          next if row_hash[:first_name].blank? && row_hash[:first_name].blank? && row_hash[:name].blank?
 
-          duplicates << Duplicate.create!(new_attributes: Person.new(row_hash).serializable_hash, people: people)
+          combine_categories(row_hash)
+          row_hash.delete(:date_of_birth) if row_hash[:date_of_birth] == 'xx'
+
+          # TODO or by USAC license number
+          people = []
+
+          if row_hash[:license].present? && row_hash[:license].to_i > 0
+            people = Person.where(license: row_hash[:license])
+          end
+
+          if people.empty?
+            people = Person.find_all_by_name_or_alias(first_name: row_hash[:first_name], last_name: row_hash[:last_name])
+          end
+
+          ActiveSupport::Notifications.instrument "find.people_file.racing_on_rails", people_count: people.size, person_first_name: row_hash[:first_name], person_last_name: row_hash[:last_name], license: row_hash[:license]
+
+          person = nil
+          row_hash[:member_to] = @member_to_for_imported_people if @update_membership
+          if people.empty?
+            ActiveSupport::Notifications.instrument "create.people_file.racing_on_rails", person_first_name: row_hash[:first_name], person_last_name: row_hash[:last_name]
+            delete_unwanted_member_from(row_hash, person)
+            add_print_card_and_label(row_hash)
+            person = Person.new(updated_by: import_file)
+            if year
+              person.year = year
+            end
+            person.attributes = row_hash
+            person.save!
+            @created = @created + 1
+          elsif people.size == 1
+            person = people.first
+
+            ActiveSupport::Notifications.instrument "update.people_file.racing_on_rails", person_id: person.id, person_name: person.name
+
+            # Don't want to overwrite existing categories
+            delete_blank_categories(row_hash)
+            delete_unwanted_member_from(row_hash, person)
+            unless person.notes.blank?
+              row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
+            end
+            add_print_card_and_label(row_hash, person)
+
+            if year
+              person.year = year
+            end
+            person.updated_by = import_file
+            person.attributes = row_hash
+
+            ActiveSupport::Notifications.instrument "update.people_file.racing_on_rails", person_id: person.id, person_name: person.name
+            person.save!
+
+            # Unsure how this works out with save! before
+            unless person.valid?
+              raise ActiveRecord::RecordNotSaved.new(person.errors.full_messages.join(', '))
+            end
+            @updated = @updated + 1
+          else
+            delete_blank_categories(row_hash)
+            person = Person.new(row_hash)
+            if year
+              person.year = year
+            end
+            delete_unwanted_member_from(row_hash, person)
+            unless person.notes.blank?
+              row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
+            end
+            add_print_card_and_label(row_hash, person)
+
+            row_hash.delete(:persistence_token)
+            row_hash.delete(:single_access_token)
+            row_hash.delete(:perishable_token)
+
+            ActiveSupport::Notifications.instrument "duplicate.people_file.racing_on_rails", person_name: person.name, people_count: people.size, people_ids: people.map(&:id)
+
+            duplicates << Duplicate.create!(new_attributes: Person.new(row_hash).serializable_hash, people: people)
+          end
         end
       end
     end

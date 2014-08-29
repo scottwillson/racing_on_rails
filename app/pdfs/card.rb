@@ -2,7 +2,7 @@ class Card < Prawn::Document
   def initialize
     super(
       top_margin: 52,
-      left_margin: 14
+      left_margin: 20
     )
   end
 

@@ -742,6 +742,8 @@ class Person < ActiveRecord::Base
   end
 
   def renew!(license_type)
+    ActiveSupport::Notifications.instrument "renew!.person.racing_on_rails", person_id: id, license_type: license_type
+
     self.member = true
     self.print_card = true
     self.license_type = license_type
