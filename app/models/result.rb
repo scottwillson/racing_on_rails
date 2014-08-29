@@ -83,6 +83,10 @@ class Result < ActiveRecord::Base
         elsif existing_people.size > 1
           self.person = Person.select_by_recent_activity(existing_people)
         end
+
+        if person.new_record?
+          person.updated_by = event
+        end
       end
     end
 
