@@ -33,7 +33,6 @@ class Result < ActiveRecord::Base
   serialize :custom_attributes, Hash
 
   before_save :find_associated_records
-  before_save :save_person
   before_save :cache_non_event_attributes
   before_create :cache_event_attributes
   before_save :ensure_custom_attributes
@@ -180,17 +179,6 @@ class Result < ActiveRecord::Base
       person.updated_by = updated_by
       person.add_number(number, discipline, event.number_issuer, event.date.year)
     end
-  end
-
-  # Save associated Person
-  def save_person
-    if person && (person.new_record? || person.changed?)
-      if person.new_record?
-        person.updated_by = event
-      end
-      person.save!
-    end
-    true
   end
 
   # Cache expensive cross-table lookups
