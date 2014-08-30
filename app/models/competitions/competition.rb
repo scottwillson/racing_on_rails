@@ -37,6 +37,7 @@ module Competitions
     UNLIMITED = Float::INFINITY
 
     after_create  :create_races
+    after_save    :expire_cache
 
     has_many :competition_event_memberships
     has_many :source_events,
@@ -269,6 +270,10 @@ module Competitions
     # Team-based competition? False (default) implies it is person-based?
     def team?
       false
+    end
+
+    def expire_cache
+      ApplicationController.expire_cache
     end
 
     def to_s

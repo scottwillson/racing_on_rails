@@ -37,6 +37,7 @@ module Admin
       @team = Team.new(team_params)
 
       if @team.save
+        expire_cache
         flash[:notice] = "Created #{@team.name}"
         redirect_to(edit_admin_team_path(@team))
       else
@@ -48,6 +49,7 @@ module Admin
       @team = Team.find(params[:id])
 
       if @team.update(team_params)
+        expire_cache
         redirect_to(edit_admin_team_path(@team))
       else
         render :edit
@@ -63,6 +65,7 @@ module Admin
           @other_teams = @team.teams_with_same_name
           if @other_teams.empty?
             @team.save!
+            expire_cache
             render plain: @team[params[:name]]
           else
             render "merge_confirm"
@@ -75,11 +78,13 @@ module Admin
       @team = Team.find(params[:id])
       @other_team = Team.find(params[:other_team_id])
       @merged = @team.merge(@other_team)
+      expire_cache
     end
 
     def destroy
       @team = Team.find(params[:id])
       if @team.destroy
+        expire_cache
         redirect_to admin_teams_path
       else
         render :edit
@@ -88,11 +93,13 @@ module Admin
 
     def destroy_name
       Name.destroy(params[:name_id])
+      expire_cache
     end
 
     def toggle_member
       team = Team.find(params[:id])
       team.toggle!(:member)
+      expire_cache
       render partial: "shared/member", locals: { record: team }
     end
 

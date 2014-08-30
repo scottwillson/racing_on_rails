@@ -2,6 +2,8 @@
 class HomeController < ApplicationController
   respond_to :html
 
+  caches_page :index
+
   before_filter :require_administrator, except: :index
 
   # Show homepage
@@ -39,6 +41,7 @@ class HomeController < ApplicationController
   def update
     assign_home
     if @home.update(home_params)
+      expire_cache
       redirect_to edit_home_path
     else
       render :edit

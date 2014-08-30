@@ -21,6 +21,7 @@ module Admin
 
       if @page.save
         flash[:notice] = "Created #{@page.title}"
+        expire_cache
         redirect_to(edit_admin_page_path(@page))
       else
         render :edit
@@ -35,6 +36,7 @@ module Admin
       @page = Page.find(params[:id])
       if @page.update(page_params)
         flash[:notice] = "Updated #{@page.title}"
+        expire_cache
         redirect_to(edit_admin_page_path(@page))
       else
         render :edit
@@ -46,6 +48,7 @@ module Admin
         format.js {
           @page = Page.find(params[:id])
           @page.update! params[:name] => params[:value]
+          expire_cache
           render plain: @page.send(params[:name])
         }
       end
@@ -60,6 +63,7 @@ module Admin
         ActiveRecord::Base.lock_optimistically = true
       end
 
+      expire_cache
       flash[:notice] = "Deleted #{@page.title}"
       redirect_to admin_pages_path
     end

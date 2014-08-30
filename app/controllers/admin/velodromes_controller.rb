@@ -15,6 +15,7 @@ module Admin
 
       if @velodrome.errors.empty?
         flash[:notice] = "Created #{@velodrome.name}"
+        expire_cache
         return redirect_to(new_admin_velodrome_path)
       end
       render(template: 'admin/velodromes/edit')
@@ -29,6 +30,7 @@ module Admin
 
       if @velodrome.update(velodrome_params)
         flash[:notice] = "Updated #{@velodrome.name}"
+        expire_cache
         return redirect_to(edit_admin_velodrome_path(@velodrome))
       end
       render(template: 'admin/velodromes/edit')
@@ -39,6 +41,7 @@ module Admin
         format.js do
           @velodrome = Velodrome.find(params[:id])
           @velodrome.update! params[:name] => params[:value]
+          expire_cache
           render plain: @velodrome.send(params[:name])
         end
       end
@@ -48,6 +51,7 @@ module Admin
       @velodrome = Velodrome.find(params[:id])
       flash[:notice] = "Deleted #{@velodrome.name}"
       @velodrome.destroy
+      expire_cache
       redirect_to(admin_velodromes_path)
     end
 

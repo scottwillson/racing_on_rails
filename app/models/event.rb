@@ -35,9 +35,9 @@ class Event < ActiveRecord::Base
   TYPES =  [ 'Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries' ]
 
   after_initialize :set_defaults
-  before_destroy :validate_no_results
   before_save :set_promoter, :set_team
   after_save :update_results
+  before_destroy :validate_no_results
   after_destroy :update_parent_date
 
   validates_presence_of :date, :name

@@ -1,5 +1,7 @@
 module Competitions
   class CompetitionsController < ApplicationController
+    caches_page :show
+
     def show
       # Very explicit because we don't want to call something like 'eval' on a request parameter!
       if params[:type] == "rider_rankings"

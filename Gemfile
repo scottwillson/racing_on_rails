@@ -29,6 +29,7 @@ gem "oj"
 gem "pdf-reader", require: "pdf/reader"
 gem "prawn", git: "https://github.com/sandal/prawn.git"
 gem "puma"
+gem "rails-observers"
 gem "rake"
 gem "redcarpet"
 gem "registration_engine", path: "lib/registration_engine"
@@ -81,13 +82,9 @@ group :test, :acceptance do
 end
 
 group :staging, :production do
-  gem "logstasher"
-  gem "raygun4ruby"
-  gem "therubyracer"
-  gem "unicorn"
-end
-
-group :acceptance, :staging, :production do
   gem "execjs"
+  gem "logstash-logger"
+  gem "raygun4ruby"
   gem "rvm-capistrano"
+  gem "therubyracer"
 end

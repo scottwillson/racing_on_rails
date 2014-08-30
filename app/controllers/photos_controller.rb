@@ -29,6 +29,7 @@ class PhotosController < Admin::AdminController
     @photo = Photo.find(params[:id])
 
     if @photo.update(photo_params)
+      expire_cache
       flash[:notice] = "Updated photo"
       return redirect_to(edit_photo_path(@photo))
     end

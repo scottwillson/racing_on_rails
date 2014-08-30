@@ -15,6 +15,8 @@ class ApplicationController < ActionController::Base
   before_filter :clear_racing_association, :toggle_tabs, :assign_year, :assign_today
 
   def self.expire_cache
+    return true if !perform_caching
+
     begin
       FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "bar"))
       FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "cat4_womens_race_series"))
@@ -59,6 +61,10 @@ class ApplicationController < ActionController::Base
 
   def toggle_tabs
     @show_tabs = false
+  end
+
+  def expire_cache
+    ApplicationController.expire_cache
   end
 
   def render_page(path = nil)

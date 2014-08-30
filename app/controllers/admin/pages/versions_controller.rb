@@ -35,6 +35,7 @@ module Admin
           ActiveRecord::Base.lock_optimistically = true
         end
 
+        expire_cache
         flash[:notice] = "Reverted #{page.title} to version from #{version.updated_at.to_s(:long)}"
         redirect_to edit_admin_page_path(page)
       end

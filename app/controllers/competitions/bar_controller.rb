@@ -2,6 +2,8 @@
 # FIXME Add test for overall and make logic cleaner
 module Competitions
   class BarController < ApplicationController
+    caches_page :index, :show
+
     def index
       @overall_bar = OverallBar.find_for_year
       fresh_when [ @overall_bar, RacingAssociation.current.year ], public: true

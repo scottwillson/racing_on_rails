@@ -1,6 +1,8 @@
 # What appear to be duplicate finds are actually existence tests.
 # Many methods to handle old URLs that search engines still hit. Will be removed.
 class ResultsController < ApplicationController
+  caches_page :index, :event, :person, :person_event, :team
+
   # HTML: Formatted links to Events with Results
   # == Params
   # * year (optional)

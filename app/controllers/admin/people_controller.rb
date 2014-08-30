@@ -113,6 +113,7 @@ module Admin
     # number_year: year (not array)
     # New blank numbers are ignored
     def create
+      expire_cache
       @person = Person.create(person_params)
       ActiveSupport::Notifications.instrument "create.people.admin.racing_on_rails", person_name: @person.name, person_id: @person.id
 
@@ -156,6 +157,7 @@ module Admin
     # number_year: year (not array)
     # New blank numbers are ignored
     def update
+      expire_cache
       @person = Person.find(params[:id])
       ActiveSupport::Notifications.instrument "update.people.racing_on_rails", person_id: @person.id, person_name: @person.name
 
@@ -276,6 +278,7 @@ module Admin
             update_name
           else
             @person.update! params[:name] => params[:value]
+            expire_cache
             render plain: @person.send(params[:name])
           end
         }
@@ -297,6 +300,7 @@ module Admin
       if @person.destroy
         flash.notice = "Deleted #{@person.name}"
         redirect_to admin_people_path
+        expire_cache
       else
         flash[:warn] = "Could not delete #{@person.name}. #{@person.errors.full_messages.join(". ")}"
         assign_race_numbers
@@ -311,6 +315,7 @@ module Admin
       ActiveSupport::Notifications.instrument "merge.people.admin.racing_on_rails", person_id: @person.id, person_name: @person.name, other_id: @other_person.id, other_name: @other_name
       @merged = @person.merge(@other_person)
       ActiveSupport::Notifications.instrument "success.merge.people.admin.racing_on_rails", person_id: @person.id, person_name: @person.name, other_id: @other_person.id, other_name: @other_name
+      expire_cache
     end
 
     def number_year_changed
@@ -380,6 +385,7 @@ module Admin
 
       if @other_people.empty?
         @person.save
+        expire_cache
         render plain: @person.name
       else
         render "merge_confirm"
