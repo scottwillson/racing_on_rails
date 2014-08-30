@@ -85,6 +85,5 @@ group :staging, :production do
   gem "execjs"
   gem "logstash-logger"
   gem "raygun4ruby"
-  gem "rvm-capistrano"
   gem "therubyracer"
 end
