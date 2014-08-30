@@ -22,9 +22,7 @@ module Competitions
 
       @event = competition_class.year(@year).first || competition_class.new(date: Time.zone.local(@year))
 
-      if stale?(@event, public: true)
-        render "results/event"
-      end
+      render "results/event"
     end
   end
 end

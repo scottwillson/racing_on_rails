@@ -27,9 +27,7 @@ class PostsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        if stale?([ Post.maximum(:updated_at), @subject])
-          @posts = @posts.paginate(page: page)
-        end
+        @posts = @posts.paginate(page: page)
       end
 
       format.rss do

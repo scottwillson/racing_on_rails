@@ -7,8 +7,6 @@
 class PagesController < ApplicationController
   def show
     @page = Page.find_by_normalized_path!(params[:path])
-    if stale?(@page, public: true)
-      render inline: @page.body, layout: "application"
-    end
+    render inline: @page.body, layout: "application"
   end
 end

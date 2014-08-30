@@ -7,15 +7,13 @@ class ResultsController < ApplicationController
   # == Params
   # * year (optional)
   def index
-    if stale?([ Event.maximum(:updated_at), @year ], public: true)
-      @discipline = Discipline[params["discipline"]]
-      @discipline_names = Discipline.names
-      @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
+    @discipline = Discipline[params["discipline"]]
+    @discipline_names = Discipline.names
+    @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
 
-      respond_to do |format|
-        format.html
-        format.xml
-      end
+    respond_to do |format|
+      format.html
+      format.xml
     end
   end
 
@@ -41,9 +39,7 @@ class ResultsController < ApplicationController
     respond_to do |format|
       format.html {
         benchmark "Load results", level: :debug do
-          if stale?(@event, public: true)
-            @event = Event.includes(races: [ :category, { results: :team } ]).find(params[:event_id])
-          end
+          @event = Event.includes(races: [ :category, { results: :team } ]).find(params[:event_id])
         end
         assign_start_list
       }
@@ -56,26 +52,22 @@ class ResultsController < ApplicationController
   def person_event
     @event = Event.find(params[:event_id])
     @person = Person.find(params[:person_id])
-    if stale?([ @event, @person, @year ], public: true)
-      @results = Result.
-                  includes(scores: [ :source_result, :competition_result ]).
-                  where(event_id: params[:event_id]).
-                  where(person_id: params[:person_id])
-    end
+    @results = Result.
+                includes(scores: [ :source_result, :competition_result ]).
+                where(event_id: params[:event_id]).
+                where(person_id: params[:person_id])
   end
 
   # Single Team's Results for a single Event
   def team_event
     @team = Team.find(params[:team_id])
     @event = Event.find(params[:event_id])
-    if stale?([ @event, @team, @year ], public: true)
-      @result = Result.
-                includes(scores: [ :source_result, :competition_result ]).
-                where("results.event_id" => params[:event_id]).
-                where(team_id: params[:team_id]).
-                first!
-      raise ActiveRecord::RecordNotFound unless @result
-    end
+    @result = Result.
+              includes(scores: [ :source_result, :competition_result ]).
+              where("results.event_id" => params[:event_id]).
+              where(team_id: params[:team_id]).
+              first!
+    raise ActiveRecord::RecordNotFound unless @result
   end
 
   # Person's Results for an entire year
@@ -84,10 +76,8 @@ class ResultsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        if stale?([ @person, @year ], public: true)
-          assign_person_results @person, @year
-          render layout: !request.xhr?
-        end
+        assign_person_results @person, @year
+        render layout: !request.xhr?
       end
 
       format.json do
@@ -107,10 +97,8 @@ class ResultsController < ApplicationController
     @team = Team.find(params[:team_id])
     respond_to do |format|
       format.html do
-        if stale?([ @team, @year ], public: true)
-          assign_team_results @team, @year
-          render layout: !request.xhr?
-        end
+        assign_team_results @team, @year
+        render layout: !request.xhr?
       end
 
       format.json do

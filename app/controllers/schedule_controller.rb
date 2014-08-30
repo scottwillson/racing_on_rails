@@ -19,9 +19,7 @@ class ScheduleController < ApplicationController
 
     respond_to do |format|
       format.html do
-        if stale?([ Event.maximum(:updated_at), @today ])
-          render_page
-        end
+        render_page
       end
       format.rss do
         redirect_to schedule_path(format: :atom), status: :moved_permanently
@@ -58,9 +56,7 @@ class ScheduleController < ApplicationController
 
     respond_to do |format|
       format.html do
-        if stale?([ Event.maximum(:updated_at), @today ])
-          render_page
-        end
+        render_page
       end
       format.rss do
         redirect_to schedule_path(format: :atom), status: :moved_permanently
