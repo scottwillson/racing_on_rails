@@ -6,7 +6,6 @@ module Competitions
 
     def index
       @overall_bar = OverallBar.find_for_year
-      fresh_when [ @overall_bar, RacingAssociation.current.year ], public: true
     end
 
     # Default to Overall BAR with links to disciplines
@@ -41,8 +40,6 @@ module Competitions
         flash.now[:warn] = "Could not find results"
         return render(:show)
       end
-
-      fresh_when [ @overall_bar, RacingAssociation.current.year ], public: true
     end
   end
 end
