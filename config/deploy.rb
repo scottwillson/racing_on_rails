@@ -10,14 +10,11 @@ set :puma_preload_app, false
 set :puma_threads, [ 8, 32 ]
 set :puma_workers, 1
 
-set :site_local_repo_url_branch, "deployment"
-
 load "local/config/deploy.rb" if File.exist?("local/config/deploy.rb")
 
 set :deploy_to, "/var/www/rails/#{fetch(:application)}"
 
 set :repo_url, "git://github.com/scottwillson/racing_on_rails.git"
-set :branch, "deployment"
 set :site_local_repo_url, "git@github.com:scottwillson/#{fetch(:application)}-local.git"
 
 set :user, "app"
@@ -49,7 +46,7 @@ namespace :deploy do
           execute :rm, "-rf \"#{release_path}/lib/registration_engine\""
         end
 
-        execute :git, "clone git@github.com:scottwillson/registration_engine.git -b deployment #{release_path}/lib/registration_engine"
+        execute :git, "clone git@github.com:scottwillson/registration_engine.git #{release_path}/lib/registration_engine"
       end
     end
   end
