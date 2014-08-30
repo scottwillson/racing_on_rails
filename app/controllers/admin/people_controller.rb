@@ -225,6 +225,7 @@ module Admin
           flash[:warn] = 'Some names in the import file already exist more than once. Match with an existing person or create a new person with the same name.'
           redirect_to duplicates_admin_people_path
         end
+        expire_cache
 
       else
         raise "Expected 'Import' or 'Cancel'"
