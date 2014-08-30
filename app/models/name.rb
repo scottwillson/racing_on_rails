@@ -16,29 +16,10 @@ class Name < ActiveRecord::Base
   validates_uniqueness_of :name, scope: [ :year, :nameable_type, :nameable_id ]
   validates_uniqueness_of :nameable_id, scope: [ :year, :nameable_type ]
 
-  after_create :update_results
-
   belongs_to :nameable, polymorphic: true
 
   def date=(value)
     self.year = value.year
-  end
-
-  def update_results
-    attribute = case nameable
-    when Person
-      :name
-    when Team
-      :team_name
-    end
-
-    nameable.results.each do |result|
-      if result[attribute] != nameable.name(result.year)
-        result.cache_attributes! :non_event
-      end
-    end
-
-    true
   end
 
   def to_s

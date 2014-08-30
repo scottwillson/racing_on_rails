@@ -114,6 +114,7 @@ class PostTest < ActiveSupport::TestCase
     original = FactoryGirl.create(:post, mailing_list: mailing_list, last_reply_at: 3.days.ago, date: 3.day.ago, subject: "My bike")
     reply = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "Re: My bike", date: 10.minutes.ago)
 
+    ApplicationController.expects :expire_cache
     Post.save reply, mailing_list
 
     assert !reply.new_record?

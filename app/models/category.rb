@@ -24,8 +24,6 @@ class Category < ActiveRecord::Base
   has_many :races
 
   before_validation :set_friendly_param
-  after_update :touch_races
-  after_update :touch_results
 
   validates_presence_of :name
   validates_presence_of :friendly_param
@@ -395,14 +393,6 @@ class Category < ActiveRecord::Base
     else
       "M"
     end
-  end
-
-  def touch_races
-    races.each(&:touch)
-  end
-
-  def touch_results
-    results.each(&:touch)
   end
 
   # Compare by position, then by name

@@ -36,9 +36,7 @@ class Event < ActiveRecord::Base
 
   after_initialize :set_defaults
   before_save :set_promoter, :set_team
-  after_save :update_results
   before_destroy :validate_no_results
-  after_destroy :update_parent_date
 
   validates_presence_of :date, :name
 
@@ -47,7 +45,7 @@ class Event < ActiveRecord::Base
   validate :inclusion_of_discipline
   validate :inclusion_of_sanctioned_by
 
-  belongs_to :parent, foreign_key: "parent_id", class_name: "Event", touch: true
+  belongs_to :parent, foreign_key: "parent_id", class_name: "Event"
   has_many :children,
            -> { order :date },
            class_name: "Event",
@@ -532,27 +530,6 @@ class Event < ActiveRecord::Base
     elsif new_team_name == ""
       self.team = nil
     end
-  end
-
-  # Update cached event attributes
-  def update_results
-    Result.
-      where(event_id: id).
-      update_all(
-        event_full_name: full_name,
-        event_date_range_s: date_range_s,
-        event_end_date: end_date,
-        date: date
-      )
-
-    parent.try :update_date
-
-    true
-  end
-
-  def update_parent_date
-    parent.try :update_date
-    true
   end
 
   # Find valid email—either promoter's email or event email. If all are blank, raise exception.

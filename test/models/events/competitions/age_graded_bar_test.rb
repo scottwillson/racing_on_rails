@@ -56,6 +56,7 @@ module Competitions
         OverallBar.calculate! 2004
       end
 
+      AgeGradedBar.any_instance.expects(:expire_cache).at_least_once
       assert_difference "Result.count", 4 do
         AgeGradedBar.calculate! 2004
       end

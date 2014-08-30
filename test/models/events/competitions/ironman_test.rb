@@ -10,6 +10,7 @@ module Competitions
       senior_men = FactoryGirl.create(:category)
       series.races.create!(category: senior_men).results.create(place: "1", person: person)
 
+      Ironman.any_instance.expects(:expire_cache).at_least_once
       Ironman.calculate!
 
       ironman = Ironman.find_for_year

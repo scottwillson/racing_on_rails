@@ -44,6 +44,7 @@ class Post < ActiveRecord::Base
 
       post.add_post_text
       original.reposition! if original
+      ApplicationController.expire_cache
     end
 
     true

@@ -47,10 +47,10 @@ class Result < ActiveRecord::Base
            extend: CreateIfBestResultForRaceExtension
   has_many :dependent_scores, class_name: 'Competitions::Score', foreign_key: 'source_result_id', dependent: :destroy
   belongs_to :category
-  belongs_to :event, touch: true
-  belongs_to :race, touch: true
-  belongs_to :person, touch: true
-  belongs_to :team, touch: true
+  belongs_to :event
+  belongs_to :race
+  belongs_to :person
+  belongs_to :team
 
   validates_presence_of :race
 
