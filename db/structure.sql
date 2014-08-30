@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.5.30, for osx10.9 (i386)
+-- MySQL dump 10.13  Distrib 5.5.30, for osx10.10 (x86_64)
 --
 -- Host: localhost    Database: racing_on_rails_development
 -- ------------------------------------------------------
@@ -1019,7 +1019,7 @@ CREATE TABLE `versions` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-08-13 20:36:45
+-- Dump completed on 2014-08-29 17:28:40
 INSERT INTO schema_migrations (version) VALUES ('1');
 
 INSERT INTO schema_migrations (version) VALUES ('10');
