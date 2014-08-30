@@ -21,7 +21,6 @@
   </thead>
   <tbody>
 <%- @events.sort.each do |event| -%>
-  <% cache [ event, @year ] do %>
   <tr>
     <td class="date">
       <%= event.date.strftime("%a %-m/%-d") if event.date -%>
@@ -48,6 +47,5 @@
     <td><%= event.city -%></td>
   </tr>
     <%- end -%>
-  <%- end -%>
 <% end -%>
 </tbody>

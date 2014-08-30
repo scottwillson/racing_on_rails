@@ -13,11 +13,9 @@
 
 <%= table do %>
   <%- @events.sort_by(&:date).reverse.each do |event| -%>
-    <% cache event do %>
-      <tr>
-        <td class="date"><%= event.short_date %></td>
-        <td><%= link_to event.name, event_results_path(event) %></td>
-      </tr>
-    <% end -%>
+    <tr>
+      <td class="date"><%= event.short_date %></td>
+      <td><%= link_to event.name, event_results_path(event) %></td>
+    </tr>
   <% end -%>
 <% end -%>

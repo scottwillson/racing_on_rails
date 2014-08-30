@@ -2,13 +2,11 @@
 
 <h2><%= link_to @team.name, team_results_path(@team) %></h2>
 
-<% cache @result do %>
-	<h3><%= @result.place.to_i.ordinalize %> &mdash; <%=
-	  link_to @result.race_full_name, event_results_path(@event, anchor: "race_#{@result.race_id}")
-	%></h3>
+<h3><%= @result.place.to_i.ordinalize %> &mdash; <%=
+  link_to @result.race_full_name, event_results_path(@event, anchor: "race_#{@result.race_id}")
+%></h3>
 
-	<%= scores_table @result %>
-<% end %>
+<%= scores_table @result %>
 
 <p>
   See all results for <%= link_to(@team.name, team_results_path(@team, @event.year), class: 'obvious') %> or the

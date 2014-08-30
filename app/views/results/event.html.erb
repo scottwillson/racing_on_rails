@@ -1,101 +1,95 @@
-<% cache @event do %>
-	<% @page_title = "Results: #{@event.date.year}: #{@event.full_name}" %>
+<% @page_title = "Results: #{@event.date.year}: #{@event.full_name}" %>
 
-	<h2><%= public_link_to_flyer @event %></h2>
+<h2><%= public_link_to_flyer @event %></h2>
 
-	<div class="row event_info">
-	  <%= @event.city_state %><br/>
-	  <%- if @event.multiple_days? -%>
-	    <%= @event.date_range_long_s %>
-	  <%- else -%>
-	    <%= @event.date.to_formatted_s(:long) %>
-	  <%- end -%>
+<div class="row event_info">
+  <%= @event.city_state %><br/>
+  <%- if @event.multiple_days? -%>
+    <%= @event.date_range_long_s %>
+  <%- else -%>
+    <%= @event.date.to_formatted_s(:long) %>
+  <%- end -%>
 
-	  <%- if @event.parent -%>
-	  <p>Part of the <%= link_to @event.parent.name, event_results_path(@event.parent) %></p>
-	  <%- end -%>
-	</div>
+  <%- if @event.parent -%>
+  <p>Part of the <%= link_to @event.parent.name, event_results_path(@event.parent) %></p>
+  <%- end -%>
+</div>
 
-	<% if @event.respond_to?(:source_events) && @event.source_events.present? %>
-	<div class="row event_info">
-	  <table class="source_events">
-	    <% @event.source_events.sort_by(&:date).each do |source_event| -%>
-	    <tr>
-	      <% if source_event.has_results? %>
-	      <td class="date"><%= link_to source_event.date.strftime('%A, %B %-d'), event_results_path(source_event) %></td>
-	      <td class="event"><%= link_to source_event.name, event_results_path(source_event) %></td>
-	      <% else %>
-	      <td class="date"><%= public_link_to_flyer source_event, source_event.date.strftime('%A, %B %-d') %></td>
-	      <td class="event"><%= public_link_to_flyer source_event %></td>
-	      <% end %>
-	    </tr>
-	    <% end -%>
-	  </table>
-	</div>
-	<% end %>
-
-	<% unless @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.empty? -%>
-	<div class="row event_info">
-	  <table class="child_single_day_events">
-	    <% @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.each do |child| -%>
-	    <tr>
-	      <td class="date"><%= link_to child.date.strftime('%A, %B %-d'), event_results_path(child) %></td>
-	      <td class="event"><%= link_to child.name, event_results_path(child), { class: "obvious" } %></td>
-	    </tr>
-	    <% child.children_and_child_competitions_with_results.each do |child_child| -%>
-	      <tr>
-	        <td></td>
-	        <td class="child"><%= link_to child_child.name, event_results_path(child_child) %></td>
-	      </tr>
-	      <% end -%>
-	    <% end -%>
-	  </table>
-	</div>
-	<% end -%>
-
-	  <%= render partial: "results/races", locals: { event: @event } %>
-
-	  <%- if @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.present? -%>
-	<div class="row event_info child_events">
-	  <%- @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.each do |child| -%>
-	  <%= link_to child.name, event_results_path(child), { class: "obvious" } %><br/>
-	  <%- end -%>
-	</div>
-	  <% else %>
-	    <% if @event.races_with_results.empty? && @start_list %>
-	      <%= render partial: "start_list", locals: { start_list: @start_list } %>
-	    <% end %>
-	  <%- end -%>
-
-	  <%- if @event.notes.present? -%>
-	  <p class="event_notes"><%= @event.notes.html_safe -%></p>
-	  <%- end -%>
-
-	  <%- if @event.races_with_results.empty? && @event.is_a?(Competitions::Competition) -%>
-	  <p class="event_notes"><%= @event.notes.html_safe -%></p>
-	    No results for <%= @event.year %>
-	  <%- end -%>
-
-	  <% if @event.races_with_results.present? -%>
-	  <p class="created_updated">Updated <%= @event.updated_at.to_formatted_s(:long_and_friendly_date_and_time) %></p>
-	  <% end -%>
-
-	  <% benchmark("Render results for event #{@event.id}", silence: false) do %>
-	    <% @event.races_with_results.sort.each do |race| %>
-	      <% cache race do %>
-	        <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
-	        <%= results_table race %>
-	      <% end -%>
-	    <%- end -%>
-
-	  <% if @event.races_with_results.empty? && @event.overall.present? && @event.overall.races_with_results.present? %>
-	    <%= render partial: "races", locals: { event: @event.overall } %>
-	    <% @event.overall.races_with_results.sort.each do |race| %>
-	      <% cache race do %>
-	        <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
-	        <%= results_table race %>
-	      <% end %>
-	    <% end %>
-	  <% end %>
-	<%- end -%>
+<% if @event.respond_to?(:source_events) && @event.source_events.present? %>
+<div class="row event_info">
+  <table class="source_events">
+    <% @event.source_events.sort_by(&:date).each do |source_event| -%>
+    <tr>
+      <% if source_event.has_results? %>
+      <td class="date"><%= link_to source_event.date.strftime('%A, %B %-d'), event_results_path(source_event) %></td>
+      <td class="event"><%= link_to source_event.name, event_results_path(source_event) %></td>
+      <% else %>
+      <td class="date"><%= public_link_to_flyer source_event, source_event.date.strftime('%A, %B %-d') %></td>
+      <td class="event"><%= public_link_to_flyer source_event %></td>
+      <% end %>
+    </tr>
+    <% end -%>
+  </table>
+</div>
 <% end %>
+
+<% unless @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.empty? -%>
+<div class="row event_info">
+  <table class="child_single_day_events">
+    <% @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.each do |child| -%>
+    <tr>
+      <td class="date"><%= link_to child.date.strftime('%A, %B %-d'), event_results_path(child) %></td>
+      <td class="event"><%= link_to child.name, event_results_path(child), { class: "obvious" } %></td>
+    </tr>
+    <% child.children_and_child_competitions_with_results.each do |child_child| -%>
+      <tr>
+        <td></td>
+        <td class="child"><%= link_to child_child.name, event_results_path(child_child) %></td>
+      </tr>
+      <% end -%>
+    <% end -%>
+  </table>
+</div>
+<% end -%>
+
+  <%= render partial: "results/races", locals: { event: @event } %>
+
+  <%- if @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.present? -%>
+<div class="row event_info child_events">
+  <%- @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.each do |child| -%>
+  <%= link_to child.name, event_results_path(child), { class: "obvious" } %><br/>
+  <%- end -%>
+</div>
+  <% else %>
+    <% if @event.races_with_results.empty? && @start_list %>
+      <%= render partial: "start_list", locals: { start_list: @start_list } %>
+    <% end %>
+  <%- end -%>
+
+  <%- if @event.notes.present? -%>
+  <p class="event_notes"><%= @event.notes.html_safe -%></p>
+  <%- end -%>
+
+  <%- if @event.races_with_results.empty? && @event.is_a?(Competitions::Competition) -%>
+  <p class="event_notes"><%= @event.notes.html_safe -%></p>
+    No results for <%= @event.year %>
+  <%- end -%>
+
+  <% if @event.races_with_results.present? -%>
+  <p class="created_updated">Updated <%= @event.updated_at.to_formatted_s(:long_and_friendly_date_and_time) %></p>
+  <% end -%>
+
+  <% benchmark("Render results for event #{@event.id}", silence: false) do %>
+    <% @event.races_with_results.sort.each do |race| %>
+      <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
+      <%= results_table race %>
+    <% end -%>
+
+  <% if @event.races_with_results.empty? && @event.overall.present? && @event.overall.races_with_results.present? %>
+    <%= render partial: "races", locals: { event: @event.overall } %>
+    <% @event.overall.races_with_results.sort.each do |race| %>
+      <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
+      <%= results_table race %>
+    <% end %>
+  <% end %>
+<%- end -%>

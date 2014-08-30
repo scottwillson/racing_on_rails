@@ -16,8 +16,6 @@ end %>
 
 <%= will_paginate @results %>
 
-<% cache [ @ironman.races.first, RacingAssociation.current.year, params[:page] ] do %>
-  <%= results_table @ironman.races.first, @results %>
-<% end %>
+<%= results_table @ironman.races.first, @results %>
 
 <%= will_paginate @results %>

@@ -1,20 +1,18 @@
-<% cache event.races_with_results do %>
-  <% if event.races_with_results.many? %>
-  <div class="event_info">
-    <table class="event_races">
-      <tbody>
-        <%- event.races_with_results.sort.each_row do |first_race, second_race| -%>
-        <tr>
-          <td class="race">
-            <%= link_to first_race.name, "#race_#{first_race.id}" %>
-          </td>
-          <td class="race">
-            <%= link_to(second_race.name, "#race_#{second_race.id}") if second_race %>
-          </td>
-        </tr>
-        <%- end -%>
-      </tbody>
-    </table>
-  </div>
-  <%- end -%>
-<% end %>
+<% if event.races_with_results.many? %>
+<div class="event_info">
+  <table class="event_races">
+    <tbody>
+      <%- event.races_with_results.sort.each_row do |first_race, second_race| -%>
+      <tr>
+        <td class="race">
+          <%= link_to first_race.name, "#race_#{first_race.id}" %>
+        </td>
+        <td class="race">
+          <%= link_to(second_race.name, "#race_#{second_race.id}") if second_race %>
+        </td>
+      </tr>
+      <%- end -%>
+    </tbody>
+  </table>
+</div>
+<%- end -%>
