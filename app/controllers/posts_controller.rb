@@ -33,7 +33,10 @@ class PostsController < ApplicationController
       format.rss do
         redirect_to mailing_list_posts_path(@mailing_list, format: :atom), status: :moved_permanently
       end
-      format.atom
+
+      format.atom do
+        @posts = @posts.limit(20)
+      end
     end
   end
 
