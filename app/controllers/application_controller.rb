@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
   before_filter :clear_racing_association, :toggle_tabs, :assign_year
 
   def self.expire_cache
+    ActiveSupport::Notifications.instrument "expire_cache.racing_on_rails"
     begin
       FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "bar"))
       FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "cat4_womens_race_series"))
