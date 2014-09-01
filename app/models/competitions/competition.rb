@@ -273,7 +273,9 @@ module Competitions
     end
 
     def expire_cache
-      ApplicationController.expire_cache
+      if ApplicationController.perform_caching
+        ApplicationController.expire_cache
+      end
     end
 
     def to_s
