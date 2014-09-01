@@ -462,10 +462,10 @@ class RaceTest < ActiveSupport::TestCase
     race = Race.find(race)
     race.destroy
     assert !Result.exists?(result.id), "Should destroy result"
-    assert(!Race.exists?(race.id), "Should be destroyed. #{race.errors.full_messages}")
-    assert(!Person.exists?(first_name: "Jonah", last_name: "Braun"), "New person Jonah Braun should have been deleted")
-    assert(Person.exists?(weaver.id), "Existing person Ryan Weaver should not be deleted")
-    assert(Person.exists?(mathew_braun.id), "Existing person with no results Mathew Braun should not be deleted")
+    assert !Race.exists?(race.id), "Should be destroyed. #{race.errors.full_messages}"
+    assert !Person.exists?(first_name: "Jonah", last_name: "Braun"), "New person Jonah Braun should have been deleted"
+    assert  Person.exists?(weaver.id), "Existing person Ryan Weaver should not be deleted"
+    assert  Person.exists?(mathew_braun.id), "Existing person with no results Mathew Braun should not be deleted"
 
     # TODO Manually-created people that only have this result
     # TODO Teams
