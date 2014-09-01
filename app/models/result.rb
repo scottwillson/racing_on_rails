@@ -73,6 +73,7 @@ class Result < ActiveRecord::Base
 
     _person = person
     if _person && _person.new_record?
+      person.updated_by = event
       if _person.name.blank?
         self.person = nil
       else
