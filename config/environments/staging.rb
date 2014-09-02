@@ -14,7 +14,7 @@ RacingOnRails::Application.configure do
   config.assets.js_compressor                               = :uglifier
   config.assets.version                                     = "2.0"
   config.cache_classes                                      = true
-  config.cache_store                                        = :dalli_store
+  config.cache_store                                        = :dalli_store, { pool_size: 5 }
   config.consider_all_requests_local                        = true
   config.eager_load                                         = true
   config.i18n.fallbacks                                     = true

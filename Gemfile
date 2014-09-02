@@ -82,6 +82,7 @@ group :test, :acceptance do
 end
 
 group :staging, :production do
+  gem "connection_pool"
   gem "dalli"
   gem "execjs"
   gem "logstash-logger"
