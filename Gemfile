@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gem "rails", "4.1.5"
 
 gem "actionpack-page_caching"
-gem "activemerchant", "1.44.0"
+gem "activemerchant", "~> 1.44"
 gem "acts_as_list", git: "https://github.com/swanandp/acts_as_list.git", ref: "ac4f602d20b679370ed4bb9702ccc3fa61af1be8"
 gem "acts_as_tree", git: "https://github.com/amerine/acts_as_tree.git"
 gem "Ascii85", require: "ascii85"
@@ -15,7 +15,7 @@ gem "carrierwave"
 gem "chronic", "< 0.10.0"
 gem "ckeditor_rails", require: "ckeditor-rails"
 gem "coffee-rails"
-gem "coffee-script-source", "1.7.1"
+gem "coffee-script-source", "~> 1.7"
 gem "default_value_for"
 gem "erubis"
 gem "in_place_editing"
@@ -64,7 +64,7 @@ group :development, :test do
 end
 
 group :test do
-  gem "minitest", "5.4.0"
+  gem "minitest", "~> 5.4"
 end
 
 group :acceptance do
@@ -84,6 +84,6 @@ end
 group :staging, :production do
   gem "execjs"
   gem "logstash-logger"
-  gem "raygun4ruby", "1.1.3"
+  gem "raygun4ruby", "~> 1.1"
   gem "therubyracer"
 end
