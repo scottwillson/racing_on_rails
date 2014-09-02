@@ -19,19 +19,21 @@
 
 <%= render "pagination", posts: @post, mailing_list: @mailing_list %>
 
-<%= table collection: @posts, columns: 4 do %>
-  <thead>
-    <tr>
-      <th></th>
-      <th class="subject">Subject</th>
-      <th class="from hidden-xs">From</th>
-      <th class="date hidden-xs">Date</th>
-    </tr>
-  </thead>
-  <tbody>
-		<%= render collection: @posts, partial: "post", locals: { current_page: @posts.current_page } %>
-  </tbody>
-<% end -%>
+<% cache @posts, @posts.current_page do %>
+  <%= table collection: @posts, columns: 4 do %>
+    <thead>
+      <tr>
+        <th></th>
+        <th class="subject">Subject</th>
+        <th class="from hidden-xs">From</th>
+        <th class="date hidden-xs">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+  		<%= render collection: @posts, partial: "post", locals: { current_page: @posts.current_page } %>
+    </tbody>
+  <% end -%>
+<% end %>
 
 <%= render "pagination", posts: @post, mailing_list: @mailing_list %>
 
