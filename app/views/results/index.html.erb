@@ -11,11 +11,13 @@
   </div>
 <% end %>
 
-<%= table do %>
-  <%- @events.sort_by(&:date).reverse.each do |event| -%>
-    <tr>
-      <td class="date"><%= event.short_date %></td>
-      <td><%= link_to event.name, event_results_path(event) %></td>
-    </tr>
+<% cache [ @year, @today, @discipline, RacingAssociation.current.updated_at, mobile_request? ] do %>
+  <%= table do %>
+    <%- @events.sort_by(&:date).reverse.each do |event| -%>
+      <tr>
+        <td class="date"><%= event.short_date %></td>
+        <td><%= link_to event.name, event_results_path(event) %></td>
+      </tr>
+    <% end -%>
   <% end -%>
-<% end -%>
+<% end %>
