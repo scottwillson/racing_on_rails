@@ -1,31 +1,33 @@
-<div class="post">
-  <div class="row">
-    <div class="col-sm-6">
-      <h4><%= reply.from_name %></h4>
+<% cache reply do %>
+  <div class="post">
+    <div class="row">
+      <div class="col-sm-6">
+        <h4><%= reply.from_name %></h4>
+      </div>
+      <div class="col-sm-4 date">
+        <%= reply.date.to_s :long_and_friendly_date_and_time %>
+      </div>
+      <div class="col-sm-2 reply">
+        <div class="btn-group">
+          <button type="button" class="btn btn-default"><%= link_to "Reply", new_mailing_list_post_path(reply.mailing_list_id) %></button>
+          <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li>
+              <%= link_to "Reply privately to sender", new_mailing_list_post_path(reply.mailing_list_id, reply_to_id: reply) %>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="col-sm-4 date">
-      <%= reply.date.to_s :long_and_friendly_date_and_time %>
-    </div>
-    <div class="col-sm-2 reply">
-      <div class="btn-group">
-        <button type="button" class="btn btn-default"><%= link_to "Reply", new_mailing_list_post_path(reply.mailing_list_id) %></button>
-        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-          <li>
-            <%= link_to "Reply privately to sender", new_mailing_list_post_path(reply.mailing_list_id, reply_to_id: reply) %>
-          </li>
-        </ul>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <%= sanitize simple_format(reply.body) %>
       </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-sm-12">
-      <%= sanitize simple_format(reply.body) %>
-    </div>
-  </div>
-</div>
-
-<hr />
+  <hr />
+<% end %>
