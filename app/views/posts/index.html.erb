@@ -34,6 +34,7 @@
 <% end -%>
 
 <%= render "pagination", posts: @post, mailing_list: @mailing_list %>
+<%= hidden_field_tag :current_page, @posts.current_page %>
 
 <%= render "mailing_lists/links", mailing_list: @mailing_list %>
 
