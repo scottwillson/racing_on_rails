@@ -9,10 +9,11 @@ class ApplicationController < ActionController::Base
   include Authentication
   include Authorization
   include Caching
+  include Dates
   include Mobile
   include SentientController
 
-  before_filter :clear_racing_association, :toggle_tabs, :assign_year
+  before_filter :clear_racing_association, :toggle_tabs
 
 
   protected
@@ -72,16 +73,6 @@ class ApplicationController < ActionController::Base
         end
       }
       type.all { render nothing: true, status: "500 Error" }
-    end
-  end
-
-  def assign_year
-    if params[:year] && params[:year][/^\d\d\d\d$/]
-      @year = params[:year].to_i
-    end
-
-    if @year.nil? || @year < 1900 || @year > 2100
-      @year = RacingAssociation.current.effective_year
     end
   end
 
