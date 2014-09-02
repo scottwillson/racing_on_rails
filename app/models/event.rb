@@ -151,6 +151,10 @@ class Event < ActiveRecord::Base
     order("updated_at desc")
   }
 
+  scope :include_results, lambda {
+    includes(races: [ :category, { results: :team } ])
+  }
+
   attr_reader :new_promoter_name
   attr_reader :new_team_name
 
