@@ -3,8 +3,9 @@ module Caching
 
   included do
     def self.expire_cache
-      if perform_caching
-        ActiveSupport::Notifications.instrument "expire_cache.racing_on_rails" do
+      ActiveSupport::Notifications.instrument "expire_cache.racing_on_rails", perform_caching: perform_caching do
+        RacingAssociation.current.touch
+        if perform_caching
           begin
             FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "bar"))
             FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "cat4_womens_race_series"))
