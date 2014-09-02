@@ -1,0 +1,13 @@
+#! /usr/bin/env ruby
+
+[ "aba", "atra", "mbra", "nabra", "wsba" ].each do |association|
+  puts association
+  puts `echo "drop database if exists #{association}_development; \
+  create database #{association}_development; \
+  grant all privileges on #{association}_development.* to 'ror_development'@'localhost'; \
+  drop database if exists #{association}_test; \
+  create database #{association}_test; \
+  grant all privileges on #{association}_test.* to 'ror_test'@'localhost'; \
+  use #{association}_development; \
+  source db/structure.sql;" | mysql -u root mysql`
+end
