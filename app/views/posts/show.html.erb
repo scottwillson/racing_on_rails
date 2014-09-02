@@ -2,7 +2,7 @@
 <h2><%= @post.subject %></h2>
 
 <%= render "show_pagination", post: @post %>
-<% cache @post, params[:current_page] do %>
+<% cache [ @post, params[:current_page] ] do %>
   <%= render collection: @post.replies.sort_by(&:position).reverse.to_a << @post, partial: "posts/reply", locals: { current_page: params[:current_page] } %>
 <% end %>
 <%= render "show_pagination", post: @post %>
