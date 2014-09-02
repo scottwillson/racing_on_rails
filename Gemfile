@@ -53,6 +53,7 @@ group :development do
   gem "capistrano-rails"
   gem "capistrano3-puma"
   gem "capistrano-rvm"
+  gem 'celluloid-benchmark', "~> 0.1.9"
   gem "guard-livereload", require: false
   gem "rubocop", require: false
   gem "rack-livereload"
