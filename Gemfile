@@ -43,7 +43,7 @@ gem "tabular", ">=0.2.4"
 gem "truncate_html"
 gem "uglifier"
 gem "vestal_versions", git: "https://github.com/scottwillson/vestal_versions.git", branch: "rails-4-1"
-gem "will_paginate", git: "https://github.com/mislav/will_paginate"
+gem "will_paginate", "~> 3.0"
 gem "will_paginate-bootstrap"
 gem "yui-compressor"
 

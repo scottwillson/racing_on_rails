@@ -6,12 +6,6 @@ GIT
       activerecord (>= 3.0.0)
 
 GIT
-  remote: https://github.com/mislav/will_paginate
-  revision: 623e9c5390998a2aca283bca28009f7d479d5f0f
-  specs:
-    will_paginate (3.0.4)
-
-GIT
   remote: https://github.com/sandal/prawn.git
   revision: 857f13e919d1bd7120de1ea9ba0429620329865b
   specs:
@@ -399,6 +393,7 @@ GEM
       json (>= 1.8.0)
     websocket (1.0.7)
     websocket-driver (0.3.4)
+    will_paginate (3.0.7)
     will_paginate-bootstrap (1.0.1)
       will_paginate (>= 3.0.3)
     xpath (2.0.0)
@@ -476,6 +471,6 @@ DEPENDENCIES
   truncate_html
   uglifier
   vestal_versions!
-  will_paginate!
+  will_paginate (~> 3.0)
   will_paginate-bootstrap
   yui-compressor
