@@ -1,6 +1,8 @@
 <% @page_title = "Results: #{@event.date.year}: #{@event.full_name}" %>
 
 <% cache [ @event, RacingAssociation.current.updated_at, mobile_request? ] do %>
+  <% @event = Event.include_results.find(@event) %>
+
   <h2><%= public_link_to_flyer @event %></h2>
 
   <div class="row event_info">

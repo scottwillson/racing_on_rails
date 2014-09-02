@@ -37,12 +37,7 @@ class ResultsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html {
-        benchmark "Load results", level: :debug do
-          @event = Event.includes(races: [ :category, { results: :team } ]).find(params[:event_id])
-        end
-        assign_start_list
-      }
+      format.html
       format.json { render json: results_for_api(@event.id) }
       format.xml { render xml: results_for_api(@event.id) }
     end
