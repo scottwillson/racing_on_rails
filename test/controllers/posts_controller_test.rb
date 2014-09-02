@@ -86,7 +86,6 @@ class PostsControllerTest < ActionController::TestCase
   test "index" do
     mailing_list = FactoryGirl.create(:mailing_list)
     get :index, mailing_list_id: mailing_list.id
-    assert_select "input[name=current_page]"
     assert_response :success
   end
 
