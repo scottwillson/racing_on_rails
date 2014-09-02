@@ -27,7 +27,7 @@ class PostsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @posts = @posts.paginate(page: page)
+        @posts = @posts.page(page)
       end
 
       format.rss do
