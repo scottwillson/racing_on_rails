@@ -82,6 +82,7 @@ group :test, :acceptance do
 end
 
 group :staging, :production do
+  gem "dalli"
   gem "execjs"
   gem "logstash-logger"
   gem "raygun4ruby", "~> 1.1"
