@@ -51,10 +51,6 @@ module Competitions
       end
     end
 
-    def multiple_days?
-      source_events.count > 1
-    end
-
     def all_year?
       true
     end
