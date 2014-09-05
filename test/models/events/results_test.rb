@@ -164,9 +164,9 @@ module Events
       FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: child_event))
       series = series_event.parent
 
-      assert(series.has_results_including_children?(true), "Series has_results_including_children?")
-      assert(series_event.has_results_including_children?, "Series Event has_results_including_children?")
-      assert(child_event.has_results_including_children?, "Series Event child has_results_including_children?")
+      assert(series.results_present_including_children?(true), "Series results_present_including_children?")
+      assert(series_event.results_present_including_children?, "Series Event results_present_including_children?")
+      assert(child_event.results_present_including_children?, "Series Event child results_present_including_children?")
     end
 
     test "results_updated_at" do

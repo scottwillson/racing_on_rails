@@ -7,7 +7,7 @@
       <th class="category">Category</th>
       <th colspan="2" class="numeric">Field Size</th>
       <th class="actions">
-        <% if @event.has_results_including_children? %>
+        <% if @event.results_present_including_children? %>
         <%= link_to event_results_path(@event), class: "icon", title: 'View public results web page' do %>
             <span class="glyphicon glyphicon-list"></span>
           <% end %>

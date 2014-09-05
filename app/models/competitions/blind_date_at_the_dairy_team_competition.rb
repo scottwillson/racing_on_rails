@@ -15,7 +15,7 @@ module Competitions
         transaction do
           series = WeeklySeries.where(name: parent_event_name).year(year).first
 
-          if series && series.has_results_including_children?(true)
+          if series && series.results_present_including_children?(true)
             team_competition = series.child_competitions.detect { |c| c.is_a? CrossCrusadeTeamCompetition }
             unless team_competition
               team_competition = self.new(parent_id: series.id)
