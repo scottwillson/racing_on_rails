@@ -3,17 +3,20 @@
 class ResultsController < ApplicationController
   caches_page :person, :person_event, :team
 
+  helper_method :competitions
+  helper_method :events
+  helper_method :weekly_series
+
   # HTML: Formatted links to Events with Results
   # == Params
   # * year (optional)
   def index
     @discipline = Discipline[params["discipline"]]
     @discipline_names = Discipline.names
-    @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
 
     respond_to do |format|
       format.html
-      format.xml
+      format.xml { all_events }
     end
   end
 
@@ -37,7 +40,19 @@ class ResultsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html
+      format.html do
+        ActiveSupport::Notifications.instrument "assign_data.event.results.racing_on_rails", event_id: @event.id, event_name: @event.name do
+          @source_events = Event.none
+          if @event.respond_to?(:source_events)
+            @source_events = @event.source_events.include_results
+          end
+
+          @races = Race.where(event_id: @event.id).include_results
+          @single_day_event_children = SingleDayEvent.where(parent_id: @event.id).include_child_results
+          @children = Event.where(parent_id: @event.id).not_single_day_event.include_child_results
+          assign_start_list
+        end
+      end
       format.json { render json: results_for_api(@event.id) }
       format.xml { render xml: results_for_api(@event.id) }
     end
@@ -111,8 +126,20 @@ class ResultsController < ApplicationController
 
   private
 
-  def assign_events_with_results
-    @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
+  def all_events
+    @all_events ||= Event.find_all_with_results(@year, @discipline)
+  end
+
+  def competitions
+    @competitions ||= all_events.select { |e| e.is_a?(Competitions::Competition) }
+  end
+
+  def events
+    @events ||= all_events.reject { |e| e.is_a?(Competitions::Competition) || e.is_a?(WeeklySeries) }
+  end
+
+  def weekly_series
+    @weekly_series ||= all_events.select { |e| e.is_a?(WeeklySeries) }
   end
 
   def assign_person_results(person, year)

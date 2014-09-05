@@ -22,6 +22,22 @@ module Competitions
 
       @event = competition_class.year(@year).first || competition_class.new(date: Time.zone.local(@year))
 
+      @races = Race.none
+
+      if @event.new_record?
+        @children = Event.none
+        @single_day_event_children = Event.none
+        @source_events = Event.none
+      else
+        if @event.respond_to?(:source_events)
+          @source_events = @event.source_events.include_results
+        end
+
+        @races = Race.where(event_id: @event.id).include_results
+        @single_day_event_children = SingleDayEvent.where(parent_id: @event.id).include_child_results
+        @children = Event.where(parent_id: @event.id).not_single_day_event.include_child_results
+      end
+
       render "results/event"
     end
   end

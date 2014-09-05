@@ -193,12 +193,8 @@ class Event < ActiveRecord::Base
       events = events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
     end
 
-    events = events.to_a.map(&:root).uniq
-
-    weekly_series, events = events.partition { |event| event.is_a?(WeeklySeries) }
-    competitions, events = events.partition { |event| event.is_a?(Competitions::Competition) }
-
-    [ weekly_series, events, competitions ]
+    ids = events.map(&:root).map(&:id).uniq
+    Event.where(id: ids).includes(children: { races: [ :category, :results ] })
   end
 
   def self.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
