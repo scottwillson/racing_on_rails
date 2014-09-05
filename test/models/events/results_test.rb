@@ -138,12 +138,12 @@ module Events
       category = FactoryGirl.create(:category)
       event.children.create!.races.create!(category: category).results.create!
       assert_equal(1, event.children_with_results.size, "cached: events_with_results: 1 children with results")
-      assert_equal(1, event.children_with_results(true).size, "refresh cache: events_with_results: 1 children with results")
-      assert_equal(1, event.children_and_child_competitions_with_results(true).size, "refresh cache: children_and_child_competitions_with_results: 1 children with results")
+        assert_equal(1, event.children_with_results.size, "refresh cache: events_with_results: 1 children with results")
+      assert_equal(1, event.children_and_child_competitions_with_results.size, "refresh cache: children_and_child_competitions_with_results: 1 children with results")
 
       event.children.create!.races.create!(category: category).results.create!
-      assert_equal(2, event.children_with_results(true).size, "refresh cache: events_with_results: 2 children with results")
-      assert_equal(2, event.children_and_child_competitions_with_results(true).size, "refresh cache: children_and_child_competitions_with_results: 2 children with results")
+      assert_equal(2, event.children_with_results.size, "refresh cache: events_with_results: 2 children with results")
+      assert_equal(2, event.children_and_child_competitions_with_results.size, "refresh cache: children_and_child_competitions_with_results: 2 children with results")
     end
 
     test "children with results only child events" do
@@ -152,7 +152,7 @@ module Events
       FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: child_event))
       series = series_event.parent
 
-      assert_equal(1, series.children_with_results(true).size, "Should have child with results")
+      assert_equal(1, series.children_with_results.size, "Should have child with results")
       assert_equal(series_event, series.children_with_results.first, "Should have child with results")
       assert_equal(1, series_event.children_with_results.size, "Should have child with results")
       assert_equal(child_event, series_event.children_with_results.first, "Should have child with results")
