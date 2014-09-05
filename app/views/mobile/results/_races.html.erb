@@ -1,8 +1,8 @@
-<% if @event.races_with_results.many? %>
+<% if races.select(&:results_present?).many? %>
 <div class="event_info">
   <table class="event_races">
     <tbody>
-      <%- @event.races_with_results.sort.each do |race| -%>
+      <%- races.select(&:results_present?).sort.each_row do |first_race, second_race| -%>
       <tr>
         <td class="race">
           <%= link_to race.name, "#race_#{race.id}" %>
