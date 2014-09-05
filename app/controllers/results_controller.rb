@@ -16,7 +16,10 @@ class ResultsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.xml { all_events }
+      format.xml do
+        fresh_when RacingAssociation.current, public: true
+        all_events
+      end
     end
   end
 
