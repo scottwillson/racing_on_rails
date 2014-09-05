@@ -367,14 +367,9 @@ class Event < ActiveRecord::Base
     children.select(&:results_present_including_children?)
   end
 
-  # Returns only the children and child child_competitions with +results+
-  def children_and_child_competitions_with_results
-    races.select(&:results_present?)
-  end
-
   # Returns only the Races with +results+
   def races_with_results
-    races.select { |race| race.results.present? }.sort
+    races.select(&:results_present?)
   end
 
   def destroy_races
