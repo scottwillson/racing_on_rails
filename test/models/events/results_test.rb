@@ -103,7 +103,7 @@ module Events
       assert(!event.results_present?, "Event with race, but no results should not have results")
 
       race.results.create!(place: 200, person: FactoryGirl.create(:person))
-      assert(event.results_present?(true), "Event with one result should have results")
+      assert(event.results_present?, "Event with one result should have results")
     end
 
     test "races with results" do
@@ -164,7 +164,7 @@ module Events
       FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: child_event))
       series = series_event.parent
 
-      assert(series.results_present_including_children?(true), "Series results_present_including_children?")
+      assert(series.results_present_including_children?, "Series results_present_including_children?")
       assert(series_event.results_present_including_children?, "Series Event results_present_including_children?")
       assert(child_event.results_present_including_children?, "Series Event child results_present_including_children?")
     end

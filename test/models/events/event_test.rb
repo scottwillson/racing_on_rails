@@ -332,7 +332,7 @@ class EventTest < ActiveSupport::TestCase
     assert_equal(overall, competition_event_membership.competition, "competition_event_membership.competition")
 
     assert_equal_events([overall], child_event.competitions(true), "competitions should only include competitions")
-    assert_equal_events([], child_event.children_with_results(true), "children_with_results")
+    assert_equal_events([], child_event.children_with_results, "children_with_results")
   end
 
   test "single day event categories" do
