@@ -78,7 +78,7 @@ module Competitions
     end
 
     def after_create_competition_results_for(race)
-      source_events.select(&:has_results?).each do |source_event|
+      source_events.select(&:results_present?).each do |source_event|
         race.results.each do |competition_result|
           scores_for_event_count = Competitions::Score.
             includes(source_result: { race: :event }).

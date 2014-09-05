@@ -23,7 +23,7 @@
     <table class="source_events">
       <% @event.source_events.sort_by(&:date).each do |source_event| -%>
       <tr>
-        <% if source_event.has_results? %>
+        <% if source_event.results_present? %>
         <td class="date"><%= link_to source_event.date.strftime('%A, %B %-d'), event_results_path(source_event) %></td>
         <td class="event"><%= link_to source_event.name, event_results_path(source_event) %></td>
         <% else %>

@@ -65,7 +65,7 @@
       <tr>
           <td class="date"><%= membership.event.date.to_s(:short_with_week_day) %></td>
           <td>
-            <% if membership.event.has_results? %>
+            <% if membership.event.results_present? %>
             <%= link_to membership.event.full_name, event_path(membership.event) %>
             <% else %>
             <%= public_link_to_flyer membership.event %>

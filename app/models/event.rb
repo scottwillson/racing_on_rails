@@ -352,14 +352,14 @@ class Event < ActiveRecord::Base
 
   # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
   # The results page should show the results in that case.
-  def has_results?(reload = false)
+  def results_present?(reload = false)
     races(reload).any? { |r| !r.results(reload).empty? }
   end
 
   # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
   # The results page should show the results in that case.
   def has_results_including_children?(reload = false)
-    races(reload).any? { |r| !r.results(reload).empty? } || children(reload).any? { |event| event.has_results?(reload) || event.has_results_including_children? }
+    races(reload).any? { |r| !r.results(reload).empty? } || children(reload).any? { |event| event.results_present?(reload) || event.has_results_including_children? }
   end
 
   # Returns only the children with +results+

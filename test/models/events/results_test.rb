@@ -96,14 +96,14 @@ module Events
     end
 
     test "has results" do
-      assert(!Event.new.has_results?, "New Event should not have results")
+      assert(!Event.new.results_present?, "New Event should not have results")
 
       event = SingleDayEvent.create!
       race = event.races.create!(category: FactoryGirl.create(:category))
-      assert(!event.has_results?, "Event with race, but no results should not have results")
+      assert(!event.results_present?, "Event with race, but no results should not have results")
 
       race.results.create!(place: 200, person: FactoryGirl.create(:person))
-      assert(event.has_results?(true), "Event with one result should have results")
+      assert(event.results_present?(true), "Event with one result should have results")
     end
 
     test "races with results" do
