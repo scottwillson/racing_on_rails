@@ -1,0 +1,18 @@
+<% if single_day_event_children.select(&:results_present?).present? -%>
+<div class="row event_info">
+  <table class="child_single_day_events">
+    <% single_day_event_children.select(&:results_present?).each do |child| -%>
+    <tr>
+      <td class="date"><%= link_to child.date.strftime('%A, %B %-d'), event_results_path(child) %></td>
+      <td class="event"><%= link_to child.name, event_results_path(child), { class: "obvious" } %></td>
+    </tr>
+      <% child.children_with_results.each do |child_child| -%>
+    <tr>
+      <td></td>
+      <td class="child"><%= link_to child_child.name, event_results_path(child_child) %></td>
+    </tr>
+      <% end -%>
+    <% end -%>
+  </table>
+</div>
+<% end -%>

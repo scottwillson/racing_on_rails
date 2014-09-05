@@ -1,0 +1,7 @@
+<%- if children.select(&:results_present?).present? -%>
+<div class="row event_info child_events">
+  <%- children.select(&:results_present?).each do |child| -%>
+  <%= link_to child.name, event_results_path(child), { class: "obvious" } %><br/>
+  <%- end -%>
+</div>
+<%- end -%>
