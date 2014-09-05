@@ -6,9 +6,7 @@ module Events
 
     test "find all with results" do
       event = FactoryGirl.create(:result).event
-      weekly_series, events = Event.find_all_with_results
-      assert_equal([], weekly_series, "weekly_series")
-      assert_equal([ event ], events, "events")
+      assert_equal([ event ], Event.find_all_with_results, "events")
     end
 
     test "find all with results with year" do
@@ -20,9 +18,7 @@ module Events
       FactoryGirl.create(:event, date: Date.new(2003))
       FactoryGirl.create(:race)
 
-      weekly_series, events = Event.find_all_with_results(2003)
-      assert_equal([ event_with_results ], events, "events")
-      assert_equal([], weekly_series, "weekly_series")
+      assert_equal([ event_with_results ], Event.find_all_with_results(2003), "events")
 
       event_with_results = FactoryGirl.create(:event, date: Date.new(2004))
       race = FactoryGirl.create(:race, event: event_with_results)
@@ -33,13 +29,10 @@ module Events
       race = FactoryGirl.create(:race, event: series_event)
       FactoryGirl.create(:result, race: race)
 
-      weekly_series, events = Event.find_all_with_results(2004)
-      assert_equal_events([ event_with_results ], events, "events")
-      assert_equal([ weekly_series_with_results], weekly_series, "weekly_series")
+      events = Event.find_all_with_results(2004)
+      assert_equal_events([ event_with_results, weekly_series_with_results].sort, events.sort, "events")
 
-      weekly_series, events = Event.find_all_with_results(2005)
-      assert_equal([], events, "events")
-      assert_equal([], weekly_series, "weekly_series")
+      assert_equal([], Event.find_all_with_results(2005), "events")
     end
 
     test "find all with results with discipline" do
@@ -52,13 +45,9 @@ module Events
       race = FactoryGirl.create(:race, event: event_with_results)
       FactoryGirl.create(:result, race: race)
 
-      weekly_series, events = Event.find_all_with_results(2003, Discipline["Road"])
-      assert_equal([ event_with_results ], events, "events")
-      assert_equal([], weekly_series, "weekly_series")
+      assert_equal([ event_with_results ], Event.find_all_with_results(2003, Discipline["Road"]), "events")
 
-      weekly_series, events = Event.find_all_with_results(2003, Discipline["Criterium"])
-      assert_equal([], events, "events")
-      assert_equal([], weekly_series, "weekly_series")
+      assert_equal([], Event.find_all_with_results(2003, Discipline["Criterium"]), "events")
 
       circuit_race = FactoryGirl.create(:event, discipline: "Circuit")
       category = FactoryGirl.create(:category)
@@ -71,15 +60,10 @@ module Events
       track_series_event = track_series.children.create!
       track_series_event.races.create!(category: category).results.create!
 
-      weekly_series, events = Event.find_all_with_results(Time.zone.today.year, Discipline["Road"])
-      expected = []
-      expected << circuit_race
-      assert_equal(expected.sort, events.sort, "events")
-      assert_equal([], weekly_series, "weekly_series")
+      assert_equal([circuit_race], Event.find_all_with_results(Time.zone.today.year, Discipline["Road"]), "events")
 
-      weekly_series, events = Event.find_all_with_results(Time.zone.today.year, Discipline["Track"])
-      assert_equal([track_event], events, "events")
-      assert_equal([track_series], weekly_series, "weekly_series")
+      events = Event.find_all_with_results(Time.zone.today.year, Discipline["Track"])
+      assert_equal([track_event, track_series].sort, events.sort, "events")
     end
 
     test "find all with only child event results" do
@@ -91,8 +75,7 @@ module Events
       assert(child_event.is_a?(Event), "Child event should be an Event")
       assert(!child_event.is_a?(SingleDayEvent), "Child event should not be an SingleDayEvent")
 
-      weekly_series, events = Event.find_all_with_results
-      assert_equal([series], weekly_series, "weekly_series")
+      assert_equal([series], Event.find_all_with_results, "weekly_series")
     end
 
     test "has results" do
@@ -129,28 +112,28 @@ module Events
     test "children with results" do
       event = SingleDayEvent.create!
       assert_equal(0, event.children_with_results.size, "events_with_results: no child")
-      assert_equal(0, event.children_and_child_competitions_with_results.size, "children_and_child_competitions_with_results: no child")
+      assert_equal(0, event.children_with_results.size, "children_with_results: no child")
 
       event.children.create!
       assert_equal(0, event.children_with_results.size, "events_with_results: child with no results")
-      assert_equal(0, event.children_and_child_competitions_with_results.size, "children_and_child_competitions_with_results: child with no results")
+      assert_equal(0, event.children_with_results.size, "children_with_results: child with no results")
 
       category = FactoryGirl.create(:category)
       event.children.create!.races.create!(category: category).results.create!
       assert_equal(1, event.children_with_results.size, "cached: events_with_results: 1 children with results")
-        assert_equal(1, event.children_with_results.size, "refresh cache: events_with_results: 1 children with results")
-      assert_equal(1, event.children_and_child_competitions_with_results.size, "refresh cache: children_and_child_competitions_with_results: 1 children with results")
+      assert_equal(1, event.children_with_results.size, "refresh cache: events_with_results: 1 children with results")
+      assert_equal(1, event.children_with_results.size, "refresh cache: children_with_results: 1 children with results")
 
       event.children.create!.races.create!(category: category).results.create!
       assert_equal(2, event.children_with_results.size, "refresh cache: events_with_results: 2 children with results")
-      assert_equal(2, event.children_and_child_competitions_with_results.size, "refresh cache: children_and_child_competitions_with_results: 2 children with results")
+      assert_equal(2, event.children_with_results.size, "refresh cache: children_with_results: 2 children with results")
     end
 
     test "children with results only child events" do
       series_event = FactoryGirl.create(:series_event)
       child_event = series_event.children.create!
       FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: child_event))
-      series = series_event.parent
+      series = Event.find(series_event.parent)
 
       assert_equal(1, series.children_with_results.size, "Should have child with results")
       assert_equal(series_event, series.children_with_results.first, "Should have child with results")
@@ -162,7 +145,7 @@ module Events
       series_event = FactoryGirl.create(:weekly_series_event)
       child_event = series_event.children.create!
       FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: child_event))
-      series = series_event.parent
+      series = Event.find(series_event.parent)
 
       assert(series.results_present_including_children?, "Series results_present_including_children?")
       assert(series_event.results_present_including_children?, "Series Event results_present_including_children?")
