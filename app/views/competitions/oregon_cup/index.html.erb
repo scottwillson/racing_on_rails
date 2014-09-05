@@ -26,7 +26,7 @@
     <%# TODO remove team %>
     <% unless @oregon_cup.new_record? %>
     <% @oregon_cup.races.each do |race| %>
-    <%= results_table race %>
+    <%= results_table @oregon_cup, race %>
     <% end %>
     <% end %>
   </div>
