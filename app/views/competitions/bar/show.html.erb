@@ -11,4 +11,4 @@
   <%= render "years", overall_bar: @overall_bar, race: @race, year: @year %>
 <% end %>
 
-<%= results_table @race %>
+<%= results_table @race.event, @race %>

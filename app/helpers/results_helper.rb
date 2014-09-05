@@ -11,14 +11,14 @@ module ResultsHelper
   }.freeze
 
   # results for pagination
-  def results_table(race, results = nil)
+  def results_table(event, race, results = nil)
     return "" unless race
 
     table = Tabular::Table.new
     table.metadata[:mobile_request] = mobile_request?
 
     if mobile_request?
-      if race.event.respond_to?(:team?) && race.event.team?
+      if event.respond_to?(:team?) && event.team?
         table.row_mapper = Results::Mapper.new(%w{ place team_name points})
       else
         table.row_mapper = Results::Mapper.new(%w{ place name points time})

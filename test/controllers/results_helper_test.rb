@@ -8,7 +8,7 @@ class ResultsHelperTest < ActionView::TestCase
 
   test "results table" do
     race = Race.new(results: [ Result.new(place: "1")])
-    table = Nokogiri::HTML(results_table(race))
+    table = Nokogiri::HTML(results_table(Event.new, race))
     assert table.css("table.results").present?
   end
 
@@ -18,7 +18,7 @@ class ResultsHelperTest < ActionView::TestCase
       Result.new(place: "1"),
       Result.new(place: "1")
     ])
-    table = Nokogiri::HTML(results_table(race))
+    table = Nokogiri::HTML(results_table(Event.new, race))
     assert table.css("table.results").present?
     assert table.css("td.place").present?, "Should have place column in #{table}"
   end
@@ -49,7 +49,7 @@ class ResultsHelperTest < ActionView::TestCase
 
     race = Race.new(results: [ Result.new(place: "1", name: "Molly Cameron", team_name: "Veloshop", time: 1000, laps: 4, time: 120)])
 
-    table = Nokogiri::HTML(results_table(race))
+    table = Nokogiri::HTML(results_table(Event.new, race))
     assert table.css("table th.place").present?
     assert table.css("table th.name").present?
     assert table.css("table th.team_name").empty?, "only show mobile columns"

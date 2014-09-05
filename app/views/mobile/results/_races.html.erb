@@ -2,7 +2,7 @@
 <div class="event_info">
   <table class="event_races">
     <tbody>
-      <%- races.select(&:results_present?).sort.each_row do |first_race, second_race| -%>
+      <%- races.select(&:results_present?).sort.each do |race| -%>
       <tr>
         <td class="race">
           <%= link_to race.name, "#race_#{race.id}" %>
