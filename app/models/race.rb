@@ -42,6 +42,10 @@ class Race < ActiveRecord::Base
     )
   }
 
+  scope :include_results, lambda {
+    includes(:category, { results: :team })
+  }
+
   default_value_for(:result_columns) { DEFAULT_RESULT_COLUMNS.dup }
   default_value_for :custom_columns, []
 
