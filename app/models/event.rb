@@ -146,7 +146,15 @@ class Event < ActiveRecord::Base
   }
 
   scope :include_results, lambda {
-    includes(races: [ :category, { results: :team } ])
+    includes races: [ :category, { results: :team } ]
+  }
+
+  scope :include_child_results, lambda {
+    includes children: { races: [ :category, { results: :team } ] }
+  }
+
+  scope :not_single_day_event, lambda {
+    where "type is null or type != 'SingleDayEvent'"
   }
 
   attr_reader :new_promoter_name
