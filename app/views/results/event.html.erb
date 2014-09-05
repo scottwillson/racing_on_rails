@@ -36,15 +36,15 @@
   </div>
   <% end %>
 
-  <% unless @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.empty? -%>
+  <% unless @event.children_with_results.select { |child| child.is_a?(SingleDayEvent) }.empty? -%>
   <div class="row event_info">
     <table class="child_single_day_events">
-      <% @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.each do |child| -%>
+      <% @event.children_with_results.select { |child| child.is_a?(SingleDayEvent) }.each do |child| -%>
       <tr>
         <td class="date"><%= link_to child.date.strftime('%A, %B %-d'), event_results_path(child) %></td>
         <td class="event"><%= link_to child.name, event_results_path(child), { class: "obvious" } %></td>
       </tr>
-      <% child.children_and_child_competitions_with_results.each do |child_child| -%>
+      <% child.children_with_results.each do |child_child| -%>
         <tr>
           <td></td>
           <td class="child"><%= link_to child_child.name, event_results_path(child_child) %></td>
@@ -57,7 +57,7 @@
 
     <%= render partial: "results/races", locals: { event: @event } %>
 
-    <%- if @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.present? -%>
+    <%- if @event.children_with_results.select { |child| !child.is_a?(SingleDayEvent) }.present? -%>
   <div class="row event_info child_events">
     <%- @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.each do |child| -%>
     <%= link_to child.name, event_results_path(child), { class: "obvious" } %><br/>

@@ -631,27 +631,27 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal(WeeklySeries, MultiDayEvent.guess_type([ pir, pir_2 ]), 'WeeklySeries')
   end
 
-  def children_with_results
+  test "children_with_results" do
     event = MultiDayEvent.create!
     assert_equal(0, event.children_with_results.size, "events_with_results: no child")
 
     event.children.create!
-    assert_equal(0, event.children_with_results.size, "events_with_results: child with no results")
-    assert_equal(0, event.children_and_child_competitions_with_results.size, "children_and_child_competitions_with_results: child with no results")
+    assert_equal(0, event.children_with_results.size, "children_with_results: child with no results")
 
+    cat_4_women = FactoryGirl.create(:category)
     event.children.create!.races.create!(category: cat_4_women).results.create!
     assert_equal(1, event.children_with_results.size, "cached: events_with_results: 1 children with results")
-    assert_equal(1, event.children_with_results(true).size, "refresh cache: events_with_results: 1 children with results")
-    assert_equal(1, event.children_and_child_competitions_with_results(true).size, "refresh cache: children_and_child_competitions_with_results: 1 children with results")
+    event = Event.find(event)
+    assert_equal(1, event.children_with_results.size, "refresh cache: children_with_results: 1 children with results")
 
     event.children.create!.races.create!(category: cat_4_women).results.create!
-    assert_equal(2, event.children_with_results(true).size, "refresh cache: events_with_results: 2 children with results")
-    assert_equal(2, event.children_and_child_competitions_with_results(true).size, "refresh cache: children_and_child_competitions_with_results: 2 children with results")
+    event = Event.find(event)
+    assert_equal(2, event.children_with_results.size, "refresh cache: children_with_results: 2 children with results")
 
     overall = event.create_overall
     overall.races.create!(category: cat_4_women).results.create!
-    assert_equal(2, event.children_with_results(true).size, "refresh cache: events_with_results: 2 children with results + overall")
-    assert_equal(3, event.children_and_child_competitions_with_results(true).size, "refresh cache: children_and_child_competitions_with_results: 2 children with results + overall")
+    event = Event.find(event)
+    assert_equal(2, event.children_with_results.size, "refresh cache: children_with_results: 2 children with results + overall")
   end
 
   test "completed" do
@@ -661,14 +661,18 @@ class MultiDayEventTest < ActiveSupport::TestCase
     parent_event.children.create!
     parent_event.children.create!
     parent_event.children.create!
-    assert(!parent_event.completed?(true), "Event with all children with no results should not be completed")
+
+    parent_event = Event.find(parent_event)
+    assert(!parent_event.completed?, "Event with all children with no results should not be completed")
 
     cat_4_women = FactoryGirl.create(:category)
     parent_event.children.first.races.create!(category: cat_4_women).results.create!
-    assert(!parent_event.completed?(true), "Event with only one child with results should not be completed")
+    parent_event = Event.find(parent_event)
+    assert(!parent_event.completed?, "Event with only one child with results should not be completed")
 
     parent_event.children.each { |event| event.races.create!(category: cat_4_women).results.create! }
-    assert(parent_event.completed?(true), "Event with all children with results should be completed")
+    parent_event = Event.find(parent_event)
+    assert(parent_event.completed?, "Event with all children with results should be completed")
   end
 
   test "child event dates" do

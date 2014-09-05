@@ -62,12 +62,6 @@ class Event < ActiveRecord::Base
            after_add: :children_changed,
            after_remove: :children_changed
 
-  has_many :children_and_child_competitions,
-           -> { order :date },
-           class_name: "Event",
-           foreign_key: "parent_id",
-           dependent: :destroy
-
   has_one :overall, foreign_key: "parent_id", dependent: :destroy, class_name: "Competitions::Overall"
   has_one :combined_results, class_name: "CombinedTimeTrialResults", foreign_key: "parent_id", dependent: :destroy
   has_many :competitions, through: :competition_event_memberships, source: :competition, class_name: "Competitions::Competition"
