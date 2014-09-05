@@ -247,7 +247,7 @@ module Admin
       end
 
       @duplicates.each do |duplicate|
-        ActiveSupport::Notifications.instrument "duplicate.people.admin.racing_on_rails", person_name: duplicate.person.name, person_id: duplicate.person.id, people_ids: duplicate.people.map(&:ids)
+        ActiveSupport::Notifications.instrument "duplicate.people.admin.racing_on_rails", person_name: duplicate.person.name, person_id: duplicate.person.id, people_ids: duplicate.people.map(&:id)
       end
     end
 
