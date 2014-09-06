@@ -151,4 +151,10 @@ class PostTest < ActiveSupport::TestCase
     Post.expects(:remove_list_prefix)
     Post.normalize_subject "", ""
   end
+
+  test "require valid email" do
+    post = FactoryGirl.build(:post, from_email: "silversuitesresidences.com/?id=167")
+    assert !post.valid?
+    assert post.errors[:from_email], "Expected error on :from_email. Had: #{post.errors.full_messages}"
+  end
 end

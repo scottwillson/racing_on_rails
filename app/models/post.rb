@@ -8,6 +8,8 @@ class Post < ActiveRecord::Base
   validates_presence_of :mailing_list
   validates_presence_of :subject
 
+  validates_format_of :from_email, with: /@/
+
   belongs_to :mailing_list
   belongs_to :original, class_name: "Post", inverse_of: :replies
   has_one :post_text
