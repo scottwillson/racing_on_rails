@@ -216,20 +216,6 @@ class ResultsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "missing person event bad person" do
-    banana_belt_1 = FactoryGirl.create(:event)
-    assert_raise(ActiveRecord::RecordNotFound) {
-      get(:person_event, event_id: banana_belt_1.to_param, person_id: 236127361273)
-    }
-  end
-
-  test "return 404 for missing person event bad event" do
-    weaver = FactoryGirl.create(:person)
-    assert_raise(ActiveRecord::RecordNotFound) {
-      get(:person_event, event_id: 236127361273, person_id: weaver.to_param)
-    }
-  end
-
   test "person json" do
     person = FactoryGirl.create(:result).person
     get :person, person_id: person.id, format: :json

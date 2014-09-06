@@ -162,48 +162,11 @@ module Competitions
       assert_response :success
     end
 
-    test "return 404 for missing team event" do
-      banana_belt_1 = FactoryGirl.create(:event)
-      assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, event_id: banana_belt_1.to_param, team_id: 236127361273) }
-    end
-
-    test "return 404 for missing team event result" do
-      event = CrossCrusadeTeamCompetition.create!(parent: SingleDayEvent.create!(name: "Cross Crusade"))
-      vanilla = FactoryGirl.create(:team)
-      assert_raise(ActiveRecord::RecordNotFound) {
-        get(:team_event, event_id: event.to_param, team_id: vanilla.to_param)
-      }
-    end
-
-    test "missing person event bad person" do
-      banana_belt_1 = FactoryGirl.create(:event)
-      assert_raise(ActiveRecord::RecordNotFound) {
-        get(:person_event, event_id: banana_belt_1.to_param, person_id: 236127361273)
-      }
-    end
-
-    test "return 404 for missing person event bad event" do
-      weaver = FactoryGirl.create(:person)
-      assert_raise(ActiveRecord::RecordNotFound) {
-        get(:person_event, event_id: 236127361273, person_id: weaver.to_param)
-      }
-    end
-
     test "missing person event result" do
       Bar.create!
       event = Bar.find_for_year
       get(:person_event, event_id: event.to_param, person_id: Person.create!.to_param)
       assert_response :success
-    end
-
-    test "return 404 for missing team event bad event" do
-      vanilla = FactoryGirl.create(:team)
-      assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, event_id: 236127361273, team_id: vanilla.to_param) }
-    end
-
-    test "return 404 for missing person event" do
-      banana_belt_1 = FactoryGirl.create(:event)
-      assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, event_id: banana_belt_1.to_param, person_id: 236127361273) }
     end
   end
 end
