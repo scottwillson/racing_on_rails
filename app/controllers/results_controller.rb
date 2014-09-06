@@ -25,7 +25,7 @@ class ResultsController < ApplicationController
 
   # All Results for Event
   def event
-    @event = Event.find(params[:event_id])
+    @event = Event.where(id: params[:event_id]).first
 
     case @event
     when Competitions::AgeGradedBar, Competitions::Bar, Competitions::TeamBar
@@ -40,6 +40,9 @@ class ResultsController < ApplicationController
       return redirect_to(oregon_cup_path(year: @event.year))
     when Competitions::RiderRankings
       return redirect_to(rider_rankings_path(year: @event.year))
+    when nil
+      flash[:notice] = "Could not find event #{params[:id]}"
+      return redirect_to(schedule_path)
     end
 
     respond_to do |format|
@@ -90,7 +93,7 @@ class ResultsController < ApplicationController
     respond_to do |format|
       format.html do
         if @person.nil?
-          flash[:warn] = "No person with id #{params[:person_id]}"
+          flash[:notice] = "No person with id #{params[:person_id]}"
           return redirect_to(people_path)
         end
 
@@ -118,7 +121,7 @@ class ResultsController < ApplicationController
     respond_to do |format|
       format.html do
         if @team.nil?
-          flash[:warn] = "No team with id #{params[:team_id]}"
+          flash[:notice] = "No team with id #{params[:team_id]}"
           return redirect_to(teams_path)
         end
 

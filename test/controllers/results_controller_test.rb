@@ -216,14 +216,6 @@ class ResultsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "return 404 for missing event" do
-    assert_raise(ActiveRecord::RecordNotFound) { get(:event, event_id: 236127361273) }
-  end
-
-  test "return 404 for missing person" do
-    assert_raise(ActiveRecord::RecordNotFound) { get(:person, person_id: 236127361273) }
-  end
-
   test "missing person event bad person" do
     banana_belt_1 = FactoryGirl.create(:event)
     assert_raise(ActiveRecord::RecordNotFound) {

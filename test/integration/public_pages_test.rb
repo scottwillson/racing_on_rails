@@ -28,6 +28,14 @@ class PublicPagesTest < RacingOnRails::IntegrationTest
     assert_select "title", /Results: #{team.name}/
   end
 
+  test "requests for missing events should just redirect to event results page" do
+    get "/events/2"
+    assert_redirected_to "/schedule"
+
+    get "/events/2/results"
+    assert_redirected_to "/schedule"
+  end
+
   test "requests for missing people should just redirect to people page" do
     get "/people/22530"
     assert_redirected_to "/people"
@@ -42,6 +50,11 @@ class PublicPagesTest < RacingOnRails::IntegrationTest
 
     get "/teams/1/results"
     assert_redirected_to "/teams"
+  end
+
+  test "requests for missing posts should redirect to mailing lists" do
+    get "/posts/1"
+    assert_redirected_to "/mailing_lists"
   end
 
   test "API request for missing models should just return 404" do

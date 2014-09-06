@@ -42,7 +42,11 @@ class PostsController < ApplicationController
 
   # Show Post. If original, include replies.
   def show
-    @post = Post.includes(:replies).includes(:original).includes(:mailing_list).find(params["id"])
+    @post = Post.includes(:replies).includes(:original).includes(:mailing_list).where(id: params["id"]).first
+    unless @post
+      flash[:notice] = "Could not find post with ID #{params[:id]}"
+      return redirect_to(mailing_lists_path)
+    end
   end
 
   # Send email to local mail program. Don't save to database. Use mailing list's
