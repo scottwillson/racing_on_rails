@@ -66,24 +66,33 @@ class ResultsController < ApplicationController
 
   # Single Person's Results for a single Event
   def person_event
-    @event = Event.find(params[:event_id])
-    @person = Person.find(params[:person_id])
-    @results = Result.
-                includes(scores: [ :source_result, :competition_result ]).
-                where(event_id: params[:event_id]).
-                where(person_id: params[:person_id])
+    begin
+      @event = Event.find(params[:event_id])
+      @person = Person.find(params[:person_id])
+      @results = Result.
+                  includes(scores: [ :source_result, :competition_result ]).
+                  where(event_id: params[:event_id]).
+                  where(person_id: params[:person_id])
+    rescue ActiveRecord::RecordNotFound
+      flash[:notice] = "Could not find result for #{@event.try :name} #{@person.try :name}"
+      return redirect_to(people_path)
+    end
   end
 
   # Single Team's Results for a single Event
   def team_event
-    @team = Team.find(params[:team_id])
-    @event = Event.find(params[:event_id])
-    @result = Result.
-              includes(scores: [ :source_result, :competition_result ]).
-              where("results.event_id" => params[:event_id]).
-              where(team_id: params[:team_id]).
-              first!
-    raise ActiveRecord::RecordNotFound unless @result
+    begin
+      @team = Team.find(params[:team_id])
+      @event = Event.find(params[:event_id])
+      @result = Result.
+                includes(scores: [ :source_result, :competition_result ]).
+                where("results.event_id" => params[:event_id]).
+                where(team_id: params[:team_id]).
+                first!
+    rescue ActiveRecord::RecordNotFound
+      flash[:notice] = "Could not find result for #{@event.try :name} #{@team.try :name}"
+      return redirect_to(teams_path)
+    end
   end
 
   # Person's Results for an entire year
