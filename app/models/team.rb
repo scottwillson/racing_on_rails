@@ -23,7 +23,7 @@ class Team < ActiveRecord::Base
   def self.find_by_name_or_alias(name)
     team = Team.find_by_name(name)
     if team.nil?
-      team_alias = Alias.find_by_name(name)
+      team_alias = Alias.where(name: name, aliasable_type: "Team").first
       if team_alias
         team = team_alias.team
       end

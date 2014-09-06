@@ -6,6 +6,11 @@ module Teams
   # :stopdoc:
   class TeamTest < ActiveSupport::TestCase
     test "find by name or alias or create" do
+      # Add person alias with team name to expose bug
+      person = FactoryGirl.create(:person)
+      person.aliases.create!(name: "Gentile Lovers")
+      person.aliases.create!(name: "Gentle Lovers")
+
       gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
       gentle_lovers.aliases.create!(name: "Gentile Lovers")
       assert_equal(gentle_lovers, Team.find_by_name_or_alias_or_create('Gentle Lovers'), 'Gentle Lovers')
