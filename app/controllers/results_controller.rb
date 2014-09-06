@@ -85,41 +85,55 @@ class ResultsController < ApplicationController
 
   # Person's Results for an entire year
   def person
-    @person = Person.find(params[:person_id])
+    @person = Person.where(id: params[:person_id]).first
 
     respond_to do |format|
       format.html do
+        if @person.nil?
+          flash[:warn] = "No person with id #{params[:person_id]}"
+          return redirect_to(people_path)
+        end
+
         assign_person_results @person, @year
         render layout: !request.xhr?
       end
 
       format.json do
+        return(render(status: :not_found, body: "")) unless @person
         assign_person_results @person, @year
         render json: (@event_results + @competition_results).to_json
       end
 
       format.xml do
+        return(render(status: :not_found, body: "")) unless @person
         assign_person_results @person, @year
-         render xml: (@event_results + @competition_results).to_xml
+        render xml: (@event_results + @competition_results).to_xml
       end
     end
   end
 
   # Teams's Results for an entire year
   def team
-    @team = Team.find(params[:team_id])
+    @team = Team.where(id: params[:team_id]).first
     respond_to do |format|
       format.html do
+        if @team.nil?
+          flash[:warn] = "No team with id #{params[:team_id]}"
+          return redirect_to(teams_path)
+        end
+
         assign_team_results @team, @year
         render layout: !request.xhr?
       end
 
       format.json do
+        return(render(status: :not_found, body: "")) unless @team
         assign_team_results @team, @year
         render json: @event_results.to_json
       end
 
       format.xml do
+        return(render(status: :not_found, body: "")) unless @team
         assign_team_results @team, @year
         render xml: @event_results.to_xml
       end

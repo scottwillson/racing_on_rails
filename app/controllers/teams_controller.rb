@@ -1,7 +1,5 @@
 # Public page of all Teams
 class TeamsController < ApplicationController
-  caches_page :index
-
   def index
     if RacingAssociation.current.show_all_teams_on_public_page?
       @teams = Team.all
