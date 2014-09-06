@@ -63,6 +63,11 @@ class PostsController < ApplicationController
   # Sent as email through Postfix
   def post_private_reply
     @reply_to = Post.find(params[:reply_to_id])
+    if @reply_to.from_email.blank?
+      flash[:warn] = "Could not reply to post with no email address"
+      return redirect_to(mailing_list_posts_path(@reply_to.mailing_list))
+    end
+
     @mailing_list = MailingList.find(params[:mailing_list_id])
     @post = @mailing_list.posts.build(post_params)
     if @post.valid?
