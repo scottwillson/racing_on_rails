@@ -117,6 +117,7 @@ class Event < ActiveRecord::Base
   }
 
   scope :child, lambda { where("parent_id is not null") }
+  # :root?
   scope :not_child, lambda { where("parent_id is null") }
 
   scope :with_recent_results, lambda { |weeks|
@@ -174,11 +175,7 @@ class Event < ActiveRecord::Base
     events = Event.
               joins(races: :results).
               includes(parent: :parent).
-              where(
-                "events.date between ? and ?",
-                Time.zone.local(year).beginning_of_year.to_date,
-                Time.zone.local(year).end_of_year.to_date
-              ).
+              where("results.year" => year).
               uniq
 
     if discipline
@@ -194,7 +191,7 @@ class Event < ActiveRecord::Base
     end
 
     ids = events.map(&:root).map(&:id).uniq
-    Event.where(id: ids).includes(children: { races: [ :category, :results ] })
+    Event.where(id: ids).includes(children: :races)
   end
 
   def self.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
