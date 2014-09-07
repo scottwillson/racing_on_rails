@@ -4,7 +4,7 @@ class HomeController < ApplicationController
 
   caches_page :index
 
-  before_filter :require_administrator, except: :index
+  before_filter :require_administrator, except: [ :index, :show ]
 
   # Show homepage
   # === Assigns
@@ -44,6 +44,10 @@ class HomeController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def show
+    return redirect_to(root_path)
   end
 
   private

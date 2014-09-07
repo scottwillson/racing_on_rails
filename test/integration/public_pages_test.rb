@@ -51,6 +51,11 @@ class PublicPagesTest < RacingOnRails::IntegrationTest
     end
   end
 
+  test "home" do
+    get "/home"
+    assert_redirected_to "/"
+  end
+
   test "redirect old schedule URLs" do
     get "/schedule/calendar.xls"
     assert_response :redirect
