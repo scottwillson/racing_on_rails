@@ -345,24 +345,24 @@ class Event < ActiveRecord::Base
 
   # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
   # The results page should show the results in that case.
-  def results_present?
-    races.any?(&:results_present?)
+  def any_results?
+    races.any?(&:any_results?)
   end
 
   # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
   # The results page should show the results in that case.
-  def results_present_including_children?
-    races.any?(&:results_present?) || children.any?(&:results_present_including_children?)
+  def any_results_including_children?
+    races.any?(&:any_results?) || children.any?(&:any_results_including_children?)
   end
 
   # Returns only the children with +results+
   def children_with_results
-    children.select(&:results_present_including_children?)
+    children.select(&:any_results_including_children?)
   end
 
   # Returns only the Races with +results+
   def races_with_results
-    races.select(&:results_present?)
+    races.select(&:any_results?)
   end
 
   def destroy_races

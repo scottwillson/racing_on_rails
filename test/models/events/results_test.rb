@@ -79,14 +79,14 @@ module Events
     end
 
     test "has results" do
-      assert(!Event.new.results_present?, "New Event should not have results")
+      assert(!Event.new.any_results?, "New Event should not have results")
 
       event = SingleDayEvent.create!
       race = event.races.create!(category: FactoryGirl.create(:category))
-      assert(!event.results_present?, "Event with race, but no results should not have results")
+      assert(!event.any_results?, "Event with race, but no results should not have results")
 
       race.results.create!(place: 200, person: FactoryGirl.create(:person))
-      assert(event.results_present?, "Event with one result should have results")
+      assert(event.any_results?, "Event with one result should have results")
     end
 
     test "races with results" do
@@ -147,9 +147,9 @@ module Events
       FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: child_event))
       series = Event.find(series_event.parent)
 
-      assert(series.results_present_including_children?, "Series results_present_including_children?")
-      assert(series_event.results_present_including_children?, "Series Event results_present_including_children?")
-      assert(child_event.results_present_including_children?, "Series Event child results_present_including_children?")
+      assert(series.any_results_including_children?, "Series any_results_including_children?")
+      assert(series_event.any_results_including_children?, "Series Event any_results_including_children?")
+      assert(child_event.any_results_including_children?, "Series Event child any_results_including_children?")
     end
 
     test "results_updated_at" do

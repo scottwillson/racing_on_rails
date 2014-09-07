@@ -4,7 +4,7 @@
   <thead>
     <tr>
       <th colspan="3" class="actions">
-        <% if @event.results_present_including_children? %>
+        <% if @event.any_results_including_children? %>
         <%= link_to event_results_path(@event),
               class: "icon",
               title: 'View public results web page' do %>

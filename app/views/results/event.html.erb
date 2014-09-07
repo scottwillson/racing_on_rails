@@ -21,7 +21,7 @@
   <%= render partial: "results/races", locals: { races: @races } %>
   <%= render partial: "results/children", locals: { children: @children } %>
 
-  <% if @children.none?(&:results_present?) && @races.none?(&:results_present?) && @start_list %>
+  <% if @children.none?(&:any_results?) && @races.none?(&:any_results?) && @start_list %>
   <%= render partial: "start_list", locals: { start_list: @start_list } %>
   <% end %>
 
@@ -38,12 +38,12 @@
   <% end %>
 
   <% ActiveSupport::Notifications.instrument "@event.results.racing_on_rails", event_id: @event.id, event_name: @event.name do %>
-    <% @races.select(&:results_present?).sort.each do |race| %>
+    <% @races.select(&:any_results?).sort.each do |race| %>
   <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
       <%= results_table @event, race %>
     <% end -%>
 
-    <% if @races.none?(&:results_present?) && @event.overall.present? && @event.overall.races_with_results.present? %>
+    <% if @races.none?(&:any_results?) && @event.overall.present? && @event.overall.races_with_results.present? %>
     <%= render partial: "races", locals: { races: @event.overall.races_with_results } %>
       <% @event.overall.races_with_results.sort.each do |race| %>
       <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>

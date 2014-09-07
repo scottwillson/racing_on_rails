@@ -362,8 +362,8 @@ class Race < ActiveRecord::Base
     result.destroy
   end
 
-  def results_present?
-    results.present?
+  def any_results?
+    results.any?
   end
 
   # By category name

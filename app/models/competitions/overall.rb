@@ -15,7 +15,7 @@ module Competitions
           parent = ::MultiDayEvent.year(year).where(name: parent_event_name).first
 
           overall = parent.try(:overall)
-          if parent && parent.results_present_including_children?
+          if parent && parent.any_results_including_children?
             unless parent.overall
               # parent.create_overall will create an instance of Overall, which is probably not what we want
               overall = self.new(parent_id: parent.id, date: parent.date)
