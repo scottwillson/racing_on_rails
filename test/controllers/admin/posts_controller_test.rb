@@ -100,10 +100,19 @@ module Admin
     test "destroy" do
       login_as FactoryGirl.create(:administrator)
       mailing_list = FactoryGirl.create(:mailing_list)
-      post = FactoryGirl.create(:post)
-      delete :destroy, mailing_list_id: mailing_list.to_param, id: post.to_param
+
+      original = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "My bike")
+      Post.save original, mailing_list
+      reply = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "Re: My bike", date: 10.minutes.ago)
+      Post.save reply, mailing_list
+
+      assert_equal 1, original.reload.replies_count, "replies_count"
+
+      delete :destroy, mailing_list_id: mailing_list.to_param, id: reply.to_param
       assert_redirected_to admin_mailing_list_posts_path(mailing_list)
-      assert !Post.exists?(mailing_list.id), "Should delete Post"
+      assert !Post.exists?(reply.id), "Should delete Post"
+
+      assert_equal 0, original.reload.replies_count, "replies_count"
     end
   end
 end

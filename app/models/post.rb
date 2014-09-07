@@ -12,7 +12,7 @@ class Post < ActiveRecord::Base
 
   belongs_to :mailing_list
   belongs_to :original, class_name: "Post", inverse_of: :replies
-  has_one :post_text
+  has_one :post_text, dependent: :destroy
   has_many :replies, class_name: "Post", inverse_of: :original, foreign_key: :original_id
 
   scope :original, -> { where(original_id: nil) }
@@ -45,6 +45,30 @@ class Post < ActiveRecord::Base
       return false if !post.save
 
       post.add_post_text
+      original.reposition! if original
+      ApplicationController.expire_cache
+    end
+
+    true
+  end
+
+  def self.destroy(post)
+    transaction do
+      original = find_original(post)
+      if original
+        original.replies_count = original.replies_count - 1
+
+        if original.replies_count == 0
+          original.last_reply_at = original.date
+        else
+          original.last_reply_at = original.replies.select { |r| r != post }.sort_by(&:date).last.date
+        end
+
+        original.save
+      end
+
+      return false if !post.destroy
+
       original.reposition! if original
       ApplicationController.expire_cache
     end
