@@ -191,7 +191,7 @@ class Event < ActiveRecord::Base
     end
 
     ids = events.map(&:root).map(&:id).uniq
-    Event.where(id: ids).includes(children: :races)
+    Event.where(id: ids).includes(children: [ :races, { children: :races } ])
   end
 
   def self.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
