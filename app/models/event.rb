@@ -172,10 +172,12 @@ class Event < ActiveRecord::Base
   # Honors RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
   def self.find_all_with_results(year = Time.zone.today.year, discipline = nil)
     # Maybe this should be its own class, since it has knowledge of Event and Result?
+
+    # Faster to load IDs and pass to second query than to use join or subselect
+    event_ids = Result.where(year: year).pluck(:event_id).uniq
     events = Event.
-              joins(races: :results).
               includes(parent: :parent).
-              where("results.year" => year).
+              where(id: event_ids).
               uniq
 
     if discipline
