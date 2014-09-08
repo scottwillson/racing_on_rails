@@ -122,7 +122,7 @@ Rails.application.routes.draw do
     resources :categories do
       resources :races
     end
-    get ':controller/:id/aliases/:alias_id/destroy' => '#destroy_alias', constraints: { id: /\d+/ }
+    get ':controller/:id/aliases/:alias_id/destroy' => :destroy_alias, constraints: { id: /\d+/ }
     get '/admin/results/:id/scores' => 'admin/results#scores'
     get '/admin/racers' => 'admin/racers#index'
     patch '/admin/persons/update_attribute/:id' => 'admin/people#update_attribute'
