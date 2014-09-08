@@ -11,6 +11,7 @@ set :puma_threads, [ 8, 32 ]
 set :puma_workers, 1
 
 load "local/config/deploy.rb" if File.exist?("local/config/deploy.rb")
+load "local/config/deploy/#{fetch(:stage)}.rb" if File.exist?("local/config/deploy/#{fetch(:stage)}.rb")
 
 set :deploy_to, "/var/www/rails/#{fetch(:application)}"
 
