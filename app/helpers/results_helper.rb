@@ -38,7 +38,7 @@ module ResultsHelper
     end
 
     table.delete_blank_columns!
-    table.delete_homogenous_columns!(except: [ :place, :number, :time, :laps ])
+    table.delete_homogenous_columns!(except: [ :place, :number, :team_name, :time, :laps ])
 
     table.renderer = Results::Renderers::DefaultResultRenderer
     table.renderers[:name] = Results::Renderers::NameRenderer
