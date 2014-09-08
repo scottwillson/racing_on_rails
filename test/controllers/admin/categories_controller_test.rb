@@ -26,5 +26,11 @@ module Admin
       assert_equal "JUNIORS", category.reload.name
       assert_redirected_to edit_admin_category_path(category)
     end
+
+    test "invalid update" do
+      category = FactoryGirl.create(:category)
+      patch :update, id: category, category: { raw_name: "" }
+      assert_response :success
+    end
   end
 end
