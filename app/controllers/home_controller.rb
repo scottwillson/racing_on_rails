@@ -1,7 +1,5 @@
 # Homepage
 class HomeController < ApplicationController
-  respond_to :html
-
   caches_page :index
 
   before_filter :require_administrator, except: [ :index, :show ]
@@ -29,7 +27,9 @@ class HomeController < ApplicationController
       @recent_news = Article.recent_news(@home.weeks_of_upcoming_events.weeks.ago, @news_category)
     end
 
-    render_page
+    respond_to do |format|
+      format.html { render_page }
+    end
   end
 
   def edit
