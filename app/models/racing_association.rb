@@ -25,8 +25,8 @@ class RacingAssociation < ActiveRecord::Base
     ])
   end
 
-  default_value_for :cat4_womens_race_series_category do
-    Category.find_or_create_by(name: "Category 4 Women")
+  default_value_for :cat4_womens_race_series_category_id do
+    Category.find_or_create_by(name: "Category 4 Women").id
   end
 
   default_value_for :competitions do
