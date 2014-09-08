@@ -22,7 +22,7 @@ set :user, "app"
 namespace :deploy do
   desc "Deploy association-specific customizations"
   task :local_code do
-    on roles :all do
+    on roles :app do
       if fetch(:application) != "racing_on_rails"
         if fetch(:site_local_repo_url_branch)
           execute :git, "clone #{fetch(:site_local_repo_url)} -b #{fetch(:site_local_repo_url_branch)} #{release_path}/local"
@@ -36,7 +36,7 @@ namespace :deploy do
   end
 
   task :registration_engine do
-    on roles :all do
+    on roles :app do
       if fetch(:application) == "obra" || fetch(:application) == "nabra"
         if test("[ -e \"#{release_path}/lib/registration_engine\" ]")
           execute :rm, "-rf \"#{release_path}/lib/registration_engine\""
@@ -58,8 +58,17 @@ namespace :deploy do
       end
     end
   end
+
+  task :cache_error_pages do
+    on roles :app do
+      %w{ 404 422 500 503 }.each do |status_code|
+        execute :curl, "--silent --fail http://#{fetch :app_hostname}/#{status_code} -o #{release_path}/public/#{status_code}.html"
+      end
+    end
+  end
 end
 
 before "deploy:updated", "deploy:local_code"
 before "deploy:updated", "deploy:registration_engine"
 after "deploy:updated", "deploy:copy_cache"
+after "deploy:finished", "deploy:cache_error_pages"
