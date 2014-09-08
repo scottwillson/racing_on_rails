@@ -32,22 +32,21 @@ function autoComplete(model, attribute, path) {
   .data("ui-autocomplete")
   ._renderItem = function(ul, item) {
       var description = [];
-      if (item !== undefined && item.name !== undefined) {
-        description.push(item.name);
+      if (item !== undefined && item.team_name !== undefined && item.team_name !== '') {
+        description.push(item.team_name);
       }
-      if (item.city !== undefined) {
-        description.push(item.city);
+      if (item.city !== undefined && jQuery.trim(item.city) !== '') {
+        description.push(jQuery.trim(item.city));
       }
-      if (item.state !== undefined) {
-        description.push(item.state);
+      if (item.state !== undefined && jQuery.trim(item.state) !== '') {
+        description.push(jQuery.trim(item.state));
       }
 
       return jQuery('<li id="person_' + item.id + '"></li>')
         .data( "item.autocomplete", item )
-        .append('<a>' + item.first_name + ' ' + item.last_name + '<div class="informal">' + description + "</div></a>")
+        .append('<a>' + item.first_name + ' ' + item.last_name + '<div class="informal">' + description.join(', ') + "</div></a>")
         .appendTo( ul );
     };
-  ;
 }
 
 function autoCompleteTeam(model, attribute, path) {
