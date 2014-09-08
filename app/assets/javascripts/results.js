@@ -10,10 +10,10 @@ function bindBarCheckBox() {
       url     : jQuery(this).data('url')
     };
     if (jQuery(e.target).is(':checked')) {
-      ajaxoptions.data['value'] = '1';
+      ajaxoptions.data.value = '1';
     }
     else {
-      ajaxoptions.data['value'] = '0';
+      ajaxoptions.data.value = '0';
     }
     jQuery.ajax(ajaxoptions);
   });
