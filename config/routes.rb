@@ -248,6 +248,11 @@ Rails.application.routes.draw do
     get '/wsba_masters_barr' => 'competitions/competitions#show', as: :wsba_masters_barr_root, type: 'wsba_masters_barr'
     get '/wsba_masters_barr/:year' => 'competitions/competitions#show', as: :wsba_masters_barr, type: 'wsba_masters_barr', constraints: { year: /\d{4}/ }
 
+    get '/404' => 'errors#not_found'
+    get '/422' => 'errors#unprocessable_entity'
+    get '/500' => 'errors#internal_error'
+    get '/503' => 'errors#over_capacity'
+
     get '/' => 'home#index', as: :root
     resource :home, controller: :home
 

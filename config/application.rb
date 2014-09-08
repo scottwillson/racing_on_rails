@@ -41,6 +41,8 @@ module RacingOnRails
 
     config.action_mailer.default_url_options = { mobile: nil }
 
+    config.exceptions_app = self.routes
+
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?
         Raygun
