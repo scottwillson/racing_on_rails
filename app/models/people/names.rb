@@ -3,6 +3,11 @@ module People
     extend ActiveSupport::Concern
 
     included do
+      # Does not consider Aliases
+      def self.find_all_by_name(name)
+        Person.where(name: name).order("last_name, first_name")
+      end
+
       # "Jane Doe" or "Jane", "Doe" or name: "Jane Doe" or first_name: "Jane", last_name: "Doe"
       def self.find_all_by_name_or_alias(*args)
         options = args.extract_options!
