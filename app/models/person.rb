@@ -11,6 +11,7 @@ class Person < ActiveRecord::Base
   include Export::People
   include Names::Nameable
   include People::Cleanup
+  include People::Aliases
   include People::Names
   include RacingOnRails::VestalVersions::Versioned
   include SentientUser
@@ -36,11 +37,8 @@ class Person < ActiveRecord::Base
   before_validation :find_associated_records
   before_validation :set_membership_dates
   validate :membership_dates
-  before_save :destroy_shadowed_aliases
-  after_save :add_alias_for_old_name
   before_destroy :ensure_no_results
 
-  has_many :aliases, as: :aliasable, dependent: :destroy
   has_and_belongs_to_many :editable_people, class_name: "Person", foreign_key: "editor_id", before_add: :validate_unique_editors
   has_and_belongs_to_many :editors, class_name: "Person", association_foreign_key: "editor_id", before_add: :validate_unique_editors
   has_many :editor_requests, dependent: :destroy
@@ -766,27 +764,6 @@ class Person < ActiveRecord::Base
 
   def can_edit?(person)
     person == self || administrator? || person.editors.include?(self)
-  end
-
-  # If name changes to match existing alias, destroy the alias
-  def destroy_shadowed_aliases
-    Alias.destroy_all(['name = ?', name]) if first_name_changed? || last_name_changed?
-  end
-
-  def add_alias_for_old_name
-    if !new_record? &&
-       name_was.present? &&
-       name.present? &&
-       name_was.casecmp(name) != 0 &&
-       !Alias.exists?(['name = ? and aliasable_id = ? and aliasable_type = ?', name_was, id, "Person"]) &&
-       !Person.exists?(["name = ?", name_was])
-
-      new_alias = Alias.new(name: name_was, person: self)
-      unless new_alias.save
-        logger.error "Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(", ")}"
-      end
-      new_alias
-    end
   end
 
   def ensure_no_results
