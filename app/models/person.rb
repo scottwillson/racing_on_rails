@@ -11,9 +11,11 @@ class Person < ActiveRecord::Base
   include Export::People
   include Names::Nameable
   include People::Aliases
+  include People::Ages
   include People::Authorization
   include People::Cleanup
   include People::Names
+  include People::Numbers
   include RacingOnRails::VestalVersions::Versioned
   include SentientUser
 
@@ -42,12 +44,9 @@ class Person < ActiveRecord::Base
 
   has_many :events, foreign_key: "promoter_id"
   has_and_belongs_to_many :editable_events, class_name: "Event", foreign_key: "editor_id", join_table: "editors_events"
-  has_many :race_numbers, -> { includes(:discipline, :number_issuer) }
   has_many :results
   belongs_to :team
 
-  accepts_nested_attributes_for :race_numbers,
-    reject_if: proc { |attributes| !attributes.has_key?(:value) || attributes[:value].blank? }
 
   attr_accessor :year
 
@@ -62,14 +61,6 @@ class Person < ActiveRecord::Base
         email, home_phone
       ).first
     end
-  end
-
-  def self.find_all_by_number(number)
-    RaceNumber.
-      includes(:person).
-      where(year: [ RacingAssociation.current.year, RacingAssociation.current.next_year ]).
-      where(value: number).
-      map(&:person)
   end
 
   # Flattened, straight SQL dump for export to Excel, FinishLynx, or SportsBase.
@@ -234,108 +225,6 @@ class Person < ActiveRecord::Base
     end
   end
 
-  def date_of_birth=(value)
-    if value.is_a?(String)
-      if value[%r{^\d\d/\d\d/\d\d$}]
-        value.gsub! %r{(\d+)/(\d+)/(\d+)}, '19\3/\1/\2'
-      else
-        value.gsub!(/^00/, '19')
-        value.gsub!(/^(\d+\/\d+\/)(\d\d)$/, '\119\2')
-      end
-    end
-
-    if value && value.to_s.size < 5
-      int_value = value.to_i
-      if int_value > 10 && int_value <= 99
-        value = "01/01/19#{value}"
-      end
-      if int_value > 0 && int_value <= 10
-        value = "01/01/20#{value}"
-      end
-    end
-
-    # Don't overwrite month and day if we're just passing in the same year
-    if self[:date_of_birth] && value
-      if value.is_a?(String)
-        new_date = Date.parse(value)
-      else
-        new_date = value
-      end
-      if new_date.year == self[:date_of_birth].year && new_date.month == 1 && new_date.day == 1
-        return
-      end
-    end
-    super
-  end
-
-  def birthdate
-    date_of_birth
-  end
-
-  def birthdate=(value)
-    self.date_of_birth = value
-  end
-
-  # 30 years old or older
-  def master?
-    if date_of_birth
-      date_of_birth <= Date.new(RacingAssociation.current.masters_age.years.ago.year, 12, 31)
-    end
-  end
-
-  # Under 18 years old
-  def junior?
-    if date_of_birth
-      date_of_birth >= Date.new(18.years.ago.year, 1, 1)
-    end
-  end
-
-  # Over 18 years old
-  def senior?
-    if date_of_birth
-      date_of_birth < Date.new(18.years.ago.year, 1, 1)
-    end
-  end
-
-  def female?
-    gender == "F"
-  end
-
-  def male?
-    gender == "M"
-  end
-
-  def age_category
-    if female?
-      if junior?
-        "girl"
-      else
-        "woman"
-      end
-    else
-      if master?
-        "master"
-      elsif junior?
-        "boy"
-      else
-        "man"
-      end
-    end
-  end
-
-  # Oldest age person will be at any point in year
-  def racing_age
-    if date_of_birth
-      (RacingAssociation.current.year - date_of_birth.year).ceil
-    end
-  end
-
-  def cyclocross_racing_age
-    if date_of_birth
-      racing_age + 1
-    end
-  end
-
   def category(discipline)
     if discipline.is_a?(String)
       _discipline = Discipline[discipline]
@@ -356,127 +245,6 @@ class Person < ActiveRecord::Base
       self["bmx_category"]
     when Discipline[:mtb]
       self["xc_category"]
-    end
-  end
-
-  def number(discipline_param, reload = false, year = nil)
-    return nil if discipline_param.nil?
-
-    year ||= RacingAssociation.current.year
-    if discipline_param.is_a?(Discipline)
-      discipline_param = discipline_param.to_param
-    end
-    number = race_numbers(reload).detect do |race_number|
-      race_number.year == year &&
-      race_number.discipline_id == RaceNumber.discipline_id(discipline_param) &&
-      race_number.number_issuer.name == RacingAssociation.current.short_name
-    end
-    number.try :value
-  end
-
-  # Look for RaceNumber +year+ in +attributes+. Not sure if there's a simple and better way to do that.
-  # Need to set +updated_by+ before setting numbers to ensure updated_by is passed to number. Setting all via a
-  # parameter hash may add number before updated_by is set.
-  def add_number(value, discipline, association = nil, _year = year)
-    association = NumberIssuer.find_by_name(RacingAssociation.current.short_name) if association.nil?
-    _year ||= RacingAssociation.current.year
-
-    if discipline.nil? || !discipline.numbers?
-      discipline = Discipline[:road]
-    end
-
-    if value.blank?
-      unless new_record?
-        # Delete ALL numbers for RacingAssociation.current and this discipline?
-        # FIXME Delete number individually in UI
-        RaceNumber.destroy_all(
-          ['person_id=? and discipline_id=? and year=? and number_issuer_id=?',
-          self.id, discipline.id, _year, association.id])
-      end
-    else
-      if new_record?
-        existing_number = race_numbers.any? do |number|
-          number.value == value && number.discipline == discipline && number.association == association && number.year == _year
-        end
-        race_numbers.build(
-          value: value, discipline: discipline, year: _year, number_issuer: association,
-          updated_by: updated_by
-        ) unless existing_number
-      else
-        RaceNumber.where(
-          value: value, person_id: id, discipline_id: discipline.id, year: _year, number_issuer_id: association.id
-        ).first || race_numbers.create(
-          value: value, discipline: discipline, year: _year, number_issuer: association, updated_by: updated_by
-        )
-      end
-    end
-  end
-
-  def bmx_number(reload = false, year = nil)
-    number(Discipline[:bmx], reload, year)
-  end
-
-  def ccx_number(reload = false, year = nil)
-    number(Discipline[:cyclocross], reload, year)
-  end
-
-  def dh_number(reload = false, year = nil)
-    number(Discipline[:downhill], reload, year)
-  end
-
-  def road_number(reload = false, year = nil)
-    number(Discipline[:road], reload, year)
-  end
-
-  def singlespeed_number(reload = false, year = nil)
-    number(Discipline[:singlespeed], reload, year)
-  end
-
-  def track_number(reload = false, year = nil)
-    number(Discipline[:track], reload, year)
-  end
-
-  def xc_number(reload = false, year = nil)
-    number(Discipline[:mountain_bike], reload, year)
-  end
-
-  def bmx_number=(value)
-    add_number(value, Discipline[:bmx])
-  end
-
-  def ccx_number=(value)
-    add_number(value, Discipline[:cyclocross])
-  end
-
-  def dh_number=(value)
-    add_number(value, Discipline[:downhill])
-  end
-
-  def road_number=(value)
-    add_number(value, Discipline[:road])
-  end
-
-  def singlespeed_number=(value)
-    add_number(value, Discipline[:singlespeed])
-  end
-
-  def track_number=(value)
-    add_number(value, Discipline[:track])
-  end
-
-  def xc_number=(value)
-    add_number(value, Discipline[:mountain_bike])
-  end
-
-  def administrator?
-    roles.any? { |role| role.name == "Administrator" }
-  end
-
-  def promoter?
-    if new_record?
-      false
-    else
-      Event.where(promoter_id: id).exists? || editable_events.present?
     end
   end
 

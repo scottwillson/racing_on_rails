@@ -10,6 +10,18 @@ module People
       has_and_belongs_to_many :roles
     end
 
+    def administrator?
+      roles.any? { |role| role.name == "Administrator" }
+    end
+
+    def promoter?
+      if new_record?
+        false
+      else
+        Event.where(promoter_id: id).exists? || editable_events.present?
+      end
+    end
+
     def can_edit?(person)
       person == self || administrator? || person.editors.include?(self)
     end
