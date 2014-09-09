@@ -59,11 +59,6 @@ class Person < ActiveRecord::Base
 
   CATEGORY_FIELDS = [ :bmx_category, :ccx_category, :dh_category, :mtb_category, :road_category, :track_category ]
 
-  # Does not consider Aliases
-  def self.find_all_by_name(name)
-    Person.where(name: name).order("last_name, first_name")
-  end
-
   def self.find_by_info(name, email = nil, home_phone = nil)
     if name.present?
       Person.find_by_name(name)
