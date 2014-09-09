@@ -8,9 +8,11 @@ class Person < ActiveRecord::Base
   YEAR_1900 = Time.zone.local(1900).to_date
 
   include Comparable
-  include RacingOnRails::VestalVersions::Versioned
   include Export::People
   include Names::Nameable
+  include People::Cleanup
+  include People::Names
+  include RacingOnRails::VestalVersions::Versioned
   include SentientUser
 
   acts_as_authentic do |config|
@@ -57,50 +59,9 @@ class Person < ActiveRecord::Base
 
   CATEGORY_FIELDS = [ :bmx_category, :ccx_category, :dh_category, :mtb_category, :road_category, :track_category ]
 
-  def self.per_page
-    50
-  end
-
   # Does not consider Aliases
   def self.find_all_by_name(name)
     Person.where(name: name).order("last_name, first_name")
-  end
-
-  # "Jane Doe" or "Jane", "Doe" or name: "Jane Doe" or first_name: "Jane", last_name: "Doe"
-  def self.find_all_by_name_or_alias(*args)
-    options = args.extract_options!
-    options.keys.each { |key| raise(ArgumentError, "'#{key}' is not a valid key") unless [:name, :first_name, :last_name].include?(key) }
-
-    name = args.join(" ") if options.empty?
-
-    name = name || options[:name]
-    first_name = options[:first_name]
-    last_name = options[:last_name]
-
-    if name.present?
-      Person.where(name: name) | Alias.find_all_people_by_name(name)
-    elsif first_name.present? && last_name.blank?
-      Person.where(first_name: first_name) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
-    elsif first_name.blank? && last_name.present?
-      Person.where(last_name: last_name) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
-    else
-      Person.where(first_name: first_name).where(last_name: last_name) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
-    end
-  end
-
-  # Considers aliases
-  def self.find_all_by_name_like(name, limit = RacingAssociation.current.search_results_limit, page = 1)
-    return [] if name.blank?
-
-    name_like = "%#{name.strip}%"
-    Person.
-      where("people.name like ? or aliases.name like ?", name_like, name_like).
-      includes(:team).
-      includes(:aliases).
-      references(:aliases).
-      limit(limit).
-      page(page).
-      order('last_name, first_name')
   end
 
   def self.find_by_info(name, email = nil, home_phone = nil)
@@ -114,20 +75,12 @@ class Person < ActiveRecord::Base
     end
   end
 
-  def self.find_by_name(name)
-    Person.where(name: name).first
-  end
-
   def self.find_all_by_number(number)
     RaceNumber.
       includes(:person).
       where(year: [ RacingAssociation.current.year, RacingAssociation.current.next_year ]).
       where(value: number).
       map(&:person)
-  end
-
-  def self.full_name(first_name, last_name)
-    "#{first_name} #{last_name}".strip
   end
 
   # Flattened, straight SQL dump for export to Excel, FinishLynx, or SportsBase.
@@ -222,128 +175,12 @@ class Person < ActiveRecord::Base
     Notifier.password_reset_instructions(people).deliver
   end
 
-  def people_with_same_name
-    if name.present?
-      people = Person.find_all_by_name(name) | Alias.find_all_people_by_name(name)
-      people.reject! { |person| person == self }
-      people
-    else
-      []
-    end
-  end
-
-  def people_name_sounds_like
-    return [] if name.blank?
-
-    Person.where.not(id: id).where("soundex(name) = soundex(?)", name.strip) +
-    Person.where(first_name: last_name).where(last_name: first_name)
-  end
-
-  # Name on year. Could be rolled into Nameable?
-  def name(date_or_year = nil)
-    year = parse_year(date_or_year)
-    name_record_for_year(year).try(:name) || Person.full_name(first_name(year), last_name(year))
-  end
-
-  def first_name(date_or_year = nil)
-    year = parse_year(date_or_year)
-    name_record_for_year(year).try(:first_name) || read_attribute(:first_name)
-  end
-
-  def last_name(date_or_year = nil)
-    year = parse_year(date_or_year)
-    name_record_for_year(year).try(:last_name) || read_attribute(:last_name)
-  end
-
-  def email_with_name
-    if name.present?
-      "#{name} <#{email}>"
-    else
-      email
-    end
-  end
-
-  def name_or_login
-    if name.present?
-      name
-    elsif login.present?
-      login
-    else
-      email
-    end
-  end
-
-  def last_name_or_login
-    if last_name.present?
-      last_name
-    elsif login.present?
-      login
-    else
-      email
-    end
-  end
-
-  # Name. If +name+ is blank, returns email and phone
-  def name_or_contact_info
-    if name.blank?
-      [email, home_phone].join(', ')
-    else
-      name
-    end
-  end
-
   # Cannot have promoters with duplicate contact information
   def unique_info
     person = Person.find_by_info(name, email, home_phone)
     if person && person != self
       errors.add("existing person with name '#{name}'")
     end
-  end
-
-  # Tries to split +name+ into +first_name+ and +last_name+
-  # TODO Handle name, Jr.
-  # This looks too complicated …
-  def name=(value)
-    self[:name] = value
-    if value.blank?
-      self[:first_name] = ''
-      self[:last_name] = ''
-      return
-    end
-
-    if value.include?(',')
-      parts = value.split(',')
-      if parts.size > 0
-        self[:last_name] = parts[0].strip
-        if parts.size > 1
-          self[:first_name] = parts[1..(parts.size - 1)].join.strip
-          self[:last_name]
-        end
-      end
-    else
-      parts = value.split(' ')
-      case parts.size
-      when 0
-        self[:first_name] = ""
-        self[:last_name] = ""
-      when 1
-        self[:first_name] = parts[0].strip
-        self[:last_name] = ""
-      else
-        self[:first_name] = parts[0].strip
-        self[:last_name] = parts[1..(parts.size - 1)].join(" ").strip
-      end
-    end
-  end
-
-  def first_name=(value)
-    self[:name] = Person.full_name(value, last_name)
-    self[:first_name] = value
-  end
-
-  def last_name=(value)
-    self[:name] = Person.full_name(first_name, value)
-    self[:last_name] = value
   end
 
   def team_name
@@ -869,7 +706,7 @@ class Person < ActiveRecord::Base
     Person.transaction do
       ActiveRecord::Base.lock_optimistically = false
       self.merge_version do
-        events_with_results = other_person.results.collect do |result|
+        other_person.results.collect do |result|
           event = result.event
           event
         end.compact || []
