@@ -10,8 +10,9 @@ class Person < ActiveRecord::Base
   include Comparable
   include Export::People
   include Names::Nameable
-  include People::Cleanup
   include People::Aliases
+  include People::Authorization
+  include People::Cleanup
   include People::Names
   include RacingOnRails::VestalVersions::Versioned
   include SentientUser
@@ -39,15 +40,10 @@ class Person < ActiveRecord::Base
   validate :membership_dates
   before_destroy :ensure_no_results
 
-  has_and_belongs_to_many :editable_people, class_name: "Person", foreign_key: "editor_id", before_add: :validate_unique_editors
-  has_and_belongs_to_many :editors, class_name: "Person", association_foreign_key: "editor_id", before_add: :validate_unique_editors
-  has_many :editor_requests, dependent: :destroy
   has_many :events, foreign_key: "promoter_id"
   has_and_belongs_to_many :editable_events, class_name: "Event", foreign_key: "editor_id", join_table: "editors_events"
   has_many :race_numbers, -> { includes(:discipline, :number_issuer) }
   has_many :results
-  has_and_belongs_to_many :roles
-  has_many :sent_editor_requests, foreign_key: "editor_id", class_name: "EditorRequest", dependent: :destroy
   belongs_to :team
 
   accepts_nested_attributes_for :race_numbers,
@@ -762,31 +758,11 @@ class Person < ActiveRecord::Base
     end
   end
 
-  def can_edit?(person)
-    person == self || administrator? || person.editors.include?(self)
-  end
-
   def ensure_no_results
     if results.present?
       errors.add :base, "Can't delete person with results"
     end
     errors.empty?
-  end
-
-  def validate_unique_editors(editor)
-    if editors.include?(editor)
-      raise ActiveRecord::ActiveRecordError, "Can't add duplicate editor #{editor.name} for #{name}"
-    end
-
-    if editor == self
-      raise ActiveRecord::ActiveRecordError, "Can't be editor for self"
-    end
-  end
-
-  def account_permissions
-    (editors + editable_people).reject { |person| person == self }.uniq.map do |person|
-      AccountPermission.new(person, editable_people.include?(person), editors.include?(person))
-    end
   end
 
   # TODO Any reason not to change this to last name, first name?
