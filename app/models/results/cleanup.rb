@@ -4,12 +4,26 @@ module Results
 
     # Fix common formatting mistakes and inconsistencies
     def cleanup
-      cleanup_place
+      cleanup_age
+      cleanup_city
       cleanup_number
       cleanup_license
+      cleanup_place
       self.first_name = cleanup_name(first_name)
       self.last_name = cleanup_name(last_name)
       self.team_name = cleanup_name(team_name)
+    end
+
+    def cleanup_age
+      if age && age.to_i == 0
+        self.age = nil
+      end
+    end
+
+    def cleanup_city
+      if city == "(blank)"
+        self.city = nil
+      end
     end
 
     # Drops the 'st' from 1st, among other things
