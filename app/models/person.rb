@@ -4,16 +4,15 @@ require "sentient_user/sentient_user"
 #
 # Names are _not_ unique. In fact, there are many business rules about names. See Aliases and Names.
 class Person < ActiveRecord::Base
-
-  YEAR_1900 = Time.zone.local(1900).to_date
-
   include Comparable
   include Export::People
   include Names::Nameable
   include People::Aliases
   include People::Ages
   include People::Authorization
-  include People::Cleanup
+  include People::Export
+  include People::Membership
+  include People::Merge
   include People::Names
   include People::Numbers
   include RacingOnRails::VestalVersions::Versioned
@@ -60,68 +59,6 @@ class Person < ActiveRecord::Base
         "(email = ? and email <> '' and email is not null) or (home_phone = ? and home_phone <> '' and home_phone is not null)",
         email, home_phone
       ).first
-    end
-  end
-
-  # Flattened, straight SQL dump for export to Excel, FinishLynx, or SportsBase.
-  def self.find_all_for_export(date = Time.zone.today, include_people = "members_only")
-    association_number_issuer_id = NumberIssuer.find_by_name(RacingAssociation.current.short_name).id
-    if include_people == "members_only"
-      where_clause = "WHERE (member_to >= '#{date}')"
-    elsif include_people == "print_cards"
-      where_clause = "WHERE  (member_to >= '#{date}') and print_card is true"
-    end
-
-    people = Person.connection.select_all(%Q{
-      SELECT people.id, license, first_name, last_name, teams.name as team_name, team_id, people.notes,
-             member_from, member_to, member_usac_to,
-             (member_from IS NOT NULL AND member_to IS NOT NULL AND member_from <= NOW() AND member_to >= NOW()) as member,
-             print_card, card_printed_at, membership_card, ccx_only, date_of_birth, occupation,
-             street, people.city, people.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender,
-             ccx_category, road_category, track_category, mtb_category, dh_category,
-             volunteer_interest, official_interest, race_promotion_interest, team_interest,
-             CEILING(#{date.year} - YEAR(date_of_birth)) as racing_age,
-             ccx_numbers.value as ccx_number, dh_numbers.value as dh_number, road_numbers.value as road_number,
-             singlespeed_numbers.value as singlespeed_number, xc_numbers.value as xc_number,
-             people.created_at, people.updated_at
-      FROM people
-      LEFT OUTER JOIN teams ON teams.id = people.team_id
-      LEFT OUTER JOIN race_numbers as ccx_numbers ON ccx_numbers.person_id = people.id
-                      and ccx_numbers.number_issuer_id = #{association_number_issuer_id}
-                      and ccx_numbers.year = #{date.year}
-                      and ccx_numbers.discipline_id = #{Discipline[:cyclocross].id}
-      LEFT OUTER JOIN race_numbers as dh_numbers ON dh_numbers.person_id = people.id
-                      and dh_numbers.number_issuer_id = #{association_number_issuer_id}
-                      and dh_numbers.year = #{date.year}
-                      and dh_numbers.discipline_id = #{Discipline[:downhill].id}
-      LEFT OUTER JOIN race_numbers as road_numbers ON road_numbers.person_id = people.id
-                      and road_numbers.number_issuer_id = #{association_number_issuer_id}
-                      and road_numbers.year = #{date.year}
-                      and road_numbers.discipline_id = #{Discipline[:road].id}
-      LEFT OUTER JOIN race_numbers as singlespeed_numbers ON singlespeed_numbers.person_id = people.id
-                      and singlespeed_numbers.number_issuer_id = #{association_number_issuer_id}
-                      and singlespeed_numbers.year = #{date.year}
-                      and singlespeed_numbers.discipline_id = #{Discipline[:singlespeed].id}
-      LEFT OUTER JOIN race_numbers as track_numbers ON track_numbers.person_id = people.id
-                      and track_numbers.number_issuer_id = #{association_number_issuer_id}
-                      and track_numbers.year = #{date.year}
-                      and track_numbers.discipline_id = #{Discipline[:track].id}
-      LEFT OUTER JOIN race_numbers as xc_numbers ON xc_numbers.person_id = people.id
-                      and xc_numbers.number_issuer_id = #{association_number_issuer_id}
-                      and xc_numbers.year = #{date.year}
-                      and xc_numbers.discipline_id = #{Discipline[:mountain_bike].id}
-      #{where_clause}
-      ORDER BY last_name, first_name, people.id
-    })
-
-    last_person = nil
-    people.to_a.reject do |person|
-      if last_person && last_person["id"] == person["id"]
-        true
-      else
-        last_person = person
-        false
-      end
     end
   end
 
@@ -248,101 +185,6 @@ class Person < ActiveRecord::Base
     end
   end
 
-  # Is Person a current member of the bike racing association?
-  def member?(date = Time.zone.today)
-    member_to.present? && member_from.present? && member_from.to_date <= date.to_date && member_to.to_date >= date.to_date
-  end
-
-  # Is/was Person a current member of the bike racing association at any point during +date+'s year?
-  def member_in_year?(date = Time.zone.today)
-    year = date.year
-    member_to && member_from && member_from.year <= year && member_to.year >= year
-    member_to.present? && member_from.present? && member_from.year <= year && member_to.year >= year
-  end
-
-  def member
-    member?
-  end
-
-  def member=(value)
-    if value
-      self.member_from = Time.zone.today if member_from.nil? || member_from.to_date >= Time.zone.today.to_date
-      unless member_to && (member_to.to_date >= Time.zone.local(RacingAssociation.current.effective_year).end_of_year.to_date)
-        self.member_to = Time.zone.local(RacingAssociation.current.effective_year).end_of_year.to_date
-      end
-    elsif !value && member?
-      if self.member_from.year == RacingAssociation.current.year
-        self.member_from = nil
-        self.member_to = nil
-      else
-        self.member_to = Time.zone.local(RacingAssociation.current.year - 1).end_of_year.to_date
-      end
-    end
-  end
-
-  # Also sets member_to if it is blank
-  def member_from=(date)
-    if date.nil?
-      self[:member_from] = nil
-      self[:member_to] = nil
-      return date
-    end
-
-    date_as_date = case date
-    when Date, DateTime, Time
-      Time.zone.local(date.year, date.month, date.day)
-    else
-      Time.zone.parse(date)
-    end
-
-    self[:member_from] = date_as_date
-  end
-
-  # Also sets member_from if it is blank
-  def set_membership_dates
-    if member_from && member_to.nil?
-      self.member_to = Time.zone.local(member_from.year).end_of_year
-    elsif member_from.nil? && member_to
-      self.member_from = Time.zone.today if member_from.nil?
-      self.member_from = member_to if member_from.to_date > member_to.to_date
-    elsif member_from && member_to && member_from.to_date > member_to.to_date
-      self.member_from = member_to
-    end
-    true
-  end
-
-  # Validates member_from and member_to
-  def membership_dates
-    if member_to && !member_from
-      errors.add('member_from', "cannot be nil if member_to is not nil (#{member_to})")
-    end
-    if member_from && !member_to
-      errors.add('member_to', "cannot be nil if member_from is not nil (#{member_from})")
-    end
-    if member_from && member_to && member_from.to_date > member_to.to_date
-      errors.add('member_to', "cannot be greater than member_from: #{member_from}")
-    end
-    if member_from && member_from < YEAR_1900
-      self.member_from = member_from_was
-    end
-    if member_to && member_to < YEAR_1900
-      self.member_to = member_to_was
-    end
-  end
-
-  def renewed?
-    member_to && member_to.year >= RacingAssociation.current.effective_year
-  end
-
-  def renew!(license_type)
-    ActiveSupport::Notifications.instrument "renew!.person.racing_on_rails", person_id: id, license_type: license_type
-
-    self.member = true
-    self.print_card = true
-    self.license_type = license_type
-    save!
-  end
-
   def state=(value)
     if value and value.size == 2
       value.upcase!
@@ -446,72 +288,6 @@ class Person < ActiveRecord::Base
     results.select do |result|
       result.competition_result?
     end
-  end
-
-  # Moves another people' aliases, results, and race numbers to this person,
-  # and delete the other person.
-  # Also adds the other people' name as a new alias
-  def merge(other_person)
-    # Consider just using straight SQL for this --
-    # it's not complicated, and the current process generates an
-    # enormous amount of SQL
-
-    if other_person.nil? || other_person == self
-      return false
-    end
-
-    Person.transaction do
-      ActiveRecord::Base.lock_optimistically = false
-      self.merge_version do
-        other_person.results.collect do |result|
-          event = result.event
-          event
-        end.compact || []
-        if login.blank? && other_person.login.present?
-          self.login = other_person.login
-          self.crypted_password = other_person.crypted_password
-          other_person.skip_version do
-            other_person.update login: nil
-          end
-        end
-        if member_from.nil? || (other_person.member_from && other_person.member_from < member_from)
-          self.member_from = other_person.member_from
-        end
-        if member_to.nil? || (other_person.member_to && other_person.member_to > member_to)
-          self.member_to = other_person.member_to
-        end
-
-        if license.blank?
-          self.license = other_person.license
-        end
-
-        save!
-        aliases << other_person.aliases
-        events << other_person.events
-        names << other_person.names
-        results << other_person.results
-        race_numbers << other_person.race_numbers
-
-        begin
-          versions << other_person.versions
-        rescue ActiveRecord::SerializationTypeMismatch => e
-          logger.error e
-        end
-
-        versions.sort_by(&:created_at).each_with_index do |version, index|
-          version.number = index + 2
-          version.save!
-        end
-
-        Person.delete other_person.id
-        existing_alias = aliases.detect{ |a| a.name.casecmp(other_person.name) == 0 }
-        if existing_alias.nil? and Person.find_all_by_name(other_person.name).empty?
-          aliases.create(name: other_person.name)
-        end
-      end
-      ActiveRecord::Base.lock_optimistically = true
-    end
-    true
   end
 
   # Replace +team+ with exising Team if current +team+ is an unsaved duplicate of an existing Team

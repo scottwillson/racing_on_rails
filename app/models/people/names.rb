@@ -56,14 +56,17 @@ module People
 
     def split_name(value)
       if value.include?(',')
-        split_name_by value, ","
+        split_name_by(value, ",").reverse
       else
         split_name_by value, " "
       end
     end
 
     def split_name_by(value, delimiter)
-      parts = value.split(delimiter)
+      parts = value.
+        split(delimiter).
+        map(&:strip).
+        compact
 
       case parts.size
       when 0
@@ -165,13 +168,13 @@ module People
     end
 
     def first_name=(value)
-      self[:name] = Person.full_name(value, last_name)
-      self[:first_name] = value
+      self[:name] = Person.full_name(value, last_name).try :strip
+      self[:first_name] = value.try :strip
     end
 
     def last_name=(value)
-      self[:name] = Person.full_name(first_name, value)
-      self[:last_name] = value
+      self[:name] = Person.full_name(first_name, value).try :strip
+      self[:last_name] = value.try :strip
     end
 
   end
