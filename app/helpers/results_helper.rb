@@ -120,8 +120,8 @@ module ResultsHelper
 
     table.rows = race.results.sort
 
-    table.delete_blank_columns!
-    table.delete_homogenous_columns!
+    table.delete_blank_columns! except: [ :place, :number, :name, :team_name, :time, :points, :laps ]
+    table.delete_homogenous_columns! except: [ :place, :number, :name, :team_name, :time, :points, :laps ]
 
     table.renderer = Results::Renderers::DefaultResultRenderer
     table.renderers[:time] = Results::Renderers::TimeRenderer
