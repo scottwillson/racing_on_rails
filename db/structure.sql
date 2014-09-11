@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.5.30, for osx10.10 (x86_64)
 --
--- Host: localhost    Database: racing_on_rails_development
+-- Host: localhost    Database: obra_development
 -- ------------------------------------------------------
 -- Server version	5.5.30
 
@@ -401,11 +401,13 @@ CREATE TABLE `events` (
   `registration_link` varchar(255) DEFAULT NULL,
   `custom_suggestion` varchar(255) DEFAULT NULL,
   `field_limit` int(11) DEFAULT NULL,
-  `refund_policy` varchar(255) DEFAULT NULL,
+  `refund_policy` text,
   `refunds` tinyint(1) NOT NULL DEFAULT '1',
   `region_id` int(11) DEFAULT NULL,
   `end_date` date NOT NULL,
   `registration_public` tinyint(1) NOT NULL DEFAULT '1',
+  `lft` int(11) DEFAULT NULL,
+  `rgt` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_disciplined` (`discipline`),
   KEY `parent_id` (`parent_id`),
@@ -418,6 +420,8 @@ CREATE TABLE `events` (
   KEY `index_events_on_bar_points` (`bar_points`),
   KEY `index_events_on_promoter_id` (`promoter_id`),
   KEY `index_events_on_region_id` (`region_id`),
+  KEY `index_events_on_lft` (`lft`),
+  KEY `index_events_on_rgt` (`rgt`),
   CONSTRAINT `events_events_id_fk` FOREIGN KEY (`parent_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
   CONSTRAINT `events_number_issuers_id_fk` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
   CONSTRAINT `events_promoter_id` FOREIGN KEY (`promoter_id`) REFERENCES `people` (`id`) ON DELETE SET NULL,
@@ -1436,7 +1440,7 @@ CREATE TABLE `versions` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-09-09 19:11:03
+-- Dump completed on 2014-09-10 14:43:21
 INSERT INTO schema_migrations (version) VALUES ('1');
 
 INSERT INTO schema_migrations (version) VALUES ('10');
@@ -1926,6 +1930,8 @@ INSERT INTO schema_migrations (version) VALUES ('20140812033621');
 INSERT INTO schema_migrations (version) VALUES ('20140813000742');
 
 INSERT INTO schema_migrations (version) VALUES ('20140909191811');
+
+INSERT INTO schema_migrations (version) VALUES ('20140910213415');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
