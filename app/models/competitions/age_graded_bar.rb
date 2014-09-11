@@ -33,13 +33,13 @@ module Competitions
     end
 
     def create_races
-      self.categories.each do |category|
+      categories!.each do |category|
         self.races.create!(category: category)
       end
       self.discipline = "Age Graded"
     end
 
-    def categories
+    def categories!
       template_categories = []
       position = 0
       30.step(65, 5) do |age|
