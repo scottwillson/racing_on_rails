@@ -40,13 +40,20 @@ module Results
         row = stub("row",
                      :[] => "Gentle Lovers",
                      metadata: {},
-                     source: stub("result", team_id: 18, event_id: 3, race_id: 200, :team_competition_result? => true, year: 2010))
-        TeamNameRenderer.stubs(racing_association: mock("racing_association", :unregistered_teams_in_results? => true))
+                     source: stub("result",
+                                  team_id: 18,
+                                  event_id: 3,
+                                  race_id: 200,
+                                  :team_competition_result? => true,
+                                  year: 2010,
+                                  :team_member? => false))
+
+        TeamNameRenderer.stubs(racing_association: mock("racing_association"))
 
         html = TeamNameRenderer.render(column, row)
         link = Nokogiri::HTML.fragment(html).search('a').first
-        assert_equal "/events/3/teams/18/results#200", link['href'], "href"
         assert_equal "Gentle Lovers", link.text, "text"
+        assert_equal "/events/3/teams/18/results#200", link['href'], "href"
       end
     end
   end

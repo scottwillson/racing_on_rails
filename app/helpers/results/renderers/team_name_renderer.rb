@@ -8,15 +8,14 @@ module Results
         text = row[column.key]
         return text unless result.team_id
 
-        if racing_association.unregistered_teams_in_results? ||
+        if result.team_competition_result?
+          "<a href=\"#{path_prefix(row)}/events/#{result.event_id}/teams/#{result.team_id}/results##{result.race_id}\">#{text}</a>"
+
+        elsif racing_association.unregistered_teams_in_results? ||
           result.team_member? ||
           result.year < racing_association.year
 
-          if result.team_competition_result?
-            "<a href=\"#{path_prefix(row)}/events/#{result.event_id}/teams/#{result.team_id}/results##{result.race_id}\">#{text}</a>"
-          else
-            "<a href=\"#{path_prefix(row)}/teams/#{result.team_id}/#{result.year}\">#{text}</a>"
-          end
+          "<a href=\"#{path_prefix(row)}/teams/#{result.team_id}/#{result.year}\">#{text}</a>"
         end
       end
 
