@@ -1,5 +1,3 @@
-require "array/stable_sort"
-
 module Admin
   # Add, delete, and edit Person information. Also merge.
   class PeopleController < Admin::AdminController
@@ -32,25 +30,15 @@ module Admin
         return export
       end
 
-      @people = []
-      @name = params[:name] || session[:person_name] || cookies[:person_name] || ''
-      @name.strip!
-      session['person_name'] = @name
-      cookies[:person_name] = { value: @name, expires: Time.zone.now + 36000 }
-      if @name.blank?
-        @people = []
-      else
-        @people = Person.find_all_by_name_like(@name, RacingAssociation.current.search_results_limit)
-        @people = @people + Person.find_all_by_number(@name)
-        @people = @people.stable_sort_by(:first_name).stable_sort_by(:last_name)
-      end
-      if @people.size == RacingAssociation.current.search_results_limit
-        flash[:notice] = "First #{RacingAssociation.current.search_results_limit} people"
-      end
-
       @current_year = current_date.year
+      assign_name
+      @people = Person.where_name_or_number_like(@name)
+      ActiveSupport::Notifications.instrument "search.people.admin.racing_on_rails", name: @name, people_count: @people.count
 
-      ActiveSupport::Notifications.instrument "search.people.admin.racing_on_rails", name: @name, people_count: @people.size
+      respond_to do |format|
+        format.html { @people = @people.page(page) }
+        format.js   { @people = @people.limit 100 }
+      end
     end
 
     # == Params
@@ -440,6 +428,13 @@ module Admin
 
 
     private
+
+    def assign_name
+      @name = params[:name] || session[:person_name] || cookies[:person_name]
+      @name = @name.try :strip
+      session[:person_name] = @name
+      cookies[:person_name] = { value: @name, expires: Time.zone.now + 36000 }
+    end
 
     def person_params
       params_without_mobile.require(:person).permit(

@@ -51,6 +51,22 @@ class Person < ActiveRecord::Base
 
   CATEGORY_FIELDS = [ :bmx_category, :ccx_category, :dh_category, :mtb_category, :road_category, :track_category ]
 
+  def self.where_name_or_number_like(name)
+    return Person.none if name.blank?
+
+    Person.
+      where(
+        "people.name like :name_like or aliases.name like :name_like or race_numbers.value = :name",
+        name_like: "%#{name.strip}%", name: name.strip
+      ).
+      includes(:aliases).
+      includes(:race_numbers).
+      includes(:team).
+      references(:aliases).
+      references(:race_numbers).
+      order(:last_name, :first_name)
+  end
+
   def self.find_by_info(name, email = nil, home_phone = nil)
     if name.present?
       Person.find_by_name(name)

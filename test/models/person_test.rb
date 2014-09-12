@@ -699,7 +699,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal([person], found_person, 'Should find Matson')
   end
 
-  test "find all by name like" do
+  test "find_all_by_name_like" do
     assert_equal([], Person.find_all_by_name_like("foo123"), "foo123 should find no names")
     weaver = FactoryGirl.create(:person, name: "Ryan Weaver")
     assert_equal([weaver], Person.find_all_by_name_like("eav"), "'eav' should find Weaver")
@@ -713,6 +713,22 @@ class PersonTest < ActiveSupport::TestCase
     weaver.save!
     Alias.create!(name: "O'Weaver", person: weaver)
     assert_equal([weaver], Person.find_all_by_name_like("O'Weaver"), "'O'Weaver' should find O'Weaver via alias")
+  end
+
+  test "where_name_or_number_like" do
+    FactoryGirl.create(:number_issuer)
+    FactoryGirl.create(:discipline, name: "Road")
+
+    weaver = FactoryGirl.create(:person, name: "Ryan Weaver", road_number: "666")
+    weaver.aliases.create! name: "Brian Weaver"
+
+    someone_else = FactoryGirl.create(:person, name: "Scott Willson", road_number: "6")
+    someone_else.aliases.create! name: "Scott Wilson"
+
+    assert_equal [], Person.where_name_or_number_like("foo123"), "foo123 should find no names"
+    assert_equal [ weaver ], Person.where_name_or_number_like("eav"), "'eav' should find Weaver"
+    assert_equal [ weaver ], Person.where_name_or_number_like("Brian"), "'Brian' should find Weaver via alias"
+    assert_equal [ weaver ], Person.where_name_or_number_like("666"), "'666' should find Weaver via road number"
   end
 
   test "find by name" do
