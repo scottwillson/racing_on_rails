@@ -5,7 +5,6 @@ if Rails.env.production? || Rails.env.staging?
   ActiveSupport::Notifications.subscribe(/fragment|process_action.action_controller|racing_on_rails/) do |name, start, finish, id, payload|
     if payload[:status] && payload[:status].is_a?(Fixnum)
       payload[:status] = payload[:status].to_s
-      puts "payload[:status] #{payload[:status]} #{payload[:status].class}"
     end
 
     message = {
