@@ -16,7 +16,7 @@ module Competitions
           series = WeeklySeries.where(name: parent_event_name).year(year).first
 
           if series && series.any_results_including_children?
-            team_competition = series.child_competitions.detect { |c| c.is_a? CrossCrusadeTeamCompetition }
+            team_competition = series.child_competitions.detect { |c| c.is_a? BlindDateAtTheDairyTeamCompetition }
             unless team_competition
               team_competition = self.new(parent_id: series.id)
               team_competition.save!
@@ -62,7 +62,7 @@ module Competitions
     end
 
     def point_schedule
-      [ 0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+      [ 0, 15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
     end
 
     def add_source_events
