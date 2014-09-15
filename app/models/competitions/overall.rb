@@ -32,6 +32,10 @@ module Competitions
       true
     end
 
+    def default_name
+      "Series Overall"
+    end
+
     def add_source_events
       parent.children.each do |source_event|
         source_events << source_event
