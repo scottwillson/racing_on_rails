@@ -20,6 +20,7 @@ module Competitions
       races.create!(category: Category.find_or_create_by(name: "Masters Women 35+ B"))
       races.create!(category: Category.find_or_create_by(name: "Masters Women 45+"))
       races.create!(category: Category.find_or_create_by(name: "Singlespeed"))
+      races.create!(category: Category.find_or_create_by(name: "Singlespeed Women"))
       races.create!(category: Category.find_or_create_by(name: "Unicycle"))
       races.create!(category: Category.find_or_create_by(name: "Clydesdale"))
     end
