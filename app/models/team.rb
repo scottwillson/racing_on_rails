@@ -39,13 +39,12 @@ class Team < ActiveRecord::Base
     team
   end
 
-  def self.find_all_by_name_like(name, limit = 100)
+  def self.name_like(name)
     name_like = "%#{name}%"
     Team.
       where('teams.name like ? or aliases.name like ?', name_like, name_like).
       includes(:aliases).
       references(:aliases).
-      limit(limit).
       order("teams.name")
   end
 

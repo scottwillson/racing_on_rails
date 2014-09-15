@@ -87,7 +87,6 @@ module Admin
         assert_not_nil(assigns["people"], "Should assign people")
         assert_equal(30, assigns['people'].size, "Search for '' should find all people")
         assert_not_nil(assigns["name"], "Should assign name")
-        assert(!flash.empty?, 'flash not empty?')
         assert_equal('Ryan', assigns['name'], "'name' assigns")
       end
 

@@ -699,20 +699,20 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal([person], found_person, 'Should find Matson')
   end
 
-  test "find_all_by_name_like" do
-    assert_equal([], Person.find_all_by_name_like("foo123"), "foo123 should find no names")
+  test "name_like" do
+    assert_equal([], Person.name_like("foo123"), "foo123 should find no names")
     weaver = FactoryGirl.create(:person, name: "Ryan Weaver")
-    assert_equal([weaver], Person.find_all_by_name_like("eav"), "'eav' should find Weaver")
+    assert_equal([weaver], Person.name_like("eav"), "'eav' should find Weaver")
 
     weaver.last_name = "O'Weaver"
     weaver.save!
-    assert_equal([weaver], Person.find_all_by_name_like("eav"), "'eav' should find O'Weaver")
-    assert_equal([weaver], Person.find_all_by_name_like("O'Weaver"), "'O'Weaver' should find O'Weaver")
+    assert_equal([weaver], Person.name_like("eav"), "'eav' should find O'Weaver")
+    assert_equal([weaver], Person.name_like("O'Weaver"), "'O'Weaver' should find O'Weaver")
 
     weaver.last_name = "Weaver"
     weaver.save!
     Alias.create!(name: "O'Weaver", person: weaver)
-    assert_equal([weaver], Person.find_all_by_name_like("O'Weaver"), "'O'Weaver' should find O'Weaver via alias")
+    assert_equal([weaver], Person.name_like("O'Weaver"), "'O'Weaver' should find O'Weaver via alias")
   end
 
   test "where_name_or_number_like" do

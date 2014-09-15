@@ -20,7 +20,6 @@ module Admin
     #  * Scott Willson
     #  * Jim Andersen (with an 'Jim Anderson' alias)
     # Store previous search in session and cookie as 'person_name'.
-    # Limit results to RacingAssociation.current.search_results_limit
     # === Params
     # * name
     # === Assigns

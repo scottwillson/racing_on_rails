@@ -6,20 +6,17 @@ module Admin
     def index
       @name = params['name'] || session['team_name'] || cookies[:team_name] || ''
       if @name.blank?
-        @teams = []
+        @teams = Team.none
       else
         session['team_name'] = @name
         cookies[:team_name] = { value: @name, expires: Time.zone.now + 36000 }
-        @teams = Team.find_all_by_name_like(@name, RacingAssociation.current.search_results_limit)
-        if @teams.size == RacingAssociation.current.search_results_limit
-          flash[:warn] = "First #{RacingAssociation.current.search_results_limit} teams"
-        end
+        @teams = Team.name_like(@name)
       end
 
       respond_to do |format|
-        format.html
-        format.js
-        format.json { render json: @teams.to_json }
+        format.html { @teams = @teams.page(page) }
+        format.js   { @teams = @teams.limit(100) }
+        format.json { render json: @teams.limit(100).to_json }
       end
     end
 

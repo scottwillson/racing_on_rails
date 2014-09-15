@@ -31,8 +31,8 @@ module People
       end
 
       # Considers aliases
-      def self.find_all_by_name_like(name, limit = RacingAssociation.current.search_results_limit, page = 1)
-        return [] if name.blank?
+      def self.name_like(name)
+        return Person.none if name.blank?
 
         name_like = "%#{name.strip}%"
         Person.
@@ -40,8 +40,6 @@ module People
           includes(:team).
           includes(:aliases).
           references(:aliases).
-          limit(limit).
-          page(page).
           order('last_name, first_name')
       end
 

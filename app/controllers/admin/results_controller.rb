@@ -12,7 +12,7 @@ module Admin
     # * name
     # * ignore_id: don't show this Person
     def find_person
-      people = Person.find_all_by_name_like(params[:name], 20)
+      people = Person.name_like(params[:name])
       ignore_id = params[:ignore_id]
       people = people.reject { |r| r.id.to_s == ignore_id }
       if people.size == 1

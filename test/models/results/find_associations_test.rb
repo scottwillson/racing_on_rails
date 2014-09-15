@@ -186,7 +186,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
 
     result = results.create!(place: 2, first_name: "Joe", last_name: "Racer", number: "600")
 
-    assert_equal 2, Person.find_all_by_name_like("Joe Racer").size, "Joe Racers"
+    assert_equal 2, Person.name_like("Joe Racer").size, "Joe Racers"
     assert_equal(person_clone, result.person, 'Person')
 
     person.reload

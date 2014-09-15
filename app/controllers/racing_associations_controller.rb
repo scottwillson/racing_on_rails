@@ -56,7 +56,6 @@ class RacingAssociationsController < Admin::AdminController
       :rental_numbers_start,
       :result_questions_url,
       :sanctioning_organizations,
-      :search_results_limit,
       :short_name,
       :show_all_teams_on_public_page,
       :show_calendar_view,

@@ -49,13 +49,13 @@ module Teams
     test "find all by name like" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
-      assert_same_elements [vanilla], Team.find_all_by_name_like("Vanilla"), "Vanilla"
-      assert_same_elements [vanilla], Team.find_all_by_name_like("Vanilla Bicycles"), "Vanilla Bicycles"
-      assert_same_elements [vanilla], Team.find_all_by_name_like("van"), "van"
-      assert_same_elements [vanilla], Team.find_all_by_name_like("cyc"), "cyc"
+      assert_same_elements [vanilla], Team.name_like("Vanilla"), "Vanilla"
+      assert_same_elements [vanilla], Team.name_like("Vanilla Bicycles"), "Vanilla Bicycles"
+      assert_same_elements [vanilla], Team.name_like("van"), "van"
+      assert_same_elements [vanilla], Team.name_like("cyc"), "cyc"
 
       steelman = Team.create!(name: "Steelman Cycles")
-      assert_same_elements [steelman, vanilla], Team.find_all_by_name_like("cycles"), "cycles"
+      assert_same_elements [steelman, vanilla], Team.name_like("cycles"), "cycles"
     end
 
     test "create dupe" do

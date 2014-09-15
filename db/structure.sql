@@ -1127,7 +1127,6 @@ CREATE TABLE `racing_associations` (
   `masters_age` int(11) NOT NULL DEFAULT '35',
   `rental_numbers_end` int(11) DEFAULT NULL,
   `rental_numbers_start` int(11) DEFAULT NULL,
-  `search_results_limit` int(11) NOT NULL DEFAULT '100',
   `cat4_womens_race_series_points` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `administrator_tabs` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `competitions` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1440,7 +1439,7 @@ CREATE TABLE `versions` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-09-10 14:43:21
+-- Dump completed on 2014-09-15 10:19:55
 INSERT INTO schema_migrations (version) VALUES ('1');
 
 INSERT INTO schema_migrations (version) VALUES ('10');
@@ -1932,6 +1931,8 @@ INSERT INTO schema_migrations (version) VALUES ('20140813000742');
 INSERT INTO schema_migrations (version) VALUES ('20140909191811');
 
 INSERT INTO schema_migrations (version) VALUES ('20140910213415');
+
+INSERT INTO schema_migrations (version) VALUES ('20140915164314');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
