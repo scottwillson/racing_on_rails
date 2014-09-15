@@ -287,6 +287,11 @@ table.base#teams_table td.contact {
   white-space: nowrap;
 }
 
+/* admin teams */
+.teams td.name {
+  width: 200px;
+}
+
 table.base a.preliminary {
   font-style: italic;
 }
