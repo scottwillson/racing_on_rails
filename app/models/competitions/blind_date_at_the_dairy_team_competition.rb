@@ -116,6 +116,7 @@ module Competitions
         "Men B",
         "Men C",
         "Singlespeed",
+        "Stampede",
         "Women A",
         "Women B",
         "Women C"
