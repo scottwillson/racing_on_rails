@@ -6,7 +6,7 @@ module Competitions
     before_create :set_notes, :set_name
 
     def self.calculate!(year = Time.zone.today.year)
-      benchmark("#{name} calculate!", level: :info) {
+      ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
         transaction do
           series = Series.where(name: "Cross Crusade").year(year).first
 
@@ -22,7 +22,7 @@ module Competitions
             team_competition.calculate!
           end
         end
-      }
+      end
       true
     end
 

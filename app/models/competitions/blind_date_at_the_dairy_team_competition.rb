@@ -11,7 +11,7 @@ module Competitions
     end
 
     def self.calculate!(year = Time.zone.today.year)
-      benchmark("#{name}#calculate!", level: :info) {
+      ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
         transaction do
           series = WeeklySeries.where(name: parent_event_name).year(year).first
 
@@ -27,7 +27,7 @@ module Competitions
             team_competition.calculate!
           end
         end
-      }
+      end
 
       # Don't return the entire populated instance!
       true

@@ -9,14 +9,16 @@ class CombinedTimeTrialResults < Event
   default_value_for :auto_combined_results, false
 
   def self.calculate!
-    events = requires_combined_results_events
-    events.each do |e|
-      combined_results = create_combined_results(e)
-      combined_results.calculate!
-    end
+    ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
+      events = requires_combined_results_events
+      events.each do |e|
+        combined_results = create_combined_results(e)
+        combined_results.calculate!
+      end
 
-    (has_combined_results_events - events).each do |e|
-      destroy_combined_results e
+      (has_combined_results_events - events).each do |e|
+        destroy_combined_results e
+      end
     end
   end
 

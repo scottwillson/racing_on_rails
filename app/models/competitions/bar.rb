@@ -12,7 +12,7 @@ module Competitions
     include Competitions::CalculatorAdapter
 
     def self.calculate!(year = Time.zone.today.year)
-      benchmark(name, level: :info) {
+      ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
         transaction do
           year = year.to_i if year.is_a?(String)
           date = Date.new(year, 1, 1)
@@ -43,7 +43,7 @@ module Competitions
             bar.calculate!
           end
         end
-      }
+      end
       # Don't return the entire populated instance!
       true
     end

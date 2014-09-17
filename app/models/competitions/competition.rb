@@ -60,7 +60,7 @@ module Competitions
     # Update results based on source event results.
     # (Calculate clashes with internal Rails method)
     def self.calculate!(year = Time.zone.today.year)
-      benchmark(name, level: :info) {
+      ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
         transaction do
           year = year.to_i if year.is_a?(String)
           competition = self.find_or_create_for_year(year)
@@ -73,7 +73,7 @@ module Competitions
           competition.calculate_members_only_places
           competition.calculate!
         end
-      }
+      end
       # Don't return the entire populated instance!
       true
     end

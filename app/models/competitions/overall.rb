@@ -10,7 +10,7 @@ module Competitions
    end
 
     def self.calculate!(year = Time.zone.today.year)
-      benchmark(name, level: :info) {
+      ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
         transaction do
           parent = ::MultiDayEvent.year(year).where(name: parent_event_name).first
 
@@ -28,7 +28,7 @@ module Competitions
             overall.calculate!
           end
         end
-      }
+      end
       true
     end
 
