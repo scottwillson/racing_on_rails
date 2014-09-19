@@ -1,6 +1,6 @@
 namespace :racing_on_rails do
-  
-  desc 'Cold setup' 
+
+  desc 'Cold setup'
   task :bootstrap do
     puts "Bootstrap task will delete your Racing on Rails development database."
     db_password = ask("MySQL root password (press return for no password): ")
@@ -10,7 +10,7 @@ namespace :racing_on_rails do
     puts `mysql -u root #{db_password_arg(db_password)} racing_on_rails_development -e "SET FOREIGN_KEY_CHECKS=0; source #{File.expand_path(::Rails.root.to_s + "/db/structure.sql")}; SET FOREIGN_KEY_CHECKS=1;"`
     puts "Start server"
     puts "Please open http://localhost:8080/ in your web browser"
-    puts `unicorn`
+    puts `./bin/rails s puma -p 8080`
   end
 end
 
