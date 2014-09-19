@@ -1,0 +1,36 @@
+<div id="races_collection">
+
+  <h3>Races</h3>
+
+  <%= form_for(races_collection, url: admin_event_races_collection_path(races_collection.event), remote: true, html: { class: "form-horizontal", role: "form" }) do |f| -%>
+
+    <table class="base table table-striped event_nav">
+      <thead>
+        <tr>
+          <th class="category">Category</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <%= f.text_area :text, class: "form-control", rows: [ races_collection.size, 20 ].max %>
+          </td>
+        </tr>
+        <tr id="create_race_row">
+          <td>
+            <%= f.submit "Save", class: "btn btn-default btn-sm", id: "races_collections_save" %>
+            <%= link_to(
+                "Cancel",
+                admin_event_races_collection_path(races_collection.event),
+                remote: true,
+                method: :get,
+                class: "btn btn-default btn-sm",
+                id: "races_collections_cancel"
+              ) %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  <% end %>
+</div>

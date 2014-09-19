@@ -160,5 +160,27 @@ class EventsTest < AcceptanceTest
 
     visit "/admin/events/#{kings_valley.id}/edit"
     assert_page_has_content "Fancy New Child Event"
+
+    click_link "Edit all"
+    wait_for "#races_collection_text"
+
+    fill_in "races_collection_text", with: "Men A\nMen B"
+    click_button "races_collections_save"
+
+    wait_for "#edit_all"
+    assert page.has_css?("td.race", text: "Men A")
+    assert page.has_css?("td.race", text: "Men B")
+
+    click_link "Edit all"
+    wait_for "#races_collection_text"
+    assert_equal "Men A Men B", find("#races_collection_text").value
+
+    fill_in "races_collection_text", with: "Women"
+    click_link "Cancel"
+
+    wait_for "#edit_all"
+    assert page.has_css?("td.race", text: "Men A")
+    assert page.has_css?("td.race", text: "Men B")
+    assert !page.has_css?("td.race", text: "Women")
   end
 end

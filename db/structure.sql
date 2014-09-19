@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.5.30, for osx10.10 (x86_64)
 --
--- Host: localhost    Database: obra_development
+-- Host: localhost    Database: racing_on_rails_development
 -- ------------------------------------------------------
 -- Server version	5.5.30
 
@@ -1439,7 +1439,7 @@ CREATE TABLE `versions` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-09-15 10:19:55
+-- Dump completed on 2014-09-19 11:30:47
 INSERT INTO schema_migrations (version) VALUES ('1');
 
 INSERT INTO schema_migrations (version) VALUES ('10');
