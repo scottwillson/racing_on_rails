@@ -89,6 +89,11 @@ fieldset {
   position: absolute;
 }
 
+table.base td.numeric .editable input {
+  text-align: right;
+  width: 80px;
+}
+
 .editable:hover {
   border: 1px solid $highlight-color;
 }
@@ -108,6 +113,10 @@ fieldset {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+}
+
+table.base td.numeric.editable_column {
+  padding-right: 4px;
 }
 
 .ui-datepicker {
