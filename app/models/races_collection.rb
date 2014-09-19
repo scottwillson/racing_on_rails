@@ -41,6 +41,10 @@ class RacesCollection
       event.races.create! category_attributes_by_name[name].merge(category: Category.find_or_create_by_normalized_name(name))
     end
 
+    event.races.select { |r| r.name.in?(category_attributes_by_name.keys) }.each do |race|
+      race.update! category_attributes_by_name[race.name]
+    end
+
     true
   end
 
