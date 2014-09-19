@@ -78,7 +78,6 @@ function autoCompleteTeam(model, attribute, path) {
           .append('<a>' + item.name + '</a>')
           .appendTo( ul );
       };
-    ;
   });
 }
 
