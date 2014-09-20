@@ -141,6 +141,10 @@ function makeEditable() {
   );
 }
 
+jQuery(document).bind("ajax:error", function(event, xhr, status, error) {
+   alert('We\'re sorry, but something went wrong (' + error + ')');
+ });
+
 jQuery(document).ready(function() {
   makeEditable();
   jQuery('.wants_focus:visible').select();
