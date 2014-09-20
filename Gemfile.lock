@@ -43,13 +43,6 @@ GIT
     acts_as_list (0.4.0)
       activerecord (>= 3.0)
 
-PATH
-  remote: lib/registration_engine
-  specs:
-    registration_engine (0.0.1)
-      activemerchant
-      rails (~> 4.1.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -486,7 +479,6 @@ DEPENDENCIES
   rake
   raygun4ruby (~> 1.1)
   redcarpet
-  registration_engine!
   ri_cal
   rubocop
   ruby-ole!

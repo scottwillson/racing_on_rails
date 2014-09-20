@@ -43,6 +43,10 @@ module RacingOnRails
 
     config.exceptions_app = self.routes
 
+    if Dir.exists?("#{config.root}/lib/registration_engine")
+      require "#{config.root}/lib/registration_engine/lib/registration_engine/engine"
+    end
+
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?
         Raygun

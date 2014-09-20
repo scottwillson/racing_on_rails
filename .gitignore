@@ -24,7 +24,6 @@ db/acceptance_structure.sql
 db/production.sql
 doc/app
 doc/README_FOR_APP
-lib/registration_engine.disabled
 libpeerconnection.log
 local
 log/*.log
