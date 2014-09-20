@@ -112,6 +112,7 @@ class EventsTest < AcceptanceTest
     find("#event_human_date_picker").click
     wait_for ".datepicker-days td.day.old"
     first(".datepicker-days td.day.old", text: "31").click
+    wait_for_ajax
     assert_equal "Thursday, October 31, 2013", find("#event_human_date").value
     click_button "Save"
 
