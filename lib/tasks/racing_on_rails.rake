@@ -5,12 +5,15 @@ namespace :racing_on_rails do
     puts "Bootstrap task will delete your Racing on Rails development database."
     db_password = ask("MySQL root password (press return for no password): ")
     puts "Create databases"
-    puts `mysql -u root #{db_password_arg(db_password)} < #{File.expand_path(::Rails.root.to_s + "/db/create_databases.sql")}`
+    puts `mysql -u root #{db_password_arg(db_password)} -e 'drop database if exists racing_on_rails_development'`
+    puts `mysql -u root #{db_password_arg(db_password)} < #{File.expand_path(::Rails.root.to_s + "/db/grants.sql")}`
     puts "Populate development database"
-    puts `mysql -u root #{db_password_arg(db_password)} racing_on_rails_development -e "SET FOREIGN_KEY_CHECKS=0; source #{File.expand_path(::Rails.root.to_s + "/db/structure.sql")}; SET FOREIGN_KEY_CHECKS=1;"`
+    puts `rake db:setup`
+    puts "Create test database"
+    puts `rake db:setup RAILS_ENV=test`
     puts "Start server"
     puts "Please open http://localhost:8080/ in your web browser"
-    puts `./bin/rails s puma -p 8080`
+    puts exec("./bin/rails s puma -p 8080")
   end
 end
 

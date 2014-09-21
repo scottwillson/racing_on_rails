@@ -14,7 +14,7 @@
   `script/local #{association}`
 
   # Ensure DB state is good
-  puts `bundle exec rake db:migrate; bundle exec rake db:structure:dump; bundle exec rake db:test:prepare`
+  puts `bundle exec rake db:migrate`
   puts `bundle exec rake test:ruby`
   puts `./bin/rake`
   puts `./bin/rake test:acceptance`

@@ -21,9 +21,6 @@ module RacingOnRails
 
     I18n.config.enforce_available_locales = true
 
-    # Racing on Rails has many foreign key constraints, so :sql is required
-    config.active_record.schema_format = :sql
-
     unless ENV["SKIP_OBSERVERS"]
       config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :team_observer
     end
