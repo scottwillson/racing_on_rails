@@ -3,7 +3,7 @@ module People
     extend ActiveSupport::Concern
 
     included do
-      has_many :race_numbers, -> { includes(:discipline, :number_issuer) }
+      has_many :race_numbers, -> { includes(:discipline, :number_issuer) }, dependent: :destroy
 
       accepts_nested_attributes_for :race_numbers,
         reject_if: proc { |attributes| !attributes.has_key?(:value) || attributes[:value].blank? }
@@ -58,13 +58,14 @@ module People
           end
           race_numbers.build(
             value: value, discipline: discipline, year: _year, number_issuer: association,
+            person: self,
             updated_by: updated_by
           ) unless existing_number
         else
           RaceNumber.where(
             value: value, person_id: id, discipline_id: discipline.id, year: _year, number_issuer_id: association.id
           ).first || race_numbers.create(
-            value: value, discipline: discipline, year: _year, number_issuer: association, updated_by: updated_by
+            value: value, discipline: discipline, year: _year, number_issuer: association, person: self, updated_by: updated_by
           )
         end
       end

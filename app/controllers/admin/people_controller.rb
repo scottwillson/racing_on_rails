@@ -104,21 +104,6 @@ module Admin
       @person = Person.create(person_params)
       ActiveSupport::Notifications.instrument "create.people.admin.racing_on_rails", person_name: @person.name, person_id: @person.id
 
-      if params[:number_value]
-        params[:number_value].each_with_index do |number_value, index|
-          unless number_value.blank?
-            race_number = @person.race_numbers.create(
-              discipline_id: params[:discipline_id][index],
-              number_issuer_id: params[:number_issuer_id][index],
-              year: params[:number_year],
-              value: number_value
-            )
-            unless race_number.errors.empty?
-              @person.errors.add(:base, race_number.errors.full_messages)
-            end
-          end
-        end
-      end
       if @person.errors.empty?
         if @event
           redirect_to(edit_admin_person_path(@person, event_id: @event.id))
@@ -384,7 +369,7 @@ module Admin
       @disciplines = Discipline.numbers
       @number_issuers = NumberIssuer.all
       if @person.race_numbers.none?(&:new_record?)
-        @person.race_numbers.build
+        @person.race_numbers.build(person_id: @person.id)
       end
     end
 

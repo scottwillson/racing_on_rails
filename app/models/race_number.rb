@@ -14,7 +14,7 @@ class RaceNumber < ActiveRecord::Base
 
   validates_presence_of :discipline
   validates_presence_of :number_issuer
-  validates_presence_of :person, unless: :new_record?
+  validates_presence_of :person
   validates_presence_of :value
   validate :unique_number
 
