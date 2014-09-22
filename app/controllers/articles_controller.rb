@@ -7,11 +7,6 @@ class ArticlesController < ApplicationController
       return redirect_to(home_path)
     end
 
-    if @article_category.nil?
-      # No flash because homepages are page cached
-      return redirect_to(home_path)
-    end
-
     render layout: !request.xhr?
   end
 end
