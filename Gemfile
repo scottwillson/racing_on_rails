@@ -46,6 +46,11 @@ gem "will_paginate", "~> 3.0"
 gem "will_paginate-bootstrap"
 gem "yui-compressor"
 
+# Require after WillPaginate
+gem "elasticsearch-model"
+gem "elasticsearch-rails"
+
+
 group :development do
   gem "brakeman"
   gem "bundler-audit"

@@ -11,23 +11,13 @@ class PostsController < ApplicationController
     @subject = params[:subject].try(:strip)
     @mailing_list = MailingList.find(params[:mailing_list_id])
 
-    @posts = @mailing_list.posts.original.order("position desc")
-
-    if @subject.present?
-      ActiveSupport::Notifications.instrument "search.posts.racing_on_rails", subject: @subject do
-        @posts = @posts.joins(:post_text).where("match(text) against (?)", @subject)
-
-        if @subject.size < 4
-          flash[:notice] = "Searches must be at least four letters"
-        elsif @posts.count == 0
-          flash[:notice] = "No posts with subject matching '#{@subject}'"
-        end
-      end
-    end
-
     respond_to do |format|
       format.html do
-        @posts = @posts.page(page)
+        if @subject.present?
+          @posts = Post.matching(@mailing_list, @subject).page(page)
+        else
+          @posts = @mailing_list.posts.original.page(page)
+        end
       end
 
       format.rss do
@@ -35,7 +25,7 @@ class PostsController < ApplicationController
       end
 
       format.atom do
-        @posts = @posts.limit(20)
+        @posts = @mailing_list.posts.original.order("position desc").limit(20)
       end
     end
   end

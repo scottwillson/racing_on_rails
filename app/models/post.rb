@@ -1,6 +1,7 @@
 # Archived mailing list post
 class Post < ActiveRecord::Base
   include Posts::Migration
+  include Posts::Search
 
   validates_presence_of :date
   validates_presence_of :from_email, on: :create
@@ -12,7 +13,6 @@ class Post < ActiveRecord::Base
 
   belongs_to :mailing_list
   belongs_to :original, class_name: "Post", inverse_of: :replies
-  has_one :post_text, dependent: :destroy
   has_many :replies, class_name: "Post", inverse_of: :original, foreign_key: :original_id
 
   scope :original, -> { where(original_id: nil) }
@@ -44,7 +44,6 @@ class Post < ActiveRecord::Base
       post.last_reply_at = post.date
       return false if !post.save
 
-      post.add_post_text
       original.reposition! if original
       ApplicationController.expire_cache
     end
@@ -146,11 +145,5 @@ class Post < ActiveRecord::Base
     end
 
     ""
-  end
-
-  def add_post_text
-    updated_post_text = post_text(true) || build_post_text
-    updated_post_text.text = subject
-    updated_post_text.save
   end
 end
