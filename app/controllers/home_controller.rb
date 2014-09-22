@@ -2,8 +2,6 @@
 class HomeController < ApplicationController
   respond_to :html
 
-  caches_page :index
-
   before_filter :require_administrator, except: [ :index, :show ]
 
   # Show homepage
