@@ -1,5 +1,3 @@
-require_dependency "acts_as_tree/validation"
-
 # Homepage Article Category
 class ArticleCategory < ActiveRecord::Base
   acts_as_tree order: "position"

@@ -1,5 +1,3 @@
-require_dependency "acts_as_tree/validation"
-
 # Senior Men, Pro/1/2, Novice Masters 45+
 #
 # Categories are just a simple hierarchy of names

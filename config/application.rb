@@ -44,6 +44,9 @@ module RacingOnRails
       require "#{config.root}/lib/registration_engine/lib/registration_engine/engine"
     end
 
+    require_dependency "acts_as_tree/extensions"
+    require_dependency "acts_as_tree/validation"
+
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?
         Raygun

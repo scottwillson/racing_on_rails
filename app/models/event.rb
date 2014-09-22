@@ -1,5 +1,3 @@
-require_dependency "acts_as_tree/extensions"
-
 # Superclass for anything that can have results:
 # * Event (Superclass only used to organizes multiple sets of results on a single day.
 #          Examples: Alpenrose Challenge Morning Session, Alpenrose Challenge Afternoon Session)
