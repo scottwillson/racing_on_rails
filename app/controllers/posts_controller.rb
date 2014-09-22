@@ -16,7 +16,7 @@ class PostsController < ApplicationController
         if @subject.present?
           @posts = Post.matching(@mailing_list, @subject).page(page)
         else
-          @posts = @mailing_list.posts.original.page(page)
+          @posts = @mailing_list.posts.original.order("position desc").page(page)
         end
       end
 
