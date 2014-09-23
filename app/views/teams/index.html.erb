@@ -1,6 +1,6 @@
 <% @page_title = "Teams" %>
 
-<% cache [ @year, RacingAssociation.current.updated_at, mobile_request? ] do %>
+<% cache [ RacingAssociation.current.short_name, @year, RacingAssociation.current.updated_at, mobile_request? ] do %>
   <h2><%= RacingAssociation.current.short_name %>-registered teams in Oregon and SW Washington.</h2>
 
   <p>A list of <%= link_to "clubs rides", "http://#{RacingAssociation.current.static_host}/teams/rides.html", class: "obvious" %> is available if you're looking for a group ride.</p>
