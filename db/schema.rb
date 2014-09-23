@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140922222519) do
+ActiveRecord::Schema.define(version: 20140922233450) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "order_id"
@@ -45,6 +45,8 @@ ActiveRecord::Schema.define(version: 20140922222519) do
     t.datetime "updated_at"
   end
 
+  add_index "article_categories", ["updated_at"], name: "index_article_categories_on_updated_at", using: :btree
+
   create_table "articles", force: true do |t|
     t.string   "title"
     t.string   "heading"
@@ -56,6 +58,9 @@ ActiveRecord::Schema.define(version: 20140922222519) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "articles", ["article_category_id"], name: "index_articles_on_article_category_id", using: :btree
+  add_index "articles", ["updated_at"], name: "index_articles_on_updated_at", using: :btree
 
   create_table "bank_statements", force: true do |t|
     t.decimal  "american_express_fees",        precision: 10, scale: 2
@@ -97,6 +102,7 @@ ActiveRecord::Schema.define(version: 20140922222519) do
   add_index "categories", ["friendly_param"], name: "index_categories_on_friendly_param", using: :btree
   add_index "categories", ["name"], name: "categories_name_index", unique: true, using: :btree
   add_index "categories", ["parent_id"], name: "parent_id", using: :btree
+  add_index "categories", ["updated_at"], name: "index_categories_on_updated_at", using: :btree
 
   create_table "competition_event_memberships", force: true do |t|
     t.integer "competition_id",                          null: false
@@ -255,6 +261,7 @@ ActiveRecord::Schema.define(version: 20140922222519) do
   add_index "events", ["sanctioned_by"], name: "index_events_on_sanctioned_by", using: :btree
   add_index "events", ["type"], name: "idx_type", using: :btree
   add_index "events", ["type"], name: "index_events_on_type", using: :btree
+  add_index "events", ["updated_at"], name: "index_events_on_updated_at", using: :btree
   add_index "events", ["velodrome_id"], name: "velodrome_id", using: :btree
 
   create_table "homes", force: true do |t|
@@ -264,6 +271,8 @@ ActiveRecord::Schema.define(version: 20140922222519) do
     t.integer  "weeks_of_recent_results",  default: 2, null: false
     t.integer  "weeks_of_upcoming_events", default: 2, null: false
   end
+
+  add_index "homes", ["updated_at"], name: "index_homes_on_updated_at", using: :btree
 
   create_table "import_files", force: true do |t|
     t.string   "name",       null: false
@@ -317,6 +326,7 @@ ActiveRecord::Schema.define(version: 20140922222519) do
   end
 
   add_index "mailing_lists", ["name"], name: "idx_name", using: :btree
+  add_index "mailing_lists", ["updated_at"], name: "index_mailing_lists_on_updated_at", using: :btree
 
   create_table "names", force: true do |t|
     t.integer  "nameable_id",   null: false
@@ -445,6 +455,7 @@ ActiveRecord::Schema.define(version: 20140922222519) do
   add_index "pages", ["parent_id"], name: "parent_id", using: :btree
   add_index "pages", ["path"], name: "index_pages_on_path", unique: true, using: :btree
   add_index "pages", ["slug"], name: "index_pages_on_slug", using: :btree
+  add_index "pages", ["updated_at"], name: "index_pages_on_updated_at", using: :btree
 
   create_table "payment_gateway_transactions", force: true do |t|
     t.integer  "order_id"
@@ -533,7 +544,6 @@ ActiveRecord::Schema.define(version: 20140922222519) do
     t.boolean  "membership_card",                                   default: false, null: false
     t.boolean  "official",                                          default: false, null: false
     t.integer  "non_member_result_id"
-    t.string   "fullname"
     t.string   "name",                                              default: "",    null: false
   end
 
@@ -552,6 +562,7 @@ ActiveRecord::Schema.define(version: 20140922222519) do
   add_index "people", ["print_card"], name: "index_people_on_print_card", using: :btree
   add_index "people", ["single_access_token"], name: "index_people_on_single_access_token", using: :btree
   add_index "people", ["team_id"], name: "idx_team_id", using: :btree
+  add_index "people", ["updated_at"], name: "index_people_on_updated_at", using: :btree
 
   create_table "people_people", id: false, force: true do |t|
     t.integer "person_id", null: false
@@ -581,6 +592,8 @@ ActiveRecord::Schema.define(version: 20140922222519) do
     t.string   "link"
   end
 
+  add_index "photos", ["updated_at"], name: "index_photos_on_updated_at", using: :btree
+
   create_table "posts", force: true do |t|
     t.text     "body",                              null: false
     t.datetime "date",                              null: false
@@ -606,6 +619,7 @@ ActiveRecord::Schema.define(version: 20140922222519) do
   add_index "posts", ["position"], name: "index_posts_on_position", using: :btree
   add_index "posts", ["subject"], name: "idx_subject", using: :btree
   add_index "posts", ["topica_message_id"], name: "idx_topica_message_id", unique: true, using: :btree
+  add_index "posts", ["updated_at"], name: "index_posts_on_updated_at", using: :btree
 
   create_table "product_variants", force: true do |t|
     t.integer  "product_id",                                          null: false
@@ -693,6 +707,7 @@ ActiveRecord::Schema.define(version: 20140922222519) do
   add_index "races", ["bar_points"], name: "index_races_on_bar_points", using: :btree
   add_index "races", ["category_id"], name: "idx_category_id", using: :btree
   add_index "races", ["event_id"], name: "index_races_on_event_id", using: :btree
+  add_index "races", ["updated_at"], name: "index_races_on_updated_at", using: :btree
 
   create_table "racing_associations", force: true do |t|
     t.boolean  "add_members_from_results",                           default: true,                                  null: false
@@ -833,6 +848,7 @@ ActiveRecord::Schema.define(version: 20140922222519) do
   add_index "results", ["place"], name: "index_results_on_place", using: :btree
   add_index "results", ["race_id"], name: "idx_race_id", using: :btree
   add_index "results", ["team_id"], name: "idx_team_id", using: :btree
+  add_index "results", ["updated_at"], name: "index_results_on_updated_at", using: :btree
   add_index "results", ["year"], name: "index_results_on_year", using: :btree
 
   create_table "roles", force: true do |t|
@@ -872,6 +888,7 @@ ActiveRecord::Schema.define(version: 20140922222519) do
   end
 
   add_index "teams", ["name"], name: "idx_name", unique: true, using: :btree
+  add_index "teams", ["updated_at"], name: "index_teams_on_updated_at", using: :btree
 
   create_table "update_requests", force: true do |t|
     t.integer  "order_person_id", null: false
