@@ -56,8 +56,6 @@ GEM
       activesupport (= 4.1.6)
       rack (~> 1.5.2)
       rack-test (~> 0.6.2)
-    actionpack-page_caching (1.0.2)
-      actionpack (>= 4.0.0, < 5)
     actionview (4.1.6)
       activesupport (= 4.1.6)
       builder (~> 3.1)
@@ -444,7 +442,6 @@ PLATFORMS
 
 DEPENDENCIES
   Ascii85
-  actionpack-page_caching
   activemerchant (~> 1.44)
   acts_as_list!
   acts_as_tree!

@@ -2,7 +2,6 @@ source "https://rubygems.org"
 
 gem "rails", "4.1.6"
 
-gem "actionpack-page_caching"
 gem "activemerchant", "~> 1.44"
 gem "acts_as_list", git: "https://github.com/swanandp/acts_as_list.git", ref: "ac4f602d20b679370ed4bb9702ccc3fa61af1be8"
 gem "acts_as_tree", git: "https://github.com/amerine/acts_as_tree.git"
