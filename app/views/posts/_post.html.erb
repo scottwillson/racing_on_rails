@@ -1,4 +1,4 @@
-<% cache [ post, current_page ] do %>
+<% cache cache_key(post, current_page) do %>
   <tr class="post">
     <td class="badges">
       <% if post.replies_count > 0 -%>

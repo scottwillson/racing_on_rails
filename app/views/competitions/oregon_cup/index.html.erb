@@ -1,6 +1,6 @@
 <% @page_title = "Oregon Cup: #{@oregon_cup.date.year}" %>
 
-<% cache [ RacingAssociation.current.short_name, @year, RacingAssociation.current.updated_at.to_s(:number), mobile_request?, @oregon_cup ] do %>
+<% cache cache_key(@year, @oregon_cup) do %>
   <h2><%= @oregon_cup.date.year %> Oregon Cup</h2>
 
   <div class="row">

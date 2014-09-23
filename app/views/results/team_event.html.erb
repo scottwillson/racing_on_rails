@@ -1,6 +1,6 @@
 <% @page_title = "Results: #{@team.name}: #{@event.full_name}" %>
 
-<% cache [ RacingAssociation.current.short_name, RacingAssociation.current.updated_at.to_s(:number), mobile_request?, @team, @event ] do %>
+<% cache cache_key(@team, @event) do %>
   <h2><%= link_to @team.name, team_results_path(@team) %></h2>
 
   <h3><%= @result.place.to_i.ordinalize %> &mdash; <%=

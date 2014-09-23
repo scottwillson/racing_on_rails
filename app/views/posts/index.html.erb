@@ -19,7 +19,7 @@
 
 <%= render "pagination", posts: @post, mailing_list: @mailing_list %>
 
-<% cache [ @posts, @posts.current_page ] do %>
+<% cache cache_key(@posts, @posts.current_page) do %>
   <%= table collection: @posts, columns: 4 do %>
     <thead>
       <tr>

@@ -1,6 +1,6 @@
 <% @page_title = "Ironman: #{@year}" %>
 
-<% cache [ RacingAssociation.current.short_name, @year, RacingAssociation.current.updated_at.to_s(:number), mobile_request?, @ironman, page ] do %>
+<% cache cache_key(@year, @ironman, page) do %>
   <%= tabs(@year) do |tabs|
     @years.each do |year|
       tabs.add year, ironman_path(year)

@@ -1,6 +1,6 @@
 <% @page_title = "Results: #{@person.name}: #{@event.full_name}" %>
 
-<% cache [ RacingAssociation.current.short_name, RacingAssociation.current.updated_at.to_s(:number), mobile_request?, @person, @event ] do %>
+<% cache cache_key(@person, @event) do %>
 	<h2><%= link_to @person.name, person_results_path(@person) %></h2>
 
 	<%- @results.sort_by(&:date).reverse.each do |result| -%>

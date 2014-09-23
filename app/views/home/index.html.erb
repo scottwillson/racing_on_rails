@@ -1,4 +1,4 @@
-<% cache [ RacingAssociation.current.short_name, @today, RacingAssociation.current.updated_at.to_s(:number), mobile_request? ] do %>
+<% cache cache_key(@today) do %>
   <div class="home">
     <%= render "photo_row",
         photo: @photo,

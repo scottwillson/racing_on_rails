@@ -1,6 +1,6 @@
 <% @page_title = "BAR" %>
 
-<% cache [ RacingAssociation.current.short_name, @year, RacingAssociation.current.updated_at.to_s(:number), mobile_request?, @overall_bar ] do %>
+<% cache cache_key(@overall_bar) do %>
   <h2>OBRA BAR</h2>
 
   <%= render "years", overall_bar: @overall_bar, race: @race, year: @year %>

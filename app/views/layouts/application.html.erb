@@ -7,11 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <%= csrf_meta_tags %>
 
-  <% cache [ RacingAssociation.current.short_name, :stylesheets ] do %>
+  <% cache cache_key(:stylesheets) do %>
     <%= render "layouts/stylesheets" %>
   <% end %>
 
-  <% cache [ RacingAssociation.current.short_name, :javascripts ] do %>
+  <% cache cache_key(:javascripts) do %>
     <%= render "layouts/javascripts" %>
   <% end %>
 

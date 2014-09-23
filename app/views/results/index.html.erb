@@ -11,7 +11,7 @@
   </div>
 <% end %>
 
-<% cache [ RacingAssociation.current.short_name, @year, @discipline, RacingAssociation.current.updated_at.to_s(:number), mobile_request? ] do %>
+<% cache cache_key(@year, @discipline) do %>
   <%= table do %>
     <%- events.sort_by(&:date).reverse.each do |event| -%>
       <tr>

@@ -1,6 +1,6 @@
 <% @page_title = "Schedule: #{@year}" %>
 
-<% cache [ RacingAssociation.current.short_name, @today, RacingAssociation.current.updated_at.to_s(:number), mobile_request?, @year, @regions, @discipline, @sanctioning_organization ] do %>
+<% cache cache_key(@today, @year, @regions, @discipline, @sanctioning_organization) do %>
   <%= render_page "shared/years", year: @year, discipline: @discipline %>
   <%= render "shared/months" %>
   <%= render_page "sanctioning_organizations", year: @year, sanctioning_organizations: @sanctioning_organizations %>

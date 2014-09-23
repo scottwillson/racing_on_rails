@@ -1,6 +1,6 @@
 <% @page_title = "Results: #{@team.name}: #{@year}" %>
 
-<% cache [ RacingAssociation.current.short_name, @year, RacingAssociation.current.updated_at.to_s(:number), mobile_request?, @team ] do %>
+<% cache cache_key(@year, @team) do %>
   <h2><%= @team.name %></h2>
 
   <%= render_page "years", year: @year %>
