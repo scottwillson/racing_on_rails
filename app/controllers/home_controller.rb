@@ -61,16 +61,4 @@ class HomeController < ApplicationController
   def recent_posts
     Post.recent
   end
-
-  # Most recent updated_at for all models shown on homepage
-  def updated_at
-    [
-      Article.maximum(:updated_at),
-      ArticleCategory.maximum(:updated_at),
-      Event.maximum(:updated_at),
-      Home.maximum(:updated_at),
-      Post.maximum(:updated_at),
-      Result.maximum(:updated_at)
-    ].compact.max
-  end
 end
