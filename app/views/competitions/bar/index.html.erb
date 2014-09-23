@@ -1,29 +1,31 @@
 <% @page_title = "BAR" %>
 
-<h2>OBRA BAR</h2>
+<% cache [ RacingAssociation.current.short_name, @year, RacingAssociation.current.updated_at.to_s(:number), mobile_request?, @overall_bar ] do %>
+  <h2>OBRA BAR</h2>
 
-<%= render "years", overall_bar: @overall_bar, race: @race, year: @year %>
-<%= render("disciplines", overall_bar: @overall_bar, race: @race, discipline: @overall_bar.discipline) if @overall_bar %>
-<%= render("races", race: @race, categories: @overall_bar.races_with_results.map(&:category)) if @race %>
+  <%= render "years", overall_bar: @overall_bar, race: @race, year: @year %>
+  <%= render("disciplines", overall_bar: @overall_bar, race: @race, discipline: @overall_bar.discipline) if @overall_bar %>
+  <%= render("races", race: @race, categories: @overall_bar.races_with_results.map(&:category)) if @race %>
 
-<p>Oregon Best All-Around Rider (BAR) a year-round, multi-discipline competition open to annual members. Points and ranking will be tracked in at least the following categories: Senior Men and Women, Category 3 Men, Category 4/5 Men, Category 3 Women, Category 4/5 Women, Masters Men and Women, Junior Men and Women, Singlespeed/Fixed, Tandem, and Clydesdale.</p>
+  <p>Oregon Best All-Around Rider (BAR) a year-round, multi-discipline competition open to annual members. Points and ranking will be tracked in at least the following categories: Senior Men and Women, Category 3 Men, Category 4/5 Men, Category 3 Women, Category 4/5 Women, Masters Men and Women, Junior Men and Women, Singlespeed/Fixed, Tandem, and Clydesdale.</p>
 
-<p>There are seven separate discipline rankings, one each for Road, Track, Criterium, Time Trial, Cyclocross, Mountain Biking (Cross-country, Downhill, SuperD) and Short Track. Points are awarded for finishes at all OBRA races for the top-15 in each discipline: 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1.</p>
+  <p>There are seven separate discipline rankings, one each for Road, Track, Criterium, Time Trial, Cyclocross, Mountain Biking (Cross-country, Downhill, SuperD) and Short Track. Points are awarded for finishes at all OBRA races for the top-15 in each discipline: 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1.</p>
 
-<p>State championships and national-caliber races are awarded double points. Fields with more than 75 riders are awarded 1.5 times regular BAR points.</p>
+  <p>State championships and national-caliber races are awarded double points. Fields with more than 75 riders are awarded 1.5 times regular BAR points.</p>
 
-<p>Points earned in team events are split evenly across the team members. Example: the winners of a three-person team time trial will each receive five points.</p>
+  <p>Points earned in team events are split evenly across the team members. Example: the winners of a three-person team time trial will each receive five points.</p>
 
-<p>Tandem teams earn points as a team. Tandem points do not count toward individual rider points.</p>
+  <p>Tandem teams earn points as a team. Tandem points do not count toward individual rider points.</p>
 
-<p>If a rider has multiple finishes in a single event, only the best finish counts. </p>
+  <p>If a rider has multiple finishes in a single event, only the best finish counts. </p>
 
-<p>If a rider has multiple discipline rankings that would count towards the same overall category, only the best ranking counts.</p>
+  <p>If a rider has multiple discipline rankings that would count towards the same overall category, only the best ranking counts.</p>
 
-<p>Weeknight events will accrue points for each month of racing.</p>
+  <p>Weeknight events will accrue points for each month of racing.</p>
 
-<p>Points are tallied and riders are ranked in order of points in each discipline. The rider with the highest point tally in each discipline is awarded 300 "ranking" points, the rider with the second highest is awarded 299, third gets 298, etc. If a rider has points in more than five disciplines, only the top five disciplines are counted. This means that there is a total 1500 points possible.</p>
+  <p>Points are tallied and riders are ranked in order of points in each discipline. The rider with the highest point tally in each discipline is awarded 300 "ranking" points, the rider with the second highest is awarded 299, third gets 298, etc. If a rider has points in more than five disciplines, only the top five disciplines are counted. This means that there is a total 1500 points possible.</p>
 
-<p>These ranking numbers are then added to determine annual awards. Riders must compete in a minimum of four disciplines in order to qualify for  annual trophies.</p>
+  <p>These ranking numbers are then added to determine annual awards. Riders must compete in a minimum of four disciplines in order to qualify for  annual trophies.</p>
 
-<p>The Team BAR is awarded based on the sum of the accrued points before rankings. </p>
+  <p>The Team BAR is awarded based on the sum of the accrued points before rankings. </p>
+<% end %>

@@ -1,5 +1,5 @@
 xml.instruct!
-cache [ @year, @today, @discipline, RacingAssociation.current.updated_at, false ] do
+cache [ @year, @today, @discipline, RacingAssociation.current.updated_at.to_s(:number), false ] do
   xml.events do
     (@all_events).each do |event|
       xml.event do

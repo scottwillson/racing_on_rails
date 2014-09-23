@@ -1,51 +1,53 @@
 <% @page_title = "Schedule: #{@year}" %>
 
-<h2><%= @year %> Schedule</h2>
+<% cache [ RacingAssociation.current.short_name, @today, RacingAssociation.current.updated_at.to_s(:number), mobile_request?, @year, @regions, @discipline, @sanctioning_organization ] do %>
+  <h2><%= @year %> Schedule</h2>
 
-<%= render_page "shared/years", year: @year, discipline: @discipline %>
-<%= render_page "shared/disciplines", year: @year, discipline: @discipline %>
-<%= render "tabs", calendar_tab: @calendar_tab %>
-<%= render_page "schedule/tentative" %>
+  <%= render_page "shared/years", year: @year, discipline: @discipline %>
+  <%= render_page "shared/disciplines", year: @year, discipline: @discipline %>
+  <%= render "tabs", calendar_tab: @calendar_tab %>
+  <%= render_page "schedule/tentative" %>
 
-<%= table collection: @events, columns: 7 do %>
-  <thead>
+  <%= table collection: @events, columns: 7 do %>
+    <thead>
+      <tr>
+        <th class="date">Date</th>
+        <th></th>
+        <th>Event</th>
+        <th class="promoter">Promoter</th>
+        <th class="phone">Phone</th>
+        <th class="discipline">Discipline</th>
+        <th class="location">Location</th>
+      </tr>
+    </thead>
+    <tbody>
+  <%- @events.sort.each do |event| -%>
     <tr>
-      <th class="date">Date</th>
-      <th></th>
-      <th>Event</th>
-      <th class="promoter">Promoter</th>
-      <th class="phone">Phone</th>
-      <th class="discipline">Discipline</th>
-      <th class="location">Location</th>
-    </tr>
-  </thead>
-  <tbody>
-<%- @events.sort.each do |event| -%>
-  <tr>
-    <td class="date">
-      <%= event.date.strftime("%a %-m/%-d") if event.date -%>
-    </td>
-    <td class="beginner_friendly"><% if event.beginner_friendly? %><span class="glyphicon glyphicon-ok-circle"></span><% end %></td>
-    <%- if event.cancelled %>
-    <td><span class="cancelled"><%= event.full_name -%></span> <em>cancelled</em></td>
-    <%- elsif event.postponed? %>
-    <td><span class="postponed"><%= event.full_name -%></span> <em>postponed</em></td>
-      <%- else -%>
-    <td class="link">
-        <%- if event.flyer.present? && event.flyer_approved? -%>
-          <a href="<%= event.flyer -%>"<%= "target='_blank'" if RacingAssociation.current.flyers_in_new_window? %>><%= event.full_name -%><%- if (!event.full_name.include?("MTB") and event.discipline == "Mountain Bike") -%>
-          MTB
-          <%- end -%></a>
-            <%- else -%>
-          <%= event.full_name -%><%= " MTB" if !event.full_name.include?("MTB") && event.discipline == "Mountain Bike" -%>
-        <%- end -%>
+      <td class="date">
+        <%= event.date.strftime("%a %-m/%-d") if event.date -%>
       </td>
+      <td class="beginner_friendly"><% if event.beginner_friendly? %><span class="glyphicon glyphicon-ok-circle"></span><% end %></td>
+      <%- if event.cancelled %>
+      <td><span class="cancelled"><%= event.full_name -%></span> <em>cancelled</em></td>
+      <%- elsif event.postponed? %>
+      <td><span class="postponed"><%= event.full_name -%></span> <em>postponed</em></td>
+        <%- else -%>
+      <td class="link">
+          <%- if event.flyer.present? && event.flyer_approved? -%>
+            <a href="<%= event.flyer -%>"<%= "target='_blank'" if RacingAssociation.current.flyers_in_new_window? %>><%= event.full_name -%><%- if (!event.full_name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+            MTB
+            <%- end -%></a>
+              <%- else -%>
+            <%= event.full_name -%><%= " MTB" if !event.full_name.include?("MTB") && event.discipline == "Mountain Bike" -%>
+          <%- end -%>
+        </td>
+        <%- end -%>
+      <td><%= link_to_event_email event %></td>
+      <td class="contact_phone"><%= link_to_event_phone event %></td>
+      <td class="discipline"><%= event.discipline -%></td>
+      <td><%= event.city -%></td>
+    </tr>
       <%- end -%>
-    <td><%= link_to_event_email event %></td>
-    <td class="contact_phone"><%= link_to_event_phone event %></td>
-    <td class="discipline"><%= event.discipline -%></td>
-    <td><%= event.city -%></td>
-  </tr>
-    <%- end -%>
-<% end -%>
-</tbody>
+  <% end -%>
+  </tbody>
+<% end %>

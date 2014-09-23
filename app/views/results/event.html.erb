@@ -1,6 +1,6 @@
 <% @page_title = "Results: #{@event.date.year}: #{@event.full_name}" %>
 
-<% cache [ RacingAssociation.current.short_name, @event, RacingAssociation.current.updated_at, mobile_request? ] do %>
+<% cache [ RacingAssociation.current.short_name, @event, RacingAssociation.current.updated_at.to_s(:number), mobile_request? ] do %>
   <h2><%= public_link_to_flyer @event %></h2>
 
   <div class="row event_info">

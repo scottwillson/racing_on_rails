@@ -1,8 +1,6 @@
 # What appear to be duplicate finds are actually existence tests.
 # Many methods to handle old URLs that search engines still hit. Will be removed.
 class ResultsController < ApplicationController
-  caches_page :person, :person_event, :team
-
   helper_method :competitions
   helper_method :events
   helper_method :weekly_series

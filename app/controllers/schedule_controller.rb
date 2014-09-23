@@ -2,8 +2,6 @@
 #
 # Caches all of its pages
 class ScheduleController < ApplicationController
-  caches_page :index, :list, :calendar
-
   before_filter :assign_schedule
   before_filter :assign_sanctioning_organizations
 

@@ -1,14 +1,16 @@
-<% if @race -%>
-  <% @page_title = "BAR: #{@race.year}: #{@race.discipline}: #{@race.category.name}" %>
-  <h2><%= @race.year %> <%= @race.discipline %> <%= @race.name unless @race.name == "Team BAR" %> BAR</h2>
-  <%= render "years", overall_bar: @overall_bar, race: @race, year: @year %>
-  <%= render "disciplines", overall_bar: @overall_bar, race: @race, discipline: @race.discipline %>
-  <%= render "races", race: @race, categories: @race.event.races_with_results.map(&:category) %>
-  <p class="created_updated">Updated <%= @race.updated_at.to_formatted_s(:long) %></p>
-<% else %>
-  <% @page_title = "BAR" %>
-  <h2><%= @year %> BAR</h2>
-  <%= render "years", overall_bar: @overall_bar, race: @race, year: @year %>
-<% end %>
+<% cache [ RacingAssociation.current.short_name, @year, RacingAssociation.current.updated_at.to_s(:number), mobile_request?, @race ] do %>
+  <% if @race -%>
+    <% @page_title = "BAR: #{@race.year}: #{@race.discipline}: #{@race.category.name}" %>
+    <h2><%= @race.year %> <%= @race.discipline %> <%= @race.name unless @race.name == "Team BAR" %> BAR</h2>
+    <%= render "years", overall_bar: @overall_bar, race: @race, year: @year %>
+    <%= render "disciplines", overall_bar: @overall_bar, race: @race, discipline: @race.discipline %>
+    <%= render "races", race: @race, categories: @race.event.races_with_results.map(&:category) %>
+    <p class="created_updated">Updated <%= @race.updated_at.to_formatted_s(:long) %></p>
+  <% else %>
+    <% @page_title = "BAR" %>
+    <h2><%= @year %> BAR</h2>
+    <%= render "years", overall_bar: @overall_bar, race: @race, year: @year %>
+  <% end %>
 
-<%= results_table @race.try(:event), @race %>
+  <%= results_table @race.try(:event), @race %>
+<% end %>

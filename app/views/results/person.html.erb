@@ -1,46 +1,48 @@
 <% @page_title = "Results: #{@person.name}: #{@year}" %>
 
-<h2><%= @person.name %></h2>
+<% cache [ RacingAssociation.current.short_name, @year, RacingAssociation.current.updated_at.to_s(:number), mobile_request?, @person ] do %>
+	<h2><%= @person.name %></h2>
 
-<%= render_page "years", year: @year %>
+	<%= render_page "years", year: @year %>
 
-<%= participant_event_results_table @person, @event_results %>
+	<%= participant_event_results_table @person, @event_results %>
 
-<% @competition_results.sort_by(&:event_end_date).reverse.each do |competition_result| %>
-	<h3><%= link_to(
-	  "#{competition_result.place.to_i.ordinalize} &mdash; #{competition_result.race_full_name}".html_safe,
-	  event_results_path(event_id: competition_result.event_id, anchor: "race_#{competition_result.race_id}")
-	).html_safe %></h3>
-	<%= scores_table competition_result %>
+	<% @competition_results.sort_by(&:event_end_date).reverse.each do |competition_result| %>
+		<h3><%= link_to(
+		  "#{competition_result.place.to_i.ordinalize} &mdash; #{competition_result.race_full_name}".html_safe,
+		  event_results_path(event_id: competition_result.event_id, anchor: "race_#{competition_result.race_id}")
+		).html_safe %></h3>
+		<%= scores_table competition_result %>
+	<% end %>
+
+	<form class="form-horizontal" role="form">
+	  <div class="row">
+	    <div class="col-sm-6">
+	      <%= labelled_text :person, :racing_age %>
+	      <%= labelled_text :person, :city_state, "City, State" %>
+	      <% if @person.team %>
+	      <%= labelled_text :person, :team_name, "Team", link_to(@person.team.name, team_results_path(@person.team)) %>
+	      <% else %>
+	      <%= labelled_text :person, :team_name, "Team", "" %>
+	      <% end %>
+	      <%= labelled_text :person, :gender %>
+	      <%= labelled_text :person, :license %>
+	      <%= labelled_text :person, :road_number %>
+	      <%= labelled_text :person, :ccx_number, "Cross Number" %>
+	    </div>
+	    <div class="col-sm-6">
+	      <%= labelled_text :person, :mtb_category, "MTB Category" %>
+	      <%= labelled_text :person, :dh_category, "DH Category" %>
+	      <%= labelled_text :person, :ccx_category, "Cross Category" %>
+	      <%= labelled_text :person, :road_category %>
+	      <%= labelled_text :person, :track_category %>
+	      <% if @person.member? %>
+	      <%= labelled_text :person, :member_from, "Member From", @person.member_from.to_s(:long) %>
+	      <%= labelled_text :person, :member_to, "Member To", @person.member_to.to_s(:long) %>
+	      <% else %>
+	      <%= labelled_text :person, :member_to, "Member", "Not a current member" %>
+	      <% end %>
+	    </div>
+	  </div>
+	</form>
 <% end %>
-
-<form class="form-horizontal" role="form">
-  <div class="row">
-    <div class="col-sm-6">
-      <%= labelled_text :person, :racing_age %>
-      <%= labelled_text :person, :city_state, "City, State" %>
-      <% if @person.team %>
-      <%= labelled_text :person, :team_name, "Team", link_to(@person.team.name, team_results_path(@person.team)) %>
-      <% else %>
-      <%= labelled_text :person, :team_name, "Team", "" %>
-      <% end %>
-      <%= labelled_text :person, :gender %>
-      <%= labelled_text :person, :license %>
-      <%= labelled_text :person, :road_number %>
-      <%= labelled_text :person, :ccx_number, "Cross Number" %>
-    </div>
-    <div class="col-sm-6">
-      <%= labelled_text :person, :mtb_category, "MTB Category" %>
-      <%= labelled_text :person, :dh_category, "DH Category" %>
-      <%= labelled_text :person, :ccx_category, "Cross Category" %>
-      <%= labelled_text :person, :road_category %>
-      <%= labelled_text :person, :track_category %>
-      <% if @person.member? %>
-      <%= labelled_text :person, :member_from, "Member From", @person.member_from.to_s(:long) %>
-      <%= labelled_text :person, :member_to, "Member To", @person.member_to.to_s(:long) %>
-      <% else %>
-      <%= labelled_text :person, :member_to, "Member", "Not a current member" %>
-      <% end %>
-    </div>
-  </div>
-</form>

@@ -1,3 +1,4 @@
+<% cache [ RacingAssociation.current.short_name, @year, RacingAssociation.current.updated_at.to_s(:number), mobile_request?, @event ] do %>
 
 <div class="owps">
   <div class="row logos">
@@ -222,3 +223,5 @@
     </div>
   </div>
 </div>
+
+<% end %>

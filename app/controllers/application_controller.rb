@@ -3,6 +3,8 @@ require "sentient_user/sentient_controller"
 
 class ApplicationController < ActionController::Base
   helper :all
+  helper_method :page
+
   protect_from_forgery
 
   include ActionController::ForceHTTPS
