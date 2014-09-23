@@ -221,11 +221,8 @@ class Event < ActiveRecord::Base
       where(postponed: false).
       where(cancelled: false).
       where(practice: false).
+      where.not(parent_id: multi_day_events).
       upcoming_in_weeks(weeks)
-
-    if multi_day_events.present?
-      series_child_events = series_child_events.where("parent_id not in (?)", multi_day_events.map(&:id))
-    end
 
     if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
       single_day_events = single_day_events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
@@ -233,7 +230,10 @@ class Event < ActiveRecord::Base
       series_child_events = series_child_events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
     end
 
-    (single_day_events.load + multi_day_events.load + series_child_events.load)
+    # No simple way to do lazy union of three Arel relations
+    events_table = Event.arel_table
+    union = Event.from(events_table.create_table_alias(single_day_events.union(multi_day_events), :events)).union(series_child_events)
+    Event.from(events_table.create_table_alias(union, :events))
   end
 
   # Defaults state to RacingAssociation.current.state, date to today, name to Untitled
