@@ -9,14 +9,14 @@
       <%= render "home/photo", photo: photo %>
     </div>
     <div class="col-sm-6">
-      <%= render "most_recent_event_with_recent_result", event: most_recent_event_with_recent_result %>
+      <%= render "most_recent_event_with_recent_result", event: most_recent_event_with_recent_result.first %>
     </div>
     <% else %>
     <div class="col-sm-8">
       <%= render "home/photo", photo: photo %>
     </div>
     <div class="col-sm-4">
-      <%= render "most_recent_event_with_recent_result", event: most_recent_event_with_recent_result %>
+      <%= render "most_recent_event_with_recent_result", event: most_recent_event_with_recent_result.first %>
     </div>
   <% end %>
 </div>

@@ -20,9 +20,9 @@ class HomeController < ApplicationController
     @most_recent_event_with_recent_result = Event.most_recent_with_recent_result(
       @home.weeks_of_recent_results.weeks.ago,
       RacingAssociation.current.default_sanctioned_by
-    ).first
+    )
 
-    @news_category = ArticleCategory.where(name: "news").first
+    @news_category = ArticleCategory.where(name: "news")
     if @news_category
       @recent_news = Article.recent_news(@home.weeks_of_upcoming_events.weeks.ago, @news_category)
     end
