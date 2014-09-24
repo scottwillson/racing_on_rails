@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140924014632) do
+ActiveRecord::Schema.define(version: 20140924152303) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "order_id"
@@ -249,6 +249,7 @@ ActiveRecord::Schema.define(version: 20140924014632) do
     t.integer  "region_id"
     t.date     "end_date",                                                                            null: false
     t.boolean  "registration_public",                                                 default: true,  null: false
+    t.decimal  "junior_price",                               precision: 10, scale: 2
   end
 
   add_index "events", ["bar_points"], name: "index_events_on_bar_points", using: :btree
