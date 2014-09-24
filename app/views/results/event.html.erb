@@ -40,7 +40,7 @@
   <% ActiveSupport::Notifications.instrument "@event.results.racing_on_rails", event_id: @event.id, event_name: @event.name do %>
     <% @races.select(&:any_results?).sort.each do |race| %>
   <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
-      <%= render "competition_debugging", event: @event %>
+      <%= render "results/competition_debugging", event: @event %>
       <%= results_table @event, race %>
     <% end -%>
 
