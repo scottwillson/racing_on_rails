@@ -56,5 +56,13 @@ module Competitions
     def all_year?
       false
     end
+
+    def category_ids_for(race)
+      ids = super(race)
+      if race.name == "Masters 35+ A"
+        ids << Category.find_or_create_by(name: "Masters Men A 40+").id
+      end
+      ids
+    end
   end
 end

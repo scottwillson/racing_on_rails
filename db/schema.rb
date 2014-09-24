@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140922233450) do
+ActiveRecord::Schema.define(version: 20140924014632) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "order_id"
