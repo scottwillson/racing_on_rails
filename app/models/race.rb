@@ -366,6 +366,10 @@ class Race < ActiveRecord::Base
     results.any?
   end
 
+  def junior?
+    category.junior?
+  end
+
   # By category name
   def <=>other
     category.name <=> other.category.name
