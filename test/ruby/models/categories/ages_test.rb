@@ -53,5 +53,35 @@ module Categories
       category.ages_end = 18
       assert category.age_group?, "10..18 age_group?"
     end
+
+    def test_junior
+      category = Stub.new
+      assert !category.junior?, "No ages junior?"
+
+      category = Stub.new
+      category.ages_begin = 0
+      category.ages_end = 999
+      assert !category.junior?, "0..99 junior?"
+
+      category = Stub.new
+      category.ages_begin = 60
+      category.ages_end = 999
+      assert !category.junior?, "60..99 junior?"
+
+      category = Stub.new
+      category.ages_begin = 10
+      category.ages_end = 18
+      assert category.junior?, "10..18 junior?"
+
+      category = Stub.new
+      category.ages_begin = 15
+      category.ages_end = 16
+      assert category.junior?, "15..16 junior?"
+
+      category = Stub.new
+      category.ages_begin = 30
+      category.ages_end = 99
+      assert !category.junior?, "30..99 junior?"
+    end
   end
 end
