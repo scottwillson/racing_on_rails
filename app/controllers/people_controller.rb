@@ -171,7 +171,7 @@ class PeopleController < ApplicationController
   def find_people
     @name = params[:name].try(:strip)
     if @name.present?
-      @people = Person.name_like(@name).page(page)
+      @people = Person.name_like(@name[0, 32]).page(page)
     else
       @people = Person.none
     end

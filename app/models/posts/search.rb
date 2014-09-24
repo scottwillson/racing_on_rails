@@ -14,10 +14,12 @@ module Posts
 
       def self.matching(mailing_list, subject)
         ActiveSupport::Notifications.instrument "search.posts.racing_on_rails", subject: subject do
+          return Post.none if subject.blank?
+
           Post.search(
             query: {
               multi_match: {
-                query: subject,
+                query: subject[0, 32],
                 fields: [ "subject^3", "body" ]
               }
             },
