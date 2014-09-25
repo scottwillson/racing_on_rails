@@ -19,9 +19,6 @@ module Schedule
       velodrome: :velodrome_name
     }
 
-    # FIXME Remove dependency. Is it here because we need a helper?
-    include ActionView
-
     # 0-based array of Months
     attr_reader :months, :year
     attr_accessor :events
