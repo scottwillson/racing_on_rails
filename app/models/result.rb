@@ -452,6 +452,13 @@ class Result < ActiveRecord::Base
     end
   end
 
+  def inspect_debug
+    puts to_long_s
+    scores(true).sort.each do |score|
+      puts score
+    end
+  end
+
   # Add +race+ and +race#event+ name, time and points to default to_s
   def to_long_s
     "#<Result #{id}\t#{place}\t#{race.event.name}\t#{race.name} (#{race.id})\t#{name}\t#{team_name}\t#{self.category_name}\t#{points}\t#{time_s if self[:time]}>"

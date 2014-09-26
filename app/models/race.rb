@@ -391,6 +391,11 @@ class Race < ActiveRecord::Base
     category == other.category
   end
 
+  def inspect_debug
+    puts to_s
+    results(true).sort.each(&:inspect_debug)
+  end
+
   def to_s
     "#<Race #{self.id} #{self[:event_id]} #{self[:category_id]} >"
   end
