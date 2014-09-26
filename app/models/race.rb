@@ -11,6 +11,7 @@ class Race < ActiveRecord::Base
   include Comparable
   include Export::Races
   include RacingOnRails::VestalVersions::Versioned
+  include Sanctioned
 
   DEFAULT_RESULT_COLUMNS = %W{ place number last_name first_name team_name points time }.freeze
   RESULT_COLUMNS = %W{
@@ -20,7 +21,6 @@ class Race < ActiveRecord::Base
   }.freeze
 
   validates_presence_of :event, :category
-  validate :inclusion_of_sanctioned_by
 
   before_validation :find_associated_records
 
@@ -126,13 +126,6 @@ class Race < ActiveRecord::Base
 
   def sanctioned_by
     self[:sanctioned_by] || event.try(:sanctioned_by) || RacingAssociation.current.default_sanctioned_by
-  end
-
-  # FIXME Extract to module. Shared by Event.
-  def inclusion_of_sanctioned_by
-    if sanctioned_by && !RacingAssociation.current.sanctioning_organizations.include?(sanctioned_by)
-      errors.add :sanctioned_by, "'#{sanctioned_by}' must be in #{RacingAssociation.current.sanctioning_organizations.join(", ")}"
-    end
   end
 
   def present_columns

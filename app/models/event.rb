@@ -43,13 +43,13 @@ class Event < ActiveRecord::Base
   include ActsAsTree::Extensions
   include RacingOnRails::VestalVersions::Versioned
   include Export::Events
+  include Sanctioned
 
   before_save :set_team
 
   validates_presence_of :date, :name
 
   validate :inclusion_of_discipline
-  validate :inclusion_of_sanctioned_by
 
   belongs_to :number_issuer
   belongs_to :team
@@ -85,10 +85,6 @@ class Event < ActiveRecord::Base
       "(date between :today and :later) || (end_date between :today and :later)",
       today: Time.zone.today,
       later: number_of_weeks.weeks.from_now.to_date)
-  }
-
-  scope :default_sanctioned_by, lambda {
-    where sanctioned_by: RacingAssociation.current.default_sanctioned_by
   }
 
   def self.upcoming(weeks = 2)
@@ -212,12 +208,6 @@ class Event < ActiveRecord::Base
   def inclusion_of_discipline
     if discipline.present? && Discipline.names.present? && !Discipline.names.include?(discipline)
       errors.add :discipline, "'#{discipline}' is not in #{Discipline.names.join(", ")}"
-    end
-  end
-
-  def inclusion_of_sanctioned_by
-    if sanctioned_by && !RacingAssociation.current.sanctioning_organizations.include?(sanctioned_by)
-      errors.add :sanctioned_by, "'#{sanctioned_by}' must be in #{RacingAssociation.current.sanctioning_organizations.join(", ")}"
     end
   end
 
