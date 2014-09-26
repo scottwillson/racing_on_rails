@@ -69,16 +69,14 @@ module Events
     end
 
     def validate_no_results
-      races(true).each do |race|
-        if race.results(true).any?
-          errors.add('results', 'Cannot destroy event with results')
-          return false
-        end
+      if any_results?
+        errors.add :results, "Cannot destroy event with results"
+        return false
       end
 
-      children(true).each do |event|
-        errors.add('results', 'Cannot destroy event with children with results')
-        return false unless event.validate_no_results
+      if any_results_including_children?
+        errors.add :results, "Cannot destroy event with children with results"
+        return false
       end
 
       true

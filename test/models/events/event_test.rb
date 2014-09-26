@@ -166,6 +166,7 @@ class EventTest < ActiveSupport::TestCase
 
   test "no delete with results" do
     event = FactoryGirl.create(:result).event
+    event = Event.find(event.id)
     assert(!event.destroy, 'Should not be destroyed')
     assert(!event.errors.empty?, 'Should have errors')
     assert(Event.exists?(event.id), "Kings Valley should not be deleted")

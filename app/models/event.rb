@@ -32,24 +32,25 @@
 class Event < ActiveRecord::Base
   TYPES =  [ 'Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries' ]
 
-  after_initialize :set_defaults
+  attr_reader :new_promoter_name
+  attr_reader :new_team_name
+
+  include Events::Children
+  include Events::Comparison
+  include Events::Dates
+  include Events::Defaults
+  include Events::Naming
+  include Events::Results
+  include ActsAsTree::Extensions
+  include RacingOnRails::VestalVersions::Versioned
+  include Export::Events
+
   before_save :set_promoter, :set_team
 
   validates_presence_of :date, :name
 
-  validate :parent_is_not_self
-
   validate :inclusion_of_discipline
   validate :inclusion_of_sanctioned_by
-
-  belongs_to :parent, foreign_key: "parent_id", class_name: "Event"
-  has_many :children,
-           -> { order :date },
-           class_name: "Event",
-           foreign_key: "parent_id",
-           dependent: :destroy,
-           after_add: :children_changed,
-           after_remove: :children_changed
 
   has_many :child_competitions,
            -> { order :date },
@@ -113,25 +114,6 @@ class Event < ActiveRecord::Base
       later: number_of_weeks.weeks.from_now.to_date)
   }
 
-  scope :child, lambda { where("parent_id is not null") }
-  # :root?
-  scope :not_child, lambda { where("parent_id is null") }
-
-  scope :not_single_day_event, lambda {
-    where "type is null or type != 'SingleDayEvent'"
-  }
-
-  attr_reader :new_promoter_name
-  attr_reader :new_team_name
-
-  include Events::Comparison
-  include Events::Dates
-  include Events::Naming
-  include Events::Results
-  include ActsAsTree::Extensions
-  include RacingOnRails::VestalVersions::Versioned
-  include Export::Events
-
   def self.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
     discipline_names = [discipline]
     discipline_names << 'Circuit' if discipline.downcase == 'road'
@@ -189,77 +171,6 @@ class Event < ActiveRecord::Base
     )
   end
 
-  # Defaults state to RacingAssociation.current.state, date to today, name to New Event mm-dd-yyyy
-  # NumberIssuer: RacingAssociation.current.short_name
-  # Child events use their parent's values unless explicity overriden. And you cannot override
-  # parent values by passing in blank or nil attributes to initialize, as there is
-  # no way to differentiate missing values from nils or blanks.
-  def set_defaults
-    if new_record?
-      if parent
-        propogated_attributes.each { |attr|
-          (self[attr] = parent[attr]) if self[attr].blank?
-        }
-      end
-      self.bar_points = default_bar_points       if self[:bar_points].nil?
-      self.date = default_date                   if self[:date].nil?
-      self.discipline = default_discipline       if self[:discipline].nil?
-      self.name = default_name                   if self[:name].nil?
-      self.ironman = default_ironman             if self[:ironman].nil?
-      self.number_issuer = default_number_issuer if number_issuer.nil?
-      self.region_id = default_region_id         if self[:region_id].nil?
-      self.sanctioned_by = default_sanctioned_by if (parent.nil? && self[:sanctioned_by].nil?) || (parent && parent[:sanctioned_by].nil?)
-      self.state = default_state                 if (parent.nil? && self[:state].nil?) || (parent && parent[:state].nil?)
-    end
-  end
-
-  def propogated_attributes
-    @propogated_attributes ||= %w{
-      city discipline flyer name number_issuer_id promoter_id prize_list sanctioned_by state time velodrome_id time
-      postponed cancelled flyer_approved instructional practice sanctioned_by email phone team_id beginner_friendly
-    }
-  end
-
-  def attributes_for_duplication
-    _attributes = attributes.dup
-    _attributes.delete("id")
-    _attributes.delete("created_at")
-    _attributes.delete("updated_at")
-    _attributes
-  end
-
-  def default_bar_points
-    if parent.is_a?(WeeklySeries) || (parent.try(:parent) && parent.parent.is_a?(WeeklySeries))
-      0
-    else
-      1
-    end
-  end
-
-  def default_discipline
-    "Road"
-  end
-
-  def default_ironman
-    true
-  end
-
-  def default_region_id
-    RacingAssociation.current.default_region_id
-  end
-
-  def default_state
-    RacingAssociation.current.state
-  end
-
-  def default_sanctioned_by
-    RacingAssociation.current.default_sanctioned_by
-  end
-
-  def default_number_issuer
-    NumberIssuer.find_by_name(RacingAssociation.current.short_name)
-  end
-
   def destroy_races
     ActiveRecord::Base.lock_optimistically = false
     transaction do
@@ -285,37 +196,6 @@ class Event < ActiveRecord::Base
   def categories
     _categories = races.map(&:category)
     children.inject(_categories) { |cats, child| cats + child.categories }
-  end
-
-  # Update child events from parents' attributes if child attribute has the
-  # same value as the parent before update
-  def update_children
-    return true if new_record? || children.count == 0
-    changes.select { |key, value| propogated_attributes.include?(key) }.each do |change|
-      attribute = change.first
-      was = change.last.first
-      if was.blank?
-        SingleDayEvent.where(
-          "(#{attribute}=? or #{attribute} is null or #{attribute} = '') and parent_id=?", was, self[:id]
-        ).update_all(attribute => self[attribute])
-      else
-        SingleDayEvent.where(attribute => was, parent_id: id).update_all(attribute => self[attribute])
-      end
-    end
-
-    children.each(&:update_children)
-    true
-  end
-
-  # Synch Races with children. More accurately: create a new Race on each child Event for each Race on the parent.
-  def propagate_races
-    # Do nothing in superclass
-  end
-
-  def children_changed(child)
-    # Don't trigger callbacks
-    Event.where(id: id).update_all(updated_at: Time.zone.now)
-    true
   end
 
   # Set point value/factor for this Competition. Convenience method to hide CompetitionEventMembership complexity.
@@ -434,48 +314,6 @@ class Event < ActiveRecord::Base
 
   def association?
     number_issuer.try(:association?)
-  end
-
-  # Always return false
-  def missing_parent?
-    false
-  end
-
-  def missing_children?
-    missing_children.any?
-  end
-
-  # Always return empty Array
-  def missing_children
-    []
-  end
-
-  def multi_day_event_children_with_no_parent?
-    multi_day_event_children_with_no_parent.any?
-  end
-
-  def multi_day_event_children_with_no_parent
-    return [] unless name && date
-
-    @multi_day_event_children_with_no_parent ||= SingleDayEvent.where(
-        "parent_id is null and name = ? and extract(year from date) = ?
-         and ((select count(*) from events where name = ? and extract(year from date) = ? and type in ('MultiDayEvent', 'Series', 'WeeklySeries')) = 0)",
-         self.name, self.date.year, self.name, self.date.year)
-    # Could do this in SQL
-    if @multi_day_event_children_with_no_parent.size == 1
-      @multi_day_event_children_with_no_parent = []
-    end
-    @multi_day_event_children_with_no_parent
-  end
-
-  def missing_parent
-    nil
-  end
-
-  def parent_is_not_self
-    if parent_id && parent_id == id
-      errors.add("parent", "Event cannot be its own parent")
-    end
   end
 
   def type_modifiable?
