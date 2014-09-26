@@ -32,42 +32,26 @@
 class Event < ActiveRecord::Base
   TYPES =  [ 'Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries' ]
 
-  attr_reader :new_promoter_name
-  attr_reader :new_team_name
-
   include Events::Children
   include Events::Comparison
+  include Events::Competitions
   include Events::Dates
   include Events::Defaults
   include Events::Naming
+  include Events::Promoters
   include Events::Results
   include ActsAsTree::Extensions
   include RacingOnRails::VestalVersions::Versioned
   include Export::Events
 
-  before_save :set_promoter, :set_team
+  before_save :set_team
 
   validates_presence_of :date, :name
 
   validate :inclusion_of_discipline
   validate :inclusion_of_sanctioned_by
 
-  has_many :child_competitions,
-           -> { order :date },
-           class_name: "Competitions::Competition",
-           foreign_key: "parent_id",
-           dependent: :destroy,
-           after_add: :children_changed,
-           after_remove: :children_changed
-
-  has_one :overall, foreign_key: "parent_id", dependent: :destroy, class_name: "Competitions::Overall"
-  has_one :combined_results, class_name: "CombinedTimeTrialResults", foreign_key: "parent_id", dependent: :destroy
-  has_many :competitions, through: :competition_event_memberships, source: :competition, class_name: "Competitions::Competition"
-  has_many :competition_event_memberships, class_name: "Competitions::CompetitionEventMembership"
-
   belongs_to :number_issuer
-  has_and_belongs_to_many :editors, class_name: "Person", association_foreign_key: "editor_id", join_table: "editors_events"
-  belongs_to :promoter, class_name: "Person"
   belongs_to :team
 
   has_many   :races,
@@ -78,17 +62,6 @@ class Event < ActiveRecord::Base
 
   belongs_to :velodrome
   belongs_to :region
-
-  scope :editable_by, lambda { |person|
-    if person.nil?
-      where("true = false")
-    elsif person.administrator?
-      # No scope
-    else
-      joins("left outer join editors_events on event_id = events.id").
-      where("promoter_id = :person_id or editors_events.editor_id = :person_id", person_id: person)
-    end
-  }
 
   scope :today_and_future, lambda { where("date >= :today || end_date >= :today", today: Time.zone.today) }
 
@@ -113,12 +86,6 @@ class Event < ActiveRecord::Base
       today: Time.zone.today,
       later: number_of_weeks.weeks.from_now.to_date)
   }
-
-  def self.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
-    discipline_names = [discipline]
-    discipline_names << 'Circuit' if discipline.downcase == 'road'
-    Event.distinct.year(year).where(discipline: discipline_names).where("bar_points > 0")
-  end
 
   def self.upcoming(weeks = 2)
     single_day_events = SingleDayEvent.
@@ -198,14 +165,6 @@ class Event < ActiveRecord::Base
     children.inject(_categories) { |cats, child| cats + child.categories }
   end
 
-  # Set point value/factor for this Competition. Convenience method to hide CompetitionEventMembership complexity.
-  def set_points_for(competition, points)
-    # For now, allow Nil exception, but probably will want to auto-create membership in the future
-    competition_event_membership = competition_event_memberships.detect { |cem| cem.competition == competition }
-    competition_event_membership.points_factor = points
-    competition_event_membership.save!
-  end
-
   def city_state
     if city.present?
       if state.present?
@@ -260,30 +219,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def promoter_name
-    promoter.name if promoter
-  end
-
-  def promoter_name=(value)
-    @new_promoter_name = value
-  end
-
-  def set_promoter
-    if new_promoter_name.present?
-      promoters = Person.find_all_by_name_or_alias(new_promoter_name)
-      case promoters.size
-      when 0
-        self.promoter = Person.create!(name: new_promoter_name)
-      when 1
-        self.promoter = promoters.first
-      else
-        self.promoter = promoters.detect { |promoter| promoter.id == promoter_id } || promoters.first
-      end
-    elsif new_promoter_name == ""
-      self.promoter = nil
-    end
-  end
-
   def team_name
     team.name if team
   end
@@ -298,17 +233,6 @@ class Event < ActiveRecord::Base
       self.team = Team.find_by_name_or_alias_or_create(new_team_name)
     elsif new_team_name == ""
       self.team = nil
-    end
-  end
-
-  # Find valid email—either promoter's email or event email. If all are blank, raise exception.
-  def email!
-    if promoter.try(:email).present?
-      promoter.email
-    elsif email.present?
-      email
-    else
-      raise BlankEmail, "Event #{name} has no email"
     end
   end
 
@@ -342,6 +266,4 @@ class Event < ActiveRecord::Base
   def to_s
     "<#{self.class} #{id} #{discipline} #{name} #{date}>"
   end
-
-  class BlankEmail < StandardError; end
 end
