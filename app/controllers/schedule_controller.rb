@@ -51,6 +51,7 @@ class ScheduleController < ApplicationController
   # * schedule: instance of year's Schedule::Schedule
   def list
     @calendar_tab = "List with race organizer contact information"
+    @events = @events.includes(:promoter)
 
     respond_to do |format|
       format.html do
