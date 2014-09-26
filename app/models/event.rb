@@ -87,22 +87,44 @@ class Event < ActiveRecord::Base
       later: number_of_weeks.weeks.from_now.to_date)
   }
 
+  scope :default_sanctioned_by, lambda {
+    where sanctioned_by: RacingAssociation.current.default_sanctioned_by
+  }
+
   def self.upcoming(weeks = 2)
-    single_day_events = SingleDayEvent.
+    single_day_events   = upcoming_single_day_events(weeks)
+    multi_day_events    = upcoming_multi_day_events(weeks)
+    series_child_events = upcoming_series_child_events(weeks, multi_day_events)
+
+    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
+      single_day_events = single_day_events.default_sanctioned_by
+      multi_day_events = multi_day_events.default_sanctioned_by
+      series_child_events = series_child_events.default_sanctioned_by
+    end
+
+    three_relation_union single_day_events, multi_day_events, series_child_events
+  end
+
+  def self.upcoming_single_day_events(weeks)
+    SingleDayEvent.
       not_child.
       where(postponed: false).
       where(cancelled: false).
       where(practice: false).
       upcoming_in_weeks(weeks)
+  end
 
-    multi_day_events = MultiDayEvent.
+  def self.upcoming_multi_day_events(weeks)
+    MultiDayEvent.
       where(postponed: false).
       where(cancelled: false).
       where(practice: false).
       where(type: "MultiDayEvent").
       upcoming_in_weeks(weeks)
+  end
 
-    series_child_events = SingleDayEvent.
+  def self.upcoming_series_child_events(weeks, multi_day_events)
+    SingleDayEvent.
       includes(parent: :parent).
       child.
       where(postponed: false).
@@ -110,21 +132,10 @@ class Event < ActiveRecord::Base
       where(practice: false).
       where.not(parent_id: multi_day_events).
       upcoming_in_weeks(weeks)
-
-    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
-      single_day_events = single_day_events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
-      multi_day_events = multi_day_events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
-      series_child_events = series_child_events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
-    end
-
-    # No simple way to do lazy union of three Arel relations
-    events_table = Event.arel_table
-    union = Event.from(events_table.create_table_alias(single_day_events.union(multi_day_events), :events)).union(series_child_events)
-    Event.from(events_table.create_table_alias(union, :events))
   end
 
   # Defaults state to RacingAssociation.current.state, date to today, name to Untitled
-  def Event.find_all_for_team_and_discipline(team, discipline, date = Time.zone.today)
+  def self.find_all_for_team_and_discipline(team, discipline, date = Time.zone.today)
     first_of_year = date.beginning_of_year
     last_of_year = date.end_of_year
     discipline_names = [discipline]
@@ -264,5 +275,12 @@ class Event < ActiveRecord::Base
       race.results.each(&:destroy)
       race.results.delete(race.results.select(&:destroyed?))
     end
+  end
+
+  def self.three_relation_union(relation_1, relation_2, relation_3)
+    # No simple way to do lazy union of three Arel relations
+    events_table = Event.arel_table
+    union = Event.from(events_table.create_table_alias(relation_1.union(relation_2), :events)).union(relation_3)
+    Event.from(events_table.create_table_alias(union, :events))
   end
 end
