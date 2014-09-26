@@ -13,11 +13,7 @@ module Events
     # no way to differentiate missing values from nils or blanks.
     def set_defaults
       if new_record?
-        if parent
-          propogated_attributes.each { |attr|
-            (self[attr] = parent[attr]) if self[attr].blank?
-          }
-        end
+        set_propogated_attributes
         self.bar_points = default_bar_points       if self[:bar_points].nil?
         self.date = default_date                   if self[:date].nil?
         self.discipline = default_discipline       if self[:discipline].nil?
@@ -30,6 +26,16 @@ module Events
       end
     end
 
+    def set_propogated_attributes
+      if parent
+        propogated_attributes.each do |attr|
+          if self[attr].blank?
+            self[attr] = parent[attr]
+          end
+        end
+      end
+    end
+
     def propogated_attributes
       @propogated_attributes ||= %w{
         city discipline flyer name number_issuer_id promoter_id prize_list sanctioned_by state time velodrome_id time
@@ -39,9 +45,9 @@ module Events
 
     def attributes_for_duplication
       _attributes = attributes.dup
-      _attributes.delete("id")
-      _attributes.delete("created_at")
-      _attributes.delete("updated_at")
+      _attributes.delete "id"
+      _attributes.delete "created_at"
+      _attributes.delete "updated_at"
       _attributes
     end
 
