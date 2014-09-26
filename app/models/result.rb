@@ -56,6 +56,18 @@ class Result < ActiveRecord::Base
 
   scope :competition, -> { where(competition_result: true) }
 
+  scope :person_event, lambda { |person, event|
+    includes(scores: [ :source_result, :competition_result ]).
+    where(event_id: event).
+    where(person_id: person.id)
+  }
+
+  scope :team_event, lambda { |team, event|
+    includes(scores: [ :source_result, :competition_result ]).
+    where("results.event_id" => event.id).
+    where(team_id: team.id)
+  }
+
   attr_accessor :updated_by
 
   def self.find_all_for(person)

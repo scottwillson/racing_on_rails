@@ -272,10 +272,6 @@ module Competitions
       ApplicationController.expire_cache
     end
 
-    def to_s
-      "#<#{self.class} #{id} #{name} #{start_date} #{end_date}>"
-    end
-
     protected
 
     def source_results_with_benchmark(race)

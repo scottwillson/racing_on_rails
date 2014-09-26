@@ -245,7 +245,7 @@ class Event < ActiveRecord::Base
   end
 
   def to_s
-    "<#{self.class} #{id} #{discipline} #{name} #{date}>"
+    "<#{self.class} #{id} #{discipline} #{name} #{start_date} #{end_date}"
   end
 
 

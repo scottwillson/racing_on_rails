@@ -30,5 +30,9 @@ module Events
       competition_event_membership.points_factor = points
       competition_event_membership.save!
     end
+
+    def source_events?
+      respond_to? :source_events
+    end
   end
 end
