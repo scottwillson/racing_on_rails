@@ -27,20 +27,27 @@ module Events
     # same value as the parent before update
     def update_children
       return true if new_record? || children.count == 0
-      changes.select { |key, value| propogated_attributes.include?(key) }.each do |change|
-        attribute = change.first
-        was = change.last.first
-        if was.blank?
-          SingleDayEvent.where(
-            "(#{attribute}=? or #{attribute} is null or #{attribute} = '') and parent_id=?", was, self[:id]
-          ).update_all(attribute => self[attribute])
-        else
-          SingleDayEvent.where(attribute => was, parent_id: id).update_all(attribute => self[attribute])
-        end
-      end
 
+      changes_for_propogation.each { |change| update_child_attribute(change) }
       children.each(&:update_children)
+
       true
+    end
+
+    def changes_for_propogation
+      changes.select { |key, value| propogated_attributes.include?(key) }
+    end
+
+    def update_child_attribute(change)
+      attribute = change.first
+      was = change.last.first
+      if was.blank?
+        SingleDayEvent.where(
+          "(#{attribute}=? or #{attribute} is null or #{attribute} = '') and parent_id=?", was, self[:id]
+        ).update_all(attribute => self[attribute])
+      else
+        SingleDayEvent.where(attribute => was, parent_id: id).update_all(attribute => self[attribute])
+      end
     end
 
     # Synch Races with children. More accurately: create a new Race on each child Event for each Race on the parent.
