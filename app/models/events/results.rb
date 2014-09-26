@@ -39,6 +39,16 @@ module Events
         query
       }
 
+      scope :discipline, lambda { |discipline|
+        if discipline
+          if discipline == Discipline['road']
+            where discipline: [ discipline.name, "Circuit" ]
+          else
+            where discipline: discipline.name
+          end
+        end
+      }
+
       # Return [weekly_series, events] that have results
       # Honors RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
       def self.find_all_with_results(year = Time.zone.today.year, discipline = nil)
@@ -51,19 +61,13 @@ module Events
                   where(id: event_ids).
                   uniq
 
-        if discipline
-          discipline_names = [discipline.name]
-          if discipline == Discipline['road']
-            discipline_names << 'Circuit'
-          end
-          events = events.where(discipline: discipline_names)
-        end
+        events = events.discipline(discipline)
 
         if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
-          events = events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
+          events = events.default_sanctioned_by
         end
 
-        ids = events.map(&:root).map(&:id).uniq
+        ids = events.map(&:root_id).uniq
         Event.where(id: ids).includes(children: [ :races, { children: :races } ])
       end
     end

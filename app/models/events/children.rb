@@ -95,5 +95,9 @@ module Events
         errors.add("parent", "Event cannot be its own parent")
       end
     end
+
+    def root_id
+      root.try :id
+    end
   end
 end
