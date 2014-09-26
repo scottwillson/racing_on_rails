@@ -453,6 +453,31 @@ class Result < ActiveRecord::Base
     self[:team_name] = value
   end
 
+  def member_result?
+    (person_id.nil? || (person_id && person.member?(date))) && !non_members_on_team?
+  end
+
+  def non_members_on_team?
+    exempt_cats = RacingAssociation.current.exempt_team_categories
+    if exempt_cats.nil? || exempt_cats.include?(race.category.name)
+      return false
+    end
+
+    non_members = false
+
+    other_results_in_place = Result.where(race_id: race_id, place: place)
+    other_results_in_place.each do |result|
+      unless result.person.nil?
+        if !result.person.member?(date)
+          self.update_attribute members_only_place: ""
+          non_members = true
+        end
+      end
+    end
+
+    non_members
+  end
+
   def custom_attribute(sym)
     _sym = sym.to_sym
     if custom_attributes && custom_attributes.has_key?(_sym)

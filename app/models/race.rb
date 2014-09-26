@@ -278,7 +278,7 @@ class Race < ActiveRecord::Base
       place_before = result.members_only_place.to_i
       result.members_only_place = ''
       if result.place.to_i > 0
-        if ((result.person.nil? || (result.person && result.person.member?(result.date))) && !non_members_on_team(result))
+        if result.member_result?
           # only increment if we have moved onto a new place
           last_members_only_place += 1 if (result.place.to_i != last_members_only_place && result.place.to_i!=last_result_place)
           result.members_only_place = last_members_only_place.to_s
@@ -288,30 +288,6 @@ class Race < ActiveRecord::Base
         # store to know when switching to new placement (team result feature)
         last_result_place = result.place.to_i
       end
-    end
-  end
-
-  def non_members_on_team(result)
-    non_members = false
-    # if this is undeclared in environment.rb, assume this rule does not apply
-    exempt_cats = RacingAssociation.current.exempt_team_categories
-    if (exempt_cats.nil? || exempt_cats.include?(result.race.category.name))
-      return non_members
-    else
-      other_results_in_place = Result.where(race_id: result.race.id, place: result.place)
-      other_results_in_place.each { |orip|
-        unless orip.person.nil?
-          if !orip.person.member?(result.date)
-            # might as well blank out this result while we're here, saves some future work
-            result.members_only_place = ''
-            result.update_attribute members_only_place: result.members_only_place
-            # could also use other_results_in_place.size if needed for calculations
-            non_members = true
-          end
-        end
-      }
-      # still false if no others found, or all are members, or could not be determined (non-person)
-      non_members
     end
   end
 
