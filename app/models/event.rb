@@ -139,24 +139,15 @@ class Event < ActiveRecord::Base
   end
 
   def destroy_races
-    ActiveRecord::Base.lock_optimistically = false
     transaction do
-      if combined_results
-        combined_results.destroy_races
-        combined_results.destroy
-      end
-      races.each do |race|
-        # Call to destroy won't remove destroyed records from association
-        # Call to clear won't invoke all before_destroy callbacks
-        race.results.each(&:destroy)
-        race.results.delete(race.results.select(&:destroyed?))
-      end
+      destroy_combined_results
+      destroy_results
+
       # Call to destroy won't remove destroyed records from association
       # Call to clear won't invoke all before_destroy callbacks
       races.each(&:destroy)
       races.delete(races.select(&:destroyed?))
     end
-    ActiveRecord::Base.lock_optimistically = true
   end
 
   # All races' Categories and all children's races' Categories
@@ -254,5 +245,24 @@ class Event < ActiveRecord::Base
 
   def to_s
     "<#{self.class} #{id} #{discipline} #{name} #{date}>"
+  end
+
+
+  private
+
+  def destroy_combined_results
+    if combined_results
+      combined_results.destroy_races
+      combined_results.destroy
+    end
+  end
+
+  def destroy_results
+    races.each do |race|
+      # Call to destroy won't remove destroyed records from association
+      # Call to clear won't invoke all before_destroy callbacks
+      race.results.each(&:destroy)
+      race.results.delete(race.results.select(&:destroyed?))
+    end
   end
 end
