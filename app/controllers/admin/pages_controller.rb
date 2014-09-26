@@ -56,12 +56,7 @@ module Admin
 
     def destroy
       @page = Page.find(params[:id])
-      begin
-        ActiveRecord::Base.lock_optimistically = false
-        @page.destroy
-      ensure
-        ActiveRecord::Base.lock_optimistically = true
-      end
+      @page.destroy
 
       expire_cache
       flash[:notice] = "Deleted #{@page.title}"

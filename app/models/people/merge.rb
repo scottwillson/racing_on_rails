@@ -15,7 +15,6 @@ module People
     end
 
     Person.transaction do
-      ActiveRecord::Base.lock_optimistically = false
       self.merge_version do
         other_person.results.collect do |result|
           event = result.event
@@ -63,7 +62,6 @@ module People
           aliases.create(name: other_person.name)
         end
       end
-      ActiveRecord::Base.lock_optimistically = true
     end
     true
   end

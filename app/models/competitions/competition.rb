@@ -83,16 +83,12 @@ module Competitions
     end
 
     def delete_races
-      ActiveRecord::Base.lock_optimistically = false
-
       if races.present?
         race_ids = races.map(&:id)
         Competitions::Score.delete_all("competition_result_id in (select id from results where race_id in (#{race_ids.join(',')}))")
         Result.where("race_id in (?)", race_ids).delete_all
       end
       races.clear
-
-      ActiveRecord::Base.lock_optimistically = true
     end
 
     def create_races

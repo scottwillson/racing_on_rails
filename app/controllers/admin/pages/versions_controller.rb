@@ -28,12 +28,7 @@ module Admin
         version = Page::Version.find(params[:id])
         page = version.versioned
 
-        begin
-          ActiveRecord::Base.lock_optimistically = false
-          page.revert_to! version.number
-        ensure
-          ActiveRecord::Base.lock_optimistically = true
-        end
+        page.revert_to! version.number
 
         expire_cache
         flash[:notice] = "Reverted #{page.title} to version from #{version.updated_at.to_s(:long)}"
