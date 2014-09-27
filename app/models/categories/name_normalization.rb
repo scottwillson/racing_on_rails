@@ -276,8 +276,7 @@ module Categories
       def self.normalize_category_spelling(name)
         name = name.gsub(/cat ?(\d)/i, 'Category \1')
         name = name.gsub(/category(\d)/i, 'Category \1')
-        name = name.gsub(/category (\d)\/ /i, 'Category \1 ')
-        name
+        name.gsub(/category (\d)\/ /i, 'Category \1 ')
       end
 
       def self.normalize_junior_spelling(name)
@@ -291,8 +290,7 @@ module Categories
         name = name.gsub(/(\d+) ?(and)? ?(under|younger|up to)/i, 'U\1')
         name = name.gsub(/(\d+) ?& ?under|younger|up to/i, 'U\1')
         name = name.gsub(/ 0-(\d+)/i, ' U\1')
-        name = name.gsub(/ U (\d+)/i, ' U\1')
-        name
+        name.gsub(/ U (\d+)/i, ' U\1')
       end
 
       def self.normalize_masters_spelling(name)
@@ -307,16 +305,13 @@ module Categories
         name = name.gsub(/masters (\d\d) /i, 'Masters \1+ ')
 
         name = name.gsub(/(\d+) ?and ?(over|older)/i, '\1+')
-        name = name.gsub(/(\d+) ?& ?(over|older)/i, '\1+')
-
-        name
+        name.gsub(/(\d+) ?& ?(over|older)/i, '\1+')
       end
 
       def self.normalize_ability_spelling(name)
         name = name.gsub(%r{M P/1/2}i, "Men Pro/1/2")
         name = name.gsub(%r{P/1/2}i, "Pro/1/2")
-        name = name.gsub(/Pro.*1\/2/i, "Pro/1/2")
-        name
+        name.gsub(/Pro.*1\/2/i, "Pro/1/2")
       end
 
       def self.normalize_mtb_spelling(name)
@@ -329,22 +324,19 @@ module Categories
         name = name.gsub(/sgl spd/i, "Singlespeed")
         name = name.gsub(/sgl speed/i, "Singlespeed")
 
-        name = name.gsub(/hard tail/i, "Hardtail")
-        name
+        name.gsub(/hard tail/i, "Hardtail")
       end
 
       def self.normalize_time_spelling(name)
         name = name.gsub(/( ?)hr( ?)/i, '\1Hour\2')
-        name = name.gsub(/(\d+) ?hour/i, '\1-Hour')
-        name
+        name.gsub(/(\d+) ?hour/i, '\1-Hour')
       end
 
       def self.normalize_weight_spelling(name)
         name = name.gsub(/(\d{3})\+ (lbs|lb)(\.)?/i, '\1+')
         name = name.gsub(/(\d{3})( )?(lbs|lb) \+/i, '\1+')
         name = name.gsub(/(\d{3})( )?(lbs|lb)(.)?\+/i, '\1+')
-        name = name.gsub(/\((\d\d+\+)\)/i, '\1')
-        name
+        name.gsub(/\((\d\d+\+)\)/i, '\1')
       end
 
       def self.normalize_distance_spelling(name)
@@ -367,8 +359,7 @@ module Categories
         name = name.gsub(/multi[ -]person/i, "Multiperson")
         name = name.gsub(/miss.*out/i, "Miss and Out")
         name = name.gsub(/win.*out/i, "Win and Out")
-        name = name.gsub(/Eddie/, "Eddy")
-        name
+        name.gsub(/Eddie/, "Eddy")
       end
 
       # Men Masters => Masters Men
