@@ -155,9 +155,7 @@ module Admin
     def merge
       @person = Person.find(params[:id])
       @other_person = Person.find(params[:other_person_id])
-      ActiveSupport::Notifications.instrument "merge.people.admin.racing_on_rails", person_id: @person.id, person_name: @person.name, other_id: @other_person.id, other_name: @other_name
       @merged = @person.merge(@other_person)
-      ActiveSupport::Notifications.instrument "success.merge.people.admin.racing_on_rails", person_id: @person.id, person_name: @person.name, other_id: @other_person.id, other_name: @other_name
       expire_cache
     end
 
