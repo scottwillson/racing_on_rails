@@ -63,7 +63,7 @@ class ResultsController < ApplicationController
     begin
       @event = Event.find(params[:event_id])
       @person = Person.find(params[:person_id])
-      @results = Result.person_event @event, @person
+      @results = Result.person_event @person, @event
     rescue ActiveRecord::RecordNotFound
       flash[:notice] = "Could not find results for #{@event.try :name} #{@person.try :name}"
       return redirect_to(people_path)
@@ -75,7 +75,7 @@ class ResultsController < ApplicationController
     begin
       @team = Team.find(params[:team_id])
       @event = Event.find(params[:event_id])
-      @result = Result.team_event(team, event)
+      @result = Result.team_event(@team, @event).first!
     rescue ActiveRecord::RecordNotFound
       flash[:notice] = "Could not find result for #{@event.try :name} #{@team.try :name}"
       return redirect_to(teams_path)
@@ -181,9 +181,10 @@ class ResultsController < ApplicationController
   end
 
   def assign_event_data
-    @source_events = Event.none
     if @event.source_events?
       @source_events = @event.source_events.include_results
+    else
+      @source_events = Event.none
     end
 
     @races = Race.where(event_id: @event.id).include_results
