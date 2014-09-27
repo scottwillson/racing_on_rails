@@ -27,11 +27,8 @@ module Admin
       # Single membership card
       def card
         @person = Person.find(params[:id])
-        @people = [@person]
-        @person.print_card = false
-        @person.membership_card = true
-        @person.card_printed_at = Time.zone.now
-        @person.save!
+        @people = [ @person ]
+        @person.print_card!
 
         ActiveSupport::Notifications.instrument "card.people.admin.racing_on_rails", person_id: @person.id
 

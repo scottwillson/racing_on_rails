@@ -98,5 +98,12 @@ module People
       self.license_type = license_type
       save!
     end
+
+    def print_card!
+      self.print_card = false
+      self.membership_card = true
+      self.card_printed_at = Time.zone.now
+      save!
+    end
   end
 end
