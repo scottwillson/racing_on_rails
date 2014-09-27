@@ -67,14 +67,7 @@ module Admin
         @duplicates = Duplicate.all
         ActiveSupport::Notifications.instrument "duplicates.people.admin.racing_on_rails", duplicates: @duplicates.size
 
-        @duplicates = @duplicates.sort do |x, y|
-          diff = (x.person.last_name || '') <=> y.person.last_name
-          if diff == 0
-            (x.person.first_name || '') <=> y.person.first_name
-          else
-            diff
-          end
-        end
+        @duplicates = sort_duplicates(@duplicates)
 
         @duplicates.each do |duplicate|
           ActiveSupport::Notifications.instrument "duplicate.people.admin.racing_on_rails", person_name: duplicate.person.name, person_id: duplicate.person.id, people_ids: duplicate.people.map(&:id)
@@ -99,6 +92,20 @@ module Admin
 
         Duplicate.delete_all
         redirect_to(action: 'index')
+      end
+
+
+      private
+
+      def sort_duplicates(duplicates)
+        duplicates.sort do |x, y|
+          diff = (x.person.last_name || '') <=> y.person.last_name
+          if diff == 0
+            (x.person.first_name || '') <=> y.person.first_name
+          else
+            diff
+          end
+        end
       end
     end
   end
