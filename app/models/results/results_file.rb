@@ -219,7 +219,7 @@ module Results
 
     def find_or_create_race(row)
       if usac_results_format?
-        category = Category.find_or_create_by_normalized_name(construct_usac_category(row))
+        category = Category.find_or_create_by_normalized_name(usac_category_from_row(row))
       else
         category = Category.find_or_create_by_normalized_name(row.first)
       end
@@ -238,18 +238,18 @@ module Results
       race
     end
 
-    def construct_usac_category(row)
-      #category_name and gender should always be populated.
-      #juniors, and conceivably masters, may be split by age group in which case the age column should
-      #contain the age range. otherwise it may be empty or contain an individual racer's age.
-      #The end result should look like "Junior Women 13-14" or "Junior Men"
-      #category_class may or may not be populated
-      #e.g. "Master B Men" or "Cat4 Female"
+    # category_name and gender should always be populated.
+    # juniors, and conceivably masters, may be split by age group in which case the age column should
+    # contain the age range. otherwise it may be empty or contain an individual racer's age.
+    # The end result should look like "Junior Women 13-14" or "Junior Men"
+    # category_class may or may not be populated
+    # e.g. "Master B Men" or "Cat4 Female"
+    def usac_category_from_row(row)
+      category = "#{row[:category_name]} #{row[:category_class]} #{row[:gender]}"
       if row[:age].present? && /\d+-\d+/ =~ row[:age].to_s
-        return ((row[:category_name].to_s + " " + row[:category_class].to_s + " " + row[:gender].to_s + " " + row[:age].to_s)).squeeze(" ").strip
-      else
-        return ((row[:category_name].to_s + " " + row[:category_class].to_s + " " + row[:gender].to_s)).squeeze(" ").strip
+        category = "#{category} #{row[:age]}"
       end
+      category.squeeze(" ").strip
     end
 
     def result?(row)
@@ -263,42 +263,32 @@ module Results
     end
 
     def create_result(row, race)
-      if race
-        result = race.results.build(result_attributes(row, race))
-        result.updated_by = @event.name
-
-        if row.same_time?
-          result.time = row.previous.result.time
-        end
-
-        if result.numeric_place?
-          result.place = result.place.to_i
-          if race?(row) && result.place != 1
-            self.import_warnings << "First racer #{row[:first_name]} #{row[:last_name]} should be 1st place racer. "
-            # if we have a previous rov and the current place is not one more than the previous place, then sequence error.
-          elsif !race?(row) && row.previous && row.previous[:place].present? && row.previous[:place].to_i != (result.place - 1)
-            self.import_warnings << "Non-sequential placings detected for racer: #{row[:first_name]} #{row[:last_name]}. " unless row[:category_name].to_s.downcase.include?("tandem") # or event is TTT or ???
-          end
-        elsif result.place.present?
-          result.place = result.place.upcase rescue result.place
-        elsif row.previous[:place].present? && row.previous[:place].to_i == 0
-          result.place = row.previous[:place]
-        end
-
-        # USAC format input may contain an age range in the age column for juniors.
-        if row[:age].present? && /\d+-\d+/ =~ row[:age].to_s
-          result.age = nil
-          result.age_group = row[:age]
-        end
-
-        result.cleanup
-        result.save!
-        row.result = result
-        Rails.logger.debug("Results::ResultsFile #{Time.zone.now} create result #{race} #{result.place}") if debug?
-      else
-        # TODO Maybe a hard exception or error would be better?
-        Rails.logger.warn("No race. Skip.")
+      if race.nil?
+        Rails.logger.warn "No race. Skipping result file row."
+        return nil
       end
+
+      result = race.results.build(result_attributes(row, race))
+      result.updated_by = @event.name
+
+      if row.same_time?
+        result.time = row.previous.result.time
+      end
+
+      set_place result, row
+
+      # USAC format input may contain an age range in the age column for juniors.
+      if row[:age].present? && /\d+-\d+/ =~ row[:age].to_s
+        result.age = nil
+        result.age_group = row[:age]
+      end
+
+      result.cleanup
+      result.save!
+      row.result = result
+      Rails.logger.debug("Results::ResultsFile #{Time.zone.now} create result #{race} #{result.place}") if debug?
+
+      result
     end
 
     def result_attributes(row, race)
@@ -332,6 +322,25 @@ module Results
 
     def debug?
       ENV["DEBUG_RESULTS"].present? && Rails.logger.debug?
+    end
+
+
+    private
+
+    def set_place(result, row)
+      if result.numeric_place?
+        result.place = result.numeric_place
+        if race?(row) && result.place != 1
+          self.import_warnings << "First racer #{row[:first_name]} #{row[:last_name]} should be first place racer. "
+          # if we have a previous rov and the current place is not one more than the previous place, then sequence error.
+        elsif !race?(row) && row.previous && row.previous[:place].present? && row.previous[:place].to_i != (result.place - 1)
+          self.import_warnings << "Non-sequential placings detected for racer: #{row[:first_name]} #{row[:last_name]}. " unless row[:category_name].to_s.downcase.include?("tandem") # or event is TTT or ???
+        end
+      elsif result.place.present?
+        result.place = result.place.upcase
+      elsif row.previous[:place].present? && row.previous[:place].to_i == 0
+        result.place = row.previous[:place]
+      end
     end
   end
 end
