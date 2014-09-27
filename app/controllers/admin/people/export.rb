@@ -10,8 +10,15 @@ module Admin
       def export
         headers['Content-Disposition'] = "filename=\"#{download_file_name(current_date)}\""
 
-        @people = Person.find_all_for_export(date, params['include'])
-        ActiveSupport::Notifications.instrument "export.people.admin.racing_on_rails", people_count: @people.size, excel_layout: params[:excel_layout], format: params[:format]
+        @people = Person.find_all_for_export(current_date, params['include'])
+
+        ActiveSupport::Notifications.instrument(
+          "export.people.admin.racing_on_rails",
+          people_count: @people.size,
+          excel_layout:
+          params[:excel_layout],
+          format: params[:format]
+        )
 
         respond_to do |format|
           format.html
