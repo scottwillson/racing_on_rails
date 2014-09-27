@@ -280,13 +280,13 @@ class Race < ActiveRecord::Base
       if result.numeric_place?
         if result.member_result?
           # only increment if we have moved onto a new place
-          last_members_only_place += 1 if (result.place.to_i != last_members_only_place && result.place.to_i!=last_result_place)
+          last_members_only_place += 1 if (result.numeric_place != last_members_only_place && result.numeric_place !=last_result_place)
           result.members_only_place = last_members_only_place.to_s
         end
         # Slight optimization. Most of the time, no point in saving a result that hasn't changed
         result.update(members_only_place: result.members_only_place) if place_before != result.members_only_place
         # store to know when switching to new placement (team result feature)
-        last_result_place = result.place.to_i
+        last_result_place = result.numeric_place
       end
     end
   end
@@ -297,6 +297,7 @@ class Race < ActiveRecord::Base
     end
 
     if result_id
+      _results = results.sort
       result = Result.find(result_id)
       start_index = _results.index(result)
       (start_index..._results.size).each do |index|
@@ -318,9 +319,9 @@ class Race < ActiveRecord::Base
   def destroy_result(result)
     _results = results.sort
     start_index = _results.index(result) + 1
-    for index in start_index...(_results.size)
+    (start_index..._results.size).each do |index|
       if _results[index].numeric_place?
-        _results[index].place = _results[index].place.to_i - 1
+        _results[index].place = _results[index].numeric_place - 1
         _results[index].save!
       end
     end

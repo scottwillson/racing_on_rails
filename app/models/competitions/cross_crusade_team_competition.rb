@@ -131,7 +131,7 @@ module Competitions
     end
 
     def points_for(source_result)
-      place = source_result.place.to_i
+      place = source_result.numeric_place
       if place > 0 && place < 100
         place
       else

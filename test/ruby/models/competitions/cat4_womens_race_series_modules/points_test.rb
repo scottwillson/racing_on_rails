@@ -12,28 +12,28 @@ module Competitions
         series.stubs(:participation_points? => true)
         series.extend Cat4WomensRaceSeriesModules::Points
 
-        result = stub("result", place: "1", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", place: "1", numeric_place: 1, event_id: 1, race: stub("race", event: source_event))
         assert_equal 100, series.points_for(result), "points for result"
 
-        result = stub("result", place: "10", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", place: "10", numeric_place: 10, event_id: 1, race: stub("race", event: source_event))
         assert_equal 66, series.points_for(result), "points for result"
 
-        result = stub("result", place: "15", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", place: "15", numeric_place: 15, event_id: 1, race: stub("race", event: source_event))
         assert_equal 56, series.points_for(result), "points for result"
 
-        result = stub("result", place: "16", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", place: "16", numeric_place: 16, event_id: 1, race: stub("race", event: source_event))
         assert_equal 25, series.points_for(result), "points for result"
 
-        result = stub("result", place: "17", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", place: "17", numeric_place: 17, event_id: 1, race: stub("race", event: source_event))
         assert_equal 25, series.points_for(result), "points for result"
 
-        result = stub("result", place: "100", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", place: "100", numeric_place: 100, event_id: 1, race: stub("race", event: source_event))
         assert_equal 25, series.points_for(result), "points for result"
 
-        result = stub("result", place: "DNF", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", place: "DNF", numeric_place: 0, event_id: 1, race: stub("race", event: source_event))
         assert_equal 0, series.points_for(result), "points for result"
 
-        result = stub("result", place: "", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", place: "", numeric_place: 0, event_id: 1, race: stub("race", event: source_event))
         assert_equal 15, series.points_for(result), "points for result"
       end
 
@@ -43,28 +43,28 @@ module Competitions
         series.stubs(:participation_points? => false)
         series.extend Cat4WomensRaceSeriesModules::Points
 
-        result = stub("result", place: "1", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", numeric_place: 1, place: "1", event_id: 1, race: stub("race", event: source_event))
         assert_equal 100, series.points_for(result), "points for result"
 
-        result = stub("result", place: "10", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", numeric_place: 10, place: "10", event_id: 1, race: stub("race", event: source_event))
         assert_equal 66, series.points_for(result), "points for result"
 
-        result = stub("result", place: "15", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", numeric_place: 15, place: "15", event_id: 1, race: stub("race", event: source_event))
         assert_equal 56, series.points_for(result), "points for result"
 
-        result = stub("result", place: "16", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", numeric_place: 16, place: "16", event_id: 1, race: stub("race", event: source_event))
         assert_equal 0, series.points_for(result), "points for result"
 
-        result = stub("result", place: "17", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", numeric_place: 17, place: "17", event_id: 1, race: stub("race", event: source_event))
         assert_equal 0, series.points_for(result), "points for result"
 
-        result = stub("result", place: "100", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", numeric_place: 100, place: "100", event_id: 1, race: stub("race", event: source_event))
         assert_equal 0, series.points_for(result), "points for result"
 
-        result = stub("result", place: "DNF", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", numeric_place: 0, place: "DNF", event_id: 1, race: stub("race", event: source_event))
         assert_equal 0, series.points_for(result), "points for result"
 
-        result = stub("result", place: "", event_id: 1, race: stub("race", event: source_event))
+        result = stub("result", numeric_place: 0, place: "", event_id: 1, race: stub("race", event: source_event))
         assert_equal 0, series.points_for(result), "points for result"
       end
 
@@ -76,10 +76,10 @@ module Competitions
 
         non_source_event = stub("SingleDayEvent", id: 2, parent_id: nil)
 
-        result = stub("result", place: "1", event_id: 2, event: non_source_event, race: stub("race", event: non_source_event))
+        result = stub("result", place: "1", numeric_place: 1, event_id: 2, event: non_source_event, race: stub("race", event: non_source_event))
         assert_equal 15, series.points_for(result), "points for result"
 
-        result = stub("result", place: "100", event_id: 2, event: non_source_event, race: stub("race", event: non_source_event))
+        result = stub("result", place: "100", numeric_place: 100, event_id: 2, event: non_source_event, race: stub("race", event: non_source_event))
         assert_equal 15, series.points_for(result), "points for result"
       end
 
@@ -91,10 +91,10 @@ module Competitions
 
         non_source_event = stub("SingleDayEvent", id: 2, parent_id: nil)
 
-        result = stub("result", place: "1", event_id: 2, event: non_source_event, race: stub("race", event: non_source_event))
+        result = stub("result", place: "1", numeric_place: 1, event_id: 2, event: non_source_event, race: stub("race", event: non_source_event))
         assert_equal 0, series.points_for(result), "points for result"
 
-        result = stub("result", place: "100", event_id: 2, event: non_source_event, race: stub("race", event: non_source_event))
+        result = stub("result", place: "100", numeric_place: 100, event_id: 2, event: non_source_event, race: stub("race", event: non_source_event))
         assert_equal 0, series.points_for(result), "points for result"
       end
     end

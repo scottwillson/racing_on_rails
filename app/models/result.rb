@@ -58,8 +58,8 @@ class Result < ActiveRecord::Base
 
   scope :person_event, lambda { |person, event|
     includes(scores: [ :source_result, :competition_result ]).
-    where(event_id: event).
-    where(person_id: person.id)
+    where(event: event).
+    where(person: person)
   }
 
   scope :team_event, lambda { |team, event|
@@ -485,6 +485,8 @@ class Result < ActiveRecord::Base
   def numeric_place
     if numeric_place?
       place.to_i
+    else
+      0
     end
   end
 

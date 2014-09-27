@@ -15,7 +15,7 @@ module Competitions
           return 15 if source_result.place.blank?
 
           event_ids = source_events.collect(&:id)
-          place = source_result.place.to_i
+          place = source_result.numeric_place
 
           if event_ids.include?(source_result.event_id) ||
              (source_result.event.parent_id &&
@@ -24,7 +24,7 @@ module Competitions
             if place >= point_schedule.size
               return 25
             else
-              return point_schedule[source_result.place.to_i] || 0
+              return point_schedule[source_result.numeric_place] || 0
             end
           elsif place > 0
             return 15
@@ -32,12 +32,12 @@ module Competitions
         else
           return 0 if source_result.place.blank?
           event_ids = source_events.collect(&:id)
-          place = source_result.place.to_i
+          place = source_result.numeric_place
 
           if (event_ids.include?(source_result.event_id) ||
               (source_result.event.parent_id && event_ids.include?(source_result.event.parent_id) && source_result.event.parent.races.none?)) &&
                place < point_schedule.size
-            return point_schedule[source_result.place.to_i] || 0
+            return point_schedule[source_result.numeric_place] || 0
           end
         end
 

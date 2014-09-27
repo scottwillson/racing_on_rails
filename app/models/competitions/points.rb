@@ -17,7 +17,7 @@ module Competitions
       if place_members_only?
         points = point_schedule[source_result.members_only_place.to_i].to_f || 0
       else
-        points = point_schedule[source_result.place.to_i].to_f || 0
+        points = point_schedule[source_result.numeric_place].to_f || 0
       end
 
       if points > 0

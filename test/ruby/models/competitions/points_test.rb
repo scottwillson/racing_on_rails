@@ -17,7 +17,7 @@ module Competitions
 
       result = stub(
         "result",
-        place: "1",
+        numeric_place: 1,
         event_id: 1,
         event: source_event,
         race: stub("race", event: source_event)
@@ -29,23 +29,15 @@ module Competitions
       points = competition.points_for(result, 1)
       assert_equal 20, points, "Points for first place with team of one and no multiplier"
 
-      result.stubs(:place).returns("")
+      result.stubs(:numeric_place).returns(0)
       points = competition.points_for(result)
       assert_equal 0, points, "Points for first place with team of one and no multiplier"
 
-      result.stubs(:place).returns("7")
+      result.stubs(:numeric_place).returns(7)
       points = competition.points_for(result)
       assert_equal 1, points, "Points for first place with team of one and no multiplier"
 
-      result.stubs(:place).returns("8")
-      points = competition.points_for(result)
-      assert_equal 0, points, "Points for first place with team of one and no multiplier"
-
-      result.stubs(:place).returns("DNF")
-      points = competition.points_for(result)
-      assert_equal 0, points, "Points for first place with team of one and no multiplier"
-
-      result.stubs(:place).returns("DNS")
+      result.stubs(:numeric_place).returns(8)
       points = competition.points_for(result)
       assert_equal 0, points, "Points for first place with team of one and no multiplier"
     end
@@ -60,7 +52,7 @@ module Competitions
 
       result = stub(
         "result",
-        place: "4",
+        numeric_place: 4,
         members_only_place: "1",
         event_id: 1,
         event: source_event,
@@ -78,7 +70,7 @@ module Competitions
 
       result = stub(
         "result",
-        place: "3",
+        numeric_place: 3,
         event_id: 1,
         event: source_event,
         race: stub("race", event: source_event)
@@ -95,7 +87,7 @@ module Competitions
 
       result = stub(
         "result",
-        place: "4",
+        numeric_place: 4,
         event_id: 1,
         event: source_event,
         race: stub("race", event: source_event)
@@ -113,7 +105,7 @@ module Competitions
 
       result = stub(
         "result",
-        place: "4",
+        numeric_place: 4,
         event_id: 1,
         event: source_event,
         race: stub("race", event: source_event)

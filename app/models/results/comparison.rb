@@ -91,10 +91,6 @@ module Results
       end
     end
 
-    def place_as_integer
-      place.to_i
-    end
-
     # All numbered places first, then blanks, followed by DNF, DQ, and DNS
     def <=>(other)
       # Respect eql?
@@ -107,8 +103,8 @@ module Results
         major_difference = (major_place <=> other.major_place)
         return major_difference if major_difference != 0
 
-        if place.to_i > 0
-          place.to_i <=> other.place.to_i
+        if numeric_place?
+          numeric_place <=> other.numeric_place
         elsif id.present?
           id <=> other.id
         else

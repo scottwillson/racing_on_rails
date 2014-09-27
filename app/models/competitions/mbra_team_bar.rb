@@ -127,7 +127,7 @@ module Competitions
         else
           # if multiple riders got the same place (must be a TTT or tandem team or... ?), then they split the points...
           #this screws up the scoring of match sprints where riders eliminated in qualifying heats all earn the same place
-          points = point_schedule[source_result.place.to_i]
+          points = point_schedule[source_result.numeric_place]
         end
       }
         logger.debug("#{self.class.name} points: #{points} for #{source_result.event.name} | #{source_result.race.name} | #{source_result.place} | #{source_result.name} | #{source_result.team_name}") if logger.debug?

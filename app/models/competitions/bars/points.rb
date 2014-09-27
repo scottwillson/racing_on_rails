@@ -10,7 +10,7 @@ module Competitions
       # Apply points from point_schedule, and adjust for field size
       def points_for(source_result, team_size = nil)
         team_size ||= source_result.team_size
-        points = (point_schedule[source_result.place.to_i] || 0) * source_result.race.bar_points / team_size.to_f
+        points = (point_schedule[source_result.numeric_place] || 0) * source_result.race.bar_points / team_size.to_f
         if source_result.race.bar_points == 1 && source_result.race.field_size >= 75
           points = points * 1.5
         end

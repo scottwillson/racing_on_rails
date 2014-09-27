@@ -109,7 +109,7 @@ module Competitions
         else
           # if multiple riders got the same place (must be a TTT or tandem team or... ?), then they split the points...
           # this screws up the scoring of match sprints where riders eliminated in qualifying heats all earn the same place
-          points = point_schedule[source_result.place.to_i] * source_result.race.bar_points #/ team_size.to_f
+          points = point_schedule[source_result.numeric_place] * source_result.race.bar_points #/ team_size.to_f
         end
       }
       points

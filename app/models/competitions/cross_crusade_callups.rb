@@ -50,7 +50,7 @@ module Competitions
 
     # Apply points from point_schedule, and split across team
     def points_for(source_result, team_size = nil)
-      point_schedule[source_result.place.to_i].to_f
+      point_schedule[source_result.numeric_place].to_f
     end
 
     def all_year?
