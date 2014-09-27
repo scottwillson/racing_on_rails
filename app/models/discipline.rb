@@ -4,7 +4,6 @@ class Discipline < ActiveRecord::Base
   has_many :discipline_aliases
   has_and_belongs_to_many :bar_categories, class_name: "Category", join_table: "discipline_bar_categories"
 
-  NONE = Discipline.new(name: "").freeze unless defined?(NONE)
   @@all_aliases = nil
   @@names = nil
 
