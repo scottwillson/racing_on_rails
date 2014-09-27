@@ -110,7 +110,7 @@ module Categories
         name
       end
 
-      def self.cleanup_case(name)
+      def self.normalize_case(name)
         if name
           name = name.split.map do |token|
             # Calling RacingAssociation.current triggers an infinite loop
@@ -324,7 +324,7 @@ module Categories
         _name = strip_whitespace(name)
         _name = split_camelcase(_name)
         _name = normalize_punctuation(_name)
-        _name = cleanup_case(_name)
+        _name = normalize_case(_name)
         _name = replace_roman_numeral_categories(_name)
         expand_abbreviations _name
       end
