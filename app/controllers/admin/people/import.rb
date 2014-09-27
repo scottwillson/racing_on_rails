@@ -20,7 +20,7 @@ module Admin
         temp_file = File.new(path)
         @people_file = PeopleFile.new(temp_file)
         if @people_file
-          assign_years
+          assign_years_for_people_file
           session[:people_file_path] = temp_file.path
         else
           redirect_to :index
@@ -96,6 +96,16 @@ module Admin
 
 
       private
+
+      def assign_years_for_people_file
+        date = current_date
+        if date.month == 12
+          @year = date.year + 1
+        else
+          @year = date.year
+        end
+        @years = [ date.year, date.year + 1 ]
+      end
 
       def sort_duplicates(duplicates)
         duplicates.sort do |x, y|

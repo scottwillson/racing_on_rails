@@ -10,6 +10,8 @@ module Admin
 
     include ApplicationHelper
     include ActionView::Helpers::TextHelper
+    include Admin::People::Cards
+    include Admin::People::Import
     include Admin::People::Export
 
     # Search for People by name. This is a 'like' search on the concatenated
@@ -45,14 +47,14 @@ module Admin
       ActiveSupport::Notifications.instrument "new.people.admin.racing_on_rails"
       @person = Person.new
       assign_race_numbers
-      @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+      assign_years
       render :edit
     end
 
     def edit
       @person = Person.includes(:race_numbers).find(params[:id])
       assign_race_numbers
-      @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+      assign_years
       ActiveSupport::Notifications.instrument "edit.people.admin.racing_on_rails", person_name: @person.name, person_id: params[:id]
     end
 
@@ -80,7 +82,7 @@ module Admin
         end
       else
         assign_race_numbers
-        @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+        assign_years
         render :edit
       end
     end
@@ -108,14 +110,14 @@ module Admin
           return redirect_to(edit_admin_person_path(@person))
         end
       end
-      @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+      assign_years
       assign_race_numbers
       render :edit
     end
 
     def update_attribute
       respond_to do |format|
-        format.js {
+        format.js do
           @person = Person.find(params[:id])
           if params[:name] == "name"
             update_name
@@ -124,7 +126,7 @@ module Admin
             expire_cache
             render plain: @person.send(params[:name])
           end
-        }
+        end
       end
     end
 
@@ -147,7 +149,7 @@ module Admin
       else
         flash[:warn] = "Could not delete #{@person.name}. #{@person.errors.full_messages.join(". ")}"
         assign_race_numbers
-        @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+        assign_years
         render :edit
       end
     end
@@ -167,7 +169,7 @@ module Admin
         @person = Person.new
         @race_numbers = []
       end
-      @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+      assign_years
 
       respond_to do |format|
         format.js
@@ -199,16 +201,6 @@ module Admin
       if @person.race_numbers.none?(&:new_record?)
         @person.race_numbers.build(person_id: @person.id)
       end
-    end
-
-    def assign_years
-      date = current_date
-      if date.month == 12
-        @year = date.year + 1
-      else
-        @year = date.year
-      end
-      @years = [ date.year, date.year + 1 ]
     end
 
     def current_date
@@ -246,6 +238,10 @@ module Admin
       @name = @name.try :strip
       session[:person_name] = @name
       cookies[:person_name] = { value: @name, expires: Time.zone.now + 36000 }
+    end
+
+    def assign_years
+      @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
     end
 
     def person_params
