@@ -274,77 +274,76 @@ module Categories
       end
 
       def self.normalize_category_spelling(name)
-        name = name.gsub(/cat ?(\d)/i, 'Category \1')
-        name = name.gsub(/category(\d)/i, 'Category \1')
-        name.gsub(/category (\d)\/ /i, 'Category \1 ')
+        name.gsub(/cat ?(\d)/i, 'Category \1').
+             gsub(/category(\d)/i, 'Category \1').
+             gsub(/category (\d)\/ /i, 'Category \1 ')
       end
 
+      # 14 and Under, 14U, 14 & U
       def self.normalize_junior_spelling(name)
-        name = name.gsub(/junior m /i, 'Junior Men ')
-        name = name.gsub(/Espior/i, 'Espoir ')
-
-        # 14 and Under, 14U, 14 & U
-        name = name.gsub(/(\d+) (and|&) U\z/i, 'U\1')
-        name = name.gsub(/(\d+)& U\z/i, 'U\1')
-        name = name.gsub(/under (\d{2,3})/i, 'U\1')
-        name = name.gsub(/(\d+) ?(and)? ?(under|younger|up to)/i, 'U\1')
-        name = name.gsub(/(\d+) ?& ?under|younger|up to/i, 'U\1')
-        name = name.gsub(/ 0-(\d+)/i, ' U\1')
-        name.gsub(/ U (\d+)/i, ' U\1')
+        name.gsub(/junior m /i, 'Junior Men ').
+             gsub(/Espior/i, 'Espoir ').
+             gsub(/(\d+) (and|&) U\z/i, 'U\1').
+             gsub(/(\d+)& U\z/i, 'U\1').
+             gsub(/under (\d{2,3})/i, 'U\1').
+             gsub(/(\d+) ?(and)? ?(under|younger|up to)/i, 'U\1').
+             gsub(/(\d+) ?& ?under|younger|up to/i, 'U\1').
+             gsub(/ 0-(\d+)/i, ' U\1').
+             gsub(/ U (\d+)/i, ' U\1')
       end
 
       def self.normalize_masters_spelling(name)
-        name = name.gsub(/mm (\d\d)\+/i, 'Masters Men \1+')
-        name = name.gsub(/\Am (\d\d)\+/i, 'Masters \1+')
-        name = name.gsub(/ m (\d\d)\+/i, ' Masters \1+')
+        name = name.gsub(/mm (\d\d)\+/i, 'Masters Men \1+').
+                    gsub(/\Am (\d\d)\+/i, 'Masters \1+').
+                    gsub(/ m (\d\d)\+/i, ' Masters \1+')
+
         if name[/\bM [1-5]+\b/i]
           categories = name[/M ([1-5]+)/i, 1].split("")
           name = name.gsub(/M [1-5]+/i, "Men #{categories.join("/")}")
         end
-        name = name.gsub(/masters (\d\d)\Z/i, 'Masters \1+')
-        name = name.gsub(/masters (\d\d) /i, 'Masters \1+ ')
 
-        name = name.gsub(/(\d+) ?and ?(over|older)/i, '\1+')
-        name.gsub(/(\d+) ?& ?(over|older)/i, '\1+')
+        name.gsub(/masters (\d\d)\Z/i, 'Masters \1+').
+             gsub(/masters (\d\d) /i, 'Masters \1+ ').
+             gsub(/(\d+) ?and ?(over|older)/i, '\1+').
+             gsub(/(\d+) ?& ?(over|older)/i, '\1+')
       end
 
       def self.normalize_ability_spelling(name)
-        name = name.gsub(%r{M P/1/2}i, "Men Pro/1/2")
-        name = name.gsub(%r{P/1/2}i, "Pro/1/2")
-        name.gsub(/Pro.*1\/2/i, "Pro/1/2")
+        name.gsub(%r{M P/1/2}i, "Men Pro/1/2").
+             gsub(%r{P/1/2}i, "Pro/1/2").
+             gsub(/Pro.*1\/2/i, "Pro/1/2")
       end
 
       def self.normalize_mtb_spelling(name)
-        name = name.gsub(/semi( ?)pro/i, "Semi-Pro")
-        name = name.gsub(/exp\/pro/i, "Pro/Expert")
-        name = name.gsub(/varsity junior/i, "Junior Varsity")
-        name = name.gsub(/jr. varsity/i, "Junior Varsity")
+        name.gsub(/semi( ?)pro/i, "Semi-Pro").
+             gsub(/exp\/pro/i, "Pro/Expert").
+             gsub(/varsity junior/i, "Junior Varsity").
+             gsub(/jr. varsity/i, "Junior Varsity").
 
-        name = name.gsub(/single speeds?/i, "Singlespeed")
-        name = name.gsub(/sgl spd/i, "Singlespeed")
-        name = name.gsub(/sgl speed/i, "Singlespeed")
+             gsub(/single speeds?/i, "Singlespeed").
+             gsub(/sgl spd/i, "Singlespeed").
+             gsub(/sgl speed/i, "Singlespeed").
 
-        name.gsub(/hard tail/i, "Hardtail")
+             gsub(/hard tail/i, "Hardtail")
       end
 
       def self.normalize_time_spelling(name)
-        name = name.gsub(/( ?)hr( ?)/i, '\1Hour\2')
-        name.gsub(/(\d+) ?hour/i, '\1-Hour')
+        name.gsub(/( ?)hr( ?)/i, '\1Hour\2').
+             gsub(/(\d+) ?hour/i, '\1-Hour')
       end
 
       def self.normalize_weight_spelling(name)
-        name = name.gsub(/(\d{3})\+ (lbs|lb)(\.)?/i, '\1+')
-        name = name.gsub(/(\d{3})( )?(lbs|lb) \+/i, '\1+')
-        name = name.gsub(/(\d{3})( )?(lbs|lb)(.)?\+/i, '\1+')
-        name.gsub(/\((\d\d+\+)\)/i, '\1')
+        name.gsub(/(\d{3})\+ (lbs|lb)(\.)?/i, '\1+').
+             gsub(/(\d{3})( )?(lbs|lb) \+/i, '\1+').
+             gsub(/(\d{3})( )?(lbs|lb)(.)?\+/i, '\1+').
+             gsub(/\((\d\d+\+)\)/i, '\1')
       end
 
       def self.normalize_distance_spelling(name)
-        name = name.gsub(/\bmeter(s)?/i, "m")
-        name = name.gsub(/metre/i, "m")
-
-        name = name.gsub(/(\d) ?m\b/i, '\1m')
-        name = name.gsub(/(\d\d\d\d) ?m\b/i, '\1m')
+        name = name.gsub(/\bmeter(s)?/i, "m").
+                    gsub(/metre/i, "m").
+                    gsub(/(\d) ?m\b/i, '\1m').
+                    gsub(/(\d\d\d\d) ?m\b/i, '\1m')
 
         # Not masters Kilometer
         unless name[/\d\d-\d\d Kilometer/]
@@ -354,12 +353,12 @@ module Categories
       end
 
       def self.normalize_competition_spelling(name)
-        name = name.gsub(/hot spot/i, "Hotspot")
-        name = name.gsub(/iron man/i, "Ironman")
-        name = name.gsub(/multi[ -]person/i, "Multiperson")
-        name = name.gsub(/miss.*out/i, "Miss and Out")
-        name = name.gsub(/win.*out/i, "Win and Out")
-        name.gsub(/Eddie/, "Eddy")
+        name.gsub(/hot spot/i, "Hotspot").
+             gsub(/iron man/i, "Ironman").
+             gsub(/multi[ -]person/i, "Multiperson").
+             gsub(/miss.*out/i, "Miss and Out").
+             gsub(/win.*out/i, "Win and Out").
+             gsub(/Eddie/, "Eddy")
       end
 
       # Men Masters => Masters Men
