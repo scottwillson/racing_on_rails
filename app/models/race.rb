@@ -277,7 +277,7 @@ class Race < ActiveRecord::Base
     results.sort.each do |result|
       place_before = result.members_only_place.to_i
       result.members_only_place = ''
-      if result.place.to_i > 0
+      if result.numeric_place?
         if result.member_result?
           # only increment if we have moved onto a new place
           last_members_only_place += 1 if (result.place.to_i != last_members_only_place && result.place.to_i!=last_result_place)
@@ -296,34 +296,30 @@ class Race < ActiveRecord::Base
       return results.create(place: "1")
     end
 
-    _results = results.sort
     if result_id
       result = Result.find(result_id)
-      place = result.place
       start_index = _results.index(result)
-      for index in start_index...(_results.size)
-        if _results[index].place.to_i > 0
-          _results[index].place = (_results[index].place.to_i + 1).to_s
-          _results[index].save!
+      (start_index..._results.size).each do |index|
+        if _results[index].numeric_place?
+          _results[index].update_attributes! place: _results[index].next_place
         end
       end
-    else
-      result = _results.last
-      if result.place.to_i > 0
-        place = result.place.to_i + 1
-      else
-        place = result.place
-      end
-    end
 
-    results.create(place: place)
+      results.create place: result.place
+    else
+      append_result
+    end
+  end
+
+  def append_result
+    results.create place: results.sort.last.next_place
   end
 
   def destroy_result(result)
     _results = results.sort
     start_index = _results.index(result) + 1
     for index in start_index...(_results.size)
-      if _results[index].place.to_i > 0
+      if _results[index].numeric_place?
         _results[index].place = _results[index].place.to_i - 1
         _results[index].save!
       end

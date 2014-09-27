@@ -76,7 +76,7 @@ module Results
 
     # Poor name. For comparison, we sort by placed, finished, DNF, etc
     def major_place
-      if place.to_i > 0
+      if numeric_place?
         0
       elsif place.blank? || place == 0
         1

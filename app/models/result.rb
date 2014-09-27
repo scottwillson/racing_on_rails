@@ -323,11 +323,11 @@ class Result < ActiveRecord::Base
   def finished?
     return false if place.blank?
     return false if ["DNF", "DNS", "DQ"].include?(place)
-    place.to_i > 0
+    numeric_place?
   end
 
   def finished_time_trial?
-    place.to_i > 0 && time && time > 0
+    numeric_place? && time && time > 0
   end
 
   # Does this result belong to the last event in a MultiDayEvent?
@@ -476,6 +476,24 @@ class Result < ActiveRecord::Base
     end
 
     non_members
+  end
+
+  def numeric_place?
+    place && place.to_i > 0
+  end
+
+  def numeric_place
+    if numeric_place?
+      place.to_i
+    end
+  end
+
+  def next_place
+    if numeric_place?
+      numeric_place + 1
+    else
+      place
+    end
   end
 
   def custom_attribute(sym)

@@ -271,7 +271,7 @@ module Results
           result.time = row.previous.result.time
         end
 
-        if result.place.to_i > 0
+        if result.place.numeric_place?
           result.place = result.place.to_i
           if race?(row) && result.place != 1
             self.import_warnings << "First racer #{row[:first_name]} #{row[:last_name]} should be 1st place racer. "
