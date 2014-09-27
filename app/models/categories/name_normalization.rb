@@ -40,7 +40,7 @@ module Categories
         name
       end
 
-      def self.cleanup_punctuation(name)
+      def self.normalize_punctuation(name)
         if name
           # trailing punctuation
           name = name.gsub(/[\/:.,"]\z/, "")
@@ -323,7 +323,7 @@ module Categories
       def self.normalized_name(name)
         _name = strip_whitespace(name)
         _name = split_camelcase(_name)
-        _name = cleanup_punctuation(_name)
+        _name = normalize_punctuation(_name)
         _name = cleanup_case(_name)
         _name = replace_roman_numeral_categories(_name)
         expand_abbreviations _name

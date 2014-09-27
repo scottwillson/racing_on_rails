@@ -96,42 +96,42 @@ module Categories
       assert_equal "3", Category.strip_whitespace(3), "Number 3"
     end
 
-    test "#cleanup_punctuation" do
-      assert_equal "Category 1/2", Category.cleanup_punctuation("Category 1/2/"), "Category 1/2/"
-      assert_equal "Category 1/2", Category.cleanup_punctuation("Category 1/2:"), "Category 1/2:"
-      assert_equal "Category 1/2", Category.cleanup_punctuation("Category 1/2."), "Category 1/2."
+    test "#normalize_punctuation" do
+      assert_equal "Category 1/2", Category.normalize_punctuation("Category 1/2/"), "Category 1/2/"
+      assert_equal "Category 1/2", Category.normalize_punctuation("Category 1/2:"), "Category 1/2:"
+      assert_equal "Category 1/2", Category.normalize_punctuation("Category 1/2."), "Category 1/2."
 
-      assert_equal "Category 4/5 Junior", Category.cleanup_punctuation("Category 4/5 (Junior)"), "Category 4/5 (Junior)"
-      assert_equal "Category 4/5 Men", Category.cleanup_punctuation("Category 4/5 (Men)"), "Category 4/5 (Men)"
+      assert_equal "Category 4/5 Junior", Category.normalize_punctuation("Category 4/5 (Junior)"), "Category 4/5 (Junior)"
+      assert_equal "Category 4/5 Men", Category.normalize_punctuation("Category 4/5 (Men)"), "Category 4/5 (Men)"
 
-      assert_equal "Category 4/5", Category.cleanup_punctuation("Category 4//5"), "Category 4//5"
+      assert_equal "Category 4/5", Category.normalize_punctuation("Category 4//5"), "Category 4//5"
 
-      assert_equal "1/2/3", Category.cleanup_punctuation("1 2 3"), "1 2 3"
-      assert_equal "4/5", Category.cleanup_punctuation("4 5"), "4 5"
-      assert_equal "Men 3/4/5 50+", Category.cleanup_punctuation("Men 3.4.5 50+"), "Men 3.4.5 50+"
-      assert_equal "1/2", Category.cleanup_punctuation("1,2"), "1,2"
-      assert_equal "1/2", Category.cleanup_punctuation("1-2"), "1-2"
-      assert_equal "1/2/3", Category.cleanup_punctuation("1,2,3"), "1,2,3"
-      assert_equal "1/2/3", Category.cleanup_punctuation("1-2-3"), "1-2-3"
-      assert_equal "3/4/5", Category.cleanup_punctuation("3.4.5"), "3.4.5"
+      assert_equal "1/2/3", Category.normalize_punctuation("1 2 3"), "1 2 3"
+      assert_equal "4/5", Category.normalize_punctuation("4 5"), "4 5"
+      assert_equal "Men 3/4/5 50+", Category.normalize_punctuation("Men 3.4.5 50+"), "Men 3.4.5 50+"
+      assert_equal "1/2", Category.normalize_punctuation("1,2"), "1,2"
+      assert_equal "1/2", Category.normalize_punctuation("1-2"), "1-2"
+      assert_equal "1/2/3", Category.normalize_punctuation("1,2,3"), "1,2,3"
+      assert_equal "1/2/3", Category.normalize_punctuation("1-2-3"), "1-2-3"
+      assert_equal "3/4/5", Category.normalize_punctuation("3.4.5"), "3.4.5"
 
-      assert_equal "2-Person", Category.cleanup_punctuation("2 Person"), "2 Person"
-      assert_equal "4-Man", Category.cleanup_punctuation("4 man"), "4 Man"
-      assert_equal "3-Day", Category.cleanup_punctuation("3 day"), "3 day"
-      assert_equal "10-Mile", Category.cleanup_punctuation("10 Mile"), "10 Mile"
-      assert_equal "24-Hour", Category.cleanup_punctuation("24 hour"), "24 hour"
-      assert_equal "Four-Man Team", Category.cleanup_punctuation("Four Man Team"), "Four Man Team"
-      assert_equal "Junior 2-Lap 10-12 Men", Category.cleanup_punctuation("Junior 2 Lap 10-12 Men"), "Junior 2 Lap 10-12 Men"
-      assert_equal "Team 8-Lap", Category.cleanup_punctuation("Team 8 Lap"), "Team 8 Lap"
+      assert_equal "2-Person", Category.normalize_punctuation("2 Person"), "2 Person"
+      assert_equal "4-Man", Category.normalize_punctuation("4 man"), "4 Man"
+      assert_equal "3-Day", Category.normalize_punctuation("3 day"), "3 day"
+      assert_equal "10-Mile", Category.normalize_punctuation("10 Mile"), "10 Mile"
+      assert_equal "24-Hour", Category.normalize_punctuation("24 hour"), "24 hour"
+      assert_equal "Four-Man Team", Category.normalize_punctuation("Four Man Team"), "Four Man Team"
+      assert_equal "Junior 2-Lap 10-12 Men", Category.normalize_punctuation("Junior 2 Lap 10-12 Men"), "Junior 2 Lap 10-12 Men"
+      assert_equal "Team 8-Lap", Category.normalize_punctuation("Team 8 Lap"), "Team 8 Lap"
 
-      assert_equal "6-Lap Scratch Junior 13-14", Category.cleanup_punctuation("6-Lap Scratch Junior 13-14"), "6-Lap Scratch Junior 13-14"
+      assert_equal "6-Lap Scratch Junior 13-14", Category.normalize_punctuation("6-Lap Scratch Junior 13-14"), "6-Lap Scratch Junior 13-14"
 
-      assert_equal "Six-day", Category.cleanup_punctuation("Six-day"), "Six-day"
-      assert_equal "Six-day", Category.cleanup_punctuation("Six day"), "Six day"
-      assert_equal "Six-day", Category.cleanup_punctuation("Sixday"), "Sixday"
-      assert_equal "Six-day", Category.cleanup_punctuation("Six-Day"), "Six-Day"
+      assert_equal "Six-day", Category.normalize_punctuation("Six-day"), "Six-day"
+      assert_equal "Six-day", Category.normalize_punctuation("Six day"), "Six day"
+      assert_equal "Six-day", Category.normalize_punctuation("Sixday"), "Sixday"
+      assert_equal "Six-day", Category.normalize_punctuation("Six-Day"), "Six-Day"
 
-      assert_equal "Men 40+ B", Category.cleanup_punctuation("Men 40+ - B"), "Men 40+ - B"
+      assert_equal "Men 40+ B", Category.normalize_punctuation("Men 40+ - B"), "Men 40+ - B"
     end
 
     test "#replace_roman_numeral_categories" do
