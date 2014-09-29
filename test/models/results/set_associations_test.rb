@@ -1,7 +1,7 @@
-require File.expand_path("../../../test_helper", __FILE__)
+require "test_helper"
 
 # :stopdoc:
-class FindAssociationsTest < ActiveSupport::TestCase
+class SetAssociationsTest < ActiveSupport::TestCase
   setup :number_issuer
 
   def number_issuer
@@ -9,7 +9,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     FactoryGirl.create(:discipline)
   end
 
-  test "find associated records 2" do
+  test "set associated records 2" do
     event = SingleDayEvent.create!(name: "Tabor CR")
     category = Category.find_or_create_by(name: "Senior Men Pro/1/2")
     race = event.races.create!(category: category)
@@ -93,7 +93,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal(nil, result.team_name, 'team name')
   end
 
-  test "find associated records" do
+  test "set associated records" do
     tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
     FactoryGirl.create(:result, person: tonkin)
     tonkin.aliases.create!(name: "Eric Tonkin")
@@ -117,7 +117,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal("Ron", result_3.person.first_name, 'Person')
   end
 
-  test "find associated records non road" do
+  test "set associated records non road" do
     FactoryGirl.create(:cyclocross_discipline)
     FactoryGirl.create(:mtb_discipline)
 
@@ -225,101 +225,101 @@ class FindAssociationsTest < ActiveSupport::TestCase
     race = FactoryGirl.create(:race, event: event)
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin')
-    assert_equal([tonkin], result.find_people(event).to_a, 'first_name + last_name')
+    assert_equal([tonkin], result.find_people.to_a, 'first_name + last_name')
 
     result = race.results.build(name: 'Erik Tonkin')
-    assert_equal([tonkin], result.find_people(event).to_a, 'name')
+    assert_equal([tonkin], result.find_people.to_a, 'name')
 
     result = race.results.build(last_name: 'Tonkin')
-    assert_equal([tonkin], result.find_people(event).to_a, 'last_name')
+    assert_equal([tonkin], result.find_people.to_a, 'last_name')
 
     result = race.results.build(first_name: 'Erik')
-    assert_equal([tonkin], result.find_people(event).to_a, 'first_name')
+    assert_equal([tonkin], result.find_people.to_a, 'first_name')
 
     result = race.results.build(first_name: 'Erika', last_name: 'Tonkin')
-    assert_equal([], result.find_people(event).to_a, 'first_name + last_name should not match')
+    assert_equal([], result.find_people.to_a, 'first_name + last_name should not match')
 
     result = race.results.build(name: 'Erika Tonkin')
-    assert_equal([], result.find_people(event).to_a, 'name should not match')
+    assert_equal([], result.find_people.to_a, 'name should not match')
 
     result = race.results.build(last_name: 'onkin')
-    assert_equal([], result.find_people(event).to_a, 'last_name should not match')
+    assert_equal([], result.find_people.to_a, 'last_name should not match')
 
     result = race.results.build(first_name: 'Erika')
-    assert_equal([], result.find_people(event).to_a, 'first_name should not match')
+    assert_equal([], result.find_people.to_a, 'first_name should not match')
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '104')
-    assert_equal([tonkin], result.find_people(event).to_a, 'road number, first_name, last_name')
+    assert_equal([tonkin], result.find_people.to_a, 'road number, first_name, last_name')
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '340')
-    assert_equal([tonkin], result.find_people(event).to_a, 'Matson road number, first_name, last_name')
+    assert_equal([tonkin], result.find_people.to_a, 'Matson road number, first_name, last_name')
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '6')
-    assert_equal([tonkin], result.find_people(event).to_a, 'cross number (not in DB), first_name, last_name')
+    assert_equal([tonkin], result.find_people.to_a, 'cross number (not in DB), first_name, last_name')
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '100')
-    assert_equal([tonkin], result.find_people(event).to_a, 'Different number')
+    assert_equal([tonkin], result.find_people.to_a, 'Different number')
 
     # TODO make null person and list this match as a possibility
     result = race.results.build(first_name: 'Rhonda', last_name: 'Tonkin', number: '104')
-    assert_equal([], result.find_people(event).to_a, 'Tonkin\'s number, different first name')
+    assert_equal([], result.find_people.to_a, 'Tonkin\'s number, different first name')
 
     # TODO make null person and list this match as a possibility
     result = race.results.build(first_name: 'Erik', last_name: 'Viking', number: '104')
-    assert_equal([], result.find_people(event).to_a, 'Tonkin\'s number, different last name')
+    assert_equal([], result.find_people.to_a, 'Tonkin\'s number, different last name')
 
     tonkin_clone = Person.create!(first_name: 'Erik', last_name: 'Tonkin')
     RaceNumber.create!(person: tonkin_clone, number_issuer: NumberIssuer.first, discipline: Discipline[:road], year: 2004, value: '100')
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin')
-    assert_same_elements([tonkin, tonkin_clone], result.find_people(event).to_a, 'Same names, no numbers')
+    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, 'Same names, no numbers')
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '6')
-    assert_same_elements([tonkin, tonkin_clone], result.find_people(event).to_a, 'Same names, bogus numbers')
+    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, 'Same names, bogus numbers')
 
     result = race.results.build(last_name: 'Tonkin')
-    assert_same_elements([tonkin, tonkin_clone], result.find_people(event).to_a, 'Same last name')
+    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, 'Same last name')
 
     result = race.results.build(first_name: 'Erik')
-    assert_same_elements([tonkin, tonkin_clone], result.find_people(event).to_a, 'Same names, bogus numbers')
+    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, 'Same names, bogus numbers')
 
     result = race.results.build(number: '6')
-    assert_equal([], result.find_people(event).to_a, 'ccx number (not in DB)')
+    assert_equal([], result.find_people.to_a, 'ccx number (not in DB)')
 
     result = race.results.build(number: '104')
-    assert_equal([tonkin], result.find_people(event).to_a, 'road number, first_name, last_name')
+    assert_equal([tonkin], result.find_people.to_a, 'road number, first_name, last_name')
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '104')
-    assert_equal([tonkin], result.find_people(event).to_a, 'road number, first_name, last_name')
+    assert_equal([tonkin], result.find_people.to_a, 'road number, first_name, last_name')
 
     result = race.results.build(number: '100')
-    assert_equal([tonkin_clone], result.find_people(event).to_a, 'road number')
+    assert_equal([tonkin_clone], result.find_people.to_a, 'road number')
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '100')
-    assert_equal([tonkin_clone], result.find_people(event).to_a, 'road number, first_name, last_name')
+    assert_equal([tonkin_clone], result.find_people.to_a, 'road number, first_name, last_name')
 
     # team_name -- consider last
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: 'Kona')
-    assert_equal([tonkin], result.find_people(event).to_a, 'first_name, last_name, team')
+    assert_equal([tonkin], result.find_people.to_a, 'first_name, last_name, team')
 
     # TODO: change to possible match
     result = race.results.build(first_name: 'Erika', last_name: 'Tonkin', team_name: 'Kona')
-    assert_equal([], result.find_people(event).to_a, 'wrong first_name, last_name, team')
+    assert_equal([], result.find_people.to_a, 'wrong first_name, last_name, team')
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: 'Kona', number: '104')
-    assert_equal([tonkin], result.find_people(event).to_a, 'first_name, last_name, team, number')
+    assert_equal([tonkin], result.find_people.to_a, 'first_name, last_name, team, number')
 
     result = race.results.build(last_name: 'Tonkin', team_name: 'Kona')
-    assert_equal([tonkin], result.find_people(event).to_a, 'last_name, team')
+    assert_equal([tonkin], result.find_people.to_a, 'last_name, team')
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: '')
-    assert_same_elements([tonkin, tonkin_clone], result.find_people(event).to_a, 'first_name, last_name, blank team')
+    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, 'first_name, last_name, blank team')
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: 'Camerati')
-    assert_equal([tonkin_clone], result.find_people(event).to_a, 'first_name, last_name, wrong team')
+    assert_equal([tonkin_clone], result.find_people.to_a, 'first_name, last_name, wrong team')
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: 'Camerati', number: '987')
-    assert_equal([tonkin_clone], result.find_people(event).to_a, 'first_name, last_name, wrong team, wrong number')
+    assert_equal([tonkin_clone], result.find_people.to_a, 'first_name, last_name, wrong team, wrong number')
 
     vanilla = FactoryGirl.create(:team, name: "Vanilla")
     vanilla.aliases.create!(name: "Vanilla Bicycles")
@@ -327,24 +327,24 @@ class FindAssociationsTest < ActiveSupport::TestCase
     tonkin_clone.save!
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: 'Vanilla Bicycles')
-    assert_equal([tonkin_clone], result.find_people(event).to_a, 'first_name, last_name + team alias should match')
+    assert_equal([tonkin_clone], result.find_people.to_a, 'first_name, last_name + team alias should match')
 
     result = race.results.build
-    assert_equal([], result.find_people(event).to_a, 'no person, team, nor number')
+    assert_equal([], result.find_people.to_a, 'no person, team, nor number')
 
     result = race.results.build(team_name: 'Astana Wurth')
-    assert_equal([], result.find_people(event).to_a, 'wrong team only')
+    assert_equal([], result.find_people.to_a, 'wrong team only')
 
     # rental numbers
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '60')
-    assert_same_elements([tonkin, tonkin_clone], result.find_people(event).to_a, 'rental number')
+    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, 'rental number')
 
     result = race.results.build(first_name: '', last_name: '')
-    assert_same_elements([], result.find_people(event).to_a, 'blank name with no blank names')
+    assert_same_elements([], result.find_people.to_a, 'blank name with no blank names')
 
     blank_name_person = Person.create!(name: '', dh_number: '100')
     result = race.results.build(first_name: '', last_name: '')
-    assert_same_elements([blank_name_person], result.find_people(event).to_a, 'blank names')
+    assert_same_elements([blank_name_person], result.find_people.to_a, 'blank names')
 
     # Add exact dupes with same numbers
     # Test numbers from different years or disciplines
@@ -444,7 +444,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     Person.create!(name: 'Rocket, The', license: "")
     weaver = FactoryGirl.create(:person, name: "Ryan Weaver", first_name: 'Ryan', last_name: 'Weaver')
     race = FactoryGirl.create(:race)
-    result = race.results.create!(first_name: 'Ryan', last_name: 'Weaver')
-    assert_same_elements([weaver], result.find_people(result.event).to_a, "blank license shouldn't match anything")
+    result = race.results.create!(first_name: 'Ryan', last_name: 'Weaver', event: race.event)
+    assert_same_elements([weaver], result.find_people.to_a, "blank license shouldn't match anything")
   end
 end

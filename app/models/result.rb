@@ -32,7 +32,7 @@ class Result < ActiveRecord::Base
 
   serialize :custom_attributes, Hash
 
-  before_save :find_associated_records
+  before_save :set_associated_records
   before_save :cache_non_event_attributes
   before_create :cache_event_attributes
   before_save :ensure_custom_attributes
@@ -80,38 +80,34 @@ class Result < ActiveRecord::Base
   end
 
   # Replace any new +person+, or +team+ with one that already exists if name matches
-  def find_associated_records
+  # TODO rationalize names
+  def set_associated_records
     return true if competition_result?
 
-    _person = person
-    if _person && _person.new_record?
-      person.updated_by = event
-      if _person.name.blank?
+    set_person
+    update_membership
+    set_team
+
+    true
+  end
+
+  def set_person
+    if person && person.new_record?
+      if person.name.blank?
         self.person = nil
       else
         existing_people = find_people
         if existing_people.size == 1
-          self.person = existing_people.to_a.first
+          self.person = existing_people.first
         elsif existing_people.size > 1
           self.person = Person.select_by_recent_activity(existing_people)
         end
       end
-    end
-
-    # This logic should be in Person
-    if person &&
-       RacingAssociation.current.add_members_from_results? &&
-       person.new_record? &&
-       person.first_name.present? &&
-       person.last_name.present? &&
-       person[:member_from].blank? &&
-       event.association? &&
-       !RaceNumber.rental?(number, Discipline[event.discipline])
-
       person.updated_by = event
-      person.member_from = race.date
     end
+  end
 
+  def set_team
     if team && team.new_record?
       if team.name.blank?
         self.team = nil
@@ -119,11 +115,8 @@ class Result < ActiveRecord::Base
         existing_team = Team.find_by_name_or_alias(team.name)
         self.team = existing_team if existing_team
       end
-      if team && team.new_record?
-        team.updated_by = event
-      end
+      team.updated_by = event
     end
-    true
   end
 
   # Use +first_name+, +last_name+, +race_number+, +team+ to figure out if +person+ already exists.
@@ -131,7 +124,7 @@ class Result < ActiveRecord::Base
   #
   # TODO refactor into methods or split responsibilities with Person?
   # Need Event to match on race number. Event will not be set before result is saved to database
-  def find_people(_event = event)
+  def find_people
     matches = Set.new
 
     #license first if present and source is reliable (USAC)
@@ -148,14 +141,14 @@ class Result < ActiveRecord::Base
     if number.present?
       if matches.size > 1
         # use number to choose between same names
-        RaceNumber.find_all_by_value_and_event(number, _event).each do |race_number|
+        RaceNumber.find_all_by_value_and_event(number, event).each do |race_number|
           if matches.include?(race_number.person)
             return [ race_number.person ]
           end
         end
       elsif name.blank?
         # no name, so try to match by number
-        matches = RaceNumber.find_all_by_value_and_event(number, _event).map(&:person)
+        matches = RaceNumber.find_all_by_value_and_event(number, event).map(&:person)
       end
     end
 
@@ -176,6 +169,24 @@ class Result < ActiveRecord::Base
     end
 
     matches
+  end
+
+  def update_membership
+    if update_membership?
+      person.updated_by = event
+      person.member_from = race.date
+    end
+  end
+
+  def update_membership?
+    person &&
+    RacingAssociation.current.add_members_from_results? &&
+    person.new_record? &&
+    person.first_name.present? &&
+    person.last_name.present? &&
+    person[:member_from].blank? &&
+    event.association? &&
+    !RaceNumber.rental?(number, Discipline[event.discipline])
   end
 
   # Set +person#number+ to +number+ if this isn't a rental number
