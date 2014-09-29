@@ -232,6 +232,10 @@ class Result < ActiveRecord::Base
     non_members
   end
 
+  def rental_number?
+    RaceNumber.rental? number, Discipline[event.discipline]
+  end
+
   def numeric_place?
     place && place.to_i > 0
   end

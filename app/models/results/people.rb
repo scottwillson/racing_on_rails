@@ -125,22 +125,21 @@ module Results
       person.last_name.present? &&
       person[:member_from].blank? &&
       event.association? &&
-      !RaceNumber.rental?(number, Discipline[event.discipline])
+      !rental_number?
     end
 
     # Set +person#number+ to +number+ if this isn't a rental number
     def update_person_number
       return true if competition_result?
 
-      discipline = Discipline[event.discipline]
       if person &&
          event.number_issuer &&
          event.number_issuer != RacingAssociation.current.number_issuer &&
          number.present? &&
-         !RaceNumber.rental?(number, discipline)
+         !rental_number?
 
         person.updated_by = updated_by
-        person.add_number number, discipline, event.number_issuer, event.date.year
+        person.add_number number, Discipline[event.discipline], event.number_issuer, event.date.year
       end
     end
 
