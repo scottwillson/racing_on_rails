@@ -105,6 +105,7 @@ class PeopleFile < Grid::GridFile
     else
       options = options.first
     end
+
     options = {
       delimiter: ',',
       quoted: true,
@@ -130,97 +131,28 @@ class PeopleFile < Grid::GridFile
       end
       year = year.to_i if year
 
-      if @update_membership
-        if year && year > Time.zone.today.year
-          @member_from_imported_people = Time.zone.local(year).beginning_of_year.to_date
-        else
-          @member_from_imported_people = Time.zone.today.to_date
-        end
-        @member_to_for_imported_people = Time.zone.local(year || Time.zone.today.year).end_of_year.to_date
-      end
+      assign_member_from_imported_people year
 
       Person.transaction do
-        rows.each do |row|
-          row_hash = row.to_hash
-          row_hash[:updated_by] = import_file
-          logger.debug(row_hash.inspect) if logger.debug?
-          next if row_hash[:first_name].blank? && row_hash[:first_name].blank? && row_hash[:name].blank?
+        rows.map(&:to_hash).each do |row|
+          row[:updated_by] = import_file
+          logger.debug(row.inspect) if logger.debug?
+          next if blank_name?(row)
 
-          combine_categories(row_hash)
-          row_hash.delete(:date_of_birth) if row_hash[:date_of_birth] == 'xx'
+          combine_categories row
+          delete_blank_categories row
+          delete_bad_date_of_birth row
 
-          # TODO or by USAC license number
-          people = []
+          people = find_people(row)
 
-          if row_hash[:license].present? && row_hash[:license].to_i > 0
-            people = Person.where(license: row_hash[:license])
-          end
+          row[:member_to] = @member_to_for_imported_people if @update_membership
 
           if people.empty?
-            people = Person.find_all_by_name_or_alias(first_name: row_hash[:first_name], last_name: row_hash[:last_name])
-          end
-
-          ActiveSupport::Notifications.instrument "find.people_file.racing_on_rails", people_count: people.size, person_first_name: row_hash[:first_name], person_last_name: row_hash[:last_name], license: row_hash[:license]
-
-          person = nil
-          row_hash[:member_to] = @member_to_for_imported_people if @update_membership
-          if people.empty?
-            ActiveSupport::Notifications.instrument "create.people_file.racing_on_rails", person_first_name: row_hash[:first_name], person_last_name: row_hash[:last_name]
-            delete_unwanted_member_from(row_hash, person)
-            add_print_card_and_label(row_hash)
-            person = Person.new(updated_by: import_file)
-            if year
-              person.year = year
-            end
-            person.attributes = row_hash
-            person.save!
-            @created = @created + 1
+            create_person row, year
           elsif people.size == 1
-            person = people.first
-
-            ActiveSupport::Notifications.instrument "update.people_file.racing_on_rails", person_id: person.id, person_name: person.name
-
-            # Don't want to overwrite existing categories
-            delete_blank_categories(row_hash)
-            delete_unwanted_member_from(row_hash, person)
-            unless person.notes.blank?
-              row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
-            end
-            add_print_card_and_label(row_hash, person)
-
-            if year
-              person.year = year
-            end
-            person.updated_by = import_file
-            person.attributes = row_hash
-
-            ActiveSupport::Notifications.instrument "update.people_file.racing_on_rails", person_id: person.id, person_name: person.name
-            person.save!
-
-            # Unsure how this works out with save! before
-            unless person.valid?
-              raise ActiveRecord::RecordNotSaved.new(person.errors.full_messages.join(', '))
-            end
-            @updated = @updated + 1
+            update_person row, people.first, year
           else
-            delete_blank_categories(row_hash)
-            person = Person.new(row_hash)
-            if year
-              person.year = year
-            end
-            delete_unwanted_member_from(row_hash, person)
-            unless person.notes.blank?
-              row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
-            end
-            add_print_card_and_label(row_hash, person)
-
-            row_hash.delete(:persistence_token)
-            row_hash.delete(:single_access_token)
-            row_hash.delete(:perishable_token)
-
-            ActiveSupport::Notifications.instrument "duplicate.people_file.racing_on_rails", person_name: person.name, people_count: people.size, people_ids: people.map(&:id)
-
-            duplicates << Duplicate.create!(new_attributes: Person.new(row_hash).serializable_hash, people: people)
+            create_duplicate row, year, people
           end
         end
       end
@@ -228,50 +160,145 @@ class PeopleFile < Grid::GridFile
     return @created, @updated
   end
 
+  def find_people(row)
+    people = []
+
+    if row[:license].present? && row[:license].to_i > 0
+      people = Person.where(license: row[:license])
+    end
+
+    if people.empty?
+      people = Person.find_all_by_name_or_alias(first_name: row[:first_name], last_name: row[:last_name])
+    end
+
+    ActiveSupport::Notifications.instrument(
+      "find.people_file.racing_on_rails",
+      people_count: people.size,
+      person_first_name: row[:first_name],
+      person_last_name: row[:last_name],
+      license: row[:license]
+    )
+
+    people
+  end
+
+  def create_person(row, year)
+    ActiveSupport::Notifications.instrument "create.people_file.racing_on_rails", person_first_name: row[:first_name], person_last_name: row[:last_name]
+    delete_unwanted_member_from row, nil
+    add_print_card_and_label row
+    person = Person.new(updated_by: import_file)
+    if year
+      person.year = year
+    end
+    person.attributes = row
+    person.save!
+    @created = @created + 1
+  end
+
+  def update_person(row, person, year)
+    ActiveSupport::Notifications.instrument "update.people_file.racing_on_rails", person_id: person.id, person_name: person.name
+
+    delete_unwanted_member_from row, person
+    unless person.notes.blank?
+      row[:notes] = "#{person.notes}#{$INPUT_RECORD_SEPARATOR}#{row[:notes]}"
+    end
+    add_print_card_and_label row, person
+
+    if year
+      person.year = year
+    end
+    person.updated_by = import_file
+    person.attributes = row
+
+    person.save!
+
+    @updated = @updated + 1
+  end
+
+  def create_duplicate(row, year, people)
+    person = Person.new(row)
+
+    ActiveSupport::Notifications.instrument "duplicate.people_file.racing_on_rails", person_name: person.name, people_count: people.size, people_ids: people.map(&:id)
+
+    if year
+      person.year = year
+    end
+    delete_unwanted_member_from row, person
+    unless person.notes.blank?
+      row[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row[:notes]}"
+    end
+    add_print_card_and_label row, person
+
+    row.delete :persistence_token
+    row.delete :single_access_token
+    row.delete :perishable_token
+
+    duplicates << Duplicate.create!(new_attributes: Person.new(row).serializable_hash, people: people)
+  end
 
   private
 
-  def combine_categories(row_hash)
+  def assign_member_from_imported_people(year)
+    if @update_membership
+      if year && year > Time.zone.today.year
+        @member_from_imported_people = Time.zone.local(year).beginning_of_year.to_date
+      else
+        @member_from_imported_people = Time.zone.today.to_date
+      end
+      @member_to_for_imported_people = Time.zone.local(year || Time.zone.today.year).end_of_year.to_date
+    end
+  end
+
+  def blank_name?(row)
+    row[:first_name].blank? && row[:first_name].blank? && row[:name].blank?
+  end
+
+  def combine_categories(row)
     Person::CATEGORY_FIELDS.each do |field|
-      if row_hash[field].present?
-        row_hash[field] = row_hash[field].gsub("\n", " ")
+      if row[field].present?
+        row[field] = row[field].gsub("\n", " ")
       end
     end
   end
 
-  def delete_blank_categories(row_hash)
-    for field in Person::CATEGORY_FIELDS
-      row_hash.delete(field) if row_hash[field].blank?
+  def delete_bad_date_of_birth(row)
+    row.delete(:date_of_birth) if row[:date_of_birth] == 'xx'
+  end
+
+  # Don't want to overwrite existing categories
+  def delete_blank_categories(row)
+    Person::CATEGORY_FIELDS.each do |field|
+      row.delete(field) if row[field].blank?
     end
   end
 
-  def delete_unwanted_member_from(row_hash, person)
+  def delete_unwanted_member_from(row, person)
     # Just in case
-    row_hash.delete(:login)
+    row.delete(:login)
 
-    if row_hash[:member_from].blank?
-      row_hash.delete(:member_from)
+    if row[:member_from].blank?
+      row.delete(:member_from)
       return
     end
 
     unless person.nil?
       if person.member_from
         begin
-          date = Time.zone.parse(row_hash[:member_from]).to_date
+          date = Time.zone.parse(row[:member_from]).to_date
           if date > person.member_from.to_date
-            row_hash[:member_from] = person.member_from
+            row[:member_from] = person.member_from
           end
         rescue ArgumentError => e
-          raise ArgumentError.new("#{e}: '#{row_hash[:member_from]}' is not a valid date. Row:\n #{row_hash.inspect}")
+          raise ArgumentError.new("#{e}: '#{row[:member_from]}' is not a valid date. Row:\n #{row.inspect}")
         end
       end
     end
   end
 
-  def add_print_card_and_label(row_hash, person = nil)
+  def add_print_card_and_label(row, person = nil)
     if @update_membership && !@has_print_column
       if person.nil? || (!person.member? || person.member_to.to_date < @member_to_for_imported_people.to_date)
-        row_hash[:print_card] = true
+        row[:print_card] = true
       end
     end
   end
