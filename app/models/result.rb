@@ -25,6 +25,8 @@ end
 # a +team+ atribute and many RaceNumbers. Result's number is just a String, not
 # a RaceNumber
 class Result < ActiveRecord::Base
+  before_save :set_associated_records
+
   include Results::Caching
   include Results::Cleanup
   include Results::Comparison
@@ -33,8 +35,6 @@ class Result < ActiveRecord::Base
   include Results::Times
   include Export::Results
 
-
-  before_save :set_associated_records
   after_save :update_person_number
   after_destroy :destroy_people
   after_destroy :destroy_teams
