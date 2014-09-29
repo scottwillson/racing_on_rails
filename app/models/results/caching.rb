@@ -38,6 +38,5 @@ module Results
       cache_non_event_attributes if args.empty? || args.include?(:non_event)
       save!
     end
-
   end
 end

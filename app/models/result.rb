@@ -28,13 +28,12 @@ class Result < ActiveRecord::Base
   include Results::Caching
   include Results::Cleanup
   include Results::Comparison
+  include Results::CustomAttributes
   include Results::Times
   include Export::Results
 
-  serialize :custom_attributes, Hash
 
   before_save :set_associated_records
-  before_save :ensure_custom_attributes
   after_save :update_person_number
   after_destroy :destroy_people
   after_destroy :destroy_teams
@@ -199,24 +198,6 @@ class Result < ActiveRecord::Base
       person.updated_by = updated_by
       person.add_number(number, discipline, event.number_issuer, event.date.year)
     end
-  end
-
-  def ensure_custom_attributes
-    if race_id && race.custom_columns && !custom_attributes
-      self.custom_attributes = Hash.new
-      race.custom_columns.each do |key|
-        custom_attributes[key.to_sym] = nil
-      end
-    end
-    true
-  end
-
-  def custom_attributes=(hash)
-    if hash
-      symbolized_hash = Hash.new
-      hash.each { |key, value| symbolized_hash[key.to_s.to_sym] = value}
-    end
-    self[:custom_attributes] = symbolized_hash
   end
 
   # Destroy People that only exist because they were created by importing results
@@ -473,17 +454,6 @@ class Result < ActiveRecord::Base
       numeric_place + 1
     else
       place
-    end
-  end
-
-  def custom_attribute(sym)
-    _sym = sym.to_sym
-    if custom_attributes && custom_attributes.has_key?(_sym)
-      custom_attributes[_sym]
-    elsif race && race.custom_columns && race.custom_columns.include?(_sym)
-      nil
-    else
-      raise NoMethodError, "No custom attribute '#{sym}' for race"
     end
   end
 
