@@ -59,16 +59,18 @@ class Result < ActiveRecord::Base
     where(team_id: team.id)
   }
 
-  attr_accessor :updated_by
-
-  def self.find_all_for(person)
+  scope :person, lambda { |person|
     if person.is_a? Person
       person_id = person.id
     else
       person_id = person
     end
-    Result.includes(:team, :person, :scores, :category, { race: [ :event, :category ] }).where(person_id: person_id)
-  end
+
+    includes(:team, :person, :scores, :category, { race: [ :event, :category ] }).
+    where(person_id: person_id)
+  }
+
+  attr_accessor :updated_by
 
   # Replace any new +person+, or +team+ with one that already exists if name matches
   # TODO rationalize names
