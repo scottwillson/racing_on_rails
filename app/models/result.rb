@@ -28,6 +28,7 @@ class Result < ActiveRecord::Base
   include Results::Caching
   include Results::Cleanup
   include Results::Comparison
+  include Results::Competitions
   include Results::CustomAttributes
   include Results::Times
   include Export::Results
@@ -38,12 +39,6 @@ class Result < ActiveRecord::Base
   after_destroy :destroy_people
   after_destroy :destroy_teams
 
-  has_many :scores,
-           class_name: "Competitions::Score",
-           foreign_key: 'competition_result_id',
-           dependent: :destroy,
-           extend: CreateIfBestResultForRaceExtension
-  has_many :dependent_scores, class_name: 'Competitions::Score', foreign_key: 'source_result_id', dependent: :destroy
   belongs_to :category
   belongs_to :event
   belongs_to :race
@@ -51,8 +46,6 @@ class Result < ActiveRecord::Base
   belongs_to :team
 
   validates_presence_of :race
-
-  scope :competition, -> { where(competition_result: true) }
 
   scope :person_event, lambda { |person, event|
     includes(scores: [ :source_result, :competition_result ]).
@@ -74,7 +67,7 @@ class Result < ActiveRecord::Base
     else
       person_id = person
     end
-    Result.includes(:team, :person, :scores, :category, {race: [:event, :category]}).where(person_id: person_id)
+    Result.includes(:team, :person, :scores, :category, { race: [ :event, :category ] }).where(person_id: person_id)
   end
 
   # Replace any new +person+, or +team+ with one that already exists if name matches
@@ -221,22 +214,6 @@ class Result < ActiveRecord::Base
     end
   end
 
-  def update_points!
-    calculate_points
-    if points_changed?
-      update_column :points, points
-    end
-  end
-
-  # Set points from +scores+
-  def calculate_points
-    # Drop to SQL for effeciency
-    if competition_result?
-      self.points = Competitions::Score.where(competition_result_id: id).sum(:points)
-    end
-    points
-  end
-
   def category_name=(name)
     if name.blank?
       self.category = nil
@@ -244,29 +221,6 @@ class Result < ActiveRecord::Base
       self.category = Category.find_or_create_by_normalized_name(name)
     end
     self[:category_name] = name.try(:to_s)
-  end
-
-  def calculate_competition_result
-    if frozen?
-      self[:competition_result] || event.is_a?(Competitions::Competition)
-    else
-      self[:competition_result] ||= event.is_a?(Competitions::Competition)
-    end
-  end
-
-  def calculate_team_competition_result
-    if frozen?
-      self[:team_competition_result] ||
-      event.is_a?(Competitions::TeamBar) ||
-      event.is_a?(Competitions::CrossCrusadeTeamCompetition) ||
-      event.is_a?(Competitions::MbraTeamBar)
-    else
-      self[:team_competition_result] ||= (
-        event.is_a?(Competitions::TeamBar) ||
-        event.is_a?(Competitions::CrossCrusadeTeamCompetition) ||
-        event.is_a?(Competitions::MbraTeamBar)
-      )
-    end
   end
 
   # TODO Cache this, too
