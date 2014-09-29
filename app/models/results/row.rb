@@ -6,12 +6,10 @@ module Results
     attr_accessor :previous
     attr_accessor :result
     attr_reader :spreadsheet_row
-    attr_reader :usac_results_format
 
-    def initialize(spreadsheet_row, column_indexes, usac_results_format)
+    def initialize(spreadsheet_row, column_indexes)
       @spreadsheet_row = spreadsheet_row
       @column_indexes = column_indexes
-      @usac_results_format = usac_results_format
     end
 
     def [](column_symbol)
@@ -78,14 +76,8 @@ module Results
     end
 
     def notes
-      if usac_results_format
-        # We want to pick up the info in the first 5 columns: org, year, event #, date, discipline
-        return "" if blank? || size < 5
-        spreadsheet_row[0, 5].select { |cell| cell.present? }.join(", ")
-      else
-        return "" if blank? || size < 2
-        spreadsheet_row[1, size - 1].select { |cell| cell.present? }.join(", ")
-      end
+      return "" if blank? || size < 2
+      spreadsheet_row[1, size - 1].select { |cell| cell.present? }.join(", ")
     end
 
     def to_s

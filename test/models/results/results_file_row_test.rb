@@ -8,18 +8,18 @@ module Results
     test "create row" do
       book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/pir_2006_format.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(0)
-      Results::Row.new(spreadsheet_row, {}, false)
+      Results::Row.new(spreadsheet_row, {})
     end
 
     test "row last?" do
       book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/pir_2006_format.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(0)
 
-      row = Results::Row.new(spreadsheet_row, {}, false)
+      row = Results::Row.new(spreadsheet_row, {})
       assert !row.last?, "Last row?"
 
       spreadsheet_row = book.worksheet(0).last_row
-      row = Results::Row.new(spreadsheet_row, {}, false)
+      row = Results::Row.new(spreadsheet_row, {})
       assert row.last?, "Last row?"
     end
 
@@ -27,7 +27,7 @@ module Results
       book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/pir_2006_format.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(2)
 
-      row = Results::Row.new(spreadsheet_row, { place: 0, last_name: 3 }, false)
+      row = Results::Row.new(spreadsheet_row, { place: 0, last_name: 3 })
       assert_nil row[:city], "Non existent column"
       assert_equal 1, row[:place], "place"
       assert_equal "Elken", row[:last_name], "last_name"
