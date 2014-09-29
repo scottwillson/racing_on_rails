@@ -120,23 +120,41 @@ class Result < ActiveRecord::Base
   def find_people
     matches = Set.new
 
-    #license first if present and source is reliable (USAC)
-    if RacingAssociation.current.eager_match_on_license? && license.present?
-      matches = matches + Person.where(license: license)
-      return matches if matches.size == 1
-    end
-
-    # name
-    matches = matches + Person.find_all_by_name_or_alias(first_name: first_name, last_name: last_name)
+    matches = eager_find_person_by_license(matches)
     return matches if matches.size == 1
 
-    # number
+    matches = find_person_by_name(matches)
+    return matches if matches.size == 1
+
+    matches = find_person_by_number(matches)
+    return matches if matches.size == 1
+
+    matches = find_person_by_team_name(matches)
+    return matches if matches.size == 1
+
+    find_person_by_license(matches)
+  end
+
+  # license first if present and source is reliable (USAC)
+  def eager_find_person_by_license(matches)
+    if RacingAssociation.current.eager_match_on_license? && license.present?
+      matches << Person.where(license: license)
+    end
+
+    matches
+  end
+
+  def find_person_by_name(matches)
+    matches + Person.find_all_by_name_or_alias(first_name: first_name, last_name: last_name)
+  end
+
+  def find_person_by_number(matches)
     if number.present?
       if matches.size > 1
         # use number to choose between same names
         RaceNumber.find_all_by_value_and_event(number, event).each do |race_number|
           if matches.include?(race_number.person)
-            return [ race_number.person ]
+            matches = Set.new ([ race_number.person ])
           end
         end
       elsif name.blank?
@@ -145,16 +163,21 @@ class Result < ActiveRecord::Base
       end
     end
 
-    # team
+    matches
+  end
+
+  def find_person_by_team_name(matches)
     unless team_name.blank?
       team = Team.find_by_name_or_alias(team_name)
       matches.reject! do |match|
         match.team != team
       end
-      return matches if matches.size == 1
     end
 
-    # license
+    matches
+  end
+
+  def find_person_by_license(matches)
     unless self.license.blank?
       matches.reject! do |match|
         match.license != license
