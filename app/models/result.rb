@@ -86,6 +86,7 @@ class Result < ActiveRecord::Base
 
   def set_person
     if person && person.new_record?
+      person.updated_by = event
       if person.name.blank?
         self.person = nil
       else
@@ -96,19 +97,18 @@ class Result < ActiveRecord::Base
           self.person = Person.select_by_recent_activity(existing_people)
         end
       end
-      person.updated_by = event
     end
   end
 
   def set_team
     if team && team.new_record?
+      team.updated_by = event
       if team.name.blank?
         self.team = nil
       else
         existing_team = Team.find_by_name_or_alias(team.name)
         self.team = existing_team if existing_team
       end
-      team.updated_by = event
     end
   end
 
