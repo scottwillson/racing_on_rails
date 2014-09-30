@@ -405,7 +405,7 @@ GEM
       ffi
       metriks
     subexec (0.2.3)
-    tabular (0.2.6)
+    tabular (0.2.7)
     temple (0.6.8)
     terminal-table (1.4.5)
     therubyracer (0.12.1)
@@ -503,7 +503,7 @@ DEPENDENCIES
   selenium-webdriver
   spreadsheet!
   spring
-  tabular (>= 0.2.6)
+  tabular (>= 0.2.7)
   therubyracer
   timecop
   truncate_html

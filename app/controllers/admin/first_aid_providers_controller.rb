@@ -1,5 +1,3 @@
-require "grid/base"
-
 module Admin
   # Work assignments for Event. First aid provider and chief official.
   # Officials can view, but not edit, this page.
@@ -33,21 +31,29 @@ module Admin
     # Formatted for "who would like to work this race email"
     def email
       rows = @events.collect do |event|
-        [event.first_aid_provider, event.date.strftime("%a %-m/%-d") , event.name, event.city_state]
+        [ event.first_aid_provider, event.date, event.name, event.city_state ]
       end
-      grid = Grid::Base.new(rows)
-      grid.truncate_rows
-      grid.calculate_padding
+      columns = [ %w{ provider date name location } ]
+      table = Tabular::Table.new(columns + rows)
+      table.renderers[:date] = DateRenderer
 
       headers['Content-Type'] = 'text/plain'
-
-      render plain: grid.to_s(false)
+      render plain: table.to_space_delimited
     end
 
     protected
 
     def assign_current_admin_tab
       @current_admin_tab = "First Aid"
+    end
+
+    class DateRenderer < Tabular::Renderer
+      def self.render(column, row)
+        date = row[column.key]
+        return nil if date.nil?
+
+        date.strftime("%a %-m/%-d")
+      end
     end
   end
 end
