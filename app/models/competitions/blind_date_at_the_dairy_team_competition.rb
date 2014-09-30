@@ -66,11 +66,7 @@ module Competitions
     end
 
     def add_source_events
-      parent.children.each do |source_event|
-        if source_event.name == parent_event_name
-          source_events << source_event
-        end
-      end
+      source_events << BlindDateAtTheDairyOverall.find_for_year(year)
     end
 
     def source_results(race)
