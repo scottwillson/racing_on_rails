@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   include Mobile
   include SentientController
 
-  before_filter :clear_racing_association, :toggle_tabs
+  before_filter :clear_racing_association, :toggle_tabs, :allow_iframes
 
 
   protected
@@ -26,6 +26,12 @@ class ApplicationController < ActionController::Base
 
   def toggle_tabs
     @show_tabs = false
+  end
+
+  def allow_iframes
+    if RacingAssociation.current.allow_iframes?
+      response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM http://www.albertabicycle.ab.ca"
+    end
   end
 
   def render_page(path = nil)

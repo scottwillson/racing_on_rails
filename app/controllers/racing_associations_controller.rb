@@ -25,6 +25,7 @@ class RacingAssociationsController < Admin::AdminController
     params_without_mobile.require(:racing_association).permit(
       :add_members_from_results,
       :administrator_tabs,
+      :allow_iframes,
       :always_insert_table_headers,
       :award_cat4_participation_points,
       :bmx_numbers,

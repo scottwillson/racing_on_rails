@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141001181343) do
+ActiveRecord::Schema.define(version: 20141001194203) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "order_id"
@@ -761,6 +761,7 @@ ActiveRecord::Schema.define(version: 20141001181343) do
     t.string   "result_questions_url"
     t.boolean  "filter_schedule_by_region",                          default: false,                                 null: false
     t.string   "default_region_id"
+    t.boolean  "allow_iframes",                                      default: false
   end
 
   create_table "refunds", force: true do |t|

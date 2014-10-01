@@ -67,6 +67,7 @@
     <div class="col-sm-6">
       <h3>Server</h3>
       <%= f.labelled_check_box :ssl, "SSL" %>
+      <%= f.labelled_check_box :allow_iframes? %>
       <%= f.labelled_text_field :rails_host %>
       <%= f.labelled_text_field :static_host %>
     </div>
