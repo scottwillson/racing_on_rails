@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140924152303) do
+ActiveRecord::Schema.define(version: 20141001181343) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "order_id"
@@ -703,6 +703,7 @@ ActiveRecord::Schema.define(version: 20140924152303) do
     t.boolean  "full",                                                      default: false, null: false
     t.integer  "field_limit"
     t.boolean  "additional_race_only",                                      default: false, null: false
+    t.boolean  "visible",                                                   default: true
   end
 
   add_index "races", ["bar_points"], name: "index_races_on_bar_points", using: :btree

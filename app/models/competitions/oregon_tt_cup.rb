@@ -178,7 +178,7 @@ module Competitions
 
       if races_to_split.present?
         existing_race = event.races.detect { |r| r.category == competition_category }
-        race = existing_race || event.races.create!(category: competition_category, bar_points: 0, updated_by: self)
+        race = existing_race || event.races.create!(category: competition_category, bar_points: 0, updated_by: self, visible: false)
 
         races_to_split.each do |race_to_split|
           split_race race_to_split, race, competition_category
@@ -212,7 +212,7 @@ module Competitions
           place: result.place,
           person: result.person,
           team: result.team,
-          time: result.time
+          time: result.time,
         )
       end
     end
@@ -222,7 +222,7 @@ module Competitions
 
       if races_to_combine.present?
         existing_race = event.races.detect { |r| r.category == competition_category }
-        race = existing_race || event.races.create!(category: competition_category, bar_points: 0, updated_by: self)
+        race = existing_race || event.races.create!(category: competition_category, bar_points: 0, updated_by: self, visible: false)
 
         races_to_combine.each do |race_to_combine|
           combine_race race_to_combine, race

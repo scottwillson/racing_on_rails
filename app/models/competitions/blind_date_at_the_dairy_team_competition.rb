@@ -34,7 +34,7 @@ module Competitions
     end
 
     def name
-      "Team Competition"
+      "Team Competition From Each Week"
     end
 
     def default_discipline
@@ -66,7 +66,11 @@ module Competitions
     end
 
     def add_source_events
-      source_events << BlindDateAtTheDairyOverall.find_for_year(year)
+      parent.children.each do |source_event|
+        if source_event.name == parent_event_name
+          source_events << source_event
+        end
+      end
     end
 
     def source_results(race)

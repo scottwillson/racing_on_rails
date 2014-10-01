@@ -6,6 +6,8 @@ module Competitions
 
     def category_names
       [
+        "Beginner Men",
+        "Beginner Women",
         "Junior Men 10-13",
         "Junior Men 14-18",
         "Junior Women 10-13",
@@ -30,6 +32,14 @@ module Competitions
 
     def point_schedule
       [ 0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+    end
+
+    def after_create_competition_results_for(race)
+      if race.name["Beginner"]
+        race.update_attributes! visible: false
+      end
+
+      super
     end
   end
 end
