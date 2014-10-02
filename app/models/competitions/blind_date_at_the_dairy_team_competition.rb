@@ -34,7 +34,7 @@ module Competitions
     end
 
     def name
-      "Team Competition From Each Week"
+      "Team Competition"
     end
 
     def default_discipline
