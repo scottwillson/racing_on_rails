@@ -22,61 +22,6 @@ module Results
 
     attr_accessor :import_warnings
 
-    COLUMN_MAP = {
-      "placing"           => "place",
-      ";place"            => "place",
-      "pl"                => "place",
-      "#"                 => "number",
-      "wsba#"             => "number",
-      "rider_#"           => "number",
-      'racing_age'        => 'age',
-      'age'               => 'age',
-      "gender"            => "gender",
-      "barcategory"       => "parent",
-      "bar_category"      => "parent",
-      "category.name"     => "category_name",
-      "categories"        => "category_name",
-      "category"          => "category_name",
-      "cat."              => "category_name",
-      "race_category"     => "category_name",
-      "class"             => "category_class",  # Example: A for Masters A
-      "first"             => "first_name",
-      "firstname"         => "first_name",
-      "person.first_name" => "first_name",
-      "person"            => "name",
-      "lane"              => "category_name",
-      "last"              => "last_name",
-      "lastname"          => "last_name",
-      "person.last_name"  => "last_name",
-      "team"              => "team_name",
-      "team.name"         => "team_name",
-      "bib"               => "number",
-      "bib_#"             => "number",
-      "obra_number"       => "number",
-      "oregoncup"         => "oregon_cup",
-      "membership_#"      => "license",
-      "membership"        => "license",
-      "license_#"         => "license",
-      "team/club"         => "team_name",
-      "club/team"         => "team_name",
-      "hometown"          => 'city',
-      "stage_time"        => "time",
-      "st"                => "time",
-      "stop_time"         => "time",
-      "bonus"             => "time_bonus_penalty",
-      "penalty"           => "time_bonus_penalty",
-      "stage_+_penalty"   => "time_total",
-      "time"              => "time",
-      "time_total"        => "time_total",
-      "total_time"        => "time_total",
-      "down"              => "time_gap_to_leader",
-      "gap"               => "time_gap_to_leader",
-      "delta_time"        => "time_gap_to_leader",
-      "pts"               => "points",
-      "total_points"      => "points_total",
-      "sex"               => "gender"
-    }
-
     def initialize(source, event)
       self.column_indexes = nil
       self.event = event
@@ -90,17 +35,25 @@ module Results
     def import
       ActiveSupport::Notifications.instrument "import.results_file.racing_on_rails", source: source.try(:path) do
         Event.transaction do
-          book = ::Spreadsheet.open(source.path)
-          book.worksheets.each do |worksheet|
-            race = nil
-
-            create_rows(worksheet)
-            ActiveSupport::Notifications.instrument "worksheet.import.results_file.racing_on_rails", rows: rows.size
-
-            rows.each do |row|
-              race = import_row(row, race)
-            end
+          race = nil
+          table = Tabular::Table.new
+          table.column_mapper = Results::ColumnMapper.new
+          table.read source
+          table.rows.each do |row|
+            race = import_row(row, race)
           end
+          #
+          # book = ::Spreadsheet.open(source.path)
+          # book.worksheets.each do |worksheet|
+          #   race = nil
+          #
+          #   create_rows(worksheet)
+          #   ActiveSupport::Notifications.instrument "worksheet.import.results_file.racing_on_rails", rows: rows.size
+          #
+          #   rows.each do |row|
+          #     race = import_row(row, race)
+          #   end
+          # end
         end
 
         if import_warnings.to_a.size > 10
@@ -112,8 +65,7 @@ module Results
     end
 
     def import_row(row, race)
-      Rails.logger.debug("Results::ResultsFile #{Time.zone.now} row #{row.spreadsheet_row.to_a.join(', ')}") if debug?
-
+      Rails.logger.debug("Results::ResultsFile #{Time.zone.now} row #{row.to_hash}") if debug?
       if race?(row)
         race = find_or_create_race(row)
       elsif result?(row)
@@ -186,9 +138,9 @@ module Results
     end
 
     def race?(row)
-      return false if column_indexes.nil? || row.last? || row.blank? || (row.next && row.next.blank?)
-      return false if row.place && row.place.to_i != 0
-      row.next && row.next.place && row.next.place.to_i == 1
+      return false if row.last? || row.blank? || (row.next && row.next.blank?)
+      return false if row[:place] && row[:place].to_i != 0
+      row.next && row.next[:place] && row.next[:place].to_i == 1
     end
 
     def find_or_create_race(row)
@@ -197,7 +149,7 @@ module Results
       if race
         race.results.clear
       else
-        race = event.races.build(category: category, notes: row.notes)
+        race = event.races.build(category: category, notes: row[:notes])
       end
       race.result_columns = columns
       race.custom_columns = race_custom_columns.to_a
@@ -209,9 +161,8 @@ module Results
     end
 
     def result?(row)
-      return false unless column_indexes
       return false if row.blank?
-      return true if row.place.present? || row[:number].present? || row[:license].present? || row[:team_name].present?
+      return true if row[:place].present? || row[:number].present? || row[:license].present? || row[:team_name].present?
       if !(row[:first_name].blank? && row[:last_name].blank? && row[:name].blank?)
         return true
       end
@@ -227,8 +178,8 @@ module Results
       result = race.results.build(result_methods(row, race))
       result.updated_by = @event.name
 
-      if row.same_time?
-        result.time = row.previous.result.time
+      if same_time?(row)
+        result.time = race.results[race.results.size - 2].time
       end
 
       set_place result, row
@@ -236,7 +187,6 @@ module Results
 
       result.cleanup
       result.save!
-      row.result = result
       Rails.logger.debug("Results::ResultsFile #{Time.zone.now} create result #{race} #{result.place}") if debug?
 
       result
@@ -341,6 +291,16 @@ module Results
 
     def result_method?(column_name)
       prototype_result.respond_to?(column_name.to_sym)
+    end
+
+    def same_time?(row)
+      return false unless row.previous
+      return true if row[:time].blank?
+
+      if row[:time].present?
+        row_time = row[:time].try(:to_s)
+        row_time && (row_time[/st/i] || row_time[/s\.t\./i])
+      end
     end
   end
 end

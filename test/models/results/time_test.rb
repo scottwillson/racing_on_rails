@@ -22,6 +22,12 @@ class ResultTest < ActiveSupport::TestCase
 
     result.time = "20:23"
     assert_in_delta 1223.0, result.time, 0.0001, "20:23 should be 20 minutes and 23 seconds"
+
+    result.time = "20:23.0001"
+    assert_equal 1223, result.time, "time should round to thousandths"
+
+    result.time = "20:23.0009"
+    assert_equal 1223.001, result.time, "time should round to thousandths"
   end
 
   test "time s" do

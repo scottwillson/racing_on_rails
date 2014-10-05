@@ -23,7 +23,7 @@ module Admin
       test "preview import" do
         people_before_import = Person.count
 
-        file = fixture_file_upload("membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
+        file = fixture_file_upload("membership/database.xls", "application/vnd.ms-excel")
         post :preview_import, people_file: file
 
         assert(!flash[:warn].present?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
@@ -50,8 +50,8 @@ module Admin
         existing_duplicate.save!
         people_before_import = Person.count
 
-        fixture_file_upload("membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
-        @request.session[:people_file_path] = File.expand_path("#{::Rails.root}/test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
+        fixture_file_upload("membership/database.xls", "application/vnd.ms-excel")
+        @request.session[:people_file_path] = File.expand_path("#{::Rails.root}/test/fixtures/membership/database.xls")
         post(:import, commit: 'Import', update_membership: 'true')
 
         assert(!flash[:warn].present?, "flash[:warn] should be empty, but was: #{flash[:warn]}")
@@ -169,4 +169,3 @@ module Admin
     end
   end
 end
-
