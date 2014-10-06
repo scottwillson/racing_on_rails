@@ -61,7 +61,7 @@ module Results
     # license first if present and source is reliable (USAC)
     def eager_find_person_by_license(matches)
       if RacingAssociation.current.eager_match_on_license? && license.present?
-        matches << Person.where(license: license)
+        matches << Person.where(license: license).first
       end
 
       matches
