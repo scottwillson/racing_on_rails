@@ -1,4 +1,4 @@
-require File.expand_path("../../../../test_helper", __FILE__)
+require "test_helper"
 
 module Competitions
   # :stopdoc:
@@ -40,7 +40,7 @@ module Competitions
       CrossCrusadeOverall.calculate!(2007)
       assert_not_nil(series.overall(true), "Should add new Overall Competition child to parent Series")
       overall = series.overall
-      assert_equal 22, overall.races.size, "Overall races"
+      assert_equal 28, overall.races.size, "Overall races"
 
       assert_equal "Series Overall", overall.name, "Overall name"
       assert_equal "Cross Crusade: Series Overall", overall.full_name, "Overall full name"
