@@ -52,6 +52,7 @@ gem "elasticsearch-rails"
 
 group :development do
   gem "brakeman"
+  gem "bullet"
   gem "bundler-audit"
   gem "capistrano-rails"
   gem "capistrano3-puma"
