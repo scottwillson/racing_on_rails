@@ -49,7 +49,6 @@ gem "yui-compressor"
 gem "elasticsearch-model"
 gem "elasticsearch-rails"
 
-
 group :development do
   gem "brakeman"
   gem "bullet"
