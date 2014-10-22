@@ -142,10 +142,10 @@ module Competitions
       # lower category.
       # After computing BAR results, look for Cat n BAR results for anyone in the Cat n - 1 BAR and add in half their Cat n points.
       [
-        ["cat_up" => "Cat 1/2 Men", "cat_down" => "Cat 3 Men"],
-        ["cat_up" => "Cat 3 Men", "cat_down" => "Cat 4 Men"],
-        ["cat_up" => "Cat 4 Men", "cat_down" => "Cat 5 Men"],
-        ["cat_up" => "Cat 1/2/3 Women", "cat_down" => "Cat 4 Women"]
+        ["cat_up" => "Category 1/2 Men", "cat_down" => "Category 3 Men"],
+        ["cat_up" => "Category 3 Men", "cat_down" => "Category 4 Men"],
+        ["cat_up" => "Category 4 Men", "cat_down" => "Category 5 Men"],
+        ["cat_up" => "Category 1/2/3 Women", "cat_down" => "Category 4 Women"]
       ].each do |category_pair|
         cat_up_race = self.races.detect { |r| r.category.name == category_pair[0]["cat_up"] }
         cat_down_race = self.races.detect { |r| r.category.name == category_pair[0]["cat_down"] }
