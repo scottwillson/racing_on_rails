@@ -77,13 +77,16 @@ class FixObraCyclocrossBarCategories < ActiveRecord::Migration
             "Women B/C 35+"
           ],
           "Men A" => [
+            "Category A",
             "Category A Men",
             "Category A/B - Men",
             "Men Category A",
             "Men Category A/B",
-            "Senior Men Category A/B"
+            "Senior Men Category A/B",
+            "Category A - Men"
           ],
           "Men B" => [
+            "Category B",
             "Category B Men",
             "Category B/C - Men",
             "Men Category B",
@@ -91,6 +94,7 @@ class FixObraCyclocrossBarCategories < ActiveRecord::Migration
             "Senior Men Category B/C"
           ],
           "Men C" => [
+            "Category C",
             "Category C - Men",
             "Category C Men",
             "Men Category C"
