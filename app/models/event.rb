@@ -238,7 +238,7 @@ class Event < ActiveRecord::Base
   
   def as_json(options)
     super(
-      only: [ :date, :discipline, :end_date, :name, :parent_id, :type ],
+      only: [ :discipline, :name, :parent_id, :type ],
       include: {
         races: {
           only: [ :name ],

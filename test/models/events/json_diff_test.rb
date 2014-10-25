@@ -4,11 +4,9 @@ module Events
   # :stopdoc:
   class JsonDiffTest < ActiveSupport::TestCase
     test "as_json" do
-      event = SingleDayEvent.new(name: "July Road Race", date: Date.new(2012, 7, 1), id: 1)
+      event = SingleDayEvent.new(name: "July Road Race", id: 1)
       expected = { 
-        "date" => Date.new(2012, 7, 1),
         "discipline" => "Road",
-        "end_date" => Date.new(2012, 7, 1),
         "name" => "July Road Race",
         "parent_id" => nil,
         "type" => "SingleDayEvent",
@@ -20,19 +18,18 @@ module Events
     end
     
     test "identical events should have same JSON" do
-      event = SingleDayEvent.new(name: "July Road Race", date: Date.new(2012, 7, 1))
-      event_2 = SingleDayEvent.new(name: "July Road Race", date: Date.new(2012, 7, 1))
+      event = SingleDayEvent.new(name: "July Road Race")
+      event_2 = SingleDayEvent.new(name: "July Road Race")
       diff = HashDiff.best_diff(event.as_json(nil), event_2.as_json(nil))
       assert diff.empty?, diff
     end
     
     test "different events should have different JSON" do
-      event = SingleDayEvent.new(name: "July Road Race", date: Date.new(2012, 7, 1))
-      event_2 = SingleDayEvent.new(name: "July Road Race", date: Date.new(2012, 1, 1))
+      event = SingleDayEvent.new(name: "July Road Race")
+      event_2 = SingleDayEvent.new(name: "July Criterium")
       diff = HashDiff.best_diff(event.as_json(nil), event_2.as_json(nil))
-      assert_equal 2, diff.size, "Should have two differences"
-      assert diff.detect { |difference| difference[1] == "date" }, "Date should be different in #{diff}"
-      assert diff.detect { |difference| difference[1] == "end_date" }, "End date should be different in #{diff}"
+      assert_equal 1, diff.size, "Should have two differences"
+      assert_equal "name", diff[0][1], "name should be different in #{diff}"
     end
     
     test "as_json should include races" do
@@ -42,11 +39,11 @@ module Events
     end
     
     test "different races should have different JSON" do
-      event = SingleDayEvent.new(name: "July Road Race", date: Date.new(2012, 7, 1))
+      event = SingleDayEvent.new(name: "July Road Race")
       event.races << Race.new(category_name: "Junior Men")
       event.races << Race.new(category_name: "Senior Men")
       
-      event_2 = SingleDayEvent.new(name: "July Road Race", date: Date.new(2012, 7, 1))
+      event_2 = SingleDayEvent.new(name: "July Road Race")
       event_2.races << Race.new(category_name: "Junior Women")
       event_2.races << Race.new(category_name: "Senior Men")
 
