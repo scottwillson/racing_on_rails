@@ -245,7 +245,7 @@ class Event < ActiveRecord::Base
           methods: [ :name ],
           include: {
             results: {
-              only: [ :place, :person_id ]
+              only: [ :person_id, :place, :points, :team_id ]
             }
           }
         }
