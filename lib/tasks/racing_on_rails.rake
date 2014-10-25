@@ -15,6 +15,18 @@ namespace :racing_on_rails do
     puts "Please open http://localhost:8080/ in your web browser"
     puts exec("./bin/rails s puma -p 8080")
   end
+  
+  namespace :competitions do
+    desc "Save COMPETITION results as JSON for comparison"
+    task :snapshot do
+      competition_class = "Competitions::#{ENV['COMPETITION']}".safe_constantize
+      competition = competition_class.last
+      FileUtils.mkdir_p "#{Rails.root}/tmp/competitions"
+      file_path = "#{Rails.root}/tmp/#{competition_class.name.underscore}.json"
+      FileUtils.rm_rf file_path
+      File.write file_path, competition.as_json(nil)
+    end
+  end
 end
 
 def ask(message)
