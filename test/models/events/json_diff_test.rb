@@ -10,7 +10,7 @@ module Events
         "name" => "July Road Race",
         "parent_id" => nil,
         "type" => "SingleDayEvent",
-        "races" => []
+        "sorted_races" => []
       }
       
       diff = HashDiff.best_diff(expected, event.as_json(nil))
@@ -35,7 +35,7 @@ module Events
     test "as_json should include races" do
       event = SingleDayEvent.new
       event.races << Race.new
-      assert event.as_json(nil)["races"], "races"
+      assert event.as_json(nil)["sorted_races"], "races"
     end
     
     test "different races should have different JSON" do
@@ -51,8 +51,8 @@ module Events
 
       assert_equal 2, diff.size, "Should have differences"
 
-      assert_equal "races[0]", diff[0][1], "should find different race"
-      assert_equal "races[0]", diff[1][1], "should find different race"
+      assert_equal "sorted_races[0]", diff[0][1], "should find different race"
+      assert_equal "sorted_races[0]", diff[1][1], "should find different race"
 
       assert diff.detect { |difference| difference[2]["name"] == "Junior Men" }, "Category name should be different in #{diff}"
       assert diff.detect { |difference| difference[2]["name"] == "Junior Women" }, "Category name should be different in #{diff}"
