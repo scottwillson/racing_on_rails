@@ -37,7 +37,7 @@ namespace :racing_on_rails do
       new_results = competition.as_json(nil)
       diff = HashDiff.best_diff(snapshot_results, new_results)
       diff.each do |line|
-        puts line
+        p line
       end
     end
   end

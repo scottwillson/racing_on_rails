@@ -332,6 +332,11 @@ class Race < ActiveRecord::Base
     results.any?
   end
 
+  # Helper method for as_json
+  def sorted_results
+    results.sort
+  end
+
   def junior?
     category.junior?
   end

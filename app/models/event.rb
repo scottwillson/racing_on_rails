@@ -239,12 +239,13 @@ class Event < ActiveRecord::Base
   def as_json(options)
     super(
       only: [ :discipline, :name, :parent_id, :type ],
+      methods: [ :sorted_races ],
       include: {
-        races: {
+        sorted_races: {
           only: [ :name ],
-          methods: [ :name ],
+          methods: [ :name, :sorted_results ],
           include: {
-            results: {
+            sorted_results: {
               only: [ :person_id, :place, :points, :team_id ]
             }
           }
