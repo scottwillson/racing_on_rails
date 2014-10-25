@@ -235,6 +235,23 @@ class Event < ActiveRecord::Base
   def type_modifiable?
     type.nil? || %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries }.include?(type)
   end
+  
+  def as_json(options)
+    super(
+      only: [ :date, :discipline, :end_date, :name, :parent_id, :type ],
+      include: {
+        races: {
+          only: [ :name ],
+          methods: [ :name ],
+          include: {
+            results: {
+              only: [ :place, :person_id ]
+            }
+          }
+        }
+      }
+    )
+  end
 
   def inspect_debug
     puts to_s

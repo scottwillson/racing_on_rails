@@ -337,7 +337,7 @@ class Race < ActiveRecord::Base
   end
 
   # By category name
-  def <=>other
+  def <=>(other)
     category.name <=> other.category.name
   end
 
