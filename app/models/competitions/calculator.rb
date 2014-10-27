@@ -70,7 +70,7 @@ module Competitions
       team                     = options.has_key?(:team) ? options[:team] : false
       use_source_result_points = options.has_key?(:use_source_result_points) ? options[:use_source_result_points] : false
 
-      struct_results = source_results.map(&struct_result)
+      struct_results = map_hashes_to_results(source_results)
       results_with_team_sizes = add_team_sizes(struct_results, use_source_result_points)
       eligible_results = select_eligible(results_with_team_sizes, results_per_event, results_per_race, members_only, team, source_event_ids)
 
@@ -83,14 +83,14 @@ module Competitions
       place competition_results, break_ties
     end
     
-    # Create Struct::CalculatorResult from Hash
-    def self.struct_result
-      lambda do |source_result|
-        struct_result = Struct::CalculatorResult.new
-        source_result.each_pair do |key, value|
-          struct_result[key] = value
+    # Create Struct::CalculatorResults from Hashes
+    def self.map_hashes_to_results(results)
+      results.map do |result|
+        new_result = Struct::CalculatorResult.new
+        result.each_pair do |key, value|
+          new_result[key] = value
         end
-        struct_result
+        new_result
       end
     end
 

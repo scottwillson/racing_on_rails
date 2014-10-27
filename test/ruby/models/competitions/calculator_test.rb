@@ -475,9 +475,9 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal Float::INFINITY, Competitions::Calculator.numeric_place(result(place: "DNF"))
   end
 
-  def test_struct_result
-    expected = Struct::CalculatorResult.new.tap { |r| r.place = 3 }
-    actual = Competitions::Calculator.struct_result.call({ place: 3 })
+  def test_map_hashes_to_results
+    expected = [ Struct::CalculatorResult.new.tap { |r| r.place = 3 } ]
+    actual = Competitions::Calculator.map_hashes_to_results([{ place: 3 }])
     assert_equal expected, actual
   end
 
