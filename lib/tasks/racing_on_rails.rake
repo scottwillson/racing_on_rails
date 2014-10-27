@@ -16,6 +16,12 @@ namespace :racing_on_rails do
     puts exec("./bin/rails s puma -p 8080")
   end
   
+  task database_dump: :environment do
+    db = ActiveRecord::Base.configurations
+    puts `mysqldump -u #{db["production"]["username"]} -p#{db["production"]["password"]} -h #{db["production"]["host"]} --compress --ignore-table=#{db["production"]["database"]}.posts #{db["production"]["database"]} > db/production.sql`
+    puts `mysqldump -u #{db["production"]["username"]} -p#{db["production"]["password"]} -h #{db["production"]["host"]} --compress --no-data #{db["production"]["database"]} posts >> db/production.sql`
+  end
+  
   namespace :competitions do
     desc "Save COMPETITION results as JSON for comparison"
     task :snapshot do
