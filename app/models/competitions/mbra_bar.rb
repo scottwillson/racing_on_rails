@@ -164,7 +164,7 @@ module Competitions
             up_result.save!
           end
         end unless (cat_up_race.blank? || cat_down_race.blank?)
-
+        cat_up_race.place_results_by_points(break_ties?, ascending_points?) if cat_up_race
       end
     end
 
