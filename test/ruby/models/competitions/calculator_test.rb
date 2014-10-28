@@ -125,7 +125,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
   
   def test_remove_nil_rules
     rules = { members_only: nil }
-    assert Competitions::Calculator.merge_with_default_rules(rules)[:members_only] == true, "Reject nil values in rules"
+    assert Competitions::Calculator.default_rules_merge(rules)[:members_only] == true, "Reject nil values in rules"
   end
 
   def test_select_results_empty

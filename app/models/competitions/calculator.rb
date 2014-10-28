@@ -57,17 +57,17 @@ module Competitions
     # results setting multipler. Could pass in a map of event_id: multiplier instead?
     #
     # Competitions that have a field_size_bonus need to set CalculatorResult::field_size.
-    def self.calculate(source_results, rules = {})
-      rules = merge_with_default_rules(rules)
+    def self.calculate(results, rules = {})
+      rules = default_rules_merge(rules)
+      
+      results = map_hashes_to_results(results)
+      results = add_team_sizes(results, rules)
+      results = select_results(results, rules)
+      scores  = map_to_scores(results, rules)
+      scores  = select_scores(scores, rules)
+      results = map_to_results(scores)
 
-      struct_results          = map_hashes_to_results(source_results)
-      results_with_team_sizes = add_team_sizes(struct_results, rules)
-      eligible_results        = select_results(results_with_team_sizes, rules)
-      scores                  = map_to_scores(eligible_results, rules)
-      eligible_scores         = select_scores(scores, rules)
-      competition_results     = map_to_results(eligible_scores)
-
-      place competition_results, rules
+      place results, rules
     end
     
     # Create Struct::CalculatorResults from Hashes
@@ -319,7 +319,7 @@ module Competitions
       result.member_from && result.member_to && result.member_from.year <= result.year && result.member_to.year >= result.year
     end
     
-    def self.merge_with_default_rules(rules)
+    def self.default_rules_merge(rules)
       assert_valid_rules rules
       default_rules.merge(
         rules.reject { |key, value| value == nil }
