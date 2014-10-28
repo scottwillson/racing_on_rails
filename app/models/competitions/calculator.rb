@@ -66,9 +66,8 @@ module Competitions
 
       # The whole point: generate scores from sources results and competition results from scores
       scores = map_to_scores(eligible_results, rules)
-      scores_with_points = scores.select { |s| s.points && s.points > 0.0 && s.participant_id }
-      scores_with_points = reject_scores_greater_than_maximum_events(scores_with_points, rules)
-      competition_results = map_to_results(scores_with_points)
+      eligible_scores = select_scores(scores, rules)
+      competition_results = map_to_results(eligible_scores)
 
       place competition_results, rules
     end
@@ -158,6 +157,12 @@ module Competitions
           new_score.points           = points(result, rules)
         end
       end
+    end
+    
+    # Select only scores with points and a participant up to +maximum_events+
+    def self.select_scores(scores, rules)
+      scores_with_points = scores.select { |s| s.points && s.points > 0.0 && s.participant_id }
+      reject_scores_greater_than_maximum_events(scores_with_points, rules)
     end
 
     def self.reject_scores_greater_than_maximum_events(scores, rules)
