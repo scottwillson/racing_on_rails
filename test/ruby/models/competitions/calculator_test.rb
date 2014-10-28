@@ -128,13 +128,13 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert Competitions::Calculator.merge_with_default_rules(rules)[:members_only] == true, "Reject nil values in rules"
   end
 
-  def test_select_eligible_empty
+  def test_select_results_empty
     expected = []
-    actual = Competitions::Calculator.select_eligible([], {})
+    actual = Competitions::Calculator.select_results([], {})
     assert_equal_results expected, actual
   end
 
-  def test_select_eligible
+  def test_select_results
     source_results = [
       result(id: 1, event_id: 1, race_id: 1, place: 1, member_from: Date.new(2012), "year" => Date.today.year),
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: nil, member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year),
@@ -148,7 +148,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
       result(id: 10, event_id: 1, race_id: 1, participant_id: 1, place: "1", member_from: Date.new(Date.today.year + 1), member_to: Date.new(Date.today.year + 2), "year" => Date.today.year)
     ]
     expected = [ result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2", member_from: Date.new(2012), member_to: end_of_year, year: Date.today.year)]
-    actual = Competitions::Calculator.select_eligible(
+    actual = Competitions::Calculator.select_results(
       source_results, 
       results_per_event: Competitions::Calculator::UNLIMITED, 
       results_per_race: 1,
@@ -158,7 +158,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal_results expected, actual
   end
 
-  def test_select_eligible_with_results_per_event
+  def test_select_results_with_results_per_event
     source_results = [
       result(id: 1, event_id: 1, race_id: 1, place: 1),
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: nil),
@@ -175,7 +175,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
       result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2"),
       result(id: 11, event_id: 1, race_id: 1, participant_id: 2, place: "3")
     ]
-    actual = Competitions::Calculator.select_eligible(
+    actual = Competitions::Calculator.select_results(
       source_results, 
       results_per_event: 2, 
       results_per_race: Competitions::Calculator::UNLIMITED
@@ -183,7 +183,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal_results expected, actual
   end
 
-  def test_select_eligible_with_results_per_race_1
+  def test_select_results_with_results_per_race_1
     source_results = [
       result(id: 1, event_id: 1, race_id: 1, place: 1),
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: nil),
@@ -199,11 +199,11 @@ class Competitions::CalculatorTest < Ruby::TestCase
       result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2"),
       result(id: 11, event_id: 1, race_id: 1, participant_id: 2, place: "3")
     ]
-    actual = Competitions::Calculator.select_eligible(source_results, results_per_event: 1, results_per_race: 1)
+    actual = Competitions::Calculator.select_results(source_results, results_per_event: 1, results_per_race: 1)
     assert_equal_results expected, actual
   end
 
-  def test_select_eligible_with_results_per_race_2
+  def test_select_results_with_results_per_race_2
     source_results = [
       result(id: 1, event_id: 1, race_id: 1, place: 1),
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: nil),
@@ -220,7 +220,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
       result(id: 6, event_id: 1, race_id: 1, participant_id: 1, place: "6"),
       result(id: 11, event_id: 1, race_id: 1, participant_id: 2, place: "3")
     ]
-    actual = Competitions::Calculator.select_eligible(
+    actual = Competitions::Calculator.select_results(
       source_results, {
         results_per_event: Competitions::Calculator::UNLIMITED, 
         results_per_race: 2
@@ -229,7 +229,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal_results expected, actual
   end
 
-  def test_select_eligible_should_sort_choose_best_results
+  def test_select_results_should_sort_choose_best_results
     source_results = [
       result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200"),
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6"),
@@ -241,7 +241,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6"),
       result(id: 3, event_id: 1, race_id: 1, participant_id: 1, place: "2")
     ]
-    actual = Competitions::Calculator.select_eligible(
+    actual = Competitions::Calculator.select_results(
       source_results, 
       results_per_event: 2, 
       results_per_race: Competitions::Calculator::UNLIMITED
@@ -257,7 +257,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6",
         member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: true)
     ]
-    actual = Competitions::Calculator.select_eligible(source_results, { results_per_event: 1, results_per_race: 1 })
+    actual = Competitions::Calculator.select_results(source_results, { results_per_event: 1, results_per_race: 1 })
     assert_equal [ 2 ], actual.map(&:id)
   end
 
@@ -269,7 +269,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6",
         member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: true)
     ]
-    actual = Competitions::Calculator.select_eligible(
+    actual = Competitions::Calculator.select_results(
       source_results, { 
         results_per_event: Competitions::Calculator::UNLIMITED,
         results_per_race: Competitions::Calculator::UNLIMITED

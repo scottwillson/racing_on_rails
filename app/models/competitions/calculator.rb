@@ -62,9 +62,7 @@ module Competitions
 
       struct_results = map_hashes_to_results(source_results)
       results_with_team_sizes = add_team_sizes(struct_results, rules)
-      eligible_results = select_eligible(results_with_team_sizes, rules)
-
-      # The whole point: generate scores from sources results and competition results from scores
+      eligible_results = select_results(results_with_team_sizes, rules)
       scores = map_to_scores(eligible_results, rules)
       eligible_scores = select_scores(scores, rules)
       competition_results = map_to_results(eligible_scores)
@@ -103,7 +101,7 @@ module Competitions
     # It's somewhat arbritrary which elgilibilty rules are applied here, and which were applied by
     # the calling Competition when it selected results from the database.
     # Only keep best +results_per_event+ results for participant (person or team).
-    def self.select_eligible(results, rules)
+    def self.select_results(results, rules)
       results = results.select { |r| r.participant_id && ![ nil, "", "DQ", "DNS" ].include?(r.place) }
 
       if rules[:members_only] && rules[:team]
