@@ -60,12 +60,12 @@ module Competitions
     def self.calculate(source_results, rules = {})
       rules = merge_with_default_rules(rules)
 
-      struct_results = map_hashes_to_results(source_results)
+      struct_results          = map_hashes_to_results(source_results)
       results_with_team_sizes = add_team_sizes(struct_results, rules)
-      eligible_results = select_results(results_with_team_sizes, rules)
-      scores = map_to_scores(eligible_results, rules)
-      eligible_scores = select_scores(scores, rules)
-      competition_results = map_to_results(eligible_scores)
+      eligible_results        = select_results(results_with_team_sizes, rules)
+      scores                  = map_to_scores(eligible_results, rules)
+      eligible_scores         = select_scores(scores, rules)
+      competition_results     = map_to_results(eligible_scores)
 
       place competition_results, rules
     end
