@@ -31,11 +31,11 @@ module Competitions
     )
 
     # Ties a source result to a competition result.
-    # CalculatorScore#numeric_place is source result's place
+    # CalculatorScore#numeric_place is source result's place.
     Struct.new("CalculatorScore", :date, :numeric_place, :participant_id, :points, :source_result_id, :team_size)
 
     # Transfrom +source_results+ (Array of Hashes) into competition results
-    # +options+:
+    # +rules+:
     # * break_ties: true/false. Default to false. Apply tie-breaking rules to results with same points.
     # * dnf: true/false. Count DNFs? Default to true.
     # * field_size_bonus: true/false. Default to false. Give 1.5 X points for fields of 75 or more
@@ -51,36 +51,26 @@ module Competitions
     # * use_source_result_points: true/false. Default to false. Don't calculate points. Use points from scoring result.
     #   Used by OBRA Overall and Age-Graded BARs.
     #
+    # Replace nil values and missing keys with defaults. E.g., dnf: nil becomes dnf: true.
+    #
     # Points are multiplied by Struct::CalculatorResult :multiplier. Use for "double points" events. Relies on denormalized
     # results setting multipler. Could pass in a map of event_id: multiplier instead?
     #
-    # Competitions that have a field_size_bonus need to set CalculatorResult::field_size
-    def self.calculate(source_results, options = {})
-      assert_valid_options options
-
-      break_ties               = options.has_key?(:break_ties) ? options[:break_ties] : false
-      dnf                      = options.has_key?(:dnf) ? options[:dnf] : false
-      field_size_bonus         = options.has_key?(:field_size) ? options[:field_size] : false
-      maximum_events           = options[:maximum_events] || UNLIMITED
-      members_only             = options.has_key?(:members_only) ? options[:members_only] : true
-      point_schedule           = options[:point_schedule]
-      results_per_event        = options[:results_per_event] || UNLIMITED
-      results_per_race         = options[:results_per_race] || 1
-      source_event_ids         = options[:source_event_ids]
-      team                     = options.has_key?(:team) ? options[:team] : false
-      use_source_result_points = options.has_key?(:use_source_result_points) ? options[:use_source_result_points] : false
+    # Competitions that have a field_size_bonus need to set CalculatorResult::field_size.
+    def self.calculate(source_results, rules = {})
+      rules = merge_with_default_rules(rules)
 
       struct_results = map_hashes_to_results(source_results)
-      results_with_team_sizes = add_team_sizes(struct_results, use_source_result_points)
-      eligible_results = select_eligible(results_with_team_sizes, results_per_event, results_per_race, members_only, team, source_event_ids)
+      results_with_team_sizes = add_team_sizes(struct_results, rules)
+      eligible_results = select_eligible(results_with_team_sizes, rules)
 
       # The whole point: generate scores from sources results and competition results from scores
-      scores = map_to_scores(eligible_results, point_schedule, dnf, field_size_bonus, use_source_result_points)
+      scores = map_to_scores(eligible_results, rules)
       scores_with_points = scores.select { |s| s.points && s.points > 0.0 && s.participant_id }
-      scores_with_points = reject_scores_greater_than_maximum_events(scores_with_points, maximum_events)
+      scores_with_points = reject_scores_greater_than_maximum_events(scores_with_points, rules)
       competition_results = map_to_results(scores_with_points)
 
-      place competition_results, break_ties
+      place competition_results, rules
     end
     
     # Create Struct::CalculatorResults from Hashes
@@ -94,9 +84,9 @@ module Competitions
       end
     end
 
-    def self.add_team_sizes(results, use_source_result_points = false)
+    def self.add_team_sizes(results, rules)
       # No point in figuring team size if just reusing points
-      if use_source_result_points
+      if rules[:use_source_result_points]
         return results
       end
 
@@ -114,23 +104,23 @@ module Competitions
     # It's somewhat arbritrary which elgilibilty rules are applied here, and which were applied by
     # the calling Competition when it selected results from the database.
     # Only keep best +results_per_event+ results for participant (person or team).
-    def self.select_eligible(results, results_per_event = UNLIMITED, results_per_race = 1, members_only = true, team = false, source_event_ids = nil)
+    def self.select_eligible(results, rules)
       results = results.select { |r| r.participant_id && ![ nil, "", "DQ", "DNS" ].include?(r.place) }
 
-      if members_only && team
+      if rules[:members_only] && rules[:team]
         results = results.select(&:team_member)
       end
 
-      if members_only
+      if rules[:members_only]
         results = results.select { |r| member_in_year?(r) }
       end
 
-      if source_event_ids
-        results = results.select { |r| source_event_ids.include? r.event_id }
+      if rules[:source_event_ids]
+        results = results.select { |r| rules[:source_event_ids].include? r.event_id }
       end
 
-      results = select_results_for_event(results, results_per_event)
-      select_results_for_race(results, results_per_race)
+      results = select_results_for_event(results, rules[:results_per_event])
+      select_results_for_race(results, rules[:results_per_race])
     end
 
     def self.select_results_for_event(results, results_per_event)
@@ -158,25 +148,25 @@ module Competitions
     end
 
     # Create Struct::CalculatorScores from Struct::CalculatorResults. Set points for each score.
-    def self.map_to_scores(results, point_schedule, dnf, field_size_bonus = false, use_source_result_points = false)
+    def self.map_to_scores(results, rules)
       results.map do |result|
         Struct::CalculatorScore.new.tap do |new_score|
           new_score.date             = result.date
           new_score.numeric_place    = numeric_place(result)
           new_score.source_result_id = result.id
           new_score.participant_id   = result.participant_id
-          new_score.points           = points(result, point_schedule, dnf, field_size_bonus, use_source_result_points)
+          new_score.points           = points(result, rules)
         end
       end
     end
 
-    def self.reject_scores_greater_than_maximum_events(scores, maximum_events = UNLIMITED)
-      if maximum_events == UNLIMITED
+    def self.reject_scores_greater_than_maximum_events(scores, rules)
+      if rules[:maximum_events] == UNLIMITED
         scores
       else
         scores.group_by(&:participant_id).
         map do |participant_id, participant_scores|
-          participant_scores.sort_by(&:points).reverse[ 0, maximum_events ]
+          participant_scores.sort_by(&:points).reverse[ 0, rules[:maximum_events] ]
         end.
         flatten
       end
@@ -194,21 +184,21 @@ module Competitions
     end
 
     # Set place on array of CalculatorResults
-    def self.place(results, break_ties = false)
+    def self.place(results, rules)
       place = 1
       previous_result = nil
 
-      sort_by_points(results, break_ties).map.with_index do |result, index|
+      sort_by_points(results, rules[:break_ties]).map.with_index do |result, index|
         if index == 0
           place = 1
         elsif result.points < previous_result.points
           place = index + 1
-        elsif break_ties && (!result.tied || !previous_result.tied)
+        elsif rules[:break_ties] && (!result.tied || !previous_result.tied)
           place = index + 1
         end
 
         previous_result = result
-        merge_struct(result, place: place)
+        merge_struct result, place: place
       end
     end
 
@@ -290,27 +280,27 @@ module Competitions
       end
     end
 
-    def self.points(result, point_schedule = nil, dnf = false, field_size_bonus = false, use_source_result_points = false)
-      if use_source_result_points
+    def self.points(result, rules)
+      if rules[:use_source_result_points]
         return result.points
       end
 
       if numeric_place(result) < Float::INFINITY
-        if point_schedule
-          if (result.multiplier.nil? || result.multiplier == 1) && field_size_bonus && result.field_size >= 75
+        if rules[:point_schedule]
+          if (result.multiplier.nil? || result.multiplier == 1) && rules[:field_size_bonus] && result.field_size >= 75
             field_size_multiplier = 1.5
           else
             field_size_multiplier = 1.0
           end
 
-          ((point_schedule[numeric_place(result) - 1] || 0) /
+          ((rules[:point_schedule][numeric_place(result) - 1] || 0) /
           (result.team_size || 1.0).to_f) *
           (result.multiplier || 1 ).to_f *
           field_size_multiplier
         else
           1
         end
-      elsif dnf && result.place == "DNF"
+      elsif rules[:dnf] && result.place == "DNF"
         1
       else
         0
@@ -325,19 +315,36 @@ module Competitions
       raise(ArgumentError, "Result year required to check membership") unless result.year
       result.member_from && result.member_to && result.member_from.year <= result.year && result.member_to.year >= result.year
     end
-
-    def self.valid_options
-      [ :break_ties, :dnf, :field_size_bonus, :maximum_events, :members_only, :results_per_event, :results_per_race,
-        :point_schedule, :source_event_ids, :team, :use_source_result_points ]
+    
+    def self.merge_with_default_rules(rules)
+      assert_valid_rules rules
+      default_rules.merge(
+        rules.reject { |key, value| value == nil }
+      )
+    end
+    
+    def self.default_rules
+      {
+        break_ties:               false,
+        dnf:                      false,
+        field_size_bonus:         false,
+        maximum_events:           UNLIMITED,
+        members_only:             true,
+        point_schedule:           nil,
+        results_per_event:        UNLIMITED,
+        results_per_race:         1,
+        source_event_ids:         nil,
+        team:                     false,
+        use_source_result_points: false
+      }
     end
 
-    def self.assert_valid_options(options)
-      return true if !options || options.size == 0
+    def self.assert_valid_rules(rules)
+      return true if !rules || rules.size == 0
 
-      options.keys.each do |key|
-        if !valid_options.include?(key)
-          raise "#{key} is not a valid option for Calculator. Valid: #{valid_options}"
-        end
+      invalid_rules = rules.keys - default_rules.keys
+      if invalid_rules.size > 0
+        raise ArgumentError, "Invalid rules: #{invalid_rules.map(", ")}. Valid: #{valid_rules}."
       end
     end
 
