@@ -1,7 +1,7 @@
 module Competitions
   # Year-long OBRA TT competition
   class OregonTTCup < Competition
-    include Competitions::CalculatorAdapter
+    include Competitions::Calculations::CalculatorAdapter
 
     def friendly_name
       "OBRA Time Trial Cup"

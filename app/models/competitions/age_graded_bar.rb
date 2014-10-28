@@ -1,7 +1,7 @@
 module Competitions
   # OBRA OverallBar organized by Masters and Juniors age categories
   class AgeGradedBar < Competition
-    include Competitions::CalculatorAdapter
+    include Competitions::Calculations::CalculatorAdapter
 
     # FIXME DRY new competition methods
     after_create :set_parent

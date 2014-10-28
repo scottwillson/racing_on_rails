@@ -4,7 +4,7 @@ module Competitions
   class TeamBar < Competition
     include Competitions::Bars::Categories
     include Competitions::Bars::Discipline
-    include Competitions::CalculatorAdapter
+    include Competitions::Calculations::CalculatorAdapter
 
     after_create :set_parent
 

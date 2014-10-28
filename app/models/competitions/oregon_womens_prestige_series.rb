@@ -1,6 +1,6 @@
 module Competitions
   class OregonWomensPrestigeSeries < Competition
-    include Competitions::CalculatorAdapter
+    include Competitions::Calculations::CalculatorAdapter
 
     def friendly_name
       "Oregon Womens Prestige Series"
