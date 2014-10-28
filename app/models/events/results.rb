@@ -112,5 +112,10 @@ module Events
     def races_with_results
       races.select(&:any_results?)
     end
+    
+    # Helper method for as_json
+    def sorted_races
+      races.sort
+    end
   end
 end

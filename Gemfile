@@ -17,6 +17,7 @@ gem "coffee-rails"
 gem "coffee-script-source", "~> 1.7"
 gem "default_value_for"
 gem "erubis"
+gem "hashdiff"
 gem "in_place_editing"
 gem "jquery-rails"
 gem "jquery-ui-rails"
@@ -50,9 +51,9 @@ gem "yui-compressor"
 gem "elasticsearch-model"
 gem "elasticsearch-rails"
 
-
 group :development do
   gem "brakeman"
+  gem "bullet"
   gem "bundler-audit"
   gem "capistrano-rails"
   gem "capistrano3-puma"

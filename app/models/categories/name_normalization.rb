@@ -311,7 +311,8 @@ module Categories
       def self.normalize_ability_spelling(name)
         name.gsub(%r{M P/1/2}i, "Men Pro/1/2").
              gsub(%r{P/1/2}i, "Pro/1/2").
-             gsub(/Pro.*1\/2/i, "Pro/1/2")
+             gsub(/Pro.*1\/2/i, "Pro/1/2").
+             gsub(/Pr([\/, ])/i, 'Pro\1')
       end
 
       def self.normalize_mtb_spelling(name)

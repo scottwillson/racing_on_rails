@@ -109,7 +109,12 @@ module Competitions
         else
           # if multiple riders got the same place (must be a TTT or tandem team or... ?), then they split the points...
           # this screws up the scoring of match sprints where riders eliminated in qualifying heats all earn the same place
-          points = point_schedule[source_result.numeric_place] * source_result.race.bar_points #/ team_size.to_f
+          points = point_schedule[source_result.numeric_place]
+          if points
+            points = points * source_result.race.bar_points
+          else
+            points = 0
+          end
         end
       }
       points
@@ -137,10 +142,10 @@ module Competitions
       # lower category.
       # After computing BAR results, look for Cat n BAR results for anyone in the Cat n - 1 BAR and add in half their Cat n points.
       [
-        ["cat_up" => "Cat 1/2 Men", "cat_down" => "Cat 3 Men"],
-        ["cat_up" => "Cat 3 Men", "cat_down" => "Cat 4 Men"],
-        ["cat_up" => "Cat 4 Men", "cat_down" => "Cat 5 Men"],
-        ["cat_up" => "Cat 1/2/3 Women", "cat_down" => "Cat 4 Women"]
+        ["cat_up" => "Category 1/2 Men", "cat_down" => "Category 3 Men"],
+        ["cat_up" => "Category 3 Men", "cat_down" => "Category 4 Men"],
+        ["cat_up" => "Category 4 Men", "cat_down" => "Category 5 Men"],
+        ["cat_up" => "Category 1/2/3 Women", "cat_down" => "Category 4 Women"]
       ].each do |category_pair|
         cat_up_race = self.races.detect { |r| r.category.name == category_pair[0]["cat_up"] }
         cat_down_race = self.races.detect { |r| r.category.name == category_pair[0]["cat_down"] }
@@ -159,7 +164,7 @@ module Competitions
             up_result.save!
           end
         end unless (cat_up_race.blank? || cat_down_race.blank?)
-
+        cat_up_race.place_results_by_points(break_ties?, ascending_points?) if cat_up_race
       end
     end
 

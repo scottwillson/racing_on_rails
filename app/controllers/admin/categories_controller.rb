@@ -53,13 +53,13 @@ module Admin
 
     # Calculate MbraBar only
     def recompute_bar
-      MbraBar.calculate!
+      Competitions::MbraBar.calculate!
       redirect_to action: :index
     end
 
     # Calculate MbraTeamBar only
     def recompute_team_bar
-      MbraTeamBar.calculate!
+      Competitions::MbraTeamBar.calculate!
       redirect_to action: :index
     end
 

@@ -10,8 +10,8 @@ module Competitions
       FactoryGirl.create(:discipline, name: "Mountain Bike")
       FactoryGirl.create(:discipline, name: "Cyclocross")
 
-      senior_men = FactoryGirl.create(:category, name: "Cat 1/2 Men2")
-      senior_women = FactoryGirl.create(:category, name: "Cat 1/2/3 Women")
+      senior_men = FactoryGirl.create(:category, name: "Category 1/2 Men")
+      senior_women = FactoryGirl.create(:category, name: "Category 1/2/3 Women")
       road.bar_categories << senior_men
       road.bar_categories << senior_women
 
@@ -214,9 +214,9 @@ module Competitions
       FactoryGirl.create(:discipline, name: "Mountain Bike")
       FactoryGirl.create(:discipline, name: "Cyclocross")
 
-      senior_men = FactoryGirl.create(:category, raw_name: "Cat 1/2 Men2")
-      senior_women = FactoryGirl.create(:category, raw_name: "Cat 1/2/3 Women")
-      cat_4_women = FactoryGirl.create(:category, raw_name: "Cat 4 Women")
+      senior_men = FactoryGirl.create(:category, raw_name: "Category 1/2 Men")
+      senior_women = FactoryGirl.create(:category, raw_name: "Category 1/2/3 Women")
+      cat_4_women = FactoryGirl.create(:category, raw_name: "Category 4 Women")
       road.bar_categories << senior_men
       road.bar_categories << senior_women
       road.bar_categories << cat_4_women
@@ -245,15 +245,15 @@ module Competitions
 
       MbraBar.calculate!(2008)
       road_bar = MbraBar.find_by_name("2008 Road BAR")
-      cat_4_women_road_bar = road_bar.races.detect {|b| b.name == "Cat 4 Women" }
-      assert_equal(molly, cat_4_women_road_bar.results[0].person, "Cat 4 Women Road BAR results person")
-      assert_equal("1", cat_4_women_road_bar.results[0].place, "Cat 4 Women Road BAR results place")
-      assert_equal((23 + 6), cat_4_women_road_bar.results[0].points, "Cat 4 Women Road BAR results points")
+      cat_4_women_road_bar = road_bar.races.detect {|b| b.name == "Category 4 Women" }
+      assert_equal(molly, cat_4_women_road_bar.results[0].person, "Category 4 Women Road BAR results person")
+      assert_equal("1", cat_4_women_road_bar.results[0].place, "Category 4 Women Road BAR results place")
+      assert_equal((23 + 6), cat_4_women_road_bar.results[0].points, "Category 4 Women Road BAR results points")
 
-      cat_1_2_3_women_road_bar = road_bar.races.detect {|b| b.name == "Cat 1/2/3 Women" }
-      assert_equal(molly, cat_1_2_3_women_road_bar.results[0].person, "Cat 1/2/3 Women Road BAR results person")
-      assert_equal("1", cat_1_2_3_women_road_bar.results[0].place, "Cat 1/2/3 Women Road BAR results place")
-      assert_equal(((23 + 6) / 2).to_i + (3 + 6), cat_1_2_3_women_road_bar.results[0].points, "Cat 1/2/3 Women Road BAR results points")
+      cat_1_2_3_women_road_bar = road_bar.races.detect {|b| b.name == "Category 1/2/3 Women" }
+      assert_equal(molly, cat_1_2_3_women_road_bar.results[0].person, "Category 1/2/3 Women Road BAR results person")
+      assert_equal("1", cat_1_2_3_women_road_bar.results[0].place, "Category 1/2/3 Women Road BAR results place")
+      assert_equal(((23 + 6) / 2).to_i + (3 + 6), cat_1_2_3_women_road_bar.results[0].points, "Category 1/2/3 Women Road BAR results points")
 
       # test max 30 upgrade points
       duck_island = SingleDayEvent.create!(
@@ -268,15 +268,15 @@ module Competitions
       )
       MbraBar.calculate!(2008)
       road_bar = MbraBar.find_by_name("2008 Road BAR")
-      cat_4_women_road_bar = road_bar.races.detect {|b| b.name == "Cat 4 Women" }
-      assert_equal(molly, cat_4_women_road_bar.results[0].person, "Cat 4 Women Road BAR results person")
-      assert_equal("1", cat_4_women_road_bar.results[0].place, "Cat 4 Women Road BAR results place")
-      assert_equal((23 + 6) + (27 + 6), cat_4_women_road_bar.results[0].points, "Cat 4 Women Road BAR results points")
+      cat_4_women_road_bar = road_bar.races.detect {|b| b.name == "Category 4 Women" }
+      assert_equal(molly, cat_4_women_road_bar.results[0].person, "Category 4 Women Road BAR results person")
+      assert_equal("1", cat_4_women_road_bar.results[0].place, "Category 4 Women Road BAR results place")
+      assert_equal((23 + 6) + (27 + 6), cat_4_women_road_bar.results[0].points, "Category 4 Women Road BAR results points")
 
-      cat_1_2_3_women_road_bar = road_bar.races.detect {|b| b.name == "Cat 1/2/3 Women" }
-      assert_equal(molly, cat_1_2_3_women_road_bar.results[0].person, "Cat 1/2/3 Women Road BAR results person")
-      assert_equal("1", cat_1_2_3_women_road_bar.results[0].place, "Cat 1/2/3 Women Road BAR results place")
-      assert_equal(30 + (3 + 6), cat_1_2_3_women_road_bar.results[0].points, "Cat 1/2/3 Women Road BAR results points")
+      cat_1_2_3_women_road_bar = road_bar.races.detect {|b| b.name == "Category 1/2/3 Women" }
+      assert_equal(molly, cat_1_2_3_women_road_bar.results[0].person, "Category 1/2/3 Women Road BAR results person")
+      assert_equal("1", cat_1_2_3_women_road_bar.results[0].place, "Category 1/2/3 Women Road BAR results place")
+      assert_equal(30 + (3 + 6), cat_1_2_3_women_road_bar.results[0].points, "Category 1/2/3 Women Road BAR results points")
     end
   end
 end

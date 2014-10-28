@@ -5,15 +5,10 @@ namespace :db do
   # Dump the current database to a MySQL file
   task :database_dump do
     on roles(:db, primary: true) do
-      execute :mkdir, "-p db"
-
-      require_relative "../../../config/environment.rb"
-      db = ActiveRecord::Base.configurations
-      execute :mysqldump, "-u #{db["production"]["username"]} -p#{db["production"]["password"]} -h #{db["production"]["host"]} --compress --ignore-table=#{db["production"]["database"]}.posts #{db["production"]["database"]} > db/production.sql"
-      execute :mysqldump, "-u #{db["production"]["username"]} -p#{db["production"]["password"]} -h #{db["production"]["host"]} --compress --no-data #{db["production"]["database"]} posts >> db/production.sql"
-
-      execute :rm, "-f db/production.sql.bz2"
-      execute :bzip2, "db/production.sql"
+      execute :mkdir, "-p #{deploy_to}/current/db"
+      execute "/bin/bash --login -c 'cd #{deploy_to}/current; /usr/bin/env bundle exec #{deploy_to}/current/bin/rake racing_on_rails:database_dump RAILS_ENV=production'"
+      execute :rm, "-f #{deploy_to}/current/db/production.sql.bz2"
+      execute :bzip2, "#{deploy_to}/current/db/production.sql"
     end
   end
 
@@ -22,7 +17,7 @@ namespace :db do
     on roles(:db, primary: true) do
       system "mkdir -p tmp/db"
       system "rm -f tmp/db/production.sql.bz2"
-      download! "db/production.sql.bz2", "tmp/db/production.sql.bz2"
+      download! "#{deploy_to}/current/db/production.sql.bz2", "tmp/db/production.sql.bz2"
     end
   end
 

@@ -15,6 +15,38 @@ namespace :racing_on_rails do
     puts "Please open http://localhost:8080/ in your web browser"
     puts exec("./bin/rails s puma -p 8080")
   end
+  
+  task database_dump: :environment do
+    db = ActiveRecord::Base.configurations
+    puts `mysqldump -u #{db["production"]["username"]} -p#{db["production"]["password"]} -h #{db["production"]["host"]} --compress --ignore-table=#{db["production"]["database"]}.posts #{db["production"]["database"]} > db/production.sql`
+    puts `mysqldump -u #{db["production"]["username"]} -p#{db["production"]["password"]} -h #{db["production"]["host"]} --compress --no-data #{db["production"]["database"]} posts >> db/production.sql`
+  end
+  
+  namespace :competitions do
+    desc "Save COMPETITION results as JSON for comparison"
+    task :snapshot do
+      competition_class = "Competitions::#{ENV['COMPETITION']}".safe_constantize
+      competition = competition_class.last
+      FileUtils.mkdir_p "#{Rails.root}/tmp/competitions"
+      file_path = "#{Rails.root}/tmp/#{competition_class.name.underscore}.json"
+      FileUtils.rm_rf file_path
+      File.write file_path, JSON.generate(competition.as_json(nil))
+    end
+    
+    desc "Compare COMPETITION snapshot with new results"
+    task :diff do
+      competition_class = "Competitions::#{ENV['COMPETITION']}".safe_constantize
+      competition_class.calculate!
+      competition = competition_class.last
+      file_path = "#{Rails.root}/tmp/#{competition_class.name.underscore}.json"
+      snapshot_results = JSON.parse(File.read(file_path))
+      new_results = competition.as_json(nil)
+      diff = HashDiff.best_diff(snapshot_results, new_results)
+      diff.each do |line|
+        p line
+      end
+    end
+  end
 end
 
 def ask(message)

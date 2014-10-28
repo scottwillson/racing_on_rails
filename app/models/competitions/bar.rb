@@ -9,7 +9,7 @@ module Competitions
   class Bar < Competition
     include Bars::Categories
     include Bars::Discipline
-    include Competitions::CalculatorAdapter
+    include Competitions::Calculations::CalculatorAdapter
 
     def self.calculate!(year = Time.zone.today.year)
       ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
@@ -102,7 +102,7 @@ module Competitions
     end
 
     def source_event_types
-      %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries Competitions::TaborOverall }
+      %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries Competitions::BlindDateAtTheDairyMonthlyStandings Competitions::TaborOverall }
     end
 
     def create_races

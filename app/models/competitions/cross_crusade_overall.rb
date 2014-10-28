@@ -18,7 +18,15 @@ module Competitions
       races.create!(category: Category.find_or_create_by(name: "Masters 50+"))
       races.create!(category: Category.find_or_create_by(name: "Masters 60+"))
       races.create!(category: Category.find_or_create_by(name: "Junior Men"))
+      races.create!(category: Category.find_or_create_by(name: "Junior Men 10-12"))
+      races.create!(category: Category.find_or_create_by(name: "Junior Men 13-14"))
+      races.create!(category: Category.find_or_create_by(name: "Junior Men 15-16"))
+      races.create!(category: Category.find_or_create_by(name: "Junior Men 17-18"))
       races.create!(category: Category.find_or_create_by(name: "Junior Women"))
+      races.create!(category: Category.find_or_create_by(name: "Junior Women 10-12"))
+      races.create!(category: Category.find_or_create_by(name: "Junior Women 13-14"))
+      races.create!(category: Category.find_or_create_by(name: "Junior Women 15-16"))
+      races.create!(category: Category.find_or_create_by(name: "Junior Women 17-18"))
       races.create!(category: Category.find_or_create_by(name: "Women A"))
       races.create!(category: Category.find_or_create_by(name: "Women B"))
       races.create!(category: Category.find_or_create_by(name: "Women C"))
@@ -60,6 +68,16 @@ module Competitions
 
     def set_name
       self.name = "Series Overall"
+    end
+    
+    # Use combined Junior results from race day. Don't combine all the age groups races into one.
+    def category_ids_for(race)
+      case race.name
+      when "Junior Men", "Junior Women"
+        [ Category.find_or_create_by(name: race.name).id ]
+      else
+        super(race)
+      end
     end
   end
 end

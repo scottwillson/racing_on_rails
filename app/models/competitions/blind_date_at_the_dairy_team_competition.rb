@@ -1,6 +1,6 @@
 module Competitions
   class BlindDateAtTheDairyTeamCompetition < Competition
-    include Competitions::CalculatorAdapter
+    include Competitions::Calculations::CalculatorAdapter
 
     validates_presence_of :parent
 

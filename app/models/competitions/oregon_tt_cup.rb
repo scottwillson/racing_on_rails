@@ -1,7 +1,7 @@
 module Competitions
   # Year-long OBRA TT competition
   class OregonTTCup < Competition
-    include Competitions::CalculatorAdapter
+    include Competitions::Calculations::CalculatorAdapter
 
     def friendly_name
       "OBRA Time Trial Cup"
@@ -225,7 +225,7 @@ module Competitions
         race = existing_race || event.races.create!(category: competition_category, bar_points: 0, updated_by: self, visible: false)
 
         races_to_combine.each do |race_to_combine|
-          combine_race race_to_combine, race
+          combine_race race_to_combine, race, competition_category
         end
         race.place_results_by_time
       end
@@ -241,12 +241,12 @@ module Competitions
           (r.category.ages_begin >= competition_category.ages_begin && r.category.ages_end <= competition_category.ages_end) ||
           (r.category.ages_begin > competition_category.ages_begin &&
            r.category.ages_begin < competition_category.ages_end &&
-           r.category.ages_end.and_over?)
+           r.category.and_over?)
         )
       end
     end
 
-    def combine_race(race_to_combine, race)
+    def combine_race(race_to_combine, race, competition_category)
       race_to_combine.results.select do |result|
         result.time &&
         result.time > 0 &&

@@ -3,7 +3,7 @@ module Competitions
   # are probably over-counted.
   # TODO Don't replace existing results
   class Ironman < Competition
-    include Competitions::CalculatorAdapter
+    include Competitions::Calculations::CalculatorAdapter
 
     def friendly_name
       'Ironman'

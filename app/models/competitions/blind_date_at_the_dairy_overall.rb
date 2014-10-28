@@ -41,5 +41,10 @@ module Competitions
 
       super
     end
+    
+    def after_calculate
+      super
+      BlindDateAtTheDairyMonthlyStandings.calculate!
+    end
   end
 end

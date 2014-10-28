@@ -300,6 +300,7 @@ module Categories
       assert_equal "Masters Men 30+", Category.normalize_spelling("Mm 30+"), "Mm 30+"
 
       assert_equal "Men 4/5", Category.normalize_spelling("Men 4/5s"), "Men 4/5s"
+      assert_equal "Pro/1/2", Category.normalize_spelling("Pr/1/2"), "Pr/1/2"
     end
 
     test "#split_camelcase" do
