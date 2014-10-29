@@ -26,9 +26,10 @@ namespace :racing_on_rails do
     desc "Save COMPETITION results as JSON for comparison"
     task :snapshot do
       competition_class = "Competitions::#{ENV['COMPETITION']}".safe_constantize
-      competition = competition_class.last
+      discipline = ENV['DISCIPLINE'] || "Road"
+      competition = competition_class.where(discipline: discipline).current_year.first
       FileUtils.mkdir_p "#{Rails.root}/tmp/competitions"
-      file_path = "#{Rails.root}/tmp/#{competition_class.name.underscore}.json"
+      file_path = "#{Rails.root}/tmp/#{competition_class.name.underscore}-#{discipline.underscore}.json"
       FileUtils.rm_rf file_path
       File.write file_path, JSON.generate(competition.as_json(nil))
     end
@@ -37,8 +38,9 @@ namespace :racing_on_rails do
     task :diff do
       competition_class = "Competitions::#{ENV['COMPETITION']}".safe_constantize
       competition_class.calculate!
-      competition = competition_class.last
-      file_path = "#{Rails.root}/tmp/#{competition_class.name.underscore}.json"
+      discipline = ENV['DISCIPLINE'] || "Road"
+      competition = competition_class.where(discipline: discipline).current_year.first
+      file_path = "#{Rails.root}/tmp/#{competition_class.name.underscore}-#{discipline.underscore}.json"
       snapshot_results = JSON.parse(File.read(file_path))
       new_results = competition.as_json(nil)
       diff = HashDiff.best_diff(snapshot_results, new_results)
