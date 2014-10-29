@@ -1,4 +1,3 @@
-# TODO Move this to mapper
 module Results
   # Used by ResultsFile. Intermediate Hash-like model between Excel row and Result.
   class Row

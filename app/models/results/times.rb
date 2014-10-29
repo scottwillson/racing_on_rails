@@ -41,12 +41,6 @@ module Results
       else
         self[attribute] = s_to_time(value)
       end
-
-      if self[attribute]
-        self[attribute] = self[attribute].round(3)
-      end
-
-      self[attribute]
     end
 
     # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
