@@ -112,16 +112,7 @@ module Competitions
 
         if numeric_place(result) < Float::INFINITY
           if rules[:point_schedule]
-            if (result.multiplier.nil? || result.multiplier == 1) && rules[:field_size_bonus] && result.field_size >= 75
-              field_size_multiplier = 1.5
-            else
-              field_size_multiplier = 1.0
-            end
-
-            ((rules[:point_schedule][numeric_place(result) - 1] || 0) /
-            (result.team_size || 1.0).to_f) *
-            (result.multiplier || 1 ).to_f *
-            field_size_multiplier
+            points_from_point_schedule(result, rules)
           else
             1
           end
@@ -129,6 +120,20 @@ module Competitions
           1
         else
           0
+        end
+      end
+      
+      def self.points_from_point_schedule(result, rules)
+        ((rules[:point_schedule][numeric_place(result) - 1] || 0) / (result.team_size || 1.0).to_f) *
+        (result.multiplier || 1 ).to_f *
+        field_size_multiplier(result, rules[:field_size_bonus])
+      end
+      
+      def self.field_size_multiplier(result, field_size_bonus)
+        if (result.multiplier.nil? || result.multiplier == 1) && field_size_bonus && result.field_size >= 75
+          1.5
+        else
+          1.0
         end
       end
     end

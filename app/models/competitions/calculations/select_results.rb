@@ -20,29 +20,17 @@ module Competitions
           results = results.select { |r| rules[:source_event_ids].include? r.event_id }
         end
 
-        results = select_results_for_event(results, rules[:results_per_event])
-        select_results_for_race(results, rules[:results_per_race])
+        results = select_results_for(:event_id, results, rules[:results_per_event])
+        select_results_for(:race_id, results, rules[:results_per_race])
       end
-
-      def self.select_results_for_event(results, results_per_event)
-        if results_per_event == UNLIMITED
+      
+      def self.select_results_for(field, results, limit)
+        if limit == UNLIMITED
           results
         else
-          results.group_by { |r| [ r.participant_id, r.event_id ] }.
+          results.group_by { |r| [ r.participant_id, r[field] ] }.
           map do |key, r|
-            r.sort_by { |r2| numeric_place(r2) }[0, results_per_event]
-          end.
-          flatten
-        end
-      end
-
-      def self.select_results_for_race(results, results_per_race)
-        if results_per_race == UNLIMITED
-          results
-        else
-          results.group_by { |r| [ r.participant_id, r.race_id ] }.
-          map do |key, r|
-            r.sort_by { |r2| numeric_place(r2) }[0, results_per_race]
+            r.sort_by { |r2| numeric_place(r2) }[0, limit]
           end.
           flatten
         end
@@ -50,7 +38,10 @@ module Competitions
 
       def self.member_in_year?(result)
         raise(ArgumentError, "Result year required to check membership") unless result.year
-        result.member_from && result.member_to && result.member_from.year <= result.year && result.member_to.year >= result.year
+        result.member_from && 
+        result.member_to && 
+        result.member_from.year <= result.year && 
+        result.member_to.year >= result.year
       end
     end
   end
