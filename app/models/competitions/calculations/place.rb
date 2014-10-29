@@ -47,13 +47,12 @@ module Competitions
       end
 
       def self.compare_by_best_place(x, y)
-        return 0 if x.scores.nil? && y.scores.nil?
-        return 0 if x.scores.size == 0 && y.scores.size == 0
+        return 0 if none?(x.scores, y.scores)
 
-        x_places = (x.scores || []).map(&:numeric_place).sort.reverse
-        y_places = (y.scores || []).map(&:numeric_place).sort.reverse
+        x_places = places(x.scores)
+        y_places = places(y.scores)
 
-        while x_places.size > 0 || y_places.size > 0 do
+        while any?(x_places, y_places) do
           x_place = x_places.pop
           y_place = y_places.pop
 
@@ -72,7 +71,7 @@ module Competitions
       end
 
       def self.compare_by_most_recent_result(x, y)
-        return 0 if x.scores.nil? && y.scores.nil?
+        return 0 if none?(x.scores, y.scores)
 
         x_date = x.scores.map(&:date).max
         y_date = y.scores.map(&:date).max
@@ -86,6 +85,19 @@ module Competitions
         else
           y_date <=> x_date
         end
+      end
+      
+      def self.none?(x, y)
+        !any?(x, y)
+      end
+      
+      def self.any?(x, y)
+        # Nil-check
+        (x || y) && (x.size > 0 || y.size > 0)
+      end
+      
+      def self.places(scores)
+        (scores || []).map(&:numeric_place).sort.reverse
       end
 
       # Result places are represented as Strings, even "1", "2", etc. Convert "1" to 1 and DNF, DQ, etc. to Infinity.
