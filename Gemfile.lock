@@ -39,11 +39,6 @@ GIT
     acts_as_list (0.4.0)
       activerecord (>= 3.0)
 
-PATH
-  remote: ~/devel/tabular
-  specs:
-    tabular (0.3.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -413,6 +408,7 @@ GEM
       ffi
       metriks
     subexec (0.2.3)
+    tabular (0.3.1)
     temple (0.6.8)
     terminal-table (1.4.5)
     therubyracer (0.12.1)
@@ -512,7 +508,7 @@ DEPENDENCIES
   scrypt
   selenium-webdriver
   spring
-  tabular!
+  tabular (= 0.3.1)
   therubyracer
   timecop
   truncate_html
