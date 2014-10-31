@@ -1,8 +1,8 @@
 module Competitions
   module Calculations
-    module Calculator
+    module Place
       # Set place on array of CalculatorResults
-      def self.place(results, rules)
+      def place(results, rules)
         place = 1
         previous_result = nil
 
@@ -20,7 +20,7 @@ module Competitions
         end
       end
 
-      def self.sort_by_points(results, break_ties = false)
+      def sort_by_points(results, break_ties = false)
         if break_ties
           results.sort do |x, y|
             compare_by_points x, y
@@ -30,7 +30,7 @@ module Competitions
         end
       end
 
-      def self.compare_by_points(x, y)
+      def compare_by_points(x, y)
         diff = y.points <=> x.points
         return diff if diff != 0
 
@@ -46,7 +46,7 @@ module Competitions
         0
       end
 
-      def self.compare_by_best_place(x, y)
+      def compare_by_best_place(x, y)
         return 0 if none?(x.scores, y.scores)
 
         x_places = places(x.scores)
@@ -70,7 +70,7 @@ module Competitions
         0
       end
 
-      def self.compare_by_most_recent_result(x, y)
+      def compare_by_most_recent_result(x, y)
         return 0 if none?(x.scores, y.scores)
 
         x_date = x.scores.map(&:date).max
@@ -87,22 +87,22 @@ module Competitions
         end
       end
       
-      def self.none?(x, y)
+      def none?(x, y)
         !any?(x, y)
       end
       
-      def self.any?(x, y)
+      def any?(x, y)
         # Nil-check
         (x || y) && (x.size > 0 || y.size > 0)
       end
       
-      def self.places(scores)
+      def places(scores)
         (scores || []).map(&:numeric_place).sort.reverse
       end
 
       # Result places are represented as Strings, even "1", "2", etc. Convert "1" to 1 and DNF, DQ, etc. to Infinity.
       # Infinity convention is handy for sorting.
-      def self.numeric_place(result)
+      def numeric_place(result)
         if result.place && result.place.to_i > 0
           result.place.to_i
         else

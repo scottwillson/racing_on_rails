@@ -1,7 +1,7 @@
 module Competitions
   module Calculations
-    module Calculator
-      def self.default_rules
+    module Rules
+      def default_rules
         {
           break_ties:               false,
           dnf:                      false,
@@ -17,14 +17,14 @@ module Competitions
         }
       end
 
-      def self.default_rules_merge(rules)
+      def default_rules_merge(rules)
         assert_valid_rules rules
         default_rules.merge(
           rules.reject { |key, value| value == nil }
         )
       end
 
-      def self.assert_valid_rules(rules)
+      def assert_valid_rules(rules)
         return true if !rules || rules.size == 0
 
         invalid_rules = rules.keys - default_rules.keys

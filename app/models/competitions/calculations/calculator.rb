@@ -6,6 +6,8 @@ require_relative "structs"
 
 module Competitions
   module Calculations
+    UNLIMITED = Float::INFINITY
+
     # Stateless, functional-style competition calculations. No dependencies on database or Rails.
     # Given source results as an Array of Hashes, returns competition results as an Array of Hashes.
     # Responsible for result eligibility, points, placing and person or team identity.
@@ -16,7 +18,11 @@ module Competitions
     #
     # Non-scoring results from the same race need to be passed in for team size calculations.
     module Calculator
-      UNLIMITED = Float::INFINITY
+      extend Place
+      extend Rules
+      extend SelectResults
+      extend SelectScores
+      extend Structs
 
       # Transfrom +results+ (Array of Hashes) into competition results
       # +rules+:

@@ -1,11 +1,11 @@
 module Competitions
   module Calculations
-    module Calculator
+    module SelectResults
       # Apply rules. Example: DNS or numeric place? Person is a member for this year?
       # It's somewhat arbritrary which elgilibilty rules are applied here, and which were applied by
       # the calling Competition when it selected results from the database.
       # Only keep best +results_per_event+ results for participant (person or team).
-      def self.select_results(results, rules)
+      def select_results(results, rules)
         results = results.select { |r| r.participant_id && ![ nil, "", "DQ", "DNS" ].include?(r.place) }
 
         if rules[:members_only] && rules[:team]
@@ -24,7 +24,7 @@ module Competitions
         select_results_for(:race_id, results, rules[:results_per_race])
       end
       
-      def self.select_results_for(field, results, limit)
+      def select_results_for(field, results, limit)
         if limit == UNLIMITED
           results
         else
@@ -36,7 +36,7 @@ module Competitions
         end
       end
 
-      def self.member_in_year?(result)
+      def member_in_year?(result)
         raise(ArgumentError, "Result year required to check membership") unless result.year
         result.member_from && 
         result.member_to && 

@@ -1,6 +1,6 @@
 module Competitions
   module Calculations
-    module Calculator
+    module Structs
       # Use simple datatypes with no behavior. Hash doesn't have method-like accessors, which means we
       # can't use symbol to proc. E.g., results.sort_by(&:points). OpenStruct is slow. Full-blown classes
       # are overkill. Could add methods to Struct using do…end, ActiveModels or maybe subclass Hash but Struct
@@ -24,7 +24,7 @@ module Competitions
       Struct.new("CalculatorScore", :date, :numeric_place, :participant_id, :points, :source_result_id, :team_size)
 
       # Create new copy of a Struct with +attributes+
-      def self.merge_struct(struct, attributes)
+      def merge_struct(struct, attributes)
         new_struct = struct.dup
         attributes.each do |k, v|
           new_struct[k] = v
