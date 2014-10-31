@@ -105,10 +105,8 @@ module Competitions
       %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries Competitions::BlindDateAtTheDairyMonthlyStandings Competitions::TaborOverall }
     end
 
-    def create_races
-      ::Discipline[discipline].bar_categories.each do |category|
-        races.create!(category: category)
-      end
+    def category_names
+      ::Discipline[discipline].bar_categories.map(&:name)
     end
 
     def friendly_name

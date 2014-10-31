@@ -104,8 +104,8 @@ module Competitions
 
       Result.connection.select_all query
     end
-
-    def category_ids
+    
+    def category_names
       [
         "Beginner Men",
         "Beginner Women",
@@ -120,7 +120,11 @@ module Competitions
         "Women A",
         "Women B",
         "Women C"
-      ].map do |category_name|
+      ]
+    end
+
+    def category_ids
+      category_names.map do |category_name|
         Category.find_or_create_by_normalized_name(category_name)
       end
     end

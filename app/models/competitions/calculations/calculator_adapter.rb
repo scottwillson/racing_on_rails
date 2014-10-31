@@ -123,6 +123,8 @@ module Competitions
       
       def update_competition_results_for(results, race)
         Rails.logger.debug "update_competition_results_for #{race.name}"
+        return true if results.empty?
+        
         team_ids = team_ids_by_person_id_hash(results)
 
         existing_results = race.results.where(person_id: results.map(&:participant_id)).includes(:scores)

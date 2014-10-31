@@ -31,12 +31,9 @@ module Competitions
 
       Result.connection.select_all query
     end
-
-    def create_races
-      categories!.each do |category|
-        self.races.create!(category: category)
-      end
-      self.discipline = "Age Graded"
+    
+    def category_names
+      categories!.map(&:name)
     end
 
     def categories!

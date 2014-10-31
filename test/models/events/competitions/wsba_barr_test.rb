@@ -38,7 +38,7 @@ module Competitions
           wsba = WsbaBarr.find_for_year(2004)
 
           men_1_2 = wsba.races.detect { |r| r.category == category_men_1_2 }
-          assert_not_nil(men_1_2, "Should have Men Cat 1-2 race")
+          assert_not_nil(men_1_2, "Should have Men Cat 1-2 race in #{wsba.races.map(&:name)}")
           assert_equal(3, men_1_2.results.count, "Senior men results")
 
           results = men_1_2.results.sort
