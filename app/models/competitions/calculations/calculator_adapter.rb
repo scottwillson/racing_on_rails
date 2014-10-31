@@ -66,6 +66,12 @@ module Competitions
         end
       end
       
+      # Override Competition superclass with a no-op
+      def delete_races
+        # Keep races
+        # TODO Remove obsolete races
+      end
+      
       def partition_results(calculated_results, race)
         Rails.logger.debug("CalculatorAdapter#partition_results")
         participant_ids            = race.results.map(&participant_id_attribute)
