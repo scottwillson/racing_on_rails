@@ -1,6 +1,18 @@
 module Results
   module Comparison
     extend ActiveSupport::Concern
+    
+    # For competition result equivalence. Don't want to override hash and eql? for all Results.
+    def competition_result_hash
+      (
+        person_id.hash ^ 
+        (person_name.hash * 2) ^ 
+        (place.hash * 3) ^ 
+        (points.hash * 5) ^ 
+        (team_id.hash * 7) ^ 
+        (team_name.hash * 11)
+      ).hash
+    end
 
     # Highest points first. Break ties by highest placing
     # OBRA rules:
