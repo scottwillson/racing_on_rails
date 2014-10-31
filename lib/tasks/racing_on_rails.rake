@@ -48,6 +48,36 @@ namespace :racing_on_rails do
         p line
       end
     end
+    
+    desc "Calculate all competitions"
+    task :calculate do
+      [
+        Competitions::Cat4WomensRaceSeries,
+        Competitions::WsbaBarr,
+        Competitions::WsbaMastersBarr,
+        Competitions::MbraBar,
+        Competitions::MbraTeamBar,
+        Competitions::CrossCrusadeOverall,
+        Competitions::CrossCrusadeTeamCompetition,
+        Competitions::TaborOverall,
+        Competitions::Ironman,
+        Competitions::OregonCup,
+        Competitions::OregonJuniorCyclocrossSeries,
+        Competitions::OregonWomensPrestigeSeries,
+        Competitions::OregonWomensPrestigeTeamSeries,
+        Competitions::BlindDateAtTheDairyOverall,
+        Competitions::BlindDateAtTheDairyTeamCompetition,
+        Competitions::OregonTTCup,
+        Competitions::CrossCrusadeCallups,
+        Competitions::Bar,
+        Competitions::TeamBar,
+        Competitions::OverallBar,
+        Competitions::AgeGradedBar
+      ].each do |competition_class|
+        puts competition_class
+        competition_class.calculate!
+      end
+    end      
   end
 end
 
