@@ -97,7 +97,7 @@ module Competitions
         if category.nil?
           category = Category.create!(raw_name: name)
         end
-        self.races.create(category: category)
+        self.races.create(category: category) unless Race.where(category: category).exists?
       end
     end
 

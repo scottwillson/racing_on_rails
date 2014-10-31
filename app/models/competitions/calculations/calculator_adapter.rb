@@ -10,7 +10,7 @@ module Competitions
           results = source_results_with_benchmark(race)
           results = add_field_size(results)
           results = map_team_member_to_boolean(results)
-
+          
           calculated_results = Calculator.calculate(
             results,
             break_ties: break_ties?,
@@ -26,7 +26,13 @@ module Competitions
             use_source_result_points: use_source_result_points?
           )
 
-          create_competition_results_for calculated_results, race
+          new_results, existing_results, obselete_results = partition_results(calculated_results, race)
+          Rails.logger.debug "Calculator new_results:      #{new_results.size}"
+          Rails.logger.debug "Calculator existing_results: #{existing_results.size}"
+          Rails.logger.debug "Calculator obselete_results: #{obselete_results.size}"
+          create_competition_results_for new_results, race
+          update_competition_results_for existing_results, race
+          delete_competition_results_for obselete_results, race
         end
 
         after_calculate
@@ -59,11 +65,36 @@ module Competitions
           results
         end
       end
+      
+      def partition_results(calculated_results, race)
+        Rails.logger.debug("CalculatorAdapter#partition_results")
+        participant_ids            = race.results.map(&participant_id_attribute)
+        calculated_participant_ids = calculated_results.map(&:participant_id)
+
+        new_participant_ids      = calculated_participant_ids - participant_ids
+        existing_participant_ids = calculated_participant_ids & participant_ids
+        old_participant_ids      = participant_ids - calculated_participant_ids
+    
+        [
+          calculated_results.select { |r| r.participant_id.in? new_participant_ids },
+          calculated_results.select { |r| r.participant_id.in? existing_participant_ids },
+          race.results.select       { |r| r[participant_id_attribute].in? old_participant_ids }
+        ]
+      end
+      
+      def participant_id_attribute
+        if team?
+          :team_id
+        else
+          :person_id
+        end
+      end
 
       # Similar to superclass's method, except this method only saves results to the database. Superclass applies rules
       # and scoring. It also decorates the results with any display data (often denormalized)
       # like people's names, teams, and points.
       def create_competition_results_for(results, race)
+        Rails.logger.debug "create_competition_results_for #{race.name}"
         results.each do |result|
           competition_result = ::Result.create!(
             place: result.place,
@@ -82,6 +113,48 @@ module Competitions
         end
 
         true
+      end
+      
+      def update_competition_results_for(results, race)
+        Rails.logger.debug "update_competition_results_for #{race.name}"
+        team_ids = team_ids_by_person_id_hash(results)
+
+        existing_results = race.results.where(person_id: results.map(&:participant_id)).includes(:scores)
+        results.each do |result|
+          existing_result = existing_results.detect { |r| r.person_id == result.participant_id }
+      
+          # to_s important. Otherwise, a change from 3 to "3" triggers a DB update.
+          existing_result.place   = result.place.to_s
+          existing_result.team_id = team_ids[result.participant_id]
+          existing_result.points  = result.points
+
+          # TODO Why do we need explicit dirty check?
+          if existing_result.place_changed? || existing_result.team_id_changed? || existing_result.points_changed?
+            existing_result.save!
+          end
+
+          existing_scores = existing_result.scores.map { |s| [ s.source_result_id, s.points.to_f ] }
+          new_scores = result.scores.map { |s| [ s.source_result_id, s.points.to_f ] }
+      
+          scores_to_create = new_scores - existing_scores
+          scores_to_delete = existing_scores - new_scores
+      
+          scores_to_create.each do |score|
+            create_score existing_result, score.first, score.last
+          end
+
+          if scores_to_delete.present?
+            Score.where(competition_result_id: existing_result.id).where(source_result_id: scores_to_delete.map(&:first)).delete_all
+          end
+        end
+      end
+
+      def delete_competition_results_for(results, race)
+        Rails.logger.debug "delete_competition_results_for #{race.name}"
+        if results.present?
+          Score.where(competition_result_id: results).delete_all
+          Result.where(id: results).delete_all
+        end
       end
 
       # Competition results could know they need to lookup their team

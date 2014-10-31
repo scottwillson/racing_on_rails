@@ -5,6 +5,27 @@ module Competitions
   class Ironman < Competition
     include Competitions::Calculations::CalculatorAdapter
 
+    # Update results based on source event results.
+    # (Calculate clashes with internal Rails method)
+    def self.calculate!(year = Time.zone.today.year)
+      Rails.logger.debug" Ironman.calculate!"
+      ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
+        transaction do
+          year = year.to_i
+          competition = self.find_or_create_for_year(year)
+          competition.set_date
+          raise(ActiveRecord::ActiveRecordError, competition.errors.full_messages) unless competition.errors.empty?
+          competition.create_races
+          competition.create_children
+          # Could bulk load all Event and Races at this point, but hardly seems to matter
+          competition.calculate_members_only_places
+          competition.calculate!
+        end
+      end
+      # Don't return the entire populated instance!
+      true
+    end
+
     def friendly_name
       'Ironman'
     end
