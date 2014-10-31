@@ -223,7 +223,7 @@ class Result < ActiveRecord::Base
     other_results_in_place.each do |result|
       unless result.person.nil?
         if !result.person.member?(date)
-          self.update_attribute members_only_place: ""
+          self.update_attributes members_only_place: ""
           non_members = true
         end
       end
