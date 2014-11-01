@@ -1,7 +1,6 @@
 module Competitions
   # Who has done the most events? Just counts starts/appearences in results. Not pefect -- some events
   # are probably over-counted.
-  # TODO Don't replace existing results
   class Ironman < Competition
     include Competitions::Calculations::CalculatorAdapter
 

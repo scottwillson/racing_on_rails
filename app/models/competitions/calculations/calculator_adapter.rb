@@ -66,10 +66,15 @@ module Competitions
         end
       end
       
-      # Override Competition superclass with a no-op
+      # Only delete obselete races
       def delete_races
-        # Keep races
-        # TODO Remove obsolete races
+        obselete_races = races.select { |race| !race.name.in?(category_names) }
+        if obselete_races.any?
+          race_ids = obselete_races.map(&:id)
+          Competitions::Score.delete_all("competition_result_id in (select id from results where race_id in (#{race_ids.join(',')}))")
+          Result.where("race_id in (?)", race_ids).delete_all
+        end
+        obselete_races.each { |race| races.delete(race) }
       end
       
       def partition_results(calculated_results, race)
