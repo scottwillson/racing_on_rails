@@ -110,7 +110,7 @@ module Competitions
           competition_result = ::Result.create!(
             place: result.place,
             person_id: person_id_for_competition_result(result),
-            team_id: team_id_for_competition_result(result, team_ids_by_person_id_hash(results)),
+            team_id: team_id_for_competition_result(result, results),
             event: self,
             race: race,
             competition_result: true,
@@ -130,16 +130,18 @@ module Competitions
         Rails.logger.debug "update_competition_results_for #{race.name}"
         return true if results.empty?
         
-        team_ids = team_ids_by_person_id_hash(results)
+        @team_ids_by_person_id_hash = nil
 
-        existing_results = race.results.where(person_id: results.map(&:participant_id)).includes(:scores)
+        existing_results = race.results.where(participant_id_attribute => results.map(&:participant_id)).includes(:scores)
         results.each do |result|
-          existing_result = existing_results.detect { |r| r.person_id == result.participant_id }
+          existing_result = existing_results.detect { |r| r[participant_id_attribute] == result.participant_id }
       
           # to_s important. Otherwise, a change from 3 to "3" triggers a DB update.
           existing_result.place   = result.place.to_s
-          existing_result.team_id = team_ids[result.participant_id]
           existing_result.points  = result.points
+          if !team?
+            existing_result.team_id = team_ids_by_person_id_hash(results)[result.participant_id]
+          end
 
           # TODO Why do we need explicit dirty check?
           if existing_result.place_changed? || existing_result.team_id_changed? || existing_result.points_changed?
@@ -173,11 +175,13 @@ module Competitions
       # Competition results could know they need to lookup their team
       # Can move to Result?
       def team_ids_by_person_id_hash(results)
-        hash = Hash.new
-        ::Person.select("id, team_id").where("id in (?)", results.map(&:participant_id).uniq).map do |person|
-          hash[person.id] = person.team_id
+        if @team_ids_by_person_id_hash.nil?
+          @team_ids_by_person_id_hash = Hash.new
+          ::Person.select("id, team_id").where("id in (?)", results.map(&:participant_id).uniq).map do |person|
+            @team_ids_by_person_id_hash[person.id] = person.team_id
+          end
         end
-        hash
+        @team_ids_by_person_id_hash
       end
 
       # This is always the 'best' result
@@ -197,11 +201,11 @@ module Competitions
         end
       end
 
-      def team_id_for_competition_result(result, team_ids)
+      def team_id_for_competition_result(result, results)
         if team?
           result.participant_id
         else
-          team_ids[result.participant_id]
+          team_ids_by_person_id_hash(results)[result.participant_id]
         end
       end
     end
