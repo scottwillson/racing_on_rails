@@ -21,6 +21,26 @@ module Competitions
         end
       end
     end
+    
+    def category_names
+      [ 
+        "Clydesdale",
+        "Category 3 Men", 
+        "Category 3 Women", 
+        "Category 4 Women",
+        "Category 4/5 Men",
+        "Junior Men", 
+        "Junior Women", 
+        "Masters Men 4/5", 
+        "Masters Men", 
+        "Masters Women 4",
+        "Masters Women",
+        "Senior Men", 
+        "Senior Women", 
+        "Singlespeed/Fixed", 
+        "Tandem"
+      ]
+    end
 
     def friendly_name
       'Overall BAR'
