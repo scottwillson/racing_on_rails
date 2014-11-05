@@ -50,32 +50,51 @@ namespace :racing_on_rails do
     end
     
     desc "Calculate all competitions"
-    task :calculate do
-      [
-        Competitions::Cat4WomensRaceSeries,
-        Competitions::WsbaBarr,
-        Competitions::WsbaMastersBarr,
-        Competitions::MbraBar,
-        Competitions::MbraTeamBar,
-        Competitions::CrossCrusadeOverall,
-        Competitions::CrossCrusadeTeamCompetition,
-        Competitions::TaborOverall,
-        Competitions::Ironman,
-        Competitions::OregonCup,
-        Competitions::OregonJuniorCyclocrossSeries,
-        Competitions::OregonWomensPrestigeSeries,
-        Competitions::OregonWomensPrestigeTeamSeries,
-        Competitions::BlindDateAtTheDairyOverall,
-        Competitions::BlindDateAtTheDairyTeamCompetition,
-        Competitions::OregonTTCup,
-        Competitions::CrossCrusadeCallups,
-        Competitions::Bar,
-        Competitions::TeamBar,
-        Competitions::OverallBar,
-        Competitions::AgeGradedBar
-      ].each do |competition_class|
+    task calculate: :environment do
+      classes = [
+        # ::Competitions::Cat4WomensRaceSeries,
+        # ::Competitions::WsbaBarr,
+        # ::Competitions::WsbaMastersBarr,
+        # ::Competitions::MbraBar,
+        # ::Competitions::MbraTeamBar,
+        # ::Competitions::CrossCrusadeOverall,
+        # ::Competitions::CrossCrusadeTeamCompetition,
+        # ::Competitions::TaborOverall,
+        # ::Competitions::Ironman,
+        # ::Competitions::OregonCup,
+        # ::Competitions::OregonJuniorCyclocrossSeries,
+        # ::Competitions::OregonWomensPrestigeSeries,
+        # ::Competitions::OregonWomensPrestigeTeamSeries,
+        # ::Competitions::BlindDateAtTheDairyOverall,
+        ::Competitions::BlindDateAtTheDairyTeamCompetition,
+        ::Competitions::OregonTTCup,
+        # ::Competitions::CrossCrusadeCallups,
+        ::Competitions::Bar,
+        ::Competitions::TeamBar,
+        ::Competitions::OverallBar,
+        ::Competitions::AgeGradedBar
+      ]
+      
+      existing_results = Hash.new
+      ::Competitions::Competition.current_year.each do |competition|
+        results = Result.where(event: competition).map(&:competition_result_hash)
+        puts "Found #{results.size} results for #{competition}"
+        existing_results[competition] = results
+      end
+      
+      classes.each do |competition_class|
         puts competition_class
+        start_time = Time.zone.now
         competition_class.calculate!
+        puts "#{(Time.zone.now - start_time).to_i}"
+      end
+      
+      ::Competitions::Competition.current_year.each do |competition|
+        results = Result.where(event: competition).map(&:competition_result_hash)
+        
+        if existing_results[competition].sort != results.sort
+          puts "#{competition.full_name} results changed"
+        end
       end
     end      
   end

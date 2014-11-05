@@ -27,8 +27,7 @@ module Competitions
         end
 
         if consider_team_size?
-          team_size = team_size || team_size_from_result(source_result)
-          points = points * factor / team_size.to_f
+          points = points * factor / source_result.team_size.to_f
         else
           points = points * factor
         end
@@ -47,10 +46,6 @@ module Competitions
       cem = source_result.event.competition_event_memberships.detect{|comp| comp.competition_id == self.id}
       # factor is one if membership is not found
       cem ? cem.points_factor : 1
-    end
-
-    def team_size_from_result(source_result)
-      ::Result.where(race_id: source_result.race_id, place: source_result.place).count
     end
 
     def ascending_points?

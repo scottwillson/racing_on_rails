@@ -72,40 +72,18 @@ module Competitions
         end
       end
     end
-
-    def source_results(race)
-      query = Result.
-        select([
-          "bar",
-          "1 as multiplier",
-          "events.date",
-          "events.ironman",
-          "events.sanctioned_by",
-          "events.type",
-          "people.date_of_birth",
-          "people.member_from",
-          "people.member_to",
-          "results.team_id as participant_id",
-          "place",
-          "points",
-          "races.category_id",
-          "race_id",
-          "results.event_id",
-          "results.id as id",
-          "year"
-        ]).
-        joins(race: :event).
-        joins("left outer join people on people.id = results.person_id").
-        joins("left outer join events parents_events on parents_events.id = events.parent_id").
-        joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
-        where("races.category_id" => category_ids).
-        where("place between 1 and ?", point_schedule.size).
-        where("results.event_id" => source_event_ids(race))
-
-      Result.connection.select_all query
+    
+    def source_results_query(race)
+      super.
+      where("results.event_id" => source_event_ids(race)).
+      where("races.category_id" => category_ids_for(race))
     end
     
-    def category_names
+    def race_category_names
+      [ "Team Competition" ]
+    end
+    
+    def source_results_category_names
       [
         "Beginner Men",
         "Beginner Women",
@@ -122,11 +100,9 @@ module Competitions
         "Women C"
       ]
     end
-
-    def category_ids
-      category_names.map do |category_name|
-        Category.find_or_create_by_normalized_name(category_name)
-      end
+    
+    def category_ids_for(race)
+      Category.where(name: source_results_category_names).pluck(:id)
     end
   end
 end

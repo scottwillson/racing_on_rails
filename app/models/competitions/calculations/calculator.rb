@@ -81,7 +81,7 @@ module Competitions
         results_by_race_and_place = Hash.new
         results.group_by { |r| [ r.race_id, r.place ] }.
         each { |key, results_with_same_place| results_by_race_and_place[key] = results_with_same_place.size }
-
+  
         results.map do |result|
           merge_struct(result, team_size: results_by_race_and_place[[ result.race_id, result.place ]])
         end

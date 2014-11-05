@@ -3,33 +3,16 @@ module Competitions
   class AgeGradedBar < Competition
     include Competitions::Calculations::CalculatorAdapter
 
-    # FIXME DRY new competition methods
     after_create :set_parent
-
-    def source_results(race)
-      query = Result.
-        select([
-          "events.date",
-          "people.member_from",
-          "people.member_to",
-          "person_id as participant_id",
-          "place",
-          "points",
-          "race_id",
-          "results.event_id",
-          "results.id as id",
-          "year"
-        ]).
-        joins(race: :event).
-        joins("left outer join people on people.id = results.person_id").
-        where("events.type" => "Competitions::OverallBar").
-        where(bar: true).
-        where("races.category_id" => race.category.parent(true).id).
-        where("people.date_of_birth between ? and ?", race.dates_of_birth.begin, race.dates_of_birth.end).
-        where("year = ?", year).
-        references(:results, :events, :categories)
-
-      Result.connection.select_all query
+    
+    def source_results_query(race)
+      super.
+      where("races.category_id" => race.category.parent_id).
+      where("people.date_of_birth between ? and ?", race.dates_of_birth.begin, race.dates_of_birth.end)
+    end
+    
+    def source_event_types
+      [ Competitions::OverallBar ]
     end
     
     def category_names

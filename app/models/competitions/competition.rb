@@ -92,7 +92,7 @@ module Competitions
     end
 
     def create_races
-      category_names.each do |name|
+      race_category_names.each do |name|
         category = Category.where(name: name).first
         if category.nil?
           category = Category.create!(raw_name: name)
@@ -276,9 +276,9 @@ module Competitions
 
     def source_results_with_benchmark(race)
       results = []
-      Competition.benchmark("#{self.class.name} source_results", level: :debug) {
+      Competition.benchmark("#{self.class.name} source_results", level: :debug) do
         results = source_results(race)
-      }
+      end
       if logger.debug?
         if results.respond_to?(:rows)
           logger.debug("#{self.class.name} Found #{results.rows.size} source results for '#{race.name}'")

@@ -11,7 +11,6 @@ module Competitions
     def test_points_for
       competition = TestCompetition.new
       competition.stubs(:points_factor).returns(1)
-      competition.stubs(:team_size_from_result).returns(1)
       competition.point_schedule = [ 0, 20, 10, 5, 4, 3, 2, 1 ]
       source_event = stub("SingleDayEvent", id: 1,)
 
@@ -20,7 +19,8 @@ module Competitions
         numeric_place: 1,
         event_id: 1,
         event: source_event,
-        race: stub("race", event: source_event)
+        race: stub("race", event: source_event),
+        team_size: 1
       )
 
       points = competition.points_for(result)
@@ -44,7 +44,6 @@ module Competitions
 
     def test_points_for_place_members_only
       competition = TestCompetition.new
-      competition.stubs(:team_size_from_result).returns(1)
       competition.stubs(:place_members_only?).returns(true)
       competition.stubs(:points_factor).returns(1)
       competition.point_schedule = [ 0, 20, 10, 5, 4, 3, 2, 1 ]
@@ -56,7 +55,8 @@ module Competitions
         members_only_place: "1",
         event_id: 1,
         event: source_event,
-        race: stub("race", event: source_event)
+        race: stub("race", event: source_event),
+        team_size: 1
       )
       points = competition.points_for(result)
       assert_equal 20, points, "points"
@@ -73,7 +73,8 @@ module Competitions
         numeric_place: 3,
         event_id: 1,
         event: source_event,
-        race: stub("race", event: source_event)
+        race: stub("race", event: source_event),
+        team_size: 2
       )
       points = competition.points_for(result, 2)
       assert_equal 2.5, points, "Points for first place with team of two and no multiplier"
@@ -90,7 +91,8 @@ module Competitions
         numeric_place: 4,
         event_id: 1,
         event: source_event,
-        race: stub("race", event: source_event)
+        race: stub("race", event: source_event),
+        team_size: 1
       )
       points = competition.points_for(result, 1)
       assert_equal 8, points, "Points"
@@ -108,7 +110,8 @@ module Competitions
         numeric_place: 4,
         event_id: 1,
         event: source_event,
-        race: stub("race", event: source_event)
+        race: stub("race", event: source_event),
+        team_size: 1
       )
       points = competition.points_for(result, 1)
       assert_equal 4, points, "Points"

@@ -187,7 +187,7 @@ module Competitions
       cx_bar = Bar.find_by_name("2004 Cyclocross BAR")
       men_cx_bar = cx_bar.races.detect { |b| b.category == men_a }
       assert_equal(2, men_cx_bar.results.size, "Men A Cyclocross BAR results")
-
+      
       results = men_cx_bar.results.sort
       assert_equal(tonkin, results[0].person, "Men A Cyclocross BAR results person")
       assert_equal("1", results[0].place, "Men A Cyclocross BAR results place")
@@ -229,10 +229,12 @@ module Competitions
         person: person
       )
       team_track_senior_men.results.create!(
-        place: 1
+        place: 1,
+        person: FactoryGirl.create(:person)
       )
       team_track_senior_men.results.create!(
-        place: 1
+        place: 1,
+        person: FactoryGirl.create(:person)
       )
 
       Bar.calculate! 2004
