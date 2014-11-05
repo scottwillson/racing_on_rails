@@ -7,7 +7,7 @@ module Results
                class_name: "Competitions::Score",
                foreign_key: 'competition_result_id',
                dependent: :destroy,
-               extend: CreateIfBestResultForRaceExtension
+               extend: Results::CreateIfBestResultForRaceExtension
       has_many :dependent_scores, class_name: 'Competitions::Score', foreign_key: 'source_result_id', dependent: :destroy
 
       scope :competition, -> { where(competition_result: true) }
