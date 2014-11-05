@@ -179,28 +179,23 @@ class Result < ActiveRecord::Base
   end
 
   def member_result?
-    (person_id.nil? || (person_id && person.member?(date))) && !non_members_on_team?
+    (person_id.nil? || (person_id && person.member?(date))) && every_person_is_a_member?
   end
 
-  def non_members_on_team?
-    exempt_cats = RacingAssociation.current.exempt_team_categories
-    if exempt_cats.nil? || exempt_cats.include?(race.category.name)
-      return false
+  def every_person_is_a_member?
+    if RacingAssociation.current.exempt_team_categories.nil? || RacingAssociation.current.exempt_team_categories.include?(race.category.name)
+      return true
     end
 
-    non_members = false
-
-    other_results_in_place = Result.where(race_id: race_id, place: place)
-    other_results_in_place.each do |result|
-      unless result.person.nil?
-        if !result.person.member?(date)
-          self.update_attributes members_only_place: ""
-          non_members = true
-        end
+    Result.where(race_id: race_id, place: place).where.not(id: id).each do |result|
+      if result.person_id && !result.person.member?(date)
+        # bad side effect
+        self.update_attributes members_only_place: ""
+        return false
       end
     end
 
-    non_members
+    true
   end
 
   def rental_number?
