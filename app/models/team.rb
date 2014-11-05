@@ -54,10 +54,18 @@ class Team < ActiveRecord::Base
   end
 
   def ensure_no_results
-    return true if results.empty?
+    return true unless no_results?
 
     errors.add :base, "Cannot delete team with results. #{name} has #{results.count} results."
     false
+  end
+  
+  def no_results?
+    results.count == 0
+  end
+  
+  def no_people?
+    people.count == 0
   end
 
   # If name changes to match existing alias, destroy the alias

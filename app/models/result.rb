@@ -66,7 +66,7 @@ class Result < ActiveRecord::Base
 
   # Destroy Team that only exist because they were created by importing results
   def destroy_teams
-    if team && team.results.count == 0 && team.people.count == 0 && team.created_from_result? && !team.updated_after_created?
+    if team && team.no_results? && team.no_people? && team.created_from_result? && team.never_updated?
       team.destroy
     end
   end
