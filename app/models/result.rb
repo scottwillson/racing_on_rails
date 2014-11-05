@@ -108,7 +108,6 @@ class Result < ActiveRecord::Base
     self[:category_name] = name.try(:to_s)
   end
 
-  # TODO Cache this, too
   def team_size
     if race_id
       @team_size ||= Result.where(race_id: race_id, place: place).count
@@ -259,7 +258,7 @@ class Result < ActiveRecord::Base
   def inspect_debug
     puts to_long_s
     scores(true).sort.each do |score|
-      puts score
+      puts score.inspect_debug
     end
   end
 
