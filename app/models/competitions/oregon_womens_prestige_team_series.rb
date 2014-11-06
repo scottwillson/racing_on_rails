@@ -66,15 +66,5 @@ module Competitions
       end
       @cat_4_category_ids
     end
-
-    def set_multiplier(results)
-      results.each do |result|
-        if result["type"] == "MultiDayEvent"
-          result["multiplier"] = 1.5
-        else
-          result["multiplier"] = 1
-        end
-      end
-    end
   end
 end
