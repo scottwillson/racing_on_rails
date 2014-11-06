@@ -1,6 +1,7 @@
 module Competitions
   class OregonWomensPrestigeSeries < Competition
     include Competitions::Calculations::CalculatorAdapter
+    include Competitions::OregonWomensPrestigeSeriesModules::Common
 
     def friendly_name
       "Oregon Womens Prestige Series"
@@ -8,11 +9,6 @@ module Competitions
 
     def category_names
       [ "Women 1/2/3", "Women 4" ]
-    end
-
-    # Decreasing points to 20th place, then 2 points for 21st through 100th
-    def point_schedule
-      [ 100, 80, 70, 60, 55, 50, 45, 40, 35, 30, 25, 20, 18, 16, 14, 12, 10, 8, 6, 4 ] + ([ 2 ] * 80)
     end
 
     def source_events?
@@ -28,18 +24,11 @@ module Competitions
     end
 
     def source_event_ids(race)
-      ids = nil
-      if source_events? && source_events.present?
-        ids = source_events.map(&:id)
-        if race.category.name == "Women 4"
-          ids.delete(21334)
-          ids.delete(21148)
-          ids.delete(21393)
-          ids.delete(21146)
-          ids.delete(21186)
-        end
+      if women_4?(race)
+        source_events.map(&:id) - cat_123_only_event_ids
+      else
+        source_events.map(&:id) 
       end
-      ids
     end
 
     def source_results_query(race)
@@ -65,6 +54,13 @@ module Competitions
           result["multiplier"] = 1
         end
       end
+    end
+
+
+    private
+    
+    def women_4?(race)
+      race.category.name == "Women 4"
     end
   end
 end
