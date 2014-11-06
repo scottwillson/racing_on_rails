@@ -198,34 +198,42 @@ module Competitions
         return true if results.empty?
         
         team_ids = team_ids_by_participant_id_hash(results)
-
         existing_results = race.results.where(participant_id_attribute => results.map(&:participant_id)).includes(:scores)
+        
         results.each do |result|
-          existing_result = existing_results.detect { |r| r[participant_id_attribute] == result.participant_id }
+          update_competition_result_for result, existing_results, team_ids
+        end
+      end
       
-          # to_s important. Otherwise, a change from 3 to "3" triggers a DB update.
-          existing_result.place   = result.place.to_s
-          existing_result.points  = result.points
-          existing_result.team_id = team_ids[result.participant_id]
+      def update_competition_result_for(result, existing_results, team_ids)
+        existing_result = existing_results.detect { |r| r[participant_id_attribute] == result.participant_id }
+    
+        # to_s important. Otherwise, a change from 3 to "3" triggers a DB update.
+        existing_result.place   = result.place.to_s
+        existing_result.points  = result.points
+        existing_result.team_id = team_ids[result.participant_id]
 
-          # TODO Why do we need explicit dirty check?
-          if existing_result.place_changed? || existing_result.team_id_changed? || existing_result.points_changed?
-            existing_result.save!
-          end
-
-          existing_scores = existing_result.scores.map { |s| [ s.source_result_id, s.points.to_f ] }
-          new_scores = result.scores.map { |s| [ s.source_result_id, s.points.to_f ] }
+        # TODO Why do we need explicit dirty check?
+        if existing_result.place_changed? || existing_result.team_id_changed? || existing_result.points_changed?
+          existing_result.save!
+        end
+        
+        update_scores_for result, existing_result
+      end
       
-          scores_to_create = new_scores - existing_scores
-          scores_to_delete = existing_scores - new_scores
-      
-          scores_to_create.each do |score|
-            create_score existing_result, score.first, score.last
-          end
+      def update_scores_for(result, existing_result)
+        existing_scores = existing_result.scores.map { |s| [ s.source_result_id, s.points.to_f ] }
+        new_scores = result.scores.map { |s| [ s.source_result_id, s.points.to_f ] }
+    
+        scores_to_create = new_scores - existing_scores
+        scores_to_delete = existing_scores - new_scores
+    
+        scores_to_create.each do |score|
+          create_score existing_result, score.first, score.last
+        end
 
-          if scores_to_delete.present?
-            Score.where(competition_result_id: existing_result.id).where(source_result_id: scores_to_delete.map(&:first)).delete_all
-          end
+        if scores_to_delete.present?
+          Score.where(competition_result_id: existing_result.id).where(source_result_id: scores_to_delete.map(&:first)).delete_all
         end
       end
 
