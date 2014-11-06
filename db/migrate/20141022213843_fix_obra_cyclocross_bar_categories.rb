@@ -127,7 +127,7 @@ class FixObraCyclocrossBarCategories < ActiveRecord::Migration
           parent = Category.where(name: parent).first
           children.each do |child|
             child = Category.where(name: child).first
-            if !child.ancestors.include?(parent)
+            if child && !child.ancestors.include?(parent)
               puts "#{child.name} not a child of #{parent.name}: #{child.ancestors.map(&:name).join(', ')}"
               child.parent = parent
               child.save!
