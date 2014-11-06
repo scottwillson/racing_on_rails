@@ -52,8 +52,10 @@ module Competitions
       event_ids = parent.children.map(&:id)
 
       Result.
-        includes(race: :event).
+        includes(race: [ :category, :event ]).
         where("results.team_id is not null").
+        where("categories.name != ?", "Junior Men").
+        where("categories.name != ?", "Junior Women").
         where("events.id" => event_ids).
         references(:events).
         order("results.team_id")
