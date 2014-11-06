@@ -148,11 +148,11 @@ module Competitions
 
         new_participant_ids      = calculated_participant_ids - participant_ids
         existing_participant_ids = calculated_participant_ids & participant_ids
-        old_participant_ids      = participant_ids - calculated_participant_ids
+        old_participant_ids      = participant_ids            - calculated_participant_ids
     
         [
-          calculated_results.select { |r| r.participant_id.in? new_participant_ids },
-          calculated_results.select { |r| r.participant_id.in? existing_participant_ids },
+          calculated_results.select { |r| r.participant_id.in?            new_participant_ids },
+          calculated_results.select { |r| r.participant_id.in?            existing_participant_ids },
           race.results.select       { |r| r[participant_id_attribute].in? old_participant_ids }
         ]
       end
