@@ -83,10 +83,6 @@ module Competitions
       1
     end
 
-    def maximum_events(race)
-      nil
-    end
-
     def raced_minimum_events?(person, race)
       true
     end
