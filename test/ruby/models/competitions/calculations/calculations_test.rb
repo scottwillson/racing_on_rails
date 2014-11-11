@@ -5,7 +5,7 @@ module Competitions
     class CalculationsTest < Ruby::TestCase
       def assert_equal_results(expected, actual)
         [ expected, actual ].each do |results|
-          results.each { |result| result.scores.sort_by!(&:numeric_place) }
+          results.each { |result| result.scores.sort_by!(&:numeric_place); result.scores.sort_by!(&:date) }
           results.sort_by!(&:participant_id)
           results.sort_by!(&:place)
         end
@@ -21,6 +21,7 @@ module Competitions
         [ expected, actual ].each do |scores|
           scores.sort_by!(&:participant_id)
           scores.sort_by!(&:numeric_place)
+          scores.sort_by!(&:date)
         end
 
         unless expected == actual
@@ -36,7 +37,7 @@ module Competitions
           message << "  Result place #{r.place} participant_id: #{r.participant_id} points: #{r.points}"
           message << "\n"
           r.scores.each do |s|
-            message << "    Score place: #{s.numeric_place} points: #{s.points}"
+            message << "    Score place: #{s.numeric_place} points: #{s.points}  date: #{s.date}"
             message << "\n"
           end
           message << "\n" if r.scores.size > 0

@@ -145,7 +145,7 @@ module Competitions
       end
       
       def self.last_event?(result)
-        result.date == result.end_date
+        result.end_date && result.date == result.end_date
       end
       
       def self.field_size_multiplier(result, field_size_bonus)
