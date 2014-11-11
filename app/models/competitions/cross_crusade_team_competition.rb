@@ -124,10 +124,6 @@ module Competitions
       false
     end
 
-    def minimum_events
-      nil
-    end
-
     def ascending_points?
       false
     end
