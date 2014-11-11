@@ -60,14 +60,14 @@ namespace :racing_on_rails do
         # ::Competitions::CrossCrusadeOverall,
         # ::Competitions::CrossCrusadeTeamCompetition,
         # ::Competitions::TaborOverall,
-        # ::Competitions::Ironman,
+        ::Competitions::Ironman,
         # ::Competitions::OregonCup,
         # ::Competitions::OregonJuniorCyclocrossSeries,
         # ::Competitions::OregonWomensPrestigeSeries,
         # ::Competitions::OregonWomensPrestigeTeamSeries,
         # ::Competitions::BlindDateAtTheDairyOverall,
-        ::Competitions::BlindDateAtTheDairyTeamCompetition,
-        ::Competitions::OregonTTCup,
+        # ::Competitions::BlindDateAtTheDairyTeamCompetition,
+        # ::Competitions::OregonTTCup,
         # ::Competitions::CrossCrusadeCallups,
         ::Competitions::Bar,
         ::Competitions::TeamBar,
@@ -92,7 +92,9 @@ namespace :racing_on_rails do
       ::Competitions::Competition.current_year.each do |competition|
         results = Result.where(event: competition).map(&:competition_result_hash)
         
-        if existing_results[competition].sort != results.sort
+        if existing_results[competition].nil?
+          puts "No previous results for #{competition.full_name}"
+        elsif existing_results[competition].sort != results.sort
           puts "#{competition.full_name} results changed"
         end
       end
