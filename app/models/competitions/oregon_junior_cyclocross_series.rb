@@ -49,10 +49,6 @@ module Competitions
       false
     end
 
-    def default_bar_points
-      0
-    end
-
     def all_year
       false
     end

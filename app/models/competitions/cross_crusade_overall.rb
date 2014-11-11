@@ -50,10 +50,6 @@ module Competitions
       point_schedule[source_result.numeric_place].to_f
     end
 
-    def default_bar_points
-      0
-    end
-
     def minimum_events
       3
     end
