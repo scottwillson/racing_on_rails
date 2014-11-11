@@ -67,9 +67,14 @@ module Competitions
         end
         hash[:scores] = scores
 
+        if !hash.key?("preliminary")
+          hash["preliminary"] = false
+        end
+
         hash.each do |key, value|
           result[key] = value
         end
+        
         result
       end
 
