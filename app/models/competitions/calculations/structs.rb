@@ -19,6 +19,7 @@ module Competitions
         :category_name,
         :date, 
         :date_of_birth, 
+        :end_date,
         :event_id, 
         :field_size, 
         :id, 

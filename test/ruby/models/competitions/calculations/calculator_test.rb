@@ -240,6 +240,30 @@ module Competitions
         )
       end
 
+      def test_calculate_double_points_for_last_event
+        rules = { double_points_for_last_event: true, point_schedule: [ 15, 14, 13 ],members_only: false }
+        source_results = [ 
+          { "event_id" => 1, "race_id" => 1, "participant_id" => 1, "place" => "1", "date" => Date.new(2014, 9), "end_date" => Date.new(2014, 10) },
+          { "event_id" => 2, "race_id" => 2, "participant_id" => 1, "place" => "2", "date" => Date.new(2014, 10), "end_date" => Date.new(2014, 10) } 
+        ]
+        expected = [
+          result(place: 1, participant_id: 1, points: 43.0, scores: [
+             { numeric_place: 1, participant_id: 1, points: 15.0, date: Date.new(2014, 9) },
+             { numeric_place: 2, participant_id: 1, points: 28.0, date: Date.new(2014, 10) } 
+          ])
+        ]
+        actual = Calculator.calculate(source_results, rules)
+        assert_equal_results expected, actual
+      end
+      
+      def test_double_points_for_last_event
+        assert_equal 6, Calculator.points(
+          result(place: "3", date: Date.new(2015, 4, 2), end_date: Date.new(2015, 4, 2)), 
+          point_schedule: [ 7, 5, 3 ], 
+          double_points_for_last_event: true
+        )
+      end
+
       def test_add_team_sizes_empty
         assert_equal [], Calculator.add_team_sizes([], {})
       end

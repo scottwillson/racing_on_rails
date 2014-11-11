@@ -3,17 +3,18 @@ module Competitions
     module Rules
       def default_rules
         {
-          break_ties:               false,
-          dnf:                      false,
-          field_size_bonus:         false,
-          maximum_events:           UNLIMITED,
-          members_only:             true,
-          point_schedule:           nil,
-          results_per_event:        UNLIMITED,
-          results_per_race:         1,
-          source_event_ids:         nil,
-          team:                     false,
-          use_source_result_points: false
+          break_ties:                   false,
+          double_points_for_last_event: false,
+          dnf:                          false,
+          field_size_bonus:             false,
+          maximum_events:               UNLIMITED,
+          members_only:                 true,
+          point_schedule:               nil,
+          results_per_event:            UNLIMITED,
+          results_per_race:             1,
+          source_event_ids:             nil,
+          team:                         false,
+          use_source_result_points:     false
         }
       end
 

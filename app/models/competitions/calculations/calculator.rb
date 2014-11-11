@@ -132,7 +132,20 @@ module Competitions
       def self.points_from_point_schedule(result, rules)
         ((rules[:point_schedule][numeric_place(result) - 1] || 0) / (result.team_size || 1.0).to_f) *
         (result.multiplier || 1 ).to_f *
+        last_event_multiplier(result, rules[:double_points_for_last_event]) *
         field_size_multiplier(result, rules[:field_size_bonus])
+      end
+      
+      def self.last_event_multiplier(result, double_points_for_last_event)
+        if double_points_for_last_event && last_event?(result)
+          2
+        else
+          1
+        end
+      end
+      
+      def self.last_event?(result)
+        result.date == result.end_date
       end
       
       def self.field_size_multiplier(result, field_size_bonus)
