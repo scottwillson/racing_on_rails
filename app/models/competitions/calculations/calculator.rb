@@ -105,6 +105,7 @@ module Competitions
         scores.group_by { |r| r.participant_id }.map do |participant_id, person_scores|
           Struct::CalculatorResult.new.tap do |new_result|
             new_result.participant_id = participant_id
+            new_result.preliminary    = preliminary?(scores)
             new_result.points         = person_scores.map(&:points).inject(:+)
             new_result.scores         = person_scores
           end
@@ -154,6 +155,10 @@ module Competitions
         else
           1.0
         end
+      end
+      
+      def self.preliminary?(scores)
+        false
       end
     end
   end

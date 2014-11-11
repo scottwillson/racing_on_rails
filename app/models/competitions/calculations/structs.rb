@@ -30,6 +30,7 @@ module Competitions
         :participant_id, 
         :place, 
         :points, 
+        :preliminary,
         :race_id, 
         :sanctioned_by, 
         :scores,
