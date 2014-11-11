@@ -45,10 +45,6 @@ module Competitions
       4
     end
 
-    def double_points_for_last_event?
-      false
-    end
-
     def all_year
       false
     end
