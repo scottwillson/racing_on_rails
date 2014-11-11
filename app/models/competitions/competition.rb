@@ -78,10 +78,6 @@ module Competitions
       true
     end
 
-    def default_ironman
-      false
-    end
-
     def delete_races
       if races.present?
         race_ids = races.map(&:id)
@@ -269,6 +265,10 @@ module Competitions
 
     # Team-based competition? False (default) implies it is person-based?
     def team?
+      false
+    end
+
+    def default_ironman
       false
     end
 
