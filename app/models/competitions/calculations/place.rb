@@ -70,6 +70,7 @@ module Competitions
         0
       end
 
+      # Who has the most recent result?
       def compare_by_most_recent_result(x, y)
         return 0 if none?(x.scores, y.scores)
 
@@ -83,8 +84,17 @@ module Competitions
         elsif y_date.nil?
           -1
         else
-          y_date <=> x_date
+          if (y_date <=> x_date) == 0
+            # Most recent race same for both riders, so break tie by place in that race
+            compare_by_most_recent_result_place x, y
+          else
+            y_date <=> x_date
+          end
         end
+      end
+      
+      def compare_by_most_recent_result_place(x, y)
+        x.scores.max_by(&:date).numeric_place <=> y.scores.max_by(&:date).numeric_place
       end
       
       def none?(x, y)

@@ -91,6 +91,30 @@ module Competitions
         assert_equal_results expected, actual
       end
 
+      def test_last_result_should_break_tie
+        source_results = [
+          result(points: 27, participant_id: 1, scores: [ 
+            { numeric_place: 1, date: Date.new(2012, 10, 1) },
+            { numeric_place: 2, date: Date.new(2012, 10, 8) } ]),
+          result(points: 27, participant_id: 2, scores: [ 
+            { numeric_place: 2, date: Date.new(2012, 10, 1) },
+            { numeric_place: 1, date: Date.new(2012, 10, 8) } ])
+        ]
+        expected = [
+          result(place: 1, participant_id: 2, points: 27, tied: nil, scores: [ 
+            { numeric_place: 2, date: Date.new(2012, 10, 1) },
+            { numeric_place: 1, date: Date.new(2012, 10, 8) }
+          ]),
+          result(place: 2, participant_id: 1, points: 27, tied: nil, scores: [ 
+            { numeric_place: 1, date: Date.new(2012, 10, 1) },
+            { numeric_place: 2, date: Date.new(2012, 10, 8) }
+          ])
+        ]
+        actual = Calculator.place(source_results, break_ties: true)
+
+        assert_equal_results expected, actual
+      end
+
       def test_place_empty
         expected = []
         actual = Calculator.place([], break_ties: false)
