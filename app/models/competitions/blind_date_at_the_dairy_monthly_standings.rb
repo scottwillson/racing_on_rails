@@ -54,10 +54,6 @@ module Competitions
       ]
     end
 
-    def default_bar_points
-      1
-    end
-
     def point_schedule
       [ 15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
     end
@@ -81,10 +77,6 @@ module Competitions
 
     def default_bar_points
       1
-    end
-
-    def raced_minimum_events?(person, race)
-      true
     end
 
     def preliminary?(result)
