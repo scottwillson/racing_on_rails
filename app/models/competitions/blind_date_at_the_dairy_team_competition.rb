@@ -71,7 +71,6 @@ module Competitions
     
     def source_results_query(race)
       super.
-      where("results.event_id" => source_event_ids(race)).
       where("races.category_id" => category_ids_for(race))
     end
     
