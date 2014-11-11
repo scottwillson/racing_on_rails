@@ -29,7 +29,7 @@ module Competitions
 
         invalid_rules = rules.keys - default_rules.keys
         if invalid_rules.size > 0
-          raise ArgumentError, "Invalid rules: #{invalid_rules.map(", ")}. Valid: #{valid_rules}."
+          raise ArgumentError, "Invalid rules: #{invalid_rules.join(", ")}. Valid: #{default_rules.keys}."
         end
       end
     end
