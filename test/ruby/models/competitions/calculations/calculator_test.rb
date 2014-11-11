@@ -13,7 +13,7 @@ module Competitions
       def test_calculate_with_one_source_result
         source_results = [ { "event_id" => 1, "participant_id" => 1, "place" => "1", "member_from" => Date.new(2012), member_to: end_of_year, "year" => Date.today.year } ]
         expected = [
-          result(place: 1, participant_id: 1, points: 1, scores: [ { numeric_place: 1, participant_id: 1, points: 1 } ])
+          result(place: 1, participant_id: 1, points: 1, preliminary: false, scores: [ { numeric_place: 1, participant_id: 1, points: 1 } ])
         ]
         actual = Calculator.calculate(source_results)
         assert_equal_results expected, actual
