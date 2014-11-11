@@ -26,10 +26,6 @@ module Competitions
       ]
     end
 
-    def default_bar_points
-      1
-    end
-
     def point_schedule
       [ 0, 15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
     end
