@@ -5,16 +5,18 @@ module Competitions
       "Mt. Tabor Series"
     end
 
-    def create_races
-      races.create! category: Category.find_or_create_by(name: "Fixed Gear")
-      races.create! category: Category.find_or_create_by(name: "Category 4 Women")
-      races.create! category: Category.find_or_create_by(name: "Masters Women")
-      races.create! category: Category.find_or_create_by(name: "Senior Women")
-      races.create! category: Category.find_or_create_by(name: "Masters Men")
-      races.create! category: Category.find_or_create_by(name: "Category 4 Men")
-      races.create! category: Category.find_or_create_by(name: "Category 5 Men")
-      races.create! category: Category.find_or_create_by(name: "Category 3 Men")
-      races.create! category: Category.find_or_create_by(name: "Senior Men")
+    def category_names
+      [
+        "Category 3 Men",
+        "Category 4 Men",
+        "Category 4 Women",
+        "Category 5 Men",
+        "Fixed Gear",
+        "Masters Men",
+        "Masters Women",
+        "Senior Men",
+        "Senior Women"
+      ]
     end
 
     def maximum_events(race)
