@@ -8,46 +8,43 @@ module Competitions
       "Cross Crusade"
     end
 
-    def create_races
-      races.create!(category: Category.find_or_create_by(name: "Category A"))
-      races.create!(category: Category.find_or_create_by(name: "Category B"))
-      races.create!(category: Category.find_or_create_by(name: "Category C"))
-      races.create!(category: Category.find_or_create_by(name: "Masters 35+ A"))
-      races.create!(category: Category.find_or_create_by(name: "Masters 35+ B"))
-      races.create!(category: Category.find_or_create_by(name: "Masters 35+ C"))
-      races.create!(category: Category.find_or_create_by(name: "Masters 50+"))
-      races.create!(category: Category.find_or_create_by(name: "Masters 60+"))
-      races.create!(category: Category.find_or_create_by(name: "Junior Men"))
-      races.create!(category: Category.find_or_create_by(name: "Junior Men 10-12"))
-      races.create!(category: Category.find_or_create_by(name: "Junior Men 13-14"))
-      races.create!(category: Category.find_or_create_by(name: "Junior Men 15-16"))
-      races.create!(category: Category.find_or_create_by(name: "Junior Men 17-18"))
-      races.create!(category: Category.find_or_create_by(name: "Junior Women"))
-      races.create!(category: Category.find_or_create_by(name: "Junior Women 10-12"))
-      races.create!(category: Category.find_or_create_by(name: "Junior Women 13-14"))
-      races.create!(category: Category.find_or_create_by(name: "Junior Women 15-16"))
-      races.create!(category: Category.find_or_create_by(name: "Junior Women 17-18"))
-      races.create!(category: Category.find_or_create_by(name: "Women A"))
-      races.create!(category: Category.find_or_create_by(name: "Women B"))
-      races.create!(category: Category.find_or_create_by(name: "Women C"))
-      races.create!(category: Category.find_or_create_by(name: "Beginner Women"))
-      races.create!(category: Category.find_or_create_by(name: "Masters Women 35+ A"))
-      races.create!(category: Category.find_or_create_by(name: "Masters Women 35+ B"))
-      races.create!(category: Category.find_or_create_by(name: "Masters Women 45+"))
-      races.create!(category: Category.find_or_create_by(name: "Beginner Men"))
-      races.create!(category: Category.find_or_create_by(name: "Singlespeed"))
-      races.create!(category: Category.find_or_create_by(name: "Singlespeed Women"))
-      races.create!(category: Category.find_or_create_by(name: "Unicycle"))
-      races.create!(category: Category.find_or_create_by(name: "Clydesdale"))
+    def category_names
+      [
+        "Beginner Men",
+        "Beginner Women",
+        "Category A",
+        "Category B",
+        "Category C",
+        "Clydesdale",
+        "Junior Men 10-12",
+        "Junior Men 13-14",
+        "Junior Men 15-16",
+        "Junior Men 17-18",
+        "Junior Men",
+        "Junior Women 10-12",
+        "Junior Women 13-14",
+        "Junior Women 15-16",
+        "Junior Women 17-18",
+        "Junior Women",
+        "Masters 35+ A",
+        "Masters 35+ B",
+        "Masters 35+ C",
+        "Masters 50+",
+        "Masters 60+",
+        "Masters Women 35+ A",
+        "Masters Women 35+ B",
+        "Masters Women 45+",
+        "Singlespeed Women",
+        "Singlespeed",
+        "Unicycle",
+        "Women A",
+        "Women B",
+        "Women C"
+      ]
     end
 
     def point_schedule
-      [0, 26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
-    end
-
-    # Apply points from point_schedule, and split across team
-    def points_for(source_result, team_size = nil)
-      point_schedule[source_result.numeric_place].to_f
+      [ 26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
     end
 
     def minimum_events
