@@ -47,8 +47,7 @@ module Competitions
 
     def source_results_query(race)
       super.
-      where("races.category_id in (?)", category_ids_for(race)).
-      where("results.event_id" => source_events)
+      where("races.category_id in (?)", category_ids_for(race))
     end
 
     # Only members can score points?
