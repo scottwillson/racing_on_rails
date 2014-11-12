@@ -31,8 +31,9 @@ module Events
       competition_event_membership.save!
     end
 
+    # Only consider results from source_events. Default to false: use all events in year.
     def source_events?
-      respond_to? :source_events
+      false
     end
   end
 end
