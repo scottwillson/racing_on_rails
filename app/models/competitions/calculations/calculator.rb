@@ -30,6 +30,7 @@ module Competitions
       # * dnf: true/false. Count DNFs? Default to true.
       # * field_size_bonus: true/false. Default to false. Give 1.5 X points for fields of 75 or more
       # * maximum_events: 1 to UNLIMITED. Only score results up to +maximum_events+ count. For rules like: best 7 of 8.
+      # * minimum_events: integer. Only score if +minimum_events+ results. Default to nil.
       # * members_only: true/false. Default to true. Only members are counted.
       # * results_per_event: integer. Default to UNLIMITED. How many results in the same event are counted for a participant?
       # * results_per_race: integer. Default to 1. How many results in the same race are counted for a participant?
@@ -47,16 +48,18 @@ module Competitions
       # results setting multipler. Could pass in a map of event_id: multiplier instead?
       #
       # Competitions that have a field_size_bonus need to set CalculatorResult::field_size.
-      def self.calculate(results, rules = {})
+      def self.calculate(source_results, rules = {})
         rules = default_rules_merge(rules)
       
-        results = map_hashes_to_results(results)
+        results = map_hashes_to_results(source_results)
         results = add_team_sizes(results, rules)
         results = select_results(results, rules)
         scores  = map_to_scores(results, rules)
         scores  = select_scores(scores, rules)
-        results = map_to_results(scores)
-
+        results = map_to_results(scores, rules)
+        
+        results = apply_preliminary(results, source_results, rules)
+        # TODO apply_place
         place results, rules
       end
     
@@ -101,11 +104,10 @@ module Competitions
       end
     
       # Create competion results as Array of Struct::CalculatorResults from Struct::CalculatorScores.
-      def self.map_to_results(scores)
+      def self.map_to_results(scores, rules)
         scores.group_by { |r| r.participant_id }.map do |participant_id, person_scores|
           Struct::CalculatorResult.new.tap do |new_result|
             new_result.participant_id = participant_id
-            new_result.preliminary    = preliminary?(scores)
             new_result.points         = person_scores.map(&:points).inject(:+)
             new_result.scores         = person_scores
           end
@@ -146,7 +148,8 @@ module Competitions
       end
       
       def self.last_event?(result)
-        result.end_date && result.date == result.end_date
+        raise(ArgumentError, "End date required to check for last event") unless result.end_date
+        result.date == result.end_date
       end
       
       def self.field_size_multiplier(result, field_size_bonus)
@@ -157,8 +160,25 @@ module Competitions
         end
       end
       
-      def self.preliminary?(scores)
-        false
+      # Mark results as preliminary, if there is a minimum number of events
+      def self.apply_preliminary(results, source_results, rules)
+        return results if rules[:minimum_events].nil? || event_complete?(source_results) || completed_events(source_results) < rules[:minimum_events]
+        
+        results.map do |r|
+          merge_struct r, preliminary: preliminary?(r.scores, rules)
+        end
+      end
+      
+      def self.preliminary?(scores, rules)
+        scores.size < rules[:minimum_events]
+      end
+      
+      def self.event_complete?(results)
+        results.map { |r| r["date"] }.max == results.first["end_date"]
+      end
+      
+      def self.completed_events(results)
+        results.map { |r| r["event_id"] }.uniq.size
       end
     end
   end

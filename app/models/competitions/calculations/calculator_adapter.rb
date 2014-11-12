@@ -20,6 +20,7 @@ module Competitions
             double_points_for_last_event: double_points_for_last_event?,
             field_size_bonus: field_size_bonus?,
             members_only: members_only?,
+            minimum_events: minimum_events,
             maximum_events: maximum_events(race),
             point_schedule: point_schedule,
             results_per_event: results_per_event,

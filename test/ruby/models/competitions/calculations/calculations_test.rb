@@ -34,10 +34,10 @@ module Competitions
       def pretty_to_string(results)
         message = ""
         results.each do |r|
-          message << "  Result place #{r.place} participant_id: #{r.participant_id} points: #{r.points}"
+          message << "  Result place #{r.place} participant_id: #{r.participant_id} points: #{r.points} preliminary: #{r.preliminary}"
           message << "\n"
           r.scores.each do |s|
-            message << "    Score place: #{s.numeric_place} points: #{s.points}  date: #{s.date}"
+            message << "    Score place: #{s.numeric_place} points: #{s.points} date: #{s.date}"
             message << "\n"
           end
           message << "\n" if r.scores.size > 0
@@ -66,10 +66,6 @@ module Competitions
           struct
         end
         hash[:scores] = scores
-
-        if !hash.key?("preliminary")
-          hash["preliminary"] = false
-        end
 
         hash.each do |key, value|
           result[key] = value

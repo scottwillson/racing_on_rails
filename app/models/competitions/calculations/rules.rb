@@ -8,6 +8,7 @@ module Competitions
           dnf:                          false,
           field_size_bonus:             false,
           maximum_events:               UNLIMITED,
+          minimum_events:               nil,
           members_only:                 true,
           point_schedule:               nil,
           results_per_event:            UNLIMITED,

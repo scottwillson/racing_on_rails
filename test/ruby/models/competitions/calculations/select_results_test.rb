@@ -134,6 +134,59 @@ module Competitions
         assert !Calculator.member_in_year?(result(year: 2005, member_from: Date.new(1999), member_to: Date.new(2004)))
         assert  Calculator.member_in_year?(result(year: 2005, member_from: Date.new(1999), member_to: Date.new(2014)))
       end
+      
+      def test_minimum_events_before_event_complete
+        source_results = [
+          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 12, 16)),
+          result(id: 2, event_id: 2, race_id: 2, participant_id: 1, place: "6", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 12, 16)),
+          result(id: 3, event_id: 2, race_id: 2, participant_id: 2, place: "2", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 12, 16)),
+          result(id: 4, event_id: 2, race_id: 3, participant_id: 3, place: "13", date: Date.new(2014, 10, 8), end_date: Date.new(2014, 12, 16)),
+          result(id: 5, event_id: 3, race_id: 3, participant_id: 1, place: "101", date: Date.new(2014, 10, 15), end_date: Date.new(2014, 12, 16)),
+          result(id: 6, event_id: 3, race_id: 3, participant_id: 2, place: "101", date: Date.new(2014, 10, 15), end_date: Date.new(2014, 12, 16))
+        ]
+        expected = [
+          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 12, 16)),
+          result(id: 2, event_id: 2, race_id: 2, participant_id: 1, place: "6", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 12, 16)),
+          result(id: 3, event_id: 2, race_id: 2, participant_id: 2, place: "2", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 12, 16)),
+          result(id: 4, event_id: 2, race_id: 3, participant_id: 3, place: "13", date: Date.new(2014, 10, 8), end_date: Date.new(2014, 12, 16)),
+          result(id: 5, event_id: 3, race_id: 3, participant_id: 1, place: "101", date: Date.new(2014, 10, 15), end_date: Date.new(2014, 12, 16)),
+          result(id: 6, event_id: 3, race_id: 3, participant_id: 2, place: "101", date: Date.new(2014, 10, 15), end_date: Date.new(2014, 12, 16))
+        ]
+
+        actual = Calculator.select_results(
+          source_results,
+          minimum_events: 3,
+          members_only: false,
+          results_per_event: 1, 
+          results_per_race: UNLIMITED
+        )
+        assert_equal_results expected, actual
+      end
+      
+      def test_minimum_events_when_event_complete
+        source_results = [
+          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 10, 15)),
+          result(id: 2, event_id: 2, race_id: 2, participant_id: 1, place: "6", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 10, 15)),
+          result(id: 3, event_id: 2, race_id: 2, participant_id: 2, place: "2", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 10, 15)),
+          result(id: 4, event_id: 2, race_id: 3, participant_id: 3, place: "13", date: Date.new(2014, 10, 8), end_date: Date.new(2014, 10, 15)),
+          result(id: 5, event_id: 3, race_id: 3, participant_id: 1, place: "101", date: Date.new(2014, 10, 15), end_date: Date.new(2014, 10, 15)),
+          result(id: 6, event_id: 3, race_id: 3, participant_id: 2, place: "101", date: Date.new(2014, 10, 15), end_date: Date.new(2014,10, 15))
+        ]
+        expected = [
+          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 10, 15)),
+          result(id: 2, event_id: 2, race_id: 2, participant_id: 1, place: "6", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 10, 15)),
+          result(id: 5, event_id: 3, race_id: 3, participant_id: 1, place: "101", date: Date.new(2014, 10, 15), end_date: Date.new(2014, 10, 15)),
+        ]
+
+        actual = Calculator.select_results(
+          source_results,
+          minimum_events: 3,
+          members_only: false,
+          results_per_event: 1, 
+          results_per_race: UNLIMITED
+        )
+        assert_equal_results expected, actual
+      end
     end
   end
 end

@@ -69,7 +69,7 @@ module Competitions
       when "Junior Men", "Junior Women"
         [ Category.find_or_create_by(name: race.name).id ]
       else
-        super(race)
+        super race
       end
     end
   end

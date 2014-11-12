@@ -13,7 +13,7 @@ module Competitions
       def test_calculate_with_one_source_result
         source_results = [ { "event_id" => 1, "participant_id" => 1, "place" => "1", "member_from" => Date.new(2012), member_to: end_of_year, "year" => Date.today.year } ]
         expected = [
-          result(place: 1, participant_id: 1, points: 1, preliminary: false, scores: [ { numeric_place: 1, participant_id: 1, points: 1 } ])
+          result(place: 1, participant_id: 1, points: 1, scores: [ { numeric_place: 1, participant_id: 1, points: 1 } ])
         ]
         actual = Calculator.calculate(source_results)
         assert_equal_results expected, actual
@@ -165,13 +165,13 @@ module Competitions
       def test_map_to_results
         scores = [ Struct::CalculatorScore.new(nil, 2, 3, 4, 5) ]
         expected = [ result(participant_id: 3, points: 4, scores: [ { numeric_place: 2, participant_id: 3, points: 4, source_result_id: 5 } ]) ]
-        actual = Calculator.map_to_results(scores)
+        actual = Calculator.map_to_results(scores, {})
         assert_equal_results expected, actual
       end
 
       def test_map_to_results_empty
         expected = []
-        actual = Calculator.map_to_results([])
+        actual = Calculator.map_to_results([], {})
         assert_equal expected, actual
       end
 
@@ -361,6 +361,85 @@ module Competitions
         ]
         actual = Calculator.calculate(source_results, source_event_ids: [], members_only: false)
         assert_equal [], actual
+      end
+      
+      def test_set_preliminary
+        rules = { minimum_events: 2, members_only: false }
+        source_results = [ 
+          { "place" => "1", "participant_id" => 1, "event_id" => 1, "race_id" => 1, "date" => Date.new(2010, 1, 1), "end_date" => Date.new(2010, 12) },
+          { "place" => "2", "participant_id" => 2, "event_id" => 1, "race_id" => 1, "date" => Date.new(2010, 1, 1), "end_date" => Date.new(2010, 12) },
+          { "place" => "3", "participant_id" => 3, "event_id" => 1, "race_id" => 1, "date" => Date.new(2010, 1, 1), "end_date" => Date.new(2010, 12) },
+          { "place" => "1", "participant_id" => 1, "event_id" => 2, "race_id" => 2, "date" => Date.new(2010, 2, 1), "end_date" => Date.new(2010, 12) },
+          { "place" => "2", "participant_id" => 2, "event_id" => 2, "race_id" => 2, "date" => Date.new(2010, 2, 1), "end_date" => Date.new(2010, 12) },
+          { "place" => "3", "participant_id" => 1, "event_id" => 3, "race_id" => 3, "date" => Date.new(2010, 3, 1), "end_date" => Date.new(2010, 12) }
+        ]
+        expected = [
+          result(place: 1, participant_id: 1, points: 3, preliminary: false, scores: [
+             { numeric_place: 1, participant_id: 1, points: 1, date: Date.new(2010, 1, 1) },
+             { numeric_place: 1, participant_id: 1, points: 1, date: Date.new(2010, 2, 1) }, 
+             { numeric_place: 3, participant_id: 1, points: 1, date: Date.new(2010, 3, 1) }
+          ]),
+          result(place: 2, participant_id: 2, points: 2, preliminary: false, scores: [
+             { numeric_place: 2, participant_id: 2, points: 1, date: Date.new(2010, 1, 1) },
+             { numeric_place: 2, participant_id: 2, points: 1, date: Date.new(2010, 2, 1) }
+          ]),
+          result(place: 3, participant_id: 3, points: 1, preliminary: true, scores: [
+             { numeric_place: 3, participant_id: 3, points: 1, date: Date.new(2010, 1, 1) }
+          ]),
+        ]
+        actual = Calculator.calculate(source_results, rules)
+        assert_equal_results expected, actual
+      end
+      
+      def test_set_preliminary_before_minimum_events
+        rules = { minimum_events: 3, members_only: false, break_ties: true }
+        source_results = [ 
+          { "place" => "1", "participant_id" => 1, "event_id" => 1, "race_id" => 1, "date" => Date.new(2010, 1, 1), "end_date" => Date.new(2010, 12) },
+          { "place" => "2", "participant_id" => 2, "event_id" => 1, "race_id" => 1, "date" => Date.new(2010, 1, 1), "end_date" => Date.new(2010, 12) },
+          { "place" => "3", "participant_id" => 3, "event_id" => 1, "race_id" => 1, "date" => Date.new(2010, 1, 1), "end_date" => Date.new(2010, 12) },
+          { "place" => "1", "participant_id" => 1, "event_id" => 2, "race_id" => 2, "date" => Date.new(2010, 2, 1), "end_date" => Date.new(2010, 12) },
+          { "place" => "2", "participant_id" => 2, "event_id" => 2, "race_id" => 2, "date" => Date.new(2010, 2, 1), "end_date" => Date.new(2010, 12) },
+        ]
+        expected = [
+          result(place: 1, participant_id: 1, points: 2, preliminary: nil, scores: [
+             { numeric_place: 1, participant_id: 1, points: 1, date: Date.new(2010, 1, 1) },
+             { numeric_place: 1, participant_id: 1, points: 1, date: Date.new(2010, 2, 1) }, 
+          ]),
+          result(place: 2, participant_id: 2, points: 2, preliminary: nil, scores: [
+             { numeric_place: 2, participant_id: 2, points: 1, date: Date.new(2010, 1, 1) },
+             { numeric_place: 2, participant_id: 2, points: 1, date: Date.new(2010, 2, 1) }
+          ]),
+          result(place: 3, participant_id: 3, points: 1, preliminary: nil, scores: [
+             { numeric_place: 3, participant_id: 3, points: 1, date: Date.new(2010, 1, 1) }
+          ]),
+        ]
+        actual = Calculator.calculate(source_results, rules)
+        assert_equal_results expected, actual
+      end
+      
+      def test_set_preliminary_when_event_complete
+        rules = { minimum_events: 2, members_only: false }
+        source_results = [ 
+          { "place" => "1", "participant_id" => 1, "event_id" => 1, "race_id" => 1, "date" => Date.new(2010, 1, 1), "end_date" => Date.new(2010, 3, 1) },
+          { "place" => "2", "participant_id" => 2, "event_id" => 1, "race_id" => 1, "date" => Date.new(2010, 1, 1), "end_date" => Date.new(2010, 3, 1) },
+          { "place" => "3", "participant_id" => 3, "event_id" => 1, "race_id" => 1, "date" => Date.new(2010, 1, 1), "end_date" => Date.new(2010, 3, 1) },
+          { "place" => "1", "participant_id" => 1, "event_id" => 2, "race_id" => 2, "date" => Date.new(2010, 2, 1), "end_date" => Date.new(2010, 3, 1) },
+          { "place" => "2", "participant_id" => 2, "event_id" => 2, "race_id" => 2, "date" => Date.new(2010, 2, 1), "end_date" => Date.new(2010, 3, 1) },
+          { "place" => "3", "participant_id" => 1, "event_id" => 3, "race_id" => 3, "date" => Date.new(2010, 3, 1), "end_date" => Date.new(2010, 3, 1) }
+        ]
+        expected = [
+          result(place: 1, participant_id: 1, points: 3, preliminary: nil, scores: [
+             { numeric_place: 1, participant_id: 1, points: 1, date: Date.new(2010, 1, 1) },
+             { numeric_place: 1, participant_id: 1, points: 1, date: Date.new(2010, 2, 1) }, 
+             { numeric_place: 3, participant_id: 1, points: 1, date: Date.new(2010, 3, 1) }
+          ]),
+          result(place: 2, participant_id: 2, points: 2, preliminary: nil, scores: [
+             { numeric_place: 2, participant_id: 2, points: 1, date: Date.new(2010, 1, 1) },
+             { numeric_place: 2, participant_id: 2, points: 1, date: Date.new(2010, 2, 1) }
+          ])
+        ]
+        actual = Calculator.calculate(source_results, rules)
+        assert_equal_results expected, actual
       end
     end
   end
