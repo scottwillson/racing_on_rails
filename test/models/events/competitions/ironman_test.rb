@@ -128,10 +128,10 @@ module Competitions
       result1 = FactoryGirl.create(:result, person: person)
       result2 = FactoryGirl.create(:result, person: person)
 
-      Struct.new("TestResult", :place, :participant_id, :points, :scores)
+      Struct.new("TestResult", :place, :participant_id, :preliminary, :points, :scores)
       Struct.new("TestScore", :points, :source_result_id)
       scores = [ Struct::TestScore.new(1, result1.id), Struct::TestScore.new(1, result2.id) ]
-      calculated_results = [ Struct::TestResult.new(1, person.id, 2, scores) ]
+      calculated_results = [ Struct::TestResult.new(1, person.id, false, 2, scores) ]
 
       ironman = Ironman.create!
       ironman.create_competition_results_for(calculated_results, ironman.races.first)

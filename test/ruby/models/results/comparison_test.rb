@@ -8,7 +8,7 @@ module Results
     class TestResult
       include Results::Comparison
 
-      attr_accessor :id, :person_id, :person_name, :place, :points, :team_id, :team_name
+      attr_accessor :id, :person_id, :person_name, :preliminary, :place, :points, :team_id, :team_name
 
       def initialize(attr = {})
         attr.each do |k, v|
