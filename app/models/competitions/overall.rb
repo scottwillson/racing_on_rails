@@ -45,6 +45,10 @@ module Competitions
       end
     end
 
+    def source_events?
+      true
+    end
+
     def source_results_query(race)
       super.
       where("races.category_id in (?)", category_ids_for(race))
