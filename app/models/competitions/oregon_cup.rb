@@ -1,39 +1,19 @@
 module Competitions
   # Year-long best rider competition for senior men. http://obra.org/oregon_cup
   class OregonCup < Competition
+    include Competitions::Calculations::CalculatorAdapter
+
     def friendly_name
-      'Oregon Cup'
+      "Oregon Cup"
     end
 
     def point_schedule
-      [ 0, 100, 75, 60, 50, 45, 40, 35, 30, 25, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10 ]
+      [ 100, 75, 60, 50, 45, 40, 35, 30, 25, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10 ]
     end
 
-    # source_results must be in person-order
-    def source_results(race)
-      return [] if source_events(true).empty?
-
-      event_ids = source_events.collect do |event|
-        event.id
-      end
-      event_ids = event_ids.join(', ')
-
-      results = Result.find_by_sql(
-        %Q{SELECT results.* FROM results
-            LEFT OUTER JOIN races ON races.id = results.race_id
-            LEFT OUTER JOIN categories ON categories.id = races.category_id
-            LEFT OUTER JOIN events ON races.event_id = events.id
-              WHERE races.category_id is not null
-                and events.type = 'SingleDayEvent'
-                and place between 1 and 20
-                and categories.id in (#{category_ids_for(race).join(", ")})
-                and (results.category_id is null or results.category_id in (#{category_ids_for(race).join(", ")}))
-                and (events.id in (#{event_ids}) or events.parent_id in (#{event_ids}))
-           order by person_id
-         }
-      )
-      remove_duplicate_results results
-      results
+    def source_results_query(race)
+      super.
+      where("races.category_id" => category_ids_for(race))
     end
 
     # Women are often raced together and then scored separately. Combined Women 1/2/3 results count for Oregon Cup.
@@ -53,13 +33,12 @@ module Competitions
       end
     end
 
-    def create_races
-      category = Category.find_or_create_by(name: "Senior Men")
-      races.create category: category
+    def category_names
+      [ "Senior Men" ]
     end
 
-    def all_year?
-      false
+    def source_events?
+      true
     end
   end
 end
