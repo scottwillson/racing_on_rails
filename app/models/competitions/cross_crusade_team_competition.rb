@@ -1,6 +1,8 @@
 module Competitions
   # Team's top ten results for each Event. Last-place points penalty if team has fewer than ten finishers.
   class CrossCrusadeTeamCompetition < Competition
+    include Competitions::Calculations::CalculatorAdapter
+
     validates_presence_of :parent
     after_create :add_source_events
     before_create :set_notes, :set_name
@@ -26,57 +28,21 @@ module Competitions
       true
     end
 
-    def create_races
-      races.create!(category: Category.find_or_create_by(name: "Team"), result_columns: %W{ place team_name points })
+    def race_category_names
+      [ "Team" ]
     end
 
-    def add_source_events
-      parent.children.each do |source_event|
-        source_events << source_event
-      end
+    def source_results_category_names
+      CrossCrusadeOverall.new.category_names
     end
 
-    def source_results_with_benchmark(race)
-      results = []
-      Overall.benchmark("#{self.class.name} source_results", level: :debug) {
-        results = source_results(race)
-      }
-      logger.debug("#{self.class.name} Found #{results.size} source results for '#{race.name}'") if logger.debug?
-      results
+    def source_results_query(race)
+      super.
+      where("races.category_id" => category_ids_for(race))
     end
-
-    # source_results must be in team-order
-    def source_results(race)
-      return [] if parent.children.empty?
-
-      event_ids = parent.children.map(&:id)
-
-      Result.
-        includes(race: [ :category, :event ]).
-        where("results.team_id is not null").
-        where("categories.name != ?", "Junior Men").
-        where("categories.name != ?", "Junior Women").
-        where("events.id" => event_ids).
-        references(:events).
-        order("results.team_id")
-    end
-
-    def create_competition_results_for(results, race)
-      competition_result = nil
-      results.each do |source_result|
-        team = source_result.team
-        if team.member?
-          unless competition_result && competition_result.team == team
-            competition_result = Result.create!(team: team, race: race)
-          end
-
-          competition_result.scores.create!(
-            source_result: source_result,
-            competition_result: competition_result,
-            points: points_for(source_result)
-          )
-        end
-      end
+    
+    def category_ids_for(race)
+      super(race) - Category.where(name: [ "Junior Men", "Junior Women" ]).pluck(&:id)
     end
 
     def after_create_competition_results_for(race)
