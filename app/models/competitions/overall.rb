@@ -38,13 +38,6 @@ module Competitions
       "Series Overall"
     end
 
-    # TODO Remove dupe?
-    def add_source_events
-      parent.children.each do |source_event|
-        source_events << source_event
-      end
-    end
-
     def source_events?
       true
     end
