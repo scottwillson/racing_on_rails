@@ -17,7 +17,7 @@ module Competitions
               team_competition.save!
             end
             team_competition.set_date
-            team_competition.destroy_races
+            team_competition.delete_races
             team_competition.create_races
             team_competition.calculate!
           end

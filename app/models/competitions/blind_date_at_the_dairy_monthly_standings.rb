@@ -24,7 +24,7 @@ module Competitions
               end
               standings.set_date
               standings.save!
-              standings.destroy_races
+              standings.delete_races
               standings.create_races
               standings.calculate!
             end

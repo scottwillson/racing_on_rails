@@ -25,7 +25,7 @@ module Competitions
               parent.overall = overall
             end
             overall.set_date
-            overall.destroy_races
+            overall.delete_races
             overall.create_races
             overall.calculate!
           end
