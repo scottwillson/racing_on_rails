@@ -4,7 +4,9 @@ module Competitions
       def default_rules
         {
           break_ties:                   false,
+          completed_events:             nil,
           double_points_for_last_event: false,
+          end_date:                     nil,
           dnf:                          false,
           field_size_bonus:             false,
           maximum_events:               UNLIMITED,

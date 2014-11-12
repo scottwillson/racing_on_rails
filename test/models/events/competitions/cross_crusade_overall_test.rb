@@ -110,7 +110,7 @@ module Competitions
       event.races.create!(category: masters).results.create!(place: 3, person: person)
       event.races.create!(category: category_a).results.create!(place: 20, person: person)
 
-      CrossCrusadeOverall.calculate!(2008)
+      CrossCrusadeOverall.calculate! 2008
 
       masters_overall_race = series.overall.races.detect { |race| race.category == masters }
       assert_not_nil(masters_overall_race, "Should have Masters overall race")
@@ -134,7 +134,7 @@ module Competitions
 
       singlespeed_overall_race = series.overall.races.detect { |race| race.category == singlespeed }
       assert_not_nil(singlespeed_overall_race, "Should have Singlespeed overall race")
-      assert(singlespeed_overall_race.results.empty?, "Should not have any singlespeed results")
+      assert(singlespeed_overall_race.results.empty?, "Should not have any singlespeed results, but have #{singlespeed_overall_race.results.size}")
     end
   end
 end

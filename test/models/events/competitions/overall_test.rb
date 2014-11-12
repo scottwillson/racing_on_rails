@@ -8,12 +8,12 @@ module Competitions
         "Test Series"
       end
 
-      def create_races
-        races.create!(category: Category.find_or_create_by(name: "Men A"))
+      def category_names
+        [ "Men A" ]
       end
 
       def point_schedule
-        [ 0, 26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+        [ 26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
       end
 
       def minimum_events
@@ -65,72 +65,6 @@ module Competitions
       assert_equal(false, result.preliminary?, "Tonkin did two races. His result should not be preliminary")
       assert_equal Date.new(2007, 10, 7), series.reload.date, "date"
       assert_equal Date.new(2007, 11, 5), series.end_date, "end_date"
-    end
-
-    test "raced minimum events boundaries" do
-      series = Series.create!(name: "Test Series")
-      men_a = Category.find_or_create_by(name: "Men A")
-      molly = FactoryGirl.create(:person)
-      event = series.children.create!(date: Date.new(2007, 10, 7))
-
-      # Molly does three races in different categories
-      men_a_race = event.races.create!(category: men_a)
-      men_a_race.results.create!(place: 6, person: molly)
-      single_speed = FactoryGirl.create(:category, name: "Single Speed")
-      single_speed_race = event.races.create!(category: single_speed)
-      single_speed_race.results.create!(place: 8, person: molly)
-      masters_men_race = event.races.create!(category: Category.find_or_create_by(name: "Masters Men A 40+"))
-      masters_men_race.results.create!(place: 10, person: molly)
-
-      alice = FactoryGirl.create(:person)
-      men_a_race.results.create!(place: 17, person: alice)
-
-      TestOverall.calculate!(2007)
-      men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
-      assert(!series.overall.raced_minimum_events?(molly, men_a_overall_race), "One event. No people have raced minimum")
-      assert(!series.overall.raced_minimum_events?(alice, men_a_overall_race), "One event. No people have raced minimum")
-
-      event = series.children.create!(date: Date.new(2007, 10, 14))
-      men_a_race = event.races.create!(category: men_a)
-      men_a_race.results.create!(place: 14, person: molly)
-      men_a_race.results.create!(place: 6, person: alice)
-
-      TestOverall.calculate!(2007)
-      men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
-      assert(series.overall.raced_minimum_events?(molly, men_a_overall_race), "Two events. Molly has raced minimum")
-      assert(series.overall.raced_minimum_events?(alice, men_a_overall_race), "Two events. Alice hasraced minimum")
-
-      event = series.children.create!(date: Date.new(2007, 10, 21))
-      men_a_race = event.races.create!(category: men_a)
-      men_a_race.results.create!(place: "DNF", person: molly)
-      single_speed_race = event.races.create!(category: single_speed)
-      single_speed_race.results.create!(place: 8, person: alice)
-
-      TestOverall.calculate!(2007)
-      men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
-      assert(series.overall.raced_minimum_events?(molly, men_a_overall_race), "Three events. Molly has raced minimum")
-      assert(series.overall.raced_minimum_events?(alice, men_a_overall_race), "Three events. Alice has raced minimum")
-
-      event = series.children.create!(date: Date.new(2007, 10, 28))
-      event.races.create!(category: men_a)
-
-      TestOverall.calculate!(2007)
-      men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
-      assert(series.overall.raced_minimum_events?(molly, men_a_overall_race), "Four events. Molly has raced minimum")
-      assert(series.overall.raced_minimum_events?(alice, men_a_overall_race), "Four events. Alice has raced minimum")
-    end
-
-    test "minimum events should handle results without person" do
-      series = Series.create!(name: "Test Series")
-      men_a = Category.find_or_create_by(name: "Men A")
-      event = series.children.create!(date: Date.new(2007, 10, 7))
-
-      men_a_race = event.races.create!(category: men_a)
-      men_a_race.results.create!(place: 17)
-
-      TestOverall.calculate!(2007)
-      men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
-      assert(!series.overall.raced_minimum_events?(nil, men_a_overall_race), "Nil person should never have minimum events")
     end
 
     test "count six best results" do

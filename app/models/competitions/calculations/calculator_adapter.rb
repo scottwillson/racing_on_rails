@@ -18,6 +18,8 @@ module Competitions
             break_ties: break_ties?,
             dnf: dnf?,
             double_points_for_last_event: double_points_for_last_event?,
+            end_date: end_date,
+            completed_events: completed_events,
             field_size_bonus: field_size_bonus?,
             members_only: members_only?,
             minimum_events: minimum_events,
@@ -59,7 +61,6 @@ module Competitions
             "member_to", 
             "parents_events.bar_points as parent_bar_points",
             "parents_events_2.bar_points as parent_parent_bar_points",
-            "parents_events.end_date", 
             "races.bar_points as race_bar_points",
             "results.#{participant_id_attribute} as participant_id", 
             "results.event_id", 
@@ -117,6 +118,12 @@ module Competitions
       
       def field_sizes
         @field_sizes ||= ::Result.group(:race_id).count
+      end
+      
+      def completed_events
+        if minimum_events && source_events? && parent
+          parent.children_with_results.count
+        end
       end
 
       def map_team_member_to_boolean(results)
@@ -183,6 +190,7 @@ module Competitions
             person_id: person_id_for_competition_result(result),
             place: result.place,
             points: result.points,
+            preliminary: result.preliminary,
             race: race,
             team_competition_result: team?,
             team_id: team_ids[result.participant_id]
@@ -210,14 +218,16 @@ module Competitions
       
       def update_competition_result_for(result, existing_results, team_ids)
         existing_result = existing_results.detect { |r| r[participant_id_attribute] == result.participant_id }
-    
+
+        # Ensure true or false, not nil
+        existing_result.preliminary   = result.preliminary ? true : false
         # to_s important. Otherwise, a change from 3 to "3" triggers a DB update.
-        existing_result.place   = result.place.to_s
-        existing_result.points  = result.points
-        existing_result.team_id = team_ids[result.participant_id]
+        existing_result.place         = result.place.to_s
+        existing_result.points        = result.points
+        existing_result.team_id       = team_ids[result.participant_id]
 
         # TODO Why do we need explicit dirty check?
-        if existing_result.place_changed? || existing_result.team_id_changed? || existing_result.points_changed?
+        if existing_result.place_changed? || existing_result.team_id_changed? || existing_result.points_changed? || existing_result.preliminary_changed?
           existing_result.save!
         end
         

@@ -27,7 +27,13 @@ module Competitions
       # Transfrom +results+ (Array of Hashes) into competition results
       # +rules+:
       # * break_ties: true/false. Default to false. Apply tie-breaking rules to results with same points.
+      # * completed_events: integer. Default to nil. How many events in the competition have results?
+      #   Not a 'rule' but needs to be calculated from all categories. Only required for
+      #   competitions with +minimum_events+.
+      #   (One category/race may not have results for one event. Passing in *all* results for all races/categories
+      #   is a better solution, but means Calculator would use a more complicated data structure: hash instead of an array.)
       # * dnf: true/false. Count DNFs? Default to true.
+      # * end_date: Default to nil. Is this result from the last event?
       # * field_size_bonus: true/false. Default to false. Give 1.5 X points for fields of 75 or more
       # * maximum_events: 1 to UNLIMITED. Only score results up to +maximum_events+ count. For rules like: best 7 of 8.
       # * minimum_events: integer. Only score if +minimum_events+ results. Default to nil.
@@ -48,17 +54,17 @@ module Competitions
       # results setting multipler. Could pass in a map of event_id: multiplier instead?
       #
       # Competitions that have a field_size_bonus need to set CalculatorResult::field_size.
-      def self.calculate(source_results, rules = {})
+      def self.calculate(results, rules = {})
         rules = default_rules_merge(rules)
       
-        results = map_hashes_to_results(source_results)
+        results = map_hashes_to_results(results)
         results = add_team_sizes(results, rules)
         results = select_results(results, rules)
         scores  = map_to_scores(results, rules)
         scores  = select_scores(scores, rules)
         results = map_to_results(scores, rules)
         
-        results = apply_preliminary(results, source_results, rules)
+        results = apply_preliminary(results, rules)
         # TODO apply_place
         place results, rules
       end
@@ -135,21 +141,21 @@ module Competitions
       def self.points_from_point_schedule(result, rules)
         ((rules[:point_schedule][numeric_place(result) - 1] || 0) / (result.team_size || 1.0).to_f) *
         (result.multiplier || 1 ).to_f *
-        last_event_multiplier(result, rules[:double_points_for_last_event]) *
+        last_event_multiplier(result, rules) *
         field_size_multiplier(result, rules[:field_size_bonus])
       end
       
-      def self.last_event_multiplier(result, double_points_for_last_event)
-        if double_points_for_last_event && last_event?(result)
+      def self.last_event_multiplier(result, rules)
+        if rules[:double_points_for_last_event] && last_event?(result, rules)
           2
         else
           1
         end
       end
       
-      def self.last_event?(result)
-        raise(ArgumentError, "End date required to check for last event") unless result.end_date
-        result.date == result.end_date
+      def self.last_event?(result, rules)
+        raise(ArgumentError, "End date required to check for last event") unless rules[:end_date]
+        result.date == rules[:end_date]
       end
       
       def self.field_size_multiplier(result, field_size_bonus)
@@ -161,9 +167,9 @@ module Competitions
       end
       
       # Mark results as preliminary, if there is a minimum number of events
-      def self.apply_preliminary(results, source_results, rules)
-        return results if rules[:minimum_events].nil? || event_complete?(source_results) || completed_events(source_results) < rules[:minimum_events]
-        
+      def self.apply_preliminary(results, rules)
+        return results if rules[:minimum_events].nil? || event_complete?(rules) || rules[:completed_events] < rules[:minimum_events]
+          
         results.map do |r|
           merge_struct r, preliminary: preliminary?(r.scores, rules)
         end
@@ -173,12 +179,8 @@ module Competitions
         scores.size < rules[:minimum_events]
       end
       
-      def self.event_complete?(results)
-        results.map { |r| r["date"] }.max == results.first["end_date"]
-      end
-      
-      def self.completed_events(results)
-        results.map { |r| r["event_id"] }.uniq.size
+      def self.event_complete?(rules)
+        rules[:completed_events] && rules[:source_event_ids] && rules[:completed_events] == rules[:source_event_ids].size
       end
     end
   end

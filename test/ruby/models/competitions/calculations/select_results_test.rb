@@ -137,53 +137,57 @@ module Competitions
       
       def test_minimum_events_before_event_complete
         source_results = [
-          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 12, 16)),
-          result(id: 2, event_id: 2, race_id: 2, participant_id: 1, place: "6", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 12, 16)),
-          result(id: 3, event_id: 2, race_id: 2, participant_id: 2, place: "2", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 12, 16)),
-          result(id: 4, event_id: 2, race_id: 3, participant_id: 3, place: "13", date: Date.new(2014, 10, 8), end_date: Date.new(2014, 12, 16)),
-          result(id: 5, event_id: 3, race_id: 3, participant_id: 1, place: "101", date: Date.new(2014, 10, 15), end_date: Date.new(2014, 12, 16)),
-          result(id: 6, event_id: 3, race_id: 3, participant_id: 2, place: "101", date: Date.new(2014, 10, 15), end_date: Date.new(2014, 12, 16))
+          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1"),
+          result(id: 2, event_id: 2, race_id: 2, participant_id: 1, place: "6"),
+          result(id: 3, event_id: 2, race_id: 2, participant_id: 2, place: "2"),
+          result(id: 4, event_id: 2, race_id: 3, participant_id: 3, place: "13"),
+          result(id: 5, event_id: 3, race_id: 3, participant_id: 1, place: "101"),
+          result(id: 6, event_id: 3, race_id: 3, participant_id: 2, place: "101")
         ]
         expected = [
-          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 12, 16)),
-          result(id: 2, event_id: 2, race_id: 2, participant_id: 1, place: "6", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 12, 16)),
-          result(id: 3, event_id: 2, race_id: 2, participant_id: 2, place: "2", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 12, 16)),
-          result(id: 4, event_id: 2, race_id: 3, participant_id: 3, place: "13", date: Date.new(2014, 10, 8), end_date: Date.new(2014, 12, 16)),
-          result(id: 5, event_id: 3, race_id: 3, participant_id: 1, place: "101", date: Date.new(2014, 10, 15), end_date: Date.new(2014, 12, 16)),
-          result(id: 6, event_id: 3, race_id: 3, participant_id: 2, place: "101", date: Date.new(2014, 10, 15), end_date: Date.new(2014, 12, 16))
+          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1"),
+          result(id: 2, event_id: 2, race_id: 2, participant_id: 1, place: "6"),
+          result(id: 3, event_id: 2, race_id: 2, participant_id: 2, place: "2"),
+          result(id: 4, event_id: 2, race_id: 3, participant_id: 3, place: "13"),
+          result(id: 5, event_id: 3, race_id: 3, participant_id: 1, place: "101"),
+          result(id: 6, event_id: 3, race_id: 3, participant_id: 2, place: "101")
         ]
 
         actual = Calculator.select_results(
           source_results,
+          completed_events: 3,
           minimum_events: 3,
           members_only: false,
           results_per_event: 1, 
-          results_per_race: UNLIMITED
+          results_per_race: UNLIMITED,
+          source_event_ids: [ 1, 2, 3, 4, 5, 6, 7, 8 ]
         )
         assert_equal_results expected, actual
       end
       
       def test_minimum_events_when_event_complete
         source_results = [
-          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 10, 15)),
-          result(id: 2, event_id: 2, race_id: 2, participant_id: 1, place: "6", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 10, 15)),
-          result(id: 3, event_id: 2, race_id: 2, participant_id: 2, place: "2", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 10, 15)),
-          result(id: 4, event_id: 2, race_id: 3, participant_id: 3, place: "13", date: Date.new(2014, 10, 8), end_date: Date.new(2014, 10, 15)),
-          result(id: 5, event_id: 3, race_id: 3, participant_id: 1, place: "101", date: Date.new(2014, 10, 15), end_date: Date.new(2014, 10, 15)),
-          result(id: 6, event_id: 3, race_id: 3, participant_id: 2, place: "101", date: Date.new(2014, 10, 15), end_date: Date.new(2014,10, 15))
+          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1", date: Date.new(2014, 10, 1)),
+          result(id: 2, event_id: 2, race_id: 2, participant_id: 1, place: "6", date: Date.new(2014, 10, 1)),
+          result(id: 3, event_id: 2, race_id: 2, participant_id: 2, place: "2", date: Date.new(2014, 10, 1)),
+          result(id: 4, event_id: 2, race_id: 3, participant_id: 3, place: "13", date: Date.new(2014, 10, 8)),
+          result(id: 5, event_id: 3, race_id: 3, participant_id: 1, place: "101", date: Date.new(2014, 10, 15)),
+          result(id: 6, event_id: 4, race_id: 3, participant_id: 2, place: "101", date: Date.new(2014, 10, 21))
         ]
         expected = [
-          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 10, 15)),
-          result(id: 2, event_id: 2, race_id: 2, participant_id: 1, place: "6", date: Date.new(2014, 10, 1), end_date: Date.new(2014, 10, 15)),
-          result(id: 5, event_id: 3, race_id: 3, participant_id: 1, place: "101", date: Date.new(2014, 10, 15), end_date: Date.new(2014, 10, 15)),
+          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1", date: Date.new(2014, 10, 1)),
+          result(id: 2, event_id: 2, race_id: 2, participant_id: 1, place: "6", date: Date.new(2014, 10, 1)),
+          result(id: 5, event_id: 3, race_id: 3, participant_id: 1, place: "101", date: Date.new(2014, 10, 15)),
         ]
 
         actual = Calculator.select_results(
           source_results,
           minimum_events: 3,
+          completed_events: 4,
           members_only: false,
           results_per_event: 1, 
-          results_per_race: UNLIMITED
+          results_per_race: UNLIMITED,
+          source_event_ids: [ 1, 2, 3, 4 ]
         )
         assert_equal_results expected, actual
       end

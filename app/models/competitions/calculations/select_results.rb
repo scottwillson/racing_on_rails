@@ -22,7 +22,7 @@ module Competitions
 
         results = select_results_for(:event_id, results, rules[:results_per_event])
         results = select_results_for(:race_id, results, rules[:results_per_race])
-        select_results_for_minimum_events results, rules[:minimum_events]
+        select_results_for_minimum_events results, rules
       end
       
       def select_results_for(field, results, limit)
@@ -45,14 +45,14 @@ module Competitions
         result.member_to.year >= result.year
       end
       
-      def select_results_for_minimum_events(results, minimum_events)
-        if minimum_events.nil? || !event_complete?(results)
+      def select_results_for_minimum_events(results, rules)
+        if rules[:minimum_events].nil? || !event_complete?(rules)
           return results
         end
         
         results.group_by(&:participant_id).
         select do |participant_id, results|
-          results.size >= minimum_events
+          results.size >= rules[:minimum_events]
         end.
         values.
         flatten
