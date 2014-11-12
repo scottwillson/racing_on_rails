@@ -212,11 +212,6 @@ module Competitions
       end
     end
 
-    # Only consider results from source_events. Default to false: use all events in year.
-    def source_events?
-      false
-    end
-
     def source_event_ids(race)
       if source_events?
         source_events.map(&:id)
