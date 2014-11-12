@@ -78,10 +78,6 @@ module Competitions
       1
     end
 
-    def preliminary?(result)
-      false
-    end
-
     def all_year?
       false
     end
