@@ -78,8 +78,8 @@ module Competitions
       1
     end
 
-    def all_year?
-      false
+    def source_event?
+      true
     end
   end
 end

@@ -62,9 +62,5 @@ module Competitions
     def maximum_events(race)
       6
     end
-
-    def all_year?
-      false
-    end
   end
 end

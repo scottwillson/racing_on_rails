@@ -52,7 +52,11 @@ module Competitions
     end
 
     def all_year?
-      true
+      if source_events?
+        false
+      else
+        true
+      end
     end
 
     # Assert start and end dates are first and last days of the year
