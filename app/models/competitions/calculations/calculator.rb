@@ -65,8 +65,7 @@ module Competitions
         results = map_to_results(scores, rules)
         
         results = apply_preliminary(results, rules)
-        # TODO apply_place
-        place results, rules
+        apply_place results, rules
       end
     
       # Create Struct::CalculatorResults from Hashes

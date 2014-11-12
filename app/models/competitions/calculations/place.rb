@@ -2,7 +2,7 @@ module Competitions
   module Calculations
     module Place
       # Set place on array of CalculatorResults
-      def place(results, rules)
+      def apply_place(results, rules)
         place = 1
         previous_result = nil
 

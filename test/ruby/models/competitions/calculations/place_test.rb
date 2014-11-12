@@ -8,21 +8,21 @@ module Competitions
       def test_place
         source_results = [ result(points: 1) ]
         expected = [ result(place: 1, points: 1) ]
-        actual = Calculator.place(source_results, break_ties: false)
+        actual = Calculator.apply_place(source_results, break_ties: false)
         assert_equal_results expected, actual
       end
 
       def test_place_by_points
         source_results = [ result(points: 1), result(points: 10), result(points: 2) ]
         expected = [ result(place: 1, points: 10), result(place: 2, points: 2), result(place: 3, points: 1) ]
-        actual = Calculator.place(source_results, break_ties: false)
+        actual = Calculator.apply_place(source_results, break_ties: false)
         assert_equal expected, actual.sort_by(&:place)
       end
 
       def test_place_by_points_dont_break_ties
         source_results = [ result(points: 1), result(points: 10), result(points: 2), result(points: 2), result(points: 2) ]
         expected = [ result(place: 1, points: 10), result(place: 2, points: 2), result(place: 2, points: 2), result(place: 2, points: 2), result(place: 5, points: 1) ]
-        actual = Calculator.place(source_results, break_ties: false)
+        actual = Calculator.apply_place(source_results, break_ties: false)
         assert_equal expected, actual.sort_by(&:place)
       end
 
@@ -41,7 +41,7 @@ module Competitions
           result(place: 4, points: 2, scores: [ { numeric_place: 3, date: Date.new(2010) } ]),
           result(place: 5, points: 1, scores: [ { numeric_place: 5, date: Date.new(2012) } ])
         ]
-        actual = Calculator.place(source_results, break_ties: true)
+        actual = Calculator.apply_place(source_results, break_ties: true)
         assert_equal expected, actual.sort_by(&:place)
       end
 
@@ -60,7 +60,7 @@ module Competitions
           result(place: 3, participant_id: 30, points: 2, tied: true, scores: [ { numeric_place: 3, date: Date.new(2011) } ]),
           result(place: 5, participant_id: 10, points: 1, tied: nil, scores: [ { numeric_place: 5, date: Date.new(2012) } ])
         ]
-        actual = Calculator.place(source_results, break_ties: true)
+        actual = Calculator.apply_place(source_results, break_ties: true)
 
         assert_equal_results expected, actual
       end
@@ -86,7 +86,7 @@ module Competitions
           result(place: 7, points: 15, tied: nil, participant_id: 15, scores: [ { numeric_place: 7, date: Date.new(2012, 1, 1) }, { numeric_place: 8, date: Date.new(2012, 1, 1) } ]),
           result(place: 8, points: 14, tied: nil, participant_id: 17, scores: [ { numeric_place: 8, date: Date.new(2012, 6, 4) } ])
         ]
-        actual = Calculator.place(source_results, break_ties: true)
+        actual = Calculator.apply_place(source_results, break_ties: true)
 
         assert_equal_results expected, actual
       end
@@ -110,14 +110,14 @@ module Competitions
             { numeric_place: 2, date: Date.new(2012, 10, 8) }
           ])
         ]
-        actual = Calculator.place(source_results, break_ties: true)
+        actual = Calculator.apply_place(source_results, break_ties: true)
 
         assert_equal_results expected, actual
       end
 
       def test_place_empty
         expected = []
-        actual = Calculator.place([], break_ties: false)
+        actual = Calculator.apply_place([], break_ties: false)
         assert_equal expected, actual
       end
       
