@@ -78,6 +78,12 @@ module Competitions
       true
     end
 
+    def add_source_events
+      parent.children.each do |source_event|
+        source_events << source_event
+      end
+    end
+
     def delete_races
       if races.present?
         race_ids = races.map(&:id)
@@ -93,7 +99,13 @@ module Competitions
         if category.nil?
           category = Category.create!(raw_name: name)
         end
-        self.races.create(category: category) unless races.where(category: category).exists?
+        if !races.where(category: category).exists?
+          if team?
+            races.create! category: category, result_columns: %W{ place team_name points }
+          else
+            races.create! category: category
+          end
+        end
       end
     end
 
