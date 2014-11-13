@@ -52,7 +52,7 @@ module Competitions
     end
 
     def maximum_events(race)
-      7
+      6
     end
 
     def set_notes
