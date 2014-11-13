@@ -8,6 +8,7 @@ module Competitions
     end
     
     # Consider results from these categories
+    # TODO Use or remove
     def source_result_category_names
       category_names
     end
