@@ -3,30 +3,33 @@ module Competitions
     module Place
       # Set place on array of CalculatorResults
       def apply_place(results, rules)
+        results = apply_preliminary(results, rules)
+        
         place = 1
         previous_result = nil
 
-        sort_by_points(results, rules[:break_ties]).map.with_index do |result, index|
+        sort_by_points(results, rules[:break_ties], rules[:ascending_points]).map.with_index do |result, index|
           if index == 0
             place = 1
-          elsif result.points < previous_result.points
+          elsif result.points != previous_result.points
             place = index + 1
           elsif rules[:break_ties] && (!result.tied || !previous_result.tied)
             place = index + 1
           end
-
           previous_result = result
           merge_struct result, place: place
         end
       end
 
-      def sort_by_points(results, break_ties = false)
-        if break_ties
+      def sort_by_points(results, break_ties, ascending_points)
+        if ascending_points
+          results.sort_by(&:points).reverse
+        elsif break_ties
           results.sort do |x, y|
             compare_by_points x, y
           end
         else
-          results.sort_by(&:points).reverse
+          results.sort_by(&:points)
         end
       end
 

@@ -15,6 +15,7 @@ module Competitions
           
           calculated_results = Calculator.calculate(
             results,
+            ascending_points: ascending_points?,
             break_ties: break_ties?,
             dnf: dnf?,
             double_points_for_last_event: double_points_for_last_event?,
@@ -23,6 +24,7 @@ module Competitions
             field_size_bonus: field_size_bonus?,
             members_only: members_only?,
             minimum_events: minimum_events,
+            missing_result_penalty: missing_result_penalty,
             maximum_events: maximum_events(race),
             point_schedule: point_schedule,
             results_per_event: results_per_event,
@@ -121,8 +123,8 @@ module Competitions
       end
       
       def completed_events
-        if minimum_events && source_events? && parent
-          parent.children_with_results.count
+        if source_events?
+          source_events.select(&:any_results?).size
         end
       end
 
@@ -236,7 +238,7 @@ module Competitions
       
       def update_scores_for(result, existing_result)
         existing_scores = existing_result.scores.map { |s| [ s.source_result_id, s.points.to_f ] }
-        new_scores = result.scores.map { |s| [ s.source_result_id, s.points.to_f ] }
+        new_scores = result.scores.map { |s| [ s.source_result_id || existing_result.id, s.points.to_f ] }
     
         scores_to_create = new_scores - existing_scores
         scores_to_delete = existing_scores - new_scores
@@ -278,7 +280,7 @@ module Competitions
       # This is always the 'best' result
       def create_score(competition_result, source_result_id, points)
         ::Competitions::Score.create!(
-          source_result_id: source_result_id,
+          source_result_id: source_result_id || competition_result.id,
           competition_result_id: competition_result.id,
           points: points
         )

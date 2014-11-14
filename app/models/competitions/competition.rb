@@ -233,6 +233,10 @@ module Competitions
     def minimum_events
       nil
     end
+    
+    def missing_result_penalty
+      nil
+    end
 
     def maximum_events(race)
       nil

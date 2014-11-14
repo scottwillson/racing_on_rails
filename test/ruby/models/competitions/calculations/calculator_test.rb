@@ -121,6 +121,60 @@ module Competitions
         assert_equal_results expected, actual
       end
   
+      # Cross Crusade team competition
+      def test_calculate_ascending_points
+        source_results = [
+          { event_id: 1, participant_id: 1, place: 2, race_id: 1 },
+          { event_id: 1, participant_id: 1, place: 4, race_id: 1 },
+          { event_id: 1, participant_id: 2, place: 5, race_id: 1 }
+        ]
+        expected = [
+          result(place: 1, participant_id: 1, points: 2.0, scores: [ { numeric_place: 2, participant_id: 1, points: 2.0 } ]),
+          result(place: 2, participant_id: 2, points: 5.0, scores: [ { numeric_place: 5, participant_id: 2, points: 5.0 } ])
+        ]
+        actual = Calculator.calculate(
+          source_results, 
+          ascending_points: false, 
+          members_only: false,
+          point_schedule: [ 1, 2, 3, 4, 5 ], 
+          results_per_event: 10,
+          results_per_race: 1
+        )
+        assert_equal_results expected, actual
+      end
+  
+      # Cross Crusade team competition
+      def test_missing_result_penalty
+        source_results = [
+          { event_id: 1, participant_id: 10, place: 2, race_id: 100 },
+          { event_id: 1, participant_id: 10, place: 4, race_id: 100 },
+          { event_id: 1, participant_id: 20, place: 5, race_id: 100 },
+          { event_id: 1, participant_id: 10, place: 5, race_id: 200 }
+        ]
+        expected = [
+          result(place: 1, participant_id: 10, points: 107.0, scores: [ 
+            { numeric_place: 2, participant_id: 10, points: 2.0 },
+            { numeric_place: 5, participant_id: 10, points: 5.0 },
+            { numeric_place: 100, participant_id: 10, points: 100.0 }
+          ]),
+          result(place: 2, participant_id: 20, points: 205.0, scores: [ 
+            { numeric_place: 5, participant_id: 20, points: 5.0 },
+            { numeric_place: 100, participant_id: 20, points: 200 }
+          ])
+        ]
+        actual = Calculator.calculate(
+          source_results, 
+          ascending_points: false, 
+          completed_events: 1,
+          members_only: false,
+          missing_result_penalty: 100,
+          point_schedule: [ 1, 2, 3, 4, 5 ], 
+          results_per_event: 3,
+          results_per_race: 1
+        )
+        assert_equal_results expected, actual
+      end
+  
       def test_team_membership
         source_results = [
           result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200",

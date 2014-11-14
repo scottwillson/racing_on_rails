@@ -26,17 +26,20 @@ module Competitions
 
       # Transfrom +results+ (Array of Hashes) into competition results
       # +rules+:
+      # * ascending_points: true/boolean. Default to true. For fewest-points wins competitions.
       # * break_ties: true/false. Default to false. Apply tie-breaking rules to results with same points.
       # * completed_events: integer. Default to nil. How many events in the competition have results?
       #   Not a 'rule' but needs to be calculated from all categories. Only required for
       #   competitions with +minimum_events+.
       #   (One category/race may not have results for one event. Passing in *all* results for all races/categories
       #   is a better solution, but means Calculator would use a more complicated data structure: hash instead of an array.)
-      # * dnf: true/false. Count DNFs? Default to true.
+      # * dnf: true/false. Count DNFs? Default to false.
       # * end_date: Default to nil. Is this result from the last event?
       # * field_size_bonus: true/false. Default to false. Give 1.5 X points for fields of 75 or more
       # * maximum_events: 1 to UNLIMITED. Only score results up to +maximum_events+ count. For rules like: best 7 of 8.
       # * minimum_events: integer. Only score if +minimum_events+ results. Default to nil.
+      # * missing_result_penalty: integer. Default nil. For fewest-points wins competitions. Give penalty for if a participant
+      #   has fewer than results_per_event.
       # * members_only: true/false. Default to true. Only members are counted.
       # * results_per_event: integer. Default to UNLIMITED. How many results in the same event are counted for a participant?
       # * results_per_race: integer. Default to 1. How many results in the same race are counted for a participant?
@@ -58,14 +61,13 @@ module Competitions
         rules = default_rules_merge(rules)
       
         results = map_hashes_to_results(results)
-        results = add_team_sizes(results, rules)
-        results = select_results(results, rules)
-        scores  = map_to_scores(results, rules)
-        scores  = select_scores(scores, rules)
-        results = map_to_results(scores, rules)
-        
-        results = apply_preliminary(results, rules)
-        apply_place results, rules
+        # TODO add_team_sizes => apply_team_sizes
+        results = add_team_sizes results, rules
+        results = select_results results, rules
+        scores  = map_to_scores  results, rules
+        scores  = select_scores  scores,  rules
+        results = map_to_results scores,  rules
+                  apply_place    results, rules
       end
     
       # Create Struct::CalculatorResults from Hashes
@@ -105,7 +107,27 @@ module Competitions
             new_score.participant_id   = result.participant_id
             new_score.points           = points(result, rules)
           end
+        end + 
+        add_missing_result_penalty_scores(results, rules)
+      end
+    
+      def self.add_missing_result_penalty_scores(results, rules)
+        return [] if rules[:missing_result_penalty].nil?
+        
+        missing_scores = []
+        results.group_by(&:participant_id).
+        each do |participant_id, participant_results|
+          if participant_results.size < rules[:results_per_event] * rules[:completed_events]
+            missing_scores << Struct::CalculatorScore.new.tap do |new_score|
+              new_score.date             = rules[:end_date]
+              new_score.numeric_place    = rules[:missing_result_penalty]
+              new_score.participant_id   = participant_id
+              new_score.points           = ((rules[:results_per_event] * rules[:completed_events]) - participant_results.size) * rules[:missing_result_penalty]
+            end
+          end
         end
+
+        missing_scores
       end
     
       # Create competion results as Array of Struct::CalculatorResults from Struct::CalculatorScores.
@@ -138,6 +160,10 @@ module Competitions
       end
       
       def self.points_from_point_schedule(result, rules)
+        if rules[:missing_result_penalty] && numeric_place(result) > rules[:missing_result_penalty]
+          return rules[:missing_result_penalty]
+        end
+        
         ((rules[:point_schedule][numeric_place(result) - 1] || 0) / (result.team_size || 1.0).to_f) *
         (result.multiplier || 1 ).to_f *
         last_event_multiplier(result, rules) *

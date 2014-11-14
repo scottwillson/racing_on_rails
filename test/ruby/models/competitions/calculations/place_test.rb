@@ -15,15 +15,15 @@ module Competitions
       def test_place_by_points
         source_results = [ result(points: 1), result(points: 10), result(points: 2) ]
         expected = [ result(place: 1, points: 10), result(place: 2, points: 2), result(place: 3, points: 1) ]
-        actual = Calculator.apply_place(source_results, break_ties: false)
+        actual = Calculator.apply_place(source_results, break_ties: false, ascending_points: true)
         assert_equal expected, actual.sort_by(&:place)
       end
 
       def test_place_by_points_dont_break_ties
         source_results = [ result(points: 1), result(points: 10), result(points: 2), result(points: 2), result(points: 2) ]
         expected = [ result(place: 1, points: 10), result(place: 2, points: 2), result(place: 2, points: 2), result(place: 2, points: 2), result(place: 5, points: 1) ]
-        actual = Calculator.apply_place(source_results, break_ties: false)
-        assert_equal expected, actual.sort_by(&:place)
+        actual = Calculator.apply_place(source_results, break_ties: false, ascending_points: true)
+        assert_equal expected.sort_by(&:place), actual.sort_by(&:place)
       end
 
       def test_place_by_points_break_ties

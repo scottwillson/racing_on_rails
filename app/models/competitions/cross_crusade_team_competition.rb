@@ -32,57 +32,40 @@ module Competitions
       [ "Team" ]
     end
 
-    def source_results_category_names
-      CrossCrusadeOverall.new.category_names
+    def category_names
+      [
+        "Beginner Men",
+        "Beginner Women",
+        "Category A",
+        "Category B",
+        "Category C",
+        "Clydesdale",
+        "Junior Men",
+        "Junior Women",
+        "Masters 35+ A",
+        "Masters 35+ B",
+        "Masters 35+ C",
+        "Masters 50+",
+        "Masters 60+",
+        "Masters Women 35+ A",
+        "Masters Women 35+ B",
+        "Masters Women 45+",
+        "Singlespeed Women",
+        "Singlespeed",
+        "Unicycle",
+        "Women A",
+        "Women B",
+        "Women C"
+      ]
     end
 
     def source_results_query(race)
       super.
-      where("races.category_id" => category_ids_for(race))
-    end
-    
-    def category_ids_for(race)
-      super(race) - Category.where(name: [ "Junior Men", "Junior Women" ]).pluck(&:id)
+      where("results.race_name" => category_names)
     end
 
-    def after_create_competition_results_for(race)
-      source_events.select(&:any_results?).each do |source_event|
-        race.results.each do |competition_result|
-          scores_for_event_count = Competitions::Score.
-            includes(source_result: { race: :event }).
-            where(competition_result_id: competition_result.id, "events.id" => source_event.id).
-            count
-
-          case scores_for_event_count
-          when 0
-            competition_result.scores.create!(
-              points: 1_000,
-              competition_result: competition_result,
-              source_result: competition_result,
-              event_name: source_event.full_name,
-              description: "Absentee Warriors",
-              date: source_event.date
-            )
-          when 1..10
-            competition_result.scores.create!(
-              points: 100 * (10 - scores_for_event_count),
-              competition_result: competition_result,
-              source_result: competition_result,
-              event_name: source_event.full_name,
-              description: "Absentee Warriors",
-              date: source_event.date
-            )
-          else
-            scores_for_event = competition_result.scores.select { |s| s.source_result.event == source_event }
-            lowest_scores = scores_for_event.sort_by(&:points)[10, scores_for_event.count - 10]
-            lowest_scores.each do |lowest_score|
-              competition_result.scores.destroy lowest_score
-            end
-            # Rails destroys Score in database, but doesn't update the current association
-            competition_result.scores true
-          end
-        end
-      end
+    def ascending_points?
+      false
     end
 
     # Member teams, people
@@ -90,17 +73,12 @@ module Competitions
       false
     end
 
-    def ascending_points?
+    def break_ties?
       false
     end
-
-    def points_for(source_result)
-      place = source_result.numeric_place
-      if place > 0 && place < 100
-        place
-      else
-        100
-      end
+    
+    def point_schedule
+      @point_schedule ||= (1..100).to_a
     end
 
     def set_notes
@@ -111,8 +89,24 @@ module Competitions
       self.name = "Team Competition"
     end
 
-    def all_year?
-      false
+    def source_events?
+      true
+    end
+
+    def results_per_race
+      Competition::UNLIMITED
+    end
+
+    def results_per_event
+      10
+    end
+    
+    def missing_result_penalty
+      100
+    end
+
+    def team?
+      true
     end
   end
 end
