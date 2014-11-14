@@ -161,6 +161,54 @@ module Competitions
         assert_equal_results expected, actual
       end
 
+      def test_highest_result_breaks_three_way_tie_2
+        source_results = [
+          result(points: 38, participant_id: 1, scores: [ 
+            { numeric_place: 3, date: Date.new(2012, 9, 17) },
+            { numeric_place: 2, date: Date.new(2012, 9, 24) },
+            { numeric_place: 5, date: Date.new(2012, 10, 1) },
+            { numeric_place: 5, date: Date.new(2012, 10, 8) },
+          ]),
+          result(points: 38, participant_id: 2, scores: [ 
+            { numeric_place: 4, date: Date.new(2012, 9, 10) },
+            { numeric_place: 5, date: Date.new(2012, 9, 17) },
+            { numeric_place: 4, date: Date.new(2012, 9, 24) },
+            { numeric_place: 6, date: Date.new(2012, 10, 1) },
+            { numeric_place: 8, date: Date.new(2012, 10, 8) },
+          ]),
+          result(points: 38, participant_id: 3, scores: [ 
+            { numeric_place: 2, date: Date.new(2012, 9, 10) },
+            { numeric_place: 6, date: Date.new(2012, 9, 24) },
+            { numeric_place: 4, date: Date.new(2012, 10, 1) },
+            { numeric_place: 3, date: Date.new(2012, 10, 8) },
+          ]),
+        ]
+        expected = [
+          result(place: 1, points: 38, participant_id: 3, tied: nil, scores: [ 
+            { numeric_place: 2, date: Date.new(2012, 9, 10) },
+            { numeric_place: 6, date: Date.new(2012, 9, 24) },
+            { numeric_place: 4, date: Date.new(2012, 10, 1) },
+            { numeric_place: 3, date: Date.new(2012, 10, 8) },
+          ]),
+          result(place: 2, points: 38, participant_id: 1, tied: nil, scores: [ 
+            { numeric_place: 3, date: Date.new(2012, 9, 17) },
+            { numeric_place: 2, date: Date.new(2012, 9, 24) },
+            { numeric_place: 5, date: Date.new(2012, 10, 1) },
+            { numeric_place: 5, date: Date.new(2012, 10, 8) },
+          ]),
+          result(place: 3, points: 38, participant_id: 2, tied: nil, scores: [ 
+            { numeric_place: 4, date: Date.new(2012, 9, 10) },
+            { numeric_place: 5, date: Date.new(2012, 9, 17) },
+            { numeric_place: 4, date: Date.new(2012, 9, 24) },
+            { numeric_place: 6, date: Date.new(2012, 10, 1) },
+            { numeric_place: 8, date: Date.new(2012, 10, 8) },
+          ]),
+        ]
+        actual = Calculator.apply_place(source_results, break_ties: true)
+
+        assert_equal_results expected, actual
+      end
+
       def test_highest_place_in_last_race_breaks_tie
         source_results = [
           result(points: 27, participant_id: 1, scores: [ 
