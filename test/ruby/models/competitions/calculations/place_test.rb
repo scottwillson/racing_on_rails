@@ -115,7 +115,7 @@ module Competitions
         assert_equal_results expected, actual
       end
 
-      def test_highest_result_breaks_three_waytie
+      def test_highest_result_breaks_three_way_tie
         source_results = [
           result(points: 62, participant_id: 1, scores: [ 
             { numeric_place: 6, date: Date.new(2012, 10, 2) },
@@ -161,7 +161,7 @@ module Competitions
         assert_equal_results expected, actual
       end
 
-      def test_last_result_should_break_tie
+      def test_highest_place_in_last_race_breaks_tie
         source_results = [
           result(points: 27, participant_id: 1, scores: [ 
             { numeric_place: 1, date: Date.new(2012, 10, 1) },
@@ -179,6 +179,32 @@ module Competitions
             { numeric_place: 1, date: Date.new(2012, 10, 1) },
             { numeric_place: 2, date: Date.new(2012, 10, 8) }
           ])
+        ]
+        actual = Calculator.apply_place(source_results, break_ties: true)
+
+        assert_equal_results expected, actual
+      end
+
+      def test_last_result_should_break_tie
+        source_results = [
+          result(points: 27, participant_id: 1, scores: [ 
+            { numeric_place: 1, date: Date.new(2012, 10, 1) },
+            { numeric_place: 2, date: Date.new(2012, 10, 19) } 
+          ]),
+          result(points: 27, participant_id: 2, scores: [ 
+            { numeric_place: 2, date: Date.new(2012, 10, 1) },
+            { numeric_place: 1, date: Date.new(2012, 10, 8) }
+          ])
+        ]
+        expected = [
+          result(place: 1, participant_id: 1, points: 27, tied: nil, scores: [ 
+            { numeric_place: 1, date: Date.new(2012, 10, 1) },
+            { numeric_place: 2, date: Date.new(2012, 10, 19) }
+          ]),
+          result(place: 2, participant_id: 2, points: 27, tied: nil, scores: [ 
+            { numeric_place: 2, date: Date.new(2012, 10, 1) },
+            { numeric_place: 1, date: Date.new(2012, 10, 8) }
+          ]),
         ]
         actual = Calculator.apply_place(source_results, break_ties: true)
 
