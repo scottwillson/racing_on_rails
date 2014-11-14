@@ -78,7 +78,7 @@ module Competitions
       1
     end
 
-    def source_event?
+    def source_events?
       true
     end
   end
