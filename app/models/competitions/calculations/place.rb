@@ -8,7 +8,7 @@ module Competitions
         place = 1
         previous_result = nil
 
-        sort_by_points(results, rules[:break_ties], rules[:ascending_points]).map.with_index do |result, index|
+        sort_by_points(results, rules[:break_ties], rules[:most_points_win]).map.with_index do |result, index|
           if index == 0
             place = 1
           elsif result.points != previous_result.points
@@ -21,13 +21,13 @@ module Competitions
         end
       end
 
-      def sort_by_points(results, break_ties, ascending_points)
-        if ascending_points
-          results.sort_by(&:points).reverse
-        elsif break_ties
+      def sort_by_points(results, break_ties, most_points_win)
+        if break_ties
           results.sort do |x, y|
             compare_by_points x, y
           end
+        elsif most_points_win
+          results.sort_by(&:points).reverse
         else
           results.sort_by(&:points)
         end
@@ -109,6 +109,7 @@ module Competitions
         (x || y) && (x.size > 0 || y.size > 0)
       end
       
+      # Sort places highest (worst) to lowest (best) so caller can use #pop
       def places(scores)
         (scores || []).map(&:numeric_place).sort.reverse
       end
