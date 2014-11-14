@@ -61,13 +61,12 @@ module Competitions
         rules = default_rules_merge(rules)
       
         results = map_hashes_to_results(results)
-        # TODO add_team_sizes => apply_team_sizes
-        results = add_team_sizes results, rules
-        results = select_results results, rules
-        scores  = map_to_scores  results, rules
-        scores  = select_scores  scores,  rules
-        results = map_to_results scores,  rules
-                  apply_place    results, rules
+        results = apply_team_sizes results, rules
+        results = select_results   results, rules
+        scores  = map_to_scores    results, rules
+        scores  = select_scores    scores,  rules
+        results = map_to_results   scores,  rules
+                  apply_place      results, rules
       end
     
       # Create Struct::CalculatorResults from Hashes
@@ -81,7 +80,7 @@ module Competitions
         end
       end
 
-      def self.add_team_sizes(results, rules)
+      def self.apply_team_sizes(results, rules)
         # No point in figuring team size if just reusing points
         if rules[:use_source_result_points]
           return results

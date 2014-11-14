@@ -365,11 +365,11 @@ module Competitions
         )
       end
 
-      def test_add_team_sizes_empty
-        assert_equal [], Calculator.add_team_sizes([], {})
+      def test_apply_team_sizes_empty
+        assert_equal [], Calculator.apply_team_sizes([], {})
       end
 
-      def test_add_team_sizes
+      def test_apply_team_sizes
         expected = [
           result(place: 1, race_id: 1, team_size: 2),
           result(place: 1, race_id: 1, team_size: 2),
@@ -388,7 +388,7 @@ module Competitions
           result(place: 3, race_id: 1),
           result(place: 1, race_id: 2)
         ]
-        assert_equal expected, Calculator.add_team_sizes(results, {})
+        assert_equal expected, Calculator.apply_team_sizes(results, {})
       end
 
       def test_map_hashes_to_results
