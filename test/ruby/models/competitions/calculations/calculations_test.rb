@@ -6,8 +6,8 @@ module Competitions
       def assert_equal_results(expected, actual)
         [ expected, actual ].each do |results|
           results.each { |result| result.scores.sort_by!(&:numeric_place); result.scores.sort_by!(&:date) }
-          results.sort_by!(&:participant_id)
           results.sort_by!(&:place)
+          results.sort_by!(&:participant_id)
         end
 
         unless expected == actual

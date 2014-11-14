@@ -48,7 +48,7 @@ module Competitions
       cem ? cem.points_factor : 1
     end
 
-    def ascending_points?
+    def most_points_win?
       true
     end
 

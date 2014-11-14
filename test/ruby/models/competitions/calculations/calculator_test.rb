@@ -122,7 +122,7 @@ module Competitions
       end
   
       # Cross Crusade team competition
-      def test_calculate_ascending_points
+      def test_calculate_most_points_win
         source_results = [
           { event_id: 1, participant_id: 1, place: 2, race_id: 1 },
           { event_id: 1, participant_id: 1, place: 4, race_id: 1 },
@@ -134,8 +134,8 @@ module Competitions
         ]
         actual = Calculator.calculate(
           source_results, 
-          ascending_points: false, 
           members_only: false,
+          most_points_win: false, 
           point_schedule: [ 1, 2, 3, 4, 5 ], 
           results_per_event: 10,
           results_per_race: 1
@@ -164,10 +164,10 @@ module Competitions
         ]
         actual = Calculator.calculate(
           source_results, 
-          ascending_points: false, 
           completed_events: 1,
           members_only: false,
           missing_result_penalty: 100,
+          most_points_win: false, 
           point_schedule: [ 1, 2, 3, 4, 5 ], 
           results_per_event: 3,
           results_per_race: 1

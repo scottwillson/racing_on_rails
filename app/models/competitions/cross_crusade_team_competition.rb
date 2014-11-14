@@ -64,7 +64,7 @@ module Competitions
       where("results.race_name" => category_names)
     end
 
-    def ascending_points?
+    def most_points_win?
       false
     end
 

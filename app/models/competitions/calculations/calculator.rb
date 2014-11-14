@@ -26,7 +26,6 @@ module Competitions
 
       # Transfrom +results+ (Array of Hashes) into competition results
       # +rules+:
-      # * ascending_points: true/boolean. Default to true. For fewest-points wins competitions.
       # * break_ties: true/false. Default to false. Apply tie-breaking rules to results with same points.
       # * completed_events: integer. Default to nil. How many events in the competition have results?
       #   Not a 'rule' but needs to be calculated from all categories. Only required for
@@ -41,6 +40,7 @@ module Competitions
       # * missing_result_penalty: integer. Default nil. For fewest-points wins competitions. Give penalty for if a participant
       #   has fewer than results_per_event.
       # * members_only: true/false. Default to true. Only members are counted.
+      # * most_points_win: true/boolean. Default to true. For fewest-points wins competitions.
       # * results_per_event: integer. Default to UNLIMITED. How many results in the same event are counted for a participant?
       # * results_per_race: integer. Default to 1. How many results in the same race are counted for a participant?
       #   Used for team competitions. Team is the participant.

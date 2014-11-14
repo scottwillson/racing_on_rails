@@ -3,7 +3,6 @@ module Competitions
     module Rules
       def default_rules
         {
-          ascending_points:             true,
           break_ties:                   false,
           completed_events:             nil,
           double_points_for_last_event: false,
@@ -14,6 +13,7 @@ module Competitions
           minimum_events:               nil,
           missing_result_penalty:       nil,
           members_only:                 true,
+          most_points_win:              true,
           point_schedule:               nil,
           results_per_event:            UNLIMITED,
           results_per_race:             1,
@@ -38,8 +38,8 @@ module Competitions
           raise ArgumentError, "Invalid rules: #{invalid_rules.join(", ")}. Valid: #{default_rules.keys}."
         end
         
-        if rules[:break_ties] == true && !rules[:ascending_points].nil? && rules[:ascending_points] == false
-          raise ArgumentError, "Can't combine break_ties and descending_points"
+        if rules[:break_ties] == true && !rules[:most_points_win].nil? && rules[:most_points_win] == false
+          raise ArgumentError, "Can only break ties if most points win"
         end
       end
     end

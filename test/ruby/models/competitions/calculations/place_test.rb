@@ -15,31 +15,31 @@ module Competitions
       def test_place_by_points
         source_results = [ result(points: 1), result(points: 10), result(points: 2) ]
         expected = [ result(place: 1, points: 10), result(place: 2, points: 2), result(place: 3, points: 1) ]
-        actual = Calculator.apply_place(source_results, break_ties: false, ascending_points: true)
+        actual = Calculator.apply_place(source_results, break_ties: false, most_points_win: true)
         assert_equal expected, actual.sort_by(&:place)
       end
 
       def test_place_by_points_dont_break_ties
         source_results = [ result(points: 1), result(points: 10), result(points: 2), result(points: 2), result(points: 2) ]
         expected = [ result(place: 1, points: 10), result(place: 2, points: 2), result(place: 2, points: 2), result(place: 2, points: 2), result(place: 5, points: 1) ]
-        actual = Calculator.apply_place(source_results, break_ties: false, ascending_points: true)
+        actual = Calculator.apply_place(source_results, break_ties: false, most_points_win: true)
         assert_equal expected.sort_by(&:place), actual.sort_by(&:place)
       end
 
       def test_place_by_points_break_ties
         source_results = [
-          result(points: 1, scores: [ { numeric_place: 5, date: Date.new(2012) } ]),
+          result(points: 1,  scores: [ { numeric_place: 5, date: Date.new(2012) } ]),
           result(points: 10, scores: [ { numeric_place: 1, date: Date.new(2012) } ]),
-          result(points: 2, scores: [ { numeric_place: 3, date: Date.new(2011) } ]),
-          result(points: 2, scores: [ { numeric_place: 3, date: Date.new(2010) } ]),
-          result(points: 2, scores: [ { numeric_place: 3, date: Date.new(2012) } ])
+          result(points: 2,  scores: [ { numeric_place: 3, date: Date.new(2011) } ]),
+          result(points: 2,  scores: [ { numeric_place: 3, date: Date.new(2010) } ]),
+          result(points: 2,  scores: [ { numeric_place: 3, date: Date.new(2012) } ])
         ]
         expected = [
           result(place: 1, points: 10, scores: [ { numeric_place: 1, date: Date.new(2012) } ]),
-          result(place: 2, points: 2, scores: [ { numeric_place: 3, date: Date.new(2012) } ]),
-          result(place: 3, points: 2, scores: [ { numeric_place: 3, date: Date.new(2011) } ]),
-          result(place: 4, points: 2, scores: [ { numeric_place: 3, date: Date.new(2010) } ]),
-          result(place: 5, points: 1, scores: [ { numeric_place: 5, date: Date.new(2012) } ])
+          result(place: 2, points: 2,  scores: [ { numeric_place: 3, date: Date.new(2012) } ]),
+          result(place: 3, points: 2,  scores: [ { numeric_place: 3, date: Date.new(2011) } ]),
+          result(place: 4, points: 2,  scores: [ { numeric_place: 3, date: Date.new(2010) } ]),
+          result(place: 5, points: 1,  scores: [ { numeric_place: 5, date: Date.new(2012) } ])
         ]
         actual = Calculator.apply_place(source_results, break_ties: true)
         assert_equal expected, actual.sort_by(&:place)
@@ -85,6 +85,76 @@ module Competitions
           result(place: 6, points: 15, tied: nil, participant_id: 14, scores: [ { numeric_place: 1, date: Date.new(2012, 4, 28) } ]),
           result(place: 7, points: 15, tied: nil, participant_id: 15, scores: [ { numeric_place: 7, date: Date.new(2012, 1, 1) }, { numeric_place: 8, date: Date.new(2012, 1, 1) } ]),
           result(place: 8, points: 14, tied: nil, participant_id: 17, scores: [ { numeric_place: 8, date: Date.new(2012, 6, 4) } ])
+        ]
+        actual = Calculator.apply_place(source_results, break_ties: true)
+
+        assert_equal_results expected, actual
+      end
+
+      def test_highest_result_breaks_tie
+        source_results = [
+          result(points: 27, participant_id: 1, scores: [ 
+            { numeric_place: 1, date: Date.new(2012, 10, 1) },
+            { numeric_place: 2, date: Date.new(2012, 10, 8) } ]),
+          result(points: 27, participant_id: 2, scores: [ 
+            { numeric_place: 3, date: Date.new(2012, 10, 1) },
+            { numeric_place: 1, date: Date.new(2012, 10, 8) } ])
+        ]
+        expected = [
+          result(place: 1, participant_id: 1, points: 27, tied: nil, scores: [ 
+            { numeric_place: 1, date: Date.new(2012, 10, 1) },
+            { numeric_place: 2, date: Date.new(2012, 10, 8) }
+          ]),
+          result(place: 2, participant_id: 2, points: 27, tied: nil, scores: [ 
+            { numeric_place: 3, date: Date.new(2012, 10, 1) },
+            { numeric_place: 1, date: Date.new(2012, 10, 8) }
+          ])
+        ]
+        actual = Calculator.apply_place(source_results, break_ties: true)
+
+        assert_equal_results expected, actual
+      end
+
+      def test_highest_result_breaks_three_waytie
+        source_results = [
+          result(points: 62, participant_id: 1, scores: [ 
+            { numeric_place: 6, date: Date.new(2012, 10, 2) },
+            { numeric_place: 2, date: Date.new(2012, 10, 19) },
+            { numeric_place: 6, date: Date.new(2012, 11, 1) },
+            { numeric_place: 3, date: Date.new(2012, 11, 2) },
+          ]),
+          result(points: 62, participant_id: 2, scores: [ 
+            { numeric_place: 8, date: Date.new(2012, 10, 11) },
+            { numeric_place: 4, date: Date.new(2012, 10, 12) },
+            { numeric_place: 3, date: Date.new(2012, 10, 19) },
+            { numeric_place: 2, date: Date.new(2012, 11, 9) },
+          ]),
+          result(points: 62, participant_id: 3, scores: [ 
+            { numeric_place: 4, date: Date.new(2012, 10, 11) },
+            { numeric_place: 2, date: Date.new(2012, 10, 12) },
+            { numeric_place: 6, date: Date.new(2012, 10, 19) },
+            { numeric_place: 5, date: Date.new(2012, 10, 26) },
+          ]),
+        ]
+        expected = [
+          result(place: 1, points: 62, participant_id: 2, tied: nil, scores: [ 
+            { numeric_place: 8, date: Date.new(2012, 10, 11) },
+            { numeric_place: 4, date: Date.new(2012, 10, 12) },
+            { numeric_place: 3, date: Date.new(2012, 10, 19) },
+            { numeric_place: 2, date: Date.new(2012, 11, 9) },
+          ]),
+          result(place: 2, points: 62, participant_id: 1, tied: nil, scores: [ 
+            { numeric_place: 6, date: Date.new(2012, 10, 2) },
+            { numeric_place: 2, date: Date.new(2012, 10, 19) },
+            { numeric_place: 6, date: Date.new(2012, 11, 1) },
+            { numeric_place: 3, date: Date.new(2012, 11, 2) },
+          ]),
+          result(place: 3, points: 62, participant_id: 3, tied: nil, scores: [ 
+            { numeric_place: 4, date: Date.new(2012, 10, 11) },
+            { numeric_place: 2, date: Date.new(2012, 10, 12) },
+            { numeric_place: 6, date: Date.new(2012, 10, 19) },
+            { numeric_place: 5, date: Date.new(2012, 10, 26) },
+          ]),
         ]
         actual = Calculator.apply_place(source_results, break_ties: true)
 

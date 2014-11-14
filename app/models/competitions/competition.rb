@@ -138,7 +138,7 @@ module Competitions
         create_competition_results_for results, race
         after_create_competition_results_for race
         race.results.each(&:update_points!)
-        race.place_results_by_points break_ties?, ascending_points?
+        race.place_results_by_points break_ties?, most_points_win?
       end
 
       after_calculate

@@ -15,7 +15,6 @@ module Competitions
           
           calculated_results = Calculator.calculate(
             results,
-            ascending_points: ascending_points?,
             break_ties: break_ties?,
             dnf: dnf?,
             double_points_for_last_event: double_points_for_last_event?,
@@ -26,6 +25,7 @@ module Competitions
             minimum_events: minimum_events,
             missing_result_penalty: missing_result_penalty,
             maximum_events: maximum_events(race),
+            most_points_win: most_points_win?,
             point_schedule: point_schedule,
             results_per_event: results_per_event,
             results_per_race: results_per_race,
