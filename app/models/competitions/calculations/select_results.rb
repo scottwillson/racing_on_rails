@@ -7,6 +7,10 @@ module Competitions
       # Only keep best +results_per_event+ results for participant (person or team).
       def select_results(results, rules)
         results = results.select { |r| r.participant_id && ![ nil, "", "DQ", "DNS" ].include?(r.place) }
+        
+        if !rules[:dnf]
+          results = results.reject { |r| r.place == "DNF" }
+        end
 
         if rules[:members_only] && rules[:team]
           results = results.select(&:team_member)
