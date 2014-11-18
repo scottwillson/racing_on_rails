@@ -34,6 +34,7 @@ module Competitions
 
     def category_names
       [
+        "Athena",
         "Beginner Men",
         "Beginner Women",
         "Category A",
@@ -76,7 +77,7 @@ module Competitions
     def break_ties?
       false
     end
-    
+
     def point_schedule
       @point_schedule ||= (1..100).to_a
     end
@@ -100,7 +101,7 @@ module Competitions
     def results_per_event
       10
     end
-    
+
     def missing_result_penalty
       100
     end
