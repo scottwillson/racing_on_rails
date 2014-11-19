@@ -10,6 +10,7 @@ module Competitions
 
     def category_names
       [
+        "Athena",
         "Beginner Men",
         "Beginner Women",
         "Category A",
@@ -62,7 +63,7 @@ module Competitions
     def set_name
       self.name = "Series Overall"
     end
-    
+
     # Use combined Junior results from race day. Don't combine all the age groups races into one.
     def category_ids_for(race)
       case race.name
