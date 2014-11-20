@@ -75,7 +75,7 @@ class ResultsController < ApplicationController
     begin
       @team = Team.find(params[:team_id])
       @event = Event.find(params[:event_id])
-      @result = Result.team_event(@team, @event).first!
+      @results = Result.team_event(@team, @event)
     rescue ActiveRecord::RecordNotFound
       flash[:notice] = "Could not find result for #{@event.try :name} #{@team.try :name}"
       return redirect_to(teams_path)

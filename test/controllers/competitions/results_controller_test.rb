@@ -139,7 +139,7 @@ module Competitions
 
       assert_response(:success)
       assert_template("results/team_event")
-      assert_equal(result, assigns["result"], "Should assign result")
+      assert_equal([result], assigns["results"], "Should assign result")
     end
 
     test "person with overall results" do

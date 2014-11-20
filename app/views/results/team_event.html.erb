@@ -3,14 +3,16 @@
 <% cache cache_key(@team, @event) do %>
   <h2><%= link_to @team.name, team_results_path(@team) %></h2>
 
-  <h3><%= @result.numeric_place.ordinalize %> &mdash; <%=
-    link_to @result.race_full_name, event_results_path(@event, anchor: "race_#{@result.race_id}")
-  %></h3>
+  <%- @results.sort_by(&:race_full_name).each do |result| -%>
+    <h3><%= result.numeric_place.ordinalize %> &mdash; <%=
+      link_to result.race_full_name, event_results_path(@event, anchor: "race_#{result.race_id}")
+    %></h3>
 
-  <%= scores_table @result %>
+    <%= scores_table result %>
+  <% end %>
 
   <p>
     See all results for <%= link_to(@team.name, team_results_path(@team, @event.year), class: 'obvious') %> or the
-    <%= link_to(@result.event.full_name, event_results_path(@result.event), class: 'obvious') %>.
+    <%= link_to(@event.full_name, event_results_path(@event), class: 'obvious') %>.
   </p>
 <% end %>
