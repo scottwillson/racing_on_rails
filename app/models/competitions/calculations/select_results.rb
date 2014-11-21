@@ -12,12 +12,8 @@ module Competitions
           results = results.reject { |r| r.place == "DNF" }
         end
 
-        if rules[:members_only] && rules[:team]
-          results = results.select(&:team_member)
-        end
-
         if rules[:members_only]
-          results = results.select { |r| member_in_year?(r) }
+          results = results.select { |r| member_in_year?(r, rules[:team]) }
         end
 
         if rules[:source_event_ids]
@@ -41,12 +37,17 @@ module Competitions
         end
       end
 
-      def member_in_year?(result)
+      def member_in_year?(result, team = false)
         raise(ArgumentError, "Result year required to check membership") unless result.year
-        result.member_from &&
-        result.member_to &&
-        result.member_from.year <= result.year &&
-        result.member_to.year >= result.year
+
+        if team
+          result.team_member
+        else
+          result.member_from &&
+          result.member_to &&
+          result.member_from.year <= result.year &&
+          result.member_to.year >= result.year
+        end
       end
 
       def select_results_for_minimum_events(results, rules)
