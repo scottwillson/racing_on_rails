@@ -304,6 +304,7 @@ module Admin
 
     test "toggle member" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
+      result = FactoryGirl.create(:result, team: vanilla)
 
       assert_equal(true, vanilla.member, 'member before update')
       post(:toggle_member, id: vanilla.to_param)
@@ -311,12 +312,14 @@ module Admin
       assert_template("shared/_member")
       vanilla.reload
       assert_equal(false, vanilla.member, 'member after update')
+      assert_equal false, result.reload.team_member?, "Result#team_member should be updated"
 
       post(:toggle_member, id: vanilla.to_param)
       assert_response(:success)
       assert_template("shared/_member")
       vanilla.reload
       assert_equal(true, vanilla.member, 'member after second update')
+      assert_equal true, result.reload.team_member?, "Result#team_member should be updated"
     end
 
     test "edit" do
