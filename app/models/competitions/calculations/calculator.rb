@@ -142,13 +142,13 @@ module Competitions
       end
 
       def self.points(result, rules)
-        if rules[:point_schedule] || rules[:points_schedule_from_field_size]
-          points_from_point_schedule result, rules
+        if rules[:use_source_result_points]
+          return result.points
         end
 
         if numeric_place(result) < Float::INFINITY
-          if rules[:point_schedule]
-            points_from_point_schedule(result, rules)
+          if rules[:point_schedule] || rules[:points_schedule_from_field_size]
+            points_from_point_schedule result, rules
           else
             1
           end

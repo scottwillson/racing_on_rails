@@ -106,16 +106,11 @@ module Competitions
         results
       end
 
-      # Calculate field size if needed. It's not stored in the DB, and can't be calculated
-      # from source results. Eventually, *should* load all of race's results and calculate
-      # in Calculator.
+      # Calculate field size. It's not stored in the DB, and can't be calculated
+      # from source results. Eventually, *should* load all results and calculate
       def add_field_size(results)
-        if field_size_bonus?
-          results.each do |result|
-            result["field_size"] = field_sizes[result["race_id"]]
-          end
-        else
-          results
+        results.each do |result|
+          result["field_size"] = field_sizes[result["race_id"]]
         end
       end
 
