@@ -26,7 +26,7 @@ module Competitions
 
       # Transfrom +results+ (Array of Hashes) into competition results
       # +rules+:
-      # * break_ties: true/false. Default to false. Apply tie-breaking rules to results with same points.
+      # * break_ties: boolean. Default to false. Apply tie-breaking rules to results with same points.
       # * completed_events: integer. Default to nil. How many events in the competition have results?
       #   Not a 'rule' but needs to be calculated from all categories. Only required for
       #   competitions with +minimum_events+.
@@ -34,12 +34,12 @@ module Competitions
       #   is a better solution, but means Calculator would use a more complicated data structure: hash instead of an array.)
       # * dnf_points: float. Points for DNF. Default to 0.
       # * end_date: Default to nil. Is this result from the last event?
-      # * field_size_bonus: true/false. Default to false. Give 1.5 X points for fields of 75 or more
+      # * field_size_bonus: boolean. Default to false. Give 1.5 X points for fields of 75 or more
       # * maximum_events: 1 to UNLIMITED. Only score results up to +maximum_events+ count. For rules like: best 7 of 8.
       # * minimum_events: integer. Only score if +minimum_events+ results. Default to nil.
       # * missing_result_penalty: integer. Default nil. For fewest-points wins competitions. Give penalty for if a participant
       #   has fewer than results_per_event.
-      # * members_only: true/false. Default to true. Only members are counted.
+      # * members_only: boolean. Default to true. Only members are counted.
       # * most_points_win: true/boolean. Default to true. For fewest-points wins competitions.
       # * results_per_event: integer. Default to UNLIMITED. How many results in the same event are counted for a participant?
       # * results_per_race: integer. Default to 1. How many results in the same race are counted for a participant?
@@ -47,8 +47,8 @@ module Competitions
       # * point_schedule: 0-based Array of points for result place. Default to nil (all results receive one point).
       #                    First place gets points at point_schedule[0].
       # * source_event_ids: Array of event IDs. Only consider results from this event. Default to nil: all results eligible.
-      # * team: true/false. Default to false. Team-based competition?
-      # * use_source_result_points: true/false. Default to false. Don't calculate points. Use points from scoring result.
+      # * team: boolean. Default to false. Team-based competition?
+      # * use_source_result_points: boolean. Default to false. Don't calculate points. Use points from scoring result.
       #   Used by OBRA Overall and Age-Graded BARs.
       #
       # Replace nil values and missing keys with defaults. E.g., dnf: nil becomes dnf: true.
