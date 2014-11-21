@@ -96,8 +96,6 @@ module Competitions
         MbraTeamBar.calculate!(2008)
       end
 
-      #MBRA BAR scoring rules: http://www.montanacycling.net/documents/racers/MBRA%20BAR-BAT.pdf
-
       road_bat = MbraTeamBar.find_by_name("2008 Road BAT")
       men_road_bat = road_bat.races.detect {|b| b.category == senior_men }
       assert_equal(senior_men, men_road_bat.category, "Senior Men BAT race BAT cat")

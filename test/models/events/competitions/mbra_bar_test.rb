@@ -102,7 +102,7 @@ module Competitions
         date: Date.new(2008, 6, 17),
         bar_points: 2
       )
-      duck_island_senior_men = duck_island.races.create(category: senior_men, field_size: 3)
+      duck_island_senior_men = duck_island.races.create(category: senior_men, field_size: 5)
 
       duck_island_senior_men.results.create(
         place: 1,
@@ -117,6 +117,8 @@ module Competitions
         place: 2,
         person: weaver
       )
+      FactoryGirl.create(:result, place: 4, event: duck_island, race: duck_island_senior_men)
+      FactoryGirl.create(:result, place: 5, event: duck_island, race: duck_island_senior_men)
 
       senior_women_duck_island = duck_island.races.create(category: senior_women, field_size: 1)
       senior_women_duck_island.results.create(
@@ -146,7 +148,7 @@ module Competitions
         person: molly
       )
 
-      assert_difference "Result.count", 0 do
+      assert_difference "Result.count", 2 do
         MbraBar.calculate!(2008)
       end
       assert_equal(3, MbraBar.where(date: Date.new(2008)).count, "Bar events after calculate!")
@@ -154,20 +156,20 @@ module Competitions
       road_bar = MbraBar.find_by_name("2008 Road BAR")
       men_road_bar = road_bar.races.detect {|b| b.category == senior_men }
       assert_equal(senior_men, men_road_bar.category, "Senior Men BAR race BAR cat")
-      assert_equal(4, men_road_bar.results.size, "Senior Men Road BAR results")
+      assert_equal(6, men_road_bar.results.size, "Senior Men Road BAR results")
 
       results = men_road_bar.results.sort
       assert_equal(tonkin, results[0].person, "Senior Men Road BAR results person")
       assert_equal("1", results[0].place, "Senior Men Road BAR results place")
-      assert_equal((5 + 6) + ((3 + 6) * 2), results[0].points, "Senior Men Road BAR results points")
+      assert_equal((5 + 6) + ((5 + 6) * 2), results[0].points, "Senior Men Road BAR results points")
 
       assert_equal(molly, results[1].person, "Senior Men Road BAR results person")
       assert_equal("2", results[1].place, "Senior Men Road BAR results place")
-      assert_equal((4 + 3) + ((2 + 3) * 2), results[1].points, "Senior Men Road BAR results points")
+      assert_equal((4 + 3) + ((4 + 3) * 2), results[1].points, "Senior Men Road BAR results points")
 
       assert_equal(weaver, results[2].person, "Senior Men Road BAR results person")
       assert_equal("3", results[2].place, "Senior Men Road BAR results place")
-      assert_equal((3 + 1) + ((2 + 3) * 2), results[2].points, "Senior Men Road BAR results points")
+      assert_equal((3 + 1) + ((4 + 3) * 2), results[2].points, "Senior Men Road BAR results points")
 
       women_road_bar = road_bar.races.detect {|b| b.category == senior_women }
       assert_equal(senior_women, women_road_bar.category, "Senior Women BAR race BAR cat")
@@ -226,6 +228,7 @@ module Competitions
         place: 1,
         person: molly
       )
+      FactoryGirl.create_list(:result, 22, event: swan_island, race: cat_4_women_swan_island)
       goose_island = SingleDayEvent.create!(
         name: "Goose Island",
         discipline: "Road",
