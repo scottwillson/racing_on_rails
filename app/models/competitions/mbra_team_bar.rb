@@ -142,6 +142,10 @@ module Competitions
       end
     end
 
+    def dnf_points
+      0.5
+    end
+
     def friendly_name
       'MBRA BAT'
     end

@@ -7,7 +7,7 @@ module Competitions
           completed_events:             nil,
           double_points_for_last_event: false,
           end_date:                     nil,
-          dnf:                          false,
+          dnf_points:                   0,
           field_size_bonus:             false,
           maximum_events:               UNLIMITED,
           minimum_events:               nil,
@@ -37,7 +37,7 @@ module Competitions
         if invalid_rules.size > 0
           raise ArgumentError, "Invalid rules: #{invalid_rules.join(", ")}. Valid: #{default_rules.keys}."
         end
-        
+
         if rules[:break_ties] == true && !rules[:most_points_win].nil? && rules[:most_points_win] == false
           raise ArgumentError, "Can only break ties if most points win"
         end

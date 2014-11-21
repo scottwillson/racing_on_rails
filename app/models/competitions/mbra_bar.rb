@@ -179,6 +179,10 @@ module Competitions
       false
     end
 
+    def dnf_points
+      0.5
+    end
+
     def friendly_name
       'MBRA BAR'
     end

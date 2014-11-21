@@ -257,8 +257,8 @@ module Competitions
       true
     end
 
-    def dnf?
-      false
+    def dnf_points
+      0
     end
 
     def results_per_event

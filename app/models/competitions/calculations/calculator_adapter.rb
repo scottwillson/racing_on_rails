@@ -16,7 +16,7 @@ module Competitions
           calculated_results = Calculator.calculate(
             results,
             break_ties: break_ties?,
-            dnf: dnf?,
+            dnf_points: dnf_points,
             double_points_for_last_event: double_points_for_last_event?,
             end_date: end_date,
             completed_events: completed_events,

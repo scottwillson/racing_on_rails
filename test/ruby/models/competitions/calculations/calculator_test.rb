@@ -117,10 +117,10 @@ module Competitions
           result(place: 1, participant_id: 1, points: 2, scores: [ { numeric_place: 1, source_result_id: 1, points: 1, participant_id: 1 }, { numeric_place: Float::INFINITY, source_result_id: 4, points: 1, participant_id: 1 } ]),
           result(place: 2, participant_id: 2, points: 1, scores: [ { numeric_place: 2, source_result_id: 2, points: 1, participant_id: 2 } ])
         ]
-        actual = Calculator.calculate(source_results, dnf: true)
+        actual = Calculator.calculate(source_results, dnf_points: 1)
         assert_equal_results expected, actual
       end
-  
+
       # Cross Crusade team competition
       def test_calculate_most_points_win
         source_results = [
@@ -133,16 +133,16 @@ module Competitions
           result(place: 2, participant_id: 2, points: 5.0, scores: [ { numeric_place: 5, participant_id: 2, points: 5.0 } ])
         ]
         actual = Calculator.calculate(
-          source_results, 
+          source_results,
           members_only: false,
-          most_points_win: false, 
-          point_schedule: [ 1, 2, 3, 4, 5 ], 
+          most_points_win: false,
+          point_schedule: [ 1, 2, 3, 4, 5 ],
           results_per_event: 10,
           results_per_race: 1
         )
         assert_equal_results expected, actual
       end
-  
+
       # Cross Crusade team competition
       def test_missing_result_penalty
         source_results = [
@@ -152,29 +152,29 @@ module Competitions
           { event_id: 1, participant_id: 10, place: 5, race_id: 200 }
         ]
         expected = [
-          result(place: 1, participant_id: 10, points: 107.0, scores: [ 
+          result(place: 1, participant_id: 10, points: 107.0, scores: [
             { numeric_place: 2, participant_id: 10, points: 2.0 },
             { numeric_place: 5, participant_id: 10, points: 5.0 },
             { numeric_place: 100, participant_id: 10, points: 100.0 }
           ]),
-          result(place: 2, participant_id: 20, points: 205.0, scores: [ 
+          result(place: 2, participant_id: 20, points: 205.0, scores: [
             { numeric_place: 5, participant_id: 20, points: 5.0 },
             { numeric_place: 100, participant_id: 20, points: 200 }
           ])
         ]
         actual = Calculator.calculate(
-          source_results, 
+          source_results,
           completed_events: 1,
           members_only: false,
           missing_result_penalty: 100,
-          most_points_win: false, 
-          point_schedule: [ 1, 2, 3, 4, 5 ], 
+          most_points_win: false,
+          point_schedule: [ 1, 2, 3, 4, 5 ],
           results_per_event: 3,
           results_per_race: 1
         )
         assert_equal_results expected, actual
       end
-  
+
       def test_team_membership
         source_results = [
           result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200",
@@ -196,7 +196,7 @@ module Competitions
             member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: true)
         ]
         actual = Calculator.select_results(
-          source_results, { 
+          source_results, {
             results_per_event: UNLIMITED,
             results_per_race: UNLIMITED
         })
@@ -269,7 +269,7 @@ module Competitions
 
       def test_points_considers_multiplier_and_team_size
         assert_in_delta 9.333, 0.1, Calculator.points(
-          result(place: "2", multiplier: 2, team_size: 3), 
+          result(place: "2", multiplier: 2, team_size: 3),
           point_schedule: [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
         )
       end
@@ -288,22 +288,22 @@ module Competitions
 
       def test_points_use_source_result_points
         assert_equal 11, Calculator.points(
-          result(place: "2", multiplier: 2, points: 11), 
-          point_schedule: [ 3, 2, 1 ], 
+          result(place: "2", multiplier: 2, points: 11),
+          point_schedule: [ 3, 2, 1 ],
           use_source_result_points: true
         )
       end
 
       def test_calculate_double_points_for_last_event
         rules = { double_points_for_last_event: true, end_date: Date.new(2014, 10), point_schedule: [ 15, 14, 13 ], members_only: false }
-        source_results = [ 
+        source_results = [
           { "event_id" => 1, "race_id" => 1, "participant_id" => 1, "place" => "1", "date" => Date.new(2014, 9) },
-          { "event_id" => 2, "race_id" => 2, "participant_id" => 1, "place" => "2", "date" => Date.new(2014, 10) } 
+          { "event_id" => 2, "race_id" => 2, "participant_id" => 1, "place" => "2", "date" => Date.new(2014, 10) }
         ]
         expected = [
           result(place: 1, participant_id: 1, points: 43.0, scores: [
              { numeric_place: 1, participant_id: 1, points: 15.0, date: Date.new(2014, 9) },
-             { numeric_place: 2, participant_id: 1, points: 28.0, date: Date.new(2014, 10) } 
+             { numeric_place: 2, participant_id: 1, points: 28.0, date: Date.new(2014, 10) }
           ])
         ]
         actual = Calculator.calculate(source_results, rules)
@@ -312,7 +312,7 @@ module Competitions
 
       def test_double_points_and_maximum_events
         rules = { double_points_for_last_event: true, maximum_events: 5, end_date: Date.new(2014, 7, 9), point_schedule: [ 100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11 ], members_only: false }
-        source_results = [ 
+        source_results = [
           { "place" => "10", "date" => Date.new(2014, 6, 4), "event_id" => 1, "race_id" => 1, "participant_id" => 1 },
           { "place" => "9", "date" => Date.new(2014, 6, 11), "event_id" => 2, "race_id" => 2, "participant_id" => 1 },
           { "place" => "3", "date" => Date.new(2014, 6, 18), "event_id" => 3, "race_id" => 3, "participant_id" => 1 },
@@ -323,19 +323,19 @@ module Competitions
         expected = [
           result(place: 1, participant_id: 1, points: 380, scores: [
              { numeric_place: 1, participant_id: 1, points: 200, date: Date.new(2014, 7, 9) },
-             { numeric_place: 2, participant_id: 1, points: 70, date: Date.new(2014, 7, 2) }, 
-             { numeric_place: 3, participant_id: 1, points: 50, date: Date.new(2014, 6, 18) }, 
-             { numeric_place: 4, participant_id: 1, points: 40, date: Date.new(2014, 6, 25) }, 
-             { numeric_place: 9, participant_id: 1, points: 20, date: Date.new(2014, 6, 11) } 
+             { numeric_place: 2, participant_id: 1, points: 70, date: Date.new(2014, 7, 2) },
+             { numeric_place: 3, participant_id: 1, points: 50, date: Date.new(2014, 6, 18) },
+             { numeric_place: 4, participant_id: 1, points: 40, date: Date.new(2014, 6, 25) },
+             { numeric_place: 9, participant_id: 1, points: 20, date: Date.new(2014, 6, 11) }
           ])
         ]
         actual = Calculator.calculate(source_results, rules)
         assert_equal_results expected, actual
       end
-      
+
       def test_last_event_should_be_more_points
         rules = { double_points_for_last_event: true, maximum_events: 5, end_date: Date.new(2014, 7, 9), point_schedule: [ 100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11 ], members_only: false }
-        source_results = [ 
+        source_results = [
           { "place" => "1", "date" => Date.new(2014, 6, 4), "event_id" => 1, "race_id" => 1, "participant_id" => 1 },
           { "place" => "3", "date" => Date.new(2014, 6, 11), "event_id" => 2, "race_id" => 2, "participant_id" => 1 },
           { "place" => "1", "date" => Date.new(2014, 6, 18), "event_id" => 3, "race_id" => 3, "participant_id" => 1 },
@@ -346,8 +346,8 @@ module Competitions
         expected = [
           result(place: 1, participant_id: 1, points: 540, scores: [
              { numeric_place: 1, participant_id: 1, points: 100, date: Date.new(2014, 6, 4) },
-             { numeric_place: 1, participant_id: 1, points: 100, date: Date.new(2014, 6, 18) }, 
-             { numeric_place: 1, participant_id: 1, points: 100, date: Date.new(2014, 6, 25) }, 
+             { numeric_place: 1, participant_id: 1, points: 100, date: Date.new(2014, 6, 18) },
+             { numeric_place: 1, participant_id: 1, points: 100, date: Date.new(2014, 6, 25) },
              { numeric_place: 1, participant_id: 1, points: 100, date: Date.new(2014, 7, 2) },
              { numeric_place: 2, participant_id: 1, points: 140, date: Date.new(2014, 7, 9) },
           ])
@@ -355,12 +355,12 @@ module Competitions
         actual = Calculator.calculate(source_results, rules)
         assert_equal_results expected, actual
       end
-      
+
       def test_double_points_for_last_event
         assert_equal 6, Calculator.points(
-          result(place: "3", date: Date.new(2015, 4, 2)), 
+          result(place: "3", date: Date.new(2015, 4, 2)),
           end_date: Date.new(2015, 4, 2),
-          point_schedule: [ 7, 5, 3 ], 
+          point_schedule: [ 7, 5, 3 ],
           double_points_for_last_event: true
         )
       end
@@ -417,10 +417,10 @@ module Competitions
         actual = Calculator.calculate(source_results, source_event_ids: [], members_only: false)
         assert_equal [], actual
       end
-      
+
       def test_set_preliminary
         rules = { minimum_events: 2, members_only: false, completed_events: 3 }
-        source_results = [ 
+        source_results = [
           { "place" => "1", "participant_id" => 1, "event_id" => 1, "race_id" => 1 },
           { "place" => "2", "participant_id" => 2, "event_id" => 1, "race_id" => 1 },
           { "place" => "3", "participant_id" => 3, "event_id" => 1, "race_id" => 1 },
@@ -431,7 +431,7 @@ module Competitions
         expected = [
           result(place: 1, participant_id: 1, points: 3, preliminary: false, scores: [
              { numeric_place: 1, participant_id: 1, points: 1 },
-             { numeric_place: 1, participant_id: 1, points: 1 }, 
+             { numeric_place: 1, participant_id: 1, points: 1 },
              { numeric_place: 3, participant_id: 1, points: 1 }
           ]),
           result(place: 2, participant_id: 2, points: 2, preliminary: false, scores: [
@@ -445,10 +445,10 @@ module Competitions
         actual = Calculator.calculate(source_results, rules)
         assert_equal_results expected, actual
       end
-      
+
       def test_set_preliminary_before_minimum_events
         rules = { minimum_events: 3, members_only: false, break_ties: true, completed_events: 2 }
-        source_results = [ 
+        source_results = [
           { "place" => "1", "participant_id" => 1, "event_id" => 1, "race_id" => 1 },
           { "place" => "2", "participant_id" => 2, "event_id" => 1, "race_id" => 1 },
           { "place" => "3", "participant_id" => 3, "event_id" => 1, "race_id" => 1 },
@@ -458,7 +458,7 @@ module Competitions
         expected = [
           result(place: 1, participant_id: 1, points: 2, preliminary: nil, scores: [
              { numeric_place: 1, participant_id: 1, points: 1 },
-             { numeric_place: 1, participant_id: 1, points: 1 }, 
+             { numeric_place: 1, participant_id: 1, points: 1 },
           ]),
           result(place: 2, participant_id: 2, points: 2, preliminary: nil, scores: [
              { numeric_place: 2, participant_id: 2, points: 1 },
@@ -471,10 +471,10 @@ module Competitions
         actual = Calculator.calculate(source_results, rules)
         assert_equal_results expected, actual
       end
-      
+
       def test_set_preliminary_when_event_complete
         rules = { minimum_events: 2, members_only: false, completed_events: 3, source_event_ids: [ 1, 2, 3 ] }
-        source_results = [ 
+        source_results = [
           { "place" => "1", "participant_id" => 1, "event_id" => 1, "race_id" => 1 },
           { "place" => "2", "participant_id" => 2, "event_id" => 1, "race_id" => 1 },
           { "place" => "3", "participant_id" => 3, "event_id" => 1, "race_id" => 1 },
@@ -485,7 +485,7 @@ module Competitions
         expected = [
           result(place: 1, participant_id: 1, points: 3, preliminary: nil, scores: [
              { numeric_place: 1, participant_id: 1, points: 1 },
-             { numeric_place: 1, participant_id: 1, points: 1 }, 
+             { numeric_place: 1, participant_id: 1, points: 1 },
              { numeric_place: 3, participant_id: 1, points: 1 }
           ]),
           result(place: 2, participant_id: 2, points: 2, preliminary: nil, scores: [
