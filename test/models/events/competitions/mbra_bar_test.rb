@@ -52,12 +52,6 @@ module Competitions
         person: matson
       )
 
-      member = FactoryGirl.create(:person)
-      swan_island_senior_men.results.create(
-        place: "DNS",
-        person: member
-      )
-
       # single racer in category
       senior_women_swan_island = swan_island.races.create(category: senior_women, field_size: 1)
       senior_women_swan_island.results.create(
@@ -242,6 +236,7 @@ module Competitions
         place: 1,
         person: molly
       )
+      FactoryGirl.create_list(:result, 2, event: goose_island, race: cat_1_2_3_women_goose_island)
 
       MbraBar.calculate!(2008)
       road_bar = MbraBar.find_by_name("2008 Road BAR")
@@ -266,7 +261,8 @@ module Competitions
         place: 1,
         person: molly
       )
-      MbraBar.calculate!(2008)
+      FactoryGirl.create_list(:result, 26, event: duck_island, race: cat_4_women_duck_island)
+       MbraBar.calculate!(2008)
       road_bar = MbraBar.find_by_name("2008 Road BAR")
       cat_4_women_road_bar = road_bar.races.detect {|b| b.name == "Category 4 Women" }
       assert_equal(molly, cat_4_women_road_bar.results[0].person, "Category 4 Women Road BAR results person")
