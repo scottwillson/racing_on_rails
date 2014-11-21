@@ -42,19 +42,19 @@ module Competitions
 
       alice = FactoryGirl.create(:person)
       swan_island_senior_men.results.create(
-        place: "dnf",
+        place: "DNF",
         person: alice
       )
 
       matson = FactoryGirl.create(:person)
       swan_island_senior_men.results.create(
-        place: "dq",
+        place: "DQ",
         person: matson
       )
 
       member = FactoryGirl.create(:person)
       swan_island_senior_men.results.create(
-        place: "dns",
+        place: "DNS",
         person: member
       )
 

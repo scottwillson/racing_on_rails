@@ -79,7 +79,7 @@ module Competitions
 
       alice = FactoryGirl.create(:person)
       swan_island_senior_men.results.create(
-        place: "dnf",
+        place: "DNF",
         person: alice,
         team: gentle_lovers
       )
