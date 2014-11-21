@@ -27,6 +27,7 @@ module Competitions
             maximum_events: maximum_events(race),
             most_points_win: most_points_win?,
             point_schedule: point_schedule,
+            points_schedule_from_field_size: points_schedule_from_field_size?,
             results_per_event: results_per_event,
             results_per_race: results_per_race,
             source_event_ids: source_event_ids(race),

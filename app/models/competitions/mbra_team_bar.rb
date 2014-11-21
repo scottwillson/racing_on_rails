@@ -146,6 +146,10 @@ module Competitions
       0.5
     end
 
+    def points_schedule_from_field_size?
+      true
+    end
+
     def friendly_name
       'MBRA BAT'
     end

@@ -365,6 +365,49 @@ module Competitions
         )
       end
 
+      def test_points_schedule_from_field_size
+        assert_equal 26, Calculator.points(
+          result(place: "4", field_size: 29),
+          points_schedule_from_field_size: true
+        )
+
+        assert_equal 75, Calculator.points(
+          result(place: "1", field_size: 75),
+          points_schedule_from_field_size: true
+        )
+
+        assert_equal 1, Calculator.points(
+          result(place: "75", field_size: 75),
+          points_schedule_from_field_size: true
+        )
+      end
+
+      def test_place_bonus
+        assert_equal 26, Calculator.points(
+          result(place: "4", field_size: 29),
+          place_bonus: [ 7, 5, 3 ],
+          points_schedule_from_field_size: true
+        )
+
+        assert_equal 82, Calculator.points(
+          result(place: "1", field_size: 75),
+          place_bonus: [ 7, 5, 3 ],
+          points_schedule_from_field_size: true
+        )
+
+        assert_equal 1, Calculator.points(
+          result(place: "75", field_size: 75),
+          place_bonus: [ 7, 5, 3 ],
+          points_schedule_from_field_size: true
+        )
+
+        assert_equal 76, Calculator.points(
+          result(place: "3", field_size: 75),
+          place_bonus: [ 7, 5, 3 ],
+          points_schedule_from_field_size: true
+        )
+      end
+
       def test_apply_team_sizes_empty
         assert_equal [], Calculator.apply_team_sizes([], {})
       end
