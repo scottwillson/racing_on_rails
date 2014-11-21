@@ -6,8 +6,6 @@ module Competitions
   #
   # This class implements a number of MBRA-specific rules.
   class MbraBar < Competition
-    validate :valid_dates
-
     def self.calculate!(year = Time.zone.today.year)
       ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
         transaction do
