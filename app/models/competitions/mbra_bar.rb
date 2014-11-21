@@ -179,6 +179,10 @@ module Competitions
       false
     end
 
+    def place_bonus
+      [ 6, 3, 1 ]
+    end
+
     def dnf_points
       0.5
     end
@@ -190,10 +194,5 @@ module Competitions
     def friendly_name
       'MBRA BAR'
     end
-
-    def to_s
-      "#<#{self.class.name} #{id} #{discipline} #{name} #{date}>"
-    end
-
   end
 end

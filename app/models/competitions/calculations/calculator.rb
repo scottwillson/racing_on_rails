@@ -41,12 +41,13 @@ module Competitions
       #   has fewer than results_per_event.
       # * members_only: boolean. Default to true. Only members are counted.
       # * most_points_win: true/boolean. Default to true. For fewest-points wins competitions.
-      # * results_per_event: integer. Default to UNLIMITED. How many results in the same event are counted for a participant?
-      # * results_per_race: integer. Default to 1. How many results in the same race are counted for a participant?
-      #   Used for team competitions. Team is the participant.
       # * point_schedule: 0-based Array of points for result place. Default to nil (all results receive one point).
       #                    First place gets points at point_schedule[0].
       # * points_schedule_from_field_size: boolean. Default to false. Assign points based on field size.
+      # * place_bonus: 0-based Array of bonus points for place. Only used when points are calculated by other rules.
+      # * results_per_event: integer. Default to UNLIMITED. How many results in the same event are counted for a participant?
+      # * results_per_race: integer. Default to 1. How many results in the same race are counted for a participant?
+      #   Used for team competitions. Team is the participant.
       # * source_event_ids: Array of event IDs. Only consider results from this event. Default to nil: all results eligible.
       # * team: boolean. Default to false. Team-based competition?
       # * use_source_result_points: boolean. Default to false. Don't calculate points. Use points from scoring result.
@@ -170,10 +171,18 @@ module Competitions
           base_points = rules[:point_schedule][numeric_place(result) - 1]
         end
 
-        (((base_points || 0)) / (result.team_size || 1.0).to_f) *
+        (((base_points || 0) + place_bonus_points(result, rules)) / (result.team_size || 1.0).to_f) *
         (result.multiplier || 1 ).to_f *
         last_event_multiplier(result, rules) *
         field_size_multiplier(result, rules[:field_size_bonus])
+      end
+
+      def self.place_bonus_points(result, rules)
+        if rules[:place_bonus] && numeric_place(result) > 0 && numeric_place(result) < Float::INFINITY
+          (rules[:place_bonus][numeric_place(result) - 1]) || 0
+        else
+          0
+        end
       end
 
       def self.last_event_multiplier(result, rules)

@@ -382,6 +382,32 @@ module Competitions
         )
       end
 
+      def test_place_bonus
+        assert_equal 26, Calculator.points(
+          result(place: "4", field_size: 29),
+          place_bonus: [ 7, 5, 3 ],
+          points_schedule_from_field_size: true
+        )
+
+        assert_equal 82, Calculator.points(
+          result(place: "1", field_size: 75),
+          place_bonus: [ 7, 5, 3 ],
+          points_schedule_from_field_size: true
+        )
+
+        assert_equal 1, Calculator.points(
+          result(place: "75", field_size: 75),
+          place_bonus: [ 7, 5, 3 ],
+          points_schedule_from_field_size: true
+        )
+
+        assert_equal 76, Calculator.points(
+          result(place: "3", field_size: 75),
+          place_bonus: [ 7, 5, 3 ],
+          points_schedule_from_field_size: true
+        )
+      end
+
       def test_apply_team_sizes_empty
         assert_equal [], Calculator.apply_team_sizes([], {})
       end
@@ -412,6 +438,14 @@ module Competitions
         expected = [ Struct::CalculatorResult.new.tap { |r| r.place = 3 } ]
         actual = Calculator.map_hashes_to_results([{ place: 3 }])
         assert_equal expected, actual
+      end
+
+      def test_place_bonus_points
+        assert_equal 6, Calculator.place_bonus_points(result(place: "1"), place_bonus: [ 6, 3, 1 ])
+        assert_equal 1, Calculator.place_bonus_points(result(place: "3"), place_bonus: [ 6, 3, 1 ])
+        assert_equal 0, Calculator.place_bonus_points(result(place: "4"), place_bonus: [ 6, 3, 1 ])
+        assert_equal 0, Calculator.place_bonus_points(result(place: "DNF"), place_bonus: [ 6, 3, 1 ])
+        assert_equal 0, Calculator.place_bonus_points(result(place: "DQ"), place_bonus: [ 6, 3, 1 ])
       end
 
       def test_source_events

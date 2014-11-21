@@ -241,6 +241,10 @@ module Competitions
       nil
     end
 
+    def place_bonus
+      nil
+    end
+
     def points_schedule_from_field_size?
       false
     end

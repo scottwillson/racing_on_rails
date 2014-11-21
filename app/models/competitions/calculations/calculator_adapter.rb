@@ -26,6 +26,7 @@ module Competitions
             missing_result_penalty: missing_result_penalty,
             maximum_events: maximum_events(race),
             most_points_win: most_points_win?,
+            place_bonus: place_bonus,
             point_schedule: point_schedule,
             points_schedule_from_field_size: points_schedule_from_field_size?,
             results_per_event: results_per_event,
@@ -108,6 +109,7 @@ module Competitions
 
       # Calculate field size. It's not stored in the DB, and can't be calculated
       # from source results. Eventually, *should* load all results and calculate
+      # in Calculator.
       def add_field_size(results)
         results.each do |result|
           result["field_size"] = field_sizes[result["race_id"]]

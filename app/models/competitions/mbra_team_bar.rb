@@ -146,6 +146,10 @@ module Competitions
       0.5
     end
 
+    def place_bonus
+      [ 6, 3, 1 ]
+    end
+
     def points_schedule_from_field_size?
       true
     end
