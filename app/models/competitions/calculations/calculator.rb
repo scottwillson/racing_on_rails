@@ -41,10 +41,10 @@ module Competitions
       #   has fewer than results_per_event.
       # * members_only: boolean. Default to true. Only members are counted.
       # * most_points_win: true/boolean. Default to true. For fewest-points wins competitions.
+      # * place_bonus: 0-based Array of bonus points for place. Only used when points are calculated by other rules.
       # * point_schedule: 0-based Array of points for result place. Default to nil (all results receive one point).
       #                    First place gets points at point_schedule[0].
       # * points_schedule_from_field_size: boolean. Default to false. Assign points based on field size.
-      # * place_bonus: 0-based Array of bonus points for place. Only used when points are calculated by other rules.
       # * results_per_event: integer. Default to UNLIMITED. How many results in the same event are counted for a participant?
       # * results_per_race: integer. Default to 1. How many results in the same race are counted for a participant?
       #   Used for team competitions. Team is the participant.
