@@ -34,7 +34,7 @@ module Competitions
       def pretty_to_string(results)
         message = ""
         results.each do |r|
-          message << "  Result place #{r.place} participant_id: #{r.participant_id} points: #{r.points} preliminary: #{r.preliminary}"
+          message << "  Result place #{r.place} participant_id: #{r.participant_id} points: #{r.points} preliminary: #{r.preliminary} team_size: #{r.team_size}"
           message << "\n"
           r.scores.each do |s|
             message << "    Score place: #{s.numeric_place} points: #{s.points} date: #{s.date}"
@@ -70,7 +70,7 @@ module Competitions
         hash.each do |key, value|
           result[key] = value
         end
-        
+
         result
       end
 
