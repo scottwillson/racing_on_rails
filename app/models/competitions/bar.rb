@@ -49,10 +49,6 @@ module Competitions
       true
     end
 
-    def self.find_by_year_and_discipline(year, discipline_name)
-      Bar.where(date: Time.zone.local(year).to_date, discipline: discipline_name).first
-    end
-
     def field_size_bonus?
       true
     end
@@ -60,7 +56,7 @@ module Competitions
     def source_event_types
       [ Event, SingleDayEvent, MultiDayEvent, Series, WeeklySeries, Competitions::BlindDateAtTheDairyMonthlyStandings, Competitions::TaborOverall, ]
     end
-    
+
     def source_results_query(race)
       super.
       where(bar: true).
@@ -71,7 +67,7 @@ module Competitions
             or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (:disciplines))",
             disciplines: disciplines_for(race))
     end
-    
+
     def after_source_results(results)
       results.each do |result|
         result["multiplier"] = result["race_bar_points"] || result["event_bar_points"] || result["parent_bar_points"] || result["parent_parent_bar_points"]
@@ -84,10 +80,6 @@ module Competitions
 
     def friendly_name
       'BAR'
-    end
-
-    def to_s
-      "#<#{self.class.name} #{id} #{discipline} #{name} #{date}>"
     end
   end
 end
