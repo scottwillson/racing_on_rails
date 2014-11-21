@@ -44,7 +44,7 @@ module Competitions
       FactoryGirl.create(:event, date: Date.new(2004)).races.create!(category: @senior_women).results.create!(place: "1", person: person)
 
       Competitions::Bar.calculate!(2004)
-      bar = Bar.find_by_year_and_discipline(2004, "Road")
+      bar = Bar.year(2004).where(discipline: "Road").first
 
       get :person_event, event_id: bar.to_param, person_id: person.to_param
       assert_response :success
@@ -62,7 +62,7 @@ module Competitions
       FactoryGirl.create(:result, event: event)
 
       Competitions::Bar.calculate!(2004)
-      bar = Bar.find_by_year_and_discipline(2004, "Road")
+      bar = Bar.year(2004).where(discipline: "Road").first
       result = bar.races.detect {|r| r.name == 'Senior Women'}.results.first
       assert_not_nil(result, 'result')
       assert_not_nil(result.person, 'result.person')

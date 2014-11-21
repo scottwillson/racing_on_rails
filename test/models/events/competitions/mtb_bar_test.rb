@@ -26,7 +26,7 @@ module Competitions
       race.results.create!(person: chris_woods, place: 14)
 
       Bar.calculate!(2001)
-      mtb_bar = Bar.find_by_year_and_discipline(2001, "Mountain Bike")
+      mtb_bar = Bar.year(2001).where(discipline: "Mountain Bike").first
       assert_not_nil(mtb_bar, "2001 MTB BAR after calculate!")
       junior_men_mtb_bar = mtb_bar.races.detect {|b| b.name == "Junior Men" }
 
@@ -178,7 +178,7 @@ module Competitions
 
       OverallBar.calculate!
 
-      road_bar = Bar.find_by_year_and_discipline(year, "Road")
+      road_bar = Bar.year(year).where(discipline: "Road").first
 
       senior_men_road_bar = road_bar.races.detect { |race| race.name == "Senior Men" }
       assert_equal(3, senior_men_road_bar.results.size, "Senior Men Road BAR results")
@@ -210,7 +210,7 @@ module Competitions
       assert_equal(woman_3, senior_women_3_road_bar.results[0].person, "Senior Woman 3 Road BAR results person")
       assert_equal(woman_4, senior_women_4_road_bar.results[0].person, "Senior Woman 4 Road BAR results person")
 
-      mtb_bar = Bar.find_by_year_and_discipline(year, "Mountain Bike")
+      mtb_bar = Bar.year(year).where(discipline: "Mountain Bike").first
       mtb_bar_elite_men_bar = mtb_bar.races.detect { |race| race.name == "Elite Men" }
       assert_equal(1, mtb_bar_elite_men_bar.results.size, "Elite Men MTB BAR results")
       assert_equal(matson, mtb_bar_elite_men_bar.results[0].person, "Elite Men MTB BAR results person")
@@ -235,7 +235,7 @@ module Competitions
       assert_equal(1, mtb_bar_women_2_bar.results.size, "Women 2 MTB BAR results")
       assert_equal(woman_1, mtb_bar_women_2_bar.results[0].person, "Women 2 MTB BAR results person")
 
-      short_track_bar = Bar.find_by_year_and_discipline(year, "Short Track")
+      short_track_bar = Bar.year(year).where(discipline: "Short Track").first
       short_track_bar_men_3_bar = short_track_bar.races.detect { |race| race.name == "Category 3 Men" }
       assert_equal(1, short_track_bar_men_3_bar.results.size, "Men 3 Short Track BAR results")
       assert_equal(weaver, short_track_bar_men_3_bar.results[0].person, "Men 3 Short Track BAR results person")
@@ -364,7 +364,7 @@ module Competitions
 
       mtb.bar_categories << masters_men
       Bar.calculate!(2001)
-      mtb_bar = Bar.find_by_year_and_discipline(2001, "Mountain Bike")
+      mtb_bar = Bar.year(2001).where(discipline: "Mountain Bike").first
       assert_not_nil(mtb_bar, "2001 MTB BAR after calculate!")
       masters_mtb_bar = mtb_bar.races.detect { |b| b.name == "Masters Men" }
 

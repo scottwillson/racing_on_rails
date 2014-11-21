@@ -175,7 +175,7 @@ module Competitions
 
       Bar.calculate!(2004)
       # Discipline BAR results past 300 don't count -- add fake result
-      bar = Bar.find_by_year_and_discipline(2004, "Road")
+      bar = Bar.year(2004).where(discipline: "Road").first
       assert_not_nil bar.parent, "Should have parent"
       sr_men_road_bar = bar.races.detect {|r| r.category == senior_men}
       sr_men_road_bar.results.create!(place: 305, person: alice)
@@ -335,7 +335,7 @@ module Competitions
       OverallBar.calculate!
 
       current_year = Time.zone.today.year
-      road_bar = Bar.find_by_year_and_discipline(current_year, "Road")
+      road_bar = Bar.year(current_year).where(discipline: "Road").first
       cat_4_road_bar = road_bar.races.detect { |race| race.category == category_4_men }
       assert_equal(2, cat_4_road_bar.results.size, "Cat 4 Overall BAR results")
       cat_5_road_bar = road_bar.races.detect { |race| race.category == category_5_men }
