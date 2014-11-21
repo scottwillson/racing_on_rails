@@ -10,7 +10,6 @@ module Competitions
   #
   # +calculate!+ is the main method
   class Competition < Event
-    # TODO Try using result dates, not event dates to find results
     include Competitions::Categories
     include Competitions::Dates
     include Competitions::Naming
@@ -233,7 +232,7 @@ module Competitions
     def minimum_events
       nil
     end
-    
+
     def missing_result_penalty
       nil
     end
