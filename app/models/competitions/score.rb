@@ -35,9 +35,9 @@ module Competitions
     def source_discipline
       source_result.try(:race).try(:discipline)
     end
-    
+
     def inspect_debug
-      "#<Competitions::Score #{id} #{source_result_id} #{source_result.event.full_name} #{source_result.race.name} #{competition_result_id} #{points}>"
+      "#<Competitions::Score #{id} #{source_result_id} #{source_result.event.full_name} #{source_result.race.name} #{competition_result_id} place: #{source_result.place} points: #{points}>"
     end
 
     # Compare by points
