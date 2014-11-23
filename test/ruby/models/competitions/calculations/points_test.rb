@@ -70,6 +70,15 @@ module Competitions
         )
       end
 
+      def test_points_upgrade
+        assert_equal 5.5, Calculator.points(
+          result(place: "2", points: 11, upgrade: true),
+          maximum_upgrade_points: 100,
+          point_schedule: [ 3, 2, 1 ],
+          use_source_result_points: false
+        )
+      end
+
       def test_calculate_double_points_for_last_event
         rules = { double_points_for_last_event: true, end_date: Date.new(2014, 10), point_schedule: [ 15, 14, 13 ], members_only: false }
         source_results = [
