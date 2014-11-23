@@ -251,7 +251,7 @@ module Competitions
       cat_1_2_3_women_road_bar = road_bar.races.detect {|b| b.name == "Category 1/2/3 Women" }
       assert_equal(molly, cat_1_2_3_women_road_bar.results[0].person, "Category 1/2/3 Women Road BAR results person")
       assert_equal("1", cat_1_2_3_women_road_bar.results[0].place, "Category 1/2/3 Women Road BAR results place")
-      assert_equal(((23 + 6) / 2).to_i + (3 + 6), cat_1_2_3_women_road_bar.results[0].points, "Category 1/2/3 Women Road BAR results points")
+      assert_equal(((23 + 6) / 2.0) + (3 + 6), cat_1_2_3_women_road_bar.results[0].points, "Category 1/2/3 Women Road BAR results points")
 
       # test max 30 upgrade points
       duck_island = SingleDayEvent.create!(
