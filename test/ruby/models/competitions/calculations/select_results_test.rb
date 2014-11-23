@@ -26,8 +26,8 @@ module Competitions
         ]
         expected = [ result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2", member_from: Date.new(2012), member_to: end_of_year, year: Date.today.year)]
         actual = Calculator.select_results(
-          source_results, 
-          results_per_event: UNLIMITED, 
+          source_results,
+          results_per_event: UNLIMITED,
           results_per_race: 1,
           dnf: false,
           members_only: true
@@ -53,8 +53,8 @@ module Competitions
           result(id: 11, event_id: 1, race_id: 1, participant_id: 2, place: "3")
         ]
         actual = Calculator.select_results(
-          source_results, 
-          results_per_event: 2, 
+          source_results,
+          results_per_event: 2,
           results_per_race: UNLIMITED
         )
         assert_equal_results expected, actual
@@ -99,7 +99,7 @@ module Competitions
         ]
         actual = Calculator.select_results(
           source_results, {
-            results_per_event: UNLIMITED, 
+            results_per_event: UNLIMITED,
             results_per_race: 2
           }
         )
@@ -119,8 +119,8 @@ module Competitions
           result(id: 3, event_id: 1, race_id: 1, participant_id: 1, place: "2")
         ]
         actual = Calculator.select_results(
-          source_results, 
-          results_per_event: 2, 
+          source_results,
+          results_per_event: 2,
           results_per_race: UNLIMITED
         )
         assert_equal_results expected, actual
@@ -134,7 +134,7 @@ module Competitions
         assert !Calculator.member_in_year?(result(year: 2005, member_from: Date.new(1999), member_to: Date.new(2004)))
         assert  Calculator.member_in_year?(result(year: 2005, member_from: Date.new(1999), member_to: Date.new(2014)))
       end
-      
+
       def test_minimum_events_before_event_complete
         source_results = [
           result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1"),
@@ -158,13 +158,13 @@ module Competitions
           completed_events: 3,
           minimum_events: 3,
           members_only: false,
-          results_per_event: 1, 
+          results_per_event: 1,
           results_per_race: UNLIMITED,
           source_event_ids: [ 1, 2, 3, 4, 5, 6, 7, 8 ]
         )
         assert_equal_results expected, actual
       end
-      
+
       def test_minimum_events_when_event_complete
         source_results = [
           result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1", date: Date.new(2014, 10, 1)),
@@ -185,11 +185,39 @@ module Competitions
           minimum_events: 3,
           completed_events: 4,
           members_only: false,
-          results_per_event: 1, 
+          results_per_event: 1,
           results_per_race: UNLIMITED,
           source_event_ids: [ 1, 2, 3, 4 ]
         )
         assert_equal_results expected, actual
+      end
+
+      def test_team_membership
+        source_results = [
+          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200",
+            member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: false),
+
+          result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6",
+            member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: true)
+        ]
+        actual = Calculator.select_results(source_results, { results_per_event: 1, results_per_race: 1 })
+        assert_equal [ 2 ], actual.map(&:id)
+      end
+
+      def test_no_team_membership
+        source_results = [
+          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200",
+            member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: false),
+
+          result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6",
+            member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: true)
+        ]
+        actual = Calculator.select_results(
+          source_results, {
+            results_per_event: UNLIMITED,
+            results_per_race: UNLIMITED
+        })
+        assert_equal [ 1, 2 ], actual.map(&:id).sort
       end
     end
   end

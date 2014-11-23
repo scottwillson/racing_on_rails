@@ -4,6 +4,7 @@ require_relative "rules"
 require_relative "select_results"
 require_relative "select_scores"
 require_relative "structs"
+require_relative "teams"
 
 module Competitions
   module Calculations
@@ -25,6 +26,7 @@ module Competitions
       extend SelectResults
       extend SelectScores
       extend Structs
+      extend Teams
 
       # Transfrom +results+ (Array of Hashes) into competition results
       # +rules+:
@@ -95,14 +97,13 @@ module Competitions
         results.group_by { |r| [ r.race_id, r.place ] }.
         each { |key, results_with_same_place| results_by_race_and_place[key] = results_with_same_place.size }
 
-        # Check if there was just a tie, not teams
         results.map do |result|
-          unique_places = results.select { |r| r.race_id == result.race_id }.map(&:place).uniq.size
-          teams = results.select { |r| r.race_id == result.race_id }.group_by(&:place).values.select { |r| r.size > 1 }.size
-          if teams / unique_places.to_f < 0.5
-            merge_struct(result, team_size: 1)
+          # Check if there was just a tie, not teams
+          # Inefficient to call team_race? in a loop but doesn't matter in practice
+          if team_race?(result.race_id, results)
+            merge_struct result, team_size: 1
           else
-            merge_struct(result, team_size: results_by_race_and_place[[ result.race_id, result.place ]])
+            merge_struct result, team_size: results_by_race_and_place[[ result.race_id, result.place ]]
           end
         end
       end

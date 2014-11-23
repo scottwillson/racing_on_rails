@@ -175,34 +175,6 @@ module Competitions
         assert_equal_results expected, actual
       end
 
-      def test_team_membership
-        source_results = [
-          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200",
-            member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: false),
-
-          result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6",
-            member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: true)
-        ]
-        actual = Calculator.select_results(source_results, { results_per_event: 1, results_per_race: 1 })
-        assert_equal [ 2 ], actual.map(&:id)
-      end
-
-      def test_no_team_membership
-        source_results = [
-          result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200",
-            member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: false),
-
-          result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6",
-            member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: true)
-        ]
-        actual = Calculator.select_results(
-          source_results, {
-            results_per_event: UNLIMITED,
-            results_per_race: UNLIMITED
-        })
-        assert_equal [ 1, 2 ], actual.map(&:id).sort
-      end
-
       def test_map_to_scores
         expected = [ Struct::CalculatorScore.new(nil, 5, 4, 1, 1, nil) ]
         source_results = [ result(id: 1, race_id: 3, participant_id: 4, place: 5, member_from: Date.new(2012)) ]
@@ -227,99 +199,6 @@ module Competitions
         expected = []
         actual = Calculator.map_to_results([], {})
         assert_equal expected, actual
-      end
-
-      def test_apply_team_sizes_empty
-        assert_equal [], Calculator.apply_team_sizes([], {})
-      end
-
-      def test_apply_team_sizes
-        expected = [
-          result(place: 1, race_id: 1, team_size: 2),
-          result(place: 1, race_id: 1, team_size: 2),
-          result(place: 2, race_id: 1, team_size: 1),
-          result(place: 3, race_id: 1, team_size: 3),
-          result(place: 3, race_id: 1, team_size: 3),
-          result(place: 3, race_id: 1, team_size: 3),
-          result(place: 1, race_id: 2, team_size: 1)
-        ]
-        results = [
-          result(place: 1, race_id: 1),
-          result(place: 1, race_id: 1),
-          result(place: 2, race_id: 1),
-          result(place: 3, race_id: 1),
-          result(place: 3, race_id: 1),
-          result(place: 3, race_id: 1),
-          result(place: 1, race_id: 2)
-        ]
-        assert_equal expected, Calculator.apply_team_sizes(results, {})
-      end
-
-      # Don't mistake ties for teams
-      def test_apply_team_sizes_not_team_event
-        expected = [
-          result(place: 1, race_id: 1, team_size: 1, participant_id: 1, field_size: 5),
-          result(place: 2, race_id: 1, team_size: 1, participant_id: 2, field_size: 5),
-          result(place: 2, race_id: 1, team_size: 1, participant_id: 3, field_size: 5),
-          result(place: 3, race_id: 1, team_size: 1, participant_id: 4, field_size: 5),
-          result(place: 4, race_id: 1, team_size: 1, participant_id: 5, field_size: 5),
-          result(place: 1, race_id: 2, team_size: 1, participant_id: 6, field_size: 1)
-        ]
-        results = [
-          result(place: 1, race_id: 1, participant_id: 1, field_size: 5),
-          result(place: 2, race_id: 1, participant_id: 2, field_size: 5),
-          result(place: 2, race_id: 1, participant_id: 3, field_size: 5),
-          result(place: 3, race_id: 1, participant_id: 4, field_size: 5),
-          result(place: 4, race_id: 1, participant_id: 5, field_size: 5),
-          result(place: 1, race_id: 2, participant_id: 6, field_size: 1)
-        ]
-        assert_equal_results expected, Calculator.apply_team_sizes(results, {})
-      end
-
-      def test_apply_team_sizes_not_team_event_small_event
-        expected = [
-          result(place: 1, race_id: 1, team_size: 3, participant_id: 1, field_size: 3),
-          result(place: 1, race_id: 1, team_size: 3, participant_id: 2, field_size: 3),
-          result(place: 1, race_id: 1, team_size: 3, participant_id: 3, field_size: 3),
-        ]
-        results = [
-          result(place: 1, race_id: 1, participant_id: 1, field_size: 3),
-          result(place: 1, race_id: 1, participant_id: 2, field_size: 3),
-          result(place: 1, race_id: 1, participant_id: 3, field_size: 3),
-        ]
-        assert_equal_results expected, Calculator.apply_team_sizes(results, {})
-
-        expected = [
-          result(place: 1, race_id: 1, team_size: 3, participant_id: 1, field_size: 4),
-          result(place: 1, race_id: 1, team_size: 3, participant_id: 2, field_size: 4),
-          result(place: 1, race_id: 1, team_size: 3, participant_id: 3, field_size: 4),
-          result(place: 2, race_id: 1, team_size: 1, participant_id: 4, field_size: 4),
-        ]
-        results = [
-          result(place: 1, race_id: 1, participant_id: 1, field_size: 4),
-          result(place: 1, race_id: 1, participant_id: 2, field_size: 4),
-          result(place: 1, race_id: 1, participant_id: 3, field_size: 4),
-          result(place: 2, race_id: 1, participant_id: 4, field_size: 4),
-        ]
-        assert_equal_results expected, Calculator.apply_team_sizes(results, {})
-
-        expected = [
-          result(place: 1, race_id: 1, team_size: 2, participant_id: 1, field_size: 1),
-          result(place: 1, race_id: 1, team_size: 2, participant_id: 2, field_size: 1),
-          result(place: 1, race_id: 2, team_size: 1, participant_id: 1, field_size: 1),
-          result(place: 2, race_id: 3, team_size: 1, participant_id: 2, field_size: 4),
-          result(place: 3, race_id: 4, team_size: 1, participant_id: 3, field_size: 4),
-          result(place: 4, race_id: 4, team_size: 1, participant_id: 4, field_size: 4),
-        ]
-        results = [
-          result(place: 1, race_id: 1, participant_id: 1, field_size: 1),
-          result(place: 1, race_id: 1, participant_id: 2, field_size: 1),
-          result(place: 1, race_id: 2, participant_id: 1, field_size: 1),
-          result(place: 2, race_id: 3, participant_id: 2, field_size: 4),
-          result(place: 3, race_id: 4, participant_id: 3, field_size: 4),
-          result(place: 4, race_id: 4, participant_id: 4, field_size: 4),
-        ]
-        assert_equal_results expected, Calculator.apply_team_sizes(results, {})
       end
 
       def test_map_hashes_to_results
