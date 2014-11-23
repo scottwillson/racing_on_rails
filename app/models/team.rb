@@ -59,11 +59,11 @@ class Team < ActiveRecord::Base
     errors.add :base, "Cannot delete team with results. #{name} has #{results.count} results."
     false
   end
-  
+
   def no_results?
     results.count == 0
   end
-  
+
   def no_people?
     people.count == 0
   end
@@ -147,10 +147,6 @@ class Team < ActiveRecord::Base
 
   def member_in_year?(date = Time.zone.today)
     member
-  end
-
-  def eligible_for_mbra_team_bar?(date = Time.zone.today, discipline)
-    Event.find_all_for_team_and_discipline(self, discipline, date).count > 0
   end
 
   def name=(value)
