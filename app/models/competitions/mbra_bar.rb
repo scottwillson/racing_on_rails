@@ -4,7 +4,7 @@ module Competitions
   # The BAR categories and disciplines are all configured in the databsase. Race categories need to have a bar_category_id to
   # show up in the BAR; disciplines must exist in the disciplines table and discipline_bar_categories.
   #
-  # This class implements a number of MBRA-specific rules.
+  # MBRA BAR scoring rules: http://www.montanacycling.net/documents/racers/MBRA%20BAR-BAT.pdf
   class MbraBar < Competition
     def self.calculate!(year = Time.zone.today.year)
       ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do

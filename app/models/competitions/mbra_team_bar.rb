@@ -1,4 +1,5 @@
 module Competitions
+  # MBRA BAT scoring rules: http://www.montanacycling.net/documents/racers/MBRA%20BAR-BAT.pdf
   class MbraTeamBar < Competition
     def self.calculate!(year = Time.zone.today.year)
       ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
