@@ -3,23 +3,28 @@ module Competitions
     module Points
       def points(result, rules)
         if rules[:use_source_result_points]
-          return result.points
-        end
+          result.points
 
-        if numeric_place(result) < Float::INFINITY
-          if rules[:point_schedule] || rules[:points_schedule_from_field_size]
-            points_from_point_schedule result, rules
-          else
-            1
-          end
+        elsif numeric_place?(result)
+          points_from_point_schedule result, rules
+
         elsif rules[:dnf_points] && result.place == "DNF"
           rules[:dnf_points]
+
         else
           0
         end
       end
 
+      def numeric_place?(result)
+        numeric_place(result) < Float::INFINITY
+      end
+
       def points_from_point_schedule(result, rules)
+        if !point_schedule?(rules)
+          return 1
+        end
+
         if rules[:missing_result_penalty] && numeric_place(result) > rules[:missing_result_penalty]
           return rules[:missing_result_penalty]
         end
@@ -36,8 +41,12 @@ module Competitions
         field_size_multiplier(result, rules[:field_size_bonus])
       end
 
+      def point_schedule?(rules)
+        rules[:point_schedule] || rules[:points_schedule_from_field_size]
+      end
+
       def place_bonus_points(result, rules)
-        if rules[:place_bonus] && numeric_place(result) > 0 && numeric_place(result) < Float::INFINITY
+        if rules[:place_bonus] && numeric_place(result) > 0 && numeric_place?(result)
           (rules[:place_bonus][numeric_place(result) - 1]) || 0
         else
           0
