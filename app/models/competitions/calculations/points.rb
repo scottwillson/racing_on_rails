@@ -5,6 +5,9 @@ module Competitions
         if rules[:use_source_result_points]
           result.points
 
+        elsif result.upgrade
+          upgrade_points(result, rules)
+
         elsif numeric_place?(result)
           points_from_point_schedule result, rules
 
@@ -14,6 +17,10 @@ module Competitions
         else
           0
         end
+      end
+
+      def upgrade_points(result, rules)
+        [ result.points / 2.0, rules[:maximum_upgrade_points] ].min
       end
 
       def numeric_place?(result)

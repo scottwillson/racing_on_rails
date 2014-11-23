@@ -10,23 +10,25 @@ module Competitions
           scores_with_points
         end
       end
-      
+
       def points?(score)
-        score.points && score.points > 0.0 && score.participant_id 
+        score.points && score.points > 0.0 && score.participant_id
       end
-      
+
       def maximum_events?(rules)
         rules[:maximum_events] != UNLIMITED
       end
 
       def reject_scores_greater_than_maximum_events(scores, rules)
-        scores.group_by(&:participant_id).
+        upgrade_scores, non_upgrade_scores = scores.partition { |s| s.upgrade }
+
+        non_upgrade_scores.group_by(&:participant_id).
         map do |participant_id, participant_scores|
           slice_of participant_scores, rules[:maximum_events]
         end.
-        flatten
+        flatten + upgrade_scores
       end
-      
+
       def slice_of(values, maximum)
         values.sort_by(&:points).reverse[ 0, maximum ]
       end

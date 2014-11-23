@@ -10,6 +10,7 @@ module Competitions
           dnf_points:                      0,
           field_size_bonus:                false,
           maximum_events:                  UNLIMITED,
+          maximum_upgrade_points:          UNLIMITED,
           minimum_events:                  nil,
           missing_result_penalty:          nil,
           members_only:                    true,

@@ -14,36 +14,37 @@ module Competitions
       # +team_size+ is calculated here, too, though it could be passed in.
       Struct.new(
         "CalculatorResult",
-        :bar, 
-        :category_id, 
+        :bar,
+        :category_id,
         :category_name,
-        :date, 
-        :date_of_birth, 
-        :event_id, 
-        :field_size, 
-        :id, 
+        :date,
+        :date_of_birth,
+        :event_id,
+        :field_size,
+        :id,
         :ironman,
-        :member_from, 
-        :member_to, 
-        :multiplier, 
-        :participant_id, 
-        :place, 
-        :points, 
+        :member_from,
+        :member_to,
+        :multiplier,
+        :participant_id,
+        :place,
+        :points,
         :preliminary,
-        :race_id, 
-        :sanctioned_by, 
+        :race_id,
+        :sanctioned_by,
         :scores,
-        :team_member, 
+        :team_member,
         :team_name,
-        :team_size, 
-        :tied, 
-        :type, 
+        :team_size,
+        :tied,
+        :type,
+        :upgrade,
         :year
       )
 
       # Ties a source result to a competition result.
       # CalculatorScore#numeric_place is source result's place.
-      Struct.new("CalculatorScore", :date, :numeric_place, :participant_id, :points, :source_result_id, :team_size)
+      Struct.new("CalculatorScore", :date, :numeric_place, :participant_id, :points, :source_result_id, :team_size, :upgrade)
 
       # Create new copy of a Struct with +attributes+
       def merge_struct(struct, attributes)

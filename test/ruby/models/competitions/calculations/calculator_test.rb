@@ -314,6 +314,46 @@ module Competitions
         actual = Calculator.calculate(source_results, rules)
         assert_equal_results expected, actual
       end
+
+      def test_upgrade_points
+        rules = { members_only: false, place_bonus: [ 6, 3, 1 ], points_schedule_from_field_size: true, }
+        source_results = [
+          { "place" => "6", "participant_id" => 1, "event_id" => 1, "race_id" => 1, "field_size" => 51 },
+          { "place" => "1", "participant_id" => 1, "event_id" => 2, "race_id" => 2, "field_size" => 22, "points" => 7, "upgrade" => true },
+          { "place" => "3", "participant_id" => 2, "event_id" => 3, "race_id" => 3, "field_size" => 9 },
+        ]
+        expected = [
+          result(place: 1, participant_id: 1, points: 49.5, scores: [
+             { numeric_place: 6, participant_id: 1, points: 46 },
+             { numeric_place: 1, participant_id: 1, points: 3.5, upgrade: true },
+          ]),
+          result(place: 2, participant_id: 2, points: 8, scores: [
+             { numeric_place: 3, participant_id: 2, points: 8 },
+          ])
+        ]
+        actual = Calculator.calculate(source_results, rules)
+        assert_equal_results expected, actual
+      end
+
+      def test_maximum_upgrade_points
+        rules = { members_only: false, place_bonus: [ 6, 3, 1 ], points_schedule_from_field_size: true, maximum_upgrade_points: 5 }
+        source_results = [
+          { "place" => "6", "participant_id" => 1, "event_id" => 1, "race_id" => 1, "field_size" => 51 },
+          { "place" => "1", "participant_id" => 1, "event_id" => 2, "race_id" => 2, "field_size" => 22, "points" => 20, "upgrade" => true },
+          { "place" => "3", "participant_id" => 2, "event_id" => 3, "race_id" => 3, "field_size" => 9 },
+        ]
+        expected = [
+          result(place: 1, participant_id: 1, points: 51, scores: [
+             { numeric_place: 6, participant_id: 1, points: 46 },
+             { numeric_place: 1, participant_id: 1, points: 5, upgrade: true },
+          ]),
+          result(place: 2, participant_id: 2, points: 8, scores: [
+             { numeric_place: 3, participant_id: 2, points: 8 },
+          ])
+        ]
+        actual = Calculator.calculate(source_results, rules)
+        assert_equal_results expected, actual
+      end
     end
   end
 end
