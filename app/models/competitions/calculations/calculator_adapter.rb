@@ -6,8 +6,9 @@ module Competitions
       def calculate!
         before_calculate
 
-        races.each do |race|
+        races_in_upgrade_order.each do |race|
           results = source_results_with_benchmark(race)
+          results = add_upgrade_results(results, race)
           results = after_source_results(results)
           results = delete_bar_points(results)
           results = add_field_size(results)
@@ -16,19 +17,20 @@ module Competitions
           calculated_results = Calculator.calculate(
             results,
             break_ties: break_ties?,
+            completed_events: completed_events,
             dnf_points: dnf_points,
             double_points_for_last_event: double_points_for_last_event?,
             end_date: end_date,
-            completed_events: completed_events,
             field_size_bonus: field_size_bonus?,
+            maximum_events: maximum_events(race),
+            maximum_upgrade_points: maximum_upgrade_points,
             members_only: members_only?,
             minimum_events: minimum_events,
             missing_result_penalty: missing_result_penalty,
-            maximum_events: maximum_events(race),
             most_points_win: most_points_win?,
             place_bonus: place_bonus,
-            point_schedule: point_schedule,
             points_schedule_from_field_size: points_schedule_from_field_size?,
+            point_schedule: point_schedule,
             results_per_event: results_per_event,
             results_per_race: results_per_race,
             source_event_ids: source_event_ids(race),
@@ -98,6 +100,46 @@ module Competitions
         results
       end
 
+      # TODO just do this in source_results with join
+      def add_upgrade_results(results, race)
+        if race.name.in?(upgrades.keys)
+          upgrade_race = races.detect { |r| r.name == upgrades[race.name] }
+          results.to_a + Result.connection.select_all(Result.
+            select(
+              "distinct results.id as id",
+              "1 as multiplier",
+              "events.bar_points as event_bar_points",
+              "events.date",
+              "events.type",
+              "member_from",
+              "member_to",
+              "parents_events.bar_points as parent_bar_points",
+              "parents_events_2.bar_points as parent_parent_bar_points",
+              "races.bar_points as race_bar_points",
+              "results.#{participant_id_attribute} as participant_id",
+              "results.event_id",
+              "place",
+              "results.points",
+              "results.race_id",
+              "results.race_name as category_name",
+              "results.year",
+              "team_member",
+              "team_name",
+              "true as upgrade"
+            ).
+            joins(:race, :event, :person).
+            joins("left outer join events parents_events on parents_events.id = events.parent_id").
+            joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
+            where("results.race_id = ?", upgrade_race).
+            # Only include upgrade results for people with category results
+            where("results.#{participant_id_attribute} in (?)", results.map { |r| r["participant_id"] }.uniq )
+          ).to_a
+        else
+          results
+        end
+      end
+
+      # TODO remove?
       def delete_bar_points(results)
         results.each do |result|
           %w{ race_bar_points event_bar_points parent_bar_points parent_parent_bar_points }.each do |a|

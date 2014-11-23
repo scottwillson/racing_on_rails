@@ -132,7 +132,7 @@ module Competitions
     def calculate!
       before_calculate
 
-      races.each do |race|
+      races_in_upgrade_order.each do |race|
         results = source_results_with_benchmark(race)
         create_competition_results_for results, race
         after_create_competition_results_for race
@@ -151,6 +151,15 @@ module Competitions
     # Callback
     def after_calculate
       self.updated_at = Time.zone.now
+    end
+
+    def races_in_upgrade_order
+      if upgrades.any?
+        categories_in_upgrade_order = upgrades.values + (races.map(&:name) - upgrades.values)
+        categories_in_upgrade_order.map { |name| races.detect { |race| race.name == name }}.compact
+      else
+        races
+      end
     end
 
     # source_results must be in person, place ascending order
@@ -241,6 +250,10 @@ module Competitions
       nil
     end
 
+    def maximum_upgrade_points
+      Competition::UNLIMITED
+    end
+
     def place_bonus
       nil
     end
@@ -288,6 +301,10 @@ module Competitions
 
     def default_ironman
       false
+    end
+
+    def upgrades
+      {}
     end
 
     def expire_cache
