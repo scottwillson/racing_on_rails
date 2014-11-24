@@ -1,6 +1,5 @@
 module Competitions
   class OregonWomensPrestigeTeamSeries < Competition
-    include Competitions::Calculations::CalculatorAdapter
     include Competitions::OregonWomensPrestigeSeriesModules::Common
 
     def friendly_name
@@ -34,7 +33,7 @@ module Competitions
     def source_results_query(race)
       # Only consider results with categories that match +race+'s category
       if categories?
-        super.where("races.category_id in (?)", category_ids_for(race))
+        super.where("races.category_id in (?)", categories_for(race))
       else
         super
       end
@@ -50,10 +49,10 @@ module Competitions
       results
     end
 
-    def category_ids_for(race)
+    def categories_for(race)
       if OregonWomensPrestigeSeries.find_for_year
-        categories = Category.where("name in (?)", OregonWomensPrestigeSeries.find_for_year.category_names)
-        categories.map(&:id) + categories.map(&:descendants).to_a.flatten.map(&:id)
+        categories = Category.where(name: OregonWomensPrestigeSeries.find_for_year.category_names)
+        categories = categories + categories.map(&:descendants).to_a.flatten
       else
         []
       end

@@ -65,10 +65,10 @@ module Competitions
     end
 
     # Use combined Junior results from race day. Don't combine all the age groups races into one.
-    def category_ids_for(race)
+    def categories_for(race)
       case race.name
       when "Junior Men", "Junior Women"
-        [ Category.find_or_create_by(name: race.name).id ]
+        [ Category.find_or_create_by(name: race.name) ]
       else
         super race
       end

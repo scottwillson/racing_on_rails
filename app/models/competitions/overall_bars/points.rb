@@ -1,3 +1,4 @@
+# TODO Delete
 module Competitions
   module OverallBars
     module Points

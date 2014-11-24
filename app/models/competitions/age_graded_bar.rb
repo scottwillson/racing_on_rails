@@ -1,20 +1,18 @@
 module Competitions
   # OBRA OverallBar organized by Masters and Juniors age categories
   class AgeGradedBar < Competition
-    include Competitions::Calculations::CalculatorAdapter
-
     after_create :set_parent
-    
+
     def source_results_query(race)
       super.
       where("races.category_id" => race.category.parent_id).
       where("people.date_of_birth between ? and ?", race.dates_of_birth.begin, race.dates_of_birth.end)
     end
-    
+
     def source_event_types
       [ Competitions::OverallBar ]
     end
-    
+
     def category_names
       categories!.map(&:name)
     end
@@ -30,13 +28,13 @@ module Competitions
 
       categories
     end
-    
+
     def template_categories
       masters_men = Category.find_or_create_by!(name: "Masters Men")
       masters_women = Category.find_or_create_by!(name: "Masters Women")
       junior_men = Category.find_or_create_by!(name: "Junior Men")
       junior_women = Category.find_or_create_by!(name: "Junior Women")
-      
+
       template_categories = []
       position = 0
       30.step(65, 5) do |age|

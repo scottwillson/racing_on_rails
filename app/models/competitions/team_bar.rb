@@ -4,10 +4,9 @@ module Competitions
   class TeamBar < Competition
     include Competitions::Bars::Categories
     include Competitions::Bars::Discipline
-    include Competitions::Calculations::CalculatorAdapter
 
     after_create :set_parent
-    
+
     def source_results_query(race)
       super.
       select("competition_events.type").
@@ -19,7 +18,7 @@ module Competitions
       where("competition_results.year" => year).
       where("results.id = scores.source_result_id")
     end
-    
+
     def after_source_results(results)
       results_with_tandem_teams_split = []
       results.each do |result|

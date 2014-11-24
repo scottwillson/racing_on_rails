@@ -1,7 +1,5 @@
 module Competitions
   class OregonJuniorCyclocrossSeries < Competition
-    include Competitions::Calculations::CalculatorAdapter
-
     def friendly_name
       "Junior Cyclocross Series"
     end
@@ -37,7 +35,7 @@ module Competitions
 
     def source_results_query(race)
       super.
-      where("races.category_id" => category_ids_for(race))
+      where("races.category_id" => categories_for(race))
     end
   end
 end

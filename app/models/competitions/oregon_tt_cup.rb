@@ -1,8 +1,6 @@
 module Competitions
   # Year-long OBRA TT competition
   class OregonTTCup < Competition
-    include Competitions::Calculations::CalculatorAdapter
-
     def friendly_name
       "OBRA Time Trial Cup"
     end
@@ -53,12 +51,12 @@ module Competitions
     def source_results_query(race)
       super.
       where(bar: true).
-      where("races.category_id in (?)", category_ids_for(race)).
+      where("races.category_id" => categories_for(race)).
       where("events.sanctioned_by" => RacingAssociation.current.default_sanctioned_by)
     end
 
-    def category_ids_for(race)
-      ids = [ race.category_id ] + race.category.descendants.map(&:id)
+    def categories_for(race)
+      ids = [ race.category ] + race.category.descendants
 
       case race.category.name
       when "Senior Men Pro/1/2"

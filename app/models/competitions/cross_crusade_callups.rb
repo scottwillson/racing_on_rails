@@ -1,7 +1,5 @@
 module Competitions
   class CrossCrusadeCallups < Competition
-    include Competitions::Calculations::CalculatorAdapter
-
     default_value_for :name, "Cross Crusade Call-ups"
 
     def category_names
@@ -31,7 +29,7 @@ module Competitions
 
     def source_results_query(race)
       super.
-      where("races.category_id" => category_ids_for(race))
+      where("races.category_id" => categories_for(race))
     end
 
     def point_schedule
@@ -42,12 +40,12 @@ module Competitions
       true
     end
 
-    def category_ids_for(race)
-      ids = super(race)
+    def categories_for(race)
+      categories = super(race)
       if race.name == "Masters 35+ A"
-        ids << Category.find_or_create_by(name: "Masters Men A 40+").id
+        categories << Category.find_or_create_by(name: "Masters Men A 40+")
       end
-      ids
+      categories
     end
   end
 end

@@ -1,8 +1,6 @@
 module Competitions
   # Team's top ten results for each Event. Last-place points penalty if team has fewer than ten finishers.
   class CrossCrusadeTeamCompetition < Competition
-    include Competitions::Calculations::CalculatorAdapter
-
     validates_presence_of :parent
     after_create :add_source_events
     before_create :set_notes, :set_name

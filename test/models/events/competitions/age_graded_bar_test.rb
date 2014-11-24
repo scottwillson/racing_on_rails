@@ -14,6 +14,7 @@ module Competitions
       road.bar_categories << masters_men
 
       FactoryGirl.create(:discipline, name: "Overall")
+      FactoryGirl.create(:discipline, name: "Mountain Bike")
 
       # Masters 30-34 result. (32)
       weaver = FactoryGirl.create(:person, date_of_birth: Date.new(1972))

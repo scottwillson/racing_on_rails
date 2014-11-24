@@ -1,8 +1,6 @@
 module Competitions
   # Year-long best rider competition for senior men. http://obra.org/oregon_cup
   class OregonCup < Competition
-    include Competitions::Calculations::CalculatorAdapter
-
     def friendly_name
       "Oregon Cup"
     end
@@ -13,7 +11,7 @@ module Competitions
 
     def source_results_query(race)
       super.
-      where("races.category_id" => category_ids_for(race))
+      where("races.category_id" => categories_for(race))
     end
 
     # Women are often raced together and then scored separately. Combined Women 1/2/3 results count for Oregon Cup.

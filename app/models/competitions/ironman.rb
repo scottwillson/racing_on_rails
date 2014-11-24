@@ -2,10 +2,8 @@ module Competitions
   # Who has done the most events? Just counts starts/appearences in results. Not pefect -- some events
   # are probably over-counted.
   class Ironman < Competition
-    include Competitions::Calculations::CalculatorAdapter
-
     def friendly_name
-      'Ironman'
+      "Ironman"
     end
 
     def points_for(source_result)

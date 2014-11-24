@@ -1,7 +1,5 @@
 module Competitions
   class BlindDateAtTheDairyMonthlyStandings < Competition
-    include Competitions::Calculations::CalculatorAdapter
-
     def self.parent_event_name
       "Blind Date at the Dairy"
     end
@@ -60,7 +58,7 @@ module Competitions
 
     def source_results_query(race)
       super.
-      where("races.category_id in (?)", category_ids_for(race))
+      where("races.category_id" => categories_for(race))
     end
 
     def add_source_events

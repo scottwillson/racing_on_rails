@@ -1,7 +1,5 @@
 module Competitions
   class BlindDateAtTheDairyTeamCompetition < Competition
-    include Competitions::Calculations::CalculatorAdapter
-
     validates_presence_of :parent
 
     after_create :add_source_events
@@ -64,16 +62,16 @@ module Competitions
         end
       end
     end
-    
+
     def source_results_query(race)
       super.
-      where("races.category_id" => category_ids_for(race))
+      where("races.category_id" => categories_for(race))
     end
-    
+
     def race_category_names
       [ "Team Competition" ]
     end
-    
+
     def source_results_category_names
       [
         "Beginner Men",
@@ -91,9 +89,9 @@ module Competitions
         "Women C"
       ]
     end
-    
-    def category_ids_for(race)
-      Category.where(name: source_results_category_names).pluck(:id)
+
+    def categories_for(race)
+      Category.where(name: source_results_category_names)
     end
   end
 end

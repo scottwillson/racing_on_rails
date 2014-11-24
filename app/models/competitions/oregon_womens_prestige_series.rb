@@ -1,6 +1,5 @@
 module Competitions
   class OregonWomensPrestigeSeries < Competition
-    include Competitions::Calculations::CalculatorAdapter
     include Competitions::OregonWomensPrestigeSeriesModules::Common
 
     def friendly_name
@@ -27,14 +26,14 @@ module Competitions
       if women_4?(race)
         source_events.map(&:id) - cat_123_only_event_ids
       else
-        source_events.map(&:id) 
+        source_events.map(&:id)
       end
     end
 
     def source_results_query(race)
       # Only consider results with categories that match +race+'s category
       if categories?
-        super.where("races.category_id in (?)", category_ids_for(race))
+        super.where("races.category_id" => categories_for(race))
       else
         super
       end
@@ -48,7 +47,7 @@ module Competitions
 
 
     private
-    
+
     def women_4?(race)
       race.category.name == "Women 4"
     end

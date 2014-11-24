@@ -187,7 +187,7 @@ module Competitions
       cx_bar = Bar.find_by_name("2004 Cyclocross BAR")
       men_cx_bar = cx_bar.races.detect { |b| b.category == men_a }
       assert_equal(2, men_cx_bar.results.size, "Men A Cyclocross BAR results")
-      
+
       results = men_cx_bar.results.sort
       assert_equal(tonkin, results[0].person, "Men A Cyclocross BAR results person")
       assert_equal("1", results[0].place, "Men A Cyclocross BAR results place")
@@ -246,43 +246,43 @@ module Competitions
     end
 
     test "count category 4 5 results" do
-      category_4_5_men = FactoryGirl.build(:category, name: "Category 4/5 Men")
-      category_4_men = FactoryGirl.build(:category, name: "Category 4 Men")
+      category_4_5_men = FactoryGirl.create(:category, name: "Category 4/5 Men")
+      category_4_men = FactoryGirl.create(:category, name: "Category 4 Men")
       category_4_5_men.children << category_4_men
 
-      ids = Bar.new.category_ids_for(Race.new(category: category_4_men))
-      assert_equal_enumerables [ category_4_5_men.id, category_4_men.id ], ids, "Should include Cat 4/5 in Cat 4 results"
+      cats = Bar.new.categories_for(Race.new(category: category_4_men))
+      assert_same_elements [ category_4_5_men, category_4_men ], cats, "Should include Cat 4/5 in Cat 4 results"
     end
 
     test "masters 4 5" do
-      masters_men             = FactoryGirl.build(:category, name: "Masters Men")
-      masters_men_4_5         = FactoryGirl.build(:category, name: "Masters Men 4/5", parent: masters_men)
-                                FactoryGirl.build(:category, name: "Masters Men 4/5 40+", parent: masters_men_4_5)
-                                FactoryGirl.build(:category, name: "Masters Men 4/5 50+", parent: masters_men_4_5)
-      masters_men_40_plus     = FactoryGirl.build(:category, name: "Masters Men 40+", parent: masters_men)
+      masters_men             = FactoryGirl.create(:category, name: "Masters Men")
+      masters_men_4_5         = FactoryGirl.create(:category, name: "Masters Men 4/5", parent: masters_men)
+                                FactoryGirl.create(:category, name: "Masters Men 4/5 40+", parent: masters_men_4_5)
+                                FactoryGirl.create(:category, name: "Masters Men 4/5 50+", parent: masters_men_4_5)
+      masters_men_40_plus     = FactoryGirl.create(:category, name: "Masters Men 40+", parent: masters_men)
 
-      ids = Bar.new.category_ids_for(Race.new(category: masters_men))
-      assert_equal_enumerables [ masters_men.id, masters_men_40_plus.id ], ids, "Should include all Masters children except 4/5"
+      cats = Bar.new.categories_for(Race.new(category: masters_men))
+      assert_same_elements [ masters_men, masters_men_40_plus ], cats, "Should include all Masters children except 4/5"
     end
 
     test "masters women" do
-      masters_women           = FactoryGirl.build(:category, name: "Masters Women")
-      masters_women_4         = FactoryGirl.build(:category, name: "Masters Women 4", parent: masters_women)
-                                FactoryGirl.build(:category, name: "Masters Women 4 40+", parent: masters_women_4)
-      masters_women_40_plus   = FactoryGirl.build(:category, name: "Masters Women 40+", parent: masters_women)
+      masters_women           = FactoryGirl.create(:category, name: "Masters Women")
+      masters_women_4         = FactoryGirl.create(:category, name: "Masters Women 4", parent: masters_women)
+                                FactoryGirl.create(:category, name: "Masters Women 4 40+", parent: masters_women_4)
+      masters_women_40_plus   = FactoryGirl.create(:category, name: "Masters Women 40+", parent: masters_women)
 
-      ids = Bar.new.category_ids_for(Race.new(category: masters_women))
-      assert_equal_enumerables [ masters_women.id, masters_women_40_plus.id ], ids, "Should include all Masters women children except 4"
+      cats = Bar.new.categories_for(Race.new(category: masters_women))
+      assert_same_elements [ masters_women, masters_women_40_plus ], cats, "Should include all Masters women children except 4"
     end
 
-    test "#category_ids_for should not modify association" do
+    test "#categories_for should not modify association" do
       root = FactoryGirl.create(:category)
       node = FactoryGirl.create(:category, parent: root)
       leaf = FactoryGirl.create(:category, parent: node)
 
-      Bar.new.category_ids_for(Race.new(category: root.reload))
-      Bar.new.category_ids_for(Race.new(category: node.reload))
-      Bar.new.category_ids_for(Race.new(category: leaf.reload))
+      Bar.new.categories_for(Race.new(category: root.reload))
+      Bar.new.categories_for(Race.new(category: node.reload))
+      Bar.new.categories_for(Race.new(category: leaf.reload))
 
       assert_equal nil, root.parent, "root parent"
       assert_equal root, node.parent, "node parent"

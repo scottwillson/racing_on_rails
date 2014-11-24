@@ -1,7 +1,7 @@
 module Competitions
   module Bars
     module Categories
-      def category_ids_for(race)
+      def categories_for(race)
         # Really should remove all other top-level categories and their descendants?
         cats = [ race.category ] + race.category.descendants
 
@@ -28,7 +28,7 @@ module Competitions
           cats << category_4_5_men
         end
 
-        cats.map(&:id)
+        cats
       end
     end
   end

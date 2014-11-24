@@ -2,8 +2,6 @@ module Competitions
   # Common superclass for Omniums and Series standings.
   # Easy to miss override: Overall results only include members
   class Overall < Competition
-    include Competitions::Calculations::CalculatorAdapter
-
    validates_presence_of :parent
    after_create :add_source_events
 
@@ -44,7 +42,7 @@ module Competitions
 
     def source_results_query(race)
       super.
-      where("races.category_id in (?)", category_ids_for(race))
+      where("races.category_id" => categories_for(race))
     end
 
     # Only members can score points?

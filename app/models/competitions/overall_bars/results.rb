@@ -3,13 +3,13 @@ module Competitions
     module Results
       extend ActiveSupport::Concern
 
-      def source_results(race)
+      def old_source_results(race)
         ::Result.
         includes(:race, {person: :team}, :team, {race: [:event, :category]}).
         where(%Q{events.type = 'Competitions::Bar'
           and place between 1 and 300
-          and ((events.discipline not in ("Mountain Bike", "Downhill", "Short Track") and categories.id in (#{category_ids_for(race)}))
-            or ((events.discipline in ("Mountain Bike", "Downhill", "Short Track")) and categories.id in (#{mtb_category_ids_for(race)})))
+          and ((events.discipline not in ("Mountain Bike", "Downhill", "Short Track") and categories.id in (#{categories_for(race)}))
+            or ((events.discipline in ("Mountain Bike", "Downhill", "Short Track")) and categories.id in (#{mtb_categories_for(race)})))
           and events.date >= '#{date.year}-01-01'
           and events.date <= '#{date.year}-12-31'}).
         order(:person_id).
@@ -19,7 +19,7 @@ module Competitions
       # Array of ids (integers)
       # +race+ category, +race+ category's siblings, and any competition categories
       # Overall BAR does some awesome mappings for MTB and DH
-      def mtb_category_ids_for(race)
+      def mtb_categories_for(race)
         return "NULL" unless race.category
 
         case race.category.name

@@ -44,6 +44,9 @@ module Competitions
       discipline.bar_categories << senior_men
       discipline.bar_categories << senior_women
 
+      # Required for source results query
+      FactoryGirl.create(:discipline, name: "Mountain Bike")
+
       kona = FactoryGirl.create(:team, name: "Kona")
       gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
       vanilla = FactoryGirl.create(:team, name: "Vanilla")

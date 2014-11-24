@@ -2,7 +2,6 @@ module Competitions
   # MBRA BAT scoring rules: http://www.montanacycling.net/documents/racers/MBRA%20BAR-BAT.pdf
   class MbraTeamBar < Competition
     include Bars::Discipline
-    include Competitions::Calculations::CalculatorAdapter
 
     def self.calculate!(year = Time.zone.today.year)
       ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
@@ -55,7 +54,7 @@ module Competitions
     def source_results_query(race)
       super.
       where(bar: true).
-      where("races.category_id in (?)", category_ids_for(race)).
+      where("races.category_id" => categories_for(race)).
       where("events.discipline in (:disciplines)
             or (events.discipline is null and parents_events.discipline in (:disciplines))
             or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (:disciplines))",
