@@ -363,7 +363,7 @@ class Race < ActiveRecord::Base
   end
 
   def inspect_debug
-    puts to_s
+    puts "  #{to_s}"
     results(true).sort.each(&:inspect_debug)
   end
 

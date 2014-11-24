@@ -223,9 +223,9 @@ class Result < ActiveRecord::Base
   end
 
   def inspect_debug
-    puts to_long_s
+    puts "    #{to_long_s}"
     scores(true).sort.each do |score|
-      puts score.inspect_debug
+      puts "      #{score.inspect_debug}"
     end
   end
 
