@@ -23,6 +23,8 @@ module Competitions
       discipline = FactoryGirl.create(:discipline, name: "Overall")
       discipline.bar_categories << @senior_men
       discipline.bar_categories << @senior_women
+
+      FactoryGirl.create(:discipline, name: "Mountain Bike")
     end
 
     test "person" do

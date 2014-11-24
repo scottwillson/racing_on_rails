@@ -3,11 +3,6 @@ require "test_helper"
 module Competitions
   # :stopdoc:
   class AgeGradedBarControllerTest < ActionController::TestCase
-    include ActionView::Helpers::TagHelper
-    include ActionView::Helpers::UrlHelper
-    include ActionView::Helpers::TextHelper
-    include ActionView::Helpers::CaptureHelper
-
     tests BarController
 
     def setup
@@ -21,6 +16,7 @@ module Competitions
       road.bar_categories << @masters_men
 
       FactoryGirl.create(:discipline, name: "Overall")
+      FactoryGirl.create(:discipline, name: "Mountain Bike")
 
       weaver = FactoryGirl.create(:person, date_of_birth: 32.years.ago(Time.zone.local(2007)))
       banana_belt = FactoryGirl.create(:event, date: Date.new(2007, 3, 20))
