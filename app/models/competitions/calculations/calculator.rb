@@ -98,7 +98,7 @@ module Competitions
         results.group_by { |r| [ r.race_id, r.place ] }.
         each { |key, results_with_same_place| results_by_race_and_place[key] = results_with_same_place.size }
 
-        # For effeciency, calculate which races are team races outside of loop
+        # For efficiency, calculate which races are team races outside of loop
         team_races = team_races(results)
 
         results.map do |result|
