@@ -1,16 +1,23 @@
 module Competitions
   module Calculations
     module Teams
-      def team_race?(race_id, results)
-        teams(race_id, results) / unique_places(race_id, results) < 0.5
+      def team_races(results)
+        results.group_by(&:race_id).select do |race_id, race_results|
+          team_race? race_results
+        end.
+        keys
       end
 
-      def unique_places(race_id, results)
-        results.select { |r| r.race_id == race_id }.map(&:place).uniq.size.to_f
+      def team_race?(results)
+        teams(results) / unique_places(results) < 0.5
       end
 
-      def teams(race_id, results)
-        results.select { |r| r.race_id == race_id }.group_by(&:place).values.select { |r| r.size > 1 }.size
+      def unique_places(results)
+        results.map(&:place).uniq.size.to_f
+      end
+
+      def teams(results)
+        results.group_by(&:place).values.select { |r| r.size > 1 }.size
       end
     end
   end

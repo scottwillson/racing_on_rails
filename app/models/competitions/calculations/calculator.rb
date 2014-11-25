@@ -98,10 +98,12 @@ module Competitions
         results.group_by { |r| [ r.race_id, r.place ] }.
         each { |key, results_with_same_place| results_by_race_and_place[key] = results_with_same_place.size }
 
+        # For effeciency, calculate which races are team races outside of loop
+        team_races = team_races(results)
+
         results.map do |result|
           # Check if there was just a tie, not teams
-          # Inefficient to call team_race? in a loop but doesn't matter in practice
-          if team_race?(result.race_id, results)
+          if team_races.include?(result.race_id)
             merge_struct result, team_size: 1
           else
             merge_struct result, team_size: results_by_race_and_place[[ result.race_id, result.place ]]
