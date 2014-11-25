@@ -55,6 +55,10 @@ module Competitions
       [ 15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
     end
 
+    def source_events?
+      true
+    end
+
     def add_source_events
       parent.children.each do |source_event|
         if source_event.name == parent_event_name
