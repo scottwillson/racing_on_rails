@@ -7,14 +7,6 @@ GIT
       rubyzip (>= 1.0.0)
 
 GIT
-  remote: git://github.com/vkill/default_value_for.git
-  revision: 87c422ec269f6bbe6efec4d04183d79c8e1f26fc
-  branch: issue#38
-  specs:
-    default_value_for (3.0.0.1)
-      activerecord (>= 3.2.0, < 5.0)
-
-GIT
   remote: https://github.com/amerine/acts_as_tree.git
   revision: 6f856745965a8f07ba8b3f330a4ac9e5931707dd
   specs:
@@ -195,6 +187,8 @@ GEM
     connection_pool (2.1.0)
     dalli (2.7.2)
     database_cleaner (1.3.0)
+    default_value_for (3.0.0.1)
+      activerecord (>= 3.2.0, < 5.0)
     domain_name (0.5.22)
       unf (>= 0.0.5, < 1.0.0)
     elasticsearch (1.0.6)
@@ -497,7 +491,7 @@ DEPENDENCIES
   connection_pool
   dalli
   database_cleaner
-  default_value_for!
+  default_value_for
   elasticsearch-model
   elasticsearch-rails
   erubis

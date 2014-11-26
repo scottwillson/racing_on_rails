@@ -25,6 +25,8 @@ module RacingOnRails
       config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :team_observer
     end
 
+    config.active_record.raise_in_transactional_callbacks = true
+
     # HP's proxy, among others, gets this wrong
     config.action_dispatch.ip_spoofing_check = false
 

@@ -8,6 +8,7 @@ RacingOnRails::Application.configure do
   config.autoload_paths                                    += %W(
     #{config.root}/lib/test
   )
+  config.active_support.test_order = :random
   config.cache_classes                                      = true
   config.consider_all_requests_local                        = true
   config.eager_load                                         = false
