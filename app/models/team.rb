@@ -39,13 +39,12 @@ class Team < ActiveRecord::Base
     team
   end
 
-  def self.find_all_by_name_like(name, limit = 100)
+  def self.name_like(name)
     name_like = "%#{name}%"
     Team.
       where('teams.name like ? or aliases.name like ?', name_like, name_like).
       includes(:aliases).
       references(:aliases).
-      limit(limit).
       order("teams.name")
   end
 
@@ -55,10 +54,18 @@ class Team < ActiveRecord::Base
   end
 
   def ensure_no_results
-    return true if results.empty?
+    return true if no_results?
 
     errors.add :base, "Cannot delete team with results. #{name} has #{results.count} results."
     false
+  end
+
+  def no_results?
+    results.count == 0
+  end
+
+  def no_people?
+    people.count == 0
   end
 
   # If name changes to match existing alias, destroy the alias
@@ -140,10 +147,6 @@ class Team < ActiveRecord::Base
 
   def member_in_year?(date = Time.zone.today)
     member
-  end
-
-  def eligible_for_mbra_team_bar?(date = Time.zone.today, discipline)
-    Event.find_all_for_team_and_discipline(self, discipline, date).count > 0
   end
 
   def name=(value)

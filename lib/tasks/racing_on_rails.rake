@@ -1,30 +1,104 @@
 namespace :racing_on_rails do
-  
-  desc 'Cold setup' 
+
+  desc 'Cold setup'
   task :bootstrap do
     puts "Bootstrap task will delete your Racing on Rails development database."
     db_password = ask("MySQL root password (press return for no password): ")
     puts "Create databases"
-    puts `mysql -u root #{db_password_arg(db_password)} < #{File.expand_path(::Rails.root.to_s + "/db/create_databases.sql")}`
+    puts `mysql -u root #{db_password_arg(db_password)} -e 'drop database if exists racing_on_rails_development'`
+    puts `mysql -u root #{db_password_arg(db_password)} < #{File.expand_path(::Rails.root.to_s + "/db/grants.sql")}`
     puts "Populate development database"
-    puts `mysql -u root #{db_password_arg(db_password)} racing_on_rails_development -e "SET FOREIGN_KEY_CHECKS=0; source #{File.expand_path(::Rails.root.to_s + "/db/structure.sql")}; SET FOREIGN_KEY_CHECKS=1;"`
+    puts `rake db:setup`
+    puts "Create test database"
+    puts `rake db:setup RAILS_ENV=test`
     puts "Start server"
     puts "Please open http://localhost:8080/ in your web browser"
-    puts `unicorn`
+    puts exec("./bin/rails s puma -p 8080")
   end
-end
-
-namespace :db do
-  namespace :structure do
-    desc "Monkey-patched by Racing on Rails. Standardize format to prevent source control churn."
-    task dump: :environment do
-      sql = File.open("#{::Rails.root}/db/structure.sql").readlines.join
-      sql.gsub!(/AUTO_INCREMENT=\d+ +/i, "")
-
-      File.open("#{::Rails.root}/db/structure.sql", "w") do |file|
-        file << sql
+  
+  task database_dump: :environment do
+    db = ActiveRecord::Base.configurations
+    puts `mysqldump -u #{db["production"]["username"]} -p#{db["production"]["password"]} -h #{db["production"]["host"]} --compress --ignore-table=#{db["production"]["database"]}.posts #{db["production"]["database"]} > db/production.sql`
+    puts `mysqldump -u #{db["production"]["username"]} -p#{db["production"]["password"]} -h #{db["production"]["host"]} --compress --no-data #{db["production"]["database"]} posts >> db/production.sql`
+  end
+  
+  namespace :competitions do
+    desc "Save COMPETITION results as JSON for comparison"
+    task :snapshot do
+      competition_class = "Competitions::#{ENV['COMPETITION']}".safe_constantize
+      discipline = ENV['DISCIPLINE'] || "Road"
+      competition = competition_class.where(discipline: discipline).current_year.first
+      FileUtils.mkdir_p "#{Rails.root}/tmp/competitions"
+      file_path = "#{Rails.root}/tmp/#{competition_class.name.underscore}-#{discipline.underscore}.json"
+      FileUtils.rm_rf file_path
+      File.write file_path, JSON.generate(competition.as_json(nil))
+    end
+    
+    desc "Compare COMPETITION snapshot with new results"
+    task :diff do
+      competition_class = "Competitions::#{ENV['COMPETITION']}".safe_constantize
+      competition_class.calculate!
+      discipline = ENV['DISCIPLINE'] || "Road"
+      competition = competition_class.where(discipline: discipline).current_year.first
+      file_path = "#{Rails.root}/tmp/#{competition_class.name.underscore}-#{discipline.underscore}.json"
+      snapshot_results = JSON.parse(File.read(file_path))
+      new_results = competition.as_json(nil)
+      diff = HashDiff.best_diff(snapshot_results, new_results)
+      diff.each do |line|
+        p line
       end
     end
+    
+    desc "Calculate all competitions"
+    task calculate: :environment do
+      classes = [
+        # ::Competitions::Cat4WomensRaceSeries,
+        # ::Competitions::WsbaBarr,
+        # ::Competitions::WsbaMastersBarr,
+        # ::Competitions::MbraBar,
+        # ::Competitions::MbraTeamBar,
+        ::Competitions::CrossCrusadeOverall,
+        ::Competitions::CrossCrusadeTeamCompetition,
+        ::Competitions::TaborOverall,
+        ::Competitions::Ironman,
+        ::Competitions::OregonCup,
+        ::Competitions::OregonJuniorCyclocrossSeries,
+        ::Competitions::OregonWomensPrestigeSeries,
+        ::Competitions::OregonWomensPrestigeTeamSeries,
+        ::Competitions::BlindDateAtTheDairyOverall,
+        ::Competitions::BlindDateAtTheDairyTeamCompetition,
+        ::Competitions::OregonTTCup,
+        ::Competitions::CrossCrusadeCallups,
+        ::Competitions::Bar,
+        ::Competitions::TeamBar,
+        ::Competitions::OverallBar,
+        ::Competitions::AgeGradedBar
+      ]
+      
+      existing_results = Hash.new
+      ::Competitions::Competition.current_year.each do |competition|
+        results = Result.where(event: competition).map(&:competition_result_hash)
+        puts "Found #{results.size} results for #{competition}"
+        existing_results[competition] = results
+      end
+      
+      classes.each do |competition_class|
+        puts competition_class
+        start_time = Time.zone.now
+        competition_class.calculate!
+        puts "#{(Time.zone.now - start_time).to_i}"
+      end
+      
+      ::Competitions::Competition.current_year.each do |competition|
+        results = Result.where(event: competition).map(&:competition_result_hash)
+        
+        if existing_results[competition].nil?
+          puts "No previous results for #{competition.full_name}"
+        elsif existing_results[competition].sort != results.sort
+          puts "#{competition.full_name} results changed"
+        end
+      end
+    end      
   end
 end
 

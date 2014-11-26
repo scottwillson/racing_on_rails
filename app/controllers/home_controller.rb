@@ -1,7 +1,5 @@
 # Homepage
 class HomeController < ApplicationController
-  caches_page :index
-
   before_filter :require_administrator, except: [ :index, :show ]
 
   # Show homepage
@@ -20,9 +18,9 @@ class HomeController < ApplicationController
     @most_recent_event_with_recent_result = Event.most_recent_with_recent_result(
       @home.weeks_of_recent_results.weeks.ago,
       RacingAssociation.current.default_sanctioned_by
-    ).first
+    )
 
-    @news_category = ArticleCategory.where(name: "news").first
+    @news_category = ArticleCategory.where(name: "news")
     if @news_category
       @recent_news = Article.recent_news(@home.weeks_of_upcoming_events.weeks.ago, @news_category)
     end
@@ -62,17 +60,5 @@ class HomeController < ApplicationController
 
   def recent_posts
     Post.recent
-  end
-
-  # Most recent updated_at for all models shown on homepage
-  def updated_at
-    [
-      Article.maximum(:updated_at),
-      ArticleCategory.maximum(:updated_at),
-      Event.maximum(:updated_at),
-      Home.maximum(:updated_at),
-      Post.maximum(:updated_at),
-      Result.maximum(:updated_at)
-    ].compact.max
   end
 end

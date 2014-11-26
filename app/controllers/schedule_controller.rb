@@ -2,8 +2,6 @@
 #
 # Caches all of its pages
 class ScheduleController < ApplicationController
-  caches_page :index, :list, :calendar
-
   before_filter :assign_schedule
   before_filter :assign_sanctioning_organizations
 
@@ -53,6 +51,7 @@ class ScheduleController < ApplicationController
   # * schedule: instance of year's Schedule::Schedule
   def list
     @calendar_tab = "List with race organizer contact information"
+    @events = @events.includes(:promoter)
 
     respond_to do |format|
       format.html do

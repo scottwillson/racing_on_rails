@@ -11,6 +11,7 @@ class Race < ActiveRecord::Base
   include Comparable
   include Export::Races
   include RacingOnRails::VestalVersions::Versioned
+  include Sanctioned
 
   DEFAULT_RESULT_COLUMNS = %W{ place number last_name first_name team_name points time }.freeze
   RESULT_COLUMNS = %W{
@@ -20,7 +21,6 @@ class Race < ActiveRecord::Base
   }.freeze
 
   validates_presence_of :event, :category
-  validate :inclusion_of_sanctioned_by
 
   before_validation :find_associated_records
 
@@ -126,13 +126,6 @@ class Race < ActiveRecord::Base
 
   def sanctioned_by
     self[:sanctioned_by] || event.try(:sanctioned_by) || RacingAssociation.current.default_sanctioned_by
-  end
-
-  # FIXME Extract to module. Shared by Event.
-  def inclusion_of_sanctioned_by
-    if sanctioned_by && !RacingAssociation.current.sanctioning_organizations.include?(sanctioned_by)
-      errors.add :sanctioned_by, "'#{sanctioned_by}' must be in #{RacingAssociation.current.sanctioning_organizations.join(", ")}"
-    end
   end
 
   def present_columns
@@ -284,41 +277,17 @@ class Race < ActiveRecord::Base
     results.sort.each do |result|
       place_before = result.members_only_place.to_i
       result.members_only_place = ''
-      if result.place.to_i > 0
-        if ((result.person.nil? || (result.person && result.person.member?(result.date))) && !non_members_on_team(result))
+      if result.numeric_place?
+        if result.member_result?
           # only increment if we have moved onto a new place
-          last_members_only_place += 1 if (result.place.to_i != last_members_only_place && result.place.to_i!=last_result_place)
+          last_members_only_place += 1 if (result.numeric_place != last_members_only_place && result.numeric_place !=last_result_place)
           result.members_only_place = last_members_only_place.to_s
         end
         # Slight optimization. Most of the time, no point in saving a result that hasn't changed
         result.update(members_only_place: result.members_only_place) if place_before != result.members_only_place
         # store to know when switching to new placement (team result feature)
-        last_result_place = result.place.to_i
+        last_result_place = result.numeric_place
       end
-    end
-  end
-
-  def non_members_on_team(result)
-    non_members = false
-    # if this is undeclared in environment.rb, assume this rule does not apply
-    exempt_cats = RacingAssociation.current.exempt_team_categories
-    if (exempt_cats.nil? || exempt_cats.include?(result.race.category.name))
-      return non_members
-    else
-      other_results_in_place = Result.where(race_id: result.race.id, place: result.place)
-      other_results_in_place.each { |orip|
-        unless orip.person.nil?
-          if !orip.person.member?(result.date)
-            # might as well blank out this result while we're here, saves some future work
-            result.members_only_place = ''
-            result.update_attribute members_only_place: result.members_only_place
-            # could also use other_results_in_place.size if needed for calculations
-            non_members = true
-          end
-        end
-      }
-      # still false if no others found, or all are members, or could not be determined (non-person)
-      non_members
     end
   end
 
@@ -327,35 +296,32 @@ class Race < ActiveRecord::Base
       return results.create(place: "1")
     end
 
-    _results = results.sort
     if result_id
+      _results = results.sort
       result = Result.find(result_id)
-      place = result.place
       start_index = _results.index(result)
-      for index in start_index...(_results.size)
-        if _results[index].place.to_i > 0
-          _results[index].place = (_results[index].place.to_i + 1).to_s
-          _results[index].save!
+      (start_index..._results.size).each do |index|
+        if _results[index].numeric_place?
+          _results[index].update_attributes! place: _results[index].next_place
         end
       end
-    else
-      result = _results.last
-      if result.place.to_i > 0
-        place = result.place.to_i + 1
-      else
-        place = result.place
-      end
-    end
 
-    results.create(place: place)
+      results.create place: result.place
+    else
+      append_result
+    end
+  end
+
+  def append_result
+    results.create place: results.sort.last.next_place
   end
 
   def destroy_result(result)
     _results = results.sort
     start_index = _results.index(result) + 1
-    for index in start_index...(_results.size)
-      if _results[index].place.to_i > 0
-        _results[index].place = _results[index].place.to_i - 1
+    (start_index..._results.size).each do |index|
+      if _results[index].numeric_place?
+        _results[index].place = _results[index].numeric_place - 1
         _results[index].save!
       end
     end
@@ -366,8 +332,17 @@ class Race < ActiveRecord::Base
     results.any?
   end
 
+  # Helper method for as_json
+  def sorted_results
+    results.sort
+  end
+
+  def junior?
+    category.junior?
+  end
+
   # By category name
-  def <=>other
+  def <=>(other)
     category.name <=> other.category.name
   end
 
@@ -385,6 +360,11 @@ class Race < ActiveRecord::Base
       return other.id == id
     end
     category == other.category
+  end
+
+  def inspect_debug
+    puts "  #{to_s}"
+    results(true).sort.each(&:inspect_debug)
   end
 
   def to_s

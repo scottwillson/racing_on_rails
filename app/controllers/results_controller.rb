@@ -1,8 +1,6 @@
 # What appear to be duplicate finds are actually existence tests.
 # Many methods to handle old URLs that search engines still hit. Will be removed.
 class ResultsController < ApplicationController
-  caches_page :person, :person_event, :team
-
   helper_method :competitions
   helper_method :events
   helper_method :weekly_series
@@ -25,6 +23,10 @@ class ResultsController < ApplicationController
 
   # All Results for Event
   def event
+    if !Event.exists?(params[:event_id])
+      return event_not_found(params[:event_id])
+    end
+
     @event = Event.where(id: params[:event_id]).first
 
     case @event
@@ -41,21 +43,13 @@ class ResultsController < ApplicationController
     when Competitions::RiderRankings
       return redirect_to(rider_rankings_path(year: @event.year))
     when nil
-      flash[:notice] = "Could not find event #{params[:id]}"
-      return redirect_to(schedule_path)
+      return event_not_found(params[:event_id])
     end
 
     respond_to do |format|
       format.html do
         ActiveSupport::Notifications.instrument "assign_data.event.results.racing_on_rails", event_id: @event.id, event_name: @event.name do
-          @source_events = Event.none
-          if @event.respond_to?(:source_events)
-            @source_events = @event.source_events.include_results
-          end
-
-          @races = Race.where(event_id: @event.id).include_results
-          @single_day_event_children = SingleDayEvent.where(parent_id: @event.id).include_child_results
-          @children = Event.where(parent_id: @event.id).not_single_day_event.include_child_results
+          assign_event_data
           assign_start_list
         end
       end
@@ -69,12 +63,9 @@ class ResultsController < ApplicationController
     begin
       @event = Event.find(params[:event_id])
       @person = Person.find(params[:person_id])
-      @results = Result.
-                  includes(scores: [ :source_result, :competition_result ]).
-                  where(event_id: params[:event_id]).
-                  where(person_id: params[:person_id])
+      @results = Result.person_event @person, @event
     rescue ActiveRecord::RecordNotFound
-      flash[:notice] = "Could not find result for #{@event.try :name} #{@person.try :name}"
+      flash[:notice] = "Could not find results for #{@event.try :name} #{@person.try :name}"
       return redirect_to(people_path)
     end
   end
@@ -84,11 +75,7 @@ class ResultsController < ApplicationController
     begin
       @team = Team.find(params[:team_id])
       @event = Event.find(params[:event_id])
-      @result = Result.
-                includes(scores: [ :source_result, :competition_result ]).
-                where("results.event_id" => params[:event_id]).
-                where(team_id: params[:team_id]).
-                first!
+      @results = Result.team_event(@team, @event)
     rescue ActiveRecord::RecordNotFound
       flash[:notice] = "Could not find result for #{@event.try :name} #{@team.try :name}"
       return redirect_to(teams_path)
@@ -191,5 +178,22 @@ class ResultsController < ApplicationController
 
   def results_for_api(event_id)
     Result.where(event_id: event_id)
+  end
+
+  def assign_event_data
+    if @event.source_events?
+      @source_events = @event.source_events.include_results
+    else
+      @source_events = Event.none
+    end
+
+    @races = Race.where(event_id: @event.id).include_results
+    @single_day_event_children = SingleDayEvent.where(parent_id: @event.id).include_child_results
+    @children = Event.where(parent_id: @event.id).not_single_day_event.include_child_results
+  end
+
+  def event_not_found(id)
+    flash[:notice] = "Could not find event #{id}"
+    redirect_to schedule_path
   end
 end

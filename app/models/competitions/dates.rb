@@ -52,7 +52,11 @@ module Competitions
     end
 
     def all_year?
-      true
+      if source_events?
+        false
+      else
+        true
+      end
     end
 
     # Assert start and end dates are first and last days of the year
@@ -65,6 +69,7 @@ module Competitions
           errors.add "end_date", "must be December 31st, but was: '#{end_date}'"
         end
       end
+      
       if start_date && end_date && start_date.to_date.year != end_date.to_date.year
         errors.add :date, "and end date must be in same year but are #{start_date} and #{end_date}"
       end

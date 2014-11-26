@@ -1,38 +1,5 @@
 module Competitions
+  # Retired
   class WsbaMastersBarr < WsbaBarr
-    def friendly_name
-      "WSBA Masters BARR"
-    end
-
-    def point_schedule
-      [ 0, 20, 17, 15, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 ]
-    end
-
-    def category_names
-      [
-        "Master Men 35-39 Cat 1-3",
-        "Master Men 35-39 Cat 4-5",
-        "Master Men 40-49 Cat 1-3",
-        "Master Men 40-49 Cat 4-5",
-        "Master Men 50+ Cat 1-5",
-        "Master Women 35+ Cat 1-3",
-        "Master Women 35+ Cat 4"
-      ]
-    end
-
-    def points_for(source_result, team_size = nil)
-      points = 0
-      WsbaBarr.benchmark('points_for', level: "debug") {
-        results_in_place = Result.where(race_id: source_result.race_id, place: source_result.place).count
-        if team_size.nil?
-          # assume this is a TTT, score divided by 4 regardless of # of riders
-          team_size = (results_in_place > 1) ? 4 : 1
-        end
-        points_index = place_members_only? ? source_result.members_only_place.to_i : source_result.place.to_i
-        points = point_schedule[points_index].to_f
-        points /= team_size.to_f
-      }
-      points
-    end
   end
 end

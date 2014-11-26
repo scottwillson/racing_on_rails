@@ -1,6 +1,18 @@
 module Results
   module Comparison
     extend ActiveSupport::Concern
+    
+    # For competition result equivalence. Don't want to override hash and eql? for all Results.
+    def competition_result_hash
+      (
+        person_id.hash ^ 
+        (person_name.hash * 2) ^ 
+        (place.hash * 3) ^ 
+        (points.hash * 5) ^ 
+        (team_id.hash * 7) ^ 
+        (team_name.hash * 11)
+      ).hash
+    end
 
     # Highest points first. Break ties by highest placing
     # OBRA rules:
@@ -76,7 +88,7 @@ module Results
 
     # Poor name. For comparison, we sort by placed, finished, DNF, etc
     def major_place
-      if place.to_i > 0
+      if numeric_place?
         0
       elsif place.blank? || place == 0
         1
@@ -91,10 +103,6 @@ module Results
       end
     end
 
-    def place_as_integer
-      place.to_i
-    end
-
     # All numbered places first, then blanks, followed by DNF, DQ, and DNS
     def <=>(other)
       # Respect eql?
@@ -107,8 +115,8 @@ module Results
         major_difference = (major_place <=> other.major_place)
         return major_difference if major_difference != 0
 
-        if place.to_i > 0
-          place.to_i <=> other.place.to_i
+        if numeric_place?
+          numeric_place <=> other.numeric_place
         elsif id.present?
           id <=> other.id
         else

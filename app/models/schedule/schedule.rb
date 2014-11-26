@@ -19,9 +19,6 @@ module Schedule
       velodrome: :velodrome_name
     }
 
-    # FIXME Remove dependency. Is it here because we need a helper?
-    include ActionView
-
     # 0-based array of Months
     attr_reader :months, :year
     attr_accessor :events
@@ -231,17 +228,24 @@ module Schedule
     def initialize(year, events)
       @year = year.to_i
       @events = events
+    end
+
+    def months
+      @months ||= assign_months
+    end
+
+    def assign_months
       @months = []
+
       (1..12).each do |month|
         @months << Month.new(year, month)
       end
+
       events.each do |event|
-        month = @months[event.date.month - 1]
-        if month.nil?
-          raise IndexError, "Could not find month for #{event.date.month} in year #{year}"
-        end
-        month.add event
+        @months[event.date.month - 1].add event
       end
+
+      @months
     end
   end
 end

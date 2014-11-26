@@ -100,15 +100,26 @@ module Competitions
       source_result = FactoryGirl.create(:result, place: "12", person: person)
       ironman = Ironman.create!
       expected = {
-        "id" => source_result.id,
-        "participant_id" => source_result.person.id,
+        "id" => 1,
+        "multiplier" => 1,
+        "event_bar_points" => 1,
+        "date" => Time.zone.today,
+        "discipline" => "Road",
+        "type" => "SingleDayEvent",
         "member_from" => Date.new(2005, 8, 1),
         "member_to" => Date.new(2010, 12, 31),
+        "parent_bar_points" => nil,
+        "parent_parent_bar_points" => nil,
+        "race_bar_points" => nil,
+        "participant_id" => 1,
+        "event_id" => 1,
         "place" => "12",
-        "event_id" => source_result.event.id,
-        "race_id" => source_result.race_id,
-        "date" => source_result.event.date,
-        "year" => Time.zone.now.year
+        "points" => 0.0,
+        "race_id" => 1,
+        "category_name" => source_result.race.name,
+        "year" => 2014,
+        "team_member" => 1,
+        "team_name" => source_result.team.name
       }
       assert_equal [ expected ], ironman.source_results(ironman.races.first).to_a, "source_results"
     end
@@ -118,10 +129,10 @@ module Competitions
       result1 = FactoryGirl.create(:result, person: person)
       result2 = FactoryGirl.create(:result, person: person)
 
-      Struct.new("TestResult", :place, :participant_id, :points, :scores)
+      Struct.new("TestResult", :place, :participant_id, :preliminary, :points, :scores)
       Struct.new("TestScore", :points, :source_result_id)
       scores = [ Struct::TestScore.new(1, result1.id), Struct::TestScore.new(1, result2.id) ]
-      calculated_results = [ Struct::TestResult.new(1, person.id, 2, scores) ]
+      calculated_results = [ Struct::TestResult.new(1, person.id, false, 2, scores) ]
 
       ironman = Ironman.create!
       ironman.create_competition_results_for(calculated_results, ironman.races.first)
@@ -147,7 +158,7 @@ module Competitions
 
     test "team ids by person id hash" do
       ironman = Ironman.create!
-      assert_equal({}, ironman.team_ids_by_person_id_hash([]))
+      assert_equal({}, ironman.team_ids_by_participant_id_hash([]))
     end
 
     test "team ids by person id hash no results" do
@@ -155,7 +166,7 @@ module Competitions
       person = FactoryGirl.create(:person, team: team)
       ironman = Ironman.create!
       Struct.new("TestResult2", :participant_id)
-      assert_equal({ person.id => team.id }, ironman.team_ids_by_person_id_hash([ Struct::TestResult2.new(person.id) ]))
+      assert_equal({ person.id => team.id }, ironman.team_ids_by_participant_id_hash([ Struct::TestResult2.new(person.id) ]))
     end
 
     test "create score" do

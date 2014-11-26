@@ -1,22 +1,24 @@
-<div class="home">
-  <%= render "photo_row",
-      photo: @photo,
-      most_recent_event_with_recent_result: @most_recent_event_with_recent_result,
-      weeks_of_recent_results: @home.weeks_of_recent_results %>
-  <div class="row">
-    <div class="col-sm-6">
-      <%= render_page "home/upcoming_events", upcoming_events: @upcoming_events %>
+<% cache cache_key(@today) do %>
+  <div class="home">
+    <%= render "photo_row",
+        photo: @photo,
+        most_recent_event_with_recent_result: @most_recent_event_with_recent_result,
+        weeks_of_recent_results: @home.weeks_of_recent_results %>
+    <div class="row">
+      <div class="col-sm-6">
+        <%= render_page "home/upcoming_events", upcoming_events: @upcoming_events %>
+      </div>
+      <div class="col-sm-6">
+        <%= render_page "home/recent_results",
+            events_with_recent_results: @events_with_recent_results,
+            weeks_of_recent_results: @home.weeks_of_recent_results %>
+      </div>
     </div>
-    <div class="col-sm-6">
-      <%= render_page "home/recent_results",
-          events_with_recent_results: @events_with_recent_results,
-          weeks_of_recent_results: @home.weeks_of_recent_results %>
-    </div>
+
+    <%= render_page "home/posts", posts: @posts %>
+
+    <%= render_page "home/ads" %>
+    <%= render_page "home/links" %>
+    <%= render_page "home/associated" %>
   </div>
-
-  <%= render_page "home/posts", posts: @posts %>
-
-  <%= render_page "home/ads" %>
-  <%= render_page "home/links" %>
-  <%= render_page "home/associated" %>
-</div>
+<% end %>

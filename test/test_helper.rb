@@ -147,7 +147,7 @@ class ActiveSupport::TestCase
     Result.all.group_by(&:race).each do |race, results|
        all_results = results.collect(&:place)
        # important to get last place in last
-       (1..results.sort.last.place.to_i).reverse_each { |res|
+       (1..results.sort.last.numeric_place).reverse_each { |res|
          unless all_results.include?(res.to_s)
            # we need a result, there is a gap here
            race.results.create!(place: res)

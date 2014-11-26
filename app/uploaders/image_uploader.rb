@@ -1,9 +1,24 @@
+require "carrier_wave/mini_magick/processing"
+
 class ImageUploader < CarrierWave::Uploader::Base
-  include CarrierWave::RMagick
+  include CarrierWave::MiniMagick
 
   storage :file
-  process resize_to_limit: [ 2880, 1800 ]
-  process :save_dimensions
+
+  version :original
+
+  version :desktop do
+    process resize_to_limit: [ 1440, 900 ]
+    process quality: 85
+    process :interlace
+    process :save_dimensions
+  end
+
+  version :mobile do
+    process resize_to_limit: [ 480, 320 ]
+    process quality: 85
+    process :interlace
+  end
 
   def store_dir
     "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
@@ -18,12 +33,8 @@ class ImageUploader < CarrierWave::Uploader::Base
   end
 
   def save_dimensions
-    if @file
-      img = ::Magick::Image::read(@file.file).first
-      if model
-        model.width = img.columns
-        model.height = img.rows
-      end
+    if file && model
+      model.width, model.height = ::MiniMagick::Image.open(file.file)[:dimensions]
     end
   end
 end

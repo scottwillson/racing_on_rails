@@ -1,21 +1,23 @@
 <% @page_title = "Ironman: #{@year}" %>
 
-<%= tabs(@year) do |tabs|
-  @years.each do |year|
-    tabs.add year, ironman_path(year)
-  end
-end %>
+<% cache cache_key(@year, @ironman, page) do %>
+  <%= tabs(@year) do |tabs|
+    @years.each do |year|
+      tabs.add year, ironman_path(year)
+    end
+  end %>
 
-<h3><%= @ironman.date.year %> Ironman</h3>
+  <h3><%= @ironman.date.year %> Ironman</h3>
 
-<p class="event_notes"><%= @ironman.notes %></p>
+  <p class="event_notes"><%= @ironman.notes %></p>
 
-<% if @ironman.updated_at %>
-<p class="created_updated">Updated <%= @ironman.updated_at.to_s(:long) %></p>
+  <% if @ironman.updated_at %>
+  <p class="created_updated">Updated <%= @ironman.updated_at.to_s(:long) %></p>
+  <% end %>
+
+  <%= will_paginate @results %>
+
+  <%= results_table @ironman, @ironman.races.first, @results %>
+
+  <%= will_paginate @results %>
 <% end %>
-
-<%= will_paginate @results %>
-
-<%= results_table @ironman, @ironman.races.first, @results %>
-
-<%= will_paginate @results %>

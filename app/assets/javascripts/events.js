@@ -9,12 +9,12 @@ jQuery(document).ready(function() {
 
   jQuery('#propagate_races').bind('ajax:beforeSend', function() {
     jQuery('#propagate_races').hide();
-    jQuery('#propagate_races_progress').show();
+    jQuery('#update_races_progress').show();
   });
 
   jQuery('#destroy_races').bind('ajax:beforeSend', function() {
     jQuery('#destroy_races').hide();
-    jQuery('#destroy_races_progress').show();
+    jQuery('#update_races_progress').show();
   });
 
   jQuery('#edit_promoter_link').click(function() {

@@ -135,7 +135,11 @@ module Admin
       temp_file = File.new(path)
       @event = Event.find(params[:id])
 
-      results_file = Results::ResultsFile.new(temp_file, @event)
+      if RacingAssociation.current.usac_results_format?
+        results_file = Results::USACResultsFile.new(temp_file, @event)
+      else
+        results_file = Results::ResultsFile.new(temp_file, @event)
+      end
 
       begin
         results_file.import
@@ -322,6 +326,7 @@ module Admin
         :human_registration_ends_at_time,
         :instructional,
         :ironman,
+        :junior_price,
         :membership_required,
         :name,
         :notes,

@@ -79,7 +79,7 @@ module Competitions
 
       alice = FactoryGirl.create(:person)
       swan_island_senior_men.results.create(
-        place: "dnf",
+        place: "DNF",
         person: alice,
         team: gentle_lovers
       )
@@ -95,8 +95,6 @@ module Competitions
       assert_difference "Result.count", 2 do
         MbraTeamBar.calculate!(2008)
       end
-
-      #MBRA BAR scoring rules: http://www.montanacycling.net/documents/racers/MBRA%20BAR-BAT.pdf
 
       road_bat = MbraTeamBar.find_by_name("2008 Road BAT")
       men_road_bat = road_bat.races.detect {|b| b.category == senior_men }

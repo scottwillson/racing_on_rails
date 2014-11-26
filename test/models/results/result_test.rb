@@ -328,17 +328,17 @@ class ResultTest < ActiveSupport::TestCase
     assert(!result.person.member?, "Person with rental number should not be member")
   end
 
-  test "find all for person" do
+  test "person scope" do
     molly = FactoryGirl.create(:person)
     FactoryGirl.create(:result, person: molly)
     FactoryGirl.create(:result, person: molly)
     FactoryGirl.create(:result, person: molly)
 
-    results = Result.find_all_for(molly)
+    results = Result.person(molly)
     assert_not_nil(results)
     assert_equal(3, results.size, 'Results')
 
-    results = Result.find_all_for(molly.id)
+    results = Result.person(molly.id)
     assert_not_nil(results)
     assert_equal(3, results.size, 'Results')
   end

@@ -25,6 +25,7 @@ class RacingAssociationsController < Admin::AdminController
     params_without_mobile.require(:racing_association).permit(
       :add_members_from_results,
       :administrator_tabs,
+      :allow_iframes,
       :always_insert_table_headers,
       :award_cat4_participation_points,
       :bmx_numbers,
@@ -56,7 +57,6 @@ class RacingAssociationsController < Admin::AdminController
       :rental_numbers_start,
       :result_questions_url,
       :sanctioning_organizations,
-      :search_results_limit,
       :short_name,
       :show_all_teams_on_public_page,
       :show_calendar_view,

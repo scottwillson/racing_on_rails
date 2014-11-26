@@ -1,4 +1,4 @@
-require File.expand_path("../../../../test_helper", __FILE__)
+require "test_helper"
 
 module Competitions
   # :stopdoc:
@@ -40,7 +40,7 @@ module Competitions
       CrossCrusadeOverall.calculate!(2007)
       assert_not_nil(series.overall(true), "Should add new Overall Competition child to parent Series")
       overall = series.overall
-      assert_equal 21, overall.races.size, "Overall races"
+      assert_equal 31, overall.races.size, "Overall races"
 
       assert_equal "Series Overall", overall.name, "Overall name"
       assert_equal "Cross Crusade: Series Overall", overall.full_name, "Overall full name"
@@ -110,7 +110,7 @@ module Competitions
       event.races.create!(category: masters).results.create!(place: 3, person: person)
       event.races.create!(category: category_a).results.create!(place: 20, person: person)
 
-      CrossCrusadeOverall.calculate!(2008)
+      CrossCrusadeOverall.calculate! 2008
 
       masters_overall_race = series.overall.races.detect { |race| race.category == masters }
       assert_not_nil(masters_overall_race, "Should have Masters overall race")
@@ -118,8 +118,8 @@ module Competitions
       result = results.first
       assert_equal(false, result.preliminary?, "Preliminary?")
       assert_equal("1", result.place, "place")
-      assert_equal(7, result.scores.size, "Scores")
-      assert_equal(26 + 26 + 0 + 26 + 0 + 26 + 20 + 26 + 20, result.points, "points")
+      assert_equal(6, result.scores.size, "Scores")
+      assert_equal(26 + 26 + 0 + 26 + 0 + 26 + 20 + 26 + 0, result.points, "points")
       assert_equal(person, result.person, "person")
 
       category_a_overall_race = series.overall.races.detect { |race| race.category == category_a }
@@ -134,7 +134,7 @@ module Competitions
 
       singlespeed_overall_race = series.overall.races.detect { |race| race.category == singlespeed }
       assert_not_nil(singlespeed_overall_race, "Should have Singlespeed overall race")
-      assert(singlespeed_overall_race.results.empty?, "Should not have any singlespeed results")
+      assert(singlespeed_overall_race.results.empty?, "Should not have any singlespeed results, but have #{singlespeed_overall_race.results.size}")
     end
   end
 end

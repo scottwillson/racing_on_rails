@@ -28,7 +28,9 @@ Rails.application.routes.draw do
             post :propagate
           end
         end
+        resource :races_collection
       end
+
       resources :first_aid_providers
       resources :mailing_lists do
         resources :posts do

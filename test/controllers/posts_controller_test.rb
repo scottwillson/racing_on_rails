@@ -45,44 +45,6 @@ class PostsControllerTest < ActionController::TestCase
     assert_tag(tag: "input", attributes: {type: "submit", name: "commit", value: "Send"})
   end
 
-  test "blank search" do
-    mailing_list = FactoryGirl.create(:mailing_list)
-    FactoryGirl.create_list(:post, 3, mailing_list: mailing_list)
-    get :index, mailing_list_id: mailing_list.id, subject: ""
-    assert_response :success
-    assert_equal 3, assigns[:posts].size, "Should return all posts"
-  end
-
-  test "matching search" do
-    PostText.delete_all
-    mailing_list = FactoryGirl.create(:mailing_list)
-    FactoryGirl.build_list(:post, 3, mailing_list: mailing_list).each do |post|
-      Post.save post, mailing_list
-    end
-    post = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "Cervelo for sale")
-    Post.save post, mailing_list
-
-    get :index, mailing_list_id: mailing_list.id, subject: "Cervelo"
-
-    assert_response :success
-    assert_equal [ post ], assigns[:posts], "Should search by subject posts"
-  end
-
-  test "no matching search" do
-    PostText.delete_all
-    mailing_list = FactoryGirl.create(:mailing_list)
-    FactoryGirl.build_list(:post, 3, mailing_list: mailing_list).each do |post|
-      Post.save post, mailing_list
-    end
-    post = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "Paging Todd Littlehales")
-    Post.save post, mailing_list
-
-    get :index, mailing_list_id: mailing_list.id, subject: "Cervelo"
-
-    assert_response :success
-    assert assigns[:posts].empty?, "Should search by subject posts"
-  end
-
   test "index" do
     mailing_list = FactoryGirl.create(:mailing_list)
     get :index, mailing_list_id: mailing_list.id

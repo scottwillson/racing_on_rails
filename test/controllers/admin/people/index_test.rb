@@ -34,7 +34,6 @@ module Admin
         assert_template layout: "admin/application"
         assert_not_nil(assigns["people"], "Should assign people")
         assert(assigns["people"].empty?, "Should have no people")
-        assert_not_nil(assigns["name"], "Should assign name")
       end
 
       test "find" do
@@ -86,9 +85,8 @@ module Admin
         assert_response :success
         assert_template("admin/people/index")
         assert_not_nil(assigns["people"], "Should assign people")
-        assert_equal(RacingAssociation.current.search_results_limit, assigns['people'].size, "Search for '' should find all people")
+        assert_equal(30, assigns['people'].size, "Search for '' should find all people")
         assert_not_nil(assigns["name"], "Should assign name")
-        assert(!flash.empty?, 'flash not empty?')
         assert_equal('Ryan', assigns['name'], "'name' assigns")
       end
 

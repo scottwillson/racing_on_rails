@@ -3,6 +3,10 @@ if Rails.env.production? || Rails.env.staging?
   parameter_filter = ActionDispatch::Http::ParameterFilter.new(Rails.application.config.filter_parameters)
 
   ActiveSupport::Notifications.subscribe(/fragment|process_action.action_controller|racing_on_rails/) do |name, start, finish, id, payload|
+    if payload[:status] && payload[:status].is_a?(Fixnum)
+      payload[:status] = payload[:status].to_s
+    end
+
     message = {
       current_person_name: ::Person.current.try(:name),
       current_person_id: ::Person.current.try(:id),

@@ -52,14 +52,6 @@ namespace :deploy do
     end
   end
 
-  task :copy_cache do
-    on roles :app do
-      %w{ bar bar.html events export people index.html results results.html teams teams.html }.each do |cached_path|
-        run("if [ -e \"#{previous_release}/public/#{cached_path}\" ]; then cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}; fi") rescue nil
-      end
-    end
-  end
-
   task :cache_error_pages do
     on roles :app do
       %w{ 404 422 500 503 }.each do |status_code|
@@ -71,5 +63,4 @@ end
 
 before "deploy:updated", "deploy:local_code"
 before "deploy:updated", "deploy:registration_engine"
-after "deploy:updated", "deploy:copy_cache"
 after "deploy:finished", "deploy:cache_error_pages"

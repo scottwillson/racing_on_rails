@@ -78,7 +78,6 @@ function autoCompleteTeam(model, attribute, path) {
           .append('<a>' + item.name + '</a>')
           .appendTo( ul );
       };
-    ;
   });
 }
 
@@ -141,6 +140,10 @@ function makeEditable() {
     }
   );
 }
+
+jQuery(document).bind("ajax:error", function(event, xhr, status, error) {
+   alert('We\'re sorry, but something went wrong (' + error + ')');
+ });
 
 jQuery(document).ready(function() {
   makeEditable();

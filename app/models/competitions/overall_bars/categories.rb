@@ -1,3 +1,4 @@
+# TODO Delete
 module Competitions
   module OverallBars
     module Categories
@@ -24,27 +25,26 @@ module Competitions
       end
 
       # Really should remove all other top-level categories and their descendants?
-      def category_ids_for(race)
-        ids = [ race.category_id ]
-        ids = ids + race.category.descendants.map(&:id)
+      def categories_for(race)
+        categories = [ race.category ] + race.category.descendants
 
         if race.category.name == "Masters Men"
           masters_men_4_5 = ::Category.find_by_name("Masters Men 4/5")
           if masters_men_4_5
-            ids.delete masters_men_4_5.id
-            ids = ids - masters_men_4_5.descendants.map(&:id)
+            categories.delete masters_men_4_5
+            categories = categories - masters_men_4_5.descendants
           end
         end
 
         if race.category.name == "Masters Women"
           masters_women_4 = ::Category.find_by_name("Masters Women 4")
           if masters_women_4
-            ids.delete masters_women_4.id
-            ids = ids - masters_women_4.descendants.map(&:id)
+            categories.delete masters_women_4
+            categories = categories - masters_women_4.descendants
           end
         end
 
-        ids.join(', ')
+        categories
       end
 
       def find_category(name)

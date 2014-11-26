@@ -48,6 +48,10 @@ module RacingOnRails
       def updated_after_created?
         created_at && updated_at && ((updated_at - created_at) > 1.hour)
       end
+      
+      def never_updated?
+        !updated_after_created?
+      end
     end
   end
 end

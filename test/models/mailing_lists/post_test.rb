@@ -55,27 +55,6 @@ class PostTest < ActiveSupport::TestCase
     assert post.valid?, post.errors.full_messages.to_s
   end
 
-  test "full text search index" do
-    PostText.delete_all
-
-    mailing_list = FactoryGirl.create(:mailing_list)
-    post = Post.new(
-      subject: "Vintage Vanilla cap",
-      body: "Body",
-      mailing_list: mailing_list,
-      date: Time.zone.now,
-      from_email: "admin@example.com",
-      from_name: "Admin"
-    )
-    post.save!
-    assert !PostText.exists?(text: "Vintage Vanilla cap"), "Should not create matching PostText by default"
-    assert_not_nil !post.post_text, "Should not create matching PostText"
-
-    Post.save post, mailing_list
-    assert PostText.exists?(text: "Vintage Vanilla cap"), "Should create matching PostText"
-    assert_not_nil post.post_text, "Should create matching PostText"
-  end
-
   test "newer should get next lowest original and older should get next highest original" do
     mailing_list = FactoryGirl.create(:mailing_list)
     original = FactoryGirl.create(:post, mailing_list: mailing_list, last_reply_at: 1.day.ago, position: 3)

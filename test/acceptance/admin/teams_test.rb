@@ -22,15 +22,15 @@ class TeamsTest < AcceptanceTest
     assert_page_has_content "Enter part of a team's name"
     fill_in "name", with: "e\n"
 
-    assert_table("teams_table", 2, 2, "Chocolate")
-    assert_table("teams_table", 3, 2, "Gentle Lovers")
-    assert_table("teams_table", 4, 2, "Team dFL")
-    assert_table("teams_table", 5, 2, "Vanilla")
+    assert_table("teams_table", 1, 2, "Chocolate")
+    assert_table("teams_table", 2, 2, "Gentle Lovers")
+    assert_table("teams_table", 3, 2, "Team dFL")
+    assert_table("teams_table", 4, 2, "Vanilla")
 
-    assert_table "teams_table", 2, 3, ""
-    assert_table("teams_table", 3, 3, "Gentile Lovers")
-    assert_table "teams_table", 4, 3, ""
-    assert_table("teams_table", 5, 3, "Vanilla Bicycles")
+    assert_table "teams_table", 1, 3, ""
+    assert_table("teams_table", 2, 3, "Gentile Lovers")
+    assert_table "teams_table", 3, 3, ""
+    assert_table("teams_table", 4, 3, "Vanilla Bicycles")
 
     assert has_checked_field?("team_member_#{dfl.id}")
     assert has_checked_field?("team_member_#{vanilla.id}")
@@ -54,7 +54,7 @@ class TeamsTest < AcceptanceTest
     visit "/admin/teams"
     fill_in "name", with: "vagen\n"
 
-    assert_table("teams_table", 2, 2, "SpeedVagen")
+    assert_table("teams_table", 1, 2, "SpeedVagen")
 
     fill_in_inline "#team_#{vanilla.id}_name", with: "Sacha's Team"
 
@@ -89,9 +89,9 @@ class TeamsTest < AcceptanceTest
     visit "/admin/teams"
     fill_in "name", with: "e\n"
 
-    assert_table("teams_table", 2, 2, "Chocolate")
-    assert_table("teams_table", 3, 2, "Gentle Lovers")
-    assert_table("teams_table", 4, 2, "Team dFL")
+    assert_table("teams_table", 1, 2, "Chocolate")
+    assert_table("teams_table", 2, 2, "Gentle Lovers")
+    assert_table("teams_table", 3, 2, "Team dFL")
   end
 
   test "merge confirm" do
@@ -107,11 +107,11 @@ class TeamsTest < AcceptanceTest
     visit "/admin/teams"
     fill_in "name", with: "e\n"
 
-    assert_table("teams_table", 2, 2, "Chocolate")
-    assert_table("teams_table", 3, 2, "Gentle Lovers")
-    assert_table("teams_table", 4, 2, "Team dFL")
-    assert_table("teams_table", 5, 2, "Vanilla")
-    assert_table("teams_table", 5, 3, "Vanilla Bicycles")
+    assert_table("teams_table", 1, 2, "Chocolate")
+    assert_table("teams_table", 2, 2, "Gentle Lovers")
+    assert_table("teams_table", 3, 2, "Team dFL")
+    assert_table("teams_table", 4, 2, "Vanilla")
+    assert_table("teams_table", 4, 3, "Vanilla Bicycles")
 
     fill_in_inline "#team_#{vanilla.id}_name", with: "Gentle Lovers"
     click_button "Merge"

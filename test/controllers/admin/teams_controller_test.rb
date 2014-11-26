@@ -95,21 +95,6 @@ module Admin
       assert_equal('', assigns['name'], "'name' assigns")
     end
 
-    test "find limit" do
-      for i in 0..RacingAssociation.current.search_results_limit
-        Team.create(name: "Test Team #{i}")
-      end
-
-      get(:index, name: 'Test')
-      assert_response(:success)
-      assert_template("admin/teams/index")
-      assert_not_nil(assigns["teams"], "Should assign teams")
-      assert_equal(RacingAssociation.current.search_results_limit, assigns['teams'].size, "Search for '' should find all teams")
-      assert_not_nil(assigns["name"], "Should assign name")
-      assert(!flash.empty?, 'flash not empty?')
-      assert_equal('Test', assigns['name'], "'name' assigns")
-    end
-
     test "blank name" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
       assert_raise(ActiveRecord::RecordInvalid) do
@@ -319,6 +304,7 @@ module Admin
 
     test "toggle member" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
+      result = FactoryGirl.create(:result, team: vanilla)
 
       assert_equal(true, vanilla.member, 'member before update')
       post(:toggle_member, id: vanilla.to_param)
@@ -326,12 +312,14 @@ module Admin
       assert_template("shared/_member")
       vanilla.reload
       assert_equal(false, vanilla.member, 'member after update')
+      assert_equal false, result.reload.team_member?, "Result#team_member should be updated"
 
       post(:toggle_member, id: vanilla.to_param)
       assert_response(:success)
       assert_template("shared/_member")
       vanilla.reload
       assert_equal(true, vanilla.member, 'member after second update')
+      assert_equal true, result.reload.team_member?, "Result#team_member should be updated"
     end
 
     test "edit" do

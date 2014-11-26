@@ -71,10 +71,7 @@ module Admin
                           "mtb_category" => "", "dh_category" => "", "member" => "1", "gender" => "", "ccx_category" => "",
                           "team_name" => "", "road_category" => "", "street" => "", "track_category" => "", "home_phone" => "",
                           "first_name" => "Jon", "last_name" => "Knowlson",
-                          "email" => "", "state" => "",
-                          "race_numbers_attributes" => {
-                            "0" => {"number_issuer_id" => @association.id, "discipline_id" => @road.id, "year" => "2013", "value" => ""}
-                          }
+                          "email" => "", "state" => ""
                     }, "commit" => "Save"})
 
       assert assigns['person'].errors.empty?, assigns['person'].errors.full_messages.join
@@ -129,78 +126,6 @@ module Admin
         assert_nil(molly.member_to, 'member_to after update')
         assert_nil(RaceNumber.find(molly_road_number.to_param).updated_by_person, "updated_by_person")
         assert_equal(@administrator, RaceNumber.find_by_value("AZY").updated_by_person, "updated_by_person")
-      end
-    end
-
-    test "create with road number" do
-      assert_equal([], Person.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
-
-      post(:create, {
-        "person" => {"work_phone" => "", "date_of_birth(2i)" => "", "occupation" => "", "city" => "Brussels", "cell_fax" => "", "zip" => "",
-          "member_from(1i)" => "2004", "member_from(2i)" => "2", "member_from(3i)" => "16",
-          "member_to(1i)" => "2004", "member_to(2i)" => "12", "member_to(3i)" => "31",
-          "date_of_birth(3i)" => "", "mtb_category" => "", "dh_category" => "", "member" => "1", "gender" => "", "ccx_category" => "",
-          "team_name" => "", "road_category" => "", "street" => "", "track_category" => "", "home_phone" => "", "first_name" => "Jon",
-           "last_name" => "Knowlson", "date_of_birth(1i)" => "", "email" => "", "state" => "",
-          "race_numbers_attributes" => {
-            "0" => {"number_issuer_id" => @association.id, "discipline_id" => @road.id, "year" => "2007", "value" => "8977"},
-            "1" => {"number_issuer_id" => @association.id, "discipline_id" => @mountain_bike.id, "year" => "2007", "value" => "BBB9"}
-          }
-        },
-          number_year: '2007', "official" => "0",
-        "commit" => "Save"})
-
-      assert assigns['person'].errors.empty?, assigns['person'].errors.full_messages.join
-
-      assert(flash.empty?, "flash empty? #{flash}")
-      knowlsons = Person.find_all_by_name('Jon Knowlson')
-      assert(!knowlsons.empty?, 'Knowlson should be created')
-      assert_redirected_to(edit_admin_person_path(knowlsons.first))
-      race_numbers = knowlsons.first.race_numbers
-      assert_equal(2, race_numbers.size, 'Knowlson race numbers')
-
-      race_number = RaceNumber.where(discipline_id: Discipline[:road].id, year: 2007, person_id: knowlsons.first.id).first
-      assert_not_nil(race_number, 'Road number')
-      assert_equal(2007, race_number.year, 'Road number year')
-      assert_equal('8977', race_number.value, 'Road number value')
-      assert_equal(Discipline[:road], race_number.discipline, 'Road number discipline')
-      assert_equal(@association, race_number.number_issuer, 'Road number issuer')
-
-      race_number = RaceNumber.where(discipline_id: Discipline[:mountain_bike].id, year: 2007, person_id: knowlsons.first.id).first
-      assert_not_nil(race_number, 'MTB number')
-      assert_equal(2007, race_number.year, 'MTB number year')
-      assert_equal('BBB9', race_number.value, 'MTB number value')
-      assert_equal(Discipline[:mountain_bike], race_number.discipline, 'MTB number discipline')
-      assert_equal(@association, race_number.number_issuer, 'MTB number issuer')
-
-      assert_equal_dates('2004-02-16', knowlsons.first.member_from, 'member_from after update')
-      assert_equal_dates('2004-12-31', knowlsons.first.member_to, 'member_to after update')
-    end
-
-    test "create with duplicate road number" do
-      assert_equal([], Person.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
-
-      post(:create, {
-        "person" => {"work_phone" => "", "date_of_birth(2i)" => "", "occupation" => "", "city" => "Brussels", "cell_fax" => "", "zip" => "",
-          "member_from(1i)" => "2004", "member_from(2i)" => "2", "member_from(3i)" => "16",
-          "member_to(1i)" => "2004", "member_to(2i)" => "12", "member_to(3i)" => "31",
-          "date_of_birth(3i)" => "", "mtb_category" => "", "dh_category" => "", "member" => "1", "gender" => "", "ccx_category" => "",
-          "team_name" => "", "road_category" => "", "street" => "", "track_category" => "", "home_phone" => "",
-          "first_name" => "Jon", "last_name" => "Knowlson", "date_of_birth(1i)" => "", "email" => "", "state" => "",
-          "race_numbers_attributes" => {
-            "0" => {"number_issuer_id" => @association.id, "discipline_id" => @road.id, "year" => "2004", "value" => "104"},
-            "1" => {"number_issuer_id" => @association.id, "discipline_id" => @road.id, "year" => "2004", "value" => "BBB9"}
-          }
-        },
-        "commit" => "Save"})
-
-      assert_not_nil(assigns['person'], "Should assign person")
-      assert(assigns['person'].errors.empty?, "Person should not have errors")
-
-      knowlsons = Person.where(first_name: "Jon", last_name: "Knowlson")
-      assert_equal(1, knowlsons.size, "Should have two Knowlsons")
-      knowlsons.each do |knowlson|
-        assert_equal(2, knowlson.race_numbers.size, 'Knowlson race numbers')
       end
     end
 

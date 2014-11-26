@@ -1,0 +1,12 @@
+<% if Rails.env.development? && ENV["DEBUG_COMPETITIONS"] && event.respond_to?(:source_events) %>
+  <% @source_events = event.source_events.select(&:any_results?) %>
+  <% @scored_events = race.results.map(&:scores).flatten.map(&:source_result).map(&:event).uniq %>
+
+  <% @scored_events.sort.each do |e| %>
+    <div><%= e.date %> <%= e.full_name %></div>
+  <% end %>
+
+  <% (@source_events - @scored_events).sort.each do |e| %>
+    <div style="color: red"><%= e.date %> <%= e.full_name %></div>
+  <% end %>
+<% end %>

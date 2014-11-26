@@ -1,7 +1,7 @@
 module PageHelper
   # Look for a matching Page, but if none, fall back on Rails' template rendering
   def render_page(path, options = {})
-    page = Page.find_by_path(path)
+    page = find_page(path)
     if page
       render({ inline: page.body }.merge(options))
     else
@@ -26,5 +26,16 @@ module PageHelper
     end
 
     msg
+  end
+
+
+  private
+
+  def find_page(path)
+    if Thread.current[:pages].nil?
+      Thread.current[:pages] = Hash.new { |hash, key| hash[key] = Page.find_by_path(key) }
+    end
+
+    Thread.current[:pages][path]
   end
 end

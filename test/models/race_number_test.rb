@@ -50,14 +50,9 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert(!RaceNumber.new(person: alice, year: 2001, number_issuer: elkhorn, discipline: road).valid?, 'No value')
     assert(!RaceNumber.new(person: alice, value: '', year: 2001, number_issuer: elkhorn, discipline: road).valid?, 'Blank value')
 
-    # No person ID valid when new, but can't save
+    # No person ID invalid
     no_person = RaceNumber.new(value: 'A103', year: 2001, number_issuer: elkhorn, discipline: road)
-    assert(no_person.valid?, "No person result should be valid, but: #{no_person.errors.full_messages}")
-    assert_raise(ActiveRecord::InvalidForeignKey) {no_person.save!}
-
-    no_person = RaceNumber.new(value: '1009', year: 2001, number_issuer: elkhorn, discipline: road)
-    assert(no_person.valid?, 'No person')
-    assert_raise(ActiveRecord::InvalidForeignKey) {no_person.save!}
+    assert !no_person.valid?
 
     # Defaults
     race_number = RaceNumber.new(person: alice, value: 'A1', number_issuer: elkhorn, discipline: road)

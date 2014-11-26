@@ -10,14 +10,15 @@
     </tr>
     <% if RacingAssociation.current.show_license? %>
     <tr>
-      <td class="number_issuer8"><%= RacingAssociation.current.short_name %> Membership</td>
+      <td class="number_issuer"><%= RacingAssociation.current.short_name %> Membership</td>
       <td class="number"><%= text_field :person, :license, class: "form-control" %></td>
       <td></td>
     </tr>
     <% end %>
 
-    <% person.race_numbers.each do |race_number| %>
-      <% if race_number.new_record? %>
+    <% if !person.new_record? %>
+      <% person.race_numbers.each do |race_number| %>
+        <% if race_number.new_record? %>
     <tr class="new_number">
       <td colspan="2">
         <%= f.fields_for :race_numbers, race_number do |race_number_fields| %>
@@ -29,7 +30,7 @@
       </td>
       <td class="actions"></td>
     </tr>
-    <% else %>
+      <% else %>
     <%= content_tag :tr,
                     class: "number year-#{race_number.year}",
                     id: "number_#{race_number.id}_row",
@@ -41,7 +42,7 @@
       <td>
         <%= f.fields_for :race_numbers, race_number do |race_number_fields| %>
           <%= race_number_fields.text_field :value, class: "number form-control" %>
-        <% end %>
+          <% end %>
       </td>
       <td class="actions">
         <%= link_to(
@@ -58,8 +59,9 @@
             class: "icon"
           ) do %><span class="glyphicon glyphicon-minus-sign"></span><% end %>
       </td>
+        <% end %>
       <% end %>
-    <% end %>
+    <% end -%>
   <% end -%>
   </tbody>
 <% end -%>

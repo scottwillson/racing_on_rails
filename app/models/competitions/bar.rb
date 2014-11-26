@@ -9,10 +9,10 @@ module Competitions
   class Bar < Competition
     include Bars::Categories
     include Bars::Discipline
-    include Competitions::CalculatorAdapter
+    include Bars::Points
 
     def self.calculate!(year = Time.zone.today.year)
-      benchmark(name, level: :info) {
+      ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
         transaction do
           year = year.to_i if year.is_a?(String)
           date = Date.new(year, 1, 1)
@@ -43,80 +43,42 @@ module Competitions
             bar.calculate!
           end
         end
-      }
+      end
       # Don't return the entire populated instance!
       true
-    end
-
-    def self.find_by_year_and_discipline(year, discipline_name)
-      Bar.where(date: Time.zone.local(year).to_date, discipline: discipline_name).first
-    end
-
-    def point_schedule
-      [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
     end
 
     def field_size_bonus?
       true
     end
 
-    # Source result = counts towards the BAR "race" and BAR results
-    # Example: Piece of Cake RR, 6th, Jon Knowlson
-    #
-    # bar_result, bar_race = BAR itself and placing in the BAR
-    # Example: Senior Men BAR, 130th, Jon Knowlson, 45 points
-    #
-    # BAR results add scoring results as scores
-    # Example:
-    # Senior Men BAR, 130th, Jon Knowlson, 18 points
-    #  - Piece of Cake RR, 6th, Jon Knowlson 10 points
-    #  - Silverton RR, 8th, Jon Knowlson 8 points
-
-    # Results as array of hashes. Select fewest fields needed to calculate results.
-    # Some competition rules applied here in the query and results excluded. It's a judgement call to apply them here
-    # rather than in #calculate.
-    def source_results(race)
-      query = Result.
-        select([
-          "results.id as id", "person_id as participant_id", "people.member_from", "people.member_to", "place", "results.event_id", "race_id", "events.date", "results.year",
-          "coalesce(races.bar_points, events.bar_points, parents_events.bar_points, parents_events_2.bar_points) as multiplier"
-        ]).
-        joins(race: :event).
-        joins("left outer join people on people.id = results.person_id").
-        joins("left outer join events parents_events on parents_events.id = events.parent_id").
-        joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
-        where("place between 1 and ?", point_schedule.size).
-        where("(events.type in (?) or events.type is NULL)", source_event_types).
-        where(bar: true).
-        where("races.category_id in (?)", category_ids_for(race)).
-        where("events.sanctioned_by" => RacingAssociation.current.default_sanctioned_by).
-        where("events.discipline in (:disciplines)
-              or (events.discipline is null and parents_events.discipline in (:disciplines))
-              or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (:disciplines))",
-              disciplines: disciplines_for(race)).
-        where("coalesce(races.bar_points, events.bar_points, parents_events.bar_points, parents_events_2.bar_points) > 0").
-        where("results.year = ?", year).
-        references(:results, :events, :categories)
-
-      Result.connection.select_all query
-    end
-
     def source_event_types
-      %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries Competitions::TaborOverall }
+      [ Event, SingleDayEvent, MultiDayEvent, Series, WeeklySeries, Competitions::BlindDateAtTheDairyMonthlyStandings, Competitions::TaborOverall, ]
     end
 
-    def create_races
-      ::Discipline[discipline].bar_categories.each do |category|
-        races.create!(category: category)
+    def source_results_query(race)
+      super.
+      where(bar: true).
+      where("races.category_id" => categories_for(race)).
+      where("events.sanctioned_by" => RacingAssociation.current.default_sanctioned_by).
+      where("events.discipline in (:disciplines)
+            or (events.discipline is null and parents_events.discipline in (:disciplines))
+            or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (:disciplines))",
+            disciplines: disciplines_for(race))
+    end
+
+    def after_source_results(results)
+      results.each do |result|
+        result["multiplier"] = result["race_bar_points"] || result["event_bar_points"] || result["parent_bar_points"] || result["parent_parent_bar_points"]
       end
+    end
+
+    def category_names
+      ::Discipline[discipline].bar_categories.map(&:name)
     end
 
     def friendly_name
       'BAR'
-    end
-
-    def to_s
-      "#<#{self.class.name} #{id} #{discipline} #{name} #{date}>"
     end
   end
 end

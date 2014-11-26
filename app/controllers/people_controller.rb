@@ -16,7 +16,7 @@ class PeopleController < ApplicationController
 
   def list
     people_list = Array.new
-    Person.find_all_by_name_like(params['name']).each { |person| people_list.push( { "label" => person.name, "id" => person.id} ) }
+    Person.name_like(params['name']).each { |person| people_list.push( { "label" => person.name, "id" => person.id} ) }
     render json: people_list
   end
 
@@ -102,7 +102,7 @@ class PeopleController < ApplicationController
     end
 
     if license.present?
-      @person = Person.find_all_by_name_like(person_params[:name]).detect do |person|
+      @person = Person.name_like(person_params[:name]).detect do |person|
         person.license == license ||
         person.race_numbers.any? { |num| num.value == license && (num.year == RacingAssociation.current.effective_year || num.year == RacingAssociation.current.effective_year - 1) }
       end
@@ -171,9 +171,9 @@ class PeopleController < ApplicationController
   def find_people
     @name = params[:name].try(:strip)
     if @name.present?
-      @people = Person.find_all_by_name_like(@name, RacingAssociation.current.search_results_limit, params[:page])
+      @people = Person.name_like(@name[0, 32]).page(page)
     else
-      @people = []
+      @people = Person.none
     end
   end
 

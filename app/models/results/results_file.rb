@@ -93,20 +93,12 @@ module Results
           book = ::Spreadsheet.open(source.path)
           book.worksheets.each do |worksheet|
             race = nil
-            create_rows(worksheet)
 
+            create_rows(worksheet)
             ActiveSupport::Notifications.instrument "worksheet.import.results_file.racing_on_rails", rows: rows.size
+
             rows.each do |row|
-              Rails.logger.debug("Results::ResultsFile #{Time.zone.now} row #{row.spreadsheet_row.to_a.join(', ')}") if debug?
-              if race?(row)
-                race = find_or_create_race(row)
-                # This row is also a result. I.e., no separate race header row.
-                if usac_results_format?
-                  create_result(row, race)
-                end
-              elsif result?(row)
-                create_result(row, race)
-              end
+              race = import_row(row, race)
             end
           end
         end
@@ -117,6 +109,18 @@ module Results
       end
 
       ActiveSupport::Notifications.instrument "warnings.import.results_file.racing_on_rails", warnings_count: import_warnings.to_a.size
+    end
+
+    def import_row(row, race)
+      Rails.logger.debug("Results::ResultsFile #{Time.zone.now} row #{row.spreadsheet_row.to_a.join(', ')}") if debug?
+
+      if race?(row)
+        race = find_or_create_race(row)
+      elsif result?(row)
+        create_result row, race
+      end
+
+      race
     end
 
     def create_rows(worksheet)
@@ -131,7 +135,8 @@ module Results
             Rails.logger.debug("number_format pattern to_s to_f #{spreadsheet_row.format(index).number_format}  #{spreadsheet_row.format(index).pattern} #{cell} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}")
           end
         end
-        row = Results::Row.new(spreadsheet_row, column_indexes, usac_results_format?)
+        row = Results::Row.new(spreadsheet_row, column_indexes)
+        row = new_row(spreadsheet_row, column_indexes)
         unless row.blank?
           if column_indexes.nil?
             create_columns(spreadsheet_row)
@@ -154,15 +159,13 @@ module Results
     def create_columns(spreadsheet_row)
       self.column_indexes = Hash.new
       self.columns = []
-      spreadsheet_row.each_with_index do |cell, index|
-        cell_string = cell.to_s
-        if cell_string.present?
-          cell_string.strip!
-          cell_string.gsub!(/^"/, '')
-          cell_string.gsub!(/"$/, '')
-        end
 
-        Rails.logger.debug("CELLS: #{cell_string}, #{spreadsheet_row[index - 1].blank?}, #{spreadsheet_row[index + 1].blank?}") if debug?
+      spreadsheet_row.each_with_index do |cell, index|
+        Rails.logger.debug("CELLS: #{cell.to_s}, #{spreadsheet_row[index - 1].blank?}, #{spreadsheet_row[index + 1].blank?}") if debug?
+
+        cell_string = cell.to_s
+        cell_string = strip_quotes(cell_string)
+
         if cell_string == "Name" && spreadsheet_row[index + 1].blank?
           cell_string = "First Name"
         elsif cell_string.blank? && "Name" == spreadsheet_row[index - 1]
@@ -172,25 +175,9 @@ module Results
         if index == 0 && cell_string.blank?
           column_indexes[:place] = 0
         elsif cell_string.present?
-          cell_string = cell_string.downcase.underscore
-          cell_string.gsub!(" ", "_")
-          cell_string = COLUMN_MAP[cell_string] if COLUMN_MAP[cell_string]
+          column_name = to_column_name(cell_string)
 
-          if cell_string.present?
-            if usac_results_format?
-              if prototype_result.respond_to?(cell_string.to_sym)
-                column_indexes[cell_string.to_sym] = index
-                self.columns << cell_string
-              end
-            else
-              column_indexes[cell_string.to_sym] = index
-              self.columns << cell_string
-              if !prototype_result.respond_to?(cell_string.to_sym)
-                self.custom_columns << cell_string
-                self.race_custom_columns << cell_string
-              end
-            end
-          end
+          create_column column_name, index
         end
       end
 
@@ -199,30 +186,13 @@ module Results
     end
 
     def race?(row)
-      if usac_results_format?
-        #new race when one of the key fields changes: category, gender, class or age if age is a range
-        #i was looking for place = 1 but it is possible that all in race were dq or dnf or dns
-        return false if column_indexes.nil? || row.blank?
-        return true if row.previous.blank?
-        #break if age is a range and it has changed
-        if row[:age].present? && /\d+-\d+/ =~ row[:age].to_s
-          return true unless row[:age] == row.previous[:age]
-        end
-        return false if row[:category_name] == row.previous[:category_name] && row[:gender] == row.previous[:gender] && row[:category_class] == row.previous[:category_class]
-        return true
-      else
-        return false if column_indexes.nil? || row.last? || row.blank? || (row.next && row.next.blank?)
-        return false if row.place && row.place.to_i != 0
-        row.next && row.next.place && row.next.place.to_i == 1
-      end
+      return false if column_indexes.nil? || row.last? || row.blank? || (row.next && row.next.blank?)
+      return false if row.place && row.place.to_i != 0
+      row.next && row.next.place && row.next.place.to_i == 1
     end
 
     def find_or_create_race(row)
-      if usac_results_format?
-        category = Category.find_or_create_by_normalized_name(construct_usac_category(row))
-      else
-        category = Category.find_or_create_by_normalized_name(row.first)
-      end
+      category = Category.find_or_create_by_normalized_name(category_name_from_row(row))
       race = event.races.detect { |r| r.category == category }
       if race
         race.results.clear
@@ -238,20 +208,6 @@ module Results
       race
     end
 
-    def construct_usac_category(row)
-      #category_name and gender should always be populated.
-      #juniors, and conceivably masters, may be split by age group in which case the age column should
-      #contain the age range. otherwise it may be empty or contain an individual racer's age.
-      #The end result should look like "Junior Women 13-14" or "Junior Men"
-      #category_class may or may not be populated
-      #e.g. "Master B Men" or "Cat4 Female"
-      if row[:age].present? && /\d+-\d+/ =~ row[:age].to_s
-        return ((row[:category_name].to_s + " " + row[:category_class].to_s + " " + row[:gender].to_s + " " + row[:age].to_s)).squeeze(" ").strip
-      else
-        return ((row[:category_name].to_s + " " + row[:category_class].to_s + " " + row[:gender].to_s)).squeeze(" ").strip
-      end
-    end
-
     def result?(row)
       return false unless column_indexes
       return false if row.blank?
@@ -263,45 +219,30 @@ module Results
     end
 
     def create_result(row, race)
-      if race
-        result = race.results.build(result_attributes(row, race))
-        result.updated_by = @event.name
-
-        if row.same_time?
-          result.time = row.previous.result.time
-        end
-
-        if result.place.to_i > 0
-          result.place = result.place.to_i
-          if race?(row) && result.place != 1
-            self.import_warnings << "First racer #{row[:first_name]} #{row[:last_name]} should be 1st place racer. "
-            # if we have a previous rov and the current place is not one more than the previous place, then sequence error.
-          elsif !race?(row) && row.previous && row.previous[:place].present? && row.previous[:place].to_i != (result.place - 1)
-            self.import_warnings << "Non-sequential placings detected for racer: #{row[:first_name]} #{row[:last_name]}. " unless row[:category_name].to_s.downcase.include?("tandem") # or event is TTT or ???
-          end
-        elsif result.place.present?
-          result.place = result.place.upcase rescue result.place
-        elsif row.previous[:place].present? && row.previous[:place].to_i == 0
-          result.place = row.previous[:place]
-        end
-
-        # USAC format input may contain an age range in the age column for juniors.
-        if row[:age].present? && /\d+-\d+/ =~ row[:age].to_s
-          result.age = nil
-          result.age_group = row[:age]
-        end
-
-        result.cleanup
-        result.save!
-        row.result = result
-        Rails.logger.debug("Results::ResultsFile #{Time.zone.now} create result #{race} #{result.place}") if debug?
-      else
-        # TODO Maybe a hard exception or error would be better?
-        Rails.logger.warn("No race. Skip.")
+      if race.nil?
+        Rails.logger.warn "No race. Skipping result file row."
+        return nil
       end
+
+      result = race.results.build(result_methods(row, race))
+      result.updated_by = @event.name
+
+      if row.same_time?
+        result.time = row.previous.result.time
+      end
+
+      set_place result, row
+      set_age_group result, row
+
+      result.cleanup
+      result.save!
+      row.result = result
+      Rails.logger.debug("Results::ResultsFile #{Time.zone.now} create result #{race} #{result.place}") if debug?
+
+      result
     end
 
-    def result_attributes(row, race)
+    def result_methods(row, race)
       attributes = row.to_hash.dup
       custom_attributes = {}
       attributes.delete_if do |key, value|
@@ -326,12 +267,80 @@ module Results
       @prototype_result ||= Result.new.freeze
     end
 
-    def usac_results_format?
-      RacingAssociation.current.usac_results_format?
-    end
-
     def debug?
       ENV["DEBUG_RESULTS"].present? && Rails.logger.debug?
+    end
+
+
+    private
+
+    def new_row(spreadsheet_row, column_indexes)
+      Results::Row.new spreadsheet_row, column_indexes
+    end
+
+    def category_name_from_row(row)
+      row.first
+    end
+
+    def strip_quotes(string)
+      if string.present?
+        string = string.strip
+        string = string.gsub(/^"/, '')
+        string = string.gsub(/"$/, '')
+      end
+      string
+    end
+
+    def set_place(result, row)
+      if result.numeric_place?
+        result.place = result.numeric_place
+        if race?(row) && result.place != 1
+          self.import_warnings << "First racer #{row[:first_name]} #{row[:last_name]} should be first place racer. "
+          # if we have a previous rov and the current place is not one more than the previous place, then sequence error.
+        elsif !race?(row) && row.previous && row.previous[:place].present? && row.previous[:place].to_i != (result.place - 1)
+          self.import_warnings << "Non-sequential placings detected for racer: #{row[:first_name]} #{row[:last_name]}. " unless row[:category_name].to_s.downcase.include?("tandem") # or event is TTT or ???
+        end
+      elsif result.place.present?
+        result.place = result.place.upcase
+      elsif row.previous[:place].present? && row.previous[:place].to_i == 0
+        result.place = row.previous[:place]
+      end
+    end
+
+    # USAC format input may contain an age range in the age column for juniors.
+    def set_age_group(result, row)
+      if row[:age].present? && /\d+-\d+/ =~ row[:age].to_s
+        result.age = nil
+        result.age_group = row[:age]
+      end
+      result
+    end
+
+    def to_column_name(cell)
+      cell = cell.downcase.
+                  underscore.
+                  gsub(" ", "_")
+
+      if COLUMN_MAP[cell]
+        COLUMN_MAP[cell]
+      else
+        cell
+      end
+    end
+
+    def create_column(name, index)
+      return if name.blank?
+
+      column_indexes[name.to_sym] = index
+      columns << name
+      if !result_method?(name)
+        custom_columns << name
+        race_custom_columns << name
+      end
+    end
+
+    def result_method?(column_name)
+      prototype_result.respond_to?(column_name.to_sym)
     end
   end
 end

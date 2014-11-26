@@ -1,5 +1,3 @@
-require "array/stable_sort"
-
 module Admin
   # Add, delete, and edit Person information. Also merge.
   class PeopleController < Admin::AdminController
@@ -12,6 +10,9 @@ module Admin
 
     include ApplicationHelper
     include ActionView::Helpers::TextHelper
+    include Admin::People::Cards
+    include Admin::People::Import
+    include Admin::People::Export
 
     # Search for People by name. This is a 'like' search on the concatenated
     # first and last name, and aliases. E.g.,:
@@ -22,7 +23,6 @@ module Admin
     #  * Scott Willson
     #  * Jim Andersen (with an 'Jim Anderson' alias)
     # Store previous search in session and cookie as 'person_name'.
-    # Limit results to RacingAssociation.current.search_results_limit
     # === Params
     # * name
     # === Assigns
@@ -32,57 +32,14 @@ module Admin
         return export
       end
 
-      @people = []
-      @name = params[:name] || session[:person_name] || cookies[:person_name] || ''
-      @name.strip!
-      session['person_name'] = @name
-      cookies[:person_name] = { value: @name, expires: Time.zone.now + 36000 }
-      if @name.blank?
-        @people = []
-      else
-        @people = Person.find_all_by_name_like(@name, RacingAssociation.current.search_results_limit)
-        @people = @people + Person.find_all_by_number(@name)
-        @people = @people.stable_sort_by(:first_name).stable_sort_by(:last_name)
-      end
-      if @people.size == RacingAssociation.current.search_results_limit
-        flash[:notice] = "First #{RacingAssociation.current.search_results_limit} people"
-      end
-
       @current_year = current_date.year
-
-      ActiveSupport::Notifications.instrument "search.people.admin.racing_on_rails", name: @name, people_count: @people.size
-    end
-
-    # == Params
-    # * excel_layout: "scoring_sheet" for fewer columns -- intended for scoring race results. "endicia" for card stickers.
-    # * include: "print_cards"
-    # * format: "ppl" for FinishLynx scoring
-    def export
-      date = current_date
-      if params['excel_layout'] == 'scoring_sheet'
-        file_name = 'scoring_sheet.xls'
-      elsif params['include'] == 'print_cards'
-        file_name = 'print_cards.xls'
-      elsif params['format'] == 'ppl'
-        file_name = 'lynx.ppl'
-      else
-        file_name = "people_#{date.year}_#{date.month}_#{date.day}.#{params['format']}"
-      end
-      headers['Content-Disposition'] = "filename=\"#{file_name}\""
-
-      @people = Person.find_all_for_export(date, params['include'])
-      ActiveSupport::Notifications.instrument "export.people.admin.racing_on_rails", people_count: @people.size, excel_layout: params[:excel_layout], format: params[:format]
+      assign_name
+      @people = Person.where_name_or_number_like(@name)
+      ActiveSupport::Notifications.instrument "search.people.admin.racing_on_rails", name: @name, people_count: @people.count
 
       respond_to do |format|
-        format.html
-        format.ppl
-        format.xls {
-          if params['excel_layout'] == 'scoring_sheet'
-            render 'admin/people/scoring_sheet'
-          elsif params['excel_layout'] == 'endicia'
-            render 'admin/people/endicia'
-          end
-        }
+        format.html { @people = @people.page(page) }
+        format.js   { @people = @people.limit 100 }
       end
     end
 
@@ -90,14 +47,14 @@ module Admin
       ActiveSupport::Notifications.instrument "new.people.admin.racing_on_rails"
       @person = Person.new
       assign_race_numbers
-      @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+      assign_years
       render :edit
     end
 
     def edit
       @person = Person.includes(:race_numbers).find(params[:id])
       assign_race_numbers
-      @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+      assign_years
       ActiveSupport::Notifications.instrument "edit.people.admin.racing_on_rails", person_name: @person.name, person_id: params[:id]
     end
 
@@ -117,21 +74,6 @@ module Admin
       @person = Person.create(person_params)
       ActiveSupport::Notifications.instrument "create.people.admin.racing_on_rails", person_name: @person.name, person_id: @person.id
 
-      if params[:number_value]
-        params[:number_value].each_with_index do |number_value, index|
-          unless number_value.blank?
-            race_number = @person.race_numbers.create(
-              discipline_id: params[:discipline_id][index],
-              number_issuer_id: params[:number_issuer_id][index],
-              year: params[:number_year],
-              value: number_value
-            )
-            unless race_number.errors.empty?
-              @person.errors.add(:base, race_number.errors.full_messages)
-            end
-          end
-        end
-      end
       if @person.errors.empty?
         if @event
           redirect_to(edit_admin_person_path(@person, event_id: @event.id))
@@ -140,7 +82,7 @@ module Admin
         end
       else
         assign_race_numbers
-        @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+        assign_years
         render :edit
       end
     end
@@ -168,112 +110,14 @@ module Admin
           return redirect_to(edit_admin_person_path(@person))
         end
       end
-      @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+      assign_years
       assign_race_numbers
       render :edit
     end
 
-    # Preview contents of new members file from event registration service website like SignMeUp or Active.com.
-    def preview_import
-      if params[:people_file].blank?
-        flash[:warn] = "Choose a file of people to import first"
-        return redirect_to(action: :index)
-      end
-
-      ActiveSupport::Notifications.instrument "preview_import.people.admin.racing_on_rails", original_filename: params[:people_file].original_filename
-
-      path = "#{Dir.tmpdir}/#{params[:people_file].original_filename}"
-      File.open(path, "wb") do |f|
-        f.print(params[:people_file].read)
-      end
-
-      temp_file = File.new(path)
-      @people_file = PeopleFile.new(temp_file)
-      if @people_file
-        assign_years
-        session[:people_file_path] = temp_file.path
-      else
-        redirect_to :index
-      end
-
-      render "preview_import"
-    end
-
-    # See http://racingonrails.rocketsurgeryllc.com/sample_import_files/ for format details and examples.
-    def import
-      if params[:commit] == 'Cancel'
-        session[:people_file_path] = nil
-        redirect_to(action: 'index')
-
-      elsif params[:commit] == 'Import'
-        ActiveSupport::Notifications.instrument "import.people.admin.racing_on_rails", people_file_path: session[:people_file_path]
-
-        Duplicate.delete_all
-        path = session[:people_file_path]
-        if path.blank?
-          flash[:warn] = "No import file"
-          return redirect_to(admin_people_path)
-        end
-
-        people_file = PeopleFile.new(File.new(path))
-        people_file.import(params[:update_membership], params[:year])
-        flash[:notice] = "Imported #{pluralize(people_file.created, 'new person')} and updated #{pluralize(people_file.updated, 'existing person')}"
-        session[:people_file_path] = nil
-        if people_file.duplicates.empty?
-          redirect_to admin_people_path
-        else
-          flash[:warn] = 'Some names in the import file already exist more than once. Match with an existing person or create a new person with the same name.'
-          redirect_to duplicates_admin_people_path
-        end
-        expire_cache
-
-      else
-        raise "Expected 'Import' or 'Cancel'"
-      end
-    end
-
-    # Unresolved duplicates after import
-    def duplicates
-      @duplicates = Duplicate.all
-      ActiveSupport::Notifications.instrument "duplicates.people.admin.racing_on_rails", duplicates: @duplicates.size
-
-      @duplicates = @duplicates.sort do |x, y|
-        diff = (x.person.last_name || '') <=> y.person.last_name
-        if diff == 0
-          (x.person.first_name || '') <=> y.person.first_name
-        else
-          diff
-        end
-      end
-
-      @duplicates.each do |duplicate|
-        ActiveSupport::Notifications.instrument "duplicate.people.admin.racing_on_rails", person_name: duplicate.person.name, person_id: duplicate.person.id, people_ids: duplicate.people.map(&:id)
-      end
-    end
-
-    def resolve_duplicates
-      @duplicates = Duplicate.all
-      @duplicates.each do |duplicate|
-        id = params[duplicate.to_param]
-        if id == 'new'
-          ActiveSupport::Notifications.instrument "resolve_duplicates.people.admin.racing_on_rails", resolution: :new, person_name: duplicate.person.name, person_id: duplicate.person.id
-          duplicate.person.save!
-        elsif id.present?
-          ActiveSupport::Notifications.instrument "resolve_duplicates.people.admin.racing_on_rails", resolution: :update, person_name: duplicate.person.name, person_id: id, new_attributes: duplicate.new_attributes
-          person = Person.update(id, duplicate.new_attributes)
-          unless person.valid?
-            raise ActiveRecord::RecordNotSaved.new(person.errors.full_messages.join(', '))
-          end
-        end
-      end
-
-      Duplicate.delete_all
-      redirect_to(action: 'index')
-    end
-
     def update_attribute
       respond_to do |format|
-        format.js {
+        format.js do
           @person = Person.find(params[:id])
           if params[:name] == "name"
             update_name
@@ -282,7 +126,7 @@ module Admin
             expire_cache
             render plain: @person.send(params[:name])
           end
-        }
+        end
       end
     end
 
@@ -305,7 +149,7 @@ module Admin
       else
         flash[:warn] = "Could not delete #{@person.name}. #{@person.errors.full_messages.join(". ")}"
         assign_race_numbers
-        @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+        assign_years
         render :edit
       end
     end
@@ -313,9 +157,7 @@ module Admin
     def merge
       @person = Person.find(params[:id])
       @other_person = Person.find(params[:other_person_id])
-      ActiveSupport::Notifications.instrument "merge.people.admin.racing_on_rails", person_id: @person.id, person_name: @person.name, other_id: @other_person.id, other_name: @other_name
       @merged = @person.merge(@other_person)
-      ActiveSupport::Notifications.instrument "success.merge.people.admin.racing_on_rails", person_id: @person.id, person_name: @person.name, other_id: @other_person.id, other_name: @other_name
       expire_cache
     end
 
@@ -327,53 +169,13 @@ module Admin
         @person = Person.new
         @race_numbers = []
       end
-      @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+      assign_years
 
       respond_to do |format|
         format.js
       end
     end
 
-    # Membership card stickers/labels
-    def cards
-      @people = Person.where(print_card: true).order("last_name, first_name")
-
-      ActiveSupport::Notifications.instrument "cards.people.admin.racing_on_rails", person_count: @people.count
-
-      if @people.empty?
-        return redirect_to(no_cards_admin_people_path(format: "html"))
-      else
-        Person.where(id: @people.map(&:id)).update_all(print_card: 0, membership_card: 1)
-      end
-
-      respond_to do |format|
-        format.pdf do
-          send_data Card.new.to_pdf(@people),
-                    filename: "cards.pdf",
-                    type: "application/pdf"
-        end
-      end
-    end
-
-    # Single membership card
-    def card
-      @person = Person.find(params[:id])
-      @people = [@person]
-      @person.print_card = false
-      @person.membership_card = true
-      @person.card_printed_at = Time.zone.now
-      @person.save!
-
-      ActiveSupport::Notifications.instrument "card.people.admin.racing_on_rails", person_id: @person.id
-
-      respond_to do |format|
-        format.pdf do
-          send_data Card.new.to_pdf(@person),
-                    filename: "card.pdf",
-                    type: "application/pdf"
-        end
-      end
-    end
 
     private
 
@@ -397,18 +199,8 @@ module Admin
       @disciplines = Discipline.numbers
       @number_issuers = NumberIssuer.all
       if @person.race_numbers.none?(&:new_record?)
-        @person.race_numbers.build
+        @person.race_numbers.build(person_id: @person.id)
       end
-    end
-
-    def assign_years
-      date = current_date
-      if date.month == 12
-        @year = date.year + 1
-      else
-        @year = date.year
-      end
-      @years = [ date.year, date.year + 1 ]
     end
 
     def current_date
@@ -440,6 +232,17 @@ module Admin
 
 
     private
+
+    def assign_name
+      @name = params[:name] || session[:person_name] || cookies[:person_name]
+      @name = @name.try :strip
+      session[:person_name] = @name
+      cookies[:person_name] = { value: @name, expires: Time.zone.now + 36000 }
+    end
+
+    def assign_years
+      @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+    end
 
     def person_params
       params_without_mobile.require(:person).permit(

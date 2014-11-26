@@ -28,6 +28,14 @@ module Categories
       ages_begin && ages_end && (ages_begin != 0 || ages_end != 999)
     end
 
+    def junior?
+      age_group? && ages_end <= 18
+    end
+
+    def and_over?
+      ages_end && ages_end == 999
+    end
+
     def set_age_from_name
       if ages_begin.nil? || ages_begin == 0
         self.ages = ages_from_name(name)

@@ -1,79 +1,81 @@
 <% @page_title = "Schedule: #{@year}" %>
 
-<%= render_page "shared/years", year: @year, discipline: @discipline %>
-<%= render "shared/months" %>
-<%= render_page "sanctioning_organizations", year: @year, sanctioning_organizations: @sanctioning_organizations %>
-<%= render_page "regions", year: @year, regions: @regions, region: @region %>
-<%= render_page "shared/disciplines", year: @year, discipline: @discipline %>
-<%= render_page "schedule/tentative" %>
-<%= render_page "schedule/others" %>
-<%= render "tabs", calendar_tab: @calendar_tab %>
+<% cache cache_key(@today, @year, @regions, @discipline, @sanctioning_organization) do %>
+  <%= render_page "shared/years", year: @year, discipline: @discipline %>
+  <%= render "shared/months" %>
+  <%= render_page "sanctioning_organizations", year: @year, sanctioning_organizations: @sanctioning_organizations %>
+  <%= render_page "regions", year: @year, regions: @regions, region: @region %>
+  <%= render_page "shared/disciplines", year: @year, discipline: @discipline %>
+  <%= render_page "schedule/tentative" %>
+  <%= render_page "schedule/others" %>
+  <%= render "tabs", calendar_tab: @calendar_tab %>
 
-<% if RacingAssociation.current.competitions.include?(:atra_points_series) -%>
-<p class="atra_ncs"><%= image_tag "icons/red_star.gif", style: "margin: 0px; padding-top: 2px;" %>&nbsp;ATRA National Championship Series (NCS)</p>
-<%- end %>
+  <% if RacingAssociation.current.competitions.include?(:atra_points_series) -%>
+  <p class="atra_ncs"><%= image_tag "icons/red_star.gif", style: "margin: 0px; padding-top: 2px;" %>&nbsp;ATRA National Championship Series (NCS)</p>
+  <%- end %>
 
-<%- @schedule.months.each do |month| -%>
-  <div class="row">
-    <div class="col-sm-12">
-      <h3 class="month"><a name='<%= month.name.downcase %>'><%= month.name %> <%= @year %></a></h3>
-      <table class="calendar table">
-        <thead>
-          <tr>
-            <th>Sunday</th>
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>Wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-            <th>Saturday</th>
-          </tr>
-        </thead>
-        <tbody>
-        <%- month.weeks.each do |week| -%>
-          <tr class="month">
-          <%- week.days.each do |day| -%>
-            <%- if day.other_month? -%>
-            <td class="day_from_other_month"><div class="number"><%= day.day_of_month -%></div>
-            <%- else -%>
-            <td class="day">
-              <div class="number"><%= day.day_of_month -%></div>
-              <%- day.events.each do |event| -%>
-              <div class="event<%= ' atra_points_series' if event.atra_points_series? %><%= " beginner-friendly" if event.beginner_friendly? %>">
-                <% if event.beginner_friendly? %>
-                <span class="glyphicon glyphicon-ok-circle"></span>
-                <%- end -%>
-                <%- if event.cancelled -%>
-            <span class="cancelled"><%= event.full_name -%></span> <em>cancelled</em>
-                <%- elsif event.postponed? -%>
-            <span class="postponed"><%= event.full_name -%></span> <em>postponed</em>
-                <%- else -%>
-                  <%- if event.flyer.present? && event.flyer_approved? -%>
-                <a href="<%= event.flyer -%>" class="obvious" <%= "target='_blank'" if RacingAssociation.current.flyers_in_new_window? %>><%= event.full_name -%><%= " MTB" if !event.name.include?("MTB") && event.discipline == "Mountain Bike" -%></a>
-                  <%- else -%>
-                <%= event.full_name -%><%= " MTB" if !event.name.include?("MTB") && event.discipline == "Mountain Bike" -%>
+  <%- @schedule.months.each do |month| -%>
+    <div class="row">
+      <div class="col-sm-12">
+        <h3 class="month"><a name='<%= month.name.downcase %>'><%= month.name %> <%= @year %></a></h3>
+        <table class="calendar table">
+          <thead>
+            <tr>
+              <th>Sunday</th>
+              <th>Monday</th>
+              <th>Tuesday</th>
+              <th>Wednesday</th>
+              <th>Thursday</th>
+              <th>Friday</th>
+              <th>Saturday</th>
+            </tr>
+          </thead>
+          <tbody>
+          <%- month.weeks.each do |week| -%>
+            <tr class="month">
+            <%- week.days.each do |day| -%>
+              <%- if day.other_month? -%>
+              <td class="day_from_other_month"><div class="number"><%= day.day_of_month -%></div>
+              <%- else -%>
+              <td class="day">
+                <div class="number"><%= day.day_of_month -%></div>
+                <%- day.events.each do |event| -%>
+                <div class="event<%= ' atra_points_series' if event.atra_points_series? %><%= " beginner-friendly" if event.beginner_friendly? %>">
+                  <% if event.beginner_friendly? %>
+                  <span class="glyphicon glyphicon-ok-circle"></span>
                   <%- end -%>
-                  <%= render_page "event", event: event %>
+                  <%- if event.cancelled -%>
+              <span class="cancelled"><%= event.full_name -%></span> <em>cancelled</em>
+                  <%- elsif event.postponed? -%>
+              <span class="postponed"><%= event.full_name -%></span> <em>postponed</em>
+                  <%- else -%>
+                    <%- if event.flyer.present? && event.flyer_approved? -%>
+                  <a href="<%= event.flyer -%>" class="obvious" <%= "target='_blank'" if RacingAssociation.current.flyers_in_new_window? %>><%= event.full_name -%><%= " MTB" if !event.name.include?("MTB") && event.discipline == "Mountain Bike" -%></a>
+                    <%- else -%>
+                  <%= event.full_name -%><%= " MTB" if !event.name.include?("MTB") && event.discipline == "Mountain Bike" -%>
+                    <%- end -%>
+                    <%= render_page "event", event: event %>
+                  <%- end -%>
+                </div>
                 <%- end -%>
-              </div>
               <%- end -%>
+              </td>
             <%- end -%>
-            </td>
-          <%- end -%>
-          </tr>
-          <%- end -%>
-        </tbody>
-      </table>
+            </tr>
+            <%- end -%>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-<% end -%>
+  <% end -%>
 
-<ul class="page-links">
-  <li><%= link_to "Excel", format: :xls %></li>
-  <li><%= link_to "iCal", schedule_url(format: :ics, protocol: "webcal") %></li>
-</ul>
+  <ul class="page-links">
+    <li><%= link_to "Excel", format: :xls %></li>
+    <li><%= link_to "iCal", schedule_url(format: :ics, protocol: "webcal") %></li>
+  </ul>
 
-<% content_for :head do -%>
-<%= auto_discovery_link_tag :atom %>
-<%= auto_discovery_link_tag :ics, { format: :ics, protocol: "webcal" }, { type: "text/calendar" } %>
+  <% content_for :head do -%>
+  <%= auto_discovery_link_tag :atom %>
+  <%= auto_discovery_link_tag :ics, { format: :ics, protocol: "webcal" }, { type: "text/calendar" } %>
+  <% end %>
 <% end %>

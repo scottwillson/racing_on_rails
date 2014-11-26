@@ -1,6 +1,6 @@
 <% @page_title = "Results: #{@event.date.year}: #{@event.full_name}" %>
 
-<% cache [ @event, RacingAssociation.current.updated_at, mobile_request? ] do %>
+<% cache cache_key(@event) do %>
   <h2><%= public_link_to_flyer @event %></h2>
 
   <div class="row event_info">
@@ -38,14 +38,15 @@
   <% end %>
 
   <% ActiveSupport::Notifications.instrument "@event.results.racing_on_rails", event_id: @event.id, event_name: @event.name do %>
-    <% @races.select(&:any_results?).sort.each do |race| %>
+    <% @races.select(&:any_results?).select(&:visible?).sort.each do |race| %>
   <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
+      <%= render "results/competition_debugging", event: @event %>
       <%= results_table @event, race %>
     <% end -%>
 
     <% if @races.none?(&:any_results?) && @event.overall.present? && @event.overall.races_with_results.present? %>
     <%= render partial: "races", locals: { races: @event.overall.races_with_results } %>
-      <% @event.overall.races_with_results.sort.each do |race| %>
+      <% @event.overall.races_with_results.select(&:visible?).sort.each do |race| %>
       <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
       <%= results_table @event, race %>
       <% end %>

@@ -6,11 +6,11 @@ module Competitions
   # :stopdoc:
   class OverallBarTest < ActiveSupport::TestCase
     test "calculate" do
-      alice  = FactoryGirl.create(:person)
-      matson = FactoryGirl.create(:person)
-      molly  = FactoryGirl.create(:person)
-      tonkin = FactoryGirl.create(:person)
-      weaver = FactoryGirl.create(:person)
+      alice  = FactoryGirl.create(:person, name: "Alice")
+      matson = FactoryGirl.create(:person, name: "Matson")
+      molly  = FactoryGirl.create(:person, name: "Molly")
+      tonkin = FactoryGirl.create(:person, name: "Tonkin")
+      weaver = FactoryGirl.create(:person, name: "Weaver")
 
       kona = FactoryGirl.create(:team)
 
@@ -175,7 +175,7 @@ module Competitions
 
       Bar.calculate!(2004)
       # Discipline BAR results past 300 don't count -- add fake result
-      bar = Bar.find_by_year_and_discipline(2004, "Road")
+      bar = Bar.year(2004).where(discipline: "Road").first
       assert_not_nil bar.parent, "Should have parent"
       sr_men_road_bar = bar.races.detect {|r| r.category == senior_men}
       sr_men_road_bar.results.create!(place: 305, person: alice)
@@ -201,14 +201,9 @@ module Competitions
 
       assert_equal(tonkin, results[0].person, "Senior Men Overall BAR results person")
       assert_equal("1", results[0].place, "Senior Men Overall BAR results place")
-      assert_equal(1498, results[0].points, "Tonkin Senior Men Overall BAR results points")
+      assert_equal [ 300, 300, 300, 299, 299 ], results[0].scores.map(&:points).sort.reverse, "Tonkin points"
       assert_equal(5, results[0].scores.size, "Tonkin Overall BAR results scores")
-      scores = results[0].scores.sort {|x, y| y.points <=> x.points}
-      assert_equal(300, scores[0].points, "Tonkin overall BAR points for discipline 0")
-      assert_equal(300, scores[1].points, "Tonkin overall BAR points for discipline 1")
-      assert_equal(300, scores[2].points, "Tonkin overall BAR points for discipline 2")
-      assert_equal(299, scores[3].points, "Tonkin overall BAR points for discipline 3")
-      assert_equal(299, scores[4].points, "Tonkin overall BAR points for discipline 4")
+      assert_equal(1498, results[0].points, "Tonkin Senior Men Overall BAR results points")
 
       assert_equal(weaver, results[1].person, "Senior Men Overall BAR results person")
       assert_equal("2", results[1].place, "Senior Men Overall BAR results place")
@@ -335,7 +330,7 @@ module Competitions
       OverallBar.calculate!
 
       current_year = Time.zone.today.year
-      road_bar = Bar.find_by_year_and_discipline(current_year, "Road")
+      road_bar = Bar.year(current_year).where(discipline: "Road").first
       cat_4_road_bar = road_bar.races.detect { |race| race.category == category_4_men }
       assert_equal(2, cat_4_road_bar.results.size, "Cat 4 Overall BAR results")
       cat_5_road_bar = road_bar.races.detect { |race| race.category == category_5_men }

@@ -1,9 +1,9 @@
 <% if source_events.present? %>
 <div class="row event_info">
   <table class="source_events">
-    <% source_events.sort_by(&:date).each do |source_event| -%>
+    <% source_events.sort.each do |source_event| -%>
     <tr>
-      <% if source_event.any_results? %>
+      <% if source_event.any_results_including_children? %>
       <td class="date"><%= link_to source_event.date.strftime('%A, %B %-d'), event_results_path(source_event) %></td>
       <td class="event"><%= link_to source_event.name, event_results_path(source_event) %></td>
       <% else %>

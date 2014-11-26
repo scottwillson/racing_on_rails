@@ -95,4 +95,16 @@ module ApplicationHelper
     options.merge!(body: capture(&block))
     render partial_name, options
   end
+
+  def cache_key(*keys)
+    if keys.present?
+      cache_key_prefix + keys
+    else
+      cache_key_prefix
+    end
+  end
+
+  def cache_key_prefix
+    [ RacingAssociation.current.short_name, RacingAssociation.current.updated_at.to_s(:number), mobile_request? ]
+  end
 end

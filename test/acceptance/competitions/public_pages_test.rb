@@ -23,6 +23,7 @@ module Competitions
 
     test "bar" do
       FactoryGirl.create(:discipline, name: "Overall")
+      FactoryGirl.create(:discipline, name: "Mountain Bike")
       age_graded = FactoryGirl.create(:discipline, name: "Age Graded")
       masters_men = FactoryGirl.create(:category, name: "Masters Men")
       masters_30_34 = FactoryGirl.create(:category, name: "Masters Men 30-34", ages: 30..34, parent: masters_men)

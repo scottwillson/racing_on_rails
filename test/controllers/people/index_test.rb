@@ -63,19 +63,6 @@ class IndexTest < ActionController::TestCase
     assert_equal('', assigns['name'], "'name' assigns")
   end
 
-  test "find limit" do
-    for i in 0..RacingAssociation.current.search_results_limit
-      Person.create(name: "Test Person #{i}")
-    end
-    get(:index, name: 'Test')
-    assert_response(:success)
-    assert_not_nil(assigns["people"], "Should assign people")
-    assert_equal(100, assigns['people'].size, "Search results should be cut off at RacingAssociation.current.search_results_limit")
-    assert_not_nil(assigns["name"], "Should assign name")
-    assert(flash.empty?, 'flash not empty?')
-    assert_equal('Test', assigns['name'], "'name' assigns")
-  end
-
   test "ajax ssl find" do
     FactoryGirl.create(:person)
     use_ssl

@@ -28,30 +28,38 @@ module Admin
           @category = existing_category
         end
       end
-      @category.save!
-
-      # parent_id could be nil, so can't use @category.children
-      if @category.parent_id
-        @children = @category.parent.children
-      else
-        @children = Category.find_all_unknowns
-      end
 
       respond_to do |type|
-        type.js
-        type.html { redirect_to edit_admin_category_path(@category) }
+        type.js do
+          @category.save!
+
+          # parent_id could be nil, so can't use @category.children
+          if @category.parent_id
+            @children = @category.parent.children
+          else
+            @children = Category.find_all_unknowns
+          end
+        end
+
+        type.html do
+          if @category.save
+            redirect_to edit_admin_category_path(@category)
+          else
+            render :edit
+          end
+        end
       end
     end
 
     # Calculate MbraBar only
     def recompute_bar
-      MbraBar.calculate!
+      Competitions::MbraBar.calculate!
       redirect_to action: :index
     end
 
     # Calculate MbraTeamBar only
     def recompute_team_bar
-      MbraTeamBar.calculate!
+      Competitions::MbraTeamBar.calculate!
       redirect_to action: :index
     end
 

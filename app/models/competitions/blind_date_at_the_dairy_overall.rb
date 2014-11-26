@@ -6,6 +6,8 @@ module Competitions
 
     def category_names
       [
+        "Beginner Men",
+        "Beginner Women",
         "Junior Men 10-13",
         "Junior Men 14-18",
         "Junior Women 10-13",
@@ -17,18 +19,26 @@ module Competitions
         "Men B",
         "Men C",
         "Singlespeed",
+        "Stampede",
         "Women A",
         "Women B",
         "Women C"
       ]
     end
 
-    def default_bar_points
-      1
-    end
-
     def point_schedule
-      [ 0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+      [ 15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+    end
+    
+    def after_calculate
+      super
+      
+      race = races.detect { |r| r.name == "Beginner" }
+      if race
+        race.update_attributes! visible: false
+      end
+      
+      BlindDateAtTheDairyMonthlyStandings.calculate!
     end
   end
 end

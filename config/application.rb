@@ -21,9 +21,6 @@ module RacingOnRails
 
     I18n.config.enforce_available_locales = true
 
-    # Racing on Rails has many foreign key constraints, so :sql is required
-    config.active_record.schema_format = :sql
-
     unless ENV["SKIP_OBSERVERS"]
       config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :team_observer
     end
@@ -42,6 +39,13 @@ module RacingOnRails
     config.action_mailer.default_url_options = { mobile: nil }
 
     config.exceptions_app = self.routes
+
+    if Dir.exists?("#{config.root}/lib/registration_engine")
+      require "#{config.root}/lib/registration_engine/lib/registration_engine/engine"
+    end
+
+    require_dependency "acts_as_tree/extensions"
+    require_dependency "acts_as_tree/validation"
 
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?

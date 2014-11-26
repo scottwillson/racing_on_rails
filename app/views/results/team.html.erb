@@ -1,7 +1,9 @@
 <% @page_title = "Results: #{@team.name}: #{@year}" %>
 
-<h2><%= @team.name %></h2>
+<% cache cache_key(@year, @team) do %>
+  <h2><%= @team.name %></h2>
 
-<%= render_page "years", year: @year %>
+  <%= render_page "years", year: @year %>
 
-<%= participant_event_results_table @team, @event_results %>
+  <%= participant_event_results_table @team, @event_results %>
+<% end %>

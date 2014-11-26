@@ -32,10 +32,12 @@ class Array
     mid = size / 2
     left  = self[0, mid].dup
     right = self[mid, size].dup
-    merge(left.merge_sort(&predicate), right.merge_sort(&predicate), &predicate)
+    _stable_merge(left.merge_sort(&predicate), right.merge_sort(&predicate), &predicate)
   end
 
-  def merge(left, right, &predicate)
+  private
+
+  def _stable_merge(left, right, &predicate)
     sorted = []
     until left.empty? or right.empty?
       if predicate

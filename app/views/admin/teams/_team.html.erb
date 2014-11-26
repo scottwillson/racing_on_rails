@@ -3,13 +3,13 @@
   <td class="name">
     <%= editable team, :name %>
   </td>
-  <td class="not_editable">
+  <td class="aliases">
     <%= render "aliases", team: team %>
   </td>
   <td class="check_box">
     <%= render "shared/member", record: team %>
   </td>
-  <td class="actions not_editable">
+  <td class="actions">
     <%= link_to "Results", team_path(team), id: "show_#{team.id}" %>
     <%= link_to "Edit", edit_admin_team_path(team), id: "edit_#{team.id}" %>
   </td>

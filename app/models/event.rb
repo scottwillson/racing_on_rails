@@ -1,5 +1,3 @@
-require_dependency "acts_as_tree/extensions"
-
 # Superclass for anything that can have results:
 # * Event (Superclass only used to organizes multiple sets of results on a single day.
 #          Examples: Alpenrose Challenge Morning Session, Alpenrose Challenge Afternoon Session)
@@ -34,42 +32,26 @@ require_dependency "acts_as_tree/extensions"
 class Event < ActiveRecord::Base
   TYPES =  [ 'Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries' ]
 
-  after_initialize :set_defaults
-  before_save :set_promoter, :set_team
-  before_destroy :validate_no_results
+  include Events::Children
+  include Events::Comparison
+  include Events::Competitions
+  include Events::Dates
+  include Events::Defaults
+  include Events::Naming
+  include Events::Promoters
+  include Events::Results
+  include ActsAsTree::Extensions
+  include RacingOnRails::VestalVersions::Versioned
+  include Export::Events
+  include Sanctioned
+
+  before_save :set_team
 
   validates_presence_of :date, :name
 
-  validate :parent_is_not_self
-
   validate :inclusion_of_discipline
-  validate :inclusion_of_sanctioned_by
-
-  belongs_to :parent, foreign_key: "parent_id", class_name: "Event"
-  has_many :children,
-           -> { order :date },
-           class_name: "Event",
-           foreign_key: "parent_id",
-           dependent: :destroy,
-           after_add: :children_changed,
-           after_remove: :children_changed
-
-  has_many :child_competitions,
-           -> { order :date },
-           class_name: "Competitions::Competition",
-           foreign_key: "parent_id",
-           dependent: :destroy,
-           after_add: :children_changed,
-           after_remove: :children_changed
-
-  has_one :overall, foreign_key: "parent_id", dependent: :destroy, class_name: "Competitions::Overall"
-  has_one :combined_results, class_name: "CombinedTimeTrialResults", foreign_key: "parent_id", dependent: :destroy
-  has_many :competitions, through: :competition_event_memberships, source: :competition, class_name: "Competitions::Competition"
-  has_many :competition_event_memberships, class_name: "Competitions::CompetitionEventMembership"
 
   belongs_to :number_issuer
-  has_and_belongs_to_many :editors, class_name: "Person", association_foreign_key: "editor_id", join_table: "editors_events"
-  belongs_to :promoter, class_name: "Person"
   belongs_to :team
 
   has_many   :races,
@@ -80,17 +62,6 @@ class Event < ActiveRecord::Base
 
   belongs_to :velodrome
   belongs_to :region
-
-  scope :editable_by, lambda { |person|
-    if person.nil?
-      where("true = false")
-    elsif person.administrator?
-      # No scope
-    else
-      joins("left outer join editors_events on event_id = events.id").
-      where("promoter_id = :person_id or editors_events.editor_id = :person_id", person_id: person)
-    end
-  }
 
   scope :today_and_future, lambda { where("date >= :today || end_date >= :today", today: Time.zone.today) }
 
@@ -116,130 +87,51 @@ class Event < ActiveRecord::Base
       later: number_of_weeks.weeks.from_now.to_date)
   }
 
-  scope :child, lambda { where("parent_id is not null") }
-  # :root?
-  scope :not_child, lambda { where("parent_id is null") }
-
-  scope :with_recent_results, lambda { |weeks|
-    query = includes(parent: :parent).
-            where("type != ?", "Event").
-            where("type is not null").
-            where("events.date >= ?", weeks).
-            where("id in (select event_id from results where competition_result = false and team_competition_result = false)").
-            order("updated_at desc")
+  def self.upcoming(weeks = 2)
+    single_day_events   = upcoming_single_day_events(weeks)
+    multi_day_events    = upcoming_multi_day_events(weeks)
+    series_child_events = upcoming_series_child_events(weeks, multi_day_events)
 
     if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
-      query = query.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
+      single_day_events = single_day_events.default_sanctioned_by
+      multi_day_events = multi_day_events.default_sanctioned_by
+      series_child_events = series_child_events.default_sanctioned_by
     end
 
-    query
-  }
-
-  scope :most_recent_with_recent_result, lambda { |weeks, sanctioned_by|
-    includes(races: [ :category, :results ]).
-    includes(:parent).
-    where("type != ?", "Event").
-    where("type is not null").
-    where("events.date >= ?", weeks).
-    where(sanctioned_by: sanctioned_by).
-    where("id in (select event_id from results where competition_result = false and team_competition_result = false)").
-    order("updated_at desc")
-  }
-
-  scope :include_results, lambda {
-    includes races: [ :category, { results: :team } ]
-  }
-
-  scope :include_child_results, lambda {
-    includes children: { races: [ :category, { results: :team } ] }
-  }
-
-  scope :not_single_day_event, lambda {
-    where "type is null or type != 'SingleDayEvent'"
-  }
-
-  attr_reader :new_promoter_name
-  attr_reader :new_team_name
-
-  include Events::Comparison
-  include Events::Dates
-  include Events::Naming
-  include ActsAsTree::Extensions
-  include RacingOnRails::VestalVersions::Versioned
-  include Export::Events
-
-  # Return [weekly_series, events] that have results
-  # Honors RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
-  def self.find_all_with_results(year = Time.zone.today.year, discipline = nil)
-    # Maybe this should be its own class, since it has knowledge of Event and Result?
-
-    # Faster to load IDs and pass to second query than to use join or subselect
-    event_ids = Result.where(year: year).pluck(:event_id).uniq
-    events = Event.
-              includes(parent: :parent).
-              where(id: event_ids).
-              uniq
-
-    if discipline
-      discipline_names = [discipline.name]
-      if discipline == Discipline['road']
-        discipline_names << 'Circuit'
-      end
-      events = events.where(discipline: discipline_names)
-    end
-
-    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
-      events = events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
-    end
-
-    ids = events.map(&:root).map(&:id).uniq
-    Event.where(id: ids).includes(children: [ :races, { children: :races } ])
+    three_relation_union single_day_events, multi_day_events, series_child_events
   end
 
-  def self.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
-    discipline_names = [discipline]
-    discipline_names << 'Circuit' if discipline.downcase == 'road'
-    Event.distinct.year(year).where(discipline: discipline_names).where("bar_points > 0")
-  end
-
-  def self.upcoming(weeks = 2)
-    single_day_events = SingleDayEvent.
+  def self.upcoming_single_day_events(weeks)
+    SingleDayEvent.
       not_child.
       where(postponed: false).
       where(cancelled: false).
       where(practice: false).
       upcoming_in_weeks(weeks)
+  end
 
-    multi_day_events = MultiDayEvent.
+  def self.upcoming_multi_day_events(weeks)
+    MultiDayEvent.
       where(postponed: false).
       where(cancelled: false).
       where(practice: false).
       where(type: "MultiDayEvent").
       upcoming_in_weeks(weeks)
+  end
 
-    series_child_events = SingleDayEvent.
+  def self.upcoming_series_child_events(weeks, multi_day_events)
+    SingleDayEvent.
       includes(parent: :parent).
       child.
       where(postponed: false).
       where(cancelled: false).
       where(practice: false).
+      where.not(parent_id: multi_day_events).
       upcoming_in_weeks(weeks)
-
-    if multi_day_events.present?
-      series_child_events = series_child_events.where("parent_id not in (?)", multi_day_events.map(&:id))
-    end
-
-    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
-      single_day_events = single_day_events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
-      multi_day_events = multi_day_events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
-      series_child_events = series_child_events.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
-    end
-
-    (single_day_events.load + multi_day_events.load + series_child_events.load)
   end
 
   # Defaults state to RacingAssociation.current.state, date to today, name to Untitled
-  def Event.find_all_for_team_and_discipline(team, discipline, date = Time.zone.today)
+  def self.find_all_for_team_and_discipline(team, discipline, date = Time.zone.today)
     first_of_year = date.beginning_of_year
     last_of_year = date.end_of_year
     discipline_names = [discipline]
@@ -253,184 +145,22 @@ class Event < ActiveRecord::Base
     )
   end
 
-  # Defaults state to RacingAssociation.current.state, date to today, name to New Event mm-dd-yyyy
-  # NumberIssuer: RacingAssociation.current.short_name
-  # Child events use their parent's values unless explicity overriden. And you cannot override
-  # parent values by passing in blank or nil attributes to initialize, as there is
-  # no way to differentiate missing values from nils or blanks.
-  def set_defaults
-    if new_record?
-      if parent
-        propogated_attributes.each { |attr|
-          (self[attr] = parent[attr]) if self[attr].blank?
-        }
-      end
-      self.bar_points = default_bar_points       if self[:bar_points].nil?
-      self.date = default_date                   if self[:date].nil?
-      self.discipline = default_discipline       if self[:discipline].nil?
-      self.name = default_name                   if self[:name].nil?
-      self.ironman = default_ironman             if self[:ironman].nil?
-      self.number_issuer = default_number_issuer if number_issuer.nil?
-      self.region_id = default_region_id         if self[:region_id].nil?
-      self.sanctioned_by = default_sanctioned_by if (parent.nil? && self[:sanctioned_by].nil?) || (parent && parent[:sanctioned_by].nil?)
-      self.state = default_state                 if (parent.nil? && self[:state].nil?) || (parent && parent[:state].nil?)
-    end
-  end
-
-  def propogated_attributes
-    @propogated_attributes ||= %w{
-      city discipline flyer name number_issuer_id promoter_id prize_list sanctioned_by state time velodrome_id time
-      postponed cancelled flyer_approved instructional practice sanctioned_by email phone team_id beginner_friendly
-    }
-  end
-
-  def attributes_for_duplication
-    _attributes = attributes.dup
-    _attributes.delete("id")
-    _attributes.delete("created_at")
-    _attributes.delete("updated_at")
-    _attributes
-  end
-
-  def default_bar_points
-    if parent.is_a?(WeeklySeries) || (parent.try(:parent) && parent.parent.is_a?(WeeklySeries))
-      0
-    else
-      1
-    end
-  end
-
-  def default_discipline
-    "Road"
-  end
-
-  def default_ironman
-    true
-  end
-
-  def default_region_id
-    RacingAssociation.current.default_region_id
-  end
-
-  def default_state
-    RacingAssociation.current.state
-  end
-
-  def default_sanctioned_by
-    RacingAssociation.current.default_sanctioned_by
-  end
-
-  def default_number_issuer
-    NumberIssuer.find_by_name(RacingAssociation.current.short_name)
-  end
-
-  def validate_no_results
-    races(true).each do |race|
-      if race.results(true).any?
-        errors.add('results', 'Cannot destroy event with results')
-        return false
-      end
-    end
-
-    children(true).each do |event|
-      errors.add('results', 'Cannot destroy event with children with results')
-      return false unless event.validate_no_results
-    end
-
-    true
-  end
-
-  # Result updated_at should propagate to Event updated_at but does not yet
-  def results_updated_at
-    Result.where(race_id: races.map(&:id)).maximum(:updated_at)
-  end
-
-  # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
-  # The results page should show the results in that case.
-  def any_results?
-    races.any?(&:any_results?)
-  end
-
-  # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
-  # The results page should show the results in that case.
-  def any_results_including_children?
-    races.any?(&:any_results?) || children.any?(&:any_results_including_children?)
-  end
-
-  # Returns only the children with +results+
-  def children_with_results
-    children.select(&:any_results_including_children?)
-  end
-
-  # Returns only the Races with +results+
-  def races_with_results
-    races.select(&:any_results?)
-  end
-
   def destroy_races
-    ActiveRecord::Base.lock_optimistically = false
     transaction do
-      if combined_results
-        combined_results.destroy_races
-        combined_results.destroy
-      end
-      races.each do |race|
-        # Call to destroy won't remove destroyed records from association
-        # Call to clear won't invoke all before_destroy callbacks
-        race.results.each(&:destroy)
-        race.results.delete(race.results.select(&:destroyed?))
-      end
+      destroy_combined_results
+      destroy_results
+
       # Call to destroy won't remove destroyed records from association
       # Call to clear won't invoke all before_destroy callbacks
       races.each(&:destroy)
       races.delete(races.select(&:destroyed?))
     end
-    ActiveRecord::Base.lock_optimistically = true
   end
 
   # All races' Categories and all children's races' Categories
   def categories
     _categories = races.map(&:category)
     children.inject(_categories) { |cats, child| cats + child.categories }
-  end
-
-  # Update child events from parents' attributes if child attribute has the
-  # same value as the parent before update
-  def update_children
-    return true if new_record? || children.count == 0
-    changes.select { |key, value| propogated_attributes.include?(key) }.each do |change|
-      attribute = change.first
-      was = change.last.first
-      if was.blank?
-        SingleDayEvent.where(
-          "(#{attribute}=? or #{attribute} is null or #{attribute} = '') and parent_id=?", was, self[:id]
-        ).update_all(attribute => self[attribute])
-      else
-        SingleDayEvent.where(attribute => was, parent_id: id).update_all(attribute => self[attribute])
-      end
-    end
-
-    children.each(&:update_children)
-    true
-  end
-
-  # Synch Races with children. More accurately: create a new Race on each child Event for each Race on the parent.
-  def propagate_races
-    # Do nothing in superclass
-  end
-
-  def children_changed(child)
-    # Don't trigger callbacks
-    Event.where(id: id).update_all(updated_at: Time.zone.now)
-    true
-  end
-
-  # Set point value/factor for this Competition. Convenience method to hide CompetitionEventMembership complexity.
-  def set_points_for(competition, points)
-    # For now, allow Nil exception, but probably will want to auto-create membership in the future
-    competition_event_membership = competition_event_memberships.detect { |cem| cem.competition == competition }
-    competition_event_membership.points_factor = points
-    competition_event_membership.save!
   end
 
   def city_state
@@ -481,36 +211,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def inclusion_of_sanctioned_by
-    if sanctioned_by && !RacingAssociation.current.sanctioning_organizations.include?(sanctioned_by)
-      errors.add :sanctioned_by, "'#{sanctioned_by}' must be in #{RacingAssociation.current.sanctioning_organizations.join(", ")}"
-    end
-  end
-
-  def promoter_name
-    promoter.name if promoter
-  end
-
-  def promoter_name=(value)
-    @new_promoter_name = value
-  end
-
-  def set_promoter
-    if new_promoter_name.present?
-      promoters = Person.find_all_by_name_or_alias(new_promoter_name)
-      case promoters.size
-      when 0
-        self.promoter = Person.create!(name: new_promoter_name)
-      when 1
-        self.promoter = promoters.first
-      else
-        self.promoter = promoters.detect { |promoter| promoter.id == promoter_id } || promoters.first
-      end
-    elsif new_promoter_name == ""
-      self.promoter = nil
-    end
-  end
-
   def team_name
     team.name if team
   end
@@ -528,89 +228,67 @@ class Event < ActiveRecord::Base
     end
   end
 
-  # Find valid email—either promoter's email or event email. If all are blank, raise exception.
-  def email!
-    if promoter.try(:email).present?
-      promoter.email
-    elsif email.present?
-      email
-    else
-      raise BlankEmail, "Event #{name} has no email"
-    end
-  end
-
   def association?
     number_issuer.try(:association?)
-  end
-
-  # Always return false
-  def missing_parent?
-    false
-  end
-
-  def missing_children?
-    missing_children.any?
-  end
-
-  # Always return empty Array
-  def missing_children
-    []
-  end
-
-  def multi_day_event_children_with_no_parent?
-    multi_day_event_children_with_no_parent.any?
-  end
-
-  def multi_day_event_children_with_no_parent
-    return [] unless name && date
-
-    @multi_day_event_children_with_no_parent ||= SingleDayEvent.where(
-        "parent_id is null and name = ? and extract(year from date) = ?
-         and ((select count(*) from events where name = ? and extract(year from date) = ? and type in ('MultiDayEvent', 'Series', 'WeeklySeries')) = 0)",
-         self.name, self.date.year, self.name, self.date.year)
-    # Could do this in SQL
-    if @multi_day_event_children_with_no_parent.size == 1
-      @multi_day_event_children_with_no_parent = []
-    end
-    @multi_day_event_children_with_no_parent
-  end
-
-  def missing_parent
-    nil
-  end
-
-  def parent_is_not_self
-    if parent_id && parent_id == id
-      errors.add("parent", "Event cannot be its own parent")
-    end
   end
 
   def type_modifiable?
     type.nil? || %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries }.include?(type)
   end
-
-  def inspect_debug
-    puts("#{self.class.name.ljust(20)} #{self.date} #{self.name} #{self.discipline} #{self.id}")
-    self.races(true).sort.each {|r|
-      puts("#{r.class.name.ljust(20)}   #{r.name}")
-      r.results(true).sort.each {|result|
-        puts("#{result.class.name.ljust(20)}      #{result.to_long_s}")
-        result.scores(true).sort.each{|score|
-          puts("#{score.class.name.ljust(20)}         #{score.source_result.place} #{score.source_result.race.event.name}  #{score.source_result.race.name} #{score.points}")
+  
+  def as_json(options)
+    super(
+      only: [ :discipline, :name, :parent_id, :type ],
+      methods: [ :sorted_races ],
+      include: {
+        sorted_races: {
+          only: [ :name ],
+          methods: [ :name, :sorted_results ],
+          include: {
+            sorted_results: {
+              only: [ :person_id, :place, :points, :team_id ]
+            }
+          }
         }
       }
-    }
+    )
+  end
 
-    self.children(true).sort.each do |event|
-      event.inspect_debug
-    end
+  def inspect_debug
+    puts to_s
+    races(true).sort.each(&:inspect_debug)
+    children(true).sort.each(&:inspect_debug)
 
     ""
   end
 
   def to_s
-    "<#{self.class} #{id} #{discipline} #{name} #{date}>"
+    "<#{self.class} #{id} #{discipline} #{name} #{start_date} #{end_date}"
   end
 
-  class BlankEmail < StandardError; end
+
+  private
+
+  def destroy_combined_results
+    if combined_results
+      combined_results.destroy_races
+      combined_results.destroy
+    end
+  end
+
+  def destroy_results
+    races.each do |race|
+      # Call to destroy won't remove destroyed records from association
+      # Call to clear won't invoke all before_destroy callbacks
+      race.results.each(&:destroy)
+      race.results.delete(race.results.select(&:destroyed?))
+    end
+  end
+
+  def self.three_relation_union(relation_1, relation_2, relation_3)
+    # No simple way to do lazy union of three Arel relations
+    events_table = Event.arel_table
+    union = Event.from(events_table.create_table_alias(relation_1.union(relation_2), :events)).union(relation_3)
+    Event.from(events_table.create_table_alias(union, :events))
+  end
 end

@@ -95,7 +95,7 @@ module Competitions
       assert_equal(weaver, result.person, "person")
     end
 
-    test "double ponts for final event" do
+    test "double points for final event" do
       series = WeeklySeries.create!(name: "Mt. Tabor Series")
 
       event = series.children.create!(date: Date.new(2007, 6, 6))

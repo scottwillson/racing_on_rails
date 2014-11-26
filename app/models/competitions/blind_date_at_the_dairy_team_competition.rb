@@ -1,7 +1,5 @@
 module Competitions
   class BlindDateAtTheDairyTeamCompetition < Competition
-    include Competitions::CalculatorAdapter
-
     validates_presence_of :parent
 
     after_create :add_source_events
@@ -11,23 +9,23 @@ module Competitions
     end
 
     def self.calculate!(year = Time.zone.today.year)
-      benchmark("#{name}#calculate!", level: :info) {
+      ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
         transaction do
           series = WeeklySeries.where(name: parent_event_name).year(year).first
 
           if series && series.any_results_including_children?
-            team_competition = series.child_competitions.detect { |c| c.is_a? CrossCrusadeTeamCompetition }
+            team_competition = series.child_competitions.detect { |c| c.is_a? BlindDateAtTheDairyTeamCompetition }
             unless team_competition
               team_competition = self.new(parent_id: series.id)
               team_competition.save!
             end
             team_competition.set_date
-            team_competition.destroy_races
+            team_competition.delete_races
             team_competition.create_races
             team_competition.calculate!
           end
         end
-      }
+      end
 
       # Don't return the entire populated instance!
       true
@@ -53,16 +51,12 @@ module Competitions
       false
     end
 
+    def point_schedule
+      [ 15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+    end
+
     def source_events?
       true
-    end
-
-    def default_bar_points
-      0
-    end
-
-    def point_schedule
-      [ 0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
     end
 
     def add_source_events
@@ -73,39 +67,16 @@ module Competitions
       end
     end
 
-    def source_results(race)
-      query = Result.
-        select([
-          "bar",
-          "1 as multiplier",
-          "events.date",
-          "events.ironman",
-          "events.sanctioned_by",
-          "events.type",
-          "people.date_of_birth",
-          "people.member_from",
-          "people.member_to",
-          "results.team_id as participant_id",
-          "place",
-          "points",
-          "races.category_id",
-          "race_id",
-          "results.event_id",
-          "results.id as id",
-          "year"
-        ]).
-        joins(race: :event).
-        joins("left outer join people on people.id = results.person_id").
-        joins("left outer join events parents_events on parents_events.id = events.parent_id").
-        joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
-        where("races.category_id" => category_ids).
-        where("place between 1 and ?", point_schedule.size).
-        where("results.event_id" => source_event_ids(race))
-
-      Result.connection.select_all query
+    def source_results_query(race)
+      super.
+      where("races.category_id" => categories_for(race))
     end
 
-    def category_ids
+    def race_category_names
+      [ "Team Competition" ]
+    end
+
+    def source_results_category_names
       [
         "Beginner Men",
         "Beginner Women",
@@ -116,12 +87,15 @@ module Competitions
         "Men B",
         "Men C",
         "Singlespeed",
+        "Stampede",
         "Women A",
         "Women B",
         "Women C"
-      ].map do |category_name|
-        Category.find_or_create_by_normalized_name(category_name)
-      end
+      ]
+    end
+
+    def categories_for(race)
+      Category.where(name: source_results_category_names)
     end
   end
 end

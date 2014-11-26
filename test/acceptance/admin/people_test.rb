@@ -142,10 +142,12 @@ class PeopleTest < AcceptanceTest
 
     visit "/admin/people"
     press_return "name"
+    wait_for_ajax
     wait_for "#people_table"
     assert_table("people_table", 1, 2, "Molly Cameron")
     assert_table("people_table", 2, 2, "Mark Matson")
     press_return "name"
+    wait_for_ajax
     wait_for "#people_table"
     assert_table("people_table", 1, 2, "Molly Cameron")
     assert_table("people_table", 2, 2, "Mark Matson")
