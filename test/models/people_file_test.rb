@@ -31,7 +31,7 @@ class PersonFileTest < ActiveSupport::TestCase
       login: "sellwood"
     )
 
-    file = File.new("#{Rails.root}/test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
+    file = File.new("#{Rails.root}/test/fixtures/database.xls")
     people = PeopleFile.new(file).import(true)
 
     assert_equal([4, 1], people, 'Number of people created and updated')

@@ -1,140 +1,41 @@
-require_dependency "grid/grid_file"
-
 # Excel or text file of People. Assumes that the first row is a header row.
 # Updates membership to current year. If there are no more events in the current year, updates membership to next year.
 # See http://racingonrails.rocketsurgeryllc.com/sample_import_files/ for format details and examples.
-class PeopleFile < Grid::GridFile
-  # 'club' ...this is often team in USAC download. How handle? Use club for team if no team? and if both, ignore club?
-  #  'NCCA club' ...can have this in addition to club and team. should team be many to many?
-
-  COLUMN_MAP = {
-    'team'                                   => 'team_name',
-    'Cycling Team'                           => 'team_name',
-    'club'                                   => 'club_name',
-    'ncca club'                              => 'ncca_club_name',
-    'fname'                                  => 'first_name',
-    'lname'                                  => 'last_name',
-    'f_name'                                 => 'first_name',
-    'l_name'                                 => 'last_name',
-    'FirstName'                              => 'first_name',
-    'first name'                             => 'first_name',
-    'LastName'                               => 'last_name',
-    'last name'                              => 'last_name',
-    'AAA Last Name'                          => 'last_name',
-    'Birth date'                             => 'date_of_birth',
-    'Birthdate'                              => 'date_of_birth',
-    'year of birth'                          => 'date_of_birth',
-    'dob'                                    => 'date_of_birth',
-    'address'                                => 'street',
-    'Address1_Contact address'               => 'street',
-    'Address2_Contact address'               => 'street',
-    'address1'                               => 'street',
-    'City_Contact address'                   => 'city',
-    'State_Contact address'                  => 'state',
-    'Zip_Contact address'                    => 'zip',
-    'Phone'                                  => 'home_phone',
-    'DayPhone'                               => 'home_phone',
-    'cell/fax'                               => 'cell_fax',
-    'cell'                                   => 'cell_fax',
-    'e-mail'                                 => 'email',
-    'category'                               => 'road_category',
-    'road cat'                               => 'road_category',
-    'Cat.'                                   => 'road_category',
-    'cat'                                    => 'road_category',
-    'Road Category - '                       => 'road_category',
-    'Road Age Group - '                      => 'road_category',
-    'USCF Category'                          => 'road_category',
-    'track cat'                              => 'track_category',
-    'Track Category - '                      => 'track_category',
-    'Track Age Group - '                     => 'track_category',
-    'Cyclocross Category - '                 => 'ccx_category',
-    'cross cat'                              => 'ccx_category',
-    'ccx cat'                                => 'ccx_category',
-    'Cyclocross Age Group -'                 => 'ccx_category',
-    'Cross Country Mountain Bike Category -' => 'mtb_category',
-    'mtn cat'                                => 'mtb_category',
-    'Cross Country Mountain Age Group -'     => 'mtb_category',
-    'XC'                                     => 'mtb_category',
-    'Downhill Mountain Bike Category - '     => 'dh_category',
-    'dh cat'                                 => 'dh_category',
-    'dh'                                     => 'dh_category',
-    'Downhill Mountain Bike Age Group -'     => 'dh_category',
-    'number'                                 => 'road_number',
-    '2009 road'                              => 'road_number',
-    'WSBA #'                                 => 'road_number',
-    '2009 xc'                                => 'xc_number',
-    'mtb #'                                  => 'xc_number',
-    '09 dh'                                  => 'dh_number',
-    'singlespeed'                            => 'singlespeed_number',
-    '2009 ss'                                => 'singlespeed_number',
-    'ss'                                     => 'singlespeed_number',
-    'ss #'                                   => 'singlespeed_number',
-    'Membership No'                          => 'license',
-    'license#'                               => 'license',
-    'date joined'                            => 'member_from',
-    'exp date'                               => 'member_usac_to',
-    'expiration date'                        => 'member_usac_to',
-    'card'                                   => 'print_card',
-    'sex'                                    => 'gender',
-    'What is your occupation? (optional)'    => 'occupation',
-    'Suspension'                             => 'status',   #e.g. "SUSPENDED - Contact USA Cycling"
-    'Interests'                              => 'notes',
-    'Receipt Code'                           => 'notes',
-    'Confirmation Code'                      => 'notes',
-    'Transaction Payment Total'              => 'notes',
-    'Registration Completion Date/Time'      => 'notes',
-    'Donation'                               => 'notes',
-    'Singlespeed'                            => 'notes',
-    'Tandem'                                 => 'notes',
-    'Please select a category:'              => Grid::Column.new(name: 'notes', description: 'Disciplines'),
-    '2009 notes'                             => 'notes',
-    'Would you like to make an additional donation to support OBRA? '                 => Grid::Column.new(name: 'notes', description: 'Donation'),
-    'Please indicate if you are interested in racing cross country or downhill. '     => Grid::Column.new(name: 'notes', description: 'Downhill/Cross Country'),
-    'Please indicate if you are interested in racing single speed.'                   => Grid::Column.new(name: 'notes', description: 'Singlespeed'),
-    'Please indicate other interests. (For example: time trial tandem triathalon r'   => Grid::Column.new(name: 'notes', description: 'Other interests'),
-    'Your team or club name (please enter N/A if you do not have a team affiliation)' => Grid::Column.new(name: 'team_name', description: 'Team')
-  }
-
+class PeopleFile
   attr_reader :created
-  attr_reader :updated
   attr_reader :duplicates
+  attr_reader :path
+  attr_reader :updated
 
-  def initialize(source, *options)
-    if options.empty?
-      options = Hash.new
-    else
-      options = options.first
-    end
-
-    options = {
-      delimiter: ',',
-      quoted: true,
-      header_row: true,
-      row_class: Person,
-      column_map: COLUMN_MAP
-    }.merge(options)
-
-    super(source, options)
-
+  def initialize(path)
     @created = 0
-    @updated = 0
     @duplicates = []
+    @path = path
+    @updated = 0
   end
 
   # +year+ for RaceNumbers
   # New memberships start on today, but really should start on January 1st of next year, if +year+ is next year
   def import(update_membership, year = nil)
-    ActiveSupport::Notifications.instrument "import.people_file.racing_on_rails", update_membership: update_membership, import_file: import_file, rows: rows.size do
+    table = Tabular::Table.new
+    table.row_mapper = People::RowMapper.new
+    table.column_mapper = People::ColumnMapper.new
+    table.read path
+
+    ActiveSupport::Notifications.instrument(
+      "import.people_file.racing_on_rails", update_membership: update_membership, import_file: import_file, rows: table.rows.size
+    ) do
+
       @update_membership = update_membership
-      @has_print_column = columns.any? do |column|
-        column.field == :print_card
-      end
+      # @has_print_column = columns.any? do |column|
+      #   column.key == :print_card
+      # end
       year = year.to_i if year
 
       assign_member_from_imported_people year
 
       Person.transaction do
-        rows.map(&:to_hash).each do |row|
+        table.rows.map(&:to_hash).each do |row|
           row[:updated_by] = import_file
           logger.debug(row.inspect) if logger.debug?
           next if blank_name?(row)
@@ -256,7 +157,7 @@ class PeopleFile < Grid::GridFile
   def combine_categories(row)
     Person::CATEGORY_FIELDS.each do |field|
       if row[field].present?
-        row[field] = row[field].gsub("\n", " ")
+        row[field] = row[field].to_s.gsub("\n", " ")
       end
     end
   end
