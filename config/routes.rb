@@ -163,6 +163,7 @@ Rails.application.routes.draw do
     get '/oregon_cup/races' => 'competitions/oregon_cup#races'
     get '/oregon_cup/:year' => 'competitions/oregon_cup#index', as: :oregon_cup
     get '/oregon_cup' => 'competitions/oregon_cup#index', as: :oregon_cup_root
+    get "/oregon_tt_cup/:year" => "competitions/competitions#show", type: "oregon_tt_cup"
     get "/oregon_tt_cup" => "competitions/competitions#show", type: "oregon_tt_cup"
     get '/oregon_womens_prestige_series' => 'competitions/oregon_womens_prestige_series#show'
     get '/owps' => 'competitions/oregon_womens_prestige_series#show'
