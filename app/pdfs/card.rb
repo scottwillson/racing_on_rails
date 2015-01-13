@@ -43,7 +43,7 @@ class Card < Prawn::Document
       draw_text "2", at: [ card_left_side + 171, card_top - 10 ]
       draw_text "0", at: [ card_left_side + 171, card_top - 27 ]
       draw_text "1", at: [ card_left_side + 171, card_top - 44 ]
-      draw_text "6", at: [ card_left_side + 171, card_top - 61 ]
+      draw_text "5", at: [ card_left_side + 171, card_top - 61 ]
 
       index = index + 1
     end
