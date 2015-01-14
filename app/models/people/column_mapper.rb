@@ -65,8 +65,15 @@ module People
     }
 
     def map(key)
-      return nil if is_blank?(key) || !Person.new.respond_to?(key)
+      return nil if is_blank?(key) || !person_instance.respond_to?(key)
       MAP[key] || symbolize(key)
+    end
+
+
+    private
+
+    def person_instance
+      @person_instance ||= Person.new
     end
   end
 end
