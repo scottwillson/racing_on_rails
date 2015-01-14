@@ -5,6 +5,7 @@ class PeopleFile
   attr_reader :created
   attr_reader :duplicates
   attr_reader :path
+  attr_reader :table
   attr_reader :updated
 
   def initialize(path)
@@ -12,33 +13,49 @@ class PeopleFile
     @duplicates = []
     @path = path
     @updated = 0
+
+    @table = Tabular::Table.new
+    table.column_mapper = People::ColumnMapper.new
+
+    table.columns.each do |column|
+      if column.key == :ccx_only
+        column.type = :boolean
+      end
+    end
+
+    table.read path
+    table.strip!
   end
 
   # +year+ for RaceNumbers
   # New memberships start on today, but really should start on January 1st of next year, if +year+ is next year
   def import(update_membership, year = nil)
-    table = Tabular::Table.new
-    table.row_mapper = People::RowMapper.new
-    table.column_mapper = People::ColumnMapper.new
-    table.read path
-
     ActiveSupport::Notifications.instrument(
       "import.people_file.racing_on_rails", update_membership: update_membership, import_file: import_file, rows: table.rows.size
     ) do
 
       @update_membership = update_membership
-      # @has_print_column = columns.any? do |column|
-      #   column.key == :print_card
-      # end
-      year = year.to_i if year
 
+      @has_print_column = table.columns.any? do |column|
+        column.key == :print_card
+      end
+
+      year = year.to_i if year
       assign_member_from_imported_people year
+
+      boolean_attributes = Person.columns.select {|c| c.type == :boolean }.map(&:name)
 
       Person.transaction do
         table.rows.map(&:to_hash).each do |row|
           row[:updated_by] = import_file
           logger.debug(row.inspect) if logger.debug?
           next if blank_name?(row)
+
+          row.each do |key, value|
+            if key.to_s.in?(boolean_attributes) && value.blank?
+              row[key] = false
+            end
+          end
 
           combine_categories row
           delete_blank_categories row
@@ -91,8 +108,7 @@ class PeopleFile
     if year
       person.year = year
     end
-    person.attributes = row
-    person.save!
+    person.update_attributes! row
     @created = @created + 1
   end
 
@@ -100,8 +116,10 @@ class PeopleFile
     ActiveSupport::Notifications.instrument "update.people_file.racing_on_rails", person_id: person.id, person_name: person.name
 
     delete_unwanted_member_from row, person
-    unless person.notes.blank?
-      row[:notes] = "#{person.notes}#{$INPUT_RECORD_SEPARATOR}#{row[:notes]}"
+    if person.notes.present? && row[:notes].present? && person.notes != row[:notes]
+      row[:notes] = [ person.notes, row[:notes] ].join($INPUT_RECORD_SEPARATOR)
+    else
+      row[:notes] = person.notes
     end
     add_print_card_and_label row, person
 
@@ -109,9 +127,7 @@ class PeopleFile
       person.year = year
     end
     person.updated_by = import_file
-    person.attributes = row
-
-    person.save!
+    person.update_attributes! row
 
     @updated = @updated + 1
   end
@@ -184,13 +200,8 @@ class PeopleFile
 
     unless person.nil?
       if person.member_from
-        begin
-          date = Time.zone.parse(row[:member_from]).to_date
-          if date > person.member_from.to_date
-            row[:member_from] = person.member_from
-          end
-        rescue ArgumentError => e
-          raise ArgumentError.new("#{e}: '#{row[:member_from]}' is not a valid date. Row:\n #{row.inspect}")
+        if row[:member_from] > person.member_from.to_date
+          row[:member_from] = person.member_from
         end
       end
     end
@@ -206,8 +217,8 @@ class PeopleFile
 
   def import_file
     unless @import_file
-      if @file
-        @import_file = ImportFile.create!(name: "#{@file.path} #{Person.current.try(:name_or_login)}")
+      if @path
+        @import_file = ImportFile.create!(name: "#{@path} #{Person.current.try(:name_or_login)}")
       else
         @import_file = ImportFile.create!(name: "#{Person.current.try(:name_or_login)} file")
       end
