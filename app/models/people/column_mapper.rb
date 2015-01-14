@@ -18,7 +18,6 @@ module People
       "AAA Last Name"                          => :last_name,
       "Birth date"                             => :date_of_birth,
       "Birthdate"                              => :date_of_birth,
-      "year of birth"                          => :date_of_birth,
       "dob"                                    => :date_of_birth,
       "address"                                => :street,
       "Address1_Contact address"               => :street,
@@ -66,7 +65,7 @@ module People
     }
 
     def map(key)
-      return nil if is_blank?(key)
+      return nil if is_blank?(key) || !Person.new.respond_to?(key)
       MAP[key] || symbolize(key)
     end
   end
