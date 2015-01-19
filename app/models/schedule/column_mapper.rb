@@ -14,7 +14,7 @@ module Schedule
       club: :team_id,
       website: :flyer,
       where: :city,
-      flyer_approved: :flyer_approved?,
+      flyer_approved?: :flyer_approved,
       velodrome: :velodrome_name
     }
 

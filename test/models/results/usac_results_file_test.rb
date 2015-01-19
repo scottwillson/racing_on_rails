@@ -5,41 +5,6 @@ require "test_helper"
 # :stopdoc:
 module Results
   class USACResultsFileTest < ActiveSupport::TestCase
-    test "race" do
-      results_file = USACResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt_usac.xls", __FILE__)), SingleDayEvent.new)
-      book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/tt_usac.xls", __FILE__))
-      results_file.create_rows(book.worksheet(0))
-
-      assert(results_file.race?(results_file.rows[0]), 'New race')
-      assert(!results_file.race?(results_file.rows[1]), 'New race')
-      assert(!results_file.race?(results_file.rows[2]), 'New race')
-      assert(!results_file.race?(results_file.rows[3]), 'New race')
-      assert(!results_file.race?(results_file.rows[4]), 'New race')
-      assert(results_file.race?(results_file.rows[5]), "New race: #{results_file.rows[5]}")
-      assert(!results_file.race?(results_file.rows[6]), "New race: #{results_file.rows[6]}")
-      assert(!results_file.race?(results_file.rows[7]), 'New race')
-    end
-
-    test "create columns" do
-      book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/tt_usac.xls", __FILE__))
-      spreadsheet_row = book.worksheet(0).row(0)
-      results_file = USACResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt_usac.xls", __FILE__)), SingleDayEvent.new)
-      column_indexes = results_file.create_columns(spreadsheet_row)
-      assert_equal({
-        time: 14,
-        last_name: 10,
-        first_name: 11,
-        category_class: 7,
-        team_name: 13,
-        category_name: 5,
-        place: 15,
-        number: 12,
-        gender: 6,
-        license: 9,
-        age: 8
-      }, column_indexes, "column_indexes")
-    end
-
     test "non sequential results" do
       event = SingleDayEvent.create!
       results_file = USACResultsFile.new(File.new(File.expand_path("../../../fixtures/results/non_sequential_usac_results.xls", __FILE__)), event)
@@ -55,7 +20,7 @@ module Results
       results_file.import
 
       expected_races = get_expected_races
-      assert_equal(expected_races.size, event.races.size, "Expected #{expected_races.size} event races but was #{event.races.size}")
+      assert_equal expected_races.size, event.races.size, "races"
       expected_races.each_with_index do |expected_race, index|
         actual_race = event.races[index]
         assert_not_nil(actual_race, "race #{index}")

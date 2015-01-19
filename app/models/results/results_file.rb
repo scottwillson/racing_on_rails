@@ -8,25 +8,14 @@ module Results
   #
   # Set DEBUG_RESULTS to Toggle expensive debug logging. E.g., DEBUG_RESULTS=yes ./script/server
   class ResultsFile
-    attr_accessor :columns
-    attr_accessor :column_indexes
     attr_accessor :event
-    attr_accessor :rows
     attr_accessor :source
-
-    # All custom columns in file
     attr_accessor :custom_columns
-
-    # Custom columns just for Race
-    attr_accessor :race_custom_columns
-
     attr_accessor :import_warnings
 
     def initialize(source, event)
-      self.column_indexes = nil
       self.event = event
       self.custom_columns = Set.new
-      self.race_custom_columns = Set.new
       self.import_warnings = Set.new
       self.source = source
     end
@@ -39,35 +28,27 @@ module Results
           table = Tabular::Table.new
           table.column_mapper = Results::ColumnMapper.new
           table.read source
+          table.delete_blank_columns!
+          table.delete_blank_rows!
+
+          add_custom_columns table
+          assert_columns! table
+
           table.rows.each do |row|
-            race = import_row(row, race)
+            race = import_row(row, race, table.columns.map(&:key))
           end
-          #
-          # book = ::Spreadsheet.open(source.path)
-          # book.worksheets.each do |worksheet|
-          #   race = nil
-          #
-          #   create_rows(worksheet)
-          #   ActiveSupport::Notifications.instrument "worksheet.import.results_file.racing_on_rails", rows: rows.size
-          #
-          #   rows.each do |row|
-          #     race = import_row(row, race)
-          #   end
-          # end
         end
 
-        if import_warnings.to_a.size > 10
-          self.import_warnings = import_warnings.to_a[0, 10]
-        end
+        import_warnings = import_warnings.to_a.take(10)
       end
 
       ActiveSupport::Notifications.instrument "warnings.import.results_file.racing_on_rails", warnings_count: import_warnings.to_a.size
     end
 
-    def import_row(row, race)
+    def import_row(row, race, columns)
       Rails.logger.debug("Results::ResultsFile #{Time.zone.now} row #{row.to_hash}") if debug?
       if race?(row)
-        race = find_or_create_race(row)
+        race = find_or_create_race(row, columns)
       elsif result?(row)
         create_result row, race
       end
@@ -75,84 +56,27 @@ module Results
       race
     end
 
-    def create_rows(worksheet)
-      # Need all rows. Decorate them before inspecting them.
-      # Drop empty ones
-      self.rows = []
-      previous_row = nil
-      worksheet.each do |spreadsheet_row|
-        if debug?
-          Rails.logger.debug("Results::ResultsFile #{Time.zone.now} row #{spreadsheet_row.to_a.join(', ')}")
-          spreadsheet_row.each_with_index do |cell, index|
-            Rails.logger.debug("number_format pattern to_s to_f #{spreadsheet_row.format(index).number_format}  #{spreadsheet_row.format(index).pattern} #{cell} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}")
-          end
-        end
-        row = Results::Row.new(spreadsheet_row, column_indexes)
-        row = new_row(spreadsheet_row, column_indexes)
-        unless row.blank?
-          if column_indexes.nil?
-            create_columns(spreadsheet_row)
-          else
-            row.previous = previous_row
-            previous_row.next = row if previous_row
-            rows << row
-            previous_row = row
-          end
-        end
-      end
-    end
-
-    # Create Hash of normalized column name indexes
-    # Convert column names to lowercase and underscore. Use COLUMN_MAP to normalize.
-    #
-    # Example:
-    # Place, Num, First Name
-    # { place: 0, number: 1, first_name: 2 }
-    def create_columns(spreadsheet_row)
-      self.column_indexes = Hash.new
-      self.columns = []
-
-      spreadsheet_row.each_with_index do |cell, index|
-        Rails.logger.debug("CELLS: #{cell.to_s}, #{spreadsheet_row[index - 1].blank?}, #{spreadsheet_row[index + 1].blank?}") if debug?
-
-        cell_string = cell.to_s
-        cell_string = strip_quotes(cell_string)
-
-        if cell_string == "Name" && spreadsheet_row[index + 1].blank?
-          cell_string = "First Name"
-        elsif cell_string.blank? && "Name" == spreadsheet_row[index - 1]
-          cell_string = "Last Name"
-        end
-
-        if index == 0 && cell_string.blank?
-          column_indexes[:place] = 0
-        elsif cell_string.present?
-          column_name = to_column_name(cell_string)
-
-          create_column column_name, index
-        end
-      end
-
-      Rails.logger.debug("Results::ResultsFile #{Time.zone.now} Create column indexes #{self.column_indexes.inspect}") if debug?
-      self.column_indexes
-    end
-
     def race?(row)
-      return false if row.last? || row.blank? || (row.next && row.next.blank?)
-      return false if row[:place] && row[:place].to_i != 0
-      row.next && row.next[:place] && row.next[:place].to_i == 1
+      return false if row.last?
+
+      # Won't correctly detect races that only have DQs or DNSs
+      row.next &&
+      category_name_from_row(row).present? &&
+      !row[:place].to_s.upcase.in?(%w{ DNS DQ DNF}) &&
+      row.next[:place] &&
+      row.next[:place].to_i == 1 &&
+      (row.previous.nil? || result?(row.previous))
     end
 
-    def find_or_create_race(row)
+    def find_or_create_race(row, columns)
       category = Category.find_or_create_by_normalized_name(category_name_from_row(row))
       race = event.races.detect { |r| r.category == category }
       if race
         race.results.clear
       else
-        race = event.races.build(category: category, notes: row[:notes])
+        race = event.races.build(category: category, notes: notes(row), custom_columns: custom_columns.to_a)
       end
-      race.result_columns = columns
-      race.custom_columns = race_custom_columns.to_a
+      race.result_columns = columns.map(&:to_s)
       race.save!
 
       ActiveSupport::Notifications.instrument "find_or_create_race.import.results_file.racing_on_rails", race_name: race.name, race_id: race.id
@@ -161,7 +85,6 @@ module Results
     end
 
     def result?(row)
-      return false if row.blank?
       return true if row[:place].present? || row[:number].present? || row[:license].present? || row[:team_name].present?
       if !(row[:first_name].blank? && row[:last_name].blank? && row[:name].blank?)
         return true
@@ -197,7 +120,7 @@ module Results
       custom_attributes = {}
       attributes.delete_if do |key, value|
         _key = key.to_s.to_sym
-        if race.custom_columns.include?(_key)
+        if custom_columns.include?(_key)
           custom_attributes[_key] = case value
           when Time
             value.strftime "%H:%M:%S"
@@ -224,12 +147,17 @@ module Results
 
     private
 
-    def new_row(spreadsheet_row, column_indexes)
-      Results::Row.new spreadsheet_row, column_indexes
-    end
-
     def category_name_from_row(row)
       row.first
+    end
+
+    def notes(row)
+      if row[:notes].present?
+        row[:notes]
+      else
+        cells = row.to_a
+        cells[1, cells.size].select(&:present?).join(", ")
+      end
     end
 
     def strip_quotes(string)
@@ -278,19 +206,27 @@ module Results
       end
     end
 
-    def create_column(name, index)
-      return if name.blank?
-
-      column_indexes[name.to_sym] = index
-      columns << name
-      if !result_method?(name)
-        custom_columns << name
-        race_custom_columns << name
+    def add_custom_columns(table)
+      table.columns.each do |column|
+        if column.key && !result_method?(column.key)
+          custom_columns << column.key
+        end
       end
     end
 
     def result_method?(column_name)
       prototype_result.respond_to?(column_name.to_sym)
+    end
+
+    def assert_columns!(table)
+      keys = table.columns.map(&:key)
+      unless keys.include?(:place)
+        import_warnings << "No place column. Place is required."
+      end
+
+      unless keys.include?(:name) || (keys.include?(:first_name) && keys.include?(:lastname)) || keys.include?(:team_name)
+        import_warnings << "No name column. Name, first name, last name or team name is required."
+      end
     end
 
     def same_time?(row)

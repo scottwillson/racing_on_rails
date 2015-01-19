@@ -147,17 +147,19 @@ class Race < ActiveRecord::Base
   end
 
   def result_columns=(value)
-    if value && value.include?("name")
-      name_index = value.index("name")
-      value[name_index] = "first_name"
-      value.insert(name_index + 1, "last_name")
+    _result_columns = value.dup
+
+    if _result_columns && _result_columns.include?("name")
+      name_index = _result_columns.index("name")
+      _result_columns[name_index] = "first_name"
+      _result_columns.insert(name_index + 1, "last_name")
     end
 
-    if value && value.include?("place") && value.first != "place"
-      value.delete("place")
-      value.insert(0, "place")
+    if _result_columns && _result_columns.include?("place") && _result_columns.first != "place"
+      _result_columns.delete("place")
+      _result_columns.insert(0, "place")
     end
-    self[:result_columns] = value
+    self[:result_columns] = _result_columns
   end
 
   # Default columns if empty

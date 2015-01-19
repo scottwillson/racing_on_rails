@@ -20,7 +20,7 @@ module Admin
         @people_file = PeopleFile.new(path)
         if @people_file
           assign_years_for_people_file
-          session[:people_file_path] = temp_file.path
+          session[:people_file_path] = path
         else
           redirect_to :index
         end

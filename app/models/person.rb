@@ -202,10 +202,10 @@ class Person < ActiveRecord::Base
   end
 
   def state=(value)
-    if value and value.size == 2
-      value.upcase!
+    if value && value.to_s.size == 2
+      value = value.to_s.upcase
     end
-    super
+    super value
   end
 
   def city_state
