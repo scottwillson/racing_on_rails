@@ -1,11 +1,19 @@
 GIT
-  remote: git://github.com/Empact/roo.git
-  revision: 4a1353de22e46880e656d9af062a1436eb5e1a9c
+  remote: git://github.com/roo-rb/roo-xls.git
+  revision: a316a88d042ca6e28a83c46a0db1906a9feebb62
   specs:
-    roo (1.13.2)
+    roo-xls (0.0.1)
       nokogiri
-      rubyzip
-      spreadsheet (> 0.6.4)
+      roo (>= 2.0.0)
+      spreadsheet (> 0.9.0)
+
+GIT
+  remote: git://github.com/roo-rb/roo.git
+  revision: 12f3f7b1b9c7cc31cada36db360125531d408405
+  specs:
+    roo (2.0.0)
+      nokogiri
+      rubyzip (>= 1.0.0)
 
 GIT
   remote: https://github.com/amerine/acts_as_tree.git
@@ -21,6 +29,12 @@ GIT
     prawn (1.0.0.rc1)
       pdf-reader (>= 0.9.0)
       ttfunk (~> 1.0.3)
+
+GIT
+  remote: https://github.com/scottwillson/ruby-ole.git
+  revision: 6b9d2530b12259ca21af75ed2dcb26ba745a6115
+  specs:
+    ruby-ole (1.2.11.3)
 
 GIT
   remote: https://github.com/scottwillson/vestal_versions.git
@@ -59,7 +73,7 @@ GEM
     active_utils (2.2.3)
       activesupport (>= 2.3.11)
       i18n
-    activemerchant (1.44.1)
+    activemerchant (1.45.0)
       active_utils (~> 2.2.0)
       activesupport (>= 3.2.14, < 5.0.0)
       builder (>= 2.1.2, < 4.0.0)
@@ -90,11 +104,11 @@ GEM
       activesupport (>= 3.2)
       request_store (~> 1.0)
     bcrypt (3.1.9)
-    bootstrap-datepicker-rails (1.3.0.2)
+    bootstrap-datepicker-rails (1.3.1.1)
       railties (>= 3.0)
-    bootstrap-sass (3.3.0.1)
+    bootstrap-sass (3.3.1.0)
       sass (~> 3.2)
-    brakeman (2.6.3)
+    brakeman (3.0.0)
       erubis (~> 2.6)
       fastercsv (~> 1.5)
       haml (>= 3.0, < 5.0)
@@ -112,7 +126,8 @@ GEM
     bundler-audit (0.3.1)
       bundler (~> 1.2)
       thor (~> 0.18)
-    capistrano (3.2.1)
+    capistrano (3.3.5)
+      capistrano-stats (~> 1.1.0)
       i18n
       rake (>= 10.0.0)
       sshkit (~> 1.3)
@@ -125,6 +140,7 @@ GEM
     capistrano-rvm (0.1.2)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
+    capistrano-stats (1.1.1)
     capistrano3-puma (0.8.3)
       capistrano (~> 3.0)
       puma (>= 2.6)
@@ -141,7 +157,7 @@ GEM
       mime-types (>= 1.16)
     celluloid (0.16.0)
       timers (~> 4.0.0)
-    celluloid-benchmark (0.1.10)
+    celluloid-benchmark (0.1.11)
       celluloid (~> 0.16.0.pre)
       mechanize (~> 2.7)
       mime-types (~> 1.25)
@@ -151,10 +167,9 @@ GEM
     childprocess (0.5.5)
       ffi (~> 1.0, >= 1.0.11)
     chronic (0.9.1)
-    ckeditor_rails (4.4.3)
+    ckeditor_rails (4.4.5)
       railties (>= 3.0)
     cliver (0.3.2)
-    coderay (1.1.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -162,13 +177,13 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.8.0)
-    colorize (0.7.3)
-    connection_pool (2.0.0)
+    colorize (0.7.5)
+    connection_pool (2.1.0)
     dalli (2.7.2)
-    database_cleaner (1.3.0)
-    default_value_for (3.0.0.1)
+    database_cleaner (1.4.0)
+    default_value_for (3.0.1)
       activerecord (>= 3.2.0, < 5.0)
-    domain_name (0.5.22)
+    domain_name (0.5.23)
       unf (>= 0.0.5, < 1.0.0)
     elasticsearch (1.0.6)
       elasticsearch-api (= 1.0.6)
@@ -183,11 +198,7 @@ GEM
     elasticsearch-transport (1.0.6)
       faraday
       multi_json
-    em-websocket (0.5.1)
-      eventmachine (>= 0.12.9)
-      http_parser.rb (~> 0.6.0)
     erubis (2.7.0)
-    eventmachine (1.0.3)
     execjs (2.2.2)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
@@ -195,56 +206,39 @@ GEM
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
     fakeweb (1.3.0)
-    faraday (0.9.0)
+    faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
     fastercsv (1.5.5)
     ffi (1.9.6)
     ffi-compiler (0.1.3)
       ffi (>= 1.0.0)
       rake
-    formatador (0.2.5)
-    guard (2.8.2)
-      formatador (>= 0.2.4)
-      listen (~> 2.7)
-      lumberjack (~> 1.0)
-      pry (>= 0.9.12)
-      thor (>= 0.18.1)
-    guard-livereload (2.3.1)
-      em-websocket (~> 0.5)
-      guard (~> 2.0)
-      multi_json (~> 1.8)
-    haml (4.0.5)
+    haml (4.0.6)
       tilt
     hashdiff (0.2.2)
     hashery (2.1.1)
-    hashie (3.3.1)
+    hashie (3.3.2)
     highline (1.6.21)
     hike (1.2.3)
     hitimes (1.2.2)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
-    http_parser.rb (0.6.0)
     httparty (0.13.3)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
-    i18n (0.6.11)
+    i18n (0.7.0)
     in_place_editing (1.2.0)
     jquery-rails (3.1.2)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    jquery-ui-rails (5.0.2)
+    jquery-ui-rails (5.0.3)
       railties (>= 3.2.16)
     json (1.8.1)
     libv8 (3.16.14.7)
-    listen (2.7.11)
-      celluloid (>= 0.15.2)
-      rb-fsevent (>= 0.9.3)
-      rb-inotify (>= 0.9)
     logstash-event (1.2.02)
     logstash-logger (0.7.0)
       logstash-event (~> 1.2)
       stud
-    lumberjack (1.0.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mechanize (2.7.2)
@@ -257,16 +251,14 @@ GEM
       ntlm-http (~> 0.1, >= 0.1.1)
       webrobots (>= 0.0.9, < 0.2)
     metaclass (0.0.4)
-    method_source (0.8.2)
     mime-types (1.25.1)
-    mini_magick (3.8.1)
-      subexec (~> 0.2.1)
-    mini_portile (0.6.1)
-    minitest (5.4.3)
+    mini_magick (4.0.1)
+    mini_portile (0.6.2)
+    minitest (5.5.0)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
-    money (6.4.0)
-      i18n (>= 0.6.4, <= 0.7.0.beta1)
+    money (6.5.0)
+      i18n (>= 0.6.4, <= 0.7.0)
     multi_json (1.10.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
@@ -276,8 +268,8 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
-    newrelic_rpm (3.9.6.257)
-    nokogiri (1.6.4.1)
+    newrelic_rpm (3.9.9.275)
+    nokogiri (1.6.5)
       mini_portile (~> 0.6.0)
     ntlm-http (0.1.1)
     offsite_payments (2.0.1)
@@ -289,7 +281,7 @@ GEM
       money (< 7.0.0)
       nokogiri (~> 1.4)
     oj (2.11.1)
-    parser (2.2.0.pre.7)
+    parser (2.2.0.1)
       ast (>= 1.1, < 3.0)
       slop (~> 3.4, >= 3.4.5)
     pdf-reader (1.3.3)
@@ -304,13 +296,9 @@ GEM
       multi_json (~> 1.0)
       websocket-driver (>= 0.2.0)
     powerpack (0.0.9)
-    pry (0.10.1)
-      coderay (~> 1.1.0)
-      method_source (~> 0.8.1)
-      slop (~> 3.4)
-    puma (2.9.2)
+    puma (2.10.2)
       rack (>= 1.1, < 2.0)
-    quiet_assets (1.0.3)
+    quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
     racc (1.4.12)
     rack (1.5.2)
@@ -336,26 +324,22 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rainbow (2.0.0)
-    rake (10.3.2)
+    rake (10.4.2)
     raygun4ruby (1.1.4)
       httparty (~> 0.11)
       json
       rack
-    rb-fsevent (0.9.4)
-    rb-inotify (0.9.5)
-      ffi (>= 0.5.0)
-    redcarpet (3.2.0)
+    redcarpet (3.2.2)
     ref (1.0.5)
     request_store (1.1.0)
     ri_cal (0.8.8)
-    rubocop (0.27.1)
+    rubocop (0.28.0)
       astrolabe (~> 1.3)
       parser (>= 2.2.0.pre.7, < 3.0)
       powerpack (~> 0.0.6)
       rainbow (>= 1.99.1, < 3.0)
       ruby-progressbar (~> 1.4)
-    ruby-ole (1.2.11.7)
-    ruby-progressbar (1.7.0)
+    ruby-progressbar (1.7.1)
     ruby-rc4 (0.1.5)
     ruby2ruby (2.1.3)
       ruby_parser (~> 3.1)
@@ -364,10 +348,10 @@ GEM
       sexp_processor (~> 4.1)
     rubyzip (1.1.6)
     sass (3.2.19)
-    sass-rails (4.0.4)
+    sass-rails (4.0.5)
       railties (>= 4.0.0, < 5.0)
       sass (~> 3.2.2)
-      sprockets (~> 2.8, < 2.12)
+      sprockets (~> 2.8, < 3.0)
       sprockets-rails (~> 2.0)
     scrypt (2.0.0)
       ffi-compiler (>= 0.0.2)
@@ -384,23 +368,22 @@ GEM
     slop (3.6.0)
     spreadsheet (1.0.0)
       ruby-ole (>= 1.0)
-    spring (1.1.3)
-    sprockets (2.11.3)
+    spring (1.2.0)
+    sprockets (2.12.3)
       hike (~> 1.2)
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
-    sprockets-rails (2.2.0)
+    sprockets-rails (2.2.2)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
-    sshkit (1.5.1)
-      colorize
+    sshkit (1.6.1)
+      colorize (>= 0.7.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     stud (0.0.18)
-    subexec (0.2.3)
-    tabular (0.3.1)
+    tabular (0.3.5)
     temple (0.6.10)
     terminal-table (1.4.5)
     therubyracer (0.12.1)
@@ -416,7 +399,7 @@ GEM
     ttfunk (1.0.3)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (2.5.3)
+    uglifier (2.6.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     unf (0.1.4)
@@ -425,7 +408,9 @@ GEM
     uniform_notifier (1.6.2)
     webrobots (0.1.1)
     websocket (1.2.1)
-    websocket-driver (0.4.0)
+    websocket-driver (0.5.1)
+      websocket-extensions (>= 0.1.0)
+    websocket-extensions (0.1.1)
     will_paginate (3.0.7)
     will_paginate-bootstrap (1.0.1)
       will_paginate (>= 3.0.3)
@@ -468,7 +453,6 @@ DEPENDENCIES
   execjs
   factory_girl_rails
   fakeweb
-  guard-livereload
   hashdiff
   in_place_editing
   jquery-rails
@@ -495,12 +479,15 @@ DEPENDENCIES
   redcarpet
   ri_cal
   roo!
+  roo-xls!
   rubocop
+  ruby-ole (~> 1.2)!
   sass-rails (~> 4.0.3)
   scrypt
   selenium-webdriver
+  spreadsheet
   spring
-  tabular (>= 0.3)
+  tabular (>= 0.3.5)
   therubyracer
   timecop
   truncate_html

@@ -18,7 +18,7 @@ module Schedule
       start_date = nil
       Event.transaction do
         table = Tabular::Table.new
-        table.column_mapper = Schedule::ColumnMapper.new
+        table.column_mapper = ::Schedule::ColumnMapper.new
         table.read(file_path)
         table.strip!
         events = parse_events(table.rows)
@@ -112,6 +112,10 @@ module Schedule
       event_hash[:promoter] = promoter
 
       event_hash.delete :series
+
+      if event_hash.key?(:flyer_approved) && event_hash[:flyer_approved].nil?
+        event_hash[:flyer_approved] = false
+      end
 
       event = SingleDayEvent.new(event_hash)
 

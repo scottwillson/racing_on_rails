@@ -25,7 +25,7 @@ module Admin
         assert(mt_hood_1.races.empty?, 'Should have no races before import')
 
         post :upload, id: mt_hood_1.to_param,
-                      results_file: fixture_file_upload("results/pir_2006_format.xls", "application/vnd.ms-excel", :binary)
+                      results_file: fixture_file_upload("results/pir_2006_format.xlsx", "application/vnd.ms-excel", :binary)
 
         assert(!flash[:warn].present?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
         assert_redirected_to edit_admin_event_path(mt_hood_1)
@@ -34,17 +34,17 @@ module Admin
       end
 
       test "upload usac" do
-        RacingAssociation.current.usac_results_format = true
+        RacingAssociation.current.update_attributes! usac_results_format: true
         mt_hood_1 = FactoryGirl.create(:stage_race)
-        assert(mt_hood_1.races.empty?, 'Should have no races before import')
 
         post :upload, id: mt_hood_1.to_param,
                       results_file: fixture_file_upload("results/tt_usac.xls", "application/vnd.ms-excel", :binary)
 
-        assert(!flash[:warn].present?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
+        assert flash[:warn].blank?, "flash[:warn] should be empty, but was: #{flash[:warn]}"
         assert_redirected_to edit_admin_event_path(mt_hood_1)
         assert_not_nil flash[:notice]
-        assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
+        puts flash[:notice]
+        assert mt_hood_1.races(true).present?, 'Should have races after upload'
       end
 
       test "upload custom columns" do
@@ -100,7 +100,7 @@ module Admin
         Results::ResultsFile.any_instance.expects(:import).raises(Ole::Storage::FormatError, "OLE2 signature is invalid")
 
         post :upload, id: mt_hood_1.to_param,
-                      results_file: fixture_file_upload("results/pir_2006_format.xls", "application/vnd.ms-excel", :binary)
+                      results_file: fixture_file_upload("results/pir_2006_format.xlsx", "application/vnd.ms-excel", :binary)
 
         assert(flash[:warn].present?, "should have flash[:warn]")
         assert_response :success
