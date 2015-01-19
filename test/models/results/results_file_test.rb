@@ -409,10 +409,11 @@ module Results
     test "times" do
       FactoryGirl.create(:discipline, name: "Track")
       event = SingleDayEvent.create(discipline: 'Track')
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/times.xls", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/times.xlsx", __FILE__)), event)
       results_file.import
-      assert_equal(1, event.races.size, 'Races')
+      assert_equal 1, event.races.size, 'Races'
       results = event.races.first.results
+      assert_equal 19, results.size, 'results'
 
       assert_equal(12.64, results[0].time, 'row 0: 12.64')
       assert_equal(12.64, results[1].time, 'row 1: 0:12.64')
@@ -422,7 +423,7 @@ module Results
       assert_in_delta(3821, results[5].time, 0.00001, 'row 5: 1:03:41')
       assert_in_delta(1641, results[6].time, 0.00001, 'row 6: 0:27:21')
       assert_in_delta(6735, results[7].time, 0.00001, 'row 7: 1:52:15')
-      assert_in_delta(6735, results[8].time, 0.00001, 'row 8: st')
+      assert_equal 6735, results[8].time, 'row 8: st'
       assert_in_delta(6735, results[9].time, 0.00001, 'row 9: s.t.')
       assert_in_delta(7440, results[10].time, 0.00001, 'row 10: 2:04')
       assert_in_delta(7440, results[11].time, 0.00001, 'row 11: st')
@@ -432,8 +433,8 @@ module Results
       assert_in_delta(172.28, results[14].time, 0.00001, 'row 14: 2:52.28')
       # Translated as hour:minutes, though minutes:seconds is the intention
       assert_in_delta(13920, results[15].time, 0.00001, 'row 15: 3:52')
-      assert_in_delta(0.161111111, results[16].time, 0.00001, 'row 16: 0.161111111')
-      assert_equal(2752.92, results[17].time, 'row 17: 45:52.917')
+      assert_equal 0.161, results[16].time, 'row 16: 0.161111111'
+      assert_equal(2752.917, results[17].time, 'row 17: 45:52.917')
       assert_equal(36000, results[18].time, 'row 18: 10:00:00')
     end
 
