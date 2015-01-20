@@ -22,13 +22,7 @@ class OfficialsTest < AcceptanceTest
     login_as member
 
     visit "/admin/first_aid_providers"
-
-    if RacingAssociation.current.ssl?
-      visit "https://localhost/people"
-    else
-      visit "/people"
-    end
-
+    visit "/people"
     assert_download "export_link", "scoring_sheet.xls"
   end
 end

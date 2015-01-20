@@ -399,8 +399,7 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   Capybara.register_driver :poltergeist do |app|
     options = {
-      js_errors: true,
-      phantomjs_options: [ '--ignore-ssl-errors=yes' ]
+      js_errors: true
     }
     Capybara::Poltergeist::Driver.new app, options
   end
@@ -408,10 +407,5 @@ class AcceptanceTest < ActiveSupport::TestCase
   Capybara.configure do |config|
     config.current_driver = default_driver
     config.javascript_driver = javascript_driver
-
-    if RacingAssociation.current.ssl?
-      config.app_host       = "http://localhost"
-      config.server_port    = 8080
-    end
   end
 end
