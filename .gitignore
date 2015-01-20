@@ -6,6 +6,7 @@
 *sublime*
 *~
 .bundle
+.capistrano
 .envrc
 .DS_Store
 .gitmodules
