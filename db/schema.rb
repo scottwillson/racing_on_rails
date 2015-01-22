@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141212193605) do
+ActiveRecord::Schema.define(version: 20150122013156) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "order_id"
@@ -433,7 +433,7 @@ ActiveRecord::Schema.define(version: 20141212193605) do
     t.datetime "purchase_time"
     t.string   "ip_address"
     t.boolean  "waiver_accepted"
-    t.string   "error_message"
+    t.string   "error_message",     limit: 2048
     t.string   "previous_status"
     t.boolean  "suggest",                                                 default: true
     t.decimal  "old_purchase_fees",              precision: 10, scale: 2
