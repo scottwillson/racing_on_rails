@@ -1,24 +1,6 @@
 module Schedule
   # Single year's event schedule. Hierarchical model or Arrays: Schedule --> Month --> Week --> Day --> SingleDayEvent
   class Schedule
-    COLUMNS_MAP = {
-      race_name: :name,
-      race: :name,
-      event: :name,
-      type: :discipline,
-      city_state: :location,
-      promoter: :promoter_name,
-      phone: :promoter_phone,
-      email: :promoter_email,
-      sponsoring_team: :team_id,
-      team: :team_id,
-      club: :team_id,
-      website: :flyer,
-      where: :city,
-      flyer_approved: { column_type: :boolean },
-      velodrome: :velodrome_name
-    }
-
     # 0-based array of Months
     attr_reader :months, :year
     attr_accessor :events
@@ -35,9 +17,11 @@ module Schedule
     def self.import(file_path)
       start_date = nil
       Event.transaction do
-        table = Tabular::Table.read(file_path, columns: COLUMNS_MAP)
+        table = Tabular::Table.new
+        table.column_mapper = ::Schedule::ColumnMapper.new
+        table.read(file_path)
         table.strip!
-        events = parse_events(table)
+        events = parse_events(table.rows)
         delete_all_future_events events
         multi_day_events = find_multi_day_events(events)
         save events, multi_day_events
@@ -55,10 +39,10 @@ module Schedule
       Event.destroy_all ["date >= ? and events.id not in (select event_id from races)", date]
     end
 
-    # Read +file+, split city and state, read and create promoter
-    def self.parse_events(file)
+    # Read +rows+, split city and state, read and create promoter
+    def self.parse_events(rows)
       events = []
-      file.rows.each do |row|
+      rows.each do |row|
         if has_event?(row)
           events << Schedule.parse(row)
         end
@@ -128,6 +112,10 @@ module Schedule
       event_hash[:promoter] = promoter
 
       event_hash.delete :series
+
+      if event_hash.key?(:flyer_approved) && event_hash[:flyer_approved].nil?
+        event_hash[:flyer_approved] = false
+      end
 
       event = SingleDayEvent.new(event_hash)
 

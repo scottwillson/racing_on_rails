@@ -15,13 +15,21 @@ module ActionController
       def force_https(options = {})
         options.delete(:host)
         before_filter(options) do
-          if !request.ssl? && RacingAssociation.current.ssl?
-            redirect_to "https://#{request.host}#{request.original_fullpath}", status: :moved_permanently
-            flash.keep
+          if self.force_https?
+            force_https!
             false
           end
         end
       end
+    end
+
+    def force_https?
+      !Rails.env.development? && !Rails.env.acceptance? && !request.ssl? && RacingAssociation.current.ssl?
+    end
+
+    def force_https!
+      redirect_to "https://#{request.host}#{request.original_fullpath}", status: :moved_permanently
+      flash.keep
     end
   end
 end

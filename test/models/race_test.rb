@@ -24,7 +24,7 @@ class RaceTest < ActiveSupport::TestCase
     race.reload
     assert_equal(Race::DEFAULT_RESULT_COLUMNS, race.result_columns_or_default, "race result_columns after save")
 
-    result_columns = ["place", "name", "category"]
+    result_columns = ["place", "first_name", "last_name", "category"]
     race.result_columns = result_columns
     race.save!
     race.reload

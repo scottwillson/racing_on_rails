@@ -31,7 +31,7 @@
             format: "xls",
             excel_layout: "scoring_sheet",
             include: "members_only",
-            protocol: RacingAssociation.current.ssl? ? "https" : "http"
+            protocol: force_https? ? "https" : "http"
           ),
           id: "export_link"
     ) %>

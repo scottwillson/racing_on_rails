@@ -35,39 +35,74 @@ module People
     # Look for RaceNumber +year+ in +attributes+. Not sure if there's a simple and better way to do that.
     # Need to set +updated_by+ before setting numbers to ensure updated_by is passed to number. Setting all via a
     # parameter hash may add number before updated_by is set.
-    def add_number(value, discipline, association = nil, _year = year)
-      association = NumberIssuer.find_by_name(RacingAssociation.current.short_name) if association.nil?
-      _year ||= RacingAssociation.current.year
+    def add_number(value, discipline, issuer = nil, _year = year)
+      return false if discipline.blank? && value.blank?
 
       if discipline.nil? || !discipline.numbers?
         discipline = Discipline[:road]
       end
+      issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name) if issuer.nil?
+      _year ||= RacingAssociation.current.year
 
-      if value.blank?
-        unless new_record?
-          # Delete ALL numbers for RacingAssociation.current and this discipline?
-          # FIXME Delete number individually in UI
-          RaceNumber.destroy_all(
-            ['person_id=? and discipline_id=? and year=? and number_issuer_id=?',
-            self.id, discipline.id, _year, association.id])
+      if value.present?
+        if new_record?
+          build_number value, discipline, issuer, updated_by, _year
+        else
+          create_number value, discipline, issuer, updated_by, _year
         end
       else
-        if new_record?
-          existing_number = race_numbers.any? do |number|
-            number.value == value && number.discipline == discipline && number.association == association && number.year == _year
-          end
-          race_numbers.build(
-            value: value, discipline: discipline, year: _year, number_issuer: association,
-            person: self,
-            updated_by: updated_by
-          ) unless existing_number
-        else
-          RaceNumber.where(
-            value: value, person_id: id, discipline_id: discipline.id, year: _year, number_issuer_id: association.id
-          ).first || race_numbers.create(
-            value: value, discipline: discipline, year: _year, number_issuer: association, person: self, updated_by: updated_by
-          )
+        if !new_record?
+          destroy_number discipline, issuer, _year
         end
+      end
+    end
+
+    def build_number(value, discipline, issuer, updated_by, year)
+      unless race_number?(value, discipline, issuer, year)
+        race_numbers.build(
+          discipline: discipline,
+          number_issuer: issuer,
+          person: self,
+          updated_by: updated_by,
+          value: value,
+          year: year
+        )
+      end
+    end
+
+    def create_number(value, discipline, issuer, updated_by, year)
+      unless race_number?(value, discipline, issuer, year)
+        race_numbers.create(
+          discipline: discipline,
+          number_issuer: issuer,
+          person: self,
+          updated_by: updated_by,
+          value: value,
+          year: year
+        )
+      end
+    end
+
+    def destroy_number(discipline, issuer, year)
+      RaceNumber.where(discipline: discipline, number_issuer: issuer, person: self, year: year).destroy_all
+    end
+
+    def race_number?(value, discipline, issuer, year)
+      if new_record?
+        race_numbers.any? do |n|
+          n.value == value &&
+          n.discipline == discipline &&
+          n.number_issuer == issuer &&
+          n.year == year
+        end
+      else
+        RaceNumber.where(
+          discipline: discipline,
+          number_issuer: issuer,
+          person: self,
+          value: value,
+          year: year
+        ).exists?
       end
     end
 

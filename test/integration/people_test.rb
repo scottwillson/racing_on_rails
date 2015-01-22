@@ -27,11 +27,13 @@ class PeopleTest < RacingOnRails::IntegrationTest
   end
 
   test "import" do
+    FactoryGirl.create :discipline
+    FactoryGirl.create :number_issuer
     goto_login_page_and_login_as FactoryGirl.create(:administrator)
     post "/admin/people/preview_import",
          people_file: fixture_file_upload(
-           "#{ActionController::TestCase.fixture_path}/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv",
-           "text/csv"
+           "#{ActionController::TestCase.fixture_path}membership/upload.xlsx",
+           "application/vnd.ms-excel"
           )
     assert_response :success
 

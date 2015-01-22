@@ -153,8 +153,8 @@ module Admin
       FileUtils.rm temp_file rescue nil
 
       flash[:notice] = "Imported #{uploaded_file.original_filename}. "
-      unless results_file.custom_columns.empty?
-        flash[:notice] = flash[:notice] + "Found custom columns: #{results_file.custom_columns.map(&:humanize).join(", ")}. "
+      if results_file.custom_columns.present?
+        flash[:notice] = flash[:notice] + "Found custom columns: #{results_file.custom_columns.map(&:to_s).map(&:humanize).join(", ")}. "
         flash[:notice] = flash[:notice] + "(If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)" if RacingAssociation.current.usac_results_format?
       end
 

@@ -853,49 +853,27 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "add number" do
-    FactoryGirl.create(:discipline, name: "Road")
-    FactoryGirl.create(:number_issuer)
+    FactoryGirl.create :discipline, name: "Road"
+    FactoryGirl.create :number_issuer
 
     person = Person.create!
     event = FactoryGirl.create(:event)
     person.updated_by = event
-    person.add_number("7890", nil)
-    assert_equal("7890", person.road_number, "Road number after add with nil discipline")
+    person.add_number "7890", nil
+    assert_equal "7890", person.road_number, "Road number after add with nil discipline"
     assert_equal event, person.race_numbers.first.created_by, "Number created_by"
   end
 
   test "add number from non number discipline" do
-    FactoryGirl.create(:discipline, name: "Circuit", numbers: false)
-    FactoryGirl.create(:discipline, name: "Road")
-    FactoryGirl.create(:number_issuer)
+    FactoryGirl.create :discipline, name: "Circuit", numbers: false
+    FactoryGirl.create :discipline, name: "Road"
+    FactoryGirl.create :number_issuer
 
     person = Person.create!
     circuit_race = Discipline[:circuit]
-    person.add_number("7890", circuit_race)
-    assert_equal("7890", person.road_number, "Road number")
-    assert_equal("7890", person.number(circuit_race), "Circuit race number")
-  end
-
-  # Legacy test … used to look at data to devine creator
-  test "created from result?" do
-    person = Person.create!
-    assert(!person.created_from_result?, "created_from_result? for blank Person")
-
-    person = Person.create!(name: "Some Person")
-    assert(!person.created_from_result?, "created_from_result? for Person with just name")
-
-    gentle_lovers = FactoryGirl.create(:team)
-    person = Person.create!(name: "Some Person", team: gentle_lovers)
-    assert(!person.created_from_result?, "created_from_result? for Person with just name and team")
-
-    person = Person.create!(name: "Some Person", team: gentle_lovers, email: "person@example.com")
-    assert(!person.created_from_result?, "created_from_result? for Person with name and team and email")
-
-    person = Person.create!(name: "Some Person", team: gentle_lovers, home_phone: "911")
-    assert(!person.created_from_result?, "created_from_result? for Person with name and team and phone")
-
-    person = Person.create!(name: "Some Person", team: gentle_lovers, street: "10 Main Street")
-    assert(!person.created_from_result?, "created_from_result? for Person with name and team and street")
+    person.add_number "7890", circuit_race
+    assert_equal "7890", person.road_number, "Road number"
+    assert_equal "7890", person.number(circuit_race), "Circuit race number"
   end
 
   test "people with same name" do

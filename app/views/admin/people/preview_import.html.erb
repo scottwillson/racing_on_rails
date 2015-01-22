@@ -18,19 +18,14 @@
 
 <div class="row">
   <div class="col-sm-12">
-<%= table class: "preview_import", id: "preview_import", columns:  @people_file.columns.size do %>
+<%= table class: "preview_import", id: "preview_import", columns:  @people_file.table.columns.size do %>
     <tr id="original">
-    <%- @people_file.columns.each do |column| -%>
-      <th <%= "class=invalid" unless column.valid? %>><%= column.description %></th>
-    <%- end -%>
-    </tr>
-    <tr>
-    <%- @people_file.columns.each do |column| -%>
-      <th><%= column.field %></th>
+    <%- @people_file.table.columns.each do |column| -%>
+      <th><%= column.key %></th>
     <%- end -%>
     </tr>
 
-  <%- @people_file.rows.each do |row| -%>
+  <%- @people_file.table.rows.each do |row| -%>
     <tr>
     <%- row.each do |cell| -%>
       <td><%= cell %></td>

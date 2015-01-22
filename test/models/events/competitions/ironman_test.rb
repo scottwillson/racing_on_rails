@@ -117,7 +117,7 @@ module Competitions
         "points" => 0.0,
         "race_id" => 1,
         "category_name" => source_result.race.name,
-        "year" => 2014,
+        "year" => RacingAssociation.current.effective_year,
         "team_member" => 1,
         "team_name" => source_result.team.name
       }

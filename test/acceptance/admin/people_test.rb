@@ -217,6 +217,6 @@ class PeopleTest < AcceptanceTest
   test "import" do
     login_as FactoryGirl.create(:administrator)
     visit '/admin/people'
-    attach_file 'people_file', "#{Rails.root}/test/fixtures/membership/database.xls"
+    attach_file 'people_file', "#{Rails.root}/test/fixtures/membership/upload.xlsx"
   end
 end

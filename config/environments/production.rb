@@ -17,5 +17,5 @@ RacingOnRails::Application.configure do
   config.eager_load                                         = true
   config.i18n.fallbacks                                     = true
   config.logger                                             = Syslog::Logger.new("racing_on_rails", Syslog::LOG_LOCAL4)
-  config.serve_static_assets                                = false
+  config.serve_static_files                                = false
 end

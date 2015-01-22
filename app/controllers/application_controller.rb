@@ -3,6 +3,7 @@ require "sentient_user/sentient_controller"
 
 class ApplicationController < ActionController::Base
   helper :all
+  helper_method :force_https?
   helper_method :page
 
   protect_from_forgery
@@ -69,7 +70,7 @@ class ApplicationController < ActionController::Base
   private
 
   def secure_redirect_options
-    if RacingAssociation.current.ssl?
+    if force_https?
       { protocol: "https", host: request.host, port: 443 }
     else
       {}

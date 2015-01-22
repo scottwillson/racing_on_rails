@@ -17,11 +17,10 @@ module Admin
           f.print(params[:people_file].read)
         end
 
-        temp_file = File.new(path)
-        @people_file = PeopleFile.new(temp_file)
+        @people_file = PeopleFile.new(path)
         if @people_file
           assign_years_for_people_file
-          session[:people_file_path] = temp_file.path
+          session[:people_file_path] = path
         else
           redirect_to :index
         end
@@ -45,7 +44,7 @@ module Admin
             return redirect_to(admin_people_path)
           end
 
-          people_file = PeopleFile.new(File.new(path))
+          people_file = PeopleFile.new(path)
           people_file.import(params[:update_membership], params[:year])
           flash[:notice] = "Imported #{pluralize(people_file.created, 'new person')} and updated #{pluralize(people_file.updated, 'existing person')}"
           session[:people_file_path] = nil
