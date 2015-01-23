@@ -33,7 +33,8 @@ module Competitions
       following_event.races.create!(category: cat_3).results.create!(place: 10, person: weaver)
 
       TaborOverall.calculate!(2007)
-      assert_not_nil(series.overall(true), "Should add new overall to parent Series after deleting old overall")
+      series = WeeklySeries.find(series.id)
+      assert_not_nil(series.overall, "Should add new overall to parent Series after deleting old overall")
       assert_equal(9, series.overall.races.size, "Overall races")
       assert_equal(1, series.overall.bar_points, "BAR points")
 
@@ -84,7 +85,7 @@ module Competitions
 
       TaborOverall.calculate!(2007)
 
-      cat_3_overall_race = series.overall.races.detect { |race| race.category == cat_3 }
+      cat_3_overall_race = TaborOverall.last.races.detect { |race| race.category == cat_3 }
       assert_not_nil(cat_3_overall_race, "Should have Cat 3 overall race")
       assert_equal(1, cat_3_overall_race.results.size, "Cat 3 race results")
       results = cat_3_overall_race.results(true).sort
@@ -120,7 +121,7 @@ module Competitions
 
       TaborOverall.calculate!(2007)
 
-      cat_3_overall_race = series.overall.races.detect { |race| race.category == cat_3 }
+      cat_3_overall_race = TaborOverall.last.races.detect { |race| race.category == cat_3 }
       assert_not_nil(cat_3_overall_race, "Should have Cat 3 overall race")
       assert_equal(1, cat_3_overall_race.results.size, "Cat 3 race results")
       results = cat_3_overall_race.results(true).sort
@@ -163,7 +164,7 @@ module Competitions
 
       TaborOverall.calculate!(2008)
 
-      masters_overall_race = series.overall.races.detect { |race| race.category == masters }
+      masters_overall_race = TaborOverall.last.races.detect { |race| race.category == masters }
       assert_not_nil(masters_overall_race, "Should have Masters overall race")
       results = masters_overall_race.results(true).sort
       result = results.first

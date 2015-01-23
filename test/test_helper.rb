@@ -1,6 +1,7 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require "rails/test_help"
+require "mocha/setup"
 require "action_view/test_case"
 require "authlogic/test_case"
 require "test/enumerable_assertions"
@@ -17,6 +18,9 @@ class ActiveSupport::TestCase
   include Test::EnumerableAssertions
 
   DatabaseCleaner.strategy = :truncation
+
+  FakeWeb.allow_net_connect = false
+  FakeWeb.register_uri :put, %r{http://localhost:9200/posts/post/*}, body: "{}"
 
   setup :clean_database, :activate_authlogic, :reset_association, :reset_disciplines, :reset_person_current
 
