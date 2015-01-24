@@ -68,7 +68,7 @@ module Events
         end
 
         ids = events.map(&:root_id).uniq
-        Event.where(id: ids).includes(children: [ :races, { children: :races } ])
+        Event.includes(children: [ :races, { children: :races } ]).where(id: ids)
       end
     end
 
@@ -112,7 +112,7 @@ module Events
     def races_with_results
       races.select(&:any_results?)
     end
-    
+
     # Helper method for as_json
     def sorted_races
       races.sort

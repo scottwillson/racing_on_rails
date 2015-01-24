@@ -92,13 +92,14 @@ class Event < ActiveRecord::Base
     multi_day_events    = upcoming_multi_day_events(weeks)
     series_child_events = upcoming_series_child_events(weeks, multi_day_events)
 
-    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
+    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar? && single_day_events.default_sanctioned_by.present?
       single_day_events = single_day_events.default_sanctioned_by
       multi_day_events = multi_day_events.default_sanctioned_by
       series_child_events = series_child_events.default_sanctioned_by
     end
 
-    three_relation_union single_day_events, multi_day_events, series_child_events
+    # FIXME Need to make this lazy-load again
+    single_day_events + multi_day_events + series_child_events
   end
 
   def self.upcoming_single_day_events(weeks)
@@ -235,7 +236,7 @@ class Event < ActiveRecord::Base
   def type_modifiable?
     type.nil? || %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries }.include?(type)
   end
-  
+
   def as_json(options)
     super(
       only: [ :discipline, :name, :parent_id, :type ],
@@ -283,12 +284,5 @@ class Event < ActiveRecord::Base
       race.results.each(&:destroy)
       race.results.delete(race.results.select(&:destroyed?))
     end
-  end
-
-  def self.three_relation_union(relation_1, relation_2, relation_3)
-    # No simple way to do lazy union of three Arel relations
-    events_table = Event.arel_table
-    union = Event.from(events_table.create_table_alias(relation_1.union(relation_2), :events)).union(relation_3)
-    Event.from(events_table.create_table_alias(union, :events))
   end
 end
