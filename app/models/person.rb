@@ -105,7 +105,7 @@ class Person < ActiveRecord::Base
 
   def self.deliver_password_reset_instructions!(people)
     people.each(&:reset_perishable_token!)
-    Notifier.password_reset_instructions(people).deliver
+    Notifier.password_reset_instructions(people).deliver_now
   end
 
   # Cannot have promoters with duplicate contact information

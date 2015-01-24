@@ -62,7 +62,7 @@ class PostsController < ApplicationController
     @post = @mailing_list.posts.build(post_params)
     if @post.valid?
       begin
-        private_reply_email = MailingListMailer.private_reply(@post, @reply_to.from_email).deliver
+        private_reply_email = MailingListMailer.private_reply(@post, @reply_to.from_email).deliver_now
         flash[:notice] = "Sent private reply '#{@post.subject}' to #{private_reply_email.to}"
         redirect_to mailing_list_confirm_private_reply_path(@mailing_list)
       rescue ArgumentError, Net::SMTPSyntaxError, Net::SMTPServerBusy, Net::SMTPFatalError => e
@@ -81,7 +81,7 @@ class PostsController < ApplicationController
     @post.mailing_list = @mailing_list
     if @post.valid?
       begin
-        MailingListMailer.post(@post).deliver
+        MailingListMailer.post(@post).deliver_now
         flash[:notice] = "Submitted new post: #{@post.subject}"
         redirect_to mailing_list_confirm_path(@mailing_list)
       rescue Net::SMTPSyntaxError, Net::SMTPServerBusy, Net::SMTPFatalError => e

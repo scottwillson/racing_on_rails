@@ -87,7 +87,7 @@ class PeopleController < ApplicationController
       if @person.update(person_params)
         @person.reset_perishable_token!
         flash[:notice] = "Created your new login"
-        PersonMailer.new_login_confirmation(@person).deliver rescue nil
+        PersonMailer.new_login_confirmation(@person).deliver_now rescue nil
         return redirect_to(edit_person_path(@person))
       else
         return render(:new_login)
@@ -152,7 +152,7 @@ class PeopleController < ApplicationController
     if @person.update(person_params)
       flash[:notice] = "Created your new login"
       PersonSession.create @person
-      PersonMailer.new_login_confirmation(@person).deliver rescue nil
+      PersonMailer.new_login_confirmation(@person).deliver_now rescue nil
       if @return_to.present?
         uri = URI.parse(@return_to)
         redirect_to URI::Generic.build(path: uri.path, query: uri.query).to_s
