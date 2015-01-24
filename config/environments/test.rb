@@ -5,10 +5,10 @@ RacingOnRails::Application.configure do
   config.action_dispatch.show_exceptions                    = false
   config.action_mailer.delivery_method                      = :test
   config.active_support.deprecation                         = :stderr
+  config.active_support.test_order                          = :random
   config.autoload_paths                                    += %W(
     #{config.root}/lib/test
   )
-  config.active_support.test_order = :random
   config.cache_classes                                      = true
   config.consider_all_requests_local                        = true
   config.active_support.deprecation                         = :raise
@@ -16,6 +16,6 @@ RacingOnRails::Application.configure do
   # For fastness. Change locally if you need debug logging to a problem.
   config.log_level                                          = ENV["LOG_LEVEL"] || :warn
   config.mass_assignment_sanitizer                          = :strict
-  config.serve_static_files                                = true
+  config.serve_static_files                                 = true
   config.static_cache_control                               = "public, max-age=3600"
 end
