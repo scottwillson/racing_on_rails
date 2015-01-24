@@ -1085,7 +1085,7 @@ class PersonTest < ActiveSupport::TestCase
     person.editors << alice
     assert alice.editable_people.any?, "should be editor"
     person.destroy
-    assert !Person.exists?(person)
+    assert !Person.exists?(person.id)
     assert alice.editable_people(true).empty?, "should remove editors"
   end
 

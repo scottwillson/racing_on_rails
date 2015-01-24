@@ -319,7 +319,7 @@ module Admin
     test "destroy" do
       person = FactoryGirl.create(:person)
       delete :destroy, id: person.id
-      assert !Person.exists?(person)
+      assert !Person.exists?(person.id)
       assert_redirected_to admin_people_path
       assert flash.notice.present?
     end
@@ -328,7 +328,7 @@ module Admin
       result = FactoryGirl.create(:result)
       person = result.person
       delete :destroy, id: person.id
-      assert Person.exists?(person)
+      assert Person.exists?(person.id)
       assert_response :success
       assert flash[:warn].present?
     end

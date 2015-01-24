@@ -421,7 +421,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(new_result, results[0], "New result should be first result")
     assert_equal("1", results[0].place, "New result place")
     assert_equal(existing_result, results[1], "Existing result should be second result")
-    assert_equal(2, results[1].place, "Existing result place")
+    assert_equal("2", results[1].place, "Existing result place")
 
     another_new_result = race.create_result_before(new_result.id)
     results = race.results(true).to_a.sort
@@ -459,7 +459,7 @@ class RaceTest < ActiveSupport::TestCase
     race.results.create!(place: "3", person: mathew_braun)
     assert(Person.exists?(first_name: "Jonah", last_name: "Braun"), "New person Jonah Braun should have been created")
 
-    race = Race.find(race)
+    race = Race.find(race.id)
     race.destroy
     assert !Result.exists?(result.id), "Should destroy result"
     assert !Race.exists?(race.id), "Should be destroyed. #{race.errors.full_messages}"

@@ -641,16 +641,16 @@ class MultiDayEventTest < ActiveSupport::TestCase
     cat_4_women = FactoryGirl.create(:category)
     event.children.create!.races.create!(category: cat_4_women).results.create!
     assert_equal(1, event.children_with_results.size, "cached: events_with_results: 1 children with results")
-    event = Event.find(event)
+    event = Event.find(event.id)
     assert_equal(1, event.children_with_results.size, "refresh cache: children_with_results: 1 children with results")
 
     event.children.create!.races.create!(category: cat_4_women).results.create!
-    event = Event.find(event)
+    event = Event.find(event.id)
     assert_equal(2, event.children_with_results.size, "refresh cache: children_with_results: 2 children with results")
 
     overall = event.create_overall
     overall.races.create!(category: cat_4_women).results.create!
-    event = Event.find(event)
+    event = Event.find(event.id)
     assert_equal(2, event.children_with_results.size, "refresh cache: children_with_results: 2 children with results + overall")
   end
 

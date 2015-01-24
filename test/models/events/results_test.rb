@@ -133,7 +133,7 @@ module Events
       series_event = FactoryGirl.create(:series_event)
       child_event = series_event.children.create!
       FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: child_event))
-      series = Event.find(series_event.parent)
+      series = Event.find(series_event.parent_id)
 
       assert_equal(1, series.children_with_results.size, "Should have child with results")
       assert_equal(series_event, series.children_with_results.first, "Should have child with results")
@@ -145,7 +145,7 @@ module Events
       series_event = FactoryGirl.create(:weekly_series_event)
       child_event = series_event.children.create!
       FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: child_event))
-      series = Event.find(series_event.parent)
+      series = Event.find(series_event.parent_id)
 
       assert(series.any_results_including_children?, "Series any_results_including_children?")
       assert(series_event.any_results_including_children?, "Series Event any_results_including_children?")

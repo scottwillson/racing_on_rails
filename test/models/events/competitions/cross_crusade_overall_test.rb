@@ -112,7 +112,7 @@ module Competitions
 
       CrossCrusadeOverall.calculate! 2008
 
-      masters_overall_race = series.overall.races.detect { |race| race.category == masters }
+      masters_overall_race = CrossCrusadeOverall.last.races.detect { |race| race.category == masters }
       assert_not_nil(masters_overall_race, "Should have Masters overall race")
       results = masters_overall_race.results(true).sort
       result = results.first
@@ -122,7 +122,7 @@ module Competitions
       assert_equal(26 + 26 + 0 + 26 + 0 + 26 + 20 + 26 + 0, result.points, "points")
       assert_equal(person, result.person, "person")
 
-      category_a_overall_race = series.overall.races.detect { |race| race.category == category_a }
+      category_a_overall_race = CrossCrusadeOverall.last.races.detect { |race| race.category == category_a }
       assert_not_nil(category_a_overall_race, "Should have Category A overall race")
       results = category_a_overall_race.results(true).sort
       result = results.first
@@ -132,7 +132,7 @@ module Competitions
       assert_equal(15, result.points, "points")
       assert_equal(person, result.person, "person")
 
-      singlespeed_overall_race = series.overall.races.detect { |race| race.category == singlespeed }
+      singlespeed_overall_race = CrossCrusadeOverall.last.races.detect { |race| race.category == singlespeed }
       assert_not_nil(singlespeed_overall_race, "Should have Singlespeed overall race")
       assert(singlespeed_overall_race.results.empty?, "Should not have any singlespeed results, but have #{singlespeed_overall_race.results.size}")
     end
