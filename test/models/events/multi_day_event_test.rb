@@ -662,16 +662,16 @@ class MultiDayEventTest < ActiveSupport::TestCase
     parent_event.children.create!
     parent_event.children.create!
 
-    parent_event = Event.find(parent_event)
+    parent_event = Event.find(parent_event.id)
     assert(!parent_event.completed?, "Event with all children with no results should not be completed")
 
     cat_4_women = FactoryGirl.create(:category)
     parent_event.children.first.races.create!(category: cat_4_women).results.create!
-    parent_event = Event.find(parent_event)
+    parent_event = Event.find(parent_event.id)
     assert(!parent_event.completed?, "Event with only one child with results should not be completed")
 
     parent_event.children.each { |event| event.races.create!(category: cat_4_women).results.create! }
-    parent_event = Event.find(parent_event)
+    parent_event = Event.find(parent_event.id)
     assert(parent_event.completed?, "Event with all children with results should be completed")
   end
 
