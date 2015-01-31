@@ -108,7 +108,7 @@ class PostTest < ActiveSupport::TestCase
     assert_equal reply.date, original.last_reply_at, "last_reply_at"
     assert_equal nil, original.original, "no original"
     assert_equal [ reply ], original.replies, "should add reply"
-    assert_equal 1, original.replies_count, "replies_count"
+    assert_equal 1, original.replies(true).size, "replies_count"
     assert_equal 2, original.position, "original position"
   end
 

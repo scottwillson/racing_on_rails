@@ -38,7 +38,8 @@ module Competitions
       following_event.races.create!(category: cat_a).results.create!(place: 10, person: weaver)
 
       CrossCrusadeOverall.calculate!(2007)
-      assert_not_nil(series.overall(true), "Should add new Overall Competition child to parent Series")
+      series = Series.find(series.id)
+      assert_not_nil(CrossCrusadeOverall.last, "Should add new Overall Competition child to parent Series")
       overall = series.overall
       assert_equal 31, overall.races.size, "Overall races"
 

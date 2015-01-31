@@ -1,7 +1,7 @@
 require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
-class PublicPagesTest < RacingOnRails::IntegrationTest
+class PublicPagesIntegrationTest < RacingOnRails::IntegrationTest
   test "results pages" do
     FactoryGirl.create(:discipline)
     team = FactoryGirl.create(:team)

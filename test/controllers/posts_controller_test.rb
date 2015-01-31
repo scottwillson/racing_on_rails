@@ -4,18 +4,16 @@ require File.expand_path("../../test_helper", __FILE__)
 class PostsControllerTest < ActionController::TestCase
   test "new" do
     obra_chat = FactoryGirl.create(:mailing_list)
-    get(:new, mailing_list_id: obra_chat.id)
-    assert_response(:success)
-    assert_template("posts/new")
-    assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
-    assert_not_nil(assigns["post"], "Should assign post")
-    post = assigns["post"]
-    assert_equal(obra_chat, post.mailing_list, "Post's mailing list")
-    assert_tag(tag: "input", attributes: {type: "text", name: "post[subject]"})
-    assert_tag(tag: "input", attributes: {type: "text", name: "post[from_email]"})
-    assert_tag(tag: "input", attributes: {type: "text", name: "post[from_name]"})
-    assert_tag(tag: "textarea", attributes: {name: "post[body]"})
-    assert_tag(tag: "input", attributes: {type: "submit", name: "commit", value: "Post"})
+    get :new, mailing_list_id: obra_chat.id
+    assert_template "posts/new"
+    assert_not_nil assigns["mailing_list"], "Should assign mailing_list"
+    assert_not_nil assigns["post"], "Should assign post"
+    assert_equal obra_chat, assigns["post"].mailing_list, "Post's mailing list"
+    assert_select "input[type='text'][name='post[subject]']"
+    assert_select "input[type='text'][name='post[from_email]']"
+    assert_select "input[type='text'][name='post[from_name]']"
+    assert_select "textarea[name='post[body]']"
+    assert_select "input[type='submit'][name='commit'][value='Post']"
   end
 
   test "new reply" do
@@ -29,20 +27,19 @@ class PostsControllerTest < ActionController::TestCase
       body: "This is a test message."
     )
 
-    get(:new, mailing_list_id: obra_race.id, reply_to_id: original_post.id)
-    assert_response(:success)
-    assert_template("posts/new")
-    assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
+    get :new, mailing_list_id: obra_race.id, reply_to_id: original_post.id
+    assert_template "posts/new"
+    assert_not_nil assigns["mailing_list"], "Should assign mailing_list"
     post = assigns["post"]
-    assert_not_nil(post, "Should assign post")
-    assert_equal(original_post, assigns["reply_to"], "Should assign reply_to")
-    assert_equal("Re: Only OBRA Race Message", post.subject, 'Prepopulated subject')
-    assert_equal(obra_race, post.mailing_list, "Post's mailing list")
-    assert_tag(tag: "input", attributes: {type: "text", name: "post[subject]"})
-    assert_tag(tag: "input", attributes: {type: "text", name: "post[from_email]"})
-    assert_tag(tag: "input", attributes: {type: "text", name: "post[from_name]"})
-    assert_tag(tag: "textarea", attributes: {name: "post[body]"})
-    assert_tag(tag: "input", attributes: {type: "submit", name: "commit", value: "Send"})
+    assert_not_nil post, "Should assign post"
+    assert_equal original_post, assigns["reply_to"], "Should assign reply_to"
+    assert_equal "Re: Only OBRA Race Message", post.subject, 'Prepopulated subject'
+    assert_equal obra_race, post.mailing_list, "Post's mailing list"
+    assert_select "input[type='text'][name='post[subject]']"
+    assert_select "input[type='text'][name='post[from_email]']"
+    assert_select "input[type='text'][name='post[from_name]']"
+    assert_select "textarea[name='post[body]']"
+    assert_select "input[type='submit'][name='commit'][value='Send']"
   end
 
   test "index" do

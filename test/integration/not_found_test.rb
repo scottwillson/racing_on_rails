@@ -1,7 +1,7 @@
 require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
-class PublicPagesTest < RacingOnRails::IntegrationTest
+class NotFoundTest < RacingOnRails::IntegrationTest
   test "requests for missing events should just redirect to event results page" do
     get "/events/2"
     assert_redirected_to "/schedule"

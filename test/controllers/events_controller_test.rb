@@ -12,7 +12,7 @@ class EventsControllerTest < ActionController::TestCase
     get :index, person_id: promoter
     assert_response :success
     assert_select ".nav.tabs", count: 0
-    assert_select "a[href=?]", /.*\/admin\/events.*/, count: 0
+    assert_select "a[href*='/admin/events']", 0
   end
 
   test "index with person id promoter" do
@@ -24,7 +24,7 @@ class EventsControllerTest < ActionController::TestCase
       get :index, person_id: promoter
       assert_response :success
       if css_select(".nav.tabs").present?
-        assert_select "a[href=?]", /.*\/admin\/events.*/
+        assert_select "a[href*='/events']"
       end
     end
   end

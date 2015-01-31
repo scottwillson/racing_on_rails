@@ -28,17 +28,19 @@ class Post < ActiveRecord::Base
   #
   # In most cases, you want to call this service method, not just save! or create!
   def self.save(post, mailing_list)
+    p "save #{post.subject}"
     post.subject = Post.normalize_subject(post.subject, mailing_list.subject_line_prefix)
 
     transaction do
       original = find_original(post)
       if original
+        p "original #{original} replies: #{original.replies_count}"
         original.replies << post
         original.replies_count = original.replies_count + 1
         if original.last_reply_at.nil? || post.date > original.last_reply_at
           original.last_reply_at = post.date
         end
-        original.save
+        p "original.save #{original.save}"
       end
 
       post.last_reply_at = post.date
