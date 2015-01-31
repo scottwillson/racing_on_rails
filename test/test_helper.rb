@@ -20,8 +20,7 @@ class ActiveSupport::TestCase
   DatabaseCleaner.strategy = :truncation
 
   FakeWeb.allow_net_connect = false
-  FakeWeb.register_uri :put, %r{http://localhost:9200/posts/post/*}, body: "{}"
-  FakeWeb.register_uri :post, %r{http://localhost:9200/posts/post/*}, body: "{}"
+  FakeWeb.register_uri :any, %r{http://localhost:9200/posts/post/*}, body: "{}"
 
   setup :clean_database, :activate_authlogic, :reset_association, :reset_disciplines, :reset_person_current
 
