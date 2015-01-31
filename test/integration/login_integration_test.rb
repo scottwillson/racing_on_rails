@@ -12,7 +12,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
   test "member account" do
     if RacingAssociation.current.ssl?
       get "/account"
-      assert_redirected_to "https://www.example.com/account"
+      assert_redirected_to "https://www.example.com/people/account"
       https!
       follow_redirect!
       assert_redirected_to "https://www.example.com/person_session/new"
@@ -103,7 +103,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
   test "redirect from old paths" do
     if RacingAssociation.current.ssl?
       get "/account/login"
-      assert_redirected_to "https://www.example.com/account/login"
+      assert_redirected_to "https://www.example.com/person_session/new"
       follow_redirect!
 
       get "/account/logout"
@@ -122,7 +122,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
   test "login" do
     if RacingAssociation.current.ssl?
       get "http://www.example.com/login"
-      assert_redirected_to "https://www.example.com/login"
+      assert_redirected_to "https://www.example.com/person_session/new"
 
       https!
       get "/login"
@@ -141,7 +141,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
   test "login on nonstandard port" do
     if RacingAssociation.current.ssl?
       get "http://www.example.com:8080/login"
-      assert_redirected_to "https://www.example.com/login"
+      assert_redirected_to "https://www.example.com/person_session/new"
 
       https!
       get "/login"

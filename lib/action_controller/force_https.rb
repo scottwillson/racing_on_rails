@@ -23,12 +23,16 @@ module ActionController
       end
     end
 
+    def use_https?
+      !Rails.env.development? && !Rails.env.acceptance? && RacingAssociation.current.ssl?
+    end
+
     def force_https?
-      !Rails.env.development? && !Rails.env.acceptance? && !request.ssl? && RacingAssociation.current.ssl?
+      use_https? && !request.ssl?
     end
 
     def force_https!
-      redirect_to "https://#{request.host}#{request.original_fullpath}", status: :moved_permanently
+      redirect_to({ protocol: "https", port: 443, params: request.query_parameters }, { status: :moved_permanently })
       flash.keep
     end
   end
