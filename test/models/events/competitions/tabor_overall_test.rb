@@ -34,11 +34,12 @@ module Competitions
 
       TaborOverall.calculate!(2007)
       series = WeeklySeries.find(series.id)
-      assert_not_nil(series.overall, "Should add new overall to parent Series after deleting old overall")
-      assert_equal(9, series.overall.races.size, "Overall races")
-      assert_equal(1, series.overall.bar_points, "BAR points")
+      overall = TaborOverall.last
+      assert_not_nil(overall, "Should add new overall to parent Series after deleting old overall")
+      assert_equal(9, overall.races.size, "Overall races")
+      assert_equal(1, overall.bar_points, "BAR points")
 
-      cat_3_overall_race = series.overall.races.detect { |race| race.category == cat_3 }
+      cat_3_overall_race = overall.races.detect { |race| race.category == cat_3 }
       assert_not_nil(cat_3_overall_race, "Should have Cat 3 overall race")
       assert_equal(2, cat_3_overall_race.results.size, "Cat 3 race results")
       results = cat_3_overall_race.results(true).sort
@@ -173,7 +174,7 @@ module Competitions
       assert_equal(100 + 100 + 100 + 70 + 0 + (100 * 2), result.points, "points")
       assert_equal(person, result.person, "person")
 
-      senior_men_overall_race = series.overall.races.detect { |race| race.category == senior_men }
+      senior_men_overall_race = TaborOverall.last.races.detect { |race| race.category == senior_men }
       assert_not_nil(senior_men_overall_race, "Should have Senior Men overall race")
       result = senior_men_overall_race.results.sort.first
       assert_equal("1", result.place, "place")

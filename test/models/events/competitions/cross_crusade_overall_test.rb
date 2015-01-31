@@ -39,8 +39,8 @@ module Competitions
 
       CrossCrusadeOverall.calculate!(2007)
       series = Series.find(series.id)
-      assert_not_nil(CrossCrusadeOverall.last, "Should add new Overall Competition child to parent Series")
-      overall = series.overall
+      overall = CrossCrusadeOverall.last
+      assert_not_nil(overall, "Should add new Overall Competition child to parent Series")
       assert_equal 31, overall.races.size, "Overall races"
 
       assert_equal "Series Overall", overall.name, "Overall name"
