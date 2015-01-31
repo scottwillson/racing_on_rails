@@ -103,9 +103,11 @@ module Admin
 
       original = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "My bike")
       Post.save original, mailing_list
-      reply = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "Re: My bike", date: 10.minutes.ago)
-      Post.save reply, mailing_list
+      assert_equal 0, original.reload.replies_count, "replies_count"
 
+      reply = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "Re: My bike", date: 10.minutes.ago)
+      assert_equal 0, original.reload.replies_count, "replies_count"
+      Post.save reply, mailing_list
       assert_equal 1, original.reload.replies_count, "replies_count"
 
       delete :destroy, mailing_list_id: mailing_list.to_param, id: reply.to_param
