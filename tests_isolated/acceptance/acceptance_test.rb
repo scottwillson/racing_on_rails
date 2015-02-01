@@ -4,6 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
 require "capybara/rails"
 require "minitest/autorun"
 require "capybara/poltergeist"
+require "fakeweb_registrations"
 
 # Capybara supports a number of drivers/browsers. AcceptanceTest default is RackTest for non-JavaScript tests
 # and Poltergeist for JS test. Note that most tests require JS.
