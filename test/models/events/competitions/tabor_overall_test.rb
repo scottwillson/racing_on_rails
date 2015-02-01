@@ -52,7 +52,7 @@ module Competitions
       assert_equal(100, result.points, "Cat 3 second result points (double points for last result)")
       assert_equal(tonkin, result.person, "Cat 3 second result person")
 
-      masters_40_plus_women_overall_race = series.overall.races.detect { |race| race.category == masters_women_category }
+      masters_40_plus_women_overall_race = overall.races.detect { |race| race.category == masters_women_category }
       assert_not_nil(masters_40_plus_women_overall_race, "Should have Masters Women overall race")
       assert_equal(1, masters_40_plus_women_overall_race.results.size, "Masters Women race results")
       result = masters_40_plus_women_overall_race.results.first
