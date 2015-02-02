@@ -935,4 +935,40 @@ ActiveRecord::Schema.define(version: 20150122013156) do
   add_index "versions", ["user_name"], name: "index_versions_on_user_name", using: :btree
   add_index "versions", ["versioned_id", "versioned_type"], name: "index_versions_on_versioned_id_and_versioned_type", using: :btree
 
+  add_foreign_key "categories", "categories", column: "parent_id", name: "categories_categories_id_fk", on_delete: :cascade
+  add_foreign_key "competition_event_memberships", "events", column: "competition_id", name: "competition_event_memberships_competitions_id_fk", on_delete: :cascade
+  add_foreign_key "competition_event_memberships", "events", name: "competition_event_memberships_events_id_fk", on_delete: :cascade
+  add_foreign_key "discipline_aliases", "disciplines", name: "discipline_aliases_disciplines_id_fk", on_delete: :cascade
+  add_foreign_key "discipline_bar_categories", "categories", name: "discipline_bar_categories_categories_id_fk", on_delete: :cascade
+  add_foreign_key "discipline_bar_categories", "disciplines", name: "discipline_bar_categories_disciplines_id_fk", on_delete: :cascade
+  add_foreign_key "discount_codes", "events", name: "discount_codes_ibfk_1"
+  add_foreign_key "duplicates_people", "duplicates", name: "duplicates_racers_duplicates_id_fk", on_delete: :cascade
+  add_foreign_key "duplicates_people", "people", name: "duplicates_people_person_id", on_delete: :cascade
+  add_foreign_key "editor_requests", "people", column: "editor_id", name: "editor_requests_ibfk_1", on_delete: :cascade
+  add_foreign_key "editor_requests", "people", name: "editor_requests_ibfk_2", on_delete: :cascade
+  add_foreign_key "events", "events", column: "parent_id", name: "events_events_id_fk", on_delete: :cascade
+  add_foreign_key "events", "number_issuers", name: "events_number_issuers_id_fk"
+  add_foreign_key "events", "people", column: "promoter_id", name: "events_promoter_id", on_delete: :nullify
+  add_foreign_key "events", "velodromes", name: "events_velodrome_id_fk"
+  add_foreign_key "order_people", "orders", name: "order_people_ibfk_2", on_delete: :cascade
+  add_foreign_key "order_people", "people", name: "order_people_ibfk_1", on_delete: :cascade
+  add_foreign_key "pages", "pages", column: "parent_id", name: "pages_parent_id_fk"
+  add_foreign_key "people", "teams", name: "people_team_id_fk"
+  add_foreign_key "people_people", "people", column: "editor_id", name: "people_people_ibfk_1", on_delete: :cascade
+  add_foreign_key "people_people", "people", name: "people_people_ibfk_2", on_delete: :cascade
+  add_foreign_key "people_roles", "people", name: "people_roles_person_id", on_delete: :cascade
+  add_foreign_key "people_roles", "roles", name: "roles_users_role_id_fk", on_delete: :cascade
+  add_foreign_key "posts", "mailing_lists", name: "posts_mailing_list_id_fk"
+  add_foreign_key "race_numbers", "disciplines", name: "race_numbers_discipline_id_fk"
+  add_foreign_key "race_numbers", "number_issuers", name: "race_numbers_number_issuer_id_fk"
+  add_foreign_key "race_numbers", "people", name: "race_numbers_person_id", on_delete: :cascade
+  add_foreign_key "races", "categories", name: "races_category_id_fk"
+  add_foreign_key "races", "events", name: "races_event_id_fk", on_delete: :cascade
+  add_foreign_key "results", "categories", name: "results_category_id_fk"
+  add_foreign_key "results", "people", name: "results_person_id"
+  add_foreign_key "results", "races", name: "results_race_id_fk", on_delete: :cascade
+  add_foreign_key "results", "teams", name: "results_team_id_fk"
+  add_foreign_key "scores", "results", column: "competition_result_id", name: "scores_competition_result_id_fk", on_delete: :cascade
+  add_foreign_key "scores", "results", column: "source_result_id", name: "scores_source_result_id_fk", on_delete: :cascade
+  add_foreign_key "update_requests", "order_people", name: "update_requests_ibfk_1", on_delete: :cascade
 end
