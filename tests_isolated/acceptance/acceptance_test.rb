@@ -257,6 +257,18 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def press(key, field)
+    errors = 0
+    begin
+      press_once key, field
+    rescue Capybara::Poltergeist::ObsoleteNode
+      errors = errors + 1
+      if errors < 4
+        retry
+      end
+    end
+  end
+
+  def press_once(key, field)
     if Capybara.current_driver == :poltergeist
       case key
       when :down

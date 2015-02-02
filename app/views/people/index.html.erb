@@ -31,7 +31,7 @@
             format: "xls",
             excel_layout: "scoring_sheet",
             include: "members_only",
-            protocol: force_https? ? "https" : "http"
+            protocol: use_https? ? "https" : "http"
           ),
           id: "export_link"
     ) %>
