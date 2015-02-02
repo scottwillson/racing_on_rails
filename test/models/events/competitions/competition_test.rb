@@ -107,20 +107,20 @@ module Competitions
     test "partition_results" do
       competition = TestCompetition.find_or_create_for_year
       race = competition.races(true).first
-      FactoryGirl.create(:result, race: race, event: competition, person_id: 1)
-      FactoryGirl.create(:result, race: race, event: competition, person_id: 2)
+      result_1 = FactoryGirl.create(:result, race: race, event: competition)
+      result_2 = FactoryGirl.create(:result, race: race, event: competition)
 
       new_calculated_result = ::Struct::CalculatorResult.new
-      new_calculated_result.participant_id = 3
+      new_calculated_result.participant_id = 9999
 
       existing_calculated_result = ::Struct::CalculatorResult.new
-      existing_calculated_result.participant_id = 2
+      existing_calculated_result.participant_id = result_2.person_id
 
       new_results, existing_results, obselete_results = competition.partition_results([ new_calculated_result, existing_calculated_result ], race)
 
-      assert_equal [ 3 ], new_results.map(&:participant_id), "new_results"
-      assert_equal [ 2 ], existing_results.map(&:participant_id), "existing_results"
-      assert_equal [ 1 ], obselete_results.map(&:person_id), "obselete_results"
+      assert_equal [ 9999 ], new_results.map(&:participant_id), "new_results"
+      assert_equal [ result_2.person_id ], existing_results.map(&:participant_id), "existing_results"
+      assert_equal [ result_1.person_id ], obselete_results.map(&:person_id), "obselete_results"
     end
   end
 end
