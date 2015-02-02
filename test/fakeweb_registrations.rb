@@ -27,3 +27,5 @@ FakeWeb.register_uri(
   body: { _index: "posts", _type: "post", _id: "1", _version: 118, created: false }.to_json,
   content_type: "application/json; charset=UTF-8"
 )
+
+FakeWeb.allow_net_connect = %r{http://127.0.0.1/*}
