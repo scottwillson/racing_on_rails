@@ -227,4 +227,8 @@ class RaceNumberTest < ActiveSupport::TestCase
     race_number = RaceNumber.new(person: molly, value: '200')
     assert(race_number.valid?, 'Dupe number for same gender should be valid')
   end
+
+  test "value should be a string" do
+    assert_equal "4", RaceNumber.new(value: 4).value, "value"
+  end
 end

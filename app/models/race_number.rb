@@ -87,6 +87,16 @@ class RaceNumber < ActiveRecord::Base
     false
   end
 
+  def value=(value)
+    if value
+      self[:value] = value.to_s
+    else
+      self[:value] = value
+    end
+
+    self[:value]
+  end
+
   def year=(value)
     if value && value.to_i > 1800
       self[:year] = value
