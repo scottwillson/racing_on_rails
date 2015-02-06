@@ -39,16 +39,18 @@ module People
       return false if discipline.blank? && value.blank?
 
       if discipline.nil? || !discipline.numbers?
-        discipline = Discipline[:road]
+        mapped_discipline = Discipline[:road]
+      else
+        mapped_discipline = discipline
       end
       issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name) if issuer.nil?
       _year ||= RacingAssociation.current.year
 
       if value.present?
         if new_record?
-          build_number value, discipline, issuer, updated_by, _year
+          build_number value, mapped_discipline, issuer, updated_by, _year
         else
-          create_number value, discipline, issuer, updated_by, _year
+          create_number value, mapped_discipline, issuer, updated_by, _year
         end
       else
         if !new_record?
