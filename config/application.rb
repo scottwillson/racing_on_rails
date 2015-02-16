@@ -15,7 +15,7 @@ module RacingOnRails
     config.encoding = "utf-8"
 
     config.assets.enabled = true
-    config.assets.version = "1.4"
+    config.assets.version = "1.5"
 
     config.time_zone = "Pacific Time (US & Canada)"
 
