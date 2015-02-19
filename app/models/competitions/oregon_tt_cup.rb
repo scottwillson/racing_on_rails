@@ -27,10 +27,12 @@ module Competitions
         "Masters Men 40-49",
         "Masters Men 50-59",
         "Masters Men 60+",
+        "Masters Men 70+",
         "Masters Women 30-39",
         "Masters Women 40-49",
         "Masters Women 50-59",
         "Masters Women 60+",
+        "Masters Women 70+",
         "Senior Men Pro/1/2",
         "Senior Women 1/2"
       ]
