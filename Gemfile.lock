@@ -435,6 +435,7 @@ DEPENDENCIES
   bootstrap-sass
   brakeman
   bullet
+  bundler
   bundler-audit
   capistrano-rails
   capistrano-rvm
