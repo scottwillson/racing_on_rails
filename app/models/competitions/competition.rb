@@ -252,7 +252,7 @@ module Competitions
           joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
           where("results.race_id = ?", upgrade_race).
           # Only include upgrade results for people with category results
-          where("results.#{participant_id_attribute} in (?)", results.map { |r| r["participant_id"] }.uniq )
+          where("results.#{participant_id_attribute} in (?)", results.select { |r| r["event_bar_points"] != 0 }.map { |r| r["participant_id"] }.uniq )
         ).to_a
       else
         results
