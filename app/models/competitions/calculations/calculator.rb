@@ -102,9 +102,14 @@ module Competitions
         team_races = team_races(results)
 
         results.map do |result|
-          # Check if there was just a tie, not teams
-          if team_races.include?(result.race_id)
+          # Already have team size, no need to compute it
+          if result.team_size
+            result
+
+          # Just a tie, not team result
+          elsif team_races.include?(result.race_id)
             merge_struct result, team_size: 1
+
           else
             merge_struct result, team_size: results_by_race_and_place[[ result.race_id, result.place ]]
           end
