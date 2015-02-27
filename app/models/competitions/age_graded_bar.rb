@@ -66,6 +66,15 @@ module Competitions
       end
     end
 
+    def after_source_results(results)
+      # BAR Results with the same place are always ties, and never team results
+      set_team_size results
+    end
+
+    def set_team_size(results)
+      results.each { |r| r["team_size"] = 1 }
+    end
+
     def default_discipline
       "Age Graded"
     end
