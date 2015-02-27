@@ -303,6 +303,10 @@ module Competitions
       @field_sizes ||= ::Result.group(:race_id).count
     end
 
+    def set_team_size_to_one(results)
+      results.each { |r| r["team_size"] = 1 }
+    end
+
     def completed_events
       if source_events?
         source_events.select(&:any_results?).size

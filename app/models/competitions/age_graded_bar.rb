@@ -68,11 +68,7 @@ module Competitions
 
     def after_source_results(results)
       # BAR Results with the same place are always ties, and never team results
-      set_team_size results
-    end
-
-    def set_team_size(results)
-      results.each { |r| r["team_size"] = 1 }
+      set_team_size_to_one results
     end
 
     def default_discipline

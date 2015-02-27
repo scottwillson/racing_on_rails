@@ -82,7 +82,7 @@ module Competitions
     def after_source_results(results)
       results = reject_duplicate_discipline_results(results)
       # BAR Results with the same place are always ties, and never team results
-      set_team_size results
+      set_team_size_to_one results
     end
 
     # If person scored in more than one category that maps to same overall category in a discipline,
@@ -107,10 +107,6 @@ module Competitions
       end
 
       filtered_results
-    end
-
-    def set_team_size(results)
-      results.each { |r| r["team_size"] = 1 }
     end
 
     # 300 points for first place, 299 for second, etc.
