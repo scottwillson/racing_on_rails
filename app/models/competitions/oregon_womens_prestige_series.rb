@@ -39,7 +39,7 @@ module Competitions
       end
     end
 
-    def after_source_results(results)
+    def after_source_results(results, race)
       # Ignore BAR points multiplier. Leave query "universal".
       set_multiplier results
       results

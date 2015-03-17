@@ -27,7 +27,7 @@ module Competitions
     end
 
     # Workaround for Cross Crusade Junior results reporting
-    def after_source_results(results)
+    def after_source_results(results, race)
       results.reject { |r| r["category_name"].in?(junior_categories) && r["event_id"].in?(cross_crusade_2014) }
     end
 

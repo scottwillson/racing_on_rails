@@ -111,7 +111,7 @@ module Competitions
       races_in_upgrade_order.each do |race|
         results = source_results(race)
         results = add_upgrade_results(results, race)
-        results = after_source_results(results)
+        results = after_source_results(results, race)
         results = delete_bar_points(results)
         results = delete_discipline(results)
         results = add_field_size(results)
@@ -216,7 +216,7 @@ module Competitions
       query
     end
 
-    def after_source_results(results)
+    def after_source_results(results, race)
       results
     end
 

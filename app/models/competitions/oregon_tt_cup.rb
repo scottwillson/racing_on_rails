@@ -82,6 +82,12 @@ module Competitions
       ids
     end
 
+    def after_source_results(results, race)
+      results.each do |result|
+
+      end
+    end
+
     # Source events' categories don't match competition's categories.
     # Some need to be split. For example: Junior Men 10-18 to Junior Men 10-12, Junior Men 13-14, etc.
     # Some need to combined: For example: Masters Men 30-34 and Masters Men 35-39 to Masters Men 30-39
