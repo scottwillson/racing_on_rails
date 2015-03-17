@@ -88,7 +88,6 @@ module Competitions
     # Both splitting and combining add races to the source events before calculation
     def before_calculate
       destroy_or_tt_cup_races
-      set_distances
 
       missing_categories.each do |event, categories|
         categories.each do |competition_category|
@@ -103,22 +102,6 @@ module Competitions
       source_events.each do |event|
         event.races.select { |r| r.created_by.kind_of?(OregonTTCup) }.
         each(&:destroy)
-      end
-    end
-
-    # Ensure distance is set so times can be adjusted. Some categories with different
-    # distances are combined.
-    def set_distances
-      source_events.each do |event|
-        event.races.each do |race|
-          if event.id == 22500 && (race.category.name == "Masters Women 55+" || race.category.name == "Masters Men 65+")
-            race.update_attributes! distance: 12.4
-          end
-
-          if event.id == 22500 && race.category.name.in?([ "Junior Women 10-12", "Junior Men 10-12", "Junior Women 13-14", "Junior Men 13-14" ])
-            race.update_attributes! distance: 6.2
-          end
-        end
       end
     end
 
@@ -222,9 +205,6 @@ module Competitions
         (result.person.racing_age.nil? || (result.person.racing_age >= competition_category.ages_begin && result.person.racing_age <= competition_category.ages_end))
       end.each do |result|
         time = result.time
-        if result.event_id == 22500 && result.race.distance.present? && result.race.distance.to_f < 24.9
-          time = result.time * 2.2
-        end
         race.results.create!(
           place: result.place,
           person: result.person,
