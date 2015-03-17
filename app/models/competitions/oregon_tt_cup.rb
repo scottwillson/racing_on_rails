@@ -34,7 +34,8 @@ module Competitions
         "Masters Women 60+",
         "Masters Women 70+",
         "Senior Men Pro/1/2",
-        "Senior Women 1/2"
+        "Senior Women 1/2",
+        "Tandem"
       ]
     end
 
