@@ -83,9 +83,17 @@ module Competitions
     end
 
     def after_source_results(results, race)
-      results.each do |result|
+      if race.name == "Tandem"
+        beginning_of_year = Time.zone.now.beginning_of_year
+        end_of_year = Time.zone.now.end_of_year
 
+        results.each do |result|
+          result["member_from"] = beginning_of_year
+          result["member_to"] = end_of_year
+        end
       end
+
+      results
     end
 
     # Source events' categories don't match competition's categories.
