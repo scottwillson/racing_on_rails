@@ -19,7 +19,7 @@ module Competitions
       where("results.id = scores.source_result_id")
     end
 
-    def after_source_results(results)
+    def after_source_results(results, race)
       results_with_tandem_teams_split = []
       results.each do |result|
         category_name = result.delete("category_name")

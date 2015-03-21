@@ -39,7 +39,7 @@ module Competitions
       true
     end
 
-    def after_source_results(results)
+    def after_source_results(results, race)
       results.each do |result|
         result["multiplier"] = result["race_bar_points"] || result["event_bar_points"] || result["parent_bar_points"] || result["parent_parent_bar_points"]
       end

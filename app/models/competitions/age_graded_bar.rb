@@ -66,6 +66,11 @@ module Competitions
       end
     end
 
+    def after_source_results(results, race)
+      # BAR Results with the same place are always ties, and never team results
+      set_team_size_to_one results
+    end
+
     def default_discipline
       "Age Graded"
     end

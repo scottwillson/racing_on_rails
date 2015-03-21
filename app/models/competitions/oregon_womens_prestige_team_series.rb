@@ -39,7 +39,7 @@ module Competitions
       end
     end
 
-    def after_source_results(results)
+    def after_source_results(results, race)
       results = results.reject do |result|
         result["category_id"].in?(cat_4_category_ids) && result["event_id"].in?(cat_123_only_event_ids)
       end

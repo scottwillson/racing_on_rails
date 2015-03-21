@@ -27,12 +27,15 @@ module Competitions
         "Masters Men 40-49",
         "Masters Men 50-59",
         "Masters Men 60+",
+        "Masters Men 70+",
         "Masters Women 30-39",
         "Masters Women 40-49",
         "Masters Women 50-59",
         "Masters Women 60+",
+        "Masters Women 70+",
         "Senior Men Pro/1/2",
-        "Senior Women 1/2"
+        "Senior Women 1/2",
+        "Tandem"
       ]
     end
 
@@ -79,13 +82,26 @@ module Competitions
       ids
     end
 
+    def after_source_results(results, race)
+      if race.name == "Tandem"
+        beginning_of_year = Time.zone.now.beginning_of_year
+        end_of_year = Time.zone.now.end_of_year
+
+        results.each do |result|
+          result["member_from"] = beginning_of_year
+          result["member_to"] = end_of_year
+        end
+      end
+
+      results
+    end
+
     # Source events' categories don't match competition's categories.
     # Some need to be split. For example: Junior Men 10-18 to Junior Men 10-12, Junior Men 13-14, etc.
     # Some need to combined: For example: Masters Men 30-34 and Masters Men 35-39 to Masters Men 30-39
     # Both splitting and combining add races to the source events before calculation
     def before_calculate
       destroy_or_tt_cup_races
-      set_distances
 
       missing_categories.each do |event, categories|
         categories.each do |competition_category|
@@ -100,22 +116,6 @@ module Competitions
       source_events.each do |event|
         event.races.select { |r| r.created_by.kind_of?(OregonTTCup) }.
         each(&:destroy)
-      end
-    end
-
-    # Ensure distance is set so times can be adjusted. Some categories with different
-    # distances are combined.
-    def set_distances
-      source_events.each do |event|
-        event.races.each do |race|
-          if event.id == 22500 && (race.category.name == "Masters Women 55+" || race.category.name == "Masters Men 65+")
-            race.update_attributes! distance: 12.4
-          end
-
-          if event.id == 22500 && race.category.name.in?([ "Junior Women 10-12", "Junior Men 10-12", "Junior Women 13-14", "Junior Men 13-14" ])
-            race.update_attributes! distance: 6.2
-          end
-        end
       end
     end
 
@@ -219,9 +219,6 @@ module Competitions
         (result.person.racing_age.nil? || (result.person.racing_age >= competition_category.ages_begin && result.person.racing_age <= competition_category.ages_end))
       end.each do |result|
         time = result.time
-        if result.event_id == 22500 && result.race.distance.present? && result.race.distance.to_f < 24.9
-          time = result.time * 2.2
-        end
         race.results.create!(
           place: result.place,
           person: result.person,

@@ -34,7 +34,7 @@ module Competitions
     end
 
     # Event with bar points of zero aren't counted. But no bonus/multiplier even if event BAR points are set to 2 or 3.
-    def after_source_results(results)
+    def after_source_results(results, race)
       results.each do |result|
         bar_points = result["race_bar_points"] || result["event_bar_points"] || result["parent_bar_points"] || result["parent_parent_bar_points"]
         if bar_points.nil? || bar_points >= 1

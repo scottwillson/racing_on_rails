@@ -61,9 +61,11 @@ $pagination-disabled-color: $light-gray;
 
 $input-border-focus: darken($highlight-color, 15);
 
-<% if File.exist?("local/app/assets/stylesheets/_racing_association_variables.css.scss") %>
+<% if File.exist?("local/app/assets/stylesheets/_racing_association_variables.scss") %>
 @import "racing_association_variables";
 <% end %>
+
+@import "bootstrap-sprockets";
 @import "bootstrap";
 @import "bootstrap/theme";
 
@@ -482,7 +484,6 @@ ul.pagination {
 @import "forms";
 @import "pages";
 @import "glyphicons_pro";
-<% if File.exist?("local/app/assets/stylesheets/_racing_association.css.scss") %>
+<% if File.exist?("local/app/assets/stylesheets/_racing_association.scss") %>
 @import "racing_association";
 <% end %>
-

@@ -6,7 +6,7 @@ module Competitions
   module Calculations
     class TeamsTest < CalculationsTest
       def test_apply_team_sizes_empty
-        assert_equal [], Calculator.apply_team_sizes([], {})
+        assert_equal_results [], Calculator.apply_team_sizes([], {})
       end
 
       def test_apply_team_sizes
@@ -28,7 +28,29 @@ module Competitions
           result(place: 3, race_id: 1),
           result(place: 1, race_id: 2)
         ]
-        assert_equal expected, Calculator.apply_team_sizes(results, {})
+        assert_equal_results expected, Calculator.apply_team_sizes(results, {})
+      end
+
+      def test_honor_existing_team_size
+        expected = [
+          result(place: 1, race_id: 1, team_size: 1),
+          result(place: 1, race_id: 1, team_size: 1),
+          result(place: 2, race_id: 1, team_size: 1),
+          result(place: 3, race_id: 1, team_size: 1),
+          result(place: 3, race_id: 1, team_size: 1),
+          result(place: 3, race_id: 1, team_size: 1),
+          result(place: 1, race_id: 2, team_size: 1)
+        ]
+        results = [
+          result(place: 1, race_id: 1, team_size: 1),
+          result(place: 1, race_id: 1, team_size: 1),
+          result(place: 2, race_id: 1, team_size: 1),
+          result(place: 3, race_id: 1, team_size: 1),
+          result(place: 3, race_id: 1, team_size: 1),
+          result(place: 3, race_id: 1, team_size: 1),
+          result(place: 1, race_id: 2, team_size: 1)
+        ]
+        assert_equal_results expected, Calculator.apply_team_sizes(results, {})
       end
 
       # Don't mistake ties for teams

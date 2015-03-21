@@ -1,4 +1,4 @@
-lock "3.3.5"
+lock "3.4.0"
 
 set :linked_dirs, %w{log public/assets public/system public/uploads tmp/pids tmp/cache tmp/sockets vendor/bundle }
 set :linked_files, %w{config/database.yml config/newrelic.yml config/secrets.yml}

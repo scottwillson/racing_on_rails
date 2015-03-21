@@ -15,13 +15,13 @@ namespace :racing_on_rails do
     puts "Please open http://localhost:8080/ in your web browser"
     puts exec("./bin/rails s puma -p 8080")
   end
-  
+
   task database_dump: :environment do
     db = ActiveRecord::Base.configurations
-    puts `mysqldump -u #{db["production"]["username"]} -p#{db["production"]["password"]} -h #{db["production"]["host"]} --compress --ignore-table=#{db["production"]["database"]}.posts #{db["production"]["database"]} > db/production.sql`
-    puts `mysqldump -u #{db["production"]["username"]} -p#{db["production"]["password"]} -h #{db["production"]["host"]} --compress --no-data #{db["production"]["database"]} posts >> db/production.sql`
+    puts `mysqldump -u #{db["production"]["username"]} -p#{db["production"]["password"]} -h #{db["production"]["host"]} --compress --single-transaction --ignore-table=#{db["production"]["database"]}.posts #{db["production"]["database"]} > db/production.sql`
+    puts `mysqldump -u #{db["production"]["username"]} -p#{db["production"]["password"]} -h #{db["production"]["host"]} --compress --single-transaction --no-data #{db["production"]["database"]} posts >> db/production.sql`
   end
-  
+
   namespace :competitions do
     desc "Save COMPETITION results as JSON for comparison"
     task :snapshot do
@@ -33,7 +33,7 @@ namespace :racing_on_rails do
       FileUtils.rm_rf file_path
       File.write file_path, JSON.generate(competition.as_json(nil))
     end
-    
+
     desc "Compare COMPETITION snapshot with new results"
     task :diff do
       competition_class = "Competitions::#{ENV['COMPETITION']}".safe_constantize
@@ -48,7 +48,7 @@ namespace :racing_on_rails do
         p line
       end
     end
-    
+
     desc "Calculate all competitions"
     task calculate: :environment do
       classes = [
@@ -74,31 +74,31 @@ namespace :racing_on_rails do
         ::Competitions::OverallBar,
         ::Competitions::AgeGradedBar
       ]
-      
+
       existing_results = Hash.new
       ::Competitions::Competition.current_year.each do |competition|
         results = Result.where(event: competition).map(&:competition_result_hash)
         puts "Found #{results.size} results for #{competition}"
         existing_results[competition] = results
       end
-      
+
       classes.each do |competition_class|
         puts competition_class
         start_time = Time.zone.now
         competition_class.calculate!
         puts "#{(Time.zone.now - start_time).to_i}"
       end
-      
+
       ::Competitions::Competition.current_year.each do |competition|
         results = Result.where(event: competition).map(&:competition_result_hash)
-        
+
         if existing_results[competition].nil?
           puts "No previous results for #{competition.full_name}"
         elsif existing_results[competition].sort != results.sort
           puts "#{competition.full_name} results changed"
         end
       end
-    end      
+    end
   end
 end
 

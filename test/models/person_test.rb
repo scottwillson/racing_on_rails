@@ -671,6 +671,22 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal "102", tonkin.number("Time Trial")
   end
 
+  test "blank non-number discipline should not delete road number" do
+    FactoryGirl.create :number_issuer
+    FactoryGirl.create :discipline, name: "Road", numbers: true
+    FactoryGirl.create :discipline, name: "Track", numbers: false
+
+    person = FactoryGirl.create(:person, road_number: "1002")
+    person = Person.find(person.id)
+    assert_equal "1002", person.road_number
+
+    person.track_number = nil
+    person.save!
+
+    person = Person.find(person.id)
+    assert_equal "1002", person.road_number
+  end
+
   test "date" do
     person = Person.new(date_of_birth: '0073-10-04')
     assert_equal_dates('1973-10-04', person.date_of_birth, 'date_of_birth from 0073-10-04')
