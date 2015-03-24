@@ -224,30 +224,30 @@ ActiveRecord::Schema.define(version: 20150122013156) do
     t.integer  "bar_points",                                                                          null: false
     t.boolean  "ironman",                                                                             null: false
     t.boolean  "auto_combined_results",                                               default: true,  null: false
+    t.integer  "promoter_id"
     t.integer  "team_id"
     t.string   "sanctioning_org_event_id",       limit: 16
-    t.integer  "promoter_id"
     t.string   "phone"
     t.string   "email"
-    t.decimal  "price",                                      precision: 10, scale: 2
     t.boolean  "postponed",                                                           default: false, null: false
     t.string   "chief_referee"
-    t.boolean  "registration",                                                        default: false, null: false
     t.boolean  "beginner_friendly",                                                   default: false, null: false
+    t.string   "website"
+    t.string   "registration_link"
+    t.integer  "region_id"
+    t.date     "end_date",                                                                            null: false
+    t.decimal  "price",                                      precision: 10, scale: 2
+    t.boolean  "registration",                                                        default: false, null: false
     t.boolean  "promoter_pays_registration_fee",                                      default: false, null: false
     t.boolean  "membership_required",                                                 default: false, null: false
     t.datetime "registration_ends_at"
     t.boolean  "override_registration_ends_at",                                       default: false, null: false
     t.decimal  "all_events_discount",                        precision: 10, scale: 2
     t.decimal  "additional_race_price",                      precision: 10, scale: 2
-    t.string   "website"
-    t.string   "registration_link"
     t.string   "custom_suggestion"
     t.integer  "field_limit"
     t.text     "refund_policy"
     t.boolean  "refunds",                                                             default: true,  null: false
-    t.integer  "region_id"
-    t.date     "end_date",                                                                            null: false
     t.boolean  "registration_public",                                                 default: true,  null: false
     t.decimal  "junior_price",                               precision: 10, scale: 2
   end
@@ -511,7 +511,6 @@ ActiveRecord::Schema.define(version: 20150122013156) do
     t.boolean  "race_promotion_interest",                           default: false, null: false
     t.boolean  "team_interest",                                     default: false, null: false
     t.date     "member_usac_to"
-    t.string   "status"
     t.string   "crypted_password"
     t.string   "password_salt"
     t.string   "persistence_token"
@@ -524,9 +523,18 @@ ActiveRecord::Schema.define(version: 20150122013156) do
     t.string   "current_login_ip"
     t.string   "last_login_ip"
     t.string   "login",                                 limit: 100
+    t.string   "status"
     t.date     "license_expiration_date"
     t.string   "club_name"
     t.string   "ncca_club_name"
+    t.string   "emergency_contact"
+    t.string   "emergency_contact_phone"
+    t.datetime "card_printed_at"
+    t.string   "license_type"
+    t.string   "country_code",                          limit: 2,   default: "US"
+    t.boolean  "membership_card",                                   default: false, null: false
+    t.boolean  "official",                                          default: false, null: false
+    t.string   "name",                                              default: "",    null: false
     t.string   "billing_first_name"
     t.string   "billing_last_name"
     t.string   "billing_street"
@@ -537,15 +545,7 @@ ActiveRecord::Schema.define(version: 20150122013156) do
     t.string   "card_brand"
     t.date     "card_expires_on"
     t.boolean  "membership_address_is_billing_address",             default: true,  null: false
-    t.string   "license_type"
-    t.string   "country_code",                          limit: 2,   default: "US"
-    t.string   "emergency_contact"
-    t.string   "emergency_contact_phone"
-    t.datetime "card_printed_at"
-    t.boolean  "membership_card",                                   default: false, null: false
-    t.boolean  "official",                                          default: false, null: false
     t.integer  "non_member_result_id"
-    t.string   "name",                                              default: "",    null: false
   end
 
   add_index "people", ["crypted_password"], name: "index_people_on_crypted_password", using: :btree
@@ -698,10 +698,9 @@ ActiveRecord::Schema.define(version: 20150122013156) do
     t.string   "result_columns"
     t.integer  "bar_points"
     t.integer  "event_id",                                                                  null: false
-    t.decimal  "custom_price",                     precision: 10, scale: 2
     t.text     "custom_columns"
+    t.decimal  "custom_price",                     precision: 10, scale: 2
     t.boolean  "full",                                                      default: false, null: false
-    t.integer  "field_limit"
     t.boolean  "additional_race_only",                                      default: false, null: false
     t.boolean  "visible",                                                   default: true
   end
@@ -741,7 +740,7 @@ ActiveRecord::Schema.define(version: 20150122013156) do
     t.string   "default_sanctioned_by"
     t.string   "email",                                              default: "scott.willson@gmail.com",             null: false
     t.string   "exempt_team_categories",                             default: "0",                                   null: false
-    t.string   "membership_email"
+    t.string   "membership_email",                                   default: "scott.willson@gmail.com",             null: false
     t.string   "name",                                               default: "Cascadia Bicycle Racing Association", null: false
     t.string   "rails_host",                                         default: "localhost:3000"
     t.string   "sanctioning_organizations"
@@ -838,9 +837,9 @@ ActiveRecord::Schema.define(version: 20150122013156) do
     t.string   "race_full_name",                                      null: false
     t.string   "team_name"
     t.integer  "year",                                                null: false
+    t.boolean  "team_member",                         default: false, null: false
     t.integer  "non_member_result_id"
     t.boolean  "single_event_license",                default: false
-    t.boolean  "team_member",                         default: false, null: false
   end
 
   add_index "results", ["category_id"], name: "idx_category_id", using: :btree
