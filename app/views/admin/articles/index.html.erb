@@ -17,12 +17,12 @@
   <% for article in @articles %>
     <tr id="article_<%= article.id %>_row">
       <td><%= link_to "#{article.title}", edit_admin_article_path(article) %></td>
-      <td><%= link_to "#{article.article_category.name}", { action: 'index', article_category_id: article.article_category.id } %></td>
+      <td><%= link_to("#{article.article_category.name}", { action: 'index', article_category_id: article.article_category.id })
+        if article.article_category %></td>
       <td><%=h article.id %></td>
       <td><%=h article.position %></td>
       <td><%=h article.display %></td>
       <td><%=h article.updated_at.to_formatted_s(:long) %></td>
-      <!--td><%#= link_to "(delete)", admin_article_path(article), confirm: 'Are you sure?', method: :delete %></td-->
     </tr>
   <% end %>
 <% end %>
