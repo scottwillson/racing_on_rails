@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150403142212) do
+ActiveRecord::Schema.define(version: 20150404143640) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "order_id"
@@ -319,12 +319,13 @@ ActiveRecord::Schema.define(version: 20150403142212) do
   add_index "line_items", ["race_id"], name: "index_line_items_on_race_id", using: :btree
 
   create_table "mailing_lists", force: true do |t|
-    t.string   "name",                default: "", null: false
-    t.string   "friendly_name",       default: "", null: false
-    t.string   "subject_line_prefix", default: "", null: false
+    t.string   "name",                default: "",   null: false
+    t.string   "friendly_name",       default: "",   null: false
+    t.string   "subject_line_prefix", default: "",   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "description"
+    t.boolean  "public",              default: true, null: false
   end
 
   add_index "mailing_lists", ["name"], name: "idx_name", using: :btree
