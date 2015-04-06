@@ -3,6 +3,8 @@ class MailingList < ActiveRecord::Base
 
   has_many :posts
 
+  scope :is_public, -> { where(public: true) }
+
   # Range of first Post date and last post date
   # Return nil..nil if no Posts
   # Cache SQL results

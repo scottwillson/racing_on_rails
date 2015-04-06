@@ -1,6 +1,6 @@
 class MailingListsController < ApplicationController
   def index
-    @mailing_lists = MailingList.all
+    @mailing_lists = MailingList.is_public
   end
 
   def confirm

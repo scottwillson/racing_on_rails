@@ -65,7 +65,7 @@ module Admin
     end
 
     def assign_mailing_list
-      @mailing_list = MailingList.find(params[:mailing_list_id])
+      @mailing_list = MailingList.is_public.find(params[:mailing_list_id])
     end
   end
 end
