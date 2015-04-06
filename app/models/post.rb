@@ -108,7 +108,9 @@ class Post < ActiveRecord::Base
 
   # Last few Posts from all public MailingLists
   def self.recent
-    Post.original.includes(:mailing_list).where("mailing_lists.public" => true).order("position desc").limit(5)
+    # Use two queries, not an include for DB performance
+    public_mailing_lists = MailingList.is_public
+    Post.original.includes(:mailing_list).where(mailing_list: public_mailing_lists).order("position desc").limit(5)
   end
 
   # Move Post into position in list based on last_reply_at. In practice, most new Posts
