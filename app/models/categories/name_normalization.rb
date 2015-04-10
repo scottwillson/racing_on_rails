@@ -2,7 +2,7 @@ module Categories
   module NameNormalization
     extend ActiveSupport::Concern
 
-    RACING_ASSOCIATIONS = %{ ABA ATRA CBRA GBRA MBRA NABRA OBRA WSBA }
+    RACING_ASSOCIATIONS = %{ ABA ATRA CBRA GBRA MBRA OBRA WSBA }
 
     included do
       def self.find_or_create_by_normalized_name(name)

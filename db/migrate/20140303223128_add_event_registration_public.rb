@@ -1,6 +1,6 @@
 class AddEventRegistrationPublic < ActiveRecord::Migration
   def up
-    if RacingAssociation.current.short_name == "OBRA" || RacingAssociation.current.short_name == "NABRA"
+    if RacingAssociation.current.short_name == "OBRA"
       add_column :events, :registration_public, :boolean, default: true, null: false
     end
   end

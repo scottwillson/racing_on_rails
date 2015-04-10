@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 
-[ "", "aba", "atra", "mbra", "nabra", "obra", "wsba" ].shuffle.each do |association|
+[ "", "aba", "atra", "mbra", "obra", "wsba" ].shuffle.each do |association|
   if association.nil?
     puts "*************************"
     puts "Run racing_on_rails tests"
@@ -19,7 +19,7 @@
   puts `bundle exec rake`
   puts `bundle exec rake test:acceptance`
 
-  if association == "obra" || association == "nabra"
+  if association == "obra"
     puts `bundle exec rake registration_engine:test`
     puts `bundle exec rake registration_engine:test:acceptance`
   end

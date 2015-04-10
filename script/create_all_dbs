@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 
-[ "aba", "atra", "mbra", "nabra", "obra", "wsba" ].each do |association|
+[ "aba", "atra", "mbra", "obra", "wsba" ].each do |association|
   puts association
   `./script/local #{association}`
   puts "Create databases"

@@ -38,7 +38,7 @@ namespace :deploy do
 
   task :registration_engine do
     on roles :app do
-      if fetch(:application) == "obra" || fetch(:application) == "nabra"
+      if fetch(:application) == "obra"
         if test("[ -e \"#{release_path}/lib/registration_engine\" ]")
           execute :rm, "-rf \"#{release_path}/lib/registration_engine\""
         end
