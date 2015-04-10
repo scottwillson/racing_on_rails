@@ -23,7 +23,7 @@ if !association.nil?
   `ln -s ../../racing_on_rails_local/#{association}/public public/local`
 end
 
-if association == "obra"
+if association == "obra" || association == "nabra"
   if !File.exist?("lib/registration_engine")
     `ln -s ../../registration_engine lib/registration_engine`
   end

@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 
-%w{ obra }.each do |association|
+%w{ nabra obra }.each do |association|
   puts "Deploy #{association}"
   `script/local #{association}`
   puts `cap staging deploy`
