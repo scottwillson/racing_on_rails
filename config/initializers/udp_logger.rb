@@ -1,5 +1,5 @@
 if Rails.env.test? && Rails.logger.level == 0
-  ActiveSupport::Notifications.subscribe(/fragment|process_action.action_controller|racing_on_rails/) do |name, start, finish, id, payload|
+  ActiveSupport::Notifications.subscribe(/process_action.action_controller|racing_on_rails/) do |name, start, finish, id, payload|
     Rails.logger.debug "#{name} #{payload}"
   end
 end
@@ -8,7 +8,7 @@ if Rails.env.production? || Rails.env.staging?
   udp_logger = ::LogStashLogger.new(port: 5228)
   parameter_filter = ActionDispatch::Http::ParameterFilter.new(Rails.application.config.filter_parameters)
 
-  ActiveSupport::Notifications.subscribe(/fragment|process_action.action_controller|racing_on_rails/) do |name, start, finish, id, payload|
+  ActiveSupport::Notifications.subscribe(/process_action.action_controller|racing_on_rails/) do |name, start, finish, id, payload|
     if payload[:status] && payload[:status].is_a?(Fixnum)
       payload[:status] = payload[:status].to_s
     end
@@ -20,7 +20,8 @@ if Rails.env.production? || Rails.env.staging?
       id: id,
       message: name,
       racing_association: RacingAssociation.current.short_name,
-      start: start
+      start: start,
+      _ttl: { enabled: true, default: "7d" }
     }.merge(
       parameter_filter.filter payload
     )
