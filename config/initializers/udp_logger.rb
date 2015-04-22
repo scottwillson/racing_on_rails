@@ -20,8 +20,7 @@ if Rails.env.production? || Rails.env.staging?
       id: id,
       message: name,
       racing_association: RacingAssociation.current.short_name,
-      start: start,
-      _ttl: { enabled: true, default: "7d" }
+      start: start
     }.merge(
       parameter_filter.filter payload
     )
