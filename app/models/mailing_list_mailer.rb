@@ -72,8 +72,8 @@ class MailingListMailer < ActionMailer::Base
           post.body = ""
         end
 
-        post.from_name = email[:from].display_names.first
-        post.from_email = email[:from].addresses.first
+        post.from_name = from_name(email)
+        post.from_email = (email[:reply_to] || email[:from]).addresses.first
         if post.from_name.blank?
           post.from_name = post.from_email_obscured
         end
@@ -108,5 +108,16 @@ class MailingListMailer < ActionMailer::Base
       end
     end
     post
+  end
+
+
+  private
+
+  def from_name(email)
+    if email[:from] && email[:from].display_names.first
+      email[:from].display_names.first.split("via").first.strip
+    elsif email[:reply_to]
+      email[:reply_to].display_names.first
+    end
   end
 end

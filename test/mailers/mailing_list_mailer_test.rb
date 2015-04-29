@@ -65,12 +65,12 @@ class MailingListMailerTest < ActionMailer::TestCase
 
       posts = Post.order(:date)
       post_from_db = posts.last
-      assert_equal("[Fwd: For the Archives]", post_from_db.subject, "Subject")
-      assert_equal("Scott Willson", post_from_db.from_name, "from")
-      assert_equal("scott.willson@gmail.com", post_from_db.from_email, "from_email")
-      assert_equal_dates("Mon Jan 23 15:52:25 PST 2006", post_from_db.date, "Post date", "%a %b %d %H:%M:%S PST %Y")
-      assert_equal(mailing_list, post_from_db.mailing_list, "mailing_list")
-      assert(post_from_db.body["Too bad it doesn't work"], "body")
+      assert_equal "Some free stuff . . . . Shimano road pedals", post_from_db.subject, "Subject"
+      assert_equal "EAL", post_from_db.from_name, "from"
+      assert_equal "anquetil@yahoo.com", post_from_db.from_email, "from_email"
+      assert_equal_dates "Tue Apr 28 16:02:20 PST 2015", post_from_db.date, "Post date", "%a %b %d %H:%M:%S PST %Y"
+      assert_equal mailing_list, post_from_db.mailing_list, "mailing_list"
+      assert post_from_db.body["Free standing adjustable basketball hoop"], "body"
     end
   end
 
