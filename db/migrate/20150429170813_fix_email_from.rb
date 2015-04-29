@@ -21,10 +21,11 @@ class FixEmailFrom < ActiveRecord::Migration
             email = members[post.from_name] || Person.where_name_or_number_like(post.from_name).last.try(:email)
             if email.nil?
               puts "!! '#{post.from_name}' not found"
+              email = "help@obra.org"
             else
               puts "OK #{post.from_name} to #{email}"
-              post.update_column :from_email, email
             end
+            post.update_column :from_email, email
           end
         end
       end
