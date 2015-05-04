@@ -17,15 +17,17 @@ class FixEmailFrom < ActiveRecord::Migration
             members[name] = email
           end
 
-          MailingList.where(name: list_name).first.posts.where("from_email like '%list.obra.org'").each do |post|
-            email = members[post.from_name] || Person.where_name_or_number_like(post.from_name).last.try(:email)
-            if email.nil?
-              puts "!! '#{post.from_name}' not found"
-              email = "help@obra.org"
-            else
-              puts "OK #{post.from_name} to #{email}"
+          if MailingList.where(name: list_name).any?
+            MailingList.where(name: list_name).first.posts.where("from_email like '%list.obra.org'").each do |post|
+              email = members[post.from_name] || Person.where_name_or_number_like(post.from_name).last.try(:email)
+              if email.nil?
+                puts "!! '#{post.from_name}' not found"
+                email = "help@obra.org"
+              else
+                puts "OK #{post.from_name} to #{email}"
+              end
+              post.update_column :from_email, email
             end
-            post.update_column :from_email, email
           end
         end
       end
