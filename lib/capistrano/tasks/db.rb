@@ -4,7 +4,7 @@ namespace :db do
 
   # Dump the current database to a MySQL file
   task :database_dump do
-    on roles(:db, primary: true) do
+    on roles(:db) do
       execute :mkdir, "-p #{deploy_to}/current/db"
       execute "/bin/bash --login -c 'cd #{deploy_to}/current; /usr/bin/env bundle exec #{deploy_to}/current/bin/rake racing_on_rails:database_dump RAILS_ENV=production'"
       execute :rm, "-f #{deploy_to}/current/db/production.sql.bz2"
@@ -14,7 +14,7 @@ namespace :db do
 
   # Downloads db/production_data.sql from the remote production environment to your local machine
   task :remote_db_download do
-    on roles(:db, primary: true) do
+    on roles(:db) do
       system "mkdir -p tmp/db"
       system "rm -f tmp/db/production.sql.bz2"
       download! "#{deploy_to}/current/db/production.sql.bz2", "tmp/db/production.sql.bz2"
@@ -25,7 +25,7 @@ namespace :db do
   # By default, delete downloaded SQL. To keep it, set SAVE=true. Example:
   # cap production_data_refresh SAVE=true
   task :production_data_load do
-    on roles(:db, primary: true) do
+    on roles(:db) do
       require_relative "../../../config/environment.rb"
       db = ActiveRecord::Base.configurations
       dev_db = db[::Rails.env]["database"]
@@ -42,7 +42,7 @@ namespace :db do
 
    # Cleans up data dump file
   task :remote_db_cleanup do
-    on roles(:db, primary: true) do
+    on roles(:db) do
       execute :rm, "-f db/production.sql.bz2"
     end
   end
