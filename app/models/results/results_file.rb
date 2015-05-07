@@ -179,7 +179,7 @@ module Results
           self.import_warnings << "Non-sequential placings detected for racer: #{row[:first_name]} #{row[:last_name]}. " unless row[:category_name].to_s.downcase.include?("tandem") # or event is TTT or ???
         end
       elsif result.place.present?
-        result.place = result.place.upcase
+        result.place = result.place.to_s.upcase
       elsif row.previous[:place].present? && row.previous[:place].to_i == 0
         result.place = row.previous[:place]
       end
