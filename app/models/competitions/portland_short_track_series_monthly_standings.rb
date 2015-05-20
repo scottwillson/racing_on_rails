@@ -62,6 +62,23 @@ module Competitions
       true
     end
 
+    def upgrades
+      {
+        "Category 2 Men 35-44"   => "Category 3 Men 19-44",
+        "Category 2 Men 45-54"   => "Category 3 Men 45+",
+        "Category 2 Men 55+"     => "Category 3 Men 45+",
+        "Category 2 Men U35"     => [ "Category 3 Men 10-14", "Category 3 Men 15-18" ],
+        "Category 2 Women 35-44" => "Category 3 Women 19+",
+        "Category 2 Women 45+"   => "Category 3 Women 19+",
+        "Category 2 Women U35"   => [ "Category 3 Women 10-14", "Category 3 Women 15-18", "Category 3 Women 19+" ],
+        "Category 1 Men 19-34"   => "Category 2 Men U35",
+        "Category 1 Men 35-44"   => "Category 2 Men 35-44",
+        "Category 1 Men 45+"     => [ "Category 2 Men 45-54", "Category 2 Men 55+" ],
+        "Elite Men"              => [ "Category 1 Men 19-34", "Category 1 Men 35-44", "Category 1 Men 45+" ],
+        "Elite/Category 1 Women" => [ "Category 2 Women 35-44", "Category 2 Women 45+", "Category 2 Women U35" ]
+      }
+    end
+
     def source_results_query(race)
       super.
       where("races.category_id" => categories_for(race))
