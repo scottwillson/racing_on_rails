@@ -165,7 +165,8 @@ module Competitions
 
     def races_in_upgrade_order
       if upgrades.any?
-        categories_in_upgrade_order = upgrades.values + (races.map(&:name) - upgrades.values)
+        upgrade_categories = upgrades.values.map { |categories| Array.wrap(categories) }.flatten
+        categories_in_upgrade_order = upgrade_categories + (races.map(&:name) - upgrade_categories)
         categories_in_upgrade_order.map { |name| races.detect { |race| race.name == name }}.compact
       else
         races
@@ -223,7 +224,8 @@ module Competitions
     # TODO just do this in source_results with join
     def add_upgrade_results(results, race)
       if race.name.in?(upgrades.keys)
-        upgrade_race = races.detect { |r| r.name == upgrades[race.name] }
+        upgrade_categories = Array.wrap(upgrades[race.name])
+        upgrade_races = races.select { |r| r.name.in?(upgrade_categories) }
         results.to_a + Result.connection.select_all(Result.
           select(
             "distinct results.id as id",
@@ -250,9 +252,12 @@ module Competitions
           joins(:race, :event, :person).
           joins("left outer join events parents_events on parents_events.id = events.parent_id").
           joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
-          where("results.race_id = ?", upgrade_race).
+          where("results.race_id" => upgrade_races).
           # Only include upgrade results for people with category results
-          where("results.#{participant_id_attribute} in (?)", results.select { |r| r["event_bar_points"] != 0 }.map { |r| r["participant_id"] }.uniq )
+          where(
+            "results.#{participant_id_attribute}" =>
+            results.select { |r| r["event_bar_points"] != 0 }.map { |r| r["participant_id"] }.uniq
+          )
         ).to_a
       else
         results
@@ -533,7 +538,7 @@ module Competitions
       false
     end
 
-    # Team-based competition? False (default) implies it is person-based?
+    # Team-based competition? False (default) implies it is person-based.
     def team?
       false
     end
