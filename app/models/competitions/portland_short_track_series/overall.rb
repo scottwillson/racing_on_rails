@@ -9,7 +9,7 @@ module Competitions
 
       def after_calculate
         super
-        PortlandShortTrackSeriesMonthlyStandings.calculate! year
+        MonthlyStandings.calculate! year
       end
     end
   end

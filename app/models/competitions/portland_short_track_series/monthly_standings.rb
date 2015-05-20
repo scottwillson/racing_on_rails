@@ -11,7 +11,7 @@ module Competitions
             if parent && parent.any_results_including_children?
               [ 6, 7 ].each do |month|
                 month_name = Date::MONTHNAMES[month]
-                standings = PortlandShortTrackSeriesMonthlyStandings.find_or_create_by!(
+                standings = MonthlyStandings.find_or_create_by!(
                   parent: parent,
                   name: "#{month_name} Standings"
                 )
