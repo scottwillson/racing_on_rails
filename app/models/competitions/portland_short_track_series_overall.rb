@@ -55,10 +55,6 @@ module Competitions
       }
     end
 
-    def maximum_upgrade_races
-      3
-    end
-
     def after_calculate
       super
       PortlandShortTrackSeriesMonthlyStandings.calculate!
