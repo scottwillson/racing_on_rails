@@ -29,15 +29,15 @@ module Competitions
     def point_schedule
       [ 15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
     end
-    
+
     def after_calculate
       super
-      
+
       race = races.detect { |r| r.name == "Beginner" }
       if race
         race.update_attributes! visible: false
       end
-      
+
       BlindDateAtTheDairyMonthlyStandings.calculate!
     end
   end

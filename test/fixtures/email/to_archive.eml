@@ -1,54 +1,143 @@
-From scott.willson@gmail.com  Mon Jan 23 15:52:43 2006
-Return-Path: <scott.willson@gmail.com>
+Delivered-To: scott.willson@gmail.com
+Received: by 10.140.101.238 with SMTP id u101csp2343176qge;
+        Tue, 28 Apr 2015 16:42:10 -0700 (PDT)
+X-Received: by 10.68.134.165 with SMTP id pl5mr37098931pbb.134.1430264529529;
+        Tue, 28 Apr 2015 16:42:09 -0700 (PDT)
+Return-Path: <obra-bounces@list.obra.org>
+Received: from list.obra.org (wsbaracing.com. [69.30.43.18])
+        by mx.google.com with ESMTP id ok17si36826324pab.41.2015.04.28.16.42.08;
+        Tue, 28 Apr 2015 16:42:09 -0700 (PDT)
+Received-SPF: none (google.com: obra-bounces@list.obra.org does not designate permitted sender hosts) client-ip=69.30.43.18;
+Authentication-Results: mx.google.com;
+       spf=none (google.com: obra-bounces@list.obra.org does not designate permitted sender hosts) smtp.mail=obra-bounces@list.obra.org;
+       dkim=neutral (body hash did not verify) header.i=@
+Received: from localhost (localhost [127.0.0.1])
+	by list.obra.org (Postfix) with ESMTP id 364E22604C4;
+	Tue, 28 Apr 2015 16:42:08 -0700 (PDT)
+X-Virus-Scanned: Debian amavisd-new at list.obra.org
+Received: from list.obra.org ([127.0.0.1])
+	by localhost (bushtit.obra.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id mNBWePgH9Y-v; Tue, 28 Apr 2015 16:42:07 -0700 (PDT)
+Received: from list.obra.org (localhost [127.0.0.1])
+	by list.obra.org (Postfix) with ESMTP id 3B0AC260361;
+	Tue, 28 Apr 2015 16:42:01 -0700 (PDT)
 X-Original-To: obra@list.obra.org
 Delivered-To: obra@list.obra.org
 Received: from localhost (localhost [127.0.0.1])
-  by list.obra.org (Postfix) with ESMTP id 1165A106A0
-  for <obra@list.obra.org>; Mon, 23 Jan 2006 15:52:43 -0800 (PST)
+ by list.obra.org (Postfix) with ESMTP id C197A26034D
+ for <obra@list.obra.org>; Tue, 28 Apr 2015 16:05:23 -0700 (PDT)
+X-Virus-Scanned: Debian amavisd-new at list.obra.org
 Received: from list.obra.org ([127.0.0.1])
-  by localhost (lizard.obra.org [127.0.0.1]) (amavisd-new, port 10024)
-  with ESMTP id 09182-02 for <obra@list.obra.org>;
-  Mon, 23 Jan 2006 15:52:41 -0800 (PST)
-Received: from mail.cheryljwillson.com (cheryljwillson.com [71.36.251.213])
-  by list.obra.org (Postfix) with ESMTP id 0B60610637
-  for <obra@list.obra.org>; Mon, 23 Jan 2006 15:52:41 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-  by mail.cheryljwillson.com (Postfix) with ESMTP id E5B73443ED
-  for <obra@list.obra.org>; Mon, 23 Jan 2006 15:52:25 -0800 (PST)
-Received: from webgateway0.cnf.com (webgateway0.cnf.com [63.230.177.28]) 
-  by www.cheryljwillson.com (IMP) with HTTP 
-  for <sw@localhost>; Mon, 23 Jan 2006 15:52:25 -0800
-Message-ID: <1138060345.43d56c39bb9c3@www.cheryljwillson.com>
-Date: Mon, 23 Jan 2006 15:52:25 -0800
-From: Scott Willson <scott.willson@gmail.com>
-To: obra@list.obra.org
-References: <43D56B2E.4080607@cheryljwillson.com>
-In-Reply-To: <43D56B2E.4080607@cheryljwillson.com>
+ by localhost (bushtit.obra.org [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id rwQ7vsCsZQX3 for <obra@list.obra.org>;
+ Tue, 28 Apr 2015 16:05:22 -0700 (PDT)
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom;
+ client-ip=98.136.216.232; helo=nm32-vm9.bullet.mail.gq1.yahoo.com;
+ envelope-from=anquetil@yahoo.com; receiver=obra@list.obra.org
+Received: from nm32-vm9.bullet.mail.gq1.yahoo.com
+ (nm32-vm9.bullet.mail.gq1.yahoo.com [98.136.216.232])
+ by list.obra.org (Postfix) with ESMTP id 7DCC9260349
+ for <obra@list.obra.org>; Tue, 28 Apr 2015 16:05:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048;
+ t=1430262322; bh=fAhxmwh0FV2YtgOnzCnVxLf0v+X945geM/eUJGQUjeE=;
+ h=Date:From:Reply-To:To:Subject:From:Subject;
+ b=aMgtA6P38ggYELm5+7h4qTQz4f2i89QjnItnCHzFeIwLXJsMK2O7AA/NKNmIZy6+9QGQi2oXpt9Ad5yZEUCS9EFkwuSQZBWDCejpLGT6MtfDewFkse/BT7rEzi11sFuKdkxq96nS1umuYKWNArX1Q7zB5mapz44JPT3IMdTki3gU4IiKYyfKD03iSymlfmeT0lq8gbFsXFyysUp9i2kvH66KvtHlrEn1HWVGN2ra2DjlXwa3GAMYjIsCOdZzc+I9L16wxk5kEyd0OMciICUAhoFqgGWntId8iOqOryy/zx3GZWz4zeRtyunA3MwO55XoUr+pM3owStwUdxIukRIgjQ==
+Received: from [127.0.0.1] by nm32.bullet.mail.gq1.yahoo.com with NNFMP;
+ 28 Apr 2015 23:05:22 -0000
+Received: from [216.39.60.181] by nm32.bullet.mail.gq1.yahoo.com with NNFMP;
+ 28 Apr 2015 23:02:21 -0000
+Received: from [98.137.12.230] by tm17.bullet.mail.gq1.yahoo.com with NNFMP;
+ 28 Apr 2015 23:02:21 -0000
+Received: from [127.0.0.1] by omp1038.mail.gq1.yahoo.com with NNFMP;
+ 28 Apr 2015 23:02:21 -0000
+X-Yahoo-Newman-Property: ymail-4
+X-Yahoo-Newman-Id: 83059.99261.bm@omp1038.mail.gq1.yahoo.com
+X-YMail-OSG: a2V8thcVM1nq4urx6MNYmaRttwdAHkhHPU_7Hskrt0Ipe0uJC9ftbkxOqgmFOBX
+ jtlPfxsr1MNh_0kXxsI6t47wzHxARPdlVRID4eys2pBUPJjQ6ixYJoCAUySk2Vu9gyFzvdWHsAIp
+ iUeJKbrxAJnoQjVG84cjHhqsZ9XYr3.t4cMbQyfMY87KRquxlm_QmJVyVY431NMl7h7WPBVtHFXJ
+ q5U2R1rMWT0ZNr1XXRK972Y8zunrxhG2vWsbV8no4uKfqeLajDKMp60PH4Fh3tu.ij7THN_OgPMq
+ AKqVvHkb353f9UClD_kKdEMvCUYIp0M16f6OcJysfXR6YLU00elBEUbmeAC_Z0GKUK6fLQ82_46o
+ QLnSIBtCsb4eMcMj0EGDHrqjEsaWhStsXUIRg155GKkqlxcZ.YWl1SZdKMXFx07OlxyKI0OyvQgu
+ xfric2Vu2xvp12zrQi0xw4LxfcPFV7npw3Md4HZ7_ClDOnOGQaivrQUPUi.yy5JTlJA3eNdtt9kM
+ h0M7mukE4
+Received: by 216.39.60.203; Tue, 28 Apr 2015 23:02:20 +0000
+Date: Tue, 28 Apr 2015 23:02:20 +0000 (UTC)
+To: OBRA List <obra@list.obra.org>
+Message-ID: <394721024.8399.1430262140296.JavaMail.yahoo@mail.yahoo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-Person-Agent: Internet Messaging Program (IMP) 3.2.2
-X-Originating-IP: 63.230.177.28
-X-Virus-Scanned: amavisd-new at obra.org
-Subject: [OBRA Chat] [Fwd:  For the Archives]
+Subject: [OBRA Chat] Some free stuff . . . . Shimano road pedals
 X-BeenThere: obra@list.obra.org
-X-Mailman-Version: 2.1.6
+X-Mailman-Version: 2.1.16
 Precedence: list
+From: EAL via OBRA <obra@list.obra.org>
+Reply-To: EAL <anquetil@yahoo.com>
 List-Id: Oregon Bicycle Racing Association <obra.list.obra.org>
-List-Unsubscribe: <http://list.obra.org/mailman/listinfo/obra>,
-  <mailto:obra-request@list.obra.org?subject=unsubscribe>
-List-Archive: <http://list.obra.org/mailing_lists/obra/posts>
+List-Unsubscribe: <http://list.obra.org/mailman/options/obra>,
+ <mailto:obra-request@list.obra.org?subject=unsubscribe>
+List-Archive: <http://list.obra.org/pipermail/obra/>
 List-Post: <mailto:obra@list.obra.org>
 List-Help: <mailto:obra-request@list.obra.org?subject=help>
 List-Subscribe: <http://list.obra.org/mailman/listinfo/obra>,
-  <mailto:obra-request@list.obra.org?subject=subscribe>
-X-List-Received-Date: Mon, 23 Jan 2006 23:52:43 -0000
-
-Too bad it doesn't work!
-
-Quoting Cheryl Willson <cjw@cheryljwillson.com>:
-
-> fascinating
-> 
+ <mailto:obra-request@list.obra.org?subject=subscribe>
+Content-Type: multipart/mixed; boundary="===============7513236345918219301=="
+Errors-To: obra-bounces@list.obra.org
+Sender: "OBRA" <obra-bounces@list.obra.org>
 
 
+--===============7513236345918219301==
+Content-Type: multipart/alternative;
+	boundary="----=_Part_8398_600463296.1430262140294"
+
+
+------=_Part_8398_600463296.1430262140294
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=UTF-8
+
+First the pedals.These are the older style Shimano road pedals.=C2=A0 I'm t=
+ransitioning to a new system:Shimano PD-7700 (just a few hundred dry miles =
+on them)Shimano PD-6600 (thousands of mainly dry miles)Shimano PD-5500 (few=
+er thousands but a lot of wet miles)
+All or any for free, but I don't have cleats for them, however.=C2=A0=20
+
+Free standing adjustable basketball hoop. You see them on about every stree=
+t in the burbs, so you know what it looks like.=C2=A0 I can help disassembl=
+e and load if necessary.
+Ed
+
+
+------=_Part_8398_600463296.1430262140294
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=UTF-8
+
+<html><body><div style=3D"color:#000; background-color:#fff; font-family:lu=
+cida console, sans-serif;font-size:16px"><div>First the pedals.</div><div>T=
+hese are the older style Shimano road pedals.&nbsp; I'm transitioning to a =
+new system:</div><div id=3D"yui_3_16_0_1_1430261800906_2604">Shimano PD-770=
+0 (just a few hundred dry miles on them)</div><div id=3D"yui_3_16_0_1_14302=
+61800906_2602">Shimano PD-6600 (thousands of mainly dry miles)</div><div id=
+=3D"yui_3_16_0_1_1430261800906_2603">Shimano PD-5500 (fewer thousands but a=
+ lot of wet miles)</div><div id=3D"yui_3_16_0_1_1430261800906_2607"><br></d=
+iv><div id=3D"yui_3_16_0_1_1430261800906_2644">All or any for free, but I d=
+on't have cleats for them, however.&nbsp; <br></div><div id=3D"yui_3_16_0_1=
+_1430261800906_2645"><br></div><div id=3D"yui_3_16_0_1_1430261800906_2646">=
+Free standing adjustable basketball hoop. You see them on about every stree=
+t in the burbs, so you know what it looks like.&nbsp; I can help disassembl=
+e and load if necessary.</div><div id=3D"yui_3_16_0_1_1430261800906_2660"><=
+br></div><div id=3D"yui_3_16_0_1_1430261800906_2665">Ed<br></div><div id=3D=
+"yui_3_16_0_1_1430261800906_2649"><br></div></div></body></html>
+------=_Part_8398_600463296.1430262140294--
+
+--===============7513236345918219301==
+Content-Disposition: inline
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: base64
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KT0JSQSBtYWls
+aW5nIGxpc3QKb2JyYUBsaXN0Lm9icmEub3JnCmh0dHA6Ly9saXN0Lm9icmEub3JnL21haWxtYW4v
+bGlzdGluZm8vb2JyYQpVbnN1YnNjcmliZTogb2JyYS11bnN1YnNjcmliZUBsaXN0Lm9icmEub3Jn
+Cg==
+
+--===============7513236345918219301==--

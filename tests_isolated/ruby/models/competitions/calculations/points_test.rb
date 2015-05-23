@@ -87,8 +87,8 @@ module Competitions
         ]
         expected = [
           result(place: 1, participant_id: 1, points: 43.0, scores: [
-             { numeric_place: 1, participant_id: 1, points: 15.0, date: Date.new(2014, 9) },
-             { numeric_place: 2, participant_id: 1, points: 28.0, date: Date.new(2014, 10) }
+             { numeric_place: 1, participant_id: 1, points: 15.0, date: Date.new(2014, 9), event_id: 1 },
+             { numeric_place: 2, participant_id: 1, points: 28.0, date: Date.new(2014, 10), event_id: 2 }
           ])
         ]
         actual = Calculator.calculate(source_results, rules)
@@ -107,11 +107,11 @@ module Competitions
         ]
         expected = [
           result(place: 1, participant_id: 1, points: 380, scores: [
-             { numeric_place: 1, participant_id: 1, points: 200, date: Date.new(2014, 7, 9) },
-             { numeric_place: 2, participant_id: 1, points: 70, date: Date.new(2014, 7, 2) },
-             { numeric_place: 3, participant_id: 1, points: 50, date: Date.new(2014, 6, 18) },
-             { numeric_place: 4, participant_id: 1, points: 40, date: Date.new(2014, 6, 25) },
-             { numeric_place: 9, participant_id: 1, points: 20, date: Date.new(2014, 6, 11) }
+             { numeric_place: 1, participant_id: 1, points: 200, date: Date.new(2014, 7, 9), event_id: 6 },
+             { numeric_place: 2, participant_id: 1, points: 70, date: Date.new(2014, 7, 2), event_id: 5 },
+             { numeric_place: 3, participant_id: 1, points: 50, date: Date.new(2014, 6, 18), event_id: 3 },
+             { numeric_place: 4, participant_id: 1, points: 40, date: Date.new(2014, 6, 25), event_id: 4 },
+             { numeric_place: 9, participant_id: 1, points: 20, date: Date.new(2014, 6, 11), event_id: 2 }
           ])
         ]
         actual = Calculator.calculate(source_results, rules)
@@ -130,11 +130,11 @@ module Competitions
         ]
         expected = [
           result(place: 1, participant_id: 1, points: 540, scores: [
-             { numeric_place: 1, participant_id: 1, points: 100, date: Date.new(2014, 6, 4) },
-             { numeric_place: 1, participant_id: 1, points: 100, date: Date.new(2014, 6, 18) },
-             { numeric_place: 1, participant_id: 1, points: 100, date: Date.new(2014, 6, 25) },
-             { numeric_place: 1, participant_id: 1, points: 100, date: Date.new(2014, 7, 2) },
-             { numeric_place: 2, participant_id: 1, points: 140, date: Date.new(2014, 7, 9) },
+             { numeric_place: 1, participant_id: 1, points: 100, date: Date.new(2014, 6, 4), event_id: 1 },
+             { numeric_place: 1, participant_id: 1, points: 100, date: Date.new(2014, 6, 18), event_id: 3 },
+             { numeric_place: 1, participant_id: 1, points: 100, date: Date.new(2014, 6, 25), event_id: 4 },
+             { numeric_place: 1, participant_id: 1, points: 100, date: Date.new(2014, 7, 2), event_id: 5 },
+             { numeric_place: 2, participant_id: 1, points: 140, date: Date.new(2014, 7, 9), event_id: 6 },
           ])
         ]
         actual = Calculator.calculate(source_results, rules)

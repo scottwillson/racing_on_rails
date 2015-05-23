@@ -44,7 +44,17 @@ module Competitions
 
       # Ties a source result to a competition result.
       # CalculatorScore#numeric_place is source result's place.
-      Struct.new("CalculatorScore", :date, :numeric_place, :participant_id, :points, :source_result_id, :team_size, :upgrade)
+      Struct.new(
+        "CalculatorScore",
+        :date,
+        :event_id,
+        :numeric_place,
+        :participant_id,
+        :points,
+        :source_result_id,
+        :team_size,
+        :upgrade
+      )
 
       # Create new copy of a Struct with +attributes+
       def merge_struct(struct, attributes)

@@ -137,4 +137,15 @@ class PostTest < ActiveSupport::TestCase
     assert !post.valid?
     assert post.errors[:from_email], "Expected error on :from_email. Had: #{post.errors.full_messages}"
   end
+
+  test "recent should only show public lists" do
+    public_list = FactoryGirl.create(:mailing_list, public: true)
+    public_post = FactoryGirl.create(:post, mailing_list: public_list)
+
+    private_list = FactoryGirl.create(:mailing_list, public: false)
+    private_post = FactoryGirl.create(:post, mailing_list: private_list)
+
+    assert Post.recent.include?(public_post)
+    assert !Post.recent.include?(private_post)
+  end
 end

@@ -37,7 +37,7 @@ module Competitions
           message << "  Result place #{r.place} participant_id: #{r.participant_id} points: #{r.points} preliminary: #{r.preliminary} team_size: #{r.team_size}"
           message << "\n"
           r.scores.each do |s|
-            message << "    Score place: #{s.numeric_place} points: #{s.points} date: #{s.date}"
+            message << "    Score place: #{s.numeric_place} points: #{s.points} date: #{s.date} event_id: #{s.event_id}"
             message << "\n"
           end
           message << "\n" if r.scores.size > 0
@@ -48,7 +48,7 @@ module Competitions
       def pretty_to_string_scores(scores)
         message = ""
         scores.each do |s|
-          message << "  Score place #{s.numeric_place} participant_id: #{s.participant_id} source_result_id: #{s.source_result_id}"
+          message << "  Score place #{s.numeric_place} participant_id: #{s.participant_id} source_result_id: #{s.source_result_id} event_id: #{s.event_id} points: #{s.points}"
           message << "\n"
         end
         message

@@ -353,6 +353,7 @@ module Admin
         :sanctioned_by,
         :sanctioning_org_event_id,
         :state,
+        :suggest_membership,
         :team_id,
         :team_name,
         :time,

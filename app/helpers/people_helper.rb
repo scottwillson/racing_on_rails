@@ -28,6 +28,16 @@ module PeopleHelper
     end
   end
 
+  def account_permission_return_to(person, current_person)
+    if person.new_record?
+      nil
+    elsif current_person.administrator?
+      edit_admin_person_path person, mobile: params[:mobile]
+    else
+      edit_person_path person, mobile: params[:mobile]
+    end
+  end
+
   # 'me' or +person+ name
   def pronoun(person, other_person)
     if person == other_person

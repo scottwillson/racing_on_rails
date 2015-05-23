@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150122013156) do
+ActiveRecord::Schema.define(version: 20150429170813) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -237,19 +237,20 @@ ActiveRecord::Schema.define(version: 20150122013156) do
     t.boolean  "promoter_pays_registration_fee", limit: 1,                              default: false, null: false
     t.boolean  "membership_required",            limit: 1,                              default: false, null: false
     t.datetime "registration_ends_at"
-    t.boolean  "override_registration_ends_at",  limit: 1,                              default: false, null: false
-    t.decimal  "all_events_discount",                          precision: 10, scale: 2
-    t.decimal  "additional_race_price",                        precision: 10, scale: 2
-    t.string   "website",                        limit: 255
-    t.string   "registration_link",              limit: 255
-    t.string   "custom_suggestion",              limit: 255
-    t.integer  "field_limit",                    limit: 4
-    t.text     "refund_policy",                  limit: 65535
-    t.boolean  "refunds",                        limit: 1,                              default: true,  null: false
-    t.integer  "region_id",                      limit: 4
-    t.date     "end_date",                                                                              null: false
-    t.boolean  "registration_public",            limit: 1,                              default: true,  null: false
-    t.decimal  "junior_price",                                 precision: 10, scale: 2
+    t.boolean  "override_registration_ends_at",                                       default: false, null: false
+    t.decimal  "all_events_discount",                        precision: 10, scale: 2
+    t.decimal  "additional_race_price",                      precision: 10, scale: 2
+    t.string   "website"
+    t.string   "registration_link"
+    t.string   "custom_suggestion"
+    t.integer  "field_limit"
+    t.text     "refund_policy"
+    t.boolean  "refunds",                                                             default: true,  null: false
+    t.integer  "region_id"
+    t.date     "end_date",                                                                            null: false
+    t.boolean  "registration_public",                                                 default: true,  null: false
+    t.decimal  "junior_price",                               precision: 10, scale: 2
+    t.boolean  "suggest_membership",                                                  default: true,  null: false
   end
 
   add_index "events", ["bar_points"], name: "index_events_on_bar_points", using: :btree
@@ -317,13 +318,14 @@ ActiveRecord::Schema.define(version: 20150122013156) do
   add_index "line_items", ["purchased_discount_code_id"], name: "index_line_items_on_purchased_discount_code_id", using: :btree
   add_index "line_items", ["race_id"], name: "index_line_items_on_race_id", using: :btree
 
-  create_table "mailing_lists", force: :cascade do |t|
-    t.string   "name",                limit: 255,   default: "", null: false
-    t.string   "friendly_name",       limit: 255,   default: "", null: false
-    t.string   "subject_line_prefix", limit: 255,   default: "", null: false
+  create_table "mailing_lists", force: true do |t|
+    t.string   "name",                default: "",   null: false
+    t.string   "friendly_name",       default: "",   null: false
+    t.string   "subject_line_prefix", default: "",   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "description",         limit: 65535
+    t.text     "description"
+    t.boolean  "public",              default: true, null: false
   end
 
   add_index "mailing_lists", ["name"], name: "idx_name", using: :btree

@@ -6,6 +6,7 @@ module Competitions
       # the calling Competition when it selected results from the database.
       # Only keep best +results_per_event+ results for participant (person or team).
       def select_results(results, rules)
+
         results = results.select { |r| r.participant_id && ![ nil, "", "DQ", "DNS" ].include?(r.place) }
 
         if rules[:dnf_points].nil? || rules[:dnf_points] == 0
@@ -17,7 +18,7 @@ module Competitions
         end
 
         if rules[:source_event_ids]
-          results = results.select { |r| rules[:source_event_ids].include? r.event_id }
+          results = results.select { |r| r.upgrade || rules[:source_event_ids].include?(r.event_id) }
         end
 
         results = select_results_for(:event_id, results, rules[:results_per_event])
@@ -56,8 +57,8 @@ module Competitions
         end
 
         results.group_by(&:participant_id).
-        select do |participant_id, results|
-          results.size >= rules[:minimum_events]
+        select do |participant_id, participant_results|
+          participant_results.size >= rules[:minimum_events]
         end.
         values.
         flatten

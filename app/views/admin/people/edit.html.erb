@@ -161,8 +161,8 @@
   <div class="col-sm-6">
     <%= render "people/account_permissions",
                 person: @person,
-                             account_permissions: @person.account_permissions,
-                             return_to: @person.new_record? ? nil : edit_admin_person_path(@person)
+                account_permissions: @person.account_permissions,
+                return_to: account_permission_return_to(@person, @current_person)
     %>
   </div>
   <div class="col-sm-6">

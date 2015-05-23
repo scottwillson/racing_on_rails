@@ -3,21 +3,22 @@ module Competitions
     module SelectScores
       # Select only scores with points and a participant up to +maximum_events+
       def select_scores(scores, rules)
-        scores_with_points = scores.select { |s| points?(s) }
+        selected_scores = scores.select { |s| points?(s) && s.participant_id }
+
         if maximum_events?(rules)
           # Upgrades don't count towards maximum events
           # Calculator needs to model results as map keyed by category, not an array,
           # to improve this code
-          upgrades = scores_with_points.select { |s| s.upgrade }
-          reject_scores_greater_than_maximum_events(scores_with_points.select { |s| !s.upgrade }, rules) +
+          upgrades = selected_scores.select { |s| s.upgrade }
+          reject_scores_greater_than_maximum_events(selected_scores.select { |s| !s.upgrade }, rules) +
           upgrades
         else
-          scores_with_points
+          selected_scores
         end
       end
 
       def points?(score)
-        score.points && score.points > 0.0 && score.participant_id
+        score.points && score.points > 0.0
       end
 
       def maximum_events?(rules)
@@ -32,8 +33,14 @@ module Competitions
         flatten
       end
 
-      def slice_of(values, maximum)
-        values.sort_by(&:points).reverse[ 0, maximum ]
+      def slice_of(scores, maximum)
+        scores.
+        group_by(&:event_id).
+        sort_by do |event_id, event_scores|
+          event_scores.map { |s| s.points }.reduce(&:+)
+        end.
+        reverse[ 0, maximum ].
+        map(&:last)
       end
     end
   end
