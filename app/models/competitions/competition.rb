@@ -183,14 +183,21 @@ module Competitions
         select(
           "distinct results.id as id",
           "1 as multiplier",
+          "age",
+          "categories.ability as category_ability",
+          "categories.ages_begin as category_ages_begin",
+          "categories.ages_end as category_ages_end",
+          "categories.gender as category_gender",
           "events.bar_points as event_bar_points",
           "events.date",
           "events.discipline",
           "events.type",
+          "gender",
           "member_from",
           "member_to",
           "parents_events.bar_points as parent_bar_points",
           "parents_events_2.bar_points as parent_parent_bar_points",
+          "people.gender as person_gender",
           "races.bar_points as race_bar_points",
           "results.#{participant_id_attribute} as participant_id",
           "results.event_id",
@@ -205,6 +212,7 @@ module Competitions
         joins(:race, :event, :person).
         joins("left outer join events parents_events on parents_events.id = events.parent_id").
         joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
+        joins("left outer join categories on categories.id = races.category_id").
         where("results.year = ?", year)
 
       if source_event_types.include?(Event)
@@ -280,6 +288,11 @@ module Competitions
 
     def delete_non_calculation_attributes(results)
       non_calculation_attributes = %w{
+          age
+          category_ability
+          category_ages_begin
+          category_ages_end
+          category_gender
           discipline
           event_bar_points
           gender
