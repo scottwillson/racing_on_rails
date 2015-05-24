@@ -112,8 +112,7 @@ module Competitions
         results = source_results(race)
         results = add_upgrade_results(results, race)
         results = after_source_results(results, race)
-        results = delete_bar_points(results)
-        results = delete_discipline(results)
+        results = delete_non_calculation_attributes(results)
         results = add_field_size(results)
         results = map_team_member_to_boolean(results)
 
@@ -279,20 +278,19 @@ module Competitions
       end
     end
 
-    def delete_bar_points(results)
-      results.each do |result|
-        %w{ race_bar_points event_bar_points parent_bar_points parent_parent_bar_points }.each do |a|
-          result.delete a
-        end
+    def delete_non_calculation_attributes(results)
+      non_calculation_attributes = %w{
+          discipline
+          event_bar_points
+          gender
+          parent_bar_points
+          parent_parent_bar_points
+          person_gender
+          race_bar_points
+      }
+      results.map do |result|
+        result.except(*non_calculation_attributes)
       end
-      results
-    end
-
-    def delete_discipline(results)
-      results.each do |result|
-        result.delete "discipline"
-      end
-      results
     end
 
     # Calculate field size. It's not stored in the DB, and can't be calculated
