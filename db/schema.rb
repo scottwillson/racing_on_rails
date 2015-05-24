@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150429170813) do
+ActiveRecord::Schema.define(version: 20150523145136) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "order_id"
@@ -97,6 +97,8 @@ ActiveRecord::Schema.define(version: 20150429170813) do
     t.integer  "ages_begin",                default: 0
     t.integer  "ages_end",                  default: 999
     t.string   "friendly_param",                          null: false
+    t.integer  "ability",                   default: 0,   null: false
+    t.string   "gender",                    default: "M", null: false
   end
 
   add_index "categories", ["friendly_param"], name: "index_categories_on_friendly_param", using: :btree

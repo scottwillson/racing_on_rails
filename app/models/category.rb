@@ -10,6 +10,7 @@ class Category < ActiveRecord::Base
   acts_as_tree
   include ActsAsTree::Validation
 
+  include Categories::Ability
   include Categories::Ages
   include Categories::Cleanup
   include Comparable
