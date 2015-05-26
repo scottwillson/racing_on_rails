@@ -1,6 +1,6 @@
 class AddCategoriesAbility < ActiveRecord::Migration
   def change
-    add_column :categories, :ability, :integer, default: 0, null: false
+    add_column(:categories, :ability, :integer, default: 0, null: false) rescue nil
 
     Category.reset_column_information
     Category.transaction do

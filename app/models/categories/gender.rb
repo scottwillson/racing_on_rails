@@ -6,6 +6,10 @@ module Categories
       before_save :set_gender_from_name
     end
 
+    def gender=(value)
+      self[:gender] = value
+    end
+
     # Relies on normalized name
     def set_gender_from_name
       if name[/women/i]
