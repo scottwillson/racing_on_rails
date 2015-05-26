@@ -466,6 +466,28 @@ module Results
       assert_equal('Field Size: 40 riders, 40 Laps, Sunny, cool, 40K', event.races(true).first.notes, 'Race notes')
     end
 
+    test "race" do
+      results_file = ResultsFile.new(nil, nil)
+      table = Tabular::Table.new([
+        { place: "1.0", name: "Merckx" },
+        { place: "1.0", name: "Moser" },
+        { place: "1.0", name: "De Vlaminck" },
+        { place: "1.0", name: "De Wolfe" }
+        ])
+
+      table.rows.each do |row|
+        assert !results_file.race?(row), "Should not be a race: #{row}"
+        assert results_file.result?(row), "Should be a result: #{row}"
+      end
+    end
+
+    test "race for empty row" do
+      results_file = ResultsFile.new(nil, nil)
+      source = Tabular::Table.new
+      row = Tabular::Row.new(source)
+      assert !results_file.race?(row)
+    end
+
     def get_expected_races
       races = []
 

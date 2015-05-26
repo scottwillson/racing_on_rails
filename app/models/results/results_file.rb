@@ -58,10 +58,11 @@ module Results
 
     def race?(row)
       return false if row.last?
-
       # Won't correctly detect races that only have DQs or DNSs
       row.next &&
       category_name_from_row(row).present? &&
+      !row[:place].to_s[/\A1\z/] &&
+      !row[:place].to_s[/\A1.0\z/] &&
       !row[:place].to_s.upcase.in?(%w{ DNS DQ DNF}) &&
       row.next[:place] &&
       row.next[:place].to_i == 1 &&
