@@ -198,6 +198,7 @@ module Competitions
           "parents_events.bar_points as parent_bar_points",
           "parents_events_2.bar_points as parent_parent_bar_points",
           "people.gender as person_gender",
+          "people.name as person_name",
           "races.bar_points as race_bar_points",
           "results.#{participant_id_attribute} as participant_id",
           "results.event_id",
@@ -244,10 +245,10 @@ module Competitions
             "member_to",
             "parents_events.bar_points as parent_bar_points",
             "parents_events_2.bar_points as parent_parent_bar_points",
+            "place",
             "races.bar_points as race_bar_points",
             "results.#{participant_id_attribute} as participant_id",
             "results.event_id",
-            "place",
             "results.points",
             "results.race_id",
             "results.race_name as category_name",
@@ -299,6 +300,7 @@ module Competitions
           parent_bar_points
           parent_parent_bar_points
           person_gender
+          person_name
           race_bar_points
       }
       results.map do |result|
@@ -385,9 +387,6 @@ module Competitions
       end
     end
 
-    # Similar to superclass's method, except this method only saves results to the database. Superclass applies rules
-    # and scoring. It also decorates the results with any display data (often denormalized)
-    # like people's names, teams, and points.
     def create_competition_results_for(results, race)
       Rails.logger.debug "create_competition_results_for #{race.name}"
 
@@ -407,7 +406,7 @@ module Competitions
         )
 
         result.scores.each do |score|
-          create_score competition_result, score.source_result_id, score.points
+          create_score competition_result, score.source_result_id, score.points, score.notes
         end
       end
 
@@ -445,8 +444,8 @@ module Competitions
     end
 
     def update_scores_for(result, existing_result)
-      existing_scores = existing_result.scores.map { |s| [ s.source_result_id, s.points.to_f ] }
-      new_scores = result.scores.map { |s| [ s.source_result_id || existing_result.id, s.points.to_f ] }
+      existing_scores = existing_result.scores.map { |s| [ s.source_result_id, s.points.to_f, s.notes ] }
+      new_scores = result.scores.map { |s| [ s.source_result_id || existing_result.id, s.points.to_f, s.notes ] }
 
       scores_to_create = new_scores - existing_scores
       scores_to_delete = existing_scores - new_scores
@@ -457,7 +456,7 @@ module Competitions
       end
 
       scores_to_create.each do |score|
-        create_score existing_result, score.first, score.last
+        create_score existing_result, score.first, score.second, score.last
       end
     end
 
@@ -487,10 +486,11 @@ module Competitions
     end
 
     # This is always the 'best' result
-    def create_score(competition_result, source_result_id, points)
+    def create_score(competition_result, source_result_id, points, notes)
       ::Competitions::Score.create!(
         source_result_id: source_result_id || competition_result.id,
         competition_result_id: competition_result.id,
+        notes: notes,
         points: points
       )
     end
