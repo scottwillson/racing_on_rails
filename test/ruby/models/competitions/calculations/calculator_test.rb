@@ -181,7 +181,7 @@ module Competitions
       end
 
       def test_map_to_scores
-        expected = [ Struct::CalculatorScore.new(nil, 1, 2, 3, 1, 5) ]
+        expected = [ Struct::CalculatorScore.new(nil, 1, nil, 2, 3, 1, 5) ]
         source_results = [ result(
           date: nil,
           event_id: 1,
@@ -201,7 +201,7 @@ module Competitions
       end
 
       def test_map_to_results
-        scores = [ Struct::CalculatorScore.new(nil, 1, 2, 3, 4, 5, 6, nil) ]
+        scores = [ Struct::CalculatorScore.new(nil, 1, nil, 2, 3, 4, 5, 6, nil) ]
         expected = [ result(participant_id: 3, points: 4, scores: [
           {
             event_id: 1,
