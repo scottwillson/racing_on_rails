@@ -240,6 +240,9 @@ table.results th.age,
 table.results td.age {
   text-align: right;
 }
+table.results td.notes {
+  min-width: 120px;
+}
 
 table.results td.result .event {
   float: left;
