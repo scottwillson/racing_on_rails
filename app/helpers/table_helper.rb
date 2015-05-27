@@ -4,7 +4,6 @@
 module TableHelper
   # == Arguments
   # * caption
-  # * caption_visible. Default true
   # * id. CSS ID
   # * style_class or class. CSS style class
   # * collection. Table contents. Only used to show "None"
@@ -13,7 +12,6 @@ module TableHelper
   def table(options = {}, &block)
     # TODO Use merge or something
     options[:caption] = nil unless options[:caption]
-    options[:caption_visible] = true unless options[:caption_visible]
     options[:new_action] = nil unless options[:new_action]
     options[:id] = nil unless options[:id]
     options[:dataid] = nil unless options[:dataid]
