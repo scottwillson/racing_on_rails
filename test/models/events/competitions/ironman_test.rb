@@ -117,6 +117,7 @@ module Competitions
         "parent_bar_points" => nil,
         "parent_parent_bar_points" => nil,
         "person_gender" => nil,
+        "person_name"=>"Greg Lemond",
         "race_bar_points" => nil,
         "participant_id" => 1,
         "event_id" => 1,
@@ -137,7 +138,7 @@ module Competitions
       result2 = FactoryGirl.create(:result, person: person)
 
       Struct.new("TestResult", :place, :participant_id, :preliminary, :points, :scores)
-      Struct.new("TestScore", :points, :source_result_id)
+      Struct.new("TestScore", :points, :source_result_id, :notes)
       scores = [ Struct::TestScore.new(1, result1.id), Struct::TestScore.new(1, result2.id) ]
       calculated_results = [ Struct::TestResult.new(1, person.id, false, 2, scores) ]
 
@@ -180,7 +181,7 @@ module Competitions
       ironman = Ironman.create!
       source_result = FactoryGirl.create(:result)
       competition_result = ironman.races.first.results.create!
-      score = ironman.create_score(competition_result, source_result.id, 12)
+      score = ironman.create_score(competition_result, source_result.id, 12, "")
       assert_equal source_result.id, score.source_result_id, "source_result_id"
       assert_equal competition_result.id, score.competition_result_id, "competition_result_id"
       assert_equal 12, score.points, "points"
