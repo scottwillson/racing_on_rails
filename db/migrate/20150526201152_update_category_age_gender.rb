@@ -6,7 +6,18 @@ class UpdateCategoryAgeGender < ActiveRecord::Migration
         putc(".") if index % 100 == 0
         category.set_ability_from_name
         category.set_gender_from_name
-        category.save!
+
+        if category.parent_id == category.id
+          category.parent_id = nil
+          puts "Removed circular parent from #{category.name}"
+        end
+
+        begin
+          category.save!
+        rescue ActiveRecord::RecordInvalid => e
+          puts "#{category} could not be saved"
+          raise e
+        end
       end
       puts
     end
