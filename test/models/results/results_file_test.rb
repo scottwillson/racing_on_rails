@@ -372,6 +372,13 @@ module Results
       assert results_file.import_warnings.present?, "Should have import warnings for no first place finisher"
     end
 
+    test "TTT results should not trigger non-sequential results warnings" do
+      event = SingleDayEvent.create!
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/ttt.xls", __FILE__)), event)
+      results_file.import
+      assert results_file.import_warnings.empty?, "Should have no import warnings for TTT results"
+    end
+
     test "times" do
       event = FactoryGirl.create(:event)
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/times.xlsx", __FILE__)), event)

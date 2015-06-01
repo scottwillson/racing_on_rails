@@ -60,6 +60,16 @@ module Admin
         assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
       end
 
+      test "upload with many warnings" do
+        event = FactoryGirl.create(:event)
+
+        post :upload, id: event.to_param, results_file: fixture_file_upload("results/ttt.xls", "application/vnd.ms-excel", :binary)
+
+        assert_redirected_to edit_admin_event_path(event)
+        assert flash[:notice].nil? || flash[:notice].size < 1024, "flash[:notice] is too big: #{flash[:notice].size} characters"
+        assert event.any_results?, "Should have results after upload"
+      end
+
       test "upload dupe people" do
         # Two people with different name, same numbers
         # Excel file has Greg Rodgers with no number

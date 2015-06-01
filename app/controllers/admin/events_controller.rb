@@ -164,6 +164,7 @@ module Admin
           flash[:notice] = flash[:notice] + warning.to_s + " "
         end
       end
+      
       redirect_to(edit_admin_event_path(@event))
     end
 

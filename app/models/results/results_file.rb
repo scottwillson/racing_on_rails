@@ -176,7 +176,7 @@ module Results
         if race?(row) && result.place != 1
           self.import_warnings << "First racer #{row[:first_name]} #{row[:last_name]} should be first place racer. "
           # if we have a previous rov and the current place is not one more than the previous place, then sequence error.
-        elsif !race?(row) && row.previous && row.previous[:place].present? && row.previous[:place].to_i != (result.place - 1)
+        elsif !race?(row) && row.previous && row.previous[:place].present? && row.previous[:place] != result.place && row.previous[:place].to_i != (result.place - 1)
           self.import_warnings << "Non-sequential placings detected for racer: #{row[:first_name]} #{row[:last_name]}. " unless row[:category_name].to_s.downcase.include?("tandem") # or event is TTT or ???
         end
       elsif result.place.present?
