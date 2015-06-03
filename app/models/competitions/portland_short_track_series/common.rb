@@ -5,7 +5,7 @@ module Competitions
 
       included do
         def self.parent_event_name
-          "Portland Short Track Series MTB STXC"
+          "Portland Short Track Series"
         end
       end
 
