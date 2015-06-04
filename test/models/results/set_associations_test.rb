@@ -230,6 +230,9 @@ class SetAssociationsTest < ActiveSupport::TestCase
     result = race.results.build(name: 'Erik Tonkin')
     assert_equal([tonkin], result.find_people.to_a, 'name')
 
+    result = race.results.build(name: 'ERIK TONKIN')
+    assert_equal([tonkin], result.find_people.to_a, 'name')
+
     result = race.results.build(last_name: 'Tonkin')
     assert_equal([tonkin], result.find_people.to_a, 'last_name')
 
