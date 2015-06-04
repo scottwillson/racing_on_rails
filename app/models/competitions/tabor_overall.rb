@@ -11,7 +11,7 @@ module Competitions
         "Category 4 Men",
         "Category 4 Women",
         "Category 5 Men",
-        "Fixed Gear",
+        "Masters Men 50+",
         "Masters Men",
         "Masters Women",
         "Senior Men",
@@ -20,11 +20,7 @@ module Competitions
     end
 
     def maximum_events(race)
-      if race.name == "Category 4 Men" || race.name == "Masters Women"
-        4
-      else
-        5
-      end
+      6
     end
 
     def double_points_for_last_event?
