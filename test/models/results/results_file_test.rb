@@ -463,7 +463,7 @@ module Results
 
       expected_races << race
 
-      return expected_races
+      expected_races
     end
 
     test "race notes" do
