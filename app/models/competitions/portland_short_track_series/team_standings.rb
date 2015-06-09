@@ -52,10 +52,6 @@ module Competitions
         true
       end
 
-      def maximum_events(race)
-        6
-      end
-
       def results_per_event
         6
       end
