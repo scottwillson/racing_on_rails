@@ -163,8 +163,8 @@ module Competitions
     end
 
     def races_in_upgrade_order
-      if upgrades.any?
-        upgrade_categories = upgrades.values.map { |categories| Array.wrap(categories) }.flatten
+      if upgrades.present?
+        upgrade_categories = upgrades.values.map { |categories| Array.wrap(categories) }.flatten.uniq
         categories_in_upgrade_order = upgrade_categories + (races.map(&:name) - upgrade_categories)
         categories_in_upgrade_order.map { |name| races.detect { |race| race.name == name }}.compact
       else
