@@ -154,6 +154,7 @@ class Event < ActiveRecord::Base
       # Call to clear won't invoke all before_destroy callbacks
       races.each(&:destroy)
       races.delete(races.select(&:destroyed?))
+      true
     end
   end
 
@@ -235,7 +236,7 @@ class Event < ActiveRecord::Base
   def type_modifiable?
     type.nil? || %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries }.include?(type)
   end
-  
+
   def as_json(options)
     super(
       only: [ :discipline, :name, :parent_id, :type ],
