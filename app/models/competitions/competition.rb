@@ -264,7 +264,7 @@ module Competitions
           # Only include upgrade results for people with category results
           where(
             "results.#{participant_id_attribute}" =>
-            results.select { |r| r["event_bar_points"] != 0 }.map { |r| r["participant_id"] }.uniq
+            results.map { |r| r["participant_id"] }.uniq
           )
         ).to_a
       else
