@@ -4,12 +4,35 @@ module Competitions
   # :stopdoc:
   class PortlandShortTrackSeriesTest < ActiveSupport::TestCase
     test "calculate" do
-      weekly_series = FactoryGirl.create(:weekly_series, name: "Portland Short Track Series MTB STXC")
-      weekly_series.races.create!(category: Category.create!(name: "Elite Men")).results.create!(place: 1, person: Person.new, age: 30)
+      weekly_series = FactoryGirl.create(:weekly_series, name: "Portland Short Track Series")
+      event = FactoryGirl.create(:event, parent: weekly_series)
+      event.races.create!(category: Category.create!(name: "Elite Men")).results.create!(place: 1, person: Person.new, age: 30)
 
       PortlandShortTrackSeries::Overall.calculate!
-      PortlandShortTrackSeries::MonthlyStandings.calculate!
       PortlandShortTrackSeries::TeamStandings.calculate!
+    end
+
+    test "calculate upgrades" do
+      weekly_series = FactoryGirl.create(:weekly_series, name: "Portland Short Track Series")
+
+      person = FactoryGirl.create(:person)
+      event = FactoryGirl.create(:event, parent: weekly_series)
+      event.races.create!(category: Category.create!(name: "Category 2 Women 35-44")).results.create!(place: 1, person: person)
+
+      event = FactoryGirl.create(:event, parent: weekly_series)
+      event.races.create!(category: Category.create!(name: "Elite/Category 1 Women")).results.create!(place: 13, person: person)
+
+      PortlandShortTrackSeries::Overall.calculate!
+
+      overall = PortlandShortTrackSeries::Overall.first
+
+      race = overall.races.detect { |r| r.name == "Category 2 Women 35-44" }
+      assert_equal 1, race.results.size
+      assert_equal 100, race.results.first.points
+
+      race = overall.races.detect { |r| r.name == "Elite/Category 1 Women" }
+      assert_equal 1, race.results.size
+      assert_equal 70, race.results.first.points
     end
 
     test "group_results_by_team_standings_categories" do
