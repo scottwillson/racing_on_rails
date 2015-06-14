@@ -150,6 +150,7 @@ class PeopleController < ApplicationController
     end
 
     if @person.update(person_params)
+      set_created_by @person
       flash[:notice] = "Created your new login"
       PersonSession.create @person
       PersonMailer.new_login_confirmation(@person).deliver rescue nil
@@ -174,6 +175,14 @@ class PeopleController < ApplicationController
       @people = Person.name_like(@name[0, 32]).page(page)
     else
       @people = Person.none
+    end
+  end
+
+  def set_created_by(person)
+    first_version = person.versions(true).first
+    if first_version.user.nil?
+      first_version.user = person
+      first_version.save!
     end
   end
 

@@ -21,6 +21,9 @@ class LoginTest < ActionController::TestCase
     assert_redirected_to root_path
 
     assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    person = Person.last
+    assert_equal 1, person.versions(true).size
+    assert_equal person, person.created_by, "created_by not set for #{person.versions.first.inspect}"
   end
 
   test "create login with token" do
