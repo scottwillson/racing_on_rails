@@ -22,7 +22,7 @@
     <%= link_to person.created_at.to_s(:long_and_friendly), person_versions_path(person) %>
   </td>
   <td class="orders numeric">
-    <%= person.orders.count if person.orders.count > 0 && person.respond_to?(:orders) %>
+    <%= person.orders.count if person.respond_to?(:orders) && person.orders.count > 0 %>
   </td>
   <td class="results numeric">
     <%= (link_to person.results.count, person_results_path(person)) if person.results.count > 0 %>
