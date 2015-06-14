@@ -1,0 +1,25 @@
+<% @page_title = "Similar People" %>
+
+<h2>Similar People</h2>
+
+<div class="row">
+  <div class="col-sm-12">
+    <%= table class: "people", collection: @people, columns: 4, id: :people do %>
+      <thead>
+        <tr>
+          <th class="icon"></th>
+          <th class="name">Name</th>
+          <th class="team">Team</th>
+          <th class="age">Age</th>
+          <th class="license">Lic</th>
+          <th class="city">City</th>
+          <th class="created_by">Created By</th>
+          <th class="created_at">Created At</th>
+          <th class="orders numeric">Orders</th>
+          <th class="results numeric">Results</th>
+        </tr>
+      </thead>
+      <%= render partial: "similar_people/person", collection: @people %>
+    <% end -%>
+  </div>
+</div>

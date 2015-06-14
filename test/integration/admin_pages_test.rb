@@ -2,7 +2,7 @@ require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
 class AdminPagesTest < RacingOnRails::IntegrationTest
-  test "events" do
+  test "admin pages" do
     if RacingAssociation.current.ssl?
       FactoryGirl.create(:administrator)
       https! false
@@ -18,6 +18,9 @@ class AdminPagesTest < RacingOnRails::IntegrationTest
       assert_redirected_to "https://www.example.com/admin/events"
 
       get admin_events_path
+      assert_response :success
+
+      get similar_people_path
       assert_response :success
     end
   end

@@ -228,6 +228,9 @@ Rails.application.routes.draw do
     get '/schedule/:discipline' => 'schedule#index', constraints: { discipline: /[^\d]+/ }
     get '/sanctioning_organization/:sanctioning_organization/schedule' => 'schedule#index', as: "schedule_sanctioning_organization"
     get '/schedule' => 'schedule#index', as: :schedule
+
+    resources :similar_people
+
     get '/region/:region(/:year)/schedule' => 'schedule#index', as: "schedule_region", constraints: { year: /\d\d\d\d/ }
     resources :single_day_events
     get '/teams/:team_id/results' => 'results#team'

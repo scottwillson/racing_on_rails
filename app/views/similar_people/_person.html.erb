@@ -1,0 +1,30 @@
+<%= content_tag :tr, class: "person_row", id: "person_#{person.id}_row", "data-id" => person.id do %>
+  <td class="icon"><div class="person_icon" id="person_<%= person.id %>" data-name="<%= person.name %>" data-id="<%= person.id %>"><span class="glyphicon glyphicon-user"></span></div></td>
+  <td class="name">
+    <%= link_to person.name, edit_admin_person_path(person) %>
+  </td>
+  <td class="team">
+    <%= person.team_name %>
+  </td>
+  <td class="age">
+    <%= person.racing_age %>
+  </td>
+  <td class="license">
+    <%= person.license %>
+  </td>
+  <td class="city">
+    <%= person.city %>
+  </td>
+  <td class="created_by">
+    <%= person.created_by.try(:name) %>
+  </td>
+  <td class="created_at">
+    <%= link_to person.created_at.to_s(:long_and_friendly), person_versions_path(person) %>
+  </td>
+  <td class="orders numeric">
+    <%= person.orders.count if person.orders.count > 0 %>
+  </td>
+  <td class="results numeric">
+    <%= (link_to person.results.count, person_results_path(person)) if person.results.count > 0 %>
+  </td>
+<% end %>
