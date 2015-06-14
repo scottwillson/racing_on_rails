@@ -3,20 +3,26 @@ class SimilarPerson
 
   attr_accessor :id, :name
 
-  def self.all
-    names = names_shared_by_multiple_people
-    names = newest_shared_names(names)
+  def self.all(limit = 20)
     # Hash of people, keyed by name
-    people = all_in_names_grouped_by_name(names)
+    people = all_in_names_grouped_by_name(limit)
     people = sort_people_by_created_at(people)
     people = sort_names_by_created_at(people)
     flatten_people_groups(people)
+  end
+
+  def self.all_in_names_grouped_by_name(limit)
+    names = names_shared_by_multiple_people
+    names = newest_shared_names(names, limit)
+
+    Person.includes(:team, {versions: :user}).where(name: names).group_by { |p| p.name.downcase }
   end
 
   def self.names_shared_by_multiple_people
     Person.
       where("name is not null").
       where("name !=''").
+      where("name !='?'").
       group(:name).
       having("count(name) > 1").
       pluck(:name).
@@ -24,17 +30,13 @@ class SimilarPerson
       uniq
   end
 
-  def self.newest_shared_names(names)
+  def self.newest_shared_names(names, limit)
     Person.
       where(name: names).
       order("created_at desc").
       pluck(:name).
       map(&:downcase).
-      first(20)
-  end
-
-  def self.all_in_names_grouped_by_name(names)
-    Person.includes(:team, {versions: :user}).where(name: names).group_by { |p| p.name.downcase }
+      first(limit)
   end
 
   def self.sort_people_by_created_at(people)
