@@ -77,15 +77,19 @@ class PeopleController < ApplicationController
       @person = Person.find_using_perishable_token(params[:id])
       if @person.nil?
         flash[:notice] = "Can't create new login from that link. Please email #{RacingAssociation.current.email}."
+        ActiveSupport::Notifications.instrument "invalid_token.login.people.racing_on_rails", token: params[:id]
         return redirect_to(login_path)
       end
+
       if @person.login.present?
         flash[:notice] = "You already have a login of '#{@person.login}'. <a href=\"/password_resets/new\" class=\"obvious\">Forgot your password?</a>"
+        ActiveSupport::Notifications.instrument "duplicate_login.login.people.racing_on_rails", login: @person.login
         return redirect_to(login_path)
       end
 
       if @person.update(person_params)
         @person.reset_perishable_token!
+        ActiveSupport::Notifications.instrument "create_for_existing_person.login.people.racing_on_rails", login: person_params[:login]
         flash[:notice] = "Created your new login"
         PersonMailer.new_login_confirmation(@person).deliver rescue nil
         return redirect_to(edit_person_path(@person))
@@ -152,6 +156,7 @@ class PeopleController < ApplicationController
     if @person.update(person_params)
       set_created_by @person
       flash[:notice] = "Created your new login"
+      ActiveSupport::Notifications.instrument "create_person.login.people.racing_on_rails", login: person_params[:login]
       PersonSession.create @person
       PersonMailer.new_login_confirmation(@person).deliver rescue nil
       if @return_to.present?
