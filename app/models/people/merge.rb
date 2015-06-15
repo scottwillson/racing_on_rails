@@ -31,6 +31,8 @@ module People
 
         Person.transaction do
           self.merge_version do
+            before_merge other_person
+
             if login.blank? && other_person.login.present?
               self.login = other_person.login
               self.crypted_password = other_person.crypted_password
@@ -69,7 +71,7 @@ module People
 
             Person.delete other_person.id
             existing_alias = aliases.detect{ |a| a.name.casecmp(other_person.name) == 0 }
-            if existing_alias.nil? and Person.find_all_by_name(other_person.name).empty?
+            if existing_alias.nil? && Person.find_all_by_name(other_person.name).empty?
               aliases.create(name: other_person.name)
             end
           end
@@ -89,6 +91,11 @@ module People
 
     def merge?(other_person)
       other_person.nil? || other_person == self || other_people_with_same_name? || other_person.other_people_with_same_name?
+    end
+
+    # Callback
+    def before_merge(other_person)
+      true
     end
   end
 end
