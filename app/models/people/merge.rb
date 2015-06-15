@@ -2,6 +2,56 @@ module People
   module Merge
     extend ActiveSupport::Concern
 
+    MERGE_ATTRIBUTES = [
+      :billing_city,
+      :billing_country_code,
+      :billing_first_name,
+      :billing_last_name,
+      :billing_state,
+      :billing_street,
+      :billing_zip,
+      :bmx_category,
+      :card_brand,
+      :card_expires_on,
+      :card_printed_at,
+      :ccx_category,
+      :ccx_only,
+      :club_name,
+      :country_code,
+      :dh_category,
+      :email,
+      :emergency_contact,
+      :emergency_contact_phone,
+      :gender,
+      :home_phone,
+      :license,
+      :license_expiration_date,
+      :license_type,
+      :membership_address_is_billing_address,
+      :membership_card,
+      :member_from,
+      :member_to,
+      :member_usac_to,
+      :mtb_category,
+      :ncca_club_name,
+      :non_member_result_id,
+      :occupation,
+      :official,
+      :official_interest,
+      :print_card,
+      :race_promotion_interest,
+      :road_category,
+      :status,
+      :street,
+      :team_interest,
+      :track_category,
+      :volunteer_interest,
+      :wants_email,
+      :wants_mail,
+      :work_phone,
+      :zip
+    ]
+
     # Moves another people' aliases, results, and race numbers to this person,
     # and delete the other person.
     # Also adds the other people' name as a new alias
@@ -47,8 +97,10 @@ module People
               self.member_to = other_person.member_to
             end
 
-            if license.blank?
-              self.license = other_person.license
+            MERGE_ATTRIBUTES.each do |attribute|
+              if send(attribute).blank? && other_person.send(attribute).present?
+                send("#{attribute}=", other_person.send(attribute))
+              end
             end
 
             save!
