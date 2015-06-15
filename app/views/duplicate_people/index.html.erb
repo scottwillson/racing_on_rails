@@ -1,0 +1,87 @@
+<% @page_title = "Duplicate People" %>
+
+<h2>Duplicate People</h2>
+
+<div class="row">
+  <div class="col-sm-10">
+    Remove: mark as different people with the same name. Remove from this view and prevent merges.
+  </div>
+  <div class="col-sm-2 text-right">
+    <a href="javascript:location.reload()" class="obvious">Reload</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <table class="base table people" id="people">
+      <thead>
+        <tr>
+          <th class="icon"></th>
+          <th class="name">Name</th>
+          <th class="team">Team</th>
+          <th class="age">Age</th>
+          <th class="license">Lic</th>
+          <th class="city">City</th>
+          <th class="created_at date">Created At</th>
+          <th class="created_by">Created By</th>
+          <th class="orders numeric">Orders</th>
+          <th class="results numeric">Results</th>
+          <th class="actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% previous = nil %>
+        <% row_class = "odd" %>
+        <% @people.each do |person| %>
+          <% if previous.nil? || previous.name != person.name
+               previous = person
+               if row_class == "odd"
+                 row_class = "even"
+               else
+                 row_class = "odd"
+               end
+             end %>
+          <%= content_tag :tr, class: "person_row #{row_class}", id: "person_#{person.id}_row", "data-id" => person.id, "data-name" => person.name.downcase do %>
+            <td class="icon"><div class="person_icon" id="person_<%= person.id %>" data-name="<%= person.name %>" data-id="<%= person.id %>"><span class="glyphicon glyphicon-user"></span></div></td>
+            <td class="name">
+              <%= link_to person.name, edit_admin_person_path(person) %>
+            </td>
+            <td class="team">
+              <%= person.team_name %>
+            </td>
+            <td class="age">
+              <%= person.racing_age %>
+            </td>
+            <td class="license">
+              <%= person.license %>
+            </td>
+            <td class="city">
+              <%= person.city %>
+            </td>
+            <td class="created_at date">
+              <%= link_to person.created_at.to_s(:mdY), person_versions_path(person) %>
+            </td>
+            <td class="created_by">
+              <%= person.created_by.try(:name) %>
+            </td>
+            <td class="orders numeric">
+              <%= person.orders.count if person.respond_to?(:orders) && person.orders.count > 0 %>
+            </td>
+            <td class="results numeric">
+              <%= (link_to person.results.count, person_results_path(person)) if person.results.count > 0 %>
+            </td>
+            <td class="actions">
+              <%= link_to "Remove", duplicate_person_path(id: person.name), method: :delete, remote: true %>
+            </td>
+          <% end %>
+        <% end %>
+
+        <%- if @people.empty? -%>
+        <tr>
+          <td colspan="8" class="empty">No duplicates</td>
+        </tr>
+        <%- end -%>
+      </tbody>
+    </table>
+  </div>
+</div>

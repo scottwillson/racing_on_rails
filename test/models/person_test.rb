@@ -75,6 +75,14 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
   end
 
+  test "do not merge other people with same name" do
+    person_1 = FactoryGirl.create(:person, name: "Molly Cameron", other_people_with_same_name: true)
+    person_2 = FactoryGirl.create(:person, name: "Molly Cameron")
+
+    assert !person_1.merge(person_2)
+    assert !person_2.merge(person_1)
+  end
+
   test "merge" do
     FactoryGirl.create(:number_issuer)
     FactoryGirl.create(:discipline, name: "Road")
@@ -892,17 +900,17 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal "7890", person.number(circuit_race), "Circuit race number"
   end
 
-  test "people with same name" do
+  test "other people with same name" do
     molly = FactoryGirl.create(:person, name: "Molly Cameron")
     molly.aliases.create!(name: "Mollie Cameron")
 
-    assert_equal([], molly.people_with_same_name, "No other people named 'Molly Cameron'")
+    assert_equal([], molly.other_people_with_same_name, "No other people named 'Molly Cameron'")
 
     person = FactoryGirl.create(:person, name: "Mollie Cameron")
-    assert_equal([], molly.people_with_same_name, "No other people named 'Mollie Cameron'")
+    assert_equal([], molly.other_people_with_same_name, "No other people named 'Mollie Cameron'")
 
     Person.create!(name: "Mollie Cameron")
-    assert_equal(1, person.people_with_same_name.size, "Other people named 'Mollie Cameron'")
+    assert_equal(1, person.other_people_with_same_name.size, "Other people named 'Mollie Cameron'")
   end
 
   test "dh number with no downhill discipline" do

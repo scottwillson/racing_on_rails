@@ -18,7 +18,7 @@ module People
         other_name: other_person.try(:name)
       ) do
 
-        if other_person.nil? || other_person == self
+        if merge?(other_person)
           ActiveSupport::Notifications.instrument(
             "failure.merge.people.admin.racing_on_rails",
             person_id: id,
@@ -85,6 +85,10 @@ module People
 
         true
       end
+    end
+
+    def merge?(other_person)
+      other_person.nil? || other_person == self || other_people_with_same_name? || other_person.other_people_with_same_name?
     end
   end
 end

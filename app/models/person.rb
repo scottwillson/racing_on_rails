@@ -46,7 +46,6 @@ class Person < ActiveRecord::Base
   has_many :results
   belongs_to :team
 
-
   attr_accessor :year
 
   CATEGORY_FIELDS = [ :bmx_category, :ccx_category, :dh_category, :mtb_category, :road_category, :track_category ]

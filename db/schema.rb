@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150614143420) do
+ActiveRecord::Schema.define(version: 20150614235447) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "order_id"
@@ -550,6 +550,7 @@ ActiveRecord::Schema.define(version: 20150614143420) do
     t.boolean  "official",                                          default: false, null: false
     t.integer  "non_member_result_id"
     t.string   "name",                                              default: "",    null: false
+    t.boolean  "other_people_with_same_name",                       default: false, null: false
   end
 
   add_index "people", ["crypted_password"], name: "index_people_on_crypted_password", using: :btree

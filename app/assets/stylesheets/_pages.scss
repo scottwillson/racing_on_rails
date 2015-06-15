@@ -608,7 +608,12 @@ table.people div.aliases {
 .table-striped tbody tr:nth-child(even).hovering td,
 .table-striped tbody tr:nth-child(odd).hovering td,
 .table-striped.hovering tbody tr:nth-child(even) td,
-.table-striped.hovering tbody tr:nth-child(odd) td {
+.table-striped.hovering tbody tr:nth-child(odd) td,
+.table tbody tr:nth-child(even).hovering td,
+.table tbody tr:nth-child(odd).hovering td,
+.table.hovering tbody tr:nth-child(even) td,
+.table.hovering tbody tr:nth-child(odd) td 
+{
   border-color: $highlight-color;
   background-color: lighten($highlight-color, 33);
 }

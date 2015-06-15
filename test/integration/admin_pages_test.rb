@@ -20,7 +20,7 @@ class AdminPagesTest < RacingOnRails::IntegrationTest
       get admin_events_path
       assert_response :success
 
-      get similar_people_path
+      get duplicate_people_path
       assert_response :success
     end
   end
