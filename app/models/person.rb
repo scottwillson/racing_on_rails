@@ -93,7 +93,7 @@ class Person < ActiveRecord::Base
 
   # Find Person with most recent. If no results, select the most recently updated Person.
   def self.select_by_recent_activity(people)
-    results = people.to_a.inject([]) { |r, person| r + person.results }
+    results = people.map(&:results).flatten
     if results.empty?
       people.to_a.sort_by(&:updated_at).last
     else
