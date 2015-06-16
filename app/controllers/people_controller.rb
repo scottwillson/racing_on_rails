@@ -230,7 +230,6 @@ class PeopleController < ApplicationController
       :occupation,
       :official,
       :official_interest,
-      :other_people_with_same_name,
       :password,
       :password_confirmation,
       :race_promotion_interest,
