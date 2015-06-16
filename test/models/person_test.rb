@@ -98,7 +98,8 @@ class PersonTest < ActiveSupport::TestCase
       official_interest: false,
       created_at: 1.week.ago,
       print_card: true,
-      race_promotion_interest: true
+      race_promotion_interest: true,
+      team: nil
     )
     person_to_keep.aliases.create!(name: "Mollie Cameron")
     person_to_keep_old_password = person_to_keep.crypted_password
@@ -106,6 +107,7 @@ class PersonTest < ActiveSupport::TestCase
     FactoryGirl.create(:result, person: person_to_keep)
     FactoryGirl.create(:result, person: person_to_keep)
 
+    team = FactoryGirl.create(:team, name: "Gentle Lovers")
     person_to_merge = FactoryGirl.create(
       :person,
       member_to: Time.zone.local(2008, 12, 31),
@@ -114,7 +116,8 @@ class PersonTest < ActiveSupport::TestCase
       membership_address_is_billing_address: false,
       official_interest: true,
       print_card: false,
-      race_promotion_interest: true
+      race_promotion_interest: true,
+      team: team
     )
     person_to_merge.race_numbers.create!(value: "102")
     person_to_merge.race_numbers.create!(year: 2004, value: "104")
@@ -181,6 +184,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal false, person_to_keep.official_interest, "should preserve booleans in person to keep"
     assert_equal true, person_to_keep.print_card, "should preserve booleans in person to keep"
     assert_equal true, person_to_keep.race_promotion_interest, "should preserve booleans in person to keep"
+    assert_equal "Gentle Lovers", person_to_keep.team_name, "should set team from person to merge"
 
     assert_equal 3, person_to_keep.versions.size, "versions in #{person_to_keep.versions}"
     assert_equal [ 2, 3, 4 ], person_to_keep.versions.map(&:number).sort, "version numbers"
