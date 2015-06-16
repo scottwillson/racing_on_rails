@@ -94,7 +94,11 @@ class PersonTest < ActiveSupport::TestCase
       state: "CT",
       road_number: "202",
       member_from: Time.zone.local(1996),
-      created_at: 1.week.ago
+      membership_address_is_billing_address: false,
+      official_interest: false,
+      created_at: 1.week.ago,
+      print_card: true,
+      race_promotion_interest: true
     )
     person_to_keep.aliases.create!(name: "Mollie Cameron")
     person_to_keep_old_password = person_to_keep.crypted_password
@@ -102,7 +106,16 @@ class PersonTest < ActiveSupport::TestCase
     FactoryGirl.create(:result, person: person_to_keep)
     FactoryGirl.create(:result, person: person_to_keep)
 
-    person_to_merge = FactoryGirl.create(:person, member_to: Time.zone.local(2008, 12, 31), city: "Middletown", license: "7123811")
+    person_to_merge = FactoryGirl.create(
+      :person,
+      member_to: Time.zone.local(2008, 12, 31),
+      city: "Middletown",
+      license: "7123811",
+      membership_address_is_billing_address: false,
+      official_interest: true,
+      print_card: false,
+      race_promotion_interest: true
+    )
     person_to_merge.race_numbers.create!(value: "102")
     person_to_merge.race_numbers.create!(year: 2004, value: "104")
     FactoryGirl.create(:result, person: person_to_merge)
@@ -164,6 +177,10 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal "7123811", person_to_keep.license, "license"
     assert_equal "Middletown", person_to_keep.city, "should update city from newer person to merge"
     assert_equal "CT", person_to_keep.state, "should preserve state in person to keep"
+    assert_equal false, person_to_keep.membership_address_is_billing_address, "should preserve booleans in person to keep"
+    assert_equal false, person_to_keep.official_interest, "should preserve booleans in person to keep"
+    assert_equal true, person_to_keep.print_card, "should preserve booleans in person to keep"
+    assert_equal true, person_to_keep.race_promotion_interest, "should preserve booleans in person to keep"
 
     assert_equal 3, person_to_keep.versions.size, "versions in #{person_to_keep.versions}"
     assert_equal [ 2, 3, 4 ], person_to_keep.versions.map(&:number).sort, "version numbers"
