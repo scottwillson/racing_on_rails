@@ -100,10 +100,14 @@ module People
               end
             end
 
+            if date_of_birth && other_person.date_of_birth && date_of_birth.day == 1
+              self.date_of_birth = Time.zone.local(date_of_birth.year, date_of_birth.month, other_person.date_of_birth.day)
+            end
+
             save!
             aliases << other_person.aliases
             editor_requests << other_person.editor_requests
-            editors << other_person.editors
+            editors << (other_person.editors - editors).uniq.reject { |e| e == self }
             events << other_person.events
             names << other_person.names
             race_numbers << other_person.race_numbers
