@@ -29,8 +29,10 @@ module Results
           existing_people = find_people
           if existing_people.size == 1
             self.person = existing_people.first
+            ActiveSupport::Notifications.instrument "single_match.set_person.results.racing_on_rails", place: place, event_id: event_id, race_id: race_id, name: person_name
           elsif existing_people.size > 1
             self.person = Person.select_by_recent_activity(existing_people)
+            ActiveSupport::Notifications.instrument "select_by_recent_activity.set_person.results.racing_on_rails", id: id, name: person_name
           end
         end
       end
@@ -44,18 +46,24 @@ module Results
       matches = Set.new
 
       matches = eager_find_person_by_license(matches)
+      ActiveSupport::Notifications.instrument "eager_find_person_by_license.set_person.results.racing_on_rails", place: place, event_id: event_id, race_id: race_id, name: person_name, count: matches.size, license: license
       return matches if matches.size == 1
 
       matches = find_person_by_name(matches)
+      ActiveSupport::Notifications.instrument "find_person_by_name.set_person.results.racing_on_rails", place: place, event_id: event_id, race_id: race_id, name: person_name, count: matches.size
       return matches if matches.size == 1
 
       matches = find_person_by_number(matches)
+      ActiveSupport::Notifications.instrument "find_person_by_number.set_person.results.racing_on_rails", place: place, event_id: event_id, race_id: race_id, name: person_name, count: matches.size, number: number
       return matches if matches.size == 1
 
       matches = find_person_by_team_name(matches)
+      ActiveSupport::Notifications.instrument "find_person_by_team_name.set_person.results.racing_on_rails", place: place, event_id: event_id, race_id: race_id, name: person_name, count: matches.size, team_name: team_name
       return matches if matches.size == 1
 
-      find_person_by_license(matches)
+      matches = find_person_by_license(matches)
+      ActiveSupport::Notifications.instrument "find_person_by_license.set_person.results.racing_on_rails", place: place, event_id: event_id, race_id: race_id, name: person_name, count: matches.size, license: license
+      matches
     end
 
     # license first if present and source is reliable (USAC)
