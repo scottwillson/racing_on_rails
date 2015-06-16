@@ -16,6 +16,7 @@ module People
       :card_printed_at,
       :ccx_category,
       :ccx_only,
+      :cell_fax,
       :city,
       :club_name,
       :country_code,
@@ -39,6 +40,7 @@ module People
       :official,
       :road_category,
       :status,
+      :state,
       :street,
       :team_id,
       :track_category,
@@ -100,10 +102,13 @@ module People
 
             save!
             aliases << other_person.aliases
+            editor_requests << other_person.editor_requests
+            editors << other_person.editors
             events << other_person.events
             names << other_person.names
-            results << other_person.results
             race_numbers << other_person.race_numbers
+            results << other_person.results
+            roles << other_person.roles
 
             begin
               versions << other_person.versions
