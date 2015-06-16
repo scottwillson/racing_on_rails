@@ -16,6 +16,7 @@ module People
       :card_printed_at,
       :ccx_category,
       :ccx_only,
+      :city,
       :club_name,
       :country_code,
       :dh_category,
@@ -29,8 +30,6 @@ module People
       :license_type,
       :membership_address_is_billing_address,
       :membership_card,
-      :member_from,
-      :member_to,
       :member_usac_to,
       :mtb_category,
       :ncca_club_name,
@@ -97,8 +96,9 @@ module People
               self.member_to = other_person.member_to
             end
 
+            other_person_is_newer = other_person.created_at > created_at
             MERGE_ATTRIBUTES.each do |attribute|
-              if send(attribute).blank? && other_person.send(attribute).present?
+              if other_person.send(attribute).present? && (send(attribute).blank? || other_person_is_newer)
                 send("#{attribute}=", other_person.send(attribute))
               end
             end
