@@ -140,9 +140,9 @@ module People
           other_id: other_person.try(:id),
           other_name: other_person.try(:name),
         )
-
-        true
       end
+
+      true
     end
 
     def merge?(other_person)
