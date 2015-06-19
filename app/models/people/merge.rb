@@ -105,6 +105,13 @@ module People
             end
 
             save!
+
+            # save! can trigger automatic deletion for people created for old orders
+            # if that happens, don't try and merge associations
+            if !Person.exists?(id)
+              return true
+            end
+
             aliases << other_person.aliases
             editor_requests << other_person.editor_requests
             editors << (other_person.editors - editors).uniq.reject { |e| e == self }
