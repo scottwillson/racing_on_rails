@@ -6,7 +6,7 @@ class DeleteJunkNames < ActiveRecord::Migration
       !p.name[" "] &&
       p.results.count == 0 &&
       (!p.respond_to?(:orders) || p.orders.count == 0) &&
-      (!p.respond_to?(:line_items) || p.orders.line_items == 0) &&
+      (!p.respond_to?(:line_items) || p.line_items == 0) &&
       p.city.blank? &&
       p.home_phone.blank? &&
       p.team_name.blank? &&

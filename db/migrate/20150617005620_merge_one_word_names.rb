@@ -8,9 +8,11 @@ class MergeOneWordNames < ActiveRecord::Migration
           say "Merge #{name}"
           original = people.first
           people.each do |p|
-            original = Person.find(original.id)
-            if p != original && p.license.blank?
-              original.merge(Person.find(p.id))
+            if Person.exists?(original.id) && Person.exists?(p.id)
+              original = Person.find(original.id)
+              if p != original && p.license.blank?
+                original.merge(Person.find(p.id))
+              end
             end
           end
         end
