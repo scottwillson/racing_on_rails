@@ -101,24 +101,33 @@ module Results
     end
 
     def find_person_by_team_name(matches)
-      unless team_name.blank?
-        team = Team.find_by_name_or_alias(team_name)
-        matches.reject! do |match|
-          match.team != team
-        end
-      end
+      return matches if team_name.blank?
 
-      matches
+      team = Team.find_by_name_or_alias(team_name)
+      return matches unless team
+
+      team_name_matches = matches.select { |m| m.team_id == team.id }
+
+      if team_name_matches.size == 0
+        # None of the potential matches are on the result's team:
+        # don't reject anyone
+        matches
+      else
+        team_name_matches
+      end
     end
 
+    # Licenses *should* be uniq but this hasn't been enforced in the DB
     def find_person_by_license(matches)
-      unless self.license.blank?
-        matches.reject! do |match|
-          match.license != license
-        end
-      end
+      return matches if license.blank?
 
-      matches
+      license_matches = matches.select { |m| m.license == license }
+
+      if license_matches.size == 0
+        matches
+      else
+        license_matches
+      end
     end
 
     def update_membership
