@@ -8,7 +8,10 @@ class MergePeopleWithSwappedFirstAndLastNames < ActiveRecord::Migration
           Person.where(first_name: person.last_name).where(last_name: person.first_name).exists?
 
           Person.where(first_name: person.last_name).where(last_name: person.first_name).each do |to_merge|
-            if to_merge.license.blank? && person.results.count > to_merge.results.count && to_merge.orders.count == 0
+            if to_merge.license.blank? &&
+               person.results.count > to_merge.results.count &&
+               (!to_merge.respond_to?(:orders) || to_merge.orders.count == 0)
+
               say "Merge #{to_merge.name} => #{person.name} (created by #{to_merge.created_by.try(&:name)})"
               Person.find(person.id).merge(Person.find(to_merge))
             end
