@@ -104,6 +104,9 @@ module People
               self.date_of_birth = Time.zone.local(date_of_birth.year, date_of_birth.month, other_person.date_of_birth.day)
             end
 
+            # Prevent unique index collision
+            other_person.update_column :license, nil
+
             save!
 
             # save! can trigger automatic deletion for people created for old orders

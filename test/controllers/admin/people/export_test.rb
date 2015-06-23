@@ -30,7 +30,7 @@ module Admin
           FactoryGirl.create(:person, name: "Molly Cameron", team_name: "Vanilla", member_from: Time.zone.local(1999).beginning_of_year, member_to: Time.zone.now.end_of_year.to_date, gender: "F", road_number: "202")
           FactoryGirl.create(:person, name: "Kevin Con'Condron", license: "576", team_name: "Gentle Lovers", member_from: Time.zone.local(2000), member_to: Time.zone.local(2011).end_of_year.to_date, email: "kc@example.com")
           FactoryGirl.create(:person, name: "Bob Jones", member_from: Time.zone.local(2009), member_to: Time.zone.local(2009).end_of_year.to_date, email: "member@example.com")
-          FactoryGirl.create(:person, name: "Mark Matson", license: "576", member_from: Time.zone.local(1999), member_to: Time.zone.now.end_of_year.to_date, team_name: "Kona", email: "mcfatson@gentlelovers.com", gender: "M", road_number: "340")
+          FactoryGirl.create(:person, name: "Mark Matson", license: "578", member_from: Time.zone.local(1999), member_to: Time.zone.now.end_of_year.to_date, team_name: "Kona", email: "mcfatson@gentlelovers.com", gender: "M", road_number: "340")
           administrator = FactoryGirl.create(:administrator, member_from: nil, member_to: nil)
           PersonSession.create(administrator)
           FactoryGirl.create(:person, name: "Alice Pennington", team_name: "Gentle Lovers", member_from: Time.zone.local(1999), member_to: Time.zone.now.end_of_year.to_date, road_number: "230", gender: "F")
@@ -58,7 +58,7 @@ module Admin
             "	Molly	Cameron	Vanilla	1/1/1999	12/31/2012	0	0		0							0		0				F								202					0	0	0	0	11/1/2012	11/1/2012\n",
             "576	Kevin	Con'Condron	Gentle Lovers	1/1/2000	12/31/2011	0	0		0							0	kc@example.com	0																	0	0	0	0	11/1/2012	11/1/2012\n",
             "	Bob	Jones		1/1/2009	12/31/2009	0	0		0							0	member@example.com	0																	0	0	0	0	11/1/2012	11/1/2012\n",
-            "576	Mark	Matson	Kona	1/1/1999	12/31/2012	0	0		0							0	mcfatson@gentlelovers.com	0				M								340					0	0	0	0	11/1/2012	11/1/2012\n",
+            "578	Mark	Matson	Kona	1/1/1999	12/31/2012	0	0		0							0	mcfatson@gentlelovers.com	0				M								340					0	0	0	0	11/1/2012	11/1/2012\n",
             "	Candi	Murray				0	0		0							0	admin@example.com	0	(503) 555-1212																0	0	0	0	11/1/2012	11/1/2012\n",
             "	Alice	Pennington	Gentle Lovers	1/1/1999	12/31/2012	0	0		0							0		0				F								230					0	0	0	0	11/1/2012	11/1/2012\n",
             "	Non	Results				0	0		0							0		0																	0	0	0	0	11/1/2012	11/1/2012\n",
@@ -132,4 +132,3 @@ module Admin
     end
   end
 end
-
