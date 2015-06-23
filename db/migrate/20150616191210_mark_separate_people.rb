@@ -149,7 +149,8 @@ class MarkSeparatePeople < ActiveRecord::Migration
       "brian martin",
       "brian jones",
       "brian evans",
-      "andrew scott"
+      "andrew scott",
+      "Eric Thompson"
     ]
 
     Person.where(name: names).update_all(other_people_with_same_name: true)
