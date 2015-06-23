@@ -3,7 +3,7 @@ class FixDupeLicenses < ActiveRecord::Migration
     Person.current = RacingAssociation.current.person
 
     Person.transaction do
-      Person.where(license: "").update_all(license: nil)
+      Person.where(license: [ "", "license", "0", "pending" ]).update_all(license: nil)
 
       licenses = Person.
                   where("license is not null").
