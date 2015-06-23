@@ -13,7 +13,7 @@ class FixDupeLicenses < ActiveRecord::Migration
                   pluck(:license)
 
       Person.where(license: licenses).includes(:versions).group_by { |p| p.license.to_i }.each do |license, people|
-        most_recent_member = people.select(&:member_to).sort_by(&:member_to).last
+        most_recent_member = people.select(&:member_to).sort_by(&:member_to).last || people.last
         say "#{most_recent_member.name} keeps license #{license}"
         (people - [ most_recent_member ]).each do |person|
           say "#{person.name} license set to blank"
