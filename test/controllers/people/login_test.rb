@@ -15,7 +15,8 @@ class LoginTest < ActionController::TestCase
            login: "racer@example.com",
            password: "secret",
            password_confirmation: "secret",
-           email: "racer@example.com"
+           email: "racer@example.com",
+           license: ""
           },
          return_to: root_path
     assert_redirected_to root_path
@@ -55,7 +56,8 @@ class LoginTest < ActionController::TestCase
            name: "Bike Racer",
            password: "secret",
            password_confirmation: "secret",
-           email: "racer@example.com"
+           email: "racer@example.com",
+           license: ""
           },
          return_to: root_path
     assert_redirected_to root_path

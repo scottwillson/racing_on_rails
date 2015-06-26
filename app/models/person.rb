@@ -38,6 +38,8 @@ class Person < ActiveRecord::Base
 
   before_validation :find_associated_records
   before_validation :set_membership_dates
+  before_save { |r| r.license = nil if license.blank? }
+  validates_uniqueness_of :license, allow_nil: true, allow_blank: true
   validate :membership_dates
   before_destroy :ensure_no_results
 

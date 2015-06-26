@@ -1285,6 +1285,11 @@ class PersonTest < ActiveSupport::TestCase
     assert person.promoter?, "Editors should be considered promoters"
   end
 
+  test "blank licenses" do
+    Person.create!(license: "")
+    Person.create!(license: "")
+  end
+
   def assert_renew(now, member_from, member_to, expected_member_from, expected_member_to)
     now = now.to_date
     person = Person.new
