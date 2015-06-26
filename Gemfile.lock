@@ -477,6 +477,3 @@ DEPENDENCIES
   will_paginate (~> 3.0)
   will_paginate-bootstrap
   yui-compressor
-
-BUNDLED WITH
-   1.10.4
