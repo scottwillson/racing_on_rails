@@ -199,6 +199,7 @@ module Competitions
           "parents_events_2.bar_points as parent_parent_bar_points",
           "people.gender as person_gender",
           "people.name as person_name",
+          "points_factor",
           "races.bar_points as race_bar_points",
           "results.#{participant_id_attribute} as participant_id",
           "results.event_id",
@@ -214,6 +215,7 @@ module Competitions
         joins("left outer join events parents_events on parents_events.id = events.parent_id").
         joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
         joins("left outer join categories on categories.id = races.category_id").
+        joins("left outer join competition_event_memberships on results.event_id = competition_event_memberships.event_id and competition_event_memberships.competition_id = #{id}").
         where("results.year = ?", year)
 
       if source_event_types.include?(Event)
@@ -246,6 +248,7 @@ module Competitions
             "parents_events.bar_points as parent_bar_points",
             "parents_events_2.bar_points as parent_parent_bar_points",
             "place",
+            "points_factor",
             "races.bar_points as race_bar_points",
             "results.#{participant_id_attribute} as participant_id",
             "results.event_id",
@@ -260,6 +263,7 @@ module Competitions
           joins(:race, :event, :person).
           joins("left outer join events parents_events on parents_events.id = events.parent_id").
           joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
+          joins("left outer join competition_event_memberships on results.event_id = competition_event_memberships.event_id and competition_event_memberships.competition_id = #{id}").
           where("results.race_id" => upgrade_races).
           # Only include upgrade results for people with category results
           where(
@@ -301,6 +305,7 @@ module Competitions
           parent_parent_bar_points
           person_gender
           person_name
+          points_factor
           race_bar_points
       }
       results.map do |result|

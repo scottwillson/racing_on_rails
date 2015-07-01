@@ -45,6 +45,12 @@ module Competitions
       where("races.category_id" => categories_for(race))
     end
 
+    def after_source_results(results, race)
+      results.each do |result|
+        result["multiplier"] = result["points_factor"] || 1
+      end
+    end
+
     # Only members can score points?
     def members_only?
       false

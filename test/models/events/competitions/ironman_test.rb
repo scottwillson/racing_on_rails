@@ -118,6 +118,7 @@ module Competitions
         "parent_parent_bar_points" => nil,
         "person_gender" => nil,
         "person_name"=>"Greg Lemond",
+        "points_factor" => nil,
         "race_bar_points" => nil,
         "participant_id" => 1,
         "event_id" => 1,
