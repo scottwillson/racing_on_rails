@@ -52,6 +52,8 @@ module Results
           "category"
         when :event_date_range_s
           "date hidden-xs"
+        when /time/
+          "time"
         else
           key(column).to_s
         end

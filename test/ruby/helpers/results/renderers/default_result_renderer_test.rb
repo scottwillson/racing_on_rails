@@ -29,6 +29,11 @@ module Results
         assert_equal "Category", DefaultResultRenderer.render_header(column)
       end
 
+      def test_time_css_class
+        column = ColumnStub.new(:time_down)
+        assert_equal "time", DefaultResultRenderer.css_class(column)
+      end
+
       def test_render
         column = stub("column", key: :city)
         row = stub("row", :[] => "Portland")
