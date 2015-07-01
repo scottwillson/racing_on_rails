@@ -6,7 +6,7 @@ require_relative "../../../../../app/helpers/results/renderers/default_result_re
 module Results
   module Renderers
   # :stopdoc:
-    class DefaultColumnRendererTest < Ruby::TestCase
+    class DefaultResultRendererTest < Ruby::TestCase
       class ColumnStub
         attr_reader :key
         def initialize(key)
