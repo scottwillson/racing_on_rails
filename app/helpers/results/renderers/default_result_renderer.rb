@@ -57,6 +57,14 @@ module Results
         end
       end
 
+      def self.render(column, row)
+        if key(column) && key(column)["time"]
+          TimeRenderer.render column, row
+        else
+          super
+        end
+      end
+
       def self.key(column)
         if column.respond_to?(:key)
           column.key

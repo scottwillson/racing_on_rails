@@ -1,8 +1,6 @@
-require_relative "default_result_renderer"
-
 module Results
   module Renderers
-    class TimeRenderer < Results::Renderers::DefaultResultRenderer
+    class TimeRenderer < DefaultResultRenderer
       def self.render(column, row)
         time = row[key(column)]
         return nil if time.nil?
