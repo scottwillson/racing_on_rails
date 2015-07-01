@@ -19,6 +19,10 @@ module Competitions
       def minimum_events
         2
       end
+
+      def maximum_events(race)
+        6
+      end
     end
 
     test "calculate with no series" do
