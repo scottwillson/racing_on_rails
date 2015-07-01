@@ -4,6 +4,7 @@ module Results
       def self.render(column, row)
         time = row[key(column)]
         return nil if time.nil?
+        return time if time.is_a?(String)
 
         seconds = time % 60
         minutes = (time / 60) % 60
