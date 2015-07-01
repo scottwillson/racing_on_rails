@@ -49,9 +49,5 @@ module Competitions
     def members_only?
       false
     end
-
-    def maximum_events(race)
-      6
-    end
   end
 end
