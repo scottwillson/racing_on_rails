@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150617190957) do
+ActiveRecord::Schema.define(version: 20150702234530) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "order_id"
@@ -557,7 +557,6 @@ ActiveRecord::Schema.define(version: 20150617190957) do
   add_index "people", ["email"], name: "index_people_on_email", using: :btree
   add_index "people", ["first_name"], name: "idx_first_name", using: :btree
   add_index "people", ["last_name"], name: "idx_last_name", using: :btree
-  add_index "people", ["license"], name: "index_people_on_license", unique: true, using: :btree
   add_index "people", ["login"], name: "index_people_on_login", using: :btree
   add_index "people", ["member_from"], name: "index_racers_on_member_from", using: :btree
   add_index "people", ["member_to"], name: "index_racers_on_member_to", using: :btree
