@@ -41,11 +41,11 @@ module Results
       end
 
       def test_render_arbritrary_time
-        column = stub("column", key: :best_time, precision: 0, max: 334)
+        column = stub("column", key: :best_time, precision: 0, cells: [ 334 ])
         row = stub("row", :[] => 334)
         assert_equal "05:34", DefaultResultRenderer.render(column, row), "Columns with 'time' should render as times"
 
-        column = stub("column", key: :time_down, precision: 0, max: 12)
+        column = stub("column", key: :time_down, precision: 0, cells: [ 12 ])
         row = stub("row", :[] => 12)
         assert_equal "12", DefaultResultRenderer.render(column, row), "Columns with 'time' should render as times"
       end
