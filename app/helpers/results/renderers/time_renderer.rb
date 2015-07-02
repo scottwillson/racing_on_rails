@@ -12,7 +12,7 @@ module Results
 
         precision = [ column.precision, 3 ].min
         if precision == 0
-          case column.max
+          case column.cells.compact.map(&:to_i).max
           when 60..3599
             format "%02d:%02d", minutes, seconds
           when 0..59
@@ -23,7 +23,7 @@ module Results
             format "%d:%02d:%02d", hours, minutes, seconds
           end
         else
-          case column.max
+          case column.cells.compact.map(&:to_i).max
           when 60..3599
             format "%02d:%0#{precision + 3}.#{precision}f", minutes, seconds
           when 0..59
