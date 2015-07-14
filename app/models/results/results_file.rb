@@ -66,7 +66,7 @@ module Results
       !row[:place].to_s.upcase.in?(%w{ DNS DQ DNF}) &&
       row.next[:place] &&
       row.next[:place].to_i == 1 &&
-      (row.previous.nil? || result?(row.previous))
+      (row.previous.nil? || row.previous[:place].blank? || result?(row.previous))
     end
 
     def find_or_create_race(row, columns)
@@ -86,6 +86,7 @@ module Results
     end
 
     def result?(row)
+      return false unless row
       return true if row[:place].present? || row[:number].present? || row[:license].present? || row[:team_name].present?
       if !(row[:first_name].blank? && row[:last_name].blank? && row[:name].blank?)
         return true
