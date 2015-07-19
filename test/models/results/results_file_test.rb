@@ -238,9 +238,9 @@ module Results
 
       event = SingleDayEvent.create!(date: Time.zone.today + 3)
       pro_1_2_race = event.races.create! category: Category.find_or_create_by(name: "Pro/1/2")
-      event.races.create! category: Category.find_or_create_by(name: "Cat 3")
-      event.races.create! category: Category.find_or_create_by(name: "Cat 4")
-      event.races.create! category: Category.find_or_create_by(name: "Cat 5")
+      event.races.create! category: Category.find_or_create_by(name: "Category 3"), visible: false
+      event.races.create! category: Category.find_or_create_by(name: "Category 4")
+      event.races.create! category: Category.find_or_create_by(name: "Category 5")
 
       weaver = FactoryGirl.create(:person)
       pro_1_2_race.results.create! place: 1, person: weaver
@@ -248,9 +248,10 @@ module Results
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/small_event.xls", __FILE__)), event)
       results_file.import
 
-      event.reload
+      event = Event.find(event.id)
 
-      assert_equal 5, event.races.count, "Races"
+      assert_equal 5, event.races.size, "Races"
+      assert event.races.all?(&:visible?), "Uploaded races should all be visible"
       [ "Pro/1/2", "Category 3", "Category 4", "Category 5", "Women 1/2" ].each do |cat_name|
         assert event.races.detect { |race| race.name == cat_name }, "Should have race #{cat_name}"
         assert_equal 1, event.races.select { |race| race.name == cat_name }.size, "Should only one of race #{cat_name}"
