@@ -66,7 +66,7 @@ module Results
     # Mostly removes unfortunate punctuation typos
     def cleanup_name(name)
       return name if name.nil?
-      name = name.to_s
+      name = name.to_s.strip
       return '' if name == '0.0'
       return '' if name == '0'
       return '' if name == '.'
