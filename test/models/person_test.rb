@@ -81,6 +81,8 @@ class PersonTest < ActiveSupport::TestCase
 
     assert !person_1.merge(person_2)
     assert !person_2.merge(person_1)
+    assert !person_1.merge?(person_2)
+    assert !person_2.merge?(person_1)
   end
 
   test "merge" do
@@ -937,6 +939,16 @@ class PersonTest < ActiveSupport::TestCase
 
     Person.create!(name: "Mollie Cameron")
     assert_equal(1, person.other_people_with_same_name.size, "Other people named 'Mollie Cameron'")
+  end
+
+  test "force other_people_with_same_name for merge" do
+    person = FactoryGirl.create(:person, name: "Molly Cameron", other_people_with_same_name: true)
+    person_2 = FactoryGirl.create(:person, name: "Molly Cameron", other_people_with_same_name: true)
+
+    assert !person_2.merge?(person), "merge? should honor other_people_with_same_name"
+    assert !person.merge?(person_2), "merge? should honor other_people_with_same_name"
+
+    assert person.merge?(person_2, force: true), "merge? should honor force argument"
   end
 
   test "dh number with no downhill discipline" do

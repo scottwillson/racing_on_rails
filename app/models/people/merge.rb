@@ -51,7 +51,7 @@ module People
     # Moves another people' aliases, results, and race numbers to this person,
     # and delete the other person.
     # Also adds the other people' name as a new alias
-    def merge(other_person)
+    def merge(other_person, force = false)
       # Consider just using straight SQL for this --
       # it's not complicated, and the current process generates an
       # enormous amount of SQL
@@ -64,7 +64,7 @@ module People
         other_name: other_person.try(:name)
       ) do
 
-        if merge?(other_person)
+        if !merge?(other_person, force)
           ActiveSupport::Notifications.instrument(
             "failure.merge.people.admin.racing_on_rails",
             person_id: id,
@@ -155,8 +155,14 @@ module People
       true
     end
 
-    def merge?(other_person)
-      other_person.nil? || other_person == self || other_people_with_same_name? || other_person.other_people_with_same_name?
+    def merge?(other_person, force = false)
+      if other_person.nil? || other_person == self
+        return false
+      end
+
+      return true if force
+
+      !other_people_with_same_name? && !other_person.other_people_with_same_name?
     end
 
     # Callback
