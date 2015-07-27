@@ -24,10 +24,6 @@ module Results
       row[:place].to_i == 1
     end
 
-    def new_row(spreadsheet_row, column_indexes)
-      Results::Row.new spreadsheet_row, column_indexes
-    end
-
     # category_name and gender should always be populated.
     # juniors, and conceivably masters, may be split by age group in which case the age column should
     # contain the age range. otherwise it may be empty or contain an individual racer's age.
