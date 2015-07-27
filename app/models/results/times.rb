@@ -33,7 +33,11 @@ module Results
     def set_time_value(attribute, value)
       case value
       when DateTime
-        self[attribute] = value.hour * 3600 + value.min * 60 + value.sec
+        if value.year == 1899 && value.month == 12 && value.day == 31
+          self[attribute] = (24 + value.hour) * 3600 + value.min * 60 + value.sec
+        else
+          self[attribute] = value.hour * 3600 + value.min * 60 + value.sec
+        end
       when ::Time
         self[attribute] = value.hour * 3600 + value.min * 60 + value.sec + (value.usec / 100.0)
       when Numeric, NilClass
