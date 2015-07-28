@@ -228,7 +228,7 @@ module Competitions
         place: 1,
         person: molly
       )
-      FactoryGirl.create_list(:result, 22, event: swan_island, race: cat_4_women_swan_island)
+      FactoryGirl.create_list(:result, 22, event: swan_island, race: cat_4_women_swan_island, place: 2)
       goose_island = SingleDayEvent.create!(
         name: "Goose Island",
         discipline: "Road",
@@ -239,7 +239,7 @@ module Competitions
         place: 1,
         person: molly
       )
-      FactoryGirl.create_list(:result, 2, event: goose_island, race: cat_1_2_3_women_goose_island)
+      FactoryGirl.create_list(:result, 2, event: goose_island, race: cat_1_2_3_women_goose_island, place: 3)
 
       MbraBar.calculate!(2008)
       road_bar = MbraBar.find_by_name("2008 Road BAR")
@@ -249,6 +249,7 @@ module Competitions
       assert_equal((23 + 6), cat_4_women_road_bar.results[0].points, "Category 4 Women Road BAR results points")
 
       cat_1_2_3_women_road_bar = road_bar.races.detect {|b| b.name == "Category 1/2/3 Women" }
+      assert_equal 3, cat_1_2_3_women_road_bar.results.size
       assert_equal(molly, cat_1_2_3_women_road_bar.results[0].person, "Category 1/2/3 Women Road BAR results person")
       assert_equal("1", cat_1_2_3_women_road_bar.results[0].place, "Category 1/2/3 Women Road BAR results place")
       assert_equal(((23 + 6) / 2.0) + (3 + 6), cat_1_2_3_women_road_bar.results[0].points, "Category 1/2/3 Women Road BAR results points")

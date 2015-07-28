@@ -164,6 +164,7 @@ module Admin
           flash[:notice] = flash[:notice] + warning.to_s + " "
         end
       end
+
       redirect_to(edit_admin_event_path(@event))
     end
 
@@ -227,10 +228,10 @@ module Admin
         format.js {
           @event = Event.find(params[:id])
           # Remember races for view
-          @races = @event.races.dup
+          @races = @event.races.to_a.dup
           @combined_results = @event.combined_results
           @event.destroy_races
-          @races = @races.reject { |race| Race.exists?(race.id) }
+          @races = @races.select { |race| !Race.exists?(race.id) }
           expire_cache
         }
       end

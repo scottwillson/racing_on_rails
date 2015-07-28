@@ -75,6 +75,14 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
   end
 
+  test "do not merge other people with same name" do
+    person_1 = FactoryGirl.create(:person, name: "Molly Cameron", other_people_with_same_name: true)
+    person_2 = FactoryGirl.create(:person, name: "Molly Cameron")
+
+    assert !person_1.merge(person_2)
+    assert !person_2.merge(person_1)
+  end
+
   test "merge" do
     FactoryGirl.create(:number_issuer)
     FactoryGirl.create(:discipline, name: "Road")
@@ -83,8 +91,15 @@ class PersonTest < ActiveSupport::TestCase
       :person_with_login,
       login: "molly",
       city: "Berlin",
+      state: "CT",
       road_number: "202",
-      member_from: Time.zone.local(1996)
+      member_from: Time.zone.local(1996),
+      membership_address_is_billing_address: false,
+      official_interest: false,
+      created_at: 1.week.ago,
+      print_card: true,
+      race_promotion_interest: true,
+      team: nil
     )
     person_to_keep.aliases.create!(name: "Mollie Cameron")
     person_to_keep_old_password = person_to_keep.crypted_password
@@ -92,7 +107,18 @@ class PersonTest < ActiveSupport::TestCase
     FactoryGirl.create(:result, person: person_to_keep)
     FactoryGirl.create(:result, person: person_to_keep)
 
-    person_to_merge = FactoryGirl.create(:person, member_to: Time.zone.local(2008, 12, 31), street: "123 Holly", license: "7123811")
+    team = FactoryGirl.create(:team, name: "Gentle Lovers")
+    person_to_merge = FactoryGirl.create(
+      :person,
+      member_to: Time.zone.local(2008, 12, 31),
+      city: "Middletown",
+      license: "7123811",
+      membership_address_is_billing_address: false,
+      official_interest: true,
+      print_card: false,
+      race_promotion_interest: true,
+      team: team
+    )
     person_to_merge.race_numbers.create!(value: "102")
     person_to_merge.race_numbers.create!(year: 2004, value: "104")
     FactoryGirl.create(:result, person: person_to_merge)
@@ -152,6 +178,14 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal_dates Time.zone.now.end_of_year.to_date, person_to_keep.member_to, "member_to"
 
     assert_equal "7123811", person_to_keep.license, "license"
+    assert_equal "Middletown", person_to_keep.city, "should update city from newer person to merge"
+    assert_equal "CT", person_to_keep.state, "should preserve state in person to keep"
+    assert_equal false, person_to_keep.membership_address_is_billing_address, "should preserve booleans in person to keep"
+    assert_equal false, person_to_keep.official_interest, "should preserve booleans in person to keep"
+    assert_equal true, person_to_keep.print_card, "should preserve booleans in person to keep"
+    assert_equal true, person_to_keep.race_promotion_interest, "should preserve booleans in person to keep"
+    assert_equal "Gentle Lovers", person_to_keep.team_name, "should set team from person to merge"
+
     assert_equal 3, person_to_keep.versions.size, "versions in #{person_to_keep.versions}"
     assert_equal [ 2, 3, 4 ], person_to_keep.versions.map(&:number).sort, "version numbers"
   end
@@ -892,17 +926,17 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal "7890", person.number(circuit_race), "Circuit race number"
   end
 
-  test "people with same name" do
+  test "other people with same name" do
     molly = FactoryGirl.create(:person, name: "Molly Cameron")
     molly.aliases.create!(name: "Mollie Cameron")
 
-    assert_equal([], molly.people_with_same_name, "No other people named 'Molly Cameron'")
+    assert_equal([], molly.other_people_with_same_name, "No other people named 'Molly Cameron'")
 
     person = FactoryGirl.create(:person, name: "Mollie Cameron")
-    assert_equal([], molly.people_with_same_name, "No other people named 'Mollie Cameron'")
+    assert_equal([], molly.other_people_with_same_name, "No other people named 'Mollie Cameron'")
 
     Person.create!(name: "Mollie Cameron")
-    assert_equal(1, person.people_with_same_name.size, "Other people named 'Mollie Cameron'")
+    assert_equal(1, person.other_people_with_same_name.size, "Other people named 'Mollie Cameron'")
   end
 
   test "dh number with no downhill discipline" do
@@ -1249,6 +1283,11 @@ class PersonTest < ActiveSupport::TestCase
     assert event.promoter.editable_events.empty?, "Promoter should have no editable_events"
     assert_equal [ event ], person.editable_events(true), "Person should have editable_events"
     assert person.promoter?, "Editors should be considered promoters"
+  end
+
+  test "blank licenses" do
+    Person.create!(license: "")
+    Person.create!(license: "")
   end
 
   def assert_renew(now, member_from, member_to, expected_member_from, expected_member_to)

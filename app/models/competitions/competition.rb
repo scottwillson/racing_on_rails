@@ -112,8 +112,7 @@ module Competitions
         results = source_results(race)
         results = add_upgrade_results(results, race)
         results = after_source_results(results, race)
-        results = delete_bar_points(results)
-        results = delete_discipline(results)
+        results = delete_non_calculation_attributes(results)
         results = add_field_size(results)
         results = map_team_member_to_boolean(results)
 
@@ -164,8 +163,8 @@ module Competitions
     end
 
     def races_in_upgrade_order
-      if upgrades.any?
-        upgrade_categories = upgrades.values.map { |categories| Array.wrap(categories) }.flatten
+      if upgrades.present?
+        upgrade_categories = upgrades.values.map { |categories| Array.wrap(categories) }.flatten.uniq
         categories_in_upgrade_order = upgrade_categories + (races.map(&:name) - upgrade_categories)
         categories_in_upgrade_order.map { |name| races.detect { |race| race.name == name }}.compact
       else
@@ -184,14 +183,23 @@ module Competitions
         select(
           "distinct results.id as id",
           "1 as multiplier",
+          "age",
+          "categories.ability as category_ability",
+          "categories.ages_begin as category_ages_begin",
+          "categories.ages_end as category_ages_end",
+          "categories.gender as category_gender",
           "events.bar_points as event_bar_points",
           "events.date",
           "events.discipline",
           "events.type",
+          "gender",
           "member_from",
           "member_to",
           "parents_events.bar_points as parent_bar_points",
           "parents_events_2.bar_points as parent_parent_bar_points",
+          "people.gender as person_gender",
+          "people.name as person_name",
+          "points_factor",
           "races.bar_points as race_bar_points",
           "results.#{participant_id_attribute} as participant_id",
           "results.event_id",
@@ -206,6 +214,8 @@ module Competitions
         joins(:race, :event, :person).
         joins("left outer join events parents_events on parents_events.id = events.parent_id").
         joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
+        joins("left outer join categories on categories.id = races.category_id").
+        joins("left outer join competition_event_memberships on results.event_id = competition_event_memberships.event_id and competition_event_memberships.competition_id = #{id}").
         where("results.year = ?", year)
 
       if source_event_types.include?(Event)
@@ -237,10 +247,11 @@ module Competitions
             "member_to",
             "parents_events.bar_points as parent_bar_points",
             "parents_events_2.bar_points as parent_parent_bar_points",
+            "place",
+            "points_factor",
             "races.bar_points as race_bar_points",
             "results.#{participant_id_attribute} as participant_id",
             "results.event_id",
-            "place",
             "results.points",
             "results.race_id",
             "results.race_name as category_name",
@@ -252,11 +263,12 @@ module Competitions
           joins(:race, :event, :person).
           joins("left outer join events parents_events on parents_events.id = events.parent_id").
           joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
+          joins("left outer join competition_event_memberships on results.event_id = competition_event_memberships.event_id and competition_event_memberships.competition_id = #{id}").
           where("results.race_id" => upgrade_races).
           # Only include upgrade results for people with category results
           where(
             "results.#{participant_id_attribute}" =>
-            results.select { |r| r["event_bar_points"] != 0 }.map { |r| r["participant_id"] }.uniq
+            results.map { |r| r["participant_id"] }.uniq
           )
         ).to_a
       else
@@ -279,20 +291,26 @@ module Competitions
       end
     end
 
-    def delete_bar_points(results)
-      results.each do |result|
-        %w{ race_bar_points event_bar_points parent_bar_points parent_parent_bar_points }.each do |a|
-          result.delete a
-        end
+    def delete_non_calculation_attributes(results)
+      non_calculation_attributes = %w{
+          age
+          category_ability
+          category_ages_begin
+          category_ages_end
+          category_gender
+          discipline
+          event_bar_points
+          gender
+          parent_bar_points
+          parent_parent_bar_points
+          person_gender
+          person_name
+          points_factor
+          race_bar_points
+      }
+      results.map do |result|
+        result.except(*non_calculation_attributes)
       end
-      results
-    end
-
-    def delete_discipline(results)
-      results.each do |result|
-        result.delete "discipline"
-      end
-      results
     end
 
     # Calculate field size. It's not stored in the DB, and can't be calculated
@@ -374,9 +392,6 @@ module Competitions
       end
     end
 
-    # Similar to superclass's method, except this method only saves results to the database. Superclass applies rules
-    # and scoring. It also decorates the results with any display data (often denormalized)
-    # like people's names, teams, and points.
     def create_competition_results_for(results, race)
       Rails.logger.debug "create_competition_results_for #{race.name}"
 
@@ -396,7 +411,7 @@ module Competitions
         )
 
         result.scores.each do |score|
-          create_score competition_result, score.source_result_id, score.points
+          create_score competition_result, score.source_result_id, score.points, score.notes
         end
       end
 
@@ -434,8 +449,8 @@ module Competitions
     end
 
     def update_scores_for(result, existing_result)
-      existing_scores = existing_result.scores.map { |s| [ s.source_result_id, s.points.to_f ] }
-      new_scores = result.scores.map { |s| [ s.source_result_id || existing_result.id, s.points.to_f ] }
+      existing_scores = existing_result.scores.map { |s| [ s.source_result_id, s.points.to_f, s.notes ] }
+      new_scores = result.scores.map { |s| [ s.source_result_id || existing_result.id, s.points.to_f, s.notes ] }
 
       scores_to_create = new_scores - existing_scores
       scores_to_delete = existing_scores - new_scores
@@ -446,7 +461,7 @@ module Competitions
       end
 
       scores_to_create.each do |score|
-        create_score existing_result, score.first, score.last
+        create_score existing_result, score.first, score.second, score.last
       end
     end
 
@@ -476,10 +491,11 @@ module Competitions
     end
 
     # This is always the 'best' result
-    def create_score(competition_result, source_result_id, points)
+    def create_score(competition_result, source_result_id, points, notes)
       ::Competitions::Score.create!(
         source_result_id: source_result_id || competition_result.id,
         competition_result_id: competition_result.id,
+        notes: notes,
         points: points
       )
     end

@@ -122,16 +122,23 @@ Rails.application.routes.draw do
     resources :categories do
       resources :races
     end
+
     get ':controller/:id/aliases/:alias_id/destroy' => :destroy_alias, constraints: { id: /\d+/ }
+
     get '/admin/results/:id/scores' => 'admin/results#scores'
     get '/admin/racers' => 'admin/racers#index'
     patch '/admin/persons/update_attribute/:id' => 'admin/people#update_attribute'
     get '/admin' => 'admin/home#index', as: :admin_home
+
     get '/bar' => 'competitions/bar#index', as: "bar_root"
     get "/bar/:year/:discipline/:category" => "competitions/bar#show", as: "bar_full"
     get "/bar(/:year(/:discipline(/:category)))" => "competitions/bar#show", as: "bar", defaults: { discipline: "overall", category: "senior_men" }
+
     get '/cat4_womens_race_series/:year' => 'competitions/competitions#show', as: :cat4_womens_race_series, type: 'cat4_womens_race_series', constraints: { year: /\d{4}/ }
     get '/cat4_womens_race_series' => 'competitions/competitions#show', type: 'cat4_womens_race_series'
+
+    resources :duplicate_people
+
     get '/events/:event_id/results' => 'results#event'
     get '/events/:event_id/people/:person_id/results' => 'results#person_event'
     get '/events/:event_id/teams/:team_id/results' => 'results#team_event'
@@ -228,6 +235,7 @@ Rails.application.routes.draw do
     get '/schedule/:discipline' => 'schedule#index', constraints: { discipline: /[^\d]+/ }
     get '/sanctioning_organization/:sanctioning_organization/schedule' => 'schedule#index', as: "schedule_sanctioning_organization"
     get '/schedule' => 'schedule#index', as: :schedule
+
     get '/region/:region(/:year)/schedule' => 'schedule#index', as: "schedule_region", constraints: { year: /\d\d\d\d/ }
     resources :single_day_events
     get '/teams/:team_id/results' => 'results#team'

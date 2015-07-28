@@ -230,6 +230,9 @@ class SetAssociationsTest < ActiveSupport::TestCase
     result = race.results.build(name: 'Erik Tonkin')
     assert_equal([tonkin], result.find_people.to_a, 'name')
 
+    result = race.results.build(name: 'ERIK TONKIN')
+    assert_equal([tonkin], result.find_people.to_a, 'name')
+
     result = race.results.build(last_name: 'Tonkin')
     assert_equal([tonkin], result.find_people.to_a, 'last_name')
 
@@ -316,10 +319,10 @@ class SetAssociationsTest < ActiveSupport::TestCase
     assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, 'first_name, last_name, blank team')
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: 'Camerati')
-    assert_equal([tonkin_clone], result.find_people.to_a, 'first_name, last_name, wrong team')
+    assert_equal([tonkin, tonkin_clone], result.find_people.to_a, 'first_name, last_name, wrong team')
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: 'Camerati', number: '987')
-    assert_equal([tonkin_clone], result.find_people.to_a, 'first_name, last_name, wrong team, wrong number')
+    assert_equal([tonkin, tonkin_clone], result.find_people.to_a, 'first_name, last_name, wrong team, wrong number')
 
     vanilla = FactoryGirl.create(:team, name: "Vanilla")
     vanilla.aliases.create!(name: "Vanilla Bicycles")

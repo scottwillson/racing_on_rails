@@ -58,14 +58,15 @@ module Results
 
     def race?(row)
       return false if row.last?
-
       # Won't correctly detect races that only have DQs or DNSs
       row.next &&
       category_name_from_row(row).present? &&
+      !row[:place].to_s[/\A1\z/] &&
+      !row[:place].to_s[/\A1.0\z/] &&
       !row[:place].to_s.upcase.in?(%w{ DNS DQ DNF}) &&
       row.next[:place] &&
       row.next[:place].to_i == 1 &&
-      (row.previous.nil? || result?(row.previous))
+      (row.previous.nil? || row.previous[:place].blank? || result?(row.previous))
     end
 
     def find_or_create_race(row, columns)
@@ -85,6 +86,7 @@ module Results
     end
 
     def result?(row)
+      return false unless row
       return true if row[:place].present? || row[:number].present? || row[:license].present? || row[:team_name].present?
       if !(row[:first_name].blank? && row[:last_name].blank? && row[:name].blank?)
         return true
@@ -175,7 +177,7 @@ module Results
         if race?(row) && result.place.to_i != 1
           self.import_warnings << "First racer #{row[:first_name]} #{row[:last_name]} should be first place racer. "
           # if we have a previous rov and the current place is not one more than the previous place, then sequence error.
-        elsif !race?(row) && row.previous && row.previous[:place].present? && row.previous[:place].to_i != (result.place.to_i - 1)
+        elsif !race?(row) && row.previous && row.previous[:place].present? && row.previous[:place] != result.place && row.previous[:place].to_i != (result.numeric_place - 1)
           self.import_warnings << "Non-sequential placings detected for racer: #{row[:first_name]} #{row[:last_name]}. " unless row[:category_name].to_s.downcase.include?("tandem") # or event is TTT or ???
         end
       elsif result.place.present?

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150429170813) do
+ActiveRecord::Schema.define(version: 20150702234530) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -97,6 +97,8 @@ ActiveRecord::Schema.define(version: 20150429170813) do
     t.integer  "ages_begin",     limit: 4,   default: 0
     t.integer  "ages_end",       limit: 4,   default: 999
     t.string   "friendly_param", limit: 255,               null: false
+    t.integer  "ability",        limit: 4,   default: 0,   null: false
+    t.string   "gender",         limit: 255, default: "M", null: false
   end
 
   add_index "categories", ["friendly_param"], name: "index_categories_on_friendly_param", using: :btree
@@ -482,7 +484,7 @@ ActiveRecord::Schema.define(version: 20150429170813) do
     t.string   "last_name",                             limit: 255
     t.string   "city",                                  limit: 128
     t.date     "date_of_birth"
-    t.string   "license",                               limit: 64
+    t.string   "license",                               limit: 255
     t.text     "notes",                                 limit: 65535
     t.string   "state",                                 limit: 64
     t.integer  "team_id",                               limit: 4
@@ -548,13 +550,14 @@ ActiveRecord::Schema.define(version: 20150429170813) do
     t.boolean  "official",                                            default: false, null: false
     t.integer  "non_member_result_id",                  limit: 4
     t.string   "name",                                  limit: 255,   default: "",    null: false
+    t.boolean  "other_people_with_same_name",                         default: false, null: false
   end
 
   add_index "people", ["crypted_password"], name: "index_people_on_crypted_password", using: :btree
   add_index "people", ["email"], name: "index_people_on_email", using: :btree
   add_index "people", ["first_name"], name: "idx_first_name", using: :btree
   add_index "people", ["last_name"], name: "idx_last_name", using: :btree
-  add_index "people", ["license"], name: "index_people_on_license", using: :btree
+  add_index "people", ["license"], name: "index_people_on_license", unique: true, using: :btree
   add_index "people", ["login"], name: "index_people_on_login", using: :btree
   add_index "people", ["member_from"], name: "index_racers_on_member_from", using: :btree
   add_index "people", ["member_to"], name: "index_racers_on_member_to", using: :btree
@@ -871,6 +874,7 @@ ActiveRecord::Schema.define(version: 20150429170813) do
     t.date     "date"
     t.string   "description",           limit: 255
     t.string   "event_name",            limit: 255
+    t.string   "notes",                 limit: 255
   end
 
   add_index "scores", ["competition_result_id"], name: "scores_competition_result_id_index", using: :btree

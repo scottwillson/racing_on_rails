@@ -155,6 +155,7 @@ class Event < ActiveRecord::Base
       # Call to clear won't invoke all before_destroy callbacks
       races.each(&:destroy)
       races.delete(races.select(&:destroyed?))
+      true
     end
   end
 

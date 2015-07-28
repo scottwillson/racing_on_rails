@@ -32,6 +32,7 @@ module Categories
       assert_equal 50..59, category.ages_from_name("Masters Men 50-59")
       assert_equal 10..18, category.ages_from_name("Women Junior")
       assert_equal 30..999, category.ages_from_name("Master Men")
+      assert_equal 0..34, category.ages_from_name("Category 2 Men U35")
     end
 
     def test_age_group

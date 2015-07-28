@@ -10,10 +10,12 @@ class Category < ActiveRecord::Base
   acts_as_tree
   include ActsAsTree::Validation
 
+  include Categories::Ability
   include Categories::Ages
   include Categories::Cleanup
   include Comparable
   include Categories::FriendlyParam
+  include Categories::Gender
   include Categories::NameNormalization
   include Export::Categories
 
@@ -53,14 +55,6 @@ class Category < ActiveRecord::Base
   # Sr, Mst, Jr, Cat, Beg, Exp
   def short_name
     Category.short_name name
-  end
-
-  def gender
-    if name[/women/i]
-      "F"
-    else
-      "M"
-    end
   end
 
   # Compare by position, then by name

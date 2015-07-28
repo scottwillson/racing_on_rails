@@ -52,6 +52,8 @@ module Categories
         10..18
       elsif name["Master"]
         30..999
+      elsif name[/U\d\d/]
+        0..(/U(\d\d)/.match(name)[1].to_i - 1)
       else
         0..999
       end

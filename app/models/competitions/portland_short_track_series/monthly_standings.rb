@@ -36,6 +36,12 @@ module Competitions
         where("races.category_id" => categories_for(race))
       end
 
+      def after_source_results(results, race)
+        results.each do |result|
+          result["multiplier"] = result["points_factor"] || 1
+        end
+      end
+
       def add_source_events
         parent.children.select { |c| c.date.month == date.month }.each do |source_event|
           source_events << source_event
@@ -48,6 +54,10 @@ module Competitions
 
       def default_bar_points
         1
+      end
+
+      def members_only?
+        false
       end
     end
   end

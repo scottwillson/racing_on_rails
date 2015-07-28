@@ -38,6 +38,8 @@ class Person < ActiveRecord::Base
 
   before_validation :find_associated_records
   before_validation :set_membership_dates
+  before_save { |r| r.license = nil if license.blank? }
+  validates_uniqueness_of :license, allow_nil: true, allow_blank: true
   validate :membership_dates
   before_destroy :ensure_no_results
 
@@ -45,7 +47,6 @@ class Person < ActiveRecord::Base
   has_and_belongs_to_many :editable_events, class_name: "Event", foreign_key: "editor_id", join_table: "editors_events"
   has_many :results
   belongs_to :team
-
 
   attr_accessor :year
 
@@ -94,7 +95,7 @@ class Person < ActiveRecord::Base
 
   # Find Person with most recent. If no results, select the most recently updated Person.
   def self.select_by_recent_activity(people)
-    results = people.to_a.inject([]) { |r, person| r + person.results }
+    results = people.map(&:results).flatten
     if results.empty?
       people.to_a.sort_by(&:updated_at).last
     else

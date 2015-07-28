@@ -1,11 +1,10 @@
-require_relative "default_result_renderer"
-
 module Results
   module Renderers
-    class TimeRenderer < Results::Renderers::DefaultResultRenderer
+    class TimeRenderer < DefaultResultRenderer
       def self.render(column, row)
         time = row[key(column)]
         return nil if time.nil?
+        return time if time.is_a?(String)
 
         seconds = time % 60
         minutes = (time / 60) % 60
@@ -13,7 +12,7 @@ module Results
 
         precision = [ column.precision, 3 ].min
         if precision == 0
-          case column.max
+          case column.cells.compact.map(&:to_i).max
           when 60..3599
             format "%02d:%02d", minutes, seconds
           when 0..59
@@ -24,7 +23,7 @@ module Results
             format "%d:%02d:%02d", hours, minutes, seconds
           end
         else
-          case column.max
+          case column.cells.compact.map(&:to_i).max
           when 60..3599
             format "%02d:%0#{precision + 3}.#{precision}f", minutes, seconds
           when 0..59

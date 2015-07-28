@@ -372,6 +372,13 @@ module Results
       assert results_file.import_warnings.present?, "Should have import warnings for no first place finisher"
     end
 
+    test "TTT results should not trigger non-sequential results warnings" do
+      event = SingleDayEvent.create!
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/ttt.xls", __FILE__)), event)
+      results_file.import
+      assert results_file.import_warnings.empty?, "Should have no import warnings for TTT results"
+    end
+
     test "times" do
       event = FactoryGirl.create(:event)
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/times.xlsx", __FILE__)), event)
@@ -456,7 +463,7 @@ module Results
 
       expected_races << race
 
-      return expected_races
+      expected_races
     end
 
     test "race notes" do
@@ -464,6 +471,28 @@ module Results
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt.xls", __FILE__)), event)
       results_file.import
       assert_equal('Field Size: 40 riders, 40 Laps, Sunny, cool, 40K', event.races(true).first.notes, 'Race notes')
+    end
+
+    test "race" do
+      results_file = ResultsFile.new(nil, nil)
+      table = Tabular::Table.new([
+        { place: "1.0", name: "Merckx" },
+        { place: "1.0", name: "Moser" },
+        { place: "1.0", name: "De Vlaminck" },
+        { place: "1.0", name: "De Wolfe" }
+        ])
+
+      table.rows.each do |row|
+        assert !results_file.race?(row), "Should not be a race: #{row}"
+        assert results_file.result?(row), "Should be a result: #{row}"
+      end
+    end
+
+    test "race for empty row" do
+      results_file = ResultsFile.new(nil, nil)
+      source = Tabular::Table.new
+      row = Tabular::Row.new(source)
+      assert !results_file.race?(row)
     end
 
     def get_expected_races

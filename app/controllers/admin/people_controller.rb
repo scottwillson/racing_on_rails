@@ -182,7 +182,7 @@ module Admin
     def update_name
       @person = Person.find(params[:id])
       @person.name = params[:value]
-      @other_people = @person.people_with_same_name
+      @other_people = @person.other_people_with_same_name
 
       ActiveSupport::Notifications.instrument "update_name.people.admin.racing_on_rails", person_id: @person.id, person_name_was: "#{@person.first_name_was} #{@person.last_name_was}", person_name: @person.name, other_people_same_name: @other_people.size
 
@@ -285,6 +285,7 @@ module Admin
         :occupation,
         :official,
         :official_interest,
+        :other_people_with_same_name,
         :password,
         :password_confirmation,
         :print_card,

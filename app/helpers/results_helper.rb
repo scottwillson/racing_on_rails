@@ -92,7 +92,7 @@ module ResultsHelper
       if mobile_request?
         table.row_mapper = Results::Mapper.new(%w{ place event_full_name name })
       else
-        table.row_mapper = Results::Mapper.new(%w{ place event_full_name race_name name event_date_range_s points })
+        table.row_mapper = Results::Mapper.new(%w{ place event_full_name race_name name event_date_range_s notes points })
       end
     else
       if mobile_request?
@@ -102,8 +102,9 @@ module ResultsHelper
       end
     end
 
-    table.rows = result.scores.sort_by { |score| score.source_result.date }.map do |score|
+    table.rows = result.scores.sort_by { |score| [score.source_result.date, -score.points] }.map do |score|
       source_result = score.source_result
+      source_result.notes = score.notes
       source_result.points = score.points
       source_result
     end
@@ -111,6 +112,7 @@ module ResultsHelper
     table.renderer = Results::Renderers::DefaultResultRenderer
     table.renderers[:event_full_name] = Results::Renderers::ScoreEventFullNameRenderer
     table.renderers[:points] = Results::Renderers::PointsRenderer
+    table.delete_blank_columns!
     render "results/table", table: table, css_class: "results scores"
   end
 

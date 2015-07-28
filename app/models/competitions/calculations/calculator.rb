@@ -122,6 +122,7 @@ module Competitions
           Struct::CalculatorScore.new.tap do |new_score|
             new_score.date             = result.date
             new_score.event_id         = result.event_id
+            new_score.notes            = result.notes
             new_score.numeric_place    = numeric_place(result)
             new_score.participant_id   = result.participant_id
             new_score.points           = points(result, rules)

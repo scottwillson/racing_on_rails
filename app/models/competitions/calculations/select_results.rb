@@ -21,18 +21,22 @@ module Competitions
           results = results.select { |r| r.upgrade || rules[:source_event_ids].include?(r.event_id) }
         end
 
-        results = select_results_for(:event_id, results, rules[:results_per_event])
-        results = select_results_for(:race_id, results, rules[:results_per_race])
+        results = select_results_for(:event_id, results, rules[:results_per_event], rules[:use_source_result_points])
+        results = select_results_for(:race_id, results, rules[:results_per_race], rules[:use_source_result_points])
         select_results_for_minimum_events results, rules
       end
 
-      def select_results_for(field, results, limit)
+      def select_results_for(field, results, limit, use_source_result_points)
         if limit == UNLIMITED
           results
         else
           results.group_by { |r| [ r.participant_id, r[field] ] }.
           map do |key, r|
-            r.sort_by { |r2| numeric_place(r2) }.take(limit)
+            if use_source_result_points
+              r.sort_by { |r2| r2.points }.reverse.take(limit)
+            else
+              r.sort_by { |r2| numeric_place(r2) }.take(limit)
+            end
           end.
           flatten
         end

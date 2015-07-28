@@ -151,6 +151,7 @@
 <div class="row">
   <div class="col-sm-6">
     <%= render "aliases", person: @person %>
+    <%= f.labelled_check_box :other_people_with_same_name %>
   </div>
   <div class="col-sm-6">
     <%= render "names", names: @person.names %>

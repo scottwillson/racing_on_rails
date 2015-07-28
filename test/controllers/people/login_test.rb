@@ -15,12 +15,16 @@ class LoginTest < ActionController::TestCase
            login: "racer@example.com",
            password: "secret",
            password_confirmation: "secret",
-           email: "racer@example.com"
+           email: "racer@example.com",
+           license: ""
           },
          return_to: root_path
     assert_redirected_to root_path
 
     assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    person = Person.last
+    assert_equal 1, person.versions(true).size
+    assert_equal person, person.created_by, "created_by not set for #{person.versions.first.inspect}"
   end
 
   test "create login with token" do
@@ -52,7 +56,8 @@ class LoginTest < ActionController::TestCase
            name: "Bike Racer",
            password: "secret",
            password_confirmation: "secret",
-           email: "racer@example.com"
+           email: "racer@example.com",
+           license: ""
           },
          return_to: root_path
     assert_redirected_to root_path
