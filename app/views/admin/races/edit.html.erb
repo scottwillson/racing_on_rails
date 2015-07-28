@@ -36,6 +36,7 @@
       <%= f.labelled_text_field :field_size, "Field Size (#{@race.results.size})", editable: administrator?, class: "col-sm-12" %>
       <%= f.labelled_text_field :distance, nil, editable: administrator?, class: "col-sm-12" %>
       <%= f.labelled_text_field :laps, nil, editable: administrator?, class: "col-sm-12" %>
+      <%= f.labelled_check_box :visible, "Visible on results page?" %>
     </div>
   </div>
 

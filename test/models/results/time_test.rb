@@ -136,6 +136,10 @@ class ResultTest < ActiveSupport::TestCase
     time = DateTime.new(2007, 11, 20, 19, 45, 50)
     result.set_time_value(:time, time)
     assert_equal(71150.0, result.time)
-  end
 
+    result = Result.new
+    time = DateTime.new(1899, 12, 31, 1, 39, 19)
+    result.set_time_value(:time, time)
+    assert_equal(92_359.0, result.time)
+  end
 end

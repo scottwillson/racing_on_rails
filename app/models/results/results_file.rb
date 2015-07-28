@@ -74,6 +74,7 @@ module Results
       race = event.races.detect { |r| r.category == category }
       if race
         race.results.clear
+        race.update_attributes! visible: true
       else
         race = event.races.build(category: category, notes: notes(row), custom_columns: custom_columns.to_a)
       end

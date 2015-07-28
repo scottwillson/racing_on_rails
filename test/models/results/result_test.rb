@@ -112,6 +112,20 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal("Basso", result.person.last_name, "person.last_name")
   end
 
+  test "#cleanup_name" do
+    result = Result.new(first_name: " Jane ", last_name: " Racer ")
+    result.cleanup
+    assert_equal "Jane", result.first_name
+    assert_equal "Racer", result.last_name
+    assert_equal "Jane Racer", result.name
+
+    result = Result.new(name: "  Jane    Racer  ")
+    result.cleanup
+    assert_equal "Jane", result.first_name
+    assert_equal "Racer", result.last_name
+    assert_equal "Jane Racer", result.name
+  end
+
   test "team name" do
     attributes = {place: "22", team_name: "T-Mobile"}
     result = FactoryGirl.create(:race).results.build(attributes)

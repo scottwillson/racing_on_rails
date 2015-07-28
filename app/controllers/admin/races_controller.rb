@@ -119,7 +119,8 @@ module Admin
         :notes,
         :sanctioned_by,
         :state,
-        :time
+        :time,
+        :visible
       )
     end
   end

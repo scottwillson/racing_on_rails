@@ -53,7 +53,16 @@ module Competitions
     end
 
     def source_event_types
-      [ Event, SingleDayEvent, MultiDayEvent, Series, WeeklySeries, Competitions::BlindDateAtTheDairyMonthlyStandings, Competitions::TaborOverall, ]
+      [ Event,
+        SingleDayEvent,
+        MultiDayEvent,
+        Series,
+        WeeklySeries,
+        Competitions::BlindDateAtTheDairyMonthlyStandings,
+        Competitions::PortlandShortTrackSeries::MonthlyStandings,
+        Competitions::PortlandShortTrackSeries::Overall,
+        Competitions::TaborOverall
+      ]
     end
 
     def source_results_query(race)
