@@ -32,9 +32,9 @@ GIT
 
 GIT
   remote: https://github.com/scottwillson/ruby-ole.git
-  revision: 6b9d2530b12259ca21af75ed2dcb26ba745a6115
+  revision: 3f2fda3dcebc7234c7af5e6df16c6594d16f3398
   specs:
-    ruby-ole (1.2.11.3)
+    ruby-ole (1.2.11.8)
 
 GIT
   remote: https://github.com/scottwillson/vestal_versions.git
