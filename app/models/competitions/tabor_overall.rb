@@ -19,10 +19,6 @@ module Competitions
       ]
     end
 
-    def maximum_events(race)
-      6
-    end
-
     def double_points_for_last_event?
       true
     end
