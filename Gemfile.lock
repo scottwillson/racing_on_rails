@@ -161,13 +161,14 @@ GEM
       mime-types (>= 1.16)
     celluloid (0.16.0)
       timers (~> 4.0.0)
-    celluloid-benchmark (0.1.15)
+    celluloid-benchmark (0.2.4)
       celluloid (~> 0.16.0)
       mechanize (~> 2.7)
       mime-types (~> 1.25)
       multi_json
       racc (~> 1)
       slop (~> 3.6)
+      table_print
     childprocess (0.5.6)
       ffi (~> 1.0, >= 1.0.11)
     chronic (0.9.1)
@@ -385,6 +386,7 @@ GEM
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     stud (0.0.20)
+    table_print (1.5.4)
     tabular (0.3.5)
     terminal-table (1.5.2)
     therubyracer (0.12.2)
@@ -440,7 +442,7 @@ DEPENDENCIES
   capistrano3-puma
   capybara
   carrierwave
-  celluloid-benchmark (~> 0.1.9)
+  celluloid-benchmark
   chronic (< 0.10.0)
   ckeditor_rails
   coffee-rails (~> 4.0)
