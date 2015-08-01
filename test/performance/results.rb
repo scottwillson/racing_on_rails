@@ -1,6 +1,6 @@
 CelluloidBenchmark::Session.define do
   benchmark :results_index, 1.2
-  page = get("http://obra.staging.rocketsurgeryllc.com/results")
+  page = get("http://staging.obra.org/results")
 
   20.times do
     link = page.links_with(class: "event").sample
