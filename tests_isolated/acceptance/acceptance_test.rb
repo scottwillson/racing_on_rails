@@ -225,16 +225,28 @@ class AcceptanceTest < ActiveSupport::TestCase
     options[:with] = options[:with] + "\n"
     wait_for locator
     find(locator).click
-    wait_for "form.editor_field"
-    within "form.editor_field" do
-      wait_for "input[name='value']"
-      fill_in "value", options
-    end
+    fill_in_editor_field options
     wait_for_no ".editing"
     wait_for_no ".saving"
     if assert_edit
       within locator do
         assert page.has_content?(text)
+      end
+    end
+  end
+
+  def fill_in_editor_field(options)
+    3.times do
+      begin
+        wait_for "form.editor_field"
+        within "form.editor_field" do
+          wait_for "input[name='value']"
+          fill_in "value", options
+        end
+        return true
+      rescue Capybara::ElementNotFound, RuntimeError
+        sleep 0.1
+        retry
       end
     end
   end
