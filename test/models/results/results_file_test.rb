@@ -83,7 +83,7 @@ module Results
 
       event = SingleDayEvent.create!(discipline: 'Time Trial')
 
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt.xls", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt.xlsx", __FILE__)), event)
       results_file.import
 
       assert_equal(2, event.races(true).size, "event races")
@@ -102,10 +102,10 @@ module Results
       assert_equal(2, Person.where(first_name: 'bruce', last_name: 'carter').count, 'Bruce Carters after import')
 
       assert(!event.races.empty?, 'event.races should not be empty')
-      for race in event.races
+      event.races.each do |race|
         assert_kind_of(Race, race, 'race')
         assert_kind_of(Category, race.category, 'race.category')
-        for result in race.results.sort
+        race.results.sort.each do |result|
           assert_kind_of(Result, result, 'result')
           assert_kind_of(Person, result.person, 'result.person') unless result.person.nil?
           assert_kind_of(Team, result.team, 'result.team') unless result.team.nil?
@@ -469,7 +469,7 @@ module Results
 
     test "race notes" do
       event = SingleDayEvent.create!
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt.xls", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt.xlsx", __FILE__)), event)
       results_file.import
       assert_equal('Field Size: 40 riders, 40 Laps, Sunny, cool, 40K', event.races(true).first.notes, 'Race notes')
     end
