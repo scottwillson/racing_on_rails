@@ -236,6 +236,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def fill_in_editor_field(options)
+    retries = 0
     3.times do
       begin
         wait_for "form.editor_field"
@@ -245,8 +246,13 @@ class AcceptanceTest < ActiveSupport::TestCase
         end
         return true
       rescue Capybara::ElementNotFound, RuntimeError
-        sleep 0.1
-        retry
+        if retries < 3
+          retries = retries + 1
+          sleep 0.1
+          retry
+        else
+          raise Capybara::ElementNotFound
+        end
       end
     end
   end
