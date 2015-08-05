@@ -244,13 +244,13 @@ class AcceptanceTest < ActiveSupport::TestCase
           fill_in "value", options
         end
         return true
-      rescue Capybara::ElementNotFound, RuntimeError
+      rescue Capybara::ElementNotFound, RuntimeError, Capybara::Poltergeist::ObsoleteNode
         if retries < 3
           retries = retries + 1
           sleep 0.1
           retry
         else
-          raise Capybara::ElementNotFound
+          raise
         end
       end
     end
