@@ -377,7 +377,10 @@ module Results
       event = SingleDayEvent.create!
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/ttt.xls", __FILE__)), event)
       results_file.import
-      assert results_file.import_warnings.empty?, "Should have no import warnings for TTT results"
+      assert(
+        results_file.import_warnings.empty?,
+        "Should have no import warnings for TTT results, but have #{results_file.import_warnings.to_a.join(', ')}"
+      )
     end
 
     test "times" do

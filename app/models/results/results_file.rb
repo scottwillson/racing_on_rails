@@ -175,11 +175,15 @@ module Results
     def set_place(result, row)
       if result.numeric_place?
         result.place = result.numeric_place
-        if race?(row) && result.place.to_i != 1
+        if race?(row) && result.place != 1
           self.import_warnings << "First racer #{row[:first_name]} #{row[:last_name]} should be first place racer. "
           # if we have a previous rov and the current place is not one more than the previous place, then sequence error.
-        elsif !race?(row) && row.previous && row.previous[:place].present? && row.previous[:place] != result.place && row.previous[:place].to_i != (result.numeric_place - 1)
-          self.import_warnings << "Non-sequential placings detected for racer: #{row[:first_name]} #{row[:last_name]}. " unless row[:category_name].to_s.downcase.include?("tandem") # or event is TTT or ???
+        elsif !race?(row) &&
+          row.previous &&
+          row.previous[:place].present? &&
+          row.previous[:place].to_i != result.numeric_place &&
+          row.previous[:place].to_i != (result.numeric_place - 1)
+          self.import_warnings << "Non-sequential placings detected for racer: #{row.previous[:place]} #{row[:first_name]} #{row[:last_name]}. " unless row[:category_name].to_s.downcase.include?("tandem") # or event is TTT or ???
         end
       elsif result.place.present?
         result.place = result.place.to_s.upcase
