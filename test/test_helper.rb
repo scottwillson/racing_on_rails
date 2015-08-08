@@ -4,6 +4,7 @@ require "rails/test_help"
 require "action_view/test_case"
 require "authlogic/test_case"
 require "test/enumerable_assertions"
+require "parallel_tests/test/runtime_logger" if ENV["RECORD_RUNTIME"]
 
 # Use transactional fixtures except for acceptance environment
 class ActiveSupport::TestCase
