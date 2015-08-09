@@ -4,12 +4,9 @@
 
 <%= render "shared/errors", object: @event_team_membership %>
 
-<div class="row">
-  <div class="col-sm-6">
-    <p>You're a member of <%= @event_team_membership.team.name %></p>
-    <p>
-      <%= link_to "Leave this team", event_team_membership_path(@event_team_membership), method: :delete %> |
-      <%= link_to "Go to your account", account_path %>
-    </p>
-  </div>
-</div>
+<h3>You're a member of <%= @event_team_membership.team.name %></h3>
+
+<ul class="page-links">
+  <li><%= link_to "Leave this team", event_team_membership_path(@event_team_membership), method: :delete, class: "obvious" %></li>
+  <li><%= link_to "Go to your account", account_path, class: "obvious" %></li>
+</ul>

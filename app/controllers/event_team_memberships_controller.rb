@@ -10,30 +10,15 @@ class EventTeamMembershipsController < ApplicationController
     end
 
     @event_team_membership = event.event_team_memberships.build(person: person, team: Team.new)
-    render :edit
   end
 
   def create
     @event_team_membership = EventTeamMembership.create(event_team_membership_params)
     if @event_team_membership.errors.empty?
-      flash[:notice] = "Updated team"
-      redirect_to edit_event_team_membership_path(@event_team_membership)
+      flash[:notice] = "Joined #{@event_team_membership.team.name}"
+      redirect_to event_team_membership_path(@event_team_membership)
     else
-      render :edit
-    end
-  end
-
-  def edit
-    @event_team_membership = EventTeamMembership.find(params[:id])
-  end
-
-  def update
-    @event_team_membership = EventTeamMembership.find(params[:id])
-    if @event_team_membership.update(event_team_membership_params)
-      flash[:notice] = "Updated team"
-      redirect_to edit_event_team_membership_path(@event_team_membership)
-    else
-      render :edit
+      render :new
     end
   end
 

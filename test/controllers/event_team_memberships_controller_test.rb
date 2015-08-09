@@ -29,7 +29,7 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
 
     event_team_membership = assigns(:event_team_membership)
     assert_not_nil event_team_membership
-    assert_redirected_to edit_event_team_membership_path(event_team_membership)
+    assert_redirected_to event_team_membership_path(event_team_membership)
   end
 
   test "create choose team" do
@@ -46,29 +46,7 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     event_team_membership = assigns(:event_team_membership)
     assert_not_nil event_team_membership
     assert_equal team, event_team_membership.team
-    assert_redirected_to edit_event_team_membership_path(event_team_membership)
-  end
-
-  test "edit" do
-    event_team_membership = FactoryGirl.create(:event_team_membership)
-    get :edit, id: event_team_membership
-    assert_response :success
-  end
-
-  test "update" do
-    event_team_membership = FactoryGirl.create(:event_team_membership)
-    team = FactoryGirl.create(:team)
-
-    patch :update, id: event_team_membership, event_team_membership: {
-      event_id: event_team_membership.event,
-      person_id: event_team_membership.person,
-      team_id: team
-    }
-
-    event_team_membership = assigns(:event_team_membership)
-    assert_not_nil event_team_membership
-    assert_equal team, event_team_membership.team
-    assert_redirected_to edit_event_team_membership_path(event_team_membership)
+    assert_redirected_to event_team_membership_path(event_team_membership)
   end
 
   test "show" do
