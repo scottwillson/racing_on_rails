@@ -149,12 +149,15 @@ Rails.application.routes.draw do
       resources :results
       resources :people do
         resources :results
+        resources :event_team_memberships
       end
       resources :races
       resources :teams do
         resources :results
       end
     end
+
+    resources :event_team_memberships
 
     get "/human_dates/:date" => "human_dates#show", constraints: { date: /.*/ }
 

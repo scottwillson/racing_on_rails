@@ -1,0 +1,73 @@
+require File.expand_path("../../test_helper", __FILE__)
+
+# :stopdoc:
+class EventTeamMembershipsControllerTest < ActionController::TestCase
+  test "new" do
+    event = FactoryGirl.create(:event)
+    person = FactoryGirl.create(:person)
+
+    get :new, event_id: event, person_id: person
+
+    assert_response :success
+  end
+
+  test "new should redirect to edit if already exists" do
+    event_team_membership = FactoryGirl.create(:event_team_membership)
+    get :new, event_id: event_team_membership.event, person_id: event_team_membership.person
+    assert_redirected_to edit_event_team_membership_path(event_team_membership)
+  end
+
+  test "create for team name" do
+    event = FactoryGirl.create(:event)
+    person = FactoryGirl.create(:person)
+
+    post :create, event_team_membership: {
+      event_id: event,
+      person_id: person,
+      team_attributes: { name: "Grant HS" }
+    }
+
+    event_team_membership = assigns(:event_team_membership)
+    assert_not_nil event_team_membership
+    assert_redirected_to edit_event_team_membership_path(event_team_membership)
+  end
+
+  test "create choose team" do
+    event = FactoryGirl.create(:event)
+    person = FactoryGirl.create(:person)
+    team = FactoryGirl.create(:team)
+
+    post :create, event_team_membership: {
+      event_id: event,
+      person_id: person,
+      team_id: team
+    }
+
+    event_team_membership = assigns(:event_team_membership)
+    assert_not_nil event_team_membership
+    assert_equal team, event_team_membership.team
+    assert_redirected_to edit_event_team_membership_path(event_team_membership)
+  end
+
+  test "edit" do
+    event_team_membership = FactoryGirl.create(:event_team_membership)
+    get :edit, id: event_team_membership
+    assert_response :success
+  end
+
+  test "update" do
+    event_team_membership = FactoryGirl.create(:event_team_membership)
+    team = FactoryGirl.create(:team)
+
+    patch :update, id: event_team_membership, event_team_membership: {
+      event_id: event_team_membership.event,
+      person_id: event_team_membership.person,
+      team_id: team
+    }
+
+    event_team_membership = assigns(:event_team_membership)
+    assert_not_nil event_team_membership
+    assert_equal team, event_team_membership.team
+    assert_redirected_to edit_event_team_membership_path(event_team_membership)
+  end
+end

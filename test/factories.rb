@@ -69,6 +69,12 @@ FactoryGirl.define do
     end
   end
 
+  factory :event_team_membership do
+    event
+    person
+    team
+  end
+
   factory :mailing_list do
     sequence(:name, "a") { |n| "obra_#{n}" }
     sequence(:friendly_name, "a") { |n| "OBRA Chat #{n}" }
