@@ -98,7 +98,7 @@ class Event < ActiveRecord::Base
       series_child_events = series_child_events.default_sanctioned_by
     end
 
-    # FIXME Need to make this lazy-load again
+    # TODO Need to make this lazy-load again
     single_day_events + multi_day_events + series_child_events
   end
 

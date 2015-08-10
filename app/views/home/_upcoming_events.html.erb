@@ -1,6 +1,6 @@
 <h3><%= link_to "Schedule", schedule_path %></h3>
 <%= table id: "upcoming_events", columns: 4 do %>
-  <% upcoming_events.sort_by(&:date)[0, mobile_request? ? 6 : 1000].each do |event| %>
+  <% Event.upcoming(weeks_of_recent_results).sort_by(&:date)[0, mobile_request? ? 6 : 1000].each do |event| %>
     <tr>
       <td class="date"><%= public_link_to_flyer(event, event.date.to_s(:short_with_week_day)) %></td>
 

@@ -13,7 +13,6 @@ class HomeController < ApplicationController
     @photo = @home.photo
     @posts = recent_posts
 
-    @upcoming_events = Event.upcoming(@home.weeks_of_upcoming_events)
     @events_with_recent_results = Event.with_recent_results(@home.weeks_of_recent_results.weeks.ago)
     @most_recent_event_with_recent_result = Event.most_recent_with_recent_result(
       @home.weeks_of_recent_results.weeks.ago,

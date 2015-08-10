@@ -6,7 +6,7 @@
         weeks_of_recent_results: @home.weeks_of_recent_results %>
     <div class="row">
       <div class="col-sm-6">
-        <%= render_page "home/upcoming_events", upcoming_events: @upcoming_events %>
+        <%= render_page "home/upcoming_events", weeks_of_recent_results: @home.weeks_of_recent_results %>
       </div>
       <div class="col-sm-6">
         <%= render_page "home/recent_results",
