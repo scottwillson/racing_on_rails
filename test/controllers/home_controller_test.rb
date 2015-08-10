@@ -10,8 +10,7 @@ class HomeControllerTest < ActionController::TestCase
     get :index
 
     assert_response :success
-    assert_not_nil assigns["upcoming_events"], "@upcoming_events"
-    assert_equal 1, assigns["upcoming_events"].size
+    assert_nil assigns["upcoming_events"], "@upcoming_events"
     assert_not_nil assigns["events_with_recent_results"], "@events_with_recent_results"
     assert assigns["most_recent_event_with_recent_result"].empty?, "@most_recent_event_with_recent_result"
     assert assigns["news_category"].empty?, "@news_category"
