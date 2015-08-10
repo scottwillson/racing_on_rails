@@ -181,8 +181,8 @@ module Results
         elsif !race?(row) &&
           row.previous &&
           row.previous[:place].present? &&
-          row.previous[:place].to_i != result.place && 
-          row.previous[:place].to_i != (result.place - 1)
+          row.previous[:place].to_i != result.numeric_place && 
+          row.previous[:place].to_i != (result.numeric_place - 1)
           self.import_warnings << "Non-sequential placings detected for racer: #{row[:first_name]} #{row[:last_name]}. " unless row[:category_name].to_s.downcase.include?("tandem") # or event is TTT or ???
         end
       elsif result.place.present?
