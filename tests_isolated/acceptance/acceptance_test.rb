@@ -387,7 +387,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   def reset_session
     begin
       Capybara.reset_sessions!
-    rescue Net::ReadTimeout => e
+    rescue StandardError => e
       Rails.logger.debug "Timeout resetting Capybara session: #{e}."
     end
   end
