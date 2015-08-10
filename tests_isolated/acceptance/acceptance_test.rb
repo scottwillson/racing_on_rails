@@ -251,7 +251,7 @@ class AcceptanceTest < ActiveSupport::TestCase
           sleep 0.1
           retry
         else
-          raise
+          raise "#{$1} after #{retries} tries"
         end
       end
     end
