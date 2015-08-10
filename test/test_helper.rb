@@ -5,8 +5,9 @@ require "rails/test_help"
 require "mocha/setup"
 require "action_view/test_case"
 require "authlogic/test_case"
-require "test/enumerable_assertions"
 require "fakeweb_registrations"
+require "parallel_tests/test/runtime_logger" if ENV["RECORD_RUNTIME"]
+require "test/enumerable_assertions"
 
 # Use transactional fixtures except for acceptance environment
 class ActiveSupport::TestCase
