@@ -27,7 +27,6 @@ doc/app
 doc/README_FOR_APP
 lib/registration_engine
 libpeerconnection.log
-local
 log/*.log
 log/acceptance
 mkmf.log
