@@ -1,14 +1,24 @@
 #! /usr/bin/env ruby
 
+`./script/local`
+puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists racing_on_rails_4_development; drop database if exists racing_on_rails_4_test'`
+puts `mysql -u root < db/grants.sql`
+puts `rake db:setup`
+puts `rake parallel:create`
+
 [ "aba", "atra", "mbra", "nabra", "obra", "wsba" ].each do |association|
   puts association
   `./script/local #{association}`
   puts "Create databases"
-  puts `mysql -u root -e 'drop database if exists #{association}_development'`
-  puts `mysql -u root -e 'grant all privileges on #{association}_development.* to 'ror_test'@'localhost';'`
+  puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_development'`
+  if association == "nabra"
+    puts `mysql -u root -e 'grant all privileges on nabra_development.* to 'ror_development'@'localhost';'`
+  else
+    puts `mysql -u root -e 'grant all privileges on #{association}_development.* to '#{association}_development'@'localhost';'`
+  end
+  puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_test'`
+  puts %x{mysql -u root -e 'grant all privileges on `#{association}_test`.* to #{association}_test@localhost'}
+  puts %x{mysql -u root -e 'grant all privileges on `#{association}_test%`.* to #{association}_test@localhost'}
   puts `rake db:setup`
-  puts "Create test database"
-  puts `mysql -u root -e 'drop database if exists #{association}_test'`
-  puts `mysql -u root -e 'grant all privileges on #{association}_test.* to 'ror_test'@'localhost';'`
-  puts `rake db:setup RAILS_ENV=test`
+  puts `rake parallel:create`
 end
