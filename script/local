@@ -6,6 +6,8 @@ require "fileutils"
 
 `spring stop`
 
+`rm -rf public/local/public` rescue nil
+
 [ "local", "public/local" ].each do |dir_name|
   if File.symlink?(dir_name)
     FileUtils.rm dir_name
@@ -20,7 +22,9 @@ association = ARGV[0]
 
 if !association.nil?
   `ln -s ../racing_on_rails_local/#{association} local`
-  `ln -s ../../racing_on_rails_local/#{association}/public public/local`
+  if Dir.exist?("../../racing_on_rails_local/#{association}/public")
+    `ln -s ../../racing_on_rails_local/#{association}/public public/local`
+  end
 end
 
 if association == "obra" || association == "nabra"
