@@ -283,7 +283,7 @@ ActiveRecord::Schema.define(version: 20150809025711) do
   add_index "events", ["type"], name: "index_events_on_type", using: :btree
   add_index "events", ["updated_at"], name: "index_events_on_updated_at", using: :btree
   add_index "events", ["velodrome_id"], name: "velodrome_id", using: :btree
-  add_index "events", ["year", "slug"], name: "index_events_on_year_and_slug", unique: true, using: :btree
+  add_index "events", ["year", "slug"], name: "index_events_on_year_and_slug", using: :btree
   add_index "events", ["year"], name: "index_events_on_year", using: :btree
 
   create_table "homes", force: true do |t|

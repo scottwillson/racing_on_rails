@@ -19,6 +19,12 @@ module Events
     test "create_slug" do
       event = Event.new(name: "OBRA TT")
       assert_equal "obra_tt", event.create_slug
+
+      event = Event.new(name: "2013 Oregon Cup")
+      assert_equal "oregon_cup", event.create_slug
+
+      event = Event.new(name: "Cross Crusade: Overall")
+      assert_equal "cross_crusade_overall", event.create_slug
     end
   end
 end

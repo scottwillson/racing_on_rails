@@ -20,7 +20,14 @@ module Events
     end
 
     def create_slug
-      self.slug = name.downcase.underscore.gsub(" ", "_")
+      self.slug = full_name
+                  .gsub(/20\d\d/, "")
+                  .downcase
+                  .gsub(/[^a-z0-9 ]/, "")
+                  .underscore
+                  .gsub(/ +/, " ")
+                  .strip
+                  .gsub(" ", "_")
     end
   end
 end
