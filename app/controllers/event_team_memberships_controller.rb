@@ -1,9 +1,21 @@
 class EventTeamMembershipsController < ApplicationController
   force_https
+  before_filter :require_current_person
 
   def new
-    event = Event.find(params[:event_id])
-    person = Person.find(params[:person_id])
+    event = nil
+    if params[:slug]
+      event = Event.where(slug: params[:slug]).current_year.first!
+    else
+      event = Event.find(params[:event_id])
+    end
+
+    person = nil
+    if params[:person_id]
+      person = Person.find(params[:person_id])
+    else
+      person = current_person
+    end
 
     if EventTeamMembership.where(event: event, person: person).exists?
       return redirect_to(event_team_membership_path(EventTeamMembership.where(event: event, person: person).first))

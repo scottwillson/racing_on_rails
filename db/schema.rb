@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150808204600) do
+ActiveRecord::Schema.define(version: 20150809025711) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "order_id"
@@ -266,6 +266,8 @@ ActiveRecord::Schema.define(version: 20150808204600) do
     t.boolean  "registration_public",                                                 default: true,  null: false
     t.decimal  "junior_price",                               precision: 10, scale: 2
     t.boolean  "suggest_membership",                                                  default: true,  null: false
+    t.string   "slug"
+    t.integer  "year",                                                                                null: false
   end
 
   add_index "events", ["bar_points"], name: "index_events_on_bar_points", using: :btree
@@ -276,10 +278,13 @@ ActiveRecord::Schema.define(version: 20150808204600) do
   add_index "events", ["promoter_id"], name: "index_events_on_promoter_id", using: :btree
   add_index "events", ["region_id"], name: "index_events_on_region_id", using: :btree
   add_index "events", ["sanctioned_by"], name: "index_events_on_sanctioned_by", using: :btree
+  add_index "events", ["slug"], name: "index_events_on_slug", using: :btree
   add_index "events", ["type"], name: "idx_type", using: :btree
   add_index "events", ["type"], name: "index_events_on_type", using: :btree
   add_index "events", ["updated_at"], name: "index_events_on_updated_at", using: :btree
   add_index "events", ["velodrome_id"], name: "velodrome_id", using: :btree
+  add_index "events", ["year", "slug"], name: "index_events_on_year_and_slug", unique: true, using: :btree
+  add_index "events", ["year"], name: "index_events_on_year", using: :btree
 
   create_table "homes", force: true do |t|
     t.integer  "photo_id"

@@ -39,6 +39,7 @@ class Event < ActiveRecord::Base
   include Events::Defaults
   include Events::Naming
   include Events::Promoters
+  include Events::Slugs
   include Events::Results
   include ActsAsTree::Extensions
   include RacingOnRails::VestalVersions::Versioned
