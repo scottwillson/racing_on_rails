@@ -1,7 +1,7 @@
 module Competitions
   class OregonJuniorCyclocrossSeries < Competition
     def friendly_name
-      "Junior Cyclocross Series"
+      "Oregon Junior Cyclocross Series"
     end
 
     def point_schedule
@@ -36,6 +36,10 @@ module Competitions
     def source_results_query(race)
       super.
       where("races.category_id" => categories_for(race))
+    end
+
+    def create_slug
+      "ojcs"
     end
   end
 end
