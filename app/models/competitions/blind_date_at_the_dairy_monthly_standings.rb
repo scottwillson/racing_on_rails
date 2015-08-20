@@ -41,6 +41,8 @@ module Competitions
         "Masters Men A 40+",
         "Masters Men B 35+",
         "Masters Men C 35+",
+        "Masters Men 50+",
+        "Masters Men 60+",
         "Men A",
         "Men B",
         "Men C",
