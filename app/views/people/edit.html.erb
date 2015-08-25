@@ -99,13 +99,15 @@
   </div>
 
   <div class="row">
-    <div class="col-sm-12">
-
+    <div class="col-sm-6">
       <%= render "people/account_permissions",
             person: @person,
             account_permissions: @person.account_permissions,
             return_to: account_permission_return_to(@person, @current_person)
       %>
+    </div>
+    <div class="col-sm-6">
+      <%= render "people/event_team_memberships", event_team_memberships: @person.event_team_memberships %>
     </div>
   </div>
 
