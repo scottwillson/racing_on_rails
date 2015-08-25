@@ -1,7 +1,7 @@
 #! /usr/bin/env ruby
 
 [ "", "aba", "atra", "mbra", "nabra", "obra", "wsba" ].shuffle.each do |association|
-  if association.nil?
+  if association == ""
     puts "*************************"
     puts "Run racing_on_rails tests"
     puts "*************************"
@@ -13,14 +13,13 @@
 
   `script/local #{association}`
 
-  # Ensure DB state is good
-  puts `bundle exec rake db:migrate`
+  puts `rake db:migrate parallel:prepare`
   puts `bundle exec rake test:ruby`
-  puts `bundle exec rake`
+  puts `RECORD_RUNTIME=true DISABLE_SPRING=1 rake parallel:test[^test/{controllers,helpers,integration,lib,mailers,models,views}]`
   puts `bundle exec rake test:acceptance`
 
   if association == "obra" || association == "nabra"
-    puts `bundle exec rake registration_engine:test`
+    puts `parallel_test lib/registration_engine/test/{controllers,helpers,integration,mailers,models}`
     puts `bundle exec rake registration_engine:test:acceptance`
   end
 end
