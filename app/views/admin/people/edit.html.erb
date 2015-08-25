@@ -172,8 +172,9 @@
 </div>
 
 <div class="row">
-  <div class="col-sm-12">
-    <%= render "people/orders", person: @person %>
+  <%= render "people/orders", person: @person %>
+  <div class="col-sm-6">
+    <%= render "people/event_team_memberships", event_team_memberships: @person.event_team_memberships %>
   </div>
 </div>
 
