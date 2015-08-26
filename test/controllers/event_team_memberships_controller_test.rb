@@ -100,4 +100,10 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     assert_redirected_to new_event_person_event_team_membership_path(event_team_membership.event, event_team_membership.person)
     assert !EventTeamMembership.exists?(event_team_membership.id)
   end
+
+  test "index" do
+    event = FactoryGirl.create(:event)
+    get :index, event_id: event
+    assert_response :success
+  end
 end

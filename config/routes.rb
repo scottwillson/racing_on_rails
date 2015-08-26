@@ -146,6 +146,7 @@ Rails.application.routes.draw do
     get '/events/:event_id' => 'results#event'
 
     resources :events do
+      resources :event_team_memberships
       resources :results
       resources :people do
         resources :results

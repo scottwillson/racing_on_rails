@@ -1,6 +1,6 @@
 class EventTeamMembershipsController < ApplicationController
   force_https
-  before_filter :require_current_person
+  before_filter :require_current_person, except: :index
 
   def new
     event = nil
@@ -46,6 +46,10 @@ class EventTeamMembershipsController < ApplicationController
     else
       render :show
     end
+  end
+
+  def index
+    @event = Event.find(params[:event_id])
   end
 
 

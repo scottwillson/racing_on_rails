@@ -1,0 +1,7 @@
+<% @page_title = "#{@event.name} Teams" %>
+
+<h2><%= @event.name %> Teams</h2>
+
+<%= table id: "event_teams", collection: @event.event_teams, columns: 1 do %>
+  <%= render partial: "event_team", collection: @event.event_teams %>
+<% end -%>
