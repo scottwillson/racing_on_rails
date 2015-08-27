@@ -69,10 +69,14 @@ FactoryGirl.define do
     end
   end
 
-  factory :event_team_membership do
+  factory :event_team do
     event
-    person
     team
+  end
+
+  factory :event_team_membership do
+    event_team
+    person
   end
 
   factory :mailing_list do

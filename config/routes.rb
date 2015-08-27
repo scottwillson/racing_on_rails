@@ -147,6 +147,7 @@ Rails.application.routes.draw do
 
     resources :events do
       resources :event_team_memberships
+      resources :event_teams 
       resources :results
       resources :people do
         resources :results

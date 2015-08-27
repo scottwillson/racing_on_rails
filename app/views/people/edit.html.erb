@@ -106,9 +106,11 @@
             return_to: account_permission_return_to(@person, @current_person)
       %>
     </div>
+    <% if @person.event_team_memberships.present? %>
     <div class="col-sm-6">
       <%= render "people/event_team_memberships", event_team_memberships: @person.event_team_memberships %>
     </div>
+    <% end %>
   </div>
 
   <div class="row">

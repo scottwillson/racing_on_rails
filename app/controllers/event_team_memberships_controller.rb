@@ -3,7 +3,7 @@ class EventTeamMembershipsController < ApplicationController
   before_filter :require_current_person, except: :index
 
   def new
-    event = nil
+    event_team = nil
     if params[:slug]
       event = Event.where(slug: params[:slug]).current_year.first!
     else
@@ -17,17 +17,17 @@ class EventTeamMembershipsController < ApplicationController
       person = current_person
     end
 
-    if EventTeamMembership.where(event: event, person: person).exists?
-      return redirect_to(event_team_membership_path(EventTeamMembership.where(event: event, person: person).first))
+    if EventTeamMembership.includes(:event_team).where(event_teams: { event_id: event }).where(person: person).exists?
+      return redirect_to(event_team_membership_path(EventTeamMembership.includes(:event_team).where(event_teams: { event_id: event }).where(person: person).first))
     end
 
-    @event_team_membership = event.event_team_memberships.build(person: person, team: Team.new)
+    @event_team_membership = event.event_team_memberships.build(person: person, event_team: EventTeam.new(event: event, team: Team.new))
   end
 
   def create
     @event_team_membership = EventTeamMembership.create(event_team_membership_params)
     if @event_team_membership.errors.empty?
-      flash[:notice] = "Joined #{@event_team_membership.team.name}"
+      flash[:notice] = "Joined #{@event_team_membership.team_name}"
       redirect_to event_team_membership_path(@event_team_membership)
     else
       render :new
@@ -48,19 +48,14 @@ class EventTeamMembershipsController < ApplicationController
     end
   end
 
-  def index
-    @event = Event.find(params[:event_id])
-  end
-
 
   private
 
   def event_team_membership_params
     params_without_mobile.require(:event_team_membership).permit(
-      :event_id,
+      :event_team_id,
       :person_id,
-      :team_id,
-      team_attributes: :name
+      event_team_attributes: [ :event_id, { team_attributes: :name } ]
     )
   end
 end

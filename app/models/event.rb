@@ -52,8 +52,8 @@ class Event < ActiveRecord::Base
 
   validate :inclusion_of_discipline
 
-  has_many :event_team_memberships
-  has_many :event_teams, through: :event_team_memberships, source: :team
+  has_many :event_teams
+  has_many :event_team_memberships, through: :event_teams
   belongs_to :number_issuer
   belongs_to :team
 

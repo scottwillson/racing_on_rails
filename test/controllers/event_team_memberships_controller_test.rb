@@ -53,9 +53,11 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     event = FactoryGirl.create(:event)
 
     post :create, event_team_membership: {
-      event_id: event,
       person_id: person,
-      team_attributes: { name: "Grant HS" }
+      event_team_attributes: {
+        event_id: event,
+        team_attributes: { name: "Grant HS" }
+      }
     }
 
     event_team_membership = assigns(:event_team_membership)
@@ -66,18 +68,16 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
   test "create choose team" do
     person = FactoryGirl.create(:person)
     login_as person
-    event = FactoryGirl.create(:event)
-    team = FactoryGirl.create(:team)
+    event_team = FactoryGirl.create(:event_team)
 
     post :create, event_team_membership: {
-      event_id: event,
       person_id: person,
-      team_id: team
+      event_team_id: event_team
     }
 
     event_team_membership = assigns(:event_team_membership)
     assert_not_nil event_team_membership
-    assert_equal team, event_team_membership.team
+    assert_equal event_team, event_team_membership.event_team
     assert_redirected_to event_team_membership_path(event_team_membership)
   end
 
@@ -99,11 +99,5 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
 
     assert_redirected_to new_event_person_event_team_membership_path(event_team_membership.event, event_team_membership.person)
     assert !EventTeamMembership.exists?(event_team_membership.id)
-  end
-
-  test "index" do
-    event = FactoryGirl.create(:event)
-    get :index, event_id: event
-    assert_response :success
   end
 end

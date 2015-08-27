@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150817201610) do
+ActiveRecord::Schema.define(version: 20150817201611) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "order_id"
@@ -198,17 +198,26 @@ ActiveRecord::Schema.define(version: 20150817201610) do
   add_index "editors_events", ["event_id"], name: "index_editors_events_on_event_id", using: :btree
 
   create_table "event_team_memberships", force: true do |t|
+    t.integer  "event_team_id", null: false
+    t.integer  "person_id",     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "event_team_memberships", ["event_team_id", "person_id"], name: "index_event_team_memberships_on_event_team_id_and_person_id", unique: true, using: :btree
+  add_index "event_team_memberships", ["event_team_id"], name: "index_event_team_memberships_on_event_team_id", using: :btree
+  add_index "event_team_memberships", ["person_id"], name: "index_event_team_memberships_on_person_id", using: :btree
+
+  create_table "event_teams", force: true do |t|
     t.integer  "event_id",   null: false
-    t.integer  "person_id",  null: false
     t.integer  "team_id",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "event_team_memberships", ["event_id", "person_id"], name: "index_event_team_memberships_on_event_id_and_person_id", unique: true, using: :btree
-  add_index "event_team_memberships", ["event_id"], name: "index_event_team_memberships_on_event_id", using: :btree
-  add_index "event_team_memberships", ["person_id"], name: "index_event_team_memberships_on_person_id", using: :btree
-  add_index "event_team_memberships", ["team_id"], name: "index_event_team_memberships_on_team_id", using: :btree
+  add_index "event_teams", ["event_id", "team_id"], name: "index_event_teams_on_event_id_and_team_id", unique: true, using: :btree
+  add_index "event_teams", ["event_id"], name: "index_event_teams_on_event_id", using: :btree
+  add_index "event_teams", ["team_id"], name: "index_event_teams_on_team_id", using: :btree
 
   create_table "events", force: true do |t|
     t.integer  "parent_id"
