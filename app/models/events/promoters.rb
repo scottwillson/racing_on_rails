@@ -24,6 +24,13 @@ module Events
       }
     end
 
+    def editable_by?(person)
+      return false unless person
+      person.administrator? ||
+      person == promoter ||
+      editors.include?(person)
+    end
+
     def promoter_name
       promoter.name if promoter
     end
