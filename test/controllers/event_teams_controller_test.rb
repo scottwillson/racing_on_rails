@@ -2,6 +2,8 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class EventTeamsControllerTest < ActionController::TestCase
+  setup :use_ssl
+
   test "index" do
     event_team_membership = FactoryGirl.create(:event_team_membership)
     get :index, event_id: event_team_membership.event

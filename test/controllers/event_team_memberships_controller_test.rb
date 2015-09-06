@@ -2,6 +2,8 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class EventTeamMembershipsControllerTest < ActionController::TestCase
+  setup :use_ssl
+
   test "#create for person name" do
     person = FactoryGirl.create(:person)
     event_team = FactoryGirl.create(:event_team)

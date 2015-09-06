@@ -1,7 +1,7 @@
 class EventTeamsController < ApplicationController
   force_https
 
-  before_filter :require_current_person, only: :create
+  before_action :require_current_person, only: :create
 
   def index
     @event = Event.includes(:event_teams).find(params[:event_id])
