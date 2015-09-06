@@ -322,7 +322,7 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   # keypress: function(index, altKey, ctrlKey, shiftKey, metaKey, keyCode, charCode) {
   def type_in(selector, text)
-    if selector["auto_complete"] || selector["autocomplete"]
+    if selector["autocomplete"]
       fill_in selector, with: ""
       find("##{selector}").native.send_keys(text[:with])
     else
