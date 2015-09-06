@@ -32,6 +32,9 @@ class EventTeamMembershipsController < ApplicationController
 
   def destroy
     @event_team_membership = EventTeamMembership.find(params[:id])
+
+    return redirect_to(unauthorized_path) unless person_or_editor?
+
     if @event_team_membership.destroy
       flash[:notice] = "Left #{@event_team_membership.team.name}"
     else
