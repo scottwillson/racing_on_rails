@@ -16,4 +16,12 @@ class EventTeam < ActiveRecord::Base
   def people
     event_team_memberships.map(&:person)
   end
+
+  def team_attributes=(attrs)
+    if Team.where(name: attrs[:name]).exists?
+      self.team = Team.where(name: attrs[:name]).first
+    else
+      super
+    end
+  end
 end

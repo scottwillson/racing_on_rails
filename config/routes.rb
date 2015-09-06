@@ -145,9 +145,13 @@ Rails.application.routes.draw do
     get '/events/:event_id/teams/:team_id/results/:race_id' => 'results#team_event'
     get '/events/:event_id' => 'results#event'
 
+    resources :event_teams do
+      resources :event_team_memberships
+    end
+
     resources :events do
       resources :event_team_memberships
-      resources :event_teams 
+      resources :event_teams
       resources :results
       resources :people do
         resources :results

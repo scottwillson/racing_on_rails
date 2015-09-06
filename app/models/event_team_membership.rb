@@ -5,7 +5,10 @@ class EventTeamMembership < ActiveRecord::Base
   validates_presence_of :event_team
   validates_presence_of :person
 
+  validates_uniqueness_of [ :event_team, :person ]
+
   accepts_nested_attributes_for :event_team
+  accepts_nested_attributes_for :person
 
   def event
     event_team.try(:event)
@@ -15,6 +18,18 @@ class EventTeamMembership < ActiveRecord::Base
     event.try(:full_name)
   end
 
+  def person_attributes=(attrs)
+    if person && !person.new_record?
+      true
+    else
+      super
+    end
+  end
+
+  def person_name
+    person.try(:name)
+  end
+
   def team
     event_team.try(:team)
   end
@@ -22,15 +37,4 @@ class EventTeamMembership < ActiveRecord::Base
   def team_name
     team.try(:name)
   end
-
-  #
-  # def event_team_attributes=(attr)
-  #   team_name = attr[:team][:name].try(:strip)
-  #
-  #   if team_name.present?
-  #     self.event_team = EventTeam.includes(:team).where(teams: { name: team_name }).first_or_create
-  #   else
-  #     super
-  #   end
-  # end
 end

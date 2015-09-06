@@ -1,7 +1,28 @@
 <% @page_title = "#{@event.name} Teams" %>
 
-<h2><%= @event.name %> Teams</h2>
+<h2><%= link_to @event.name, event_path(@event) %> Teams</h2>
 
 <%= table id: "event_teams", collection: @event.event_teams, columns: 1 do %>
-  <%= render partial: "event_team", collection: @event.event_teams %>
+  <%= render partial: "event_team", collection: @event.event_teams.sort_by(&:name) %>
 <% end -%>
+
+<% if @event.editable_by?(current_person) %>
+<%= form_for @event_team, url: event_event_teams_path(@event), html: { class: "form-inline" } do |f| %>
+  <%= f.fields_for :team do |team| %>
+    <div class="form-group">
+      <%= team.text_field :name, class: "form-control", placeholder: "Team name" %>
+    </div>
+  <% end %>
+  <button type="submit" class="btn btn-default">Add New Team</button>
+<% end %>
+
+<% elsif current_person && current_person.event_team_memberships.none? { |m| m.event == @event } %>
+  <%= form_for @event_team, url: event_event_teams_path(@event), html: { class: "form-inline" } do |f| %>
+    <%= f.fields_for :team do |team| %>
+      <div class="form-group">
+        <%= team.text_field :name, class: "form-control", placeholder: "Team name" %>
+      </div>
+    <% end %>
+    <button type="submit" class="btn btn-default">Join New Team</button>
+  <% end %>
+<% end %>

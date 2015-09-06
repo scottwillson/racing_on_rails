@@ -3,14 +3,22 @@ require "test_helper"
 # :stopdoc:
 class EventTeamMembershipsTest < ActiveSupport::TestCase
   test "create for existing team" do
-    event = FactoryGirl.create(:event)
     person = FactoryGirl.create(:person)
-    team = FactoryGirl.create(:team)
+    event_team = FactoryGirl.create(:event_team)
 
-    team_event_membership = EventTeamMembership.create!(
-      event: event,
-      person: person,
-      team_attributes: { name: team.name }
-    )
+    new_membership = event_team.event_team_memberships.create!(person: person)
+
+    assert_equal event_team, new_membership.event_team
+    assert_equal person, new_membership.person
+    assert_equal 1, EventTeamMembership.count
+  end
+
+  test "replace with person ID" do
+    event_team_membership = FactoryGirl.create(:event_team_membership)
+    different_team = FactoryGirl.create(:event_team, event: event_team_membership.event)
+
+    new_membership = different_team.event_team_memberships.create(person: event_team_membership.person)
+    assert new_membership.errors.present?
+    assert_equal 1, EventTeamMembership.count
   end
 end
