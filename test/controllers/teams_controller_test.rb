@@ -14,4 +14,12 @@ class TeamsControllerTest < ActionController::TestCase
     assert(!assigns(:teams).include?(nonmember), "Should only show member teams") unless RacingAssociation.current.show_all_teams_on_public_page?
     assert(!assigns(:teams).include?(hidden_team), "Should not show hidden teams") unless RacingAssociation.current.show_all_teams_on_public_page?
   end
+
+  test "find json" do
+    vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
+    get :index, name: 'van', format: "json"
+    assert_response :success
+    assert_equal [vanilla], assigns['teams'], "Search for 'van' should find Vanilla"
+    assert_equal "van", assigns["name"], "'name' assigns"
+  end
 end
