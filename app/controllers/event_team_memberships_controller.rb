@@ -1,6 +1,11 @@
 class EventTeamMembershipsController < ApplicationController
   force_https
-  before_filter :require_current_person
+  before_filter :require_current_person, except: :new
+
+  def new
+    event = Event.where(slug: params[:slug]).first!
+    redirect_to event_event_teams_path(event)
+  end
 
   def create
     event_team = EventTeam.find(params[:event_team_id])
