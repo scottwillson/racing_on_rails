@@ -11,7 +11,6 @@ RacingOnRails::Application.configure do
   config.cache_classes                                      = ENV["CACHE_CLASSES"] || false
   config.consider_all_requests_local                        = true
   config.eager_load                                         = false
-  config.middleware.use                                       Rack::LiveReload
   config.action_view.raise_on_missing_translations          = true
 
   config.after_initialize do
