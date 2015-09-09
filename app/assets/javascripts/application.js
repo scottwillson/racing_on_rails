@@ -7,30 +7,32 @@
  *= require bootstrap-datepicker/core
  *= require_self
 */
-function autoComplete(model, attribute, path) {
-  jQuery('#' + attribute + '_auto_complete').autocomplete({
-    delay: 200,
-    minLength: 3,
-    source: function(request, response) {
-      jQuery.getJSON(path, { name: request.term }, response);
-    },
-    messages: {
-      noResults: null,
-      results: function() {}
-    },
-    focus: function(event, ui) {
-      jQuery('#promoter_auto_complete').val(ui.item.first_name + ' ' + ui.item.last_name);
-      return false;
-    },
-    select: function(event, ui) {
-      jQuery('#promoter_auto_complete').val(ui.item.first_name + ' ' + ui.item.last_name);
-      jQuery('#event_promoter_id').val(ui.item.id);
-      jQuery('#event_promoter_id').change();
-      return false;
-    }
-  })
-  .data("ui-autocomplete")
-  ._renderItem = function(ul, item) {
+function bindAutocomplete() {
+  if (jQuery('.autocomplete').length) {
+    jQuery('.autocomplete').autocomplete({
+      delay: 200,
+      minLength: 3,
+      source: function(request, response) {
+        jQuery.getJSON('/people.json', { name: request.term }, response);
+      },
+      messages: {
+        noResults: null,
+        results: function() {}
+      },
+      focus: function(event, ui) {
+        jQuery(this).val(ui.item.first_name + ' ' + ui.item.last_name);
+        return false;
+      },
+      select: function(event, ui) {
+        jQuery(this).val(ui.item.first_name + ' ' + ui.item.last_name);
+        idField = jQuery('#' + jQuery(this).data('id-field'));
+        idField.val(ui.item.id);
+        idField.change();
+        return false;
+      }
+    })
+    .data("ui-autocomplete")
+    ._renderItem = function(ul, item) {
       var description = [];
       if (item !== undefined && item.team_name !== undefined && item.team_name !== '') {
         description.push(item.team_name);
@@ -43,42 +45,45 @@ function autoComplete(model, attribute, path) {
       }
 
       return jQuery('<li id="person_' + item.id + '"></li>')
-        .data( "item.autocomplete", item )
+        .data("item.autocomplete", item)
         .append('<a>' + item.first_name + ' ' + item.last_name + '<div class="informal">' + description.join(', ') + "</div></a>")
-        .appendTo( ul );
+        .appendTo(ul);
     };
+  }
 }
 
-function autoCompleteTeam(model, attribute, path) {
-  jQuery(document).ready(function() {
-    jQuery('#' + attribute + '_auto_complete').autocomplete({
+function bindAutocompleteTeam() {
+  if (jQuery('.team_autocomplete').length) {
+    jQuery('.team_autocomplete').autocomplete({
       delay: 200,
       minLength: 3,
       source: function(request, response) {
-        jQuery.getJSON(path, { name: request.term }, response);
+        jQuery.getJSON("/teams.json", { name: request.term }, response);
       },
       messages: {
         noResults: null,
         results: function() {}
       },
       focus: function(event, ui) {
-        jQuery('#team_auto_complete').val(ui.item.name);
+        jQuery(this).val(ui.item.name);
         return false;
       },
       select: function(event, ui) {
-        jQuery('#team_auto_complete').val(ui.item.name);
-        jQuery('#event_team_id').val(ui.item.id);
+        jQuery(this).val(ui.item.name);
+        idField = jQuery('#' + jQuery(this).data('id-field'));
+        idField.val(ui.item.id);
+        idField.change();
         return false;
-      }
+      },
     })
     .data("ui-autocomplete")
     ._renderItem = function(ul, item) {
-        return jQuery('<li id="team_' + item.id + '"></li>')
-          .data( "item.autocomplete", item )
+      return jQuery('<li id="team_' + item.id + '"></li>')
+          .data("item.autocomplete", item)
           .append('<a>' + item.name + '</a>')
-          .appendTo( ul );
-      };
-  });
+          .appendTo(ul);
+    };
+  }
 }
 
 function makeEditable() {
@@ -147,5 +152,7 @@ jQuery(document).bind("ajax:error", function(event, xhr, status, error) {
 
 jQuery(document).ready(function() {
   makeEditable();
+  bindAutocomplete();
+  bindAutocompleteTeam();
   jQuery('.wants_focus:visible').select();
 });

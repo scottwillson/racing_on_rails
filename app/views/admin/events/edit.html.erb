@@ -98,16 +98,13 @@
           <%= f.hidden_field :promoter_id -%>
           <%= f.label :promoter_id, nil, class: "control-label col-sm-4" %>
           <div class="col-sm-8">
-            <%= f.text_field :promoter_name, class: "form-control", id: "promoter_auto_complete", autocomplete: "off" %>
+            <%= f.text_field :promoter_name,
+                  class: "form-control autocomplete",
+                  id: "promoter_autocomplete",
+                  autocomplete: "off",
+                  data: { "id-field" => "event_promoter_id" } %>
           </div>
         </div>
-
-        <script type="text/javascript" charset="utf-8">
-        $(document).ready(function() {
-          autoComplete('event', 'promoter', '<%= people_path(format: :json) %>');
-        });
-        </script>
-
         <div class="form-group">
           <div class="col-sm-offset-4 col-sm-8">
             <a href="#" class="obvious" data-event-id="<%= @event.id %>" id="edit_promoter_link">Edit</a>
@@ -129,15 +126,13 @@
           <%= f.hidden_field :team_id -%>
           <%= f.label :team_id, "Sponsoring Team", class: "control-label col-sm-4" %>
           <div class="col-sm-8">
-            <%= f.text_field :team_name, class: "form-control", id: "team_auto_complete", autocomplete: "off" %>
+            <%= f.text_field :team_name,
+                  class: "form-control team_autocomplete",
+                  id: "team_autocomplete",
+                  autocomplete: "off",
+                  data: { "id-field" => "event_team_id" } %>
           </div>
         </div>
-
-        <script type="text/javascript" charset="utf-8">
-        $(document).ready(function() {
-          autoCompleteTeam('event', 'team', '<%= admin_teams_path(format: :json) %>');
-        });
-        </script>
         <% end %>
 
         <%= f.labelled_text_field :first_aid_provider, nil, editable: administrator?, class: "form-control col-sm-12" %>

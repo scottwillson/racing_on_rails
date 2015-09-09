@@ -25,18 +25,18 @@ class EventsTest < AcceptanceTest
     click_link "Sausalito Criterium"
 
     assert_equal "", find("#event_promoter_id", visible: false).value
-    assert_equal "", find("#promoter_auto_complete").value
-    type_in "promoter_auto_complete", with: "Tom Brown"
+    assert_equal "", find("#promoter_autocomplete").value
+    type_in "promoter_autocomplete", with: "Tom Brown"
 
     click_button "Save"
     assert_match %r{\d+}, find("#event_promoter_id", visible: false).value
-    assert page.has_field?("promoter_auto_complete", with: "Tom Brown")
+    assert page.has_field?("promoter_autocomplete", with: "Tom Brown")
 
     visit "/admin/events"
     assert_page_has_content "Sausalito Criterium"
     click_link "Sausalito Criterium"
     assert_match %r{\d+}, find("#event_promoter_id", visible: false).value
-    assert page.has_field?("promoter_auto_complete", with: "Tom Brown")
+    assert page.has_field?("promoter_autocomplete", with: "Tom Brown")
 
     click_link "edit_promoter_link"
     assert page.has_field?("First Name", with: "Tom")
@@ -48,25 +48,25 @@ class EventsTest < AcceptanceTest
     click_link "back_to_event"
 
     assert_match %r{\d+}, find("#event_promoter_id", visible: false).value
-    assert page.has_field?("promoter_auto_complete", with: "Tim Brown")
+    assert page.has_field?("promoter_autocomplete", with: "Tim Brown")
 
-    type_in "promoter_auto_complete", with: "candi m"
+    type_in "promoter_autocomplete", with: "candi m"
     find("li#person_#{candi.id} a").click
-    assert page.has_field?("promoter_auto_complete", with: "Candi Murray")
+    assert page.has_field?("promoter_autocomplete", with: "Candi Murray")
 
     click_button "Save"
 
     assert_equal candi.id.to_s, find("#event_promoter_id", visible: false).value
-    assert page.has_field?("promoter_auto_complete", with: "Candi Murray")
+    assert page.has_field?("promoter_autocomplete", with: "Candi Murray")
 
-    fill_in "promoter_auto_complete", with: ""
+    fill_in "promoter_autocomplete", with: ""
     click_button "Save"
 
     assert_equal "", find("#event_promoter_id", visible: false).value
-    assert page.has_field?("promoter_auto_complete", with: "")
+    assert page.has_field?("promoter_autocomplete", with: "")
 
     assert_equal "", find("#event_team_id", visible: false).value
-    assert_equal "", find("#team_auto_complete").value
+    assert_equal "", find("#team_autocomplete").value
 
     assert_equal "", find("#event_phone").value
     assert_equal "", find("#event_email").value
@@ -85,20 +85,20 @@ class EventsTest < AcceptanceTest
     visit "/admin/events"
     click_link "Sausalito Criterium"
 
-    type_in "team_auto_complete", with: "Gentle Lovers"
+    type_in "team_autocomplete", with: "Gentle Lovers"
     find("li#team_#{gl.id} a").click
-    assert page.has_field?("team_auto_complete", with: "Gentle Lovers")
+    assert page.has_field?("team_autocomplete", with: "Gentle Lovers")
 
     click_button "Save"
 
     assert_equal gl.id.to_s, find("#event_team_id", visible: false).value
-    assert_equal "Gentle Lovers", find("#team_auto_complete").value
+    assert_equal "Gentle Lovers", find("#team_autocomplete").value
 
-    fill_in "team_auto_complete", with: ""
+    fill_in "team_autocomplete", with: ""
     click_button "Save"
 
     assert_equal "", find("#event_team_id", visible: false).value
-    assert_equal "", find("#team_auto_complete").value
+    assert_equal "", find("#team_autocomplete").value
 
     fill_in "Date", with: "Nov 13, 2013"
     click_button "Save"
