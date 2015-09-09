@@ -47,12 +47,13 @@ class Event < ActiveRecord::Base
   include Sanctioned
 
   before_save :set_team
+  before_destroy :destroy_event_team_memberships
 
   validates_presence_of :date, :name
 
   validate :inclusion_of_discipline
 
-  has_many :event_teams
+  has_many :event_teams, dependent: :destroy
   has_many :event_team_memberships, through: :event_teams
   belongs_to :number_issuer
   belongs_to :team
@@ -288,6 +289,10 @@ class Event < ActiveRecord::Base
       race.results.each(&:destroy)
       race.results.delete(race.results.select(&:destroyed?))
     end
+  end
+
+  def destroy_event_team_memberships
+    event_team_memberships.each(&:destroy)
   end
 
   def self.three_relation_union(relation_1, relation_2, relation_3)

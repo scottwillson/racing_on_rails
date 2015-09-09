@@ -2,7 +2,7 @@ class EventTeam < ActiveRecord::Base
   belongs_to :event
   belongs_to :team
 
-  has_many :event_team_memberships
+  has_many :event_team_memberships, dependent: :restrict_with_error
 
   validates_presence_of :event
   validates_presence_of :team
