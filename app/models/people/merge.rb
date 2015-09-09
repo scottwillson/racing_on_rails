@@ -119,6 +119,8 @@ module People
             editor_requests << other_person.editor_requests
             editors << (other_person.editors - editors).uniq.reject { |e| e == self }
             events << other_person.events
+            event_teams = event_team_memberships.map(&:event_team_id)
+            event_team_memberships << other_person.event_team_memberships.reject { |e| event_teams.include?(e.event_team_id) }
             names << other_person.names
             race_numbers << other_person.race_numbers
             results << other_person.results
@@ -135,6 +137,7 @@ module People
               version.save!
             end
 
+            other_person.event_team_memberships.reload.clear
             Person.delete other_person.id
             existing_alias = aliases.detect{ |a| a.name.casecmp(other_person.name) == 0 }
             if existing_alias.nil? && Person.find_all_by_name(other_person.name).empty?

@@ -17,6 +17,7 @@ class Team < ActiveRecord::Base
 
   has_many :aliases, as: :aliasable, dependent: :destroy
   has_many :events
+  has_many :event_teams
   has_many :people
   has_many :results
 
@@ -110,6 +111,15 @@ class Team < ActiveRecord::Base
 
       team.create_team_for_historical_results!
       team.results true
+
+      team.event_teams.each do |event_team|
+        event_team.event_team_memberships.each do |event_team_membership|
+          new_event_team = EventTeam.where(event: event_team.event, team: self).first_or_create!
+          event_team_membership.event_team = new_event_team
+          event_team_membership.save!
+        end
+        event_team.reload.destroy!
+      end
 
       aliases << team.aliases
       events << team.events

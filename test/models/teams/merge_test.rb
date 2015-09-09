@@ -18,6 +18,11 @@ module Teams
       FactoryGirl.create(:person, team: team_to_merge)
       FactoryGirl.create(:person, team: team_to_merge)
       FactoryGirl.create(:person, team: team_to_merge)
+      event = FactoryGirl.create(:event)
+      event_team = EventTeam.create!(team: team_to_merge, event: event)
+      FactoryGirl.create(:event_team_membership, event_team: event_team)
+      event_team = EventTeam.create!(team: team_to_keep, event: event)
+      FactoryGirl.create(:event_team_membership, event_team: event_team)
 
       CombinedTimeTrialResults.calculate!
 
@@ -48,6 +53,11 @@ module Teams
       assert_equal(0, Person.where(team_id: team_to_merge.id).count, "Gentle Lovers's people")
       assert_equal(0, Alias.where(aliasable_id: team_to_merge.id).count, "Gentle Lovers's aliases")
       assert_same_elements(promoter_events, team_to_keep.events(true), "Should merge sponsored events")
+      assert_equal 1, EventTeam.count, "event teams"
+      assert_equal 1, team_to_keep.event_teams.reload.count, "event teams"
+      assert_equal 2, EventTeamMembership.count, "event team memberships"
+      assert_equal team_to_keep, EventTeamMembership.first.team
+      assert_equal team_to_keep, EventTeamMembership.second.team
     end
 
     test "merge with names" do
