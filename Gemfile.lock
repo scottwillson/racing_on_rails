@@ -278,8 +278,6 @@ GEM
       railties (>= 3.1, < 5.0)
     racc (1.4.12)
     rack (1.5.5)
-    rack-livereload (0.3.16)
-      rack
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.1.13)
@@ -448,7 +446,6 @@ DEPENDENCIES
   prawn!
   puma
   quiet_assets
-  rack-livereload
   rails (~> 4.1.13)
   rails-observers
   rake

@@ -63,7 +63,6 @@ group :development do
   gem "capistrano-rvm"
   gem "celluloid-benchmark"
   gem "rubocop", require: false
-  gem "rack-livereload"
   gem "spring"
 end
 
