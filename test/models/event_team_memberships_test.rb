@@ -17,7 +17,7 @@ class EventTeamMembershipsTest < ActiveSupport::TestCase
     event_team_membership = FactoryGirl.create(:event_team_membership)
     different_team = FactoryGirl.create(:event_team, event: event_team_membership.event)
 
-    new_membership = different_team.event_team_memberships.create(person: event_team_membership.person)
+    new_membership = different_team.event_team_memberships.create(person: event_team_membership.person.reload)
     assert new_membership.errors.present?
     assert_equal 1, EventTeamMembership.count
   end

@@ -6,6 +6,7 @@ class EventTeamMembership < ActiveRecord::Base
   validates_presence_of :person
 
   validates_uniqueness_of :person, scope: :event_team
+  validate :uniqueness_of_event
 
   accepts_nested_attributes_for :event_team
   accepts_nested_attributes_for :person
@@ -36,5 +37,11 @@ class EventTeamMembership < ActiveRecord::Base
 
   def team_name
     team.try(:name)
+  end
+
+  def uniqueness_of_event
+    if person && person.event_team_memberships.reject { |m| m == self }.map(&:event).include?(event)
+      errors.add :event_team, "Already on a team for #{event.name}"
+    end
   end
 end
