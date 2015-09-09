@@ -6,6 +6,12 @@ class EventTeamsController < ApplicationController
   def index
     @event = Event.includes(:event_teams).find(params[:event_id])
     @event_team = EventTeam.new(event: @event, team: Team.new)
+
+    if @event.event_teams?
+      render :index
+    else
+      render :no_event_teams
+    end
   end
 
   def create

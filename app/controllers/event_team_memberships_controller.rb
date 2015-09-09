@@ -3,8 +3,13 @@ class EventTeamMembershipsController < ApplicationController
   before_filter :require_current_person, except: :new
 
   def new
-    event = Event.where(slug: params[:slug]).first!
-    redirect_to event_event_teams_path(event)
+    if params[:slug].present?
+      event = Event.where(slug: params[:slug]).first!
+      redirect_to event_event_teams_path(event)
+    else
+      event = Event.find(params[:event_id])
+      redirect_to event_event_teams_path(event)
+    end
   end
 
   def create

@@ -17,6 +17,7 @@
   </div>
 
   <%= render partial: "results/source_events", locals: { source_events: @source_events } %>
+  <%= render partial: "results/event_teams", locals: { event: @event } %>
   <%= render partial: "results/single_day_event_children", locals: { single_day_event_children: @single_day_event_children } %>
   <%= render partial: "results/races", locals: { races: @races } %>
   <%= render partial: "results/children", locals: { children: @children } %>
