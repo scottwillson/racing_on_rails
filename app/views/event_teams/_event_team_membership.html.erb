@@ -8,8 +8,8 @@
 <% end %>
 
 <% if current_person == event_team_membership.person %>
-  <%= link_to "Leave", event_team_membership_path(event_team_membership), method: :delete %>
+  <%= link_to "Leave", event_team_membership_path(event_team_membership), method: :delete, class: "btn btn-default btn-xs" %>
 <% elsif editor_for?(event_team_membership.person) || event_team_membership.event.editable_by?(current_person) %>
-  <%= link_to "Remove", event_team_membership_path(event_team_membership), method: :delete %>
+  <%= link_to "Remove", event_team_membership_path(event_team_membership), method: :delete, class: "btn btn-default btn-xs" %>
 <% end %>
 </li>

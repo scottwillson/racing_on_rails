@@ -4,7 +4,7 @@
     <ul class="list-unstyled">
       <%= render partial: "event_teams/event_team_membership", collection: event_team.event_team_memberships.sort_by(&:person_name) %>
       <% if event_team.event.editable_by?(current_person).present? %>
-        <% link_to event_team_path(event_team_path(event_team), method: :delete) %>
+        <% link_to "Remove", event_team_path(event_team_path(event_team), method: :delete), class: "btn btn-default btn-xs" %>
       <% end %>
     </ul>
     <% if event_team.event.editable_by?(current_person).present? %>
@@ -23,7 +23,7 @@
         <button type="submit" class="btn btn-default">Add Person</button>
       <% end %>
     <% elsif !event_team.people.include?(current_person) %>
-      <%= link_to "Join", event_team_event_team_memberships_path(event_team), method: :post %>
+      <%= link_to "Join", event_team_event_team_memberships_path(event_team), method: :post, class: "btn btn-default btn-xs" %>
     <% end %>
   </td>
 </tr>
