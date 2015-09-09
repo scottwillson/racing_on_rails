@@ -43,8 +43,9 @@ class Person < ActiveRecord::Base
   validate :membership_dates
   before_destroy :ensure_no_results
 
-  has_many :events, foreign_key: "promoter_id"
   has_and_belongs_to_many :editable_events, class_name: "Event", foreign_key: "editor_id", join_table: "editors_events"
+  has_many :events, foreign_key: "promoter_id"
+  has_many :event_teams, through: :event_team_memberships
   has_many :event_team_memberships, dependent: :destroy
   has_many :results
   belongs_to :team
