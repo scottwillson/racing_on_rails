@@ -4,7 +4,10 @@ class EventTeamsController < ApplicationController
   before_action :require_current_person, only: :create
 
   def index
-    @event = Event.includes(:event_teams).find(params[:event_id])
+    @event = Event
+      .includes(event_teams: :team)
+      .includes(event_team_memberships: [ { event_team: :team, person: :editors } ])
+      .find(params[:event_id])
     @event_team = EventTeam.new(event: @event, team: Team.new)
 
     if @event.event_teams?
