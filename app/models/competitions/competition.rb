@@ -160,6 +160,7 @@ module Competitions
 
     # Callback
     def after_calculate
+      # TODO ensure subclasses call super
       self.updated_at = Time.zone.now
     end
 

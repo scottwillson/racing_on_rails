@@ -1,6 +1,6 @@
 module Competitions
   class CrossCrusadeCallups < Competition
-    default_value_for :name, "Cross Crusade Call-ups"
+    default_value_for :name, "Cross Crusade Callups"
 
     def category_names
       [
