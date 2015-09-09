@@ -23,7 +23,7 @@ module PeopleHelper
       person.try :person
     end
 
-    if ((attributes && (attributes.any? { |a| person[a].blank? || subject[a].blank? })) || current_person.can_edit?(subject)) && block
+    if ((attributes && (attributes.any? { |a| person[a].blank? || subject[a].blank? })) || (current_person && current_person.can_edit?(subject))) && block
       capture(&block)
     end
   end

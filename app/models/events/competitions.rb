@@ -31,6 +31,10 @@ module Events
       competition_event_membership.save!
     end
 
+    def event_teams?
+      false
+    end
+
     # Only consider results from source_events. Default to false: use all events in year.
     def source_events?
       false

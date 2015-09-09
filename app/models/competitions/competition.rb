@@ -25,7 +25,8 @@ module Competitions
       Competitions::Ironman
       Competitions::OregonTTCup
       Competitions::OregonCup
-      Competitions::OregonJuniorCyclocrossSeries
+      Competitions::OregonJuniorCyclocrossSeries::Overall
+      Competitions::OregonJuniorCyclocrossSeries::Team
       Competitions::OregonWomensPrestigeSeries
       Competitions::OregonWomensPrestigeTeamSeries
       Competitions::OverallBar

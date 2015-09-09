@@ -1,6 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
-
+# :stopdoc:
 class EditorRequestsTest < ActiveSupport::TestCase
   test "create" do
     ActionMailer::Base.deliveries.clear

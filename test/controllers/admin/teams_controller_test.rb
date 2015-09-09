@@ -24,6 +24,40 @@ module Admin
       assert_nil(@request.session["person"], "No person in session")
     end
 
+    test "find" do
+      vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
+      get(:index, name: 'van')
+      assert_response(:success)
+      assert_template("admin/teams/index")
+      assert_not_nil(assigns["teams"], "Should assign teams")
+      assert_equal([vanilla], assigns['teams'], 'Search for van should find Vanilla')
+      assert_not_nil(assigns["name"], "Should assign name")
+      assert_equal('van', assigns['name'], "'name' assigns")
+    end
+
+    test "find nothing" do
+      FactoryGirl.create(:team, name: "Vanilla Bicycles")
+      FactoryGirl.create(:team)
+
+      get(:index, name: 's7dfnacs89danfx')
+      assert_response(:success)
+      assert_template("admin/teams/index")
+      assert_not_nil(assigns["teams"], "Should assign teams")
+      assert_equal(0, assigns['teams'].size, "Should find no teams")
+    end
+
+    test "find empty name" do
+      FactoryGirl.create(:team, name: "Vanilla Bicycles")
+
+      get(:index, name: '')
+      assert_response(:success)
+      assert_template("admin/teams/index")
+      assert_not_nil(assigns["teams"], "Should assign teams")
+      assert_equal(0, assigns['teams'].size, "Search for '' should find no teams")
+      assert_not_nil(assigns["name"], "Should assign name")
+      assert_equal('', assigns['name'], "'name' assigns")
+    end
+
     test "index" do
       get(:index)
       assert_response(:success)
@@ -51,48 +85,6 @@ module Admin
       assert_template("admin/teams/index")
       assert_not_nil(assigns["teams"], "Should assign teams")
       assert_equal([vanilla], assigns['teams'], 'Search for nilla should find Vanilla')
-    end
-
-    test "find" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
-      get(:index, name: 'van')
-      assert_response(:success)
-      assert_template("admin/teams/index")
-      assert_not_nil(assigns["teams"], "Should assign teams")
-      assert_equal([vanilla], assigns['teams'], 'Search for van should find Vanilla')
-      assert_not_nil(assigns["name"], "Should assign name")
-      assert_equal('van', assigns['name'], "'name' assigns")
-    end
-
-    test "find json" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
-      get :index, name: 'van', format: "json"
-      assert_response :success
-      assert_equal [vanilla], assigns['teams'], "Search for 'van' should find Vanilla"
-      assert_equal "van", assigns["name"], "'name' assigns"
-    end
-
-    test "find nothing" do
-      FactoryGirl.create(:team, name: "Vanilla Bicycles")
-      FactoryGirl.create(:team)
-
-      get(:index, name: 's7dfnacs89danfx')
-      assert_response(:success)
-      assert_template("admin/teams/index")
-      assert_not_nil(assigns["teams"], "Should assign teams")
-      assert_equal(0, assigns['teams'].size, "Should find no teams")
-    end
-
-    test "find empty name" do
-      FactoryGirl.create(:team, name: "Vanilla Bicycles")
-
-      get(:index, name: '')
-      assert_response(:success)
-      assert_template("admin/teams/index")
-      assert_not_nil(assigns["teams"], "Should assign teams")
-      assert_equal(0, assigns['teams'].size, "Search for '' should find no teams")
-      assert_not_nil(assigns["name"], "Should assign name")
-      assert_equal('', assigns['name'], "'name' assigns")
     end
 
     test "blank name" do

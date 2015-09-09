@@ -6,6 +6,7 @@ module Events
 
     included do
       before_save :set_end_date
+      before_save :set_year
     end
 
     module ClassMethods
@@ -114,6 +115,10 @@ module Events
 
     # Does nothing. Allows us to treat Events and MultiDayEvents the same.
     def update_date
+    end
+
+    def set_year
+      self.year = date.year
     end
   end
 end

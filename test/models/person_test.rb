@@ -108,6 +108,7 @@ class PersonTest < ActiveSupport::TestCase
     FactoryGirl.create(:result, person: person_to_keep)
     FactoryGirl.create(:result, person: person_to_keep)
     FactoryGirl.create(:result, person: person_to_keep)
+    event_team_membership = FactoryGirl.create(:event_team_membership, person: person_to_keep)
 
     team = FactoryGirl.create(:team, name: "Gentle Lovers")
     person_to_merge = FactoryGirl.create(
@@ -126,6 +127,7 @@ class PersonTest < ActiveSupport::TestCase
     FactoryGirl.create(:result, person: person_to_merge)
     FactoryGirl.create(:result, person: person_to_merge)
     person_to_merge.aliases.create!(name: "Eric Tonkin")
+    FactoryGirl.create(:event_team_membership, person: person_to_merge, event_team: event_team_membership.event_team)
 
     assert Person.where(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
     assert_equal(3, Result.where(person_id: person_to_keep.id).count, "Molly's results")
@@ -150,6 +152,8 @@ class PersonTest < ActiveSupport::TestCase
 
     promoter_events = [ Event.create!(promoter: person_to_keep), Event.create!(promoter: person_to_merge) ]
 
+    person_to_keep.reload
+    person_to_merge.reload
     person_to_keep.merge(person_to_merge)
 
     person_to_keep.reload
@@ -187,6 +191,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal true, person_to_keep.print_card, "should preserve booleans in person to keep"
     assert_equal true, person_to_keep.race_promotion_interest, "should preserve booleans in person to keep"
     assert_equal "Gentle Lovers", person_to_keep.team_name, "should set team from person to merge"
+    assert_equal 1, EventTeamMembership.count, "event team memberships"
 
     assert_equal 3, person_to_keep.versions.size, "versions in #{person_to_keep.versions}"
     assert_equal [ 2, 3, 4 ], person_to_keep.versions.map(&:number).sort, "version numbers"

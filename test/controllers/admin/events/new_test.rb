@@ -4,7 +4,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 module Admin
   module Events
     class NewControllerTest < ActionController::TestCase
-      tests EventsController
+      tests ::Admin::EventsController
 
       def setup
         super

@@ -1,0 +1,29 @@
+<tr>
+  <td class="name">
+    <strong><%= link_to event_team.name, edit_event_team_path(event_team) %></strong>
+    <ul class="list-unstyled">
+      <%= render partial: "event_teams/event_team_membership", collection: event_team.event_team_memberships.sort_by(&:person_name) %>
+      <% if event_team.event.editable_by?(current_person).present? %>
+        <% link_to "Remove", event_team_path(event_team_path(event_team), method: :delete), class: "btn btn-default btn-xs" %>
+      <% end %>
+    </ul>
+    <% if event_team.event.editable_by?(current_person).present? %>
+      <%= form_for event_team.event_team_memberships.build(person: Person.new), url: event_team_event_team_memberships_path(event_team), html: { class: "form-inline" } do |f| %>
+        <%= f.hidden_field :person_id, id: "event_#{event_team.id}_team_membership_person_id" -%>
+        <%= f.fields_for :person do |person| %>
+          <div class="form-group">
+            <%= person.text_field :name,
+                class: "form-control autocomplete",
+                id: "event_team_#{event_team.id}_person_autocomplete",
+                placeholder: "Person name",
+                autocomplete: "off",
+                data: { "id-field" => "event_#{event_team.id}_team_membership_person_id" } %>
+          </div>
+        <% end %>
+        <button type="submit" class="btn btn-default">Add Person</button>
+      <% end %>
+    <% elsif !event_team.people.include?(current_person) %>
+      <%= link_to "Join", event_team_event_team_memberships_path(event_team), method: :post, class: "btn btn-default btn-xs" %>
+    <% end %>
+  </td>
+</tr>
