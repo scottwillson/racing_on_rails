@@ -1,6 +1,6 @@
 class CreateEventTeamMemberships < ActiveRecord::Migration
   def change
-    create_table :event_teams do |t|
+    create_table :event_teams, force: true do |t|
       t.references :event, null: false
       t.references :team, null: false
 
@@ -11,7 +11,7 @@ class CreateEventTeamMemberships < ActiveRecord::Migration
       t.index [ :event_id, :team_id ], unique: true
     end
 
-    create_table :event_team_memberships do |t|
+    create_table :event_team_memberships, force: true do |t|
       t.references :event_team, null: false
       t.references :person, null: false
 
