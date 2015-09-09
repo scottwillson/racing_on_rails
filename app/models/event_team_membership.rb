@@ -5,7 +5,7 @@ class EventTeamMembership < ActiveRecord::Base
   validates_presence_of :event_team
   validates_presence_of :person
 
-  validates_uniqueness_of [ :event_team, :person ]
+  validates_uniqueness_of :person, scope: :event_team
 
   accepts_nested_attributes_for :event_team
   accepts_nested_attributes_for :person

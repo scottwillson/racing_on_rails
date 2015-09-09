@@ -43,6 +43,28 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     assert_redirected_to event_event_teams_path(event_team.event)
   end
 
+  test "#create for existing person and existing event team" do
+    event_team_membership = FactoryGirl.create(:event_team_membership)
+    person = FactoryGirl.create(:person)
+    event_team = event_team_membership.event_team
+    login_as event_team.event.promoter
+
+    post :create,
+      event_team_id: event_team,
+      event_team_membership: {
+        person_id: person,
+        person_attributes: {
+          name: person.name
+        }
+      }
+
+    event_team_membership = assigns(:event_team_membership)
+    assert_not_nil event_team_membership
+    assert event_team_membership.errors.empty?, event_team_membership.errors.full_messages.join(", ")
+    assert_equal person, event_team_membership.person
+    assert_redirected_to event_event_teams_path(event_team.event)
+  end
+
   test "#create current person" do
     person = FactoryGirl.create(:person)
     login_as person
