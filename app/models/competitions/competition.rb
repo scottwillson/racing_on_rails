@@ -26,6 +26,7 @@ module Competitions
       Competitions::OregonTTCup
       Competitions::OregonCup
       Competitions::OregonJuniorCyclocrossSeries::Overall
+      Competitions::OregonJuniorCyclocrossSeries::Team
       Competitions::OregonWomensPrestigeSeries
       Competitions::OregonWomensPrestigeTeamSeries
       Competitions::OverallBar
