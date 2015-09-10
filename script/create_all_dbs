@@ -1,7 +1,7 @@
 #! /usr/bin/env ruby
 
 `./script/local`
-puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists racing_on_rails_development; drop database if exists racing_on_rails_4_test'`
+puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists racing_on_rails_development; drop database if exists racing_on_rails_test'`
 puts `mysql -u root < db/grants.sql`
 puts `rake db:setup`
 puts `rake parallel:create`
