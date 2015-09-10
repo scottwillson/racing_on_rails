@@ -26,12 +26,12 @@ class AddEventsSlug < ActiveRecord::Migration
     if Event.column_names.include?("slug")
       Event.transaction do
         Event
-          .where("sanctioned_by is not null and sanctioned_by != ''")
+          .where("sanctioned_by is not null and sanctioned_by != ''and sanctioned_by != 'FIAC'")
           .find_each do |e|
             e.slug = nil
             e.set_slug
             say("#{e.id} #{e.date} #{e.name} #{e.slug}")
-            e.save
+            e.save!
         end
       end
     end
