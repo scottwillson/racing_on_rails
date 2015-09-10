@@ -1,4 +1,5 @@
 require "test_helper"
+require_relative "../../../../app/models/competitions/calculations/structs"
 
 module Competitions
   # :stopdoc:
