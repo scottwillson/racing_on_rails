@@ -1,13 +1,18 @@
 #! /usr/bin/env ruby
 
-# `./script/local`
-# puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists racing_on_rails_development; drop database if exists racing_on_rails_test'`
-# puts `mysql -u root < db/grants.sql`
-# puts `rake db:setup`
-# puts `rake parallel:create`
+`./script/local`
+puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists racing_on_rails_development; drop database if exists racing_on_rails_test'`
+puts `mysql -u root < db/grants.sql`
+puts `DISABLE_SPRING=1 rake db:setup RAILS_ENV=test`
+puts `DISABLE_SPRING=1 rake db:setup`
+(1..7).each do |index|
+  puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists racing_on_rails_test#{index}'`
+end
 
-[ "mbra" ].each do |association|
-# [ "aba", "atra", "mbra", "nabra", "obra", "wsba" ].each do |association|
+puts `DISABLE_SPRING=1 rake parallel:create`
+puts `DISABLE_SPRING=1 rake parallel:prepare`
+
+[ "aba", "atra", "mbra", "nabra", "obra", "wsba" ].each do |association|
   puts association
   `./script/local #{association}`
   puts "Create databases"
@@ -20,8 +25,11 @@
   puts %x{mysql -u root -e 'grant all privileges on `#{association}_test%`.* to #{association}_test@localhost'}
   puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_development'`
   puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_test'`
-  puts `rake db:setup`
-  puts `rake db:setup RAILS_ENV=test`
-  puts `rake parallel:drop`
-  puts `rake parallel:create`
+  (1..7).each do |index|
+    puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_test#{index}'`
+  end
+  puts `DISABLE_SPRING=1 rake db:setup RAILS_ENV=test`
+  puts `DISABLE_SPRING=1 rake db:setup`
+  puts `DISABLE_SPRING=1 rake parallel:create`
+  puts `DISABLE_SPRING=1 rake parallel:prepare`
 end
