@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150702234530) do
+ActiveRecord::Schema.define(version: 20150901201611) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -197,6 +197,28 @@ ActiveRecord::Schema.define(version: 20150702234530) do
   add_index "editors_events", ["editor_id"], name: "index_editors_events_on_editor_id", using: :btree
   add_index "editors_events", ["event_id"], name: "index_editors_events_on_event_id", using: :btree
 
+  create_table "event_team_memberships", force: :cascade do |t|
+    t.integer  "event_team_id", limit: 4, null: false
+    t.integer  "person_id",     limit: 4, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "event_team_memberships", ["event_team_id", "person_id"], name: "index_event_team_memberships_on_event_team_id_and_person_id", unique: true, using: :btree
+  add_index "event_team_memberships", ["event_team_id"], name: "index_event_team_memberships_on_event_team_id", using: :btree
+  add_index "event_team_memberships", ["person_id"], name: "index_event_team_memberships_on_person_id", using: :btree
+
+  create_table "event_teams", force: :cascade do |t|
+    t.integer  "event_id",   limit: 4, null: false
+    t.integer  "team_id",    limit: 4, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "event_teams", ["event_id", "team_id"], name: "index_event_teams_on_event_id_and_team_id", unique: true, using: :btree
+  add_index "event_teams", ["event_id"], name: "index_event_teams_on_event_id", using: :btree
+  add_index "event_teams", ["team_id"], name: "index_event_teams_on_team_id", using: :btree
+
   create_table "events", force: :cascade do |t|
     t.integer  "parent_id",                      limit: 4
     t.string   "city",                           limit: 128
@@ -253,6 +275,8 @@ ActiveRecord::Schema.define(version: 20150702234530) do
     t.boolean  "registration_public",                                                   default: true,  null: false
     t.decimal  "junior_price",                                 precision: 10, scale: 2
     t.boolean  "suggest_membership",                                                    default: true,  null: false
+    t.string   "slug",                           limit: 255
+    t.integer  "year",                           limit: 4,                                              null: false
   end
 
   add_index "events", ["bar_points"], name: "index_events_on_bar_points", using: :btree
@@ -263,10 +287,13 @@ ActiveRecord::Schema.define(version: 20150702234530) do
   add_index "events", ["promoter_id"], name: "index_events_on_promoter_id", using: :btree
   add_index "events", ["region_id"], name: "index_events_on_region_id", using: :btree
   add_index "events", ["sanctioned_by"], name: "index_events_on_sanctioned_by", using: :btree
+  add_index "events", ["slug"], name: "index_events_on_slug", using: :btree
   add_index "events", ["type"], name: "idx_type", using: :btree
   add_index "events", ["type"], name: "index_events_on_type", using: :btree
   add_index "events", ["updated_at"], name: "index_events_on_updated_at", using: :btree
   add_index "events", ["velodrome_id"], name: "velodrome_id", using: :btree
+  add_index "events", ["year", "slug"], name: "index_events_on_year_and_slug", using: :btree
+  add_index "events", ["year"], name: "index_events_on_year", using: :btree
 
   create_table "homes", force: :cascade do |t|
     t.integer  "photo_id",                 limit: 4
@@ -557,7 +584,6 @@ ActiveRecord::Schema.define(version: 20150702234530) do
   add_index "people", ["email"], name: "index_people_on_email", using: :btree
   add_index "people", ["first_name"], name: "idx_first_name", using: :btree
   add_index "people", ["last_name"], name: "idx_last_name", using: :btree
-  add_index "people", ["license"], name: "index_people_on_license", unique: true, using: :btree
   add_index "people", ["login"], name: "index_people_on_login", using: :btree
   add_index "people", ["member_from"], name: "index_racers_on_member_from", using: :btree
   add_index "people", ["member_to"], name: "index_racers_on_member_to", using: :btree

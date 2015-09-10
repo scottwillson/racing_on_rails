@@ -39,6 +39,7 @@ class Event < ActiveRecord::Base
   include Events::Defaults
   include Events::Naming
   include Events::Promoters
+  include Events::Slugs
   include Events::Results
   include ActsAsTree::Extensions
   include RacingOnRails::VestalVersions::Versioned
@@ -46,13 +47,17 @@ class Event < ActiveRecord::Base
   include Sanctioned
 
   before_save :set_team
+  before_destroy :destroy_event_team_memberships
 
   validates_presence_of :date, :name
 
   validate :inclusion_of_discipline
 
+  has_many :event_teams, dependent: :destroy
+  has_many :event_team_memberships, through: :event_teams
   belongs_to :number_issuer
   belongs_to :team
+
 
   has_many   :races,
              inverse_of: :event,
@@ -285,5 +290,16 @@ class Event < ActiveRecord::Base
       race.results.each(&:destroy)
       race.results.delete(race.results.select(&:destroyed?))
     end
+  end
+
+  def destroy_event_team_memberships
+    event_team_memberships.each(&:destroy)
+  end
+
+  def self.three_relation_union(relation_1, relation_2, relation_3)
+    # No simple way to do lazy union of three Arel relations
+    events_table = Event.arel_table
+    union = Event.from(events_table.create_table_alias(relation_1.union(relation_2), :events)).union(relation_3)
+    Event.from(events_table.create_table_alias(union, :events))
   end
 end

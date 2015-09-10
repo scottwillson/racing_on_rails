@@ -1,0 +1,8 @@
+<% if event.event_teams? %>
+<div class="row event_info">
+  <div class="col-sm-12">
+    <%= link_to "View Teams", event_event_teams_path(event), class: "obvious" %> |
+    <%= link_to "Join Team", new_event_event_team_membership_path(event), class: "obvious" %>
+  </div>
+</div>
+<% end %>

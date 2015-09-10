@@ -1,0 +1,8 @@
+<h3>Event Teams</h3>
+<%= table class: "event_teams", collection: event_team_memberships, columns: 2 do %>
+  <tr>
+    <th>Event</th>
+    <th>Name</th>
+  </tr>
+  <%= render partial: "people/event_team_membership", collection: event_team_memberships %>
+<% end -%>

@@ -69,8 +69,9 @@ module RacingOnRails
       end
     end
 
-    def labelled_radio_button(method, value, text = nil)
-      %Q{<div class="radio">#{radio_button(method, value)}#{label(method, text || method.to_s.titleize)}</div>}.html_safe
+    def labelled_radio_button(method, text = nil, options = {})
+      label_options = options.delete(:label) || {}
+      %Q{<div class="form-group"><div class="col-sm-offset-4 col-sm-8"><div class="radio">#{label(method, label_options) { "#{radio_button(method, options)}#{text || method.to_s.titleize}".html_safe }}</div></div></div>}.html_safe
     end
 
     # Set +editable+ to false for read-only

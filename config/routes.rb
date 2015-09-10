@@ -145,16 +145,25 @@ Rails.application.routes.draw do
     get '/events/:event_id/teams/:team_id/results/:race_id' => 'results#team_event'
     get '/events/:event_id' => 'results#event'
 
+    resources :event_teams do
+      resources :event_team_memberships
+    end
+
     resources :events do
+      resources :event_team_memberships
+      resources :event_teams
       resources :results
       resources :people do
         resources :results
+        resources :event_team_memberships
       end
       resources :races
       resources :teams do
         resources :results
       end
     end
+
+    resources :event_team_memberships
 
     get "/human_dates/:date" => "human_dates#show", constraints: { date: /.*/ }
 
@@ -164,8 +173,6 @@ Rails.application.routes.draw do
     get '/rider_rankings/:year' => 'competitions/competitions#show', as: :rider_rankings, type: 'rider_rankings', constraints: { year: /\d{4}/ }
     get '/rider_rankings' => 'competitions/competitions#show', as: :rider_rankings_root, type: 'rider_rankings'
     get '/ironman(/:year)' => 'competitions/ironman#index', as: :ironman
-
-
     get '/oregon_cup/rules' => 'competitions/oregon_cup#rules'
     get '/oregon_cup/races' => 'competitions/oregon_cup#races'
     get '/oregon_cup/:year' => 'competitions/oregon_cup#index', as: :oregon_cup
@@ -174,6 +181,7 @@ Rails.application.routes.draw do
     get "/oregon_tt_cup" => "competitions/competitions#show", type: "oregon_tt_cup"
     get '/oregon_womens_prestige_series' => 'competitions/oregon_womens_prestige_series#show'
     get '/owps' => 'competitions/oregon_womens_prestige_series#show'
+    get "/:slug/join" => "event_team_memberships#new"
 
     resources :password_resets
 

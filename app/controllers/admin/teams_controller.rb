@@ -16,7 +16,6 @@ module Admin
       respond_to do |format|
         format.html { @teams = @teams.page(page) }
         format.js   { @teams = @teams.limit(100) }
-        format.json { render json: @teams.limit(100).to_json }
       end
     end
 

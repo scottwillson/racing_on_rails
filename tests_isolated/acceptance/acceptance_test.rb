@@ -194,7 +194,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def wait_for_ajax
-    Timeout.timeout(Capybara.default_wait_time) do
+    Timeout.timeout(Capybara.default_max_wait_time) do
       loop until finished_all_ajax_requests?
     end
   end
@@ -323,7 +323,7 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   # keypress: function(index, altKey, ctrlKey, shiftKey, metaKey, keyCode, charCode) {
   def type_in(selector, text)
-    if selector["auto_complete"] || selector["autocomplete"]
+    if selector["autocomplete"]
       fill_in selector, with: ""
       find("##{selector}").native.send_keys(text[:with])
     else

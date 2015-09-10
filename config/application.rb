@@ -9,7 +9,6 @@ module RacingOnRails
     config.autoload_paths += %W(
       #{config.root}/app/models/observers
       #{config.root}/app/pdfs
-      #{config.root}/app/rack
     )
 
     config.encoding = "utf-8"

@@ -24,7 +24,7 @@ gem "jquery-rails"
 gem "jquery-ui-rails"
 gem "mini_magick"
 gem "money"
-gem "mysql2"
+gem "mysql2", "< 0.4"
 gem "newrelic_rpm"
 gem "nokogiri"
 gem "oj"
@@ -63,7 +63,6 @@ group :development do
   gem "capistrano-rvm"
   gem "celluloid-benchmark"
   gem "rubocop", require: false
-  gem "rack-livereload"
   gem "spring"
 end
 

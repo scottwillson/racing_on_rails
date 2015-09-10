@@ -13,7 +13,7 @@
 
   `script/local #{association}`
 
-  puts `rake db:migrate parallel:prepare`
+  puts `DISABLE_SPRING=1 rake db:migrate parallel:prepare`
   puts `bundle exec rake test:ruby`
   puts `RECORD_RUNTIME=true DISABLE_SPRING=1 rake parallel:test[^test/{controllers,helpers,integration,lib,mailers,models,views}]`
   puts `bundle exec rake test:acceptance`
