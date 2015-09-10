@@ -1,7 +1,7 @@
 class MergePeopleWithSameNameAndEmail < ActiveRecord::Migration
 
   def change
-    create_table :event_teams do |t|
+    create_table :event_teams, force: true do |t|
       t.references :event, null: false
       t.references :team, null: false
 
@@ -12,7 +12,7 @@ class MergePeopleWithSameNameAndEmail < ActiveRecord::Migration
       t.index [ :event_id, :team_id ], unique: true
     end
 
-    create_table :event_team_memberships do |t|
+    create_table :event_team_memberships, force: true do |t|
       t.references :event_team, null: false
       t.references :person, null: false
 
@@ -22,6 +22,8 @@ class MergePeopleWithSameNameAndEmail < ActiveRecord::Migration
       t.index :person_id
       t.index [ :event_team_id, :person_id ], unique: true
     end
+
+    Person.reset_column_information
 
     Person.current = RacingAssociation.current.person
 
