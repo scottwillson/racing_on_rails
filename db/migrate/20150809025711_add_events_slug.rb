@@ -31,7 +31,7 @@ class AddEventsSlug < ActiveRecord::Migration
             e.slug = nil
             e.set_slug
             say("#{e.id} #{e.date} #{e.name} #{e.slug}")
-            e.save!
+            e.save
         end
       end
     end
