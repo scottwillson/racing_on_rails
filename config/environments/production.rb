@@ -16,6 +16,7 @@ RacingOnRails::Application.configure do
   config.consider_all_requests_local                        = false
   config.eager_load                                         = true
   config.i18n.fallbacks                                     = true
+  config.log_level                                          = :info
   config.logger                                             = Syslog::Logger.new("racing_on_rails", Syslog::LOG_LOCAL4)
-  config.serve_static_files                                = false
+  config.serve_static_files                                 = false
 end
