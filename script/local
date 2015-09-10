@@ -29,7 +29,7 @@ end
 
 if association == "obra" || association == "nabra"
   if !File.exist?("lib/registration_engine")
-    `ln -s ../../registration_engine_4_2 lib/registration_engine`
+    `ln -s ../../registration_engine lib/registration_engine`
   end
 else
   if File.exist?("lib/registration_engine")
