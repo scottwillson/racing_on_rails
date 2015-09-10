@@ -1,12 +1,13 @@
 #! /usr/bin/env ruby
 
-`./script/local`
-puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists racing_on_rails_development; drop database if exists racing_on_rails_test'`
-puts `mysql -u root < db/grants.sql`
-puts `rake db:setup`
-puts `rake parallel:create`
+# `./script/local`
+# puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists racing_on_rails_development; drop database if exists racing_on_rails_test'`
+# puts `mysql -u root < db/grants.sql`
+# puts `rake db:setup`
+# puts `rake parallel:create`
 
-[ "aba", "atra", "mbra", "nabra", "obra", "wsba" ].each do |association|
+[ "mbra" ].each do |association|
+# [ "aba", "atra", "mbra", "nabra", "obra", "wsba" ].each do |association|
   puts association
   `./script/local #{association}`
   puts "Create databases"
@@ -20,6 +21,7 @@ puts `rake parallel:create`
   puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_development'`
   puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_test'`
   puts `rake db:setup`
+  puts `rake db:setup RAILS_ENV=test`
   puts `rake parallel:drop`
   puts `rake parallel:create`
 end
