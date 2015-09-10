@@ -16,7 +16,6 @@ load "local/config/deploy/#{fetch(:stage)}.rb" if File.exist?("local/config/depl
 set :deploy_to, "/var/www/rails/#{fetch(:application)}"
 
 set :repo_url, "git://github.com/scottwillson/racing_on_rails.git"
-set :branch, "rails-4.2.0.beta1"
 set :site_local_repo_url, "git@github.com:scottwillson/#{fetch(:application)}-local.git"
 
 set :user, "app"
