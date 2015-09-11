@@ -7,8 +7,14 @@ module Competitions
       category_names
     end
 
-    # Consider results from these categories
-    # TODO Use or remove
+    def source_result_categories
+      categories = Category.where(name: source_result_category_names).all
+      categories + categories.map(&:descendants).flatten
+    end
+
+    # Consider results from these categories. "Which results do we use?"
+    # Distinct from "which categories does the competition have?"
+    # In most cases, these are the same, but not always.
     def source_result_category_names
       category_names
     end
