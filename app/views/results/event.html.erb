@@ -22,7 +22,7 @@
   <%= render partial: "results/races", locals: { races: @races } %>
   <%= render partial: "results/children", locals: { children: @children } %>
 
-  <% if @children.none?(&:any_results?) && @races.none?(&:any_results?) && @start_list %>
+  <% if @children.none?(&:any_results?) && @races.none?(&:any_results?) && @start_list.present? %>
   <%= render partial: "start_list", locals: { start_list: @start_list } %>
   <% end %>
 
