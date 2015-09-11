@@ -42,7 +42,7 @@ class EventTeamsControllerTest < ActionController::TestCase
 
     assert_difference "EventTeamMembership.count" do
       login_as person
-      post :create, event_id: event, event_team: { team_attributes: { name: "Grant HS" } }
+      post :create, event_id: event, event_team: { team_attributes: { name: " Grant HS" } }
     end
 
     event_team_membership = EventTeamMembership.first

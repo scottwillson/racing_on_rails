@@ -29,6 +29,7 @@ class EventTeam < ActiveRecord::Base
   end
 
   def team_attributes=(attrs)
+    attrs[:name] = attrs[:name].try(:strip)
     if Team.where(name: attrs[:name]).exists?
       self.team = Team.where(name: attrs[:name]).first
     else
