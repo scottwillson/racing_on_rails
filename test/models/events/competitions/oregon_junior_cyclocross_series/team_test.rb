@@ -10,7 +10,7 @@ module Competitions
         series.source_events << event
 
         team = ::Team.create!(name: "Cazenovia High School")
-        event_team = EventTeam.create!(team: team, event: event)
+        event_team = EventTeam.create!(team: team, event: series)
 
         junior_men_10_12 = Category.find_or_create_by(name: "Junior Men 10-12")
         person = FactoryGirl.create(:person)
@@ -26,17 +26,23 @@ module Competitions
         person.event_team_memberships.create!(event_team: event_team)
         race.results.create!(place: 17, person: person)
 
+        # Fourth-best result
         person = FactoryGirl.create(:person)
         person.event_team_memberships.create!(event_team: event_team)
         race.results.create!(place: 18, person: person)
 
         team = ::Team.create!(name: "Chittenango High School")
-        event_team = EventTeam.create!(team: team, event: event)
+        event_team = EventTeam.create!(team: team, event: series)
 
         # Only members (people) count
         person = FactoryGirl.create(:past_member)
         person.event_team_memberships.create!(event_team: event_team)
         race.results.create!(place: 2, person: person)
+
+        # Only 2 members
+        person = FactoryGirl.create(:person)
+        person.event_team_memberships.create!(event_team: event_team)
+        race.results.create!(place: 4, person: person)
 
         OregonJuniorCyclocrossSeries::Team.calculate!
 
@@ -49,10 +55,6 @@ module Competitions
         assert_equal "Cazenovia High School", result.team.name, "team"
         assert_equal 3, result.scores.size
         assert_equal 68, result.points
-
-        # racing age
-        # top 3 count
-        # event teams must have at least three members
       end
     end
   end

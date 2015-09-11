@@ -43,7 +43,14 @@ module Competitions
         where("member_from is not null").
         where("year(member_from) <= ?", year).
         where("member_to is not null").
-        where("year(member_to) >= ?", year)
+        where("year(member_to) >= ?", year).
+        where("event_teams.id" => event_teams_with_at_least_members)
+      end
+
+      def event_teams_with_at_least_members
+        event_teams.includes(:event_team_memberships).select do |team|
+          team.event_team_memberships.size >= 3
+        end
       end
 
       def results_per_event
