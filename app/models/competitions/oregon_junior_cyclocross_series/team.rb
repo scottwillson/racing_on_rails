@@ -39,7 +39,11 @@ module Competitions
         select("event_teams.team_id as participant_id").
         joins("inner join event_team_memberships on event_team_memberships.person_id = results.person_id").
         joins("inner join event_teams on event_teams.id = event_team_memberships.event_team_id").
-        where("races.category_id" => source_result_categories)
+        where("races.category_id" => source_result_categories).
+        where("member_from is not null").
+        where("year(member_from) <= ?", year).
+        where("member_to is not null").
+        where("year(member_to) >= ?", year)
       end
 
       def results_per_event
