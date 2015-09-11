@@ -14,12 +14,12 @@
   `script/local #{association}`
 
   puts `DISABLE_SPRING=1 rake db:migrate parallel:prepare`
-  puts `bundle exec rake test:ruby`
+  puts `DISABLE_SPRING=1 rake test:ruby`
   puts `RECORD_RUNTIME=true DISABLE_SPRING=1 rake parallel:test[^test/{controllers,helpers,integration,lib,mailers,models,views}]`
-  puts `bundle exec rake test:acceptance`
+  puts `rake test:acceptance`
 
   if association == "obra" || association == "nabra"
     puts `parallel_test lib/registration_engine/test/{controllers,helpers,integration,mailers,models}`
-    puts `bundle exec rake registration_engine:test:acceptance`
+    puts `rake registration_engine:test:acceptance`
   end
 end
