@@ -13,27 +13,11 @@ class EventTeamMembershipsController < ApplicationController
   end
 
   def create
-    event_team = EventTeam.find(params[:event_team_id])
-
     if params[:event_team_membership]
-      @event_team_membership = event_team.event_team_memberships.build(event_team_membership_params)
+      create_for_other_person
     else
-      @event_team_membership = event_team.event_team_memberships.build(person: current_person)
+      create_for_current_person
     end
-
-    return redirect_to(unauthorized_path) unless person_or_editor?
-
-    if @event_team_membership.create_or_replace
-      if @event_team_membership.person == current_person
-        flash[:notice] = "You've joined #{@event_team_membership.team_name}"
-      else
-        flash[:notice] = "Added #{@event_team_membership.person.name} to #{@event_team_membership.team_name}"
-      end
-    else
-      flash[:warn] = "Could not join team: #{@event_team_membership.errors.full_messages.join(', ')}"
-    end
-
-    redirect_to event_event_teams_path(@event_team_membership.event)
   end
 
   def destroy
@@ -51,6 +35,34 @@ class EventTeamMembershipsController < ApplicationController
 
 
   private
+
+  def create_for_other_person
+    event_team = EventTeam.find(params[:event_team_id])
+    @event_team_membership = event_team.event_team_memberships.build(event_team_membership_params)
+    return redirect_to(unauthorized_path) unless person_or_editor?
+
+    if @event_team_membership.create_or_replace
+      flash[:notice] = "Added #{@event_team_membership.person.name} to #{@event_team_membership.team_name}"
+    else
+      flash[:warn] = "Could not join team: #{@event_team_membership.errors.full_messages.join(', ')}"
+    end
+
+    redirect_to event_event_teams_path(@event_team_membership.event)
+  end
+
+  def create_for_current_person
+    event_team = EventTeam.find(params[:event_team_id])
+    @event_team_membership = event_team.event_team_memberships.build(person: current_person)
+    return redirect_to(unauthorized_path) unless person_or_editor?
+
+    if @event_team_membership.create_or_replace
+      flash[:notice] = "You've joined #{@event_team_membership.team_name}"
+    else
+      flash[:warn] = "Could not join team: #{@event_team_membership.errors.full_messages.join(', ')}"
+    end
+
+    redirect_to event_event_teams_path(@event_team_membership.event)
+  end
 
   def person_or_editor?
     @event_team_membership.event && @event_team_membership.event.editable_by?(current_person) ||
