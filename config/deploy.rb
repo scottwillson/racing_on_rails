@@ -47,7 +47,7 @@ namespace :deploy do
           execute :rm, "-rf \"#{release_path}/lib/registration_engine\""
         end
 
-        execute :git, "clone git@github.com:scottwillson/registration_engine.git -b rails-4-2 #{release_path}/lib/registration_engine"
+        execute :git, "clone git@github.com:scottwillson/registration_engine.git #{release_path}/lib/registration_engine"
       end
     end
   end

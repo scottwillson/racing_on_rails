@@ -15,20 +15,15 @@ class EventTeamMembershipsController < ApplicationController
   def create
     event_team = EventTeam.find(params[:event_team_id])
 
-    EventTeamMembership.transaction do
-      if params[:event_team_membership]
-        @event_team_membership = event_team.event_team_memberships.build(event_team_membership_params)
-      else
-        @event_team_membership = event_team.event_team_memberships.build(person: current_person)
-      end
-
-      return redirect_to(unauthorized_path) unless person_or_editor?
-
-      EventTeamMembership.includes(:event_team).where(person: @event_team_membership.person, event_teams: { event_id: event_team.event }).destroy_all
-      @event_team_membership.save
+    if params[:event_team_membership]
+      @event_team_membership = event_team.event_team_memberships.build(event_team_membership_params)
+    else
+      @event_team_membership = event_team.event_team_memberships.build(person: current_person)
     end
 
-    if @event_team_membership.errors.empty?
+    return redirect_to(unauthorized_path) unless person_or_editor?
+
+    if @event_team_membership.create_or_replace
       if @event_team_membership.person == current_person
         flash[:notice] = "You've joined #{@event_team_membership.team_name}"
       else
@@ -37,6 +32,7 @@ class EventTeamMembershipsController < ApplicationController
     else
       flash[:warn] = "Could not join team: #{@event_team_membership.errors.full_messages.join(', ')}"
     end
+
     redirect_to event_event_teams_path(@event_team_membership.event)
   end
 

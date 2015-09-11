@@ -11,6 +11,17 @@ class EventTeamMembership < ActiveRecord::Base
   accepts_nested_attributes_for :event_team
   accepts_nested_attributes_for :person
 
+  def create_or_replace
+    transaction do
+      destroy_duplicates
+      save
+    end
+  end
+
+  def destroy_duplicates
+    EventTeamMembership.includes(:event_team).where(person: person, event_teams: { event_id: event_team.event }).destroy_all
+  end
+
   def event
     event_team.try(:event)
   end

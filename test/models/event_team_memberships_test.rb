@@ -21,4 +21,17 @@ class EventTeamMembershipsTest < ActiveSupport::TestCase
     assert new_membership.errors.present?
     assert_equal 1, EventTeamMembership.count
   end
+
+  test "create_or_replace" do
+    event_team_membership = FactoryGirl.create(:event_team_membership)
+    different_team = FactoryGirl.create(:event_team, event: event_team_membership.event)
+
+    new_membership = EventTeamMembership.new(
+      event_team: event_team_membership.event_team,
+      person: event_team_membership.person.reload
+    )
+    assert new_membership.create_or_replace
+    assert !new_membership.errors.present?
+    assert_equal 1, EventTeamMembership.count
+  end
 end
