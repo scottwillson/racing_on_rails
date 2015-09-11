@@ -12,8 +12,6 @@ RacingOnRails::Application.configure do
   config.cache_classes                                      = true
   config.consider_all_requests_local                        = true
   config.eager_load                                         = false
-  # For fastness. Change locally if you need debug logging to a problem.
-  config.log_level                                          = ENV["LOG_LEVEL"] || :warn
   config.mass_assignment_sanitizer                          = :strict
   config.serve_static_files                                 = true
   config.static_cache_control                               = "public, max-age=3600"
