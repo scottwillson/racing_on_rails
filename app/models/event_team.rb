@@ -9,6 +9,17 @@ class EventTeam < ActiveRecord::Base
 
   accepts_nested_attributes_for :team
 
+  def create_and_join(person)
+    if save
+      if !event.editable_by?(person) && person.event_team_memberships.none? { |m| m.event == event }
+        event_team_memberships.create person: person
+      end
+      true
+    else
+      false
+    end
+  end
+
   def name
     team.try(:name)
   end

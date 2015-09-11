@@ -20,14 +20,13 @@ class EventTeamsController < ApplicationController
   def create
     event = Event.find(params[:event_id])
     event_team = event.event_teams.build(event_team_params)
-    if event_team.save
-      if !event.editable_by?(current_person) && current_person.event_team_memberships.none? { |m| m.event == event }
-        event_team.event_team_memberships.create(event_team: event_team, person: current_person)
-      end
+
+    if event_team.create_and_join(current_person)
       flash[:notice] = "Added #{event_team.name} for #{event.name}"
     else
       flash[:warn] = "Could not add team: #{event_team.errors.full_messages.join(', ')}"
     end
+
     redirect_to event_event_teams_path(event)
   end
 
