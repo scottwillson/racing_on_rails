@@ -32,6 +32,10 @@ module Competitions
       [ 15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
     end
 
+    def maximum_events(race)
+      4
+    end
+
     def after_calculate
       super
 
