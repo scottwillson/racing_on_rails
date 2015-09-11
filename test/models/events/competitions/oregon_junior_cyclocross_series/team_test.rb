@@ -26,6 +26,10 @@ module Competitions
         person.event_team_memberships.create!(event_team: event_team)
         race.results.create!(place: 17, person: person)
 
+        person = FactoryGirl.create(:person)
+        person.event_team_memberships.create!(event_team: event_team)
+        race.results.create!(place: 18, person: person)
+
         team = ::Team.create!(name: "Chittenango High School")
         event_team = EventTeam.create!(team: team, event: event)
 
