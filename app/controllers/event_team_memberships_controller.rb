@@ -22,7 +22,6 @@ class EventTeamMembershipsController < ApplicationController
 
   def destroy
     @event_team_membership = EventTeamMembership.find(params[:id])
-
     return redirect_to(unauthorized_path) unless person_or_editor?
 
     if @event_team_membership.destroy
@@ -30,6 +29,7 @@ class EventTeamMembershipsController < ApplicationController
     else
       flash[:error] = "Could not leave #{@event_team_membership.team.name}: #{@event_team_membership.errors.full_messages.join(', ')}"
     end
+
     redirect_to event_event_teams_path(@event_team_membership.event)
   end
 
