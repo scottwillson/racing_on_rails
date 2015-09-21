@@ -19,7 +19,7 @@
   puts `rake test:acceptance`
 
   if association == "obra" || association == "nabra"
-    puts `parallel_test lib/registration_engine/test/{controllers,helpers,integration,mailers,models}`
+    puts `DISABLE_SPRING=1 parallel_test lib/registration_engine/test/{controllers,helpers,integration,mailers,models}`
     puts `rake registration_engine:test:acceptance`
   end
 end
