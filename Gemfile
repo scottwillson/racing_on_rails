@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "rails", "~> 4.2"
 
-gem "activemerchant", "~> 1.44"
+gem "activemerchant", ">= 1.44"
 gem "acts_as_list"
 gem "acts_as_tree", git: "https://github.com/amerine/acts_as_tree.git"
 gem "Ascii85", require: "ascii85"
