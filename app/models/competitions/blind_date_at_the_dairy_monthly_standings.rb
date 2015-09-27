@@ -34,6 +34,8 @@ module Competitions
 
     def category_names
       [
+        "Beginner Men",
+        "Beginner Women",
         "Junior Men 10-13",
         "Junior Men 14-18",
         "Junior Women 10-13",
