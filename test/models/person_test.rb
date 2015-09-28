@@ -937,13 +937,13 @@ class PersonTest < ActiveSupport::TestCase
     molly = FactoryGirl.create(:person, name: "Molly Cameron")
     molly.aliases.create!(name: "Mollie Cameron")
 
-    assert_equal([], molly.other_people_with_same_name, "No other people named 'Molly Cameron'")
+    assert_equal([], molly.all_other_people_with_same_name, "No other people named 'Molly Cameron'")
 
     person = FactoryGirl.create(:person, name: "Mollie Cameron")
-    assert_equal([], molly.other_people_with_same_name, "No other people named 'Mollie Cameron'")
+    assert_equal([], molly.all_other_people_with_same_name, "No other people named 'Mollie Cameron'")
 
     Person.create!(name: "Mollie Cameron")
-    assert_equal(1, person.other_people_with_same_name.size, "Other people named 'Mollie Cameron'")
+    assert_equal(1, person.all_other_people_with_same_name.size, "Other people named 'Mollie Cameron'")
   end
 
   test "force other_people_with_same_name for merge" do

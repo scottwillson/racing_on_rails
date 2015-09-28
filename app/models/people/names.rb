@@ -76,7 +76,7 @@ module People
       end
     end
 
-    def other_people_with_same_name
+    def all_other_people_with_same_name
       if name.present?
         people = Person.find_all_by_name(name) | Alias.find_all_people_by_name(name)
         people.reject { |person| person == self }
