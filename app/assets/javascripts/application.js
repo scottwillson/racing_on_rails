@@ -30,25 +30,27 @@ function bindAutocomplete() {
         idField.change();
         return false;
       }
-    })
-    .data("ui-autocomplete")
-    ._renderItem = function(ul, item) {
-      var description = [];
-      if (item !== undefined && item.team_name !== undefined && item.team_name !== '') {
-        description.push(item.team_name);
-      }
-      if (item.city !== undefined && jQuery.trim(item.city) !== '') {
-        description.push(jQuery.trim(item.city));
-      }
-      if (item.state !== undefined && jQuery.trim(item.state) !== '') {
-        description.push(jQuery.trim(item.state));
-      }
+    });
 
-      return jQuery('<li id="person_' + item.id + '"></li>')
-        .data("item.autocomplete", item)
-        .append('<a>' + item.first_name + ' ' + item.last_name + '<div class="informal">' + description.join(', ') + "</div></a>")
-        .appendTo(ul);
-    };
+    $('.autocomplete').each(function() {
+      $(this).data('uiAutocomplete')._renderItem = function (ul, item) {
+        var description = [];
+        if (item && item.team_name && item.team_name !== '') {
+          description.push(item.team_name);
+        }
+        if (item.city && jQuery.trim(item.city) !== '') {
+          description.push(jQuery.trim(item.city));
+        }
+        if (item.state && jQuery.trim(item.state) !== '') {
+          description.push(jQuery.trim(item.state));
+        }
+
+        return jQuery('<li id="person_' + item.id + '"></li>')
+          .data("item.autocomplete", item)
+          .append('<a>' + item.name + '<div class="informal">' + description.join(', ') + "</div></a>")
+          .appendTo(ul);
+      };
+    });
   }
 }
 
