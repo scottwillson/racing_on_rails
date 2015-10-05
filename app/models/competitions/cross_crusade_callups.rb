@@ -47,5 +47,11 @@ module Competitions
       end
       categories
     end
+
+    def after_source_results(results, race)
+      results.each do |result|
+        result["multiplier"] = 1
+      end
+    end
   end
 end
