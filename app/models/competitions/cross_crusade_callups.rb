@@ -40,6 +40,10 @@ module Competitions
       true
     end
 
+    def members_only?
+      false
+    end
+
     def categories_for(race)
       categories = super(race)
       if race.name == "Masters 35+ A"
