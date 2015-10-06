@@ -7,6 +7,7 @@ module Competitions
         "Men A",
         "Men B",
         "Men C",
+        "Athena",
         "Clydesdale",
         "Junior Men",
         "Junior Women",
