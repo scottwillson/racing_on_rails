@@ -61,6 +61,14 @@ namespace :deploy do
   end
 end
 
+task :compress_assets_7z do
+  on roles(:app) do
+    assets_path = release_path.join('public', fetch(:assets_prefix))
+    execute "find -L #{assets_path} \\( -name *.js -o -name *.css -o -name *.ico \\) -exec bash -c '[ ! -f {}.gz ] && 7z a -tgzip -mx=9 {}.gz {}' \\; "
+  end
+end
+
+after 'deploy:normalize_assets', 'compress_assets_7z'
 before "deploy:updated", "deploy:local_code"
 before "deploy:updated", "deploy:registration_engine"
 after "deploy:finished", "deploy:cache_error_pages"
