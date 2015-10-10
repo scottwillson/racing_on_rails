@@ -544,6 +544,12 @@ table.results.scores tr:last-child {
   text-align: center;
 }
 
+table.results td.name a.riera:hover {
+  background: pink;
+  color: red;
+  font-weight: bold;
+}
+
 .promoted_events .name,
 .promoted_events .link {
   white-space: nowrap;

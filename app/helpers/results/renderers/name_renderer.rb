@@ -12,6 +12,10 @@ module Results
           html_options = ' class="preliminary"'
         end
 
+        if result.person_id == 93483
+          html_options = ' class="riera"'
+        end
+
         if result.competition_result?
           "<a href=\"#{path_prefix(row)}/events/#{result.event_id}/people/#{result.person_id}/results##{result.race_id}\"#{html_options}>#{text}</a>"
         else
