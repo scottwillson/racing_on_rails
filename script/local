@@ -21,15 +21,15 @@ end
 association = ARGV[0]
 
 if !association.nil?
-  `ln -s ../racing_on_rails_local/#{association} local`
-  if Dir.exist?("../../racing_on_rails_local/#{association}/public")
-    `ln -s ../../racing_on_rails_local/#{association}/public public/local`
+  `ln -s ../racing_on_rails_local/#{association}_stripe local`
+  if Dir.exist?("../../racing_on_rails_local/#{association}_stripe/public")
+    `ln -s ../../racing_on_rails_local/#{association}_stripe/public public/local`
   end
 end
 
 if association == "obra" || association == "nabra"
   if !File.exist?("lib/registration_engine")
-    `ln -s ../../registration_engine lib/registration_engine`
+    `ln -s ../../registration_engine_stripe lib/registration_engine`
   end
 else
   if File.exist?("lib/registration_engine")
