@@ -16,9 +16,7 @@ load "local/config/deploy/#{fetch(:stage)}.rb" if File.exist?("local/config/depl
 set :deploy_to, "/var/www/rails/#{fetch(:application)}"
 
 set :repo_url, "git://github.com/scottwillson/racing_on_rails.git"
-set :branch, :stripe
 set :site_local_repo_url, "git@github.com:scottwillson/#{fetch(:application)}-local.git"
-set :site_local_repo_url_branch, "stripe"
 
 set :user, "app"
 
@@ -49,7 +47,7 @@ namespace :deploy do
           execute :rm, "-rf \"#{release_path}/lib/registration_engine\""
         end
 
-        execute :git, "clone git@github.com:scottwillson/registration_engine.git -b stripe #{release_path}/lib/registration_engine"
+        execute :git, "clone git@github.com:scottwillson/registration_engine.git #{release_path}/lib/registration_engine"
       end
     end
   end
