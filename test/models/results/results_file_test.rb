@@ -362,6 +362,16 @@ module Results
       assert_equal [:bogus_column_name], event.races.first.custom_columns, "Race custom_columns"
     end
 
+    test "add custom columns to existing race" do
+      FactoryGirl.create(:discipline, name: "Downhill")
+      event = SingleDayEvent.create(discipline: 'Downhill')
+      event.races.create!(category: Category.create!(name: "Pro/Elite Men"))
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/custom_columns.xls", __FILE__)), event)
+      results_file.import
+      assert_equal [:bogus_column_name], results_file.custom_columns.to_a, "ResultsFile Custom columns"
+      assert_equal [:bogus_column_name], event.races.first.custom_columns, "Race custom_columns"
+    end
+
     test "non sequential results" do
       event = SingleDayEvent.create!
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/non_sequential_results.xls", __FILE__)), event)
