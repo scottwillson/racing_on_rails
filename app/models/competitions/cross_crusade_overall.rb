@@ -73,5 +73,12 @@ module Competitions
         super race
       end
     end
+
+    def after_source_results(results, race)
+      results.reject do |result|
+        # Racers sent off-course. Don't count for overall.
+        result["event_id"] == 23827 && result["category_name"] == "Category C"
+      end
+    end
   end
 end
