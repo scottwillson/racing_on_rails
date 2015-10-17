@@ -339,9 +339,25 @@ class AcceptanceTest < ActiveSupport::TestCase
     page.evaluate_script "window.confirm = function(msg){return true;};"
   end
 
+  def create_new_login
+    fill_in "person_login", with: "kc@iq-9.com"
+    fill_in "person_password", with: "condor"
+    fill_in "person_password_confirmation", with: "condor"
+    fill_in "person_name", with: "Kevin Condron"
+    fill_in "person_license", with: "576"
+    fill_in "person_email", with: "kc@iq-9.com"
+    click_button "Save"
+  end
+
+  def assert_login_page
+    assert_current_path "/person_session/new"
+  end
+
   # Go to login page and login
   def login_as(person)
-    visit "/person_session/new"
+    unless current_path == "/person_session/new"
+      visit "/person_session/new"
+    end
     wait_for "#person_session_login"
     fill_in "person_session_login", with: person.login
     fill_in "person_session_password", with: "secret"
