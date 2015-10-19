@@ -88,9 +88,9 @@ class PeopleTest < AcceptanceTest
 
       click_button "Save"
 
-      assert_page_has_no_content "error"
-      assert_page_has_no_content "Unknown action"
-      assert_page_has_no_content "Couldn't find RaceNumber"
+      assert_no_text "error"
+      assert_no_text "Unknown action"
+      assert_no_text "Couldn't find RaceNumber"
     end
 
     assert !page.has_css?("input.number[value='878']")
@@ -100,12 +100,12 @@ class PeopleTest < AcceptanceTest
     visit "/admin/people/#{brad.id}/edit"
     assert_page_has_content 'Ross'
     click_link "delete"
-    assert_page_has_no_content 'error'
-    assert_page_has_no_content 'Unknown action'
-    assert_page_has_no_content 'has no parent'
+    assert_no_text 'error'
+    assert_no_text 'Unknown action'
+    assert_no_text 'has no parent'
 
     fill_in "name", with: "Brad\n"
-    assert_page_has_no_content "Ross"
+    assert_no_text "Ross"
 
     visit "/admin/people"
     fill_in "name", with: "a\n"

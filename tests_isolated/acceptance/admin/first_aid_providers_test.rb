@@ -36,7 +36,7 @@ class FirstAidProvidersTest < AcceptanceTest
         assert has_checked_field?("past_events")
 
         find("#past_events").click
-        assert_page_has_no_content event_3.name
+        assert_no_text event_3.name
         assert !has_checked_field?("past_events")
       end
 

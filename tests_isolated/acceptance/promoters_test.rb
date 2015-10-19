@@ -32,7 +32,7 @@ class PromotersTest < AcceptanceTest
     within "form.editor_field" do
       fill_in "value", with: "Senior Women\n"
     end
-    assert_page_has_no_content "form.editor_field input"
+    assert_no_text "form.editor_field input"
     assert_page_has_content "Senior Women"
     race = series.races(true).first
     assert_equal "Senior Women", race.category_name, "Should update category name"
@@ -47,7 +47,7 @@ class PromotersTest < AcceptanceTest
     within "form.editor_field" do
       fill_in "value", with: "Masters Women 40+\n"
     end
-    assert_page_has_no_content "form.editor_field input"
+    assert_no_text "form.editor_field input"
     assert_page_has_content "Masters Women 40+"
     race = event.races(true).first
     assert_equal "Masters Women 40+", race.category_name, "Should update category name"

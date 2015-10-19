@@ -15,7 +15,7 @@ class MailingListsTest < AcceptanceTest
     visit "/mailing_lists"
 
     visit "/mailing_lists/#{mailing_list.id}/posts"
-    assert_page_has_no_content "Cervelo for sale"
+    assert_no_text "Cervelo for sale"
 
     visit "/mailing_lists/#{mailing_list.id}/posts/new"
 

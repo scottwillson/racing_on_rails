@@ -124,7 +124,7 @@ class EventsTest < AcceptanceTest
     assert_page_has_content "Deleted Sausalito Criterium"
 
     visit "/admin/events?year=2004"
-    assert_page_has_no_content "Sausalito Criterium"
+    assert_no_text "Sausalito Criterium"
 
     visit "/admin/events?year=2003"
 
@@ -148,8 +148,8 @@ class EventsTest < AcceptanceTest
     visit "/admin/events?year=2003"
 
     visit_event kings_valley
-    assert_page_has_no_content "Senior Men Pro/1/2"
-    assert_page_has_no_content "Senior Men 3"
+    assert_no_text "Senior Men Pro/1/2"
+    assert_no_text "Senior Men 3"
 
     click_link "new_event"
     assert_page_has_content "Kings Valley Road Race"

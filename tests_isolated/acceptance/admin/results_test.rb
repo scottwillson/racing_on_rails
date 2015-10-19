@@ -33,7 +33,7 @@ class ResultsTest < AcceptanceTest
     fill_in_inline "#result_#{result.id}_name", with: "Megan Weaver"
 
     visit "/admin/races/#{race.id}/edit"
-    assert_page_has_no_content "Ryan Weaver"
+    assert_no_text "Ryan Weaver"
     assert_page_has_content "Megan Weaver"
 
     weaver = Person.find_by_name("Ryan Weaver")
@@ -68,7 +68,7 @@ class ResultsTest < AcceptanceTest
     find("#result_#{result.id}_destroy").click
     wait_for_no :xpath, "//table[@id='results_table']//tr[4]"
     visit "/admin/races/#{race.id}/edit"
-    assert_page_has_no_content "Megan Weaver"
+    assert_no_text "Megan Weaver"
     assert_page_has_content "DNF"
 
     assert page.has_no_selector? :xpath, "//table[@id='results_table']//tr[4]"

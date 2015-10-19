@@ -93,8 +93,8 @@ class PublicPagesTest < AcceptanceTest
 
     FactoryGirl.create(:person, name: "Alice Pennington")
     visit "/people"
-    assert_page_has_no_content "Pennington"
-    assert_page_has_no_content "Weaver"
+    assert_no_text "Pennington"
+    assert_no_text "Weaver"
 
     unless page.has_content?("Montana")
       fill_in "name", with: "Penn\n"
