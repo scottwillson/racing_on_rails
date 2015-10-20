@@ -84,7 +84,7 @@ module ApplicationHelper
     unless options.has_key?(:page_links)
       options = options.merge(page_links: !mobile_request?)
     end
-    content_tag(:div, class: "pagination") { super *[collection_or_options, options].compact }
+    content_tag(:div, class: "pagination") { super(*[collection_or_options, options].compact) }
   end
 
   # Only need this helper once, it will provide an interface to convert a block into a partial.
@@ -105,6 +105,6 @@ module ApplicationHelper
   end
 
   def cache_key_prefix
-    [ RacingAssociation.current.short_name, RacingAssociation.current.updated_at.to_s(:number), mobile_request? ]
+    [ RacingAssociation.current.short_name, RacingAssociation.current.updated_at.try(:to_s, :number), mobile_request? ]
   end
 end
