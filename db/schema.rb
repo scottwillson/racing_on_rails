@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150928231804) do
+ActiveRecord::Schema.define(version: 20151019230300) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -495,7 +495,7 @@ ActiveRecord::Schema.define(version: 20150928231804) do
     t.integer  "amount",        limit: 4
     t.boolean  "success"
     t.string   "authorization", limit: 255
-    t.string   "message",       limit: 255
+    t.text     "message",       limit: 65535
     t.text     "params",        limit: 65535
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -793,6 +793,7 @@ ActiveRecord::Schema.define(version: 20150928231804) do
     t.boolean  "filter_schedule_by_region",                                      default: false,                                 null: false
     t.string   "default_region_id",                                  limit: 255
     t.boolean  "allow_iframes",                                                  default: false
+    t.string   "default_payment_gateway_name",                       limit: 255, default: "elavon"
   end
 
   create_table "refunds", force: :cascade do |t|
