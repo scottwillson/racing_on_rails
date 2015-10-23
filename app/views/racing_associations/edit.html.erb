@@ -73,9 +73,11 @@
     </div>
   </div>
 
+  <%= render "registration_engine", f: f  %>
+
   <div class="row">
     <div class="col-sm-12">
-      <%= submit_tag "Save", class: "btn-default", id: "save" %>
+      <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
       <div class="created_updated pull-right">
         <% if @racing_association.updated_at %>Updated <%= time_ago_in_words(@racing_association.updated_at, include_seconds: true) + " ago" %><% end %>
       </div>
