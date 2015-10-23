@@ -1,4 +1,5 @@
 <%= javascript_include_tag "application" %>
-<% if Dir.exist? "lib/registration_engine/app/assets" %>
-<%= javascript_include_tag "registration_engine/application" %>
+
+<% if File.exist? "lib/registration_engine/app/views/layouts/registration_engine/_javascripts.html.erb" %>
+<%= render "layouts/registration_engine/javascripts" %>
 <% end %>
