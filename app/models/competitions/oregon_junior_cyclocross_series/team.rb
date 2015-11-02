@@ -34,6 +34,10 @@ module Competitions
         ]
       end
 
+      def maximum_events(race)
+        4
+      end
+
       def source_results_query(race)
         super.
         select("event_teams.team_id as participant_id").
