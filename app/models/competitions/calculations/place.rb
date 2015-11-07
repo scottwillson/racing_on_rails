@@ -108,10 +108,6 @@ module Competitions
         0
       end
 
-      def compare_by_most_recent_result_place(x, y)
-        x.scores.max_by(&:date).numeric_place <=> y.scores.max_by(&:date).numeric_place
-      end
-
       def none?(x, y)
         !any?(x, y)
       end
