@@ -75,7 +75,7 @@ module Competitions
 
         results.
         group_by(&:participant_id).
-        select do |participant_id, participant_results|
+        select do |_, participant_results|
           participant_results.size >= rules[:minimum_events]
         end.
         values.
