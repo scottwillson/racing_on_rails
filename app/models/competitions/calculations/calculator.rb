@@ -133,25 +133,6 @@ module Competitions
         add_missing_result_penalty_scores(results, rules)
       end
 
-      def self.add_missing_result_penalty_scores(results, rules)
-        return [] if rules[:missing_result_penalty].nil?
-
-        missing_scores = []
-        results.group_by(&:participant_id).
-        each do |participant_id, participant_results|
-          if participant_results.size < rules[:results_per_event] * rules[:completed_events]
-            missing_scores << Struct::CalculatorScore.new.tap do |new_score|
-              new_score.date             = rules[:end_date]
-              new_score.numeric_place    = rules[:missing_result_penalty]
-              new_score.participant_id   = participant_id
-              new_score.points           = ((rules[:results_per_event] * rules[:completed_events]) - participant_results.size) * rules[:missing_result_penalty]
-            end
-          end
-        end
-
-        missing_scores
-      end
-
       # Create competion results as Array of Struct::CalculatorResults from Struct::CalculatorScores.
       def self.map_to_results(scores, rules)
         scores.group_by { |r| r.participant_id }.map do |participant_id, person_scores|
@@ -178,6 +159,36 @@ module Competitions
 
       def self.event_complete?(rules)
         rules[:completed_events] && rules[:source_event_ids] && rules[:completed_events] == rules[:source_event_ids].size
+      end
+
+      def self.add_missing_result_penalty_scores(results, rules)
+        return [] if rules[:missing_result_penalty].nil?
+
+        results.
+        group_by(&:participant_id).
+        map do |participant_id, participant_results|
+          if missing_results?(participant_results, rules)
+            new_missing_score(participant_results, participant_id, rules)
+          end
+        end.
+        compact
+      end
+
+      def self.new_missing_score(results, participant_id, rules)
+        Struct::CalculatorScore.new.tap do |new_score|
+          new_score.date             = rules[:end_date]
+          new_score.numeric_place    = rules[:missing_result_penalty]
+          new_score.participant_id   = participant_id
+          new_score.points           = missing_results_points(results, rules)
+        end
+      end
+
+      def self.missing_results?(results, rules)
+        results.size < rules[:results_per_event] * rules[:completed_events]
+      end
+
+      def self.missing_results_points(results, rules)
+        ((rules[:results_per_event] * rules[:completed_events]) - results.size) * rules[:missing_result_penalty]
       end
     end
   end
