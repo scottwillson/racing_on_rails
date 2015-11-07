@@ -36,11 +36,13 @@ module Competitions
       def slice_of(scores, maximum)
         scores.
         group_by(&:event_id).
-        sort_by do |event_id, event_scores|
-          [ event_scores.map { |s| s.points }.reduce(&:+), event_scores.first.date ]
-        end.
+        sort_by { |_, event_scores| date_and_points(event_scores) }.
         reverse[ 0, maximum ].
         map(&:last)
+      end
+
+      def date_and_points(scores)
+        [ scores.map(&:points).reduce(&:+), scores.first.date ]
       end
     end
   end
