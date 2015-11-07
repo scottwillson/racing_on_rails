@@ -53,8 +53,8 @@ module Competitions
         return 0 if none?(x.scores, y.scores)
 
         # "Best" scores last because #pop returns the last item
-        x_places = places(x.scores).sort.reverse
-        y_places = places(y.scores).sort.reverse
+        x_places = places(x.scores)
+        y_places = places(y.scores)
 
         while any?(x_places, y_places) do
           x_place = x_places.pop
