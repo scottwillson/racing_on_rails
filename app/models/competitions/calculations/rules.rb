@@ -36,11 +36,18 @@ module Competitions
       def assert_valid_rules(rules)
         return true if !rules || rules.size == 0
 
+        raise_if_any_invalid rules, default_rules
+        raise_if_inconsistent rules
+      end
+
+      def raise_if_any_invalid(rules, default_rules)
         invalid_rules = rules.keys - default_rules.keys
         if invalid_rules.size > 0
           raise ArgumentError, "Invalid rules: #{invalid_rules.join(", ")}. Valid: #{default_rules.keys}."
         end
+      end
 
+      def raise_if_inconsistent(rules)
         if rules[:break_ties] == true && !rules[:most_points_win].nil? && rules[:most_points_win] == false
           raise ArgumentError, "Can only break ties if most points win"
         end
