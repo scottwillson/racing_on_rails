@@ -50,6 +50,44 @@ module Competitions
         assert_equal_scores expected, actual
       end
 
+      def test_apply_results_per_event_to_oldest_results_first
+        scores = [
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 9, 13), event_id: 1),
+          score(numeric_place: 2, points: 29, participant_id: 1, date: Date.new(2015, 9, 13), event_id: 1),
+          score(numeric_place: 2, points: 29, participant_id: 1, date: Date.new(2015, 9, 13), event_id: 1),
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 9, 19), event_id: 2),
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 9, 19), event_id: 2),
+          score(numeric_place: 2, points: 29, participant_id: 1, date: Date.new(2015, 9, 19), event_id: 2),
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 10, 3), event_id: 3),
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 10, 3), event_id: 3),
+          score(numeric_place: 2, points: 29, participant_id: 1, date: Date.new(2015, 10, 3), event_id: 3),
+          score(numeric_place: 3, points: 28, participant_id: 1, date: Date.new(2015, 10, 18), event_id: 4),
+          score(numeric_place: 3, points: 28, participant_id: 1, date: Date.new(2015, 10, 18), event_id: 4),
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 10, 25), event_id: 5),
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 10, 25), event_id: 5),
+          score(numeric_place: 2, points: 29, participant_id: 1, date: Date.new(2015, 10, 25), event_id: 5),
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 10, 31), event_id: 6),
+          score(numeric_place: 2, points: 29, participant_id: 1, date: Date.new(2015, 10, 31), event_id: 6),
+          score(numeric_place: 2, points: 29, participant_id: 1, date: Date.new(2015, 10, 31), event_id: 6),
+        ]
+        expected = [
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 9, 19), event_id: 2),
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 9, 19), event_id: 2),
+          score(numeric_place: 2, points: 29, participant_id: 1, date: Date.new(2015, 9, 19), event_id: 2),
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 10, 3), event_id: 3),
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 10, 3), event_id: 3),
+          score(numeric_place: 2, points: 29, participant_id: 1, date: Date.new(2015, 10, 3), event_id: 3),
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 10, 25), event_id: 5),
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 10, 25), event_id: 5),
+          score(numeric_place: 2, points: 29, participant_id: 1, date: Date.new(2015, 10, 25), event_id: 5),
+          score(numeric_place: 1, points: 30, participant_id: 1, date: Date.new(2015, 10, 31), event_id: 6),
+          score(numeric_place: 2, points: 29, participant_id: 1, date: Date.new(2015, 10, 31), event_id: 6),
+          score(numeric_place: 2, points: 29, participant_id: 1, date: Date.new(2015, 10, 31), event_id: 6),
+        ]
+        actual = Calculator.reject_scores_greater_than_maximum_events(scores, maximum_events: 4, results_per_event: 3)
+        assert_equal_scores expected, actual
+      end
+
       def test_reject_scores_keep_upgrades
         scores = [
           score(numeric_place: 10, participant_id: 1, points: 1, upgrade: true),

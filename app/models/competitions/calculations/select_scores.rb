@@ -37,7 +37,7 @@ module Competitions
         scores.
         group_by(&:event_id).
         sort_by do |event_id, event_scores|
-          event_scores.map { |s| s.points }.reduce(&:+)
+          [ event_scores.map { |s| s.points }.reduce(&:+), event_scores.first.date ]
         end.
         reverse[ 0, maximum ].
         map(&:last)

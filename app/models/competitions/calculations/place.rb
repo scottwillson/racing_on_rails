@@ -4,7 +4,7 @@ module Competitions
       # Set place on array of CalculatorResults
       def apply_place(results, rules)
         results = apply_preliminary(results, rules)
-        
+
         place = 1
         previous_result = nil
 
@@ -52,8 +52,9 @@ module Competitions
       def compare_by_best_place(x, y)
         return 0 if none?(x.scores, y.scores)
 
-        x_places = places(x.scores)
-        y_places = places(y.scores)
+        # "Best" scores last because #pop returns the last item
+        x_places = places(x.scores).sort.reverse
+        y_places = places(y.scores).sort.reverse
 
         while any?(x_places, y_places) do
           x_place = x_places.pop
@@ -77,38 +78,49 @@ module Competitions
       def compare_by_most_recent_result(x, y)
         return 0 if none?(x.scores, y.scores)
 
-        x_date = x.scores.map(&:date).max
-        y_date = y.scores.map(&:date).max
+        # Sort scores by most recent date, lowest place
+        # "Best" scores last because #pop returns the last item
+        x_scores = x.scores.sort_by { |s| [ s.date, -s.numeric_place ] }
+        y_scores = y.scores.sort_by { |s| [ s.date, -s.numeric_place ] }
 
-        if x_date.nil? && y_date.nil?
-          0
-        elsif x_date.nil?
-          1
-        elsif y_date.nil?
-          -1
-        else
-          if (y_date <=> x_date) == 0
-            # Most recent race same for both riders, so break tie by place in that race
-            compare_by_most_recent_result_place x, y
-          else
-            y_date <=> x_date
+        while any?(x_scores, y_scores) do
+          x_score = x_scores.pop
+          y_score = y_scores.pop
+
+          # One participant has more results than the other
+          if x_score.nil? && y_score.nil?
+            return 0
+          elsif x_score.nil?
+            return 1
+          elsif y_score.nil?
+            return -1
           end
+
+          # One of the results is more recent
+          diff = y_score.date <=> x_score.date
+          return diff if diff != 0
+
+          # Most recent race same for both riders, try to break tie by place in that race
+          diff = x_score.numeric_place <=> y_score.numeric_place
+          return diff if diff != 0
         end
+
+        0
       end
-      
+
       def compare_by_most_recent_result_place(x, y)
         x.scores.max_by(&:date).numeric_place <=> y.scores.max_by(&:date).numeric_place
       end
-      
+
       def none?(x, y)
         !any?(x, y)
       end
-      
+
       def any?(x, y)
         # Nil-check
         (x || y) && (x.size > 0 || y.size > 0)
       end
-      
+
       # Sort places highest (worst) to lowest (best) so caller can use #pop
       def places(scores)
         (scores || []).map(&:numeric_place).sort.reverse
