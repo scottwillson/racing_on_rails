@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151019230300) do
+ActiveRecord::Schema.define(version: 20151107172456) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -468,8 +468,10 @@ ActiveRecord::Schema.define(version: 20151019230300) do
     t.string   "previous_status",   limit: 255
     t.boolean  "suggest",                                                 default: true
     t.decimal  "old_purchase_fees",              precision: 10, scale: 2
+    t.string   "gateway",           limit: 255
   end
 
+  add_index "orders", ["gateway"], name: "index_orders_on_gateway", using: :btree
   add_index "orders", ["purchase_time"], name: "index_orders_on_purchase_time", using: :btree
   add_index "orders", ["status"], name: "index_orders_on_status", using: :btree
   add_index "orders", ["updated_at"], name: "index_orders_on_updated_at", using: :btree
