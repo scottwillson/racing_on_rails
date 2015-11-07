@@ -7,21 +7,36 @@ module Competitions
       # Only keep best +results_per_event+ results for participant (person or team).
       def select_results(results, rules)
         results = results.select { |r| r.participant_id && ![ nil, "", "DQ", "DNS" ].include?(r.place) }
-
-        if rules[:dnf_points].nil? || rules[:dnf_points] == 0
-          results = results.reject { |r| r.place == "DNF" }
-        end
-
-        if rules[:members_only]
-          results = results.select { |r| member_in_year?(r, rules[:team]) }
-        end
-
-        if rules[:source_event_ids]
-          results = results.select { |r| r.upgrade || rules[:source_event_ids].include?(r.event_id) }
-        end
+        results = reject_dnfs(results, rules)
+        results = select_members(results, rules)
+        results = select_in_source_events(results, rules)
         results = select_results_for(:event_id, results, rules[:results_per_event], rules[:use_source_result_points])
         results = select_results_for(:race_id, results, rules[:results_per_race], rules[:use_source_result_points])
         select_results_for_minimum_events results, rules
+      end
+
+      def reject_dnfs(results, rules)
+        if rules[:dnf_points].nil? || rules[:dnf_points] == 0
+          results.reject { |r| r.place == "DNF" }
+        else
+          results
+        end
+      end
+
+      def select_members(results, rules)
+        if rules[:members_only]
+          results.select { |r| member_in_year?(r, rules[:team]) }
+        else
+          results
+        end
+      end
+
+      def select_in_source_events(results, rules)
+        if rules[:source_event_ids]
+          results.select { |r| r.upgrade || rules[:source_event_ids].include?(r.event_id) }
+        else
+          results
+        end
       end
 
       def select_results_for(field, results, limit, use_source_result_points)
