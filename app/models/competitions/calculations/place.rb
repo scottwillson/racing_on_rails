@@ -52,7 +52,6 @@ module Competitions
       def compare_by_best_place(x, y)
         return 0 if none?(x.scores, y.scores)
 
-        # "Best" scores last because #pop returns the last item
         x_places = places(x.scores)
         y_places = places(y.scores)
 
@@ -60,16 +59,8 @@ module Competitions
           x_place = x_places.pop
           y_place = y_places.pop
 
-          if x_place.nil? && y_place.nil?
-            return 0
-          elsif x_place.nil?
-            return 1
-          elsif y_place.nil?
-            return -1
-          else
-            diff = x_place <=> y_place
-            return diff if diff != 0
-          end
+          diff = compare(x_place, y_place)
+          return diff if diff != 0
         end
         0
       end
@@ -87,17 +78,9 @@ module Competitions
           x_score = x_scores.pop
           y_score = y_scores.pop
 
-          # One participant has more results than the other
-          if x_score.nil? && y_score.nil?
-            return 0
-          elsif x_score.nil?
-            return 1
-          elsif y_score.nil?
-            return -1
-          end
+          return 0 if none?(x_score, y_score)
 
-          # One of the results is more recent
-          diff = y_score.date <=> x_score.date
+          diff = compare_by_date(x_score, y_score)
           return diff if diff != 0
 
           # Most recent race same for both riders, try to break tie by place in that race
@@ -108,13 +91,37 @@ module Competitions
         0
       end
 
+      def compare_by_date(x, y)
+        # One participant has more results than the other?
+        if x.nil?
+          return 1
+        elsif y.nil?
+          return -1
+        end
+
+        # One of the results is more recent?
+        y.date <=> x.date
+      end
+
       def none?(x, y)
         !any?(x, y)
       end
 
       def any?(x, y)
         # Nil-check
-        (x || y) && (x.size > 0 || y.size > 0)
+        (x && x.size > 0) || (y && y.size > 0)
+      end
+
+      def compare(x, y)
+        if x.nil? && y.nil?
+          0
+        elsif x.nil?
+          1
+        elsif y.nil?
+          -1
+        else
+          x <=> y
+        end
       end
 
       # Sort places highest (worst) to lowest (best) so caller can use #pop
