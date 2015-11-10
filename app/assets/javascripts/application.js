@@ -5,6 +5,7 @@
  *= require jquery.jeditable
  *= require bootstrap
  *= require bootstrap-datepicker/core
+ *= require raygun
  *= require_self
 */
 function bindAutocomplete() {
