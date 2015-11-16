@@ -37,7 +37,7 @@ class RacingAssociationsController < Admin::AdminController
       :country_code,
       :cx_memberships,
       :default_discipline,
-      :default_payment_gateway_name,
+      :payment_gateway_name,
       :default_region_id,
       :default_sanctioned_by,
       :eager_match_on_license,

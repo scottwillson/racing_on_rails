@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151107172456) do
+ActiveRecord::Schema.define(version: 20151111042000) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -795,7 +795,7 @@ ActiveRecord::Schema.define(version: 20151107172456) do
     t.boolean  "filter_schedule_by_region",                                      default: false,                                 null: false
     t.string   "default_region_id",                                  limit: 255
     t.boolean  "allow_iframes",                                                  default: false
-    t.string   "default_payment_gateway_name",                       limit: 255, default: "elavon"
+    t.string   "payment_gateway_name",                               limit: 255, default: "elavon"
   end
 
   create_table "refunds", force: :cascade do |t|
