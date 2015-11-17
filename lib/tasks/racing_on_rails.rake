@@ -18,8 +18,8 @@ namespace :racing_on_rails do
 
   task database_dump: :environment do
     db = ActiveRecord::Base.configurations
-    puts `mysqldump -u #{db["production"]["username"]} -p#{db["production"]["password"]} -h #{db["production"]["host"]} --compress --single-transaction --ignore-table=#{db["production"]["database"]}.posts #{db["production"]["database"]} > db/production.sql`
-    puts `mysqldump -u #{db["production"]["username"]} -p#{db["production"]["password"]} -h #{db["production"]["host"]} --compress --single-transaction --no-data #{db["production"]["database"]} posts >> db/production.sql`
+    puts `mysqldump -u #{db[Rails.env]["username"]} -p#{db[Rails.env]["password"]} -h #{db[Rails.env]["host"]} --compress --single-transaction --ignore-table=#{db[Rails.env]["database"]}.posts #{db[Rails.env]["database"]} > db/#{Rails.env}.sql`
+    puts `mysqldump -u #{db[Rails.env]["username"]} -p#{db[Rails.env]["password"]} -h #{db[Rails.env]["host"]} --compress --single-transaction --no-data #{db[Rails.env]["database"]} posts >> db/#{Rails.env}.sql`
   end
 
   namespace :competitions do
