@@ -4,9 +4,9 @@ engines:
   coffeelint:
     enabled: false
   eslint:
-    enabled: false
-  csslint:
     enabled: true
+  csslint:
+    enabled: false
   bundler-audit:
     enabled: true
   fixme:
@@ -20,6 +20,7 @@ ratings:
   - "**.css"
   - Gemfile.lock
 exclude_paths:
+- bin/**/*
 - config/**/*
 - db/**/*
 - features/**/*

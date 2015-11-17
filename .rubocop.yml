@@ -5,10 +5,24 @@ Documentation:
   Enabled: false
 
 LineLength:
-  Max: 120
+  Max: 160
 
 MethodLength:
   Enabled: false
+
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/ClassLength:
+  CountComments: false
+  Max: 300
+
+Metrics/ModuleLength:
+  CountComments: false
+  Max: 300
 
 SpaceInsideBrackets:
   Enabled: false
