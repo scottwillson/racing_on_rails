@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151111042000) do
+ActiveRecord::Schema.define(version: 20151117051750) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -61,22 +61,6 @@ ActiveRecord::Schema.define(version: 20151111042000) do
 
   add_index "articles", ["article_category_id"], name: "index_articles_on_article_category_id", using: :btree
   add_index "articles", ["updated_at"], name: "index_articles_on_updated_at", using: :btree
-
-  create_table "bank_statements", force: :cascade do |t|
-    t.decimal  "american_express_fees",                  precision: 10, scale: 2
-    t.decimal  "american_express_gross",                 precision: 10, scale: 2
-    t.decimal  "credit_card_transaction_fees",           precision: 10, scale: 2
-    t.decimal  "credit_card_percentage_fees",            precision: 10, scale: 2
-    t.decimal  "credit_card_gross",                      precision: 10, scale: 2
-    t.integer  "items",                        limit: 4
-    t.integer  "refunds",                      limit: 4
-    t.decimal  "gross",                                  precision: 10, scale: 2
-    t.decimal  "refunds_gross",                          precision: 10, scale: 2
-    t.decimal  "other_fees",                             precision: 10, scale: 2
-    t.date     "date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "bids", force: :cascade do |t|
     t.string   "name",       limit: 255, null: false
