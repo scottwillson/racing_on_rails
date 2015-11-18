@@ -393,7 +393,7 @@ GEM
       rest-client (~> 1.4)
     stud (0.0.22)
     table_print (1.5.4)
-    tabular (0.4.0)
+    tabular (0.4.2)
     temple (0.7.6)
     terminal-table (1.5.2)
     therubyracer (0.12.2)
@@ -500,7 +500,7 @@ DEPENDENCIES
   spreadsheet
   spring
   stripe
-  tabular (>= 0.3.5)
+  tabular (>= 0.4.2)
   therubyracer
   timecop
   truncate_html
