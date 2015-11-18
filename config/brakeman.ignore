@@ -1,6 +1,24 @@
 {
   "ignored_warnings":[
     {
+      "warning_type":"Cross Site Scripting",
+      "warning_code":2,
+      "fingerprint":"e66e37eef4a1017801c70b90eaf0b9e23e78ff6335d0c0c9ab70476bacfd55ad",
+      "message":"Unescaped model attribute",
+      "file":"app/views/teams/_team.html.erb",
+      "line":7,
+      "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code":"(Unresolved Model).new.sponsors",
+      "render_path":[{"type":"template","name":"teams/index","line":18,"file":"app/views/teams/index.html.erb"}],
+      "location":{
+        "type":"template",
+        "template":"teams/_team"
+      },
+      "user_input":null,
+      "confidence":"High",
+      "note":"Limited to admin users. Does echo raw HTML. Ideally would use Markdown."
+    },
+    {
       "warning_type":"Redirect",
       "warning_code":18,
       "fingerprint":"0995340021ac45331856df4aa279a7860dabfd7113eeceb5c2e9dd43ee76a8cc",
@@ -227,29 +245,8 @@
       "user_input":"(local change).first",
       "confidence":"Medium",
       "note":""
-    },
-    {
-      "warning_type":"Cross Site Scripting",
-      "warning_code":2,
-      "fingerprint":"e66e37eef4a1017801c70b90eaf0b9e23e78ff6335d0c0c9ab70476bacfd55ad",
-      "message":"Unescaped model attribute",
-      "file":"app/views/teams/_team.html.erb",
-      "line":7,
-      "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code":"(Unresolved Model).new.sponsors",
-      "render_path":[
-        "TeamsController#index",
-        "Template:teams/index"
-      ],
-      "location":{
-        "type":"template",
-        "template":"teams/_team (Template:teams/index)"
-      },
-      "user_input":null,
-      "confidence":"High",
-      "note":"Limited to admin users. Does echo raw HTML. Ideally would use Markdown."
     }
   ],
-  "updated":"2014-02-01 14:49:54 -0800",
-  "brakeman_version":"2.3.1"
+  "updated":"2015-11-18 12:44:24 -0800",
+  "brakeman_version":"3.1.1"
 }
