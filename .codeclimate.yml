@@ -1,13 +1,28 @@
 engines:
-  rubocop:
-    enabled: true
-  coffeelint:
-    enabled: false
-  eslint:
-    enabled: true
-  csslint:
+  # Fails locally
+  brakeman:
     enabled: false
   bundler-audit:
+    enabled: true
+  # Fails locally
+  csslint:
+    enabled: false
+  coffeelint:
+    enabled: false
+  duplication:
+    enabled: true
+    # Fails with: comparison of Fixnum with String failed
+    # config:
+    #   languages:
+    #     ruby:
+    #       mass_threshold: 20
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
+  rubocop:
+    enabled: true
+  scss-lint:
     enabled: true
   fixme:
     enabled: true
