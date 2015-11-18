@@ -26,3 +26,5 @@ RECORD_RUNTIME=true DISABLE_SPRING=1 rake parallel:test[^test/{controllers,helpe
 Requirements
 Ruby 2+
 MySQL 5.5
+
+[![Build Status](https://semaphoreci.com/api/v1/projects/464030ae-be1d-4136-b484-c3636b153db5/577684/badge.svg)](https://semaphoreci.com/rocket_surgery/racing_on_rails)
