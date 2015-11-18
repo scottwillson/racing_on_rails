@@ -3,7 +3,7 @@
 script/local obra;
 
 if [ "$DB" = '1' ]; then
-  rake db:migrate parallel:prepare;
+  DISABLE_SPRING=1 rake db:migrate parallel:prepare;
 fi
 
 RECORD_RUNTIME=true DISABLE_SPRING=1 rake test:ruby parallel:test[^test/{controllers,helpers,integration,lib,mailers,models,views}]; \
