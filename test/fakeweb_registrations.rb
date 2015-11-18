@@ -1,5 +1,3 @@
-FakeWeb.allow_net_connect = false
-
 FakeWeb.register_uri(
   :delete,
   %r{http://localhost:9200/*},
@@ -28,4 +26,4 @@ FakeWeb.register_uri(
   content_type: "application/json; charset=UTF-8"
 )
 
-FakeWeb.allow_net_connect = %r{http://127.0.0.1/*|http://localhost/*|https://codeclimate.com/*}
+FakeWeb.allow_net_connect = %r[^http?://(localhost|127.0.0.1|0.0.0.0|codeclimate.com)]
