@@ -28,4 +28,4 @@ FakeWeb.register_uri(
   content_type: "application/json; charset=UTF-8"
 )
 
-FakeWeb.allow_net_connect = %r{http://127.0.0.1/*}
+FakeWeb.allow_net_connect = %r{http://127.0.0.1/*|https://codeclimate.com/*}
