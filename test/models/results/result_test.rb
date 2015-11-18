@@ -501,7 +501,7 @@ class ResultTest < ActiveSupport::TestCase
     event = SingleDayEvent.create!
     race = event.races.create!(category: Category.find_or_create_by(name: "Senior Men Pro/1/2"))
     race.results.create!(
-      first_name: "Tom", team_name: "Blow", team_name: "QuickStep"
+      first_name: "Tom", last_name: "Blow", team_name: "QuickStep"
     )
 
     Person.create!(name: "Phil Anderson", team: Team.find_by_name("QuickStep"))
