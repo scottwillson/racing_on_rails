@@ -26,4 +26,4 @@ FakeWeb.register_uri(
   content_type: "application/json; charset=UTF-8"
 )
 
-FakeWeb.allow_net_connect = %r[^http?://(localhost|127.0.0.1|0.0.0.0|codeclimate.com)]
+FakeWeb.allow_net_connect = %r[\Ahttp(s?)://(localhost|127.0.0.1|0.0.0.0|codeclimate.com)]
