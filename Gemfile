@@ -72,6 +72,7 @@ group :development, :test do
 end
 
 group :test do
+  gem "codeclimate-test-reporter", require: nil
   gem "minitest", "~> 5.4"
 end
 
