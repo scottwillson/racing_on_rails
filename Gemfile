@@ -74,15 +74,9 @@ end
 group :test do
   gem "codeclimate-test-reporter", require: nil
   gem "minitest", "~> 5.4"
-end
-
-group :acceptance do
   gem "capybara"
   gem "poltergeist"
   gem "selenium-webdriver"
-end
-
-group :test, :acceptance do
   gem "database_cleaner"
   gem "factory_girl_rails"
   gem "fakeweb"

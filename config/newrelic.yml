@@ -28,11 +28,6 @@ test:
   monitor_mode: false
   app_name: Racing on Rails Test
 
-acceptance:
-  <<: *default_settings
-  monitor_mode: false
-  app_name: Racing on Rails Acceptance
-
 staging:
   <<: *default_settings
   monitor_mode: true

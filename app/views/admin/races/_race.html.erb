@@ -16,7 +16,7 @@
           class: "icon",
           id: "destroy_race_#{race.id}",
           title: "Delete race",
-          data: { confirm: (Rails.env.acceptance? || !promoter?) ? nil : "Really delete #{race.name}?" },
+          data: { confirm: promoter? ? "Really delete #{race.name}?" : nil },
           method: :delete) do %>
       <span class="glyphicon glyphicon-minus-sign"></span>
     <% end %>

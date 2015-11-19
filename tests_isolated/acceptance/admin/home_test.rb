@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
+require_relative "../acceptance_test"
 
 # :stopdoc:
 module Admin

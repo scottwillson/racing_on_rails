@@ -88,7 +88,7 @@
             title: "Delete all races",
             remote: true,
             method: :delete,
-            data: { confirm: (Rails.env.acceptance?) ? nil : "Really delete all races from #{event.name}?" }
+            data: { confirm: "Really delete all races from #{event.name}?" }
           ) if event.races.any? && administrator?
           # Lame workaround for Safari
           %>

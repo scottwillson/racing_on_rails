@@ -24,7 +24,7 @@ module ActionController
     end
 
     def use_https?
-      !Rails.env.development? && !Rails.env.acceptance? && RacingAssociation.current.ssl?
+      (Rails.env.production? || Rails.env.staging?) && RacingAssociation.current.ssl?
     end
 
     def force_https?
