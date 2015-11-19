@@ -2,11 +2,6 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class PersonSessionsControllerTest < ActionController::TestCase
-  def setup
-    super
-    use_ssl
-  end
-
   test "login page" do
     get :new
     assert_response :success
@@ -100,57 +95,32 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
   test "logout no ssl" do
     administrator = FactoryGirl.create(:administrator)
-    @request.env['HTTPS'] = nil
     PersonSession.create(administrator)
 
     delete :destroy
 
-    if RacingAssociation.current.ssl?
-      assert_redirected_to "https://test.host/person_session"
-    else
-      assert_redirected_to "http://test.host/person_session/new"
-    end
+    assert_redirected_to "http://test.host/person_session/new"
   end
 
   test "show" do
-    @request.env['HTTPS'] = nil
     get :show
-    if RacingAssociation.current.ssl?
-      assert_redirected_to person_session_url(secure_redirect_options)
-    else
-      assert_redirected_to new_person_session_url(secure_redirect_options)
-    end
+    assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
   test "show and return to" do
-    @request.env['HTTPS'] = nil
     get :show, return_to: "/admin"
-    if RacingAssociation.current.ssl?
-      assert_redirected_to person_session_url(secure_redirect_options.merge(return_to: "/admin"))
-    else
-      assert_redirected_to new_person_session_url(secure_redirect_options)
-    end
+    assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
   test "show and return to registration" do
-    @request.env['HTTPS'] = nil
     get :show, return_to: "/events/123/register"
-    if RacingAssociation.current.ssl?
-      assert_redirected_to person_session_url(secure_redirect_options.merge(return_to: "/events/123/register"))
-    else
-      assert_redirected_to new_person_session_url(secure_redirect_options)
-    end
+    assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
   test "show loggedin" do
-    @request.env['HTTPS'] = nil
     member = FactoryGirl.create(:person_with_login)
     login_as member
     get :show
-    if RacingAssociation.current.ssl?
-      assert_redirected_to person_session_url(secure_redirect_options)
-    else
-      assert_response :success
-    end
+    assert_response :success
   end
 end

@@ -225,11 +225,7 @@ class LoginTest < ActionController::TestCase
 
   test "new login http" do
     get :new_login
-    if RacingAssociation.current.ssl?
-      assert_redirected_to people_new_login_url(secure_redirect_options)
-    else
-      assert_response :success
-    end
+    assert_response :success
   end
 
   test "create login all blank" do
