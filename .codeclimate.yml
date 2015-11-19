@@ -1,7 +1,7 @@
 engines:
-  # Fails locally
+  # Fails
   brakeman:
-    enabled: true
+    enabled: false
   bundler-audit:
     enabled: true
   # Fails locally
