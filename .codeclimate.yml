@@ -11,10 +11,10 @@ engines:
     enabled: false
   duplication:
     enabled: true
+    config:
+      languages:
+      - ruby
     # Fails with: comparison of Fixnum with String failed
-    # config:
-    #   languages:
-    #     ruby:
     #       mass_threshold: 20
   eslint:
     enabled: true
