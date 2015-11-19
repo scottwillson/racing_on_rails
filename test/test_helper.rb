@@ -14,7 +14,6 @@ require "fakeweb_registrations"
 require "parallel_tests/test/runtime_logger" if ENV["RECORD_RUNTIME"]
 require "test/enumerable_assertions"
 
-# Use transactional fixtures except for acceptance environment
 class ActiveSupport::TestCase
   make_my_diffs_pretty!
 
