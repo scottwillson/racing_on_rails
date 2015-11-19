@@ -2,8 +2,6 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
 class PagesTest < AcceptanceTest
-  setup :javascript!
-
   test "pages" do
     login_as FactoryGirl.create(:administrator)
 
@@ -24,8 +22,9 @@ class PagesTest < AcceptanceTest
 
     # Create new page
     # 404 first
-    visit "/officials"
-    assert_page_has_content "No route matches"
+    assert_raises(ActionController::RoutingError) do
+      visit "/officials"
+    end
 
     visit "/admin/pages"
 
