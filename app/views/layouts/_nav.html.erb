@@ -4,8 +4,8 @@
       <div class="col-sm-12">
         <h1><%= link_to RacingAssociation.current.short_name, root_path %></h1>
         <ul class="pull-right">
-          <% if @posts.present? %><li><%=
-            link_to "Mailing Lists", mailing_lists_path %></li><% end %><li><%=
+          <li><%= link_to "Join #{RacingAssociation.current.short_name}", membership_new_path %></li><%- if @posts.present? -%><li><%=
+            link_to "Mailing Lists", mailing_lists_path %></li><%- end -%><li><%=
             link_to "Schedule", schedule_path, class: "schedule_link" %></li><li><%=
             link_to "Results", results_path, class: "results_link" %></li><%
             if mobile_browser? %><li><%=
