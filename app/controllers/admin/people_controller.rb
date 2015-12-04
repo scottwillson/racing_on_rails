@@ -28,9 +28,7 @@ module Admin
     # === Assigns
     # * person: Array of People
     def index
-      if params['format'] == 'ppl' || params['format'] == 'xls'
-        return export
-      end
+      return export if params['format'] == 'ppl' || params['format'] == 'xls'
 
       @current_year = current_date.year
       assign_name
@@ -147,7 +145,7 @@ module Admin
         redirect_to admin_people_path
         expire_cache
       else
-        flash[:warn] = "Could not delete #{@person.name}. #{@person.errors.full_messages.join(". ")}"
+        flash[:warn] = "Could not delete #{@person.name}. #{@person.errors.full_messages.join('. ')}"
         assign_race_numbers
         assign_years
         render :edit
@@ -175,7 +173,6 @@ module Admin
         format.js
       end
     end
-
 
     private
 
@@ -212,9 +209,7 @@ module Admin
     end
 
     def remember_event
-      unless params['event_id'].blank?
-        @event = Event.find(params['event_id'])
-      end
+      @event = Event.find(params['event_id']) unless params['event_id'].blank?
     end
 
     def require_administrator_or_promoter
@@ -230,14 +225,13 @@ module Admin
       @current_admin_tab = "People"
     end
 
-
     private
 
     def assign_name
       @name = params[:name] || session[:person_name] || cookies[:person_name]
       @name = @name.try :strip
       session[:person_name] = @name
-      cookies[:person_name] = { value: @name, expires: Time.zone.now + 36000 }
+      cookies[:person_name] = { value: @name, expires: Time.zone.now + 36_000 }
     end
 
     def assign_years

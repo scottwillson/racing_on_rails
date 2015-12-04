@@ -23,13 +23,13 @@ module Admin
         respond_to do |format|
           format.html
           format.ppl
-          format.xls {
+          format.xls do
             if params['excel_layout'] == 'scoring_sheet'
               render 'admin/people/scoring_sheet'
             elsif params['excel_layout'] == 'endicia'
               render 'admin/people/endicia'
             end
-          }
+          end
         end
       end
 

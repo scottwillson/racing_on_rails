@@ -45,12 +45,12 @@ module Admin
 
     def update_attribute
       respond_to do |format|
-        format.js {
+        format.js do
           @page = Page.find(params[:id])
           @page.update! params[:name] => params[:value]
           expire_cache
           render plain: @page.send(params[:name])
-        }
+        end
       end
     end
 
@@ -68,7 +68,6 @@ module Admin
     def assign_current_admin_tab
       @current_admin_tab = "Pages"
     end
-
 
     private
 

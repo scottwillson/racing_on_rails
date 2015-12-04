@@ -9,7 +9,7 @@ module Admin
         @teams = Team.none
       else
         session['team_name'] = @name
-        cookies[:team_name] = { value: @name, expires: Time.zone.now + 36000 }
+        cookies[:team_name] = { value: @name, expires: Time.zone.now + 36_000 }
         @teams = Team.name_like(@name)
       end
 
@@ -54,7 +54,7 @@ module Admin
 
     def update_attribute
       respond_to do |format|
-        format.js {
+        format.js do
           @team = Team.find(params[:id])
           @team[params[:name]] = params[:value]
 
@@ -66,7 +66,7 @@ module Admin
           else
             render "merge_confirm"
           end
-        }
+        end
       end
     end
 
@@ -104,7 +104,6 @@ module Admin
     def assign_current_admin_tab
       @current_admin_tab = "Team"
     end
-
 
     private
 

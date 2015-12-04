@@ -104,12 +104,12 @@ module Admin
 
     def update_attribute
       respond_to do |format|
-        format.js {
+        format.js do
           @event = Event.find(params[:id])
           @event.update! params[:name] => params[:value]
           expire_cache
           render plain: @event.send(params[:name])
-        }
+        end
       end
     end
 
@@ -154,8 +154,10 @@ module Admin
 
       flash[:notice] = "Imported #{uploaded_file.original_filename}. "
       if results_file.custom_columns.present?
-        flash[:notice] = flash[:notice] + "Found custom columns: #{results_file.custom_columns.map(&:to_s).map(&:humanize).join(", ")}. "
-        flash[:notice] = flash[:notice] + "(If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)" if RacingAssociation.current.usac_results_format?
+        flash[:notice] = flash[:notice] + "Found custom columns: #{results_file.custom_columns.map(&:to_s).map(&:humanize).join(', ')}. "
+        if RacingAssociation.current.usac_results_format?
+          flash[:notice] = flash[:notice] + "(If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)"
+        end
       end
 
       if results_file.import_warnings.present?
@@ -202,22 +204,22 @@ module Admin
       if @event.destroy
         expire_cache
         respond_to do |format|
-          format.html {
+          format.html do
             flash[:notice] = "Deleted #{@event.name}"
             if @event.parent
               redirect_to(edit_admin_event_path(@event.parent))
             else
               redirect_to(admin_events_path(year: @event.date.year))
             end
-          }
+          end
           format.js
         end
       else
         respond_to do |format|
-          format.html {
+          format.html do
             flash[:notice] = "Could not delete #{@event.name}: #{@event.errors.full_messages.join}"
             redirect_to(admin_events_path(year: @event.date.year))
-          }
+          end
           format.js { render "destroy_error" }
         end
       end
@@ -225,7 +227,7 @@ module Admin
 
     def destroy_races
       respond_to do |format|
-        format.js {
+        format.js do
           @event = Event.find(params[:id])
           # Remember races for view
           @races = @event.races.to_a.dup
@@ -233,7 +235,7 @@ module Admin
           @event.destroy_races
           @races = @races.select { |race| !Race.exists?(race.id) }
           expire_cache
-        }
+        end
       end
     end
 
@@ -274,7 +276,7 @@ module Admin
       _params = event_params.dup
       event_type = params[:event][:type]
       if event_type.blank?
-        if  _params[:parent_id].present?
+        if _params[:parent_id].present?
           event_type = "Event"
         else
           event_type = "SingleDayEvent"
@@ -282,7 +284,7 @@ module Admin
       end
 
       unless Event::TYPES.include?(event_type)
-        raise "Unknown event type: #{event_type}"
+        fail "Unknown event type: #{event_type}"
       end
 
       @event = Object.const_get(event_type).new(_params)

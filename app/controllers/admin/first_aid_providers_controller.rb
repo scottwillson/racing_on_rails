@@ -33,7 +33,7 @@ module Admin
       rows = @events.collect do |event|
         [ event.first_aid_provider, event.date, event.name, event.city_state ]
       end
-      columns = [ %w{ provider date name location } ]
+      columns = [ %w( provider date name location ) ]
       table = Tabular::Table.new(columns + rows)
       table.renderers[:date] = DateRenderer
 

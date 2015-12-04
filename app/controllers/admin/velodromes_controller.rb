@@ -61,7 +61,6 @@ module Admin
       @current_admin_tab = "Velodromes"
     end
 
-
     private
 
     def velodrome_params

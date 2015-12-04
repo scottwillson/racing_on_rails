@@ -3,10 +3,10 @@ module Admin
     before_action :assign_mailing_list
 
     def index
-      @posts = Post.
-        where(mailing_list_id: @mailing_list.id).
-        order("date desc").
-        page(params[:page])
+      @posts = Post
+        .where(mailing_list_id: @mailing_list.id)
+        .order("date desc")
+        .page(params[:page])
     end
 
     def new
@@ -56,7 +56,6 @@ module Admin
       end
       redirect_to admin_mailing_list_posts_path(@mailing_list)
     end
-
 
     private
 

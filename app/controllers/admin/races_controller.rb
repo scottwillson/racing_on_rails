@@ -11,25 +11,23 @@ module Admin
 
     def create
       respond_to do |format|
-        format.html {
+        format.html do
           if @race.save
             flash[:notice] = "Created #{@race.name}"
             redirect_to edit_admin_race_path(@race)
           else
             render :edit
           end
-        }
-        format.js {
+        end
+        format.js do
           @race.category = Category.find_or_create_by(name: "New Category")
           @race.save!
-        }
+        end
       end
     end
 
     def edit
-      @disciplines = [''] + Discipline.all.collect do |discipline|
-        discipline.name
-      end
+      @disciplines = [''] + Discipline.all.collect(&:name)
       @disciplines = @disciplines.sort
     end
 
@@ -78,7 +76,6 @@ module Admin
     def propagate
       @event.propagate_races
     end
-
 
     private
 

@@ -57,7 +57,7 @@ module Admin
           expire_cache
 
         else
-          raise "Expected 'Import' or 'Cancel'"
+          fail "Expected 'Import' or 'Cancel'"
         end
       end
 
@@ -84,7 +84,7 @@ module Admin
             ActiveSupport::Notifications.instrument "resolve_duplicates.people.admin.racing_on_rails", resolution: :update, person_name: duplicate.person.name, person_id: id, new_attributes: duplicate.new_attributes
             person = Person.update(id, duplicate.new_attributes)
             unless person.valid?
-              raise ActiveRecord::RecordNotSaved.new(person.errors.full_messages.join(', '))
+              fail ActiveRecord::RecordNotSaved.new(person.errors.full_messages.join(', '))
             end
           end
         end
@@ -92,7 +92,6 @@ module Admin
         Duplicate.delete_all
         redirect_to(action: 'index')
       end
-
 
       private
 
