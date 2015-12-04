@@ -412,6 +412,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     unless passed?
       begin
         save_page
+
       rescue StandardError => e
         Rails.logger.error "Test did not pass. Could not save page: #{e}."
       end

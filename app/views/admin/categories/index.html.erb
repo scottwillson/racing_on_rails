@@ -21,6 +21,7 @@
     <h3><%= RacingAssociation.current.short_name %></h3>
     <div class="category category_root association_category_root well" id="category_<%= @category.id %>_row" data-id="<%= @category.id %>">
       <%= render partial: "category", collection: @category.children.sort_by(&:name) %>
+      <div class="root-drop-target"></div>
     </div>
   </div>
 
@@ -28,6 +29,7 @@
     <h3>Unknown</h3>
     <div class="category category_root unknown_category_root well" id="category__row" data-id="">
       <%= render partial: "category", collection: @unknowns.sort_by(&:name) %>
+      <div class="root-drop-target"></div>
     </div>
   </div>
 </div>
