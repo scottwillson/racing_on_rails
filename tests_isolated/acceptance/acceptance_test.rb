@@ -247,11 +247,11 @@ class AcceptanceTest < ActiveSupport::TestCase
         return true
       rescue Capybara::ElementNotFound, RuntimeError, Capybara::Poltergeist::ObsoleteNode
         if retries < 3
-          retries = retries + 1
+          retries =+ 1
           sleep 0.1
           retry
         else
-          raise "#{$1} after #{retries} tries"
+          raise "#{$1} for fill_in_editor_field(#{options}) after #{retries} tries"
         end
       end
     end
