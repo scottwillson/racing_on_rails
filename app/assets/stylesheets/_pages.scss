@@ -1,8 +1,8 @@
-/* Page-specific. Do we really need so many of these?  Probably should be separate files for pages. */
+// Page-specific. Do we really need so many of these?  Probably should be separate files for pages.
 
-/* Home */
+// Home
 .home {
-  img.hero_photo {
+  img.hero-photo {
     margin-bottom: $line-height-computed / 2;
   }
 
@@ -22,7 +22,7 @@
   }
 }
 
-.hero_photo_caption a {
+.hero-photo-caption a {
   text-decoration: underline;
 }
 
@@ -30,9 +30,9 @@ th.name {
   white-space: nowrap;
 }
 
-/* Admin events */
+// Admin events
 .edit_event h3.events {
-  padding-top: 0px;
+  padding-top: 0;
 }
 
 .edit_event .form-group.name {
@@ -60,10 +60,10 @@ table td.delete_all_races {
   height: $line-height-computed * 4;
 }
 
-/* Calendar of events */
+// Calendar of events
 table.calendar {
   border-collapse: separate;
-  padding: 0px;
+  padding: 0;
   margin-bottom: 36px;
 }
 
@@ -76,11 +76,11 @@ tr.month {
 }
 
 .calendar td.day {
-  height: 100px;
+  height: 100;
   width: 14%;
   min-width: 14%;
   background-color: $gray-lighter;
-  border: 1px solid white;
+  border: 1px solid #ffffff;
   text-align: left;
 }
 
@@ -109,10 +109,10 @@ td.day div.number {
 
 .table > tbody > tr > td.day_from_other_month, table.calendar tbody tr:hover td.day_from_other_month {
   background-color: lighten($warm-gray, 8);
-  border: 1px solid white;
-  height: 100px;
+  border: 1px solid #ffffff;
+  height: 100;
   min-width: 14%;
-  padding: 4px 4px;
+  padding: 4px;
   width: 14%;
 }
 
@@ -137,11 +137,11 @@ table.calendar tbody tr:hover td, .table.calendar tbody tr:hover th {
 }
 
 table.calendar tbody tr:hover td.day_from_other_month {
-  background: white;
+  background: #ffffff;
 }
 
 table.calendar tbody td {
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid #ffffff;
 }
 
 table td.discipline {
@@ -158,10 +158,10 @@ p.list_link, p.atra_ncs {
 }
 
 
-/* Categories */
+// Categories
 .category_root {
   float: left;
-  min-height: 400px;
+  min-height: 400;
   width: 90%;
 }
 
@@ -177,7 +177,7 @@ p.list_link, p.atra_ncs {
   float: left;
   height: 16px;
   margin-right: 8px;
-  margin-top: 0px;
+  margin-top: 0;
   text-align: center;
   vertical-align: middle;
   width: 16px;
@@ -185,11 +185,11 @@ p.list_link, p.atra_ncs {
 
 .disclosure.glyphicon-collapse, .disclosure.glyphicon-expand {
   cursor: pointer;
-  font-size: 20px;
+  font-size: 20;
 }
 
 .disclosure.glyphicon-refresh {
-  margin-right: 10px;
+  margin-right: 10;
 }
 
 .category .icon-list {
@@ -207,7 +207,7 @@ p.list_link, p.atra_ncs {
   float: left;
   cursor: move;
   background-repeat: no-repeat;
-  background-position: 0px 2px;
+  background-position: 0 2px;
   line-height: 24px;
   height: 24px;
   padding-right: 8px;
@@ -225,10 +225,10 @@ p.list_link, p.atra_ncs {
 }
 
 .category_root div.hovering {
-  background-color: #E9F79B;
+  background-color: #e9f79b;
 }
 
-/* Results admin */
+// Results admin
 table.results .drag {
   cursor: move;
 }
@@ -241,7 +241,7 @@ table.results td.age {
   text-align: right;
 }
 table.results td.notes {
-  min-width: 120px;
+  min-width: 120;
 }
 
 table.results td.result .event {
@@ -257,16 +257,16 @@ table.results td.result .event {
   }
 }
 
-/* Pages */
+// Pages
 #page_body {
   width: 100%;
-  height: 340px;
-  font-size: 10px;
+  height: 340;
+  font-size: 10;
   font-family: Monaco, "Lucida Console", Monospace, "Bitstream Vera Sans Mono", "Courier New", Courier, monospaced;
 }
 
 #page_parent_id {
-  width: 270px;
+  width: 270;
 }
 
 table.base td img.cancel {
@@ -281,7 +281,7 @@ table.base td.name a.cancel {
   background-color: transparent;
 }
 
-/* public teams page */
+// public teams page
 table.base#teams_table td.club_name {
   width: 30%;
 }
@@ -290,9 +290,9 @@ table.base#teams_table td.contact {
   white-space: nowrap;
 }
 
-/* admin teams */
+// admin teams
 .teams td.name {
-  width: 200px;
+  width: 200;
 }
 
 table.base a.preliminary {
@@ -319,21 +319,21 @@ table.base a.preliminary {
 }
 
 .current, .renewed {
-  padding-right: 20px;
+  padding-right: 20;
 }
 
-/* Event */
+// Event
 table.event_nav td.category {
-  padding-left: 30px;
+  padding-left: 30;
 }
 
 table.event_nav td.delete {
   width: 16px;
 }
 
-/* Mailing lists */
+// Mailing lists
 .posts .pagination {
-  margin-top: 0px;
+  margin-top: 0;
 }
 
 .posts .btn.new {
@@ -344,7 +344,7 @@ table.event_nav td.delete {
   text-align: right;
 }
 
-/* Results */
+// Results
 table.base td.total_points span.total
 {
   font-size: 8pt;
@@ -365,7 +365,7 @@ table.base td.total_points {
 }
 
 .event_info p:last-child {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 .event_races {
@@ -417,13 +417,13 @@ table.child_single_day_events td.child a {
   text-align: center;
 }
 
-/* Event first aid providers */
+// Event first aid providers
 table.first_aid_providers td.date {
   white-space: nowrap;
 }
 
 table.first_aid_providers td.name {
-  width: 200px;
+  width: 200;
 }
 
 .link_spacer {
@@ -472,7 +472,7 @@ table.results th.place,
 table.results th.laps,
 table.results th.state,
 table.results th.age {
-  width: 40px;
+  width: 40;
 }
 
 table.results th.time_bonus_penalty,
@@ -483,7 +483,7 @@ table.results th.points_from_place,
 table.results th.number,
 table.results th.number {
   white-space: nowrap;
-  width: 60px;
+  width: 60;
 }
 
 table.results th.time_total,
@@ -493,42 +493,42 @@ table.results th.time,
 table.results th.points_total {
   text-align: right;
   white-space: nowrap;
-  width: 80px;
+  width: 80;
 }
 
 table.results td.points_total {
   text-align: right;
-  width: 80px;
+  width: 80;
 }
 
 table.results th.first_name,
 table.results th.city {
-  width: 100px;
+  width: 100;
 }
 
 table.results th.last_name {
-  width: 120px;
+  width: 120;
 }
 
 table.results th.category_name,
 table.results td.category_name {
-  width: 160px;
+  width: 160;
 }
 
 table.results th.name {
-  width: 220px;
+  width: 220;
 }
 
 table.results td.event {
-  width: 400px;
+  width: 400;
 }
 
 table.results td.category {
-  width: 200px;
+  width: 200;
 }
 
 table.results td.dates {
-  width: 100px;
+  width: 100;
 }
 
 table.results.scores tr:last-child {
@@ -560,14 +560,14 @@ table.results td.name a.riera:hover {
 }
 
 
-/* People */
+// People
 #preview_import_table tr th.invalid {
   color: red;;
 }
 
 #import_year {
-  margin-top: 0px;
-  padding-top: 0px;
+  margin-top: 0;
+  padding-top: 0;
   margin-left: 8px;
 }
 
@@ -586,19 +586,19 @@ table.results td.name a.riera:hover {
 }
 
 select#person_date_of_birth_2i, select#person_member_from_2i, select#person_member_to_2i {
-  width: 100px;
+  width: 100;
 }
 
 select#person_date_of_birth_1i, select#person_member_from_1i, select#person_member_to_1i {
-  width: 70px;
+  width: 70;
 }
 
 select#person_date_of_birth_3i, select#person_member_from_3i, select#person_member_to_3i {
-  width: 50px;
+  width: 50;
 }
 
 .form-horizontal .membership .form-group {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 .people .license, .people .racing_age {
@@ -630,14 +630,14 @@ table.people div.aliases {
   background-color: lighten($highlight-color, 33);
 }
 
-/* Versions */
+// Versions
 .version .what,
 .version .from,
 .version .to {
   width: 33%;
 }
 
-/* Public results */
+// Public results
 td.right, th.right {
   text-align: right;
 }
@@ -647,12 +647,12 @@ td.right, th.right {
 }
 
 .owps img.logo {
-  height: 150px;
+  height: 150;
   width: 228px;
 }
 
 .owps img.obra-logo {
-  height: 70px;
+  height: 70;
   width: 167px;
 }
 
@@ -661,7 +661,7 @@ td.right, th.right {
 }
 
 .owps .giant-logo img {
-  height: 70px;
+  height: 70;
   width: 239px;
 }
 
@@ -670,12 +670,12 @@ td.right, th.right {
 }
 
 .owps .rapha-logo img {
-  height: 70px;
+  height: 70;
   width: 153px;
 }
 
 .owps img.lets-race-bikes-logo {
-  height: 70px;
+  height: 70;
   width: 422px;
 }
 

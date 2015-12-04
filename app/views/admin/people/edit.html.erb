@@ -58,7 +58,7 @@
     <%= f.labelled_text_field :cell_fax %>
     <%= f.labelled_text_field :emergency_contact %>
     <%= f.labelled_text_field :emergency_contact_phone, "Emerg Contact Phone" %>
-    <div class="check_boxes">
+    <div class="check-boxes">
       <%= f.labelled_check_box :wants_mail, "Wants mail?" %>
       <%= f.labelled_check_box :wants_email, "Wants email?" %>
     </div>
@@ -68,7 +68,7 @@
     <%= render "shared/city_state_zip", f: f %>
     <%= f.labelled_text_field :occupation %>
 
-    <div class="check_boxes">
+    <div class="check-boxes">
       <%= f.labelled_check_box :volunteer_interest, "Volunteer Interest" %>
       <%= f.labelled_check_box :official_interest, "Official Interest" %>
       <%= f.labelled_check_box :race_promotion_interest, "Race Promotion Interest" %>
@@ -122,7 +122,7 @@
     <%= f.labelled_text(:member, "Renewed", nil, class: "renewed") if @person.renewed? -%>
     <%= f.labelled_text(:member, "Not current", nil, class: "not_current") if !@person.member? && !@person.renewed? -%>
 
-    <div class="check_boxes">
+    <div class="check-boxes">
       <%= f.labelled_check_box(:ccx_only, "Cyclocross only?") if RacingAssociation.current.cx_memberships? %>
       <%= f.labelled_check_box :official %>
       <%= f.labelled_check_box :membership_card, "Has Card?" %>

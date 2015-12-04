@@ -15,7 +15,7 @@ engines:
       languages:
       - ruby
     # Fails with: comparison of Fixnum with String failed
-    #       mass_threshold: 20
+      mass_threshold: 20
   eslint:
     enabled: true
   fixme:
@@ -35,11 +35,13 @@ ratings:
   - "**.css"
   - Gemfile.lock
 exclude_paths:
+- .codeclimate.yml
+- .csslintrc
+- .eslintrc
 - bin/**/*
 - config/**/*
 - db/**/*
 - features/**/*
 - script/**/*
 - spec/**/*
-- test/**/*
 - vendor/**/*

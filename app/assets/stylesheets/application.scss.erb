@@ -1,6 +1,6 @@
 $font-size-base: 13px;
 $font-size-bigger: 14px;
-$font-size-smaller: 10px;
+$font-size-smaller: 10;
 
 $line-height-base: 1.2308;
 $line-height-computed: 16px;
@@ -91,8 +91,8 @@ body {
 }
 
 .container .container {
-  padding-left: 0px;
-  padding-right: 0px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 body nav a:hover, body footer a:hover, body a:hover, a:hover, .nav > li > a:hover, .btn-link:hover {
@@ -159,8 +159,8 @@ h4 {
   color: $gray;
   font-size: $font-size-base;
   line-height: $line-height-computed;
-  margin-bottom: 0px;
-  margin-top: 0px;
+  margin-bottom: 0;
+  margin-top: 0;
   padding-top: 4px;
 }
 
@@ -185,20 +185,20 @@ nav, footer {
 nav h1 {
   display: inline;
   line-height: $line-height-computed * 1.6;
-  margin: 0px;
+  margin: 0;
   padding-left: $line-height-computed / 2;
 }
 
 nav h1, nav h1 a, nav a, footer a {
   color: $nav-font-color;
   font-size: $font-size-bigger;
-  text-shadow: -1px -1px 0 rgba(0, 0, 0, .35), 0 0 30px rgba(0, 0, 0, .3);
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, .35), 0 0 30 rgba(0, 0, 0, .3);
 }
 
 nav ul, footer ul {
   line-height: $line-height-computed * 1.5;
-  margin-bottom: 0px;
-  margin-left: 0px;
+  margin-bottom: 0;
+  margin-left: 0;
   padding-right: $line-height-computed / 2;
   padding-top: 1px;
   text-align: right;
@@ -229,7 +229,7 @@ nav li, footer li {
 }
 
 nav li:last-child, footer li:last-child {
-  border-right: 0px;
+  border-right: 0;
 }
 
 .content {
@@ -298,7 +298,7 @@ nav li:last-child, footer li:last-child {
 
 .table-striped td.icon {
   max-width: 22px;
-  padding-right: 0px;
+  padding-right: 0;
   width: 22px;
 }
 
@@ -326,8 +326,8 @@ nav li:last-child, footer li:last-child {
 
 @media (max-width: 767px) {
   body {
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
     padding-top: $line-height-computed / 2;
   }
 
@@ -362,13 +362,13 @@ p.created_updated {
 }
 
 .post div.date, .table .date {
-  min-width: 80px;
+  min-width: 80;
   text-align: right;
   white-space: nowrap;
 }
 
 .table .date {
-  max-width: 240px;
+  max-width: 240;
 }
 
 @media (max-width: 767px) {
@@ -407,7 +407,7 @@ td.numeric {
 
 ul.nav-pills {
   display: inline-block;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 .nav-pills li a {
@@ -427,8 +427,8 @@ ul.page-links {
   margin-bottom: $line-height-computed / 4;
   margin-left: auto;
   margin-right: auto;
-  padding-top: 0px;
-  padding-bottom: 0px;
+  padding-top: 0;
+  padding-bottom: 0;
   text-align: center;
   width: auto
 }
@@ -484,7 +484,7 @@ div.pagination {
 }
 
 ul.pagination {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 @import "bootstrap-datepicker";

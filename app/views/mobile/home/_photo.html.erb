@@ -2,17 +2,17 @@
 <div class="row">
   <% if photo.widescreen? %>
     <div class="col-sm-12">
-      <%= image_tag photo.image.mobile.url, title: photo.title, class: "hero_photo img-responsive" %>
+      <%= image_tag photo.image.mobile.url, title: photo.title, class: "hero-photo img-responsive" %>
       <%= markdown photo.caption %>
     </div>
     <% elsif photo.portrait? %>
     <div class="col-sm-6">
-      <%= image_tag photo.image.mobile.url, title: photo.title, class: "hero_photo img-responsive" %>
+      <%= image_tag photo.image.mobile.url, title: photo.title, class: "hero-photo img-responsive" %>
       <%= markdown photo.caption %>
     </div>
     <% else %>
     <div class="col-sm-8">
-      <%= image_tag photo.image.mobile.url, title: photo.title, class: "hero_photo img-responsive" %>
+      <%= image_tag photo.image.mobile.url, title: photo.title, class: "hero-photo img-responsive" %>
       <%= markdown photo.caption %>
     </div>
   <% end %>

@@ -63,7 +63,7 @@
             <%= label_tag :results_file, "Import Results", class: "control-label", id: "upload_form_label" %>
             <%= form_tag upload_admin_event_path(event), multipart: true, id: "upload_form" do %>
               <div class="controls">
-                <%= file_field_tag "results_file",style: "width: 250px;" %>
+                <%= file_field_tag "results_file",style: "width: 250;" %>
               </div>
             <% end -%>
           </div>

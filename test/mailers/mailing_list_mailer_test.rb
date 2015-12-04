@@ -150,7 +150,7 @@ class MailingListMailerTest < ActionMailer::TestCase
 <head>
   <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
 </head>
-<body bgcolor="#ffffff" text="#000000">
+<body bgcolor="#ffffff" text="#000">
 <h3>Race Results</h3>
 <table border="1" cellpadding="2" cellspacing="2" width="100%">
   <tbody>

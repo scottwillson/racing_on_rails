@@ -11,7 +11,7 @@
   <%= render "tabs", calendar_tab: @calendar_tab %>
 
   <% if RacingAssociation.current.competitions.include?(:atra_points_series) -%>
-  <p class="atra_ncs"><%= image_tag "icons/red_star.gif", style: "margin: 0px; padding-top: 2px;" %>&nbsp;ATRA National Championship Series (NCS)</p>
+  <p class="atra_ncs"><%= image_tag "icons/red_star.gif", style: "margin: 0; padding-top: 2px;" %>&nbsp;ATRA National Championship Series (NCS)</p>
   <%- end %>
 
   <%- @schedule.months.each do |month| -%>

@@ -1,7 +1,7 @@
 @media (min-width: $screen-sm-min) {
-  .form-horizontal label.control-label {
-    padding-left: 30px;
-    padding-right: 0px;
+  .form-horizontal .control-label {
+    padding-left: 30;
+    padding-right: 0;
   }
 }
 
@@ -15,7 +15,7 @@ label {
   font-weight: bold;
 }
 
-input[type="text"] {
+[type="text"] {
   color: $form-color;
 }
 
@@ -23,16 +23,16 @@ input[type="text"] {
   margin-bottom: 8px;
 }
 
-.form-horizontal .check_boxes {
+.form-horizontal .check-boxes {
   margin-bottom: $line-height-computed;
+
+  .form-group {
+    margin-bottom: 0;
+  }
 }
 
-.form-horizontal .check_boxes .form-group {
-  margin-bottom: 0px;
-}
-
-label.checkbox {
-  margin-bottom: 0px;
+.checkbox {
+  margin-bottom: 0;
 }
 
 .form-horizontal .control-label,
@@ -48,14 +48,9 @@ label.checkbox {
   padding-top: 6px;
 }
 
-input[type="radio"],
-input[type="checkbox"] {
+[type="radio"],
+[type="checkbox"] {
   margin: 2px 0 0;
-  *margin-top: 0;
-  /* IE7 */
-  margin-top: 1px \9;
-  /* IE8-9 */
-  line-height: normal;
 }
 
 legend {
@@ -74,24 +69,24 @@ fieldset {
   margin-left: -3px;
   margin-top: -4px;
   min-height: $line-height-computed + 6;
-  min-width: 40px;
+  min-width: 40;
   padding: 3px;
+
+  input {
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    margin-bottom: -4px;
+    margin-left: -3px;
+    margin-top: -3px;
+    padding: 2px;
+    position: absolute;
+  }
 }
 
-.editable input {
-  border-radius: 4px;
-  border-style: solid;
-  border-width: 1px;
-  margin-bottom: -4px;
-  margin-left: -3px;
-  margin-top: -3px;
-  padding: 2px;
-  position: absolute;
-}
-
-table.base td.numeric .editable input {
+.base .numeric .editable input {
   text-align: right;
-  width: 80px;
+  width: 80;
 }
 
 .editable:hover {
@@ -102,17 +97,20 @@ table.base td.numeric .editable input {
   position: absolute;
 }
 
-.editable.editing, .editable.editing:hover, .editable.saving, .editable.saving:hover {
+.editable.editing,
+.editable.editing:hover,
+.editable.saving,
+.editable.saving:hover {
   border: 1px solid transparent;
 }
 
 .editable.saving input {
   background-color: lighten($input-border, 30);
+  box-shadow: none;
   border-color: $input-border;
   color: $input-border;
-  -webkit-box-shadow: none;
   -moz-box-shadow: none;
-  box-shadow: none;
+  -webkit-box-shadow: none;
 }
 
 table.base td.numeric.editable_column {
@@ -120,43 +118,40 @@ table.base td.numeric.editable_column {
 }
 
 .ui-datepicker {
-  width: 17em;
-  padding: .2em .2em 0;
-  display: none;
   border-color: $highlight-color;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba($highlight-color, .6);
+  display: none;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba($highlight-color, .6);
   outline: 0;
-  outline: thin dotted \9;
-  /* IE6-9 */
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba($highlight-color, 0.6);
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba($highlight-color, 0.6);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba($highlight-color, 0.6);
+  padding: .2em .2em 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba($highlight-color, .6);
+  width: 17em;
 }
 
 .ui-datepicker.ui-widget-content {
   border-color: $highlight-color;
 }
 
-.bootstrap-datetimepicker-widget td.active, .bootstrap-datetimepicker-widget td.active:hover {
-  color: #fff;
-  background-color: black;
+.bootstrap-datetimepicker-widget .active, .bootstrap-datetimepicker-widget .active:hover {
+  background-color: #000;
   background-image: none;
   border-color: none;
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
-.bootstrap-datetimepicker-widget td.active:hover, .bootstrap-datetimepicker-widget td.active:hover:hover, .bootstrap-datetimepicker-widget td.active:active, .bootstrap-datetimepicker-widget td.active:hover:active, .bootstrap-datetimepicker-widget td.active.active, .bootstrap-datetimepicker-widget td.active:hover.active, .bootstrap-datetimepicker-widget td.active.disabled, .bootstrap-datetimepicker-widget td.active:hover.disabled, .bootstrap-datetimepicker-widget td.active[disabled], .bootstrap-datetimepicker-widget td.active:hover[disabled] {
+.bootstrap-datetimepicker-widget .active:hover, .bootstrap-datetimepicker-widget .active:hover:hover, .bootstrap-datetimepicker-widget td.active:active, .bootstrap-datetimepicker-widget td.active:hover:active, .bootstrap-datetimepicker-widget td.active.active, .bootstrap-datetimepicker-widget td.active:hover.active, .bootstrap-datetimepicker-widget td.active.disabled, .bootstrap-datetimepicker-widget td.active:hover.disabled, .bootstrap-datetimepicker-widget td.active[disabled], .bootstrap-datetimepicker-widget td.active:hover[disabled] {
   color: #fff;
-  background-color: black;
-  *background-color: black;
+  background-color: #000;
+  *background-color: #000;
 }
 
-.bootstrap-datetimepicker-widget td.active:active, .bootstrap-datetimepicker-widget td.active:hover:active, .bootstrap-datetimepicker-widget td.active.active, .bootstrap-datetimepicker-widget td.active:hover.active {
+.bootstrap-datetimepicker-widget .active:active, .bootstrap-datetimepicker-widget .active:hover:active, .bootstrap-datetimepicker-widget td.active.active, .bootstrap-datetimepicker-widget td.active:hover.active {
   background-color: black \9;
 }
 
 div.col-sm-6.date_time_picker {
-  padding-right: 0px;
+  padding-right: 0;
 }
 
 .ui-menu .ui-menu-item {
@@ -181,6 +176,7 @@ div.col-sm-6.date_time_picker {
 .field_with_errors .control-label,
 .field_with_errors .help-block,
 .field_with_errors .help-inline {
+  // scss-lint:disable NameFormat
   color: #b94a48;
 }
 
@@ -189,25 +185,28 @@ div.col-sm-6.date_time_picker {
 .field_with_errors input,
 .field_with_errors select,
 .field_with_errors textarea {
+  // scss-lint:disable NameFormat
   color: #b94a48;
 }
 
 .field_with_errors input,
 .field_with_errors select,
 .field_with_errors textarea {
+  // scss-lint:disable NameFormat
   border-color: #b94a48;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 }
 
 .field_with_errors input:focus,
 .field_with_errors select:focus,
 .field_with_errors textarea:focus {
+  // scss-lint:disable NameFormat
   border-color: #953b39;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #d59392;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #d59392;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #d59392;
 }
 
 .btn {
