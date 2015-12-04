@@ -6,7 +6,6 @@ function bindCategoryEvents() {
   jQuery('.category').unbind();
   jQuery('.category').droppable({
     drop: function(ev, ui) {
-      var droppedOn = jQuery(this);
       jQuery.ajax({
         type: 'POST',
         url: '/admin/categories/' + encodeURIComponent(jQuery(ui.draggable).attr('data-id')) + '.js',
@@ -21,13 +20,13 @@ function bindCategoryEvents() {
     revert: 'invalid',
     opacity: 0.7,
     zIndex: 10000,
-    helper: function(event) {
+    helper: function() {
       return jQuery('<div class="category"><span class="glyphicon glyphicon-star"></span>' + jQuery(this).text() + '</div>');
     }
   });
 
   jQuery('.disclosure').unbind();
-  jQuery('.disclosure').click(function(e) {
+  jQuery('.disclosure').click(function() {
     var categoryId = jQuery(this).attr('data-id');
     expandDisclosure(categoryId);
   });
@@ -44,7 +43,7 @@ function expandDisclosure(categoryId) {
     jQuery.get(
       '/admin/categories.js',
       { parent_id: categoryId },
-      function(data) {
+      function() {
         disclosure.removeClass('glyphicon-refresh');
         disclosure.removeClass('rotate');
         disclosure.addClass('glyphicon-expand');

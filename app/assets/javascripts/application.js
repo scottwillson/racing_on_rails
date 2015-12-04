@@ -26,7 +26,7 @@ function bindAutocomplete() {
       },
       select: function(event, ui) {
         jQuery(this).val(ui.item.first_name + ' ' + ui.item.last_name);
-        idField = jQuery('#' + jQuery(this).data('id-field'));
+        var idField = jQuery('#' + jQuery(this).data('id-field'));
         idField.val(ui.item.id);
         idField.change();
         return false;
@@ -73,11 +73,11 @@ function bindAutocompleteTeam() {
       },
       select: function(event, ui) {
         jQuery(this).val(ui.item.name);
-        idField = jQuery('#' + jQuery(this).data('id-field'));
+        var idField = jQuery('#' + jQuery(this).data('id-field'));
         idField.val(ui.item.id);
         idField.change();
         return false;
-      },
+      }
     })
     .data("ui-autocomplete")
     ._renderItem = function(ul, item) {
@@ -117,7 +117,7 @@ function makeEditable() {
             jQuery.globalEval(result);
           }
         },
-        error   : function(xhr, status, error) {
+        error   : function() {
           element.removeClass('saving');
           var originalColor = element.css('background-color');
           element.css({ 'background-color': 'rgb(255, 204, 204)' });
@@ -141,7 +141,7 @@ function makeEditable() {
         jQuery(this).closest('.editing').removeClass('editing');
         return true;
       },
-      callback: function(value, settings) {
+      callback: function() {
         jQuery(this).closest('.editing').removeClass('editing');
         return true;
       }

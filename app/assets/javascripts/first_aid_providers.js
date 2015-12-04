@@ -1,3 +1,3 @@
 jQuery(document).ready(function() {
-  jQuery('.show_past_events').click(function(e) { return this.form.submit(); });
+  jQuery('.show_past_events').click(function() { return this.form.submit(); });
 });

@@ -2,7 +2,7 @@ jQuery(document).ready(function() {
   jQuery('#find_person_form').submit(function() {
     jQuery('#find_progress_icon').show();
     jQuery.ajax(
-      { complete: function(request) {
+      { complete: function() {
                     jQuery(document).scrollTop(0);
                     jQuery('#right_person').show();
                     jQuery('#find_progress_icon').hide();

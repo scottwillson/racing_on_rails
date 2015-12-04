@@ -7,7 +7,7 @@ function bindTeamDragAndDrop() {
     revert: 'invalid',
     zIndex: 10000,
     opacity: 0.7,
-    helper: function(event) {
+    helper: function() {
       return jQuery('<div class="team" data-id="' + jQuery(this).attr('data-id') + '"><span class="glyphicon glyphicon-group"></span> ' + jQuery(this).attr('data-name') + '</div>');
     }
     });
