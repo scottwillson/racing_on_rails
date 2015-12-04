@@ -1,7 +1,7 @@
 module Admin
   class AdminController < ApplicationController
     force_https
-    before_filter :require_administrator, :assign_current_admin_tab
+    before_action :require_administrator, :assign_current_admin_tab
     layout "admin/application"
 
     # Always show tabs

@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   include Mobile
   include SentientController
 
-  before_filter :clear_racing_association, :toggle_tabs, :allow_iframes
+  before_action :clear_racing_association, :toggle_tabs, :allow_iframes
 
 
   protected

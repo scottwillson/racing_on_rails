@@ -1,6 +1,6 @@
 # Homepage
 class HomeController < ApplicationController
-  before_filter :require_administrator, except: [ :index, :show ]
+  before_action :require_administrator, except: [ :index, :show ]
 
   # Show homepage
   # === Assigns

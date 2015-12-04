@@ -2,9 +2,9 @@
 class VersionsController < ApplicationController
   force_https
 
-  before_filter :require_current_person
-  before_filter :assign_person
-  before_filter :require_same_person_or_administrator_or_editor
+  before_action :require_current_person
+  before_action :assign_person
+  before_action :require_same_person_or_administrator_or_editor
 
   def assign_person
     @person = Person.find(params[:person_id])

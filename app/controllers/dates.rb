@@ -2,7 +2,7 @@ module Dates
   extend ActiveSupport::Concern
 
   included do
-    before_filter :assign_year, :assign_today
+    before_action :assign_year, :assign_today
   end
 
   def assign_year

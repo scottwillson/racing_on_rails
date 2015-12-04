@@ -1,9 +1,9 @@
 module Admin
   class RacesController < Admin::AdminController
-    before_filter :assign_event, only: [ :new, :create, :propagate ]
-    before_filter :assign_race, only: [ :create, :destroy, :edit, :new, :update, :update_attribute ]
-    before_filter :require_administrator_or_promoter, only: [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
-    before_filter :require_administrator, except: [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
+    before_action :assign_event, only: [ :new, :create, :propagate ]
+    before_action :assign_race, only: [ :create, :destroy, :edit, :new, :update, :update_attribute ]
+    before_action :require_administrator_or_promoter, only: [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
+    before_action :require_administrator, except: [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
 
     def new
       render :edit

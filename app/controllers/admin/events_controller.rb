@@ -2,10 +2,10 @@ module Admin
   # Show Schedule, add and edit Events, edit Results for Events. Promoters can view and edit their own events. Promoters can edit
   # fewer fields than administrators.
   class EventsController < Admin::AdminController
-    before_filter :assign_event, only: [ :edit, :update ]
-    before_filter :require_administrator_or_promoter, only: [ :edit, :update ]
-    before_filter :require_administrator, except: [ :edit, :update ]
-    before_filter :assign_disciplines, only: [ :new, :create, :edit, :update ]
+    before_action :assign_event, only: [ :edit, :update ]
+    before_action :require_administrator_or_promoter, only: [ :edit, :update ]
+    before_action :require_administrator, except: [ :edit, :update ]
+    before_action :assign_disciplines, only: [ :new, :create, :edit, :update ]
 
     # schedule calendar  with links to admin Event pages
     # === Params

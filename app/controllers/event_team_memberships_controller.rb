@@ -1,6 +1,6 @@
 class EventTeamMembershipsController < ApplicationController
   force_https
-  before_filter :require_current_person, except: :new
+  before_action :require_current_person, except: :new
 
   def new
     if params[:slug].present?

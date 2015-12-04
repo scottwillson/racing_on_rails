@@ -2,8 +2,8 @@
 #
 # Caches all of its pages
 class ScheduleController < ApplicationController
-  before_filter :assign_schedule
-  before_filter :assign_sanctioning_organizations
+  before_action :assign_schedule
+  before_action :assign_sanctioning_organizations
 
   # Default calendar format
   # === Params

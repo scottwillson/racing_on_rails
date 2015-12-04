@@ -1,7 +1,7 @@
 module Admin
   class RacesCollectionsController < Admin::AdminController
-    before_filter :assign_event
-    before_filter :require_administrator_or_promoter
+    before_action :assign_event
+    before_action :require_administrator_or_promoter
 
     def edit
       @races_collection = RacesCollection.new(@event)

@@ -14,7 +14,7 @@ module ActionController
       # * <tt>except<tt>  - The callback should be run for all actions except this action
       def force_https(options = {})
         options.delete(:host)
-        before_filter(options) do
+        before_action(options) do
           if self.force_https?
             force_https!
             false

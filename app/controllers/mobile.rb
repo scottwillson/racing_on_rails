@@ -2,7 +2,7 @@ module Mobile
   extend ActiveSupport::Concern
 
   included do
-    before_filter :set_mobile_preferences, :redirect_to_mobile_if_applicable, :prepend_view_path_if_mobile
+    before_action :set_mobile_preferences, :redirect_to_mobile_if_applicable, :prepend_view_path_if_mobile
 
     helper_method :mobile_browser?
     helper_method :mobile_request?

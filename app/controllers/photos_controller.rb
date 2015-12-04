@@ -1,5 +1,5 @@
 class PhotosController < Admin::AdminController
-  before_filter :assign_current_admin_tab
+  before_action :assign_current_admin_tab
 
   def index
     @photos = Photo.order("updated_at desc").page(page)

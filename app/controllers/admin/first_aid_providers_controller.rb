@@ -3,7 +3,7 @@ module Admin
   # Officials can view, but not edit, this page.
   class FirstAidProvidersController < Admin::AdminController
     skip_filter :require_administrator
-    before_filter :require_administrator_or_official
+    before_action :require_administrator_or_official
     helper :table
 
     def index

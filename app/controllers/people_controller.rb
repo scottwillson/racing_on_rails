@@ -1,9 +1,9 @@
 class PeopleController < ApplicationController
   force_https except: [ :index, :list, :show ]
 
-  before_filter :require_current_person, only: [ :edit, :update, :card ]
-  before_filter :assign_person, only: [ :edit, :update, :card ]
-  before_filter :require_same_person_or_administrator_or_editor, only: [ :edit, :update, :card ]
+  before_action :require_current_person, only: [ :edit, :update, :card ]
+  before_action :assign_person, only: [ :edit, :update, :card ]
+  before_action :require_same_person_or_administrator_or_editor, only: [ :edit, :update, :card ]
 
   def index
     respond_to do |format|
