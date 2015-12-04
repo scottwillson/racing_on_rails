@@ -1,6 +1,6 @@
 @media (min-width: $screen-sm-min) {
   .form-horizontal .control-label {
-    padding-left: 30;
+    padding-left: 30px;
     padding-right: 0;
   }
 }
@@ -69,7 +69,7 @@ fieldset {
   margin-left: -3px;
   margin-top: -4px;
   min-height: $line-height-computed + 6;
-  min-width: 40;
+  min-width: 40px;
   padding: 3px;
 
   input {
@@ -86,7 +86,7 @@ fieldset {
 
 .base .numeric .editable input {
   text-align: right;
-  width: 80;
+  width: 80px;
 }
 
 .editable:hover {

@@ -76,7 +76,7 @@ tr.month {
 }
 
 .calendar td.day {
-  height: 100;
+  height: 100px;
   width: 14%;
   min-width: 14%;
   background-color: $gray-lighter;
@@ -110,7 +110,7 @@ td.day div.number {
 .table > tbody > tr > td.day_from_other_month, table.calendar tbody tr:hover td.day_from_other_month {
   background-color: lighten($warm-gray, 8);
   border: 1px solid #ffffff;
-  height: 100;
+  height: 100px;
   min-width: 14%;
   padding: 4px;
   width: 14%;
@@ -161,7 +161,7 @@ p.list_link, p.atra_ncs {
 // Categories
 .category_root {
   float: left;
-  min-height: 400;
+  min-height: 400px;
   width: 90%;
 }
 
@@ -185,11 +185,11 @@ p.list_link, p.atra_ncs {
 
 .disclosure.glyphicon-collapse, .disclosure.glyphicon-expand {
   cursor: pointer;
-  font-size: 20;
+  font-size: 20px;
 }
 
 .disclosure.glyphicon-refresh {
-  margin-right: 10;
+  margin-right: 10px;
 }
 
 .category .icon-list {
@@ -241,7 +241,7 @@ table.results td.age {
   text-align: right;
 }
 table.results td.notes {
-  min-width: 120;
+  min-width: 120px;
 }
 
 table.results td.result .event {
@@ -260,13 +260,13 @@ table.results td.result .event {
 // Pages
 #page_body {
   width: 100%;
-  height: 340;
-  font-size: 10;
+  height: 340px;
+  font-size: 10px;
   font-family: Monaco, "Lucida Console", Monospace, "Bitstream Vera Sans Mono", "Courier New", Courier, monospaced;
 }
 
 #page_parent_id {
-  width: 270;
+  width: 270px;
 }
 
 table.base td img.cancel {
@@ -292,7 +292,7 @@ table.base#teams_table td.contact {
 
 // admin teams
 .teams td.name {
-  width: 200;
+  width: 200px;
 }
 
 table.base a.preliminary {
@@ -319,12 +319,12 @@ table.base a.preliminary {
 }
 
 .current, .renewed {
-  padding-right: 20;
+  padding-right: 20px;
 }
 
 // Event
 table.event_nav td.category {
-  padding-left: 30;
+  padding-left: 30px;
 }
 
 table.event_nav td.delete {
@@ -423,7 +423,7 @@ table.first_aid_providers td.date {
 }
 
 table.first_aid_providers td.name {
-  width: 200;
+  width: 200px;
 }
 
 .link_spacer {
@@ -472,7 +472,7 @@ table.results th.place,
 table.results th.laps,
 table.results th.state,
 table.results th.age {
-  width: 40;
+  width: 40px;
 }
 
 table.results th.time_bonus_penalty,
@@ -483,7 +483,7 @@ table.results th.points_from_place,
 table.results th.number,
 table.results th.number {
   white-space: nowrap;
-  width: 60;
+  width: 60px;
 }
 
 table.results th.time_total,
@@ -493,42 +493,42 @@ table.results th.time,
 table.results th.points_total {
   text-align: right;
   white-space: nowrap;
-  width: 80;
+  width: 80px;
 }
 
 table.results td.points_total {
   text-align: right;
-  width: 80;
+  width: 80px;
 }
 
 table.results th.first_name,
 table.results th.city {
-  width: 100;
+  width: 100px;
 }
 
 table.results th.last_name {
-  width: 120;
+  width: 120px;
 }
 
 table.results th.category_name,
 table.results td.category_name {
-  width: 160;
+  width: 160px;
 }
 
 table.results th.name {
-  width: 220;
+  width: 220px;
 }
 
 table.results td.event {
-  width: 400;
+  width: 400px;
 }
 
 table.results td.category {
-  width: 200;
+  width: 200px;
 }
 
 table.results td.dates {
-  width: 100;
+  width: 100px;
 }
 
 table.results.scores tr:last-child {
@@ -586,15 +586,15 @@ table.results td.name a.riera:hover {
 }
 
 select#person_date_of_birth_2i, select#person_member_from_2i, select#person_member_to_2i {
-  width: 100;
+  width: 100px;
 }
 
 select#person_date_of_birth_1i, select#person_member_from_1i, select#person_member_to_1i {
-  width: 70;
+  width: 70px;
 }
 
 select#person_date_of_birth_3i, select#person_member_from_3i, select#person_member_to_3i {
-  width: 50;
+  width: 50px;
 }
 
 .form-horizontal .membership .form-group {
@@ -647,12 +647,12 @@ td.right, th.right {
 }
 
 .owps img.logo {
-  height: 150;
+  height: 150px;
   width: 228px;
 }
 
 .owps img.obra-logo {
-  height: 70;
+  height: 70px;
   width: 167px;
 }
 
@@ -661,7 +661,7 @@ td.right, th.right {
 }
 
 .owps .giant-logo img {
-  height: 70;
+  height: 70px;
   width: 239px;
 }
 
@@ -670,12 +670,12 @@ td.right, th.right {
 }
 
 .owps .rapha-logo img {
-  height: 70;
+  height: 70px;
   width: 153px;
 }
 
 .owps img.lets-race-bikes-logo {
-  height: 70;
+  height: 70px;
   width: 422px;
 }
 
