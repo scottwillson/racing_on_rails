@@ -63,7 +63,6 @@ module Admin
       redirect_to action: :index
     end
 
-
     private
 
     def category_params

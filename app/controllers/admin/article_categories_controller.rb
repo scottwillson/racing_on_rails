@@ -1,5 +1,5 @@
 module Admin
-# Edit categories for articles for homepage. Unrelated to Event Categories.
+  # Edit categories for articles for homepage. Unrelated to Event Categories.
   class ArticleCategoriesController < Admin::AdminController
     def index
       @article_categories = ArticleCategory.order("parent_id, position")

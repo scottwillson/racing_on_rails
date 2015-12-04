@@ -68,7 +68,6 @@ module Admin
       @current_admin_tab = "Articles"
     end
 
-
     private
 
     def article_params
