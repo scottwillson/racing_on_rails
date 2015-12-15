@@ -13,10 +13,6 @@ class PasswordResetsTest < RacingOnRails::IntegrationTest
     no_login = Person.create!(email: "member@example.com")
 
     get new_password_reset_path
-    if RacingAssociation.current.ssl?
-      assert_response :redirect
-      follow_redirect!
-    end
     assert_response :success
 
     post password_resets_path(email: "member@example.com")
