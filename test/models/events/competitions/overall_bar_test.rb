@@ -342,18 +342,17 @@ module Competitions
 
       matson_result = cat_4_5_overall_bar.results.detect { |result| result.person == matson }
       assert_equal("1", matson_result.place, "Matson Cat 4/5 Overall BAR place")
-      assert_equal(1497.0, matson_result.points, "Matson Cat 4/5 Overall BAR points")
-      assert_equal(5, matson_result.scores.size, "Matson Cat 4/5 Overall BAR 1st place scores")
+      assert_equal(1197.0, matson_result.points, "Matson Cat 4/5 Overall BAR points")
+      assert_equal(4, matson_result.scores.size, "Matson Cat 4/5 Overall BAR 1st place scores")
 
       weaver_result = cat_4_5_overall_bar.results.detect { |result| result.person == weaver }
       assert_equal("2", weaver_result.place, "Weaver Cat 4/5 Overall BAR place")
       assert_equal(300, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Road" }.points, "Road points")
       assert_equal(300, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Time Trial" }.points, "Time Trial points")
-      assert_equal(299, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Mountain Bike" }.points, "Mountain Bike points")
       assert_equal(298, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Track" }.points, "Track points")
       assert_equal(297, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Criterium" }.points, "Criterium points")
-      assert_equal(300 + 300 + 299 + 298 + 297, weaver_result.points, "Weaver Cat 4/5 Overall BAR points")
-      assert_equal(5, weaver_result.scores.size, "Weaver Cat 4/5 Overall BAR 1st place scores")
+      assert_equal(300 + 300 + 298 + 297, weaver_result.points, "Weaver Cat 4/5 Overall BAR points")
+      assert_equal(4, weaver_result.scores.size, "Weaver Cat 4/5 Overall BAR 1st place scores")
 
       tonkin_result = cat_4_5_overall_bar.results.detect { |result| result.person == tonkin }
       assert_equal("3", tonkin_result.place, "Tonkin Cat 4/5 Overall BAR place")
