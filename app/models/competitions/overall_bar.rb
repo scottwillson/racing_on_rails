@@ -22,37 +22,7 @@ module Competitions
 
     def source_results_query(race)
       super.
-      where(
-        "(events.discipline not in (:disciplines) and races.category_id in (:categories))
-        or (events.discipline in (:disciplines) and races.category_id in (:mtb_categories))",
-        disciplines: Discipline["Mountain Bike"].names,
-        categories: categories_for(race),
-        mtb_categories: mtb_categories_for(race)
-      )
-    end
-
-    # Array of ids (integers)
-    # +race+ category, +race+ category's siblings, and any competition categories
-    # Overall BAR does some awesome mappings for MTB and DH
-    def mtb_categories_for(race)
-      return [] unless race.category
-
-      case race.category.name
-      when "Senior Men"
-        [::Category.find_or_create_by(name: "Elite Men"), ::Category.find_or_create_by(name: "Pro Men")]
-      when "Senior Women"
-        [::Category.find_or_create_by(name: "Elite Women"), ::Category.find_or_create_by(name: "Category 1 Women"), ::Category.find_or_create_by(name: "Pro Women")]
-      when "Category 3 Men"
-        [::Category.find_or_create_by(name: "Category 1 Men")]
-      when "Category 3 Women"
-        [::Category.find_or_create_by(name: "Category 2 Women")]
-      when "Category 4/5 Men"
-        [::Category.find_or_create_by(name: "Category 2 Men"), ::Category.find_or_create_by(name: "Category 3 Men")]
-      when "Category 4 Women"
-        [::Category.find_or_create_by(name: "Category 3 Women")]
-      else
-        [ race.category ]
-      end
+      where("races.category_id" => categories_for(race))
     end
 
     def category_names
