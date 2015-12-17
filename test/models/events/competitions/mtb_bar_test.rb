@@ -248,7 +248,7 @@ module Competitions
       assert_equal(2, senior_men_3_overall_bar.results.size, "Senior Men 3 Overall BAR results")
 
       senior_men_4_5_overall_bar = overall_bar.races.detect { |race| race.name == "Category 4/5 Men" }
-      assert_equal(1, senior_men_4_5_overall_bar.results.size, "Senior Men 4/5 Overall BAR results")
+      assert_equal(2, senior_men_4_5_overall_bar.results.size, "Senior Men 4/5 Overall BAR results")
 
       senior_women_overall_bar = overall_bar.races.detect { |race| race.name == "Senior Women" }
       assert_equal(4, senior_women_overall_bar.results.size, "Senior Women Overall BAR results")
@@ -257,47 +257,50 @@ module Competitions
       assert_equal(2, senior_women_3_overall_bar.results.size, "Senior Women 3 Overall BAR results")
 
       senior_women_4_overall_bar = overall_bar.races.detect { |race| race.name == "Category 4 Women" }
-      assert_equal(1, senior_women_4_overall_bar.results.size, "Category 4 Women Overall BAR results")
+      assert_equal(2, senior_women_4_overall_bar.results.size, "Category 4 Women Overall BAR results")
 
       results = senior_men_overall_bar.results.to_a.sort
-      assert_equal(tonkin, results[0].person, "Senior Men Overall BAR results person")
+      assert_equal(molly, results[0].person, "Senior Men Overall BAR results person")
       assert_equal("1", results[0].place, "Senior Men Overall BAR results place")
-      assert_equal(599, results[0].points, "Tonkin Senior Men Overall BAR results points")
-      assert_equal(2, results[0].scores.size, "Tonkin Overall BAR results scores")
+      assert_equal(598, results[0].points, "Senior Men Overall BAR results points")
+      assert_equal(2, results[0].scores.size, "Overall BAR results scores")
 
-      assert_equal(molly, results[1].person, "Senior Men Overall BAR results person")
+      assert_equal(matson, results[1].person, "Senior Men Overall BAR results person")
       assert_equal("2", results[1].place, "Senior Men Overall BAR results place")
-      assert_equal(598, results[1].points, "molly Senior Men Overall BAR results points")
-      assert_equal(2, results[1].scores.size, "molly Overall BAR results scores")
+      assert_equal(300, results[1].points, "Senior Men Overall BAR results points")
+      assert_equal(1, results[1].scores.size, "Overall BAR results scores")
 
-      assert([matson, weaver].include?(results[2].person), "Senior Men Overall BAR results person")
-      assert_equal("3", results[2].place, "Senior Men Overall BAR results place")
-      assert_equal(300, results[2].points, "matson Senior Men Overall BAR results points")
-      assert_equal(1, results[2].scores.size, "matson Overall BAR results scores")
+      assert_equal(weaver, results[2].person, "Senior Men Overall BAR results person")
+      assert_equal("2", results[2].place, "Senior Men Overall BAR results place")
+      assert_equal(300, results[2].points, "Senior Men Overall BAR results points")
+      assert_equal(1, results[2].scores.size, "Overall BAR results scores")
 
-      assert([matson, weaver].include?(results[3].person), "Senior Men Overall BAR results person")
-      assert_equal("3", results[3].place, "Senior Men Overall BAR results place")
-      assert_equal(300, results[3].points, "molly Senior Men Overall BAR results points")
-      assert_equal(1, results[3].scores.size, "molly Overall BAR results scores")
+      assert_equal(tonkin, results[3].person, "Senior Men Overall BAR results person")
+      assert_equal("4", results[3].place, "Senior Men Overall BAR results place")
+      assert_equal(299, results[3].points, "Senior Men Overall BAR results points")
+      assert_equal(1, results[3].scores.size, "Overall BAR results scores")
 
       results = senior_men_3_overall_bar.results.to_a.sort
-      assert_equal(2, results.size)
-      assert_equal(weaver, results[0].person, "Category 3 Men Overall BAR results person")
-      assert_equal("1", results[0].place, "Senior Men Overall BAR results place")
-      assert_equal(600, results[0].points, "alice Senior Men Overall BAR results points")
-      assert_equal(2, results[0].scores.size, "alice Overall BAR results scores")
+      assert_equal(tonkin, results[0].person, "Men 3 Overall BAR results person")
+      assert_equal("1", results[0].place, "Men 3 Overall BAR results place")
+      assert_equal(300, results[0].points, "Men 3 Overall  BAR results points")
+      assert_equal(1, results[0].scores.size, "Men 3 Overall BAR results scores")
 
-      assert_equal(alice, results[1].person, "Category 3 Men Overall BAR results person")
-      assert_equal("2", results[1].place, "Senior Men Overall BAR results place")
-      assert_equal(300, results[1].points, "alice Senior Men Overall BAR results points")
-      assert_equal(1, results[1].scores.size, "alice Overall BAR results scores")
+      assert([alice, molly].include?(results[1].person), "Men 3 Overall BAR results person was #{results[1].person.name}")
+      assert_equal("1", results[1].place, "Men 3 Overall BAR results place")
+      assert_equal(300, results[1].points, "Men 3 Overall BAR results points")
+      assert_equal(1, results[1].scores.size, "Men 3 Overall BAR results scores")
 
       results = senior_men_4_5_overall_bar.results.to_a.sort
-      assert_equal(1, results.size)
-      assert_equal matson, results[0].person, "Senior Men Overall BAR results person"
-      assert_equal("1", results[0].place, "Senior Men Overall BAR results place")
-      assert_equal(300, results[0].points, "matson Senior Men Overall BAR results points")
-      assert_equal(1, results[0].scores.size, "matson Overall BAR results scores")
+      assert_equal weaver, results[0].person, "Men 4 Overall BAR results person"
+      assert_equal("1", results[0].place, "Men 4 Overall BAR results place")
+      assert_equal(600, results[0].points, "Men 4 Overall BAR results points")
+      assert_equal(2, results[0].scores.size, "Men 4 Overall BAR results scores")
+
+      assert_equal weaver, results[0].person, "Men 4 Overall BAR results person"
+      assert_equal("2", results[1].place, "Men 4 Overall BAR results place")
+      assert_equal(300, results[1].points, "Men 4 Overall BAR results points")
+      assert_equal(1, results[1].scores.size, "Men 4 Overall BAR results scores")
 
       results = senior_women_overall_bar.results.to_a.sort
       assert_equal(woman_pro, results[0].person, "Senior Women Overall BAR results person")
@@ -305,14 +308,14 @@ module Competitions
       assert_equal(600, results[0].points, "Senior Women Overall BAR results points")
       assert_equal(2, results[0].scores.size, "Senior Women Overall BAR results scores")
 
-      assert_equal(woman_1, results[1].person, "Senior Women Overall BAR results person")
+      assert_equal(woman_3, results[1].person, "Senior Women Overall BAR results person")
       assert_equal("2", results[1].place, "Senior Women Overall BAR results place")
-      assert_equal(599, results[1].points, "Senior Women Overall BAR results points")
-      assert_equal(2, results[1].scores.size, "Women Overall BAR results scores")
+      assert_equal(300, results[1].points, "Senior Women Overall BAR results points")
+      assert_equal(1, results[1].scores.size, "Women Overall BAR results scores")
 
-      assert_equal(woman_3, results[2].person, "Senior Women Overall BAR results person")
+      assert_equal(woman_1, results[2].person, "Senior Women Overall BAR results person")
       assert_equal("3", results[2].place, "Senior Women Overall BAR results place")
-      assert_equal(300, results[2].points, "Senior Women Overall BAR results points")
+      assert_equal(299, results[2].points, "Senior Women Overall BAR results points")
       assert_equal(1, results[2].scores.size, "Women Overall BAR results scores")
 
       assert_equal(woman_2, results[3].person, "Senior Women Overall BAR results person")
@@ -321,13 +324,15 @@ module Competitions
       assert_equal(1, results[3].scores.size, "Women Overall BAR results scores")
 
       results = senior_women_3_overall_bar.results.to_a.sort
-      assert_equal(2, results.size)
-      assert_equal(woman_2, results[0].person, "Senior Women Overall BAR results person")
+      assert([woman_1, woman_3].include?(results[0].person), "Senior Women 3 Overall BAR results person")
       assert_equal("1", results[0].place, "Senior Women 3 Overall BAR results place")
       assert_equal(300, results[0].points, "Senior Women 3 Overall BAR results points")
       assert_equal(1, results[0].scores.size, "Women 3 Overall BAR results scores")
 
-      assert_equal(woman_3, results[1].person, "Senior Women Overall BAR results person")
+      assert([woman_1, woman_3].include?(results[0].person), "Senior Women 3 Overall BAR results person")
+      assert_equal("1", results[0].place, "Senior Women 3 Overall BAR results place")
+      assert_equal(300, results[0].points, "Senior Women 3 Overall BAR results points")
+      assert_equal(1, results[0].scores.size, "Women 3 Overall BAR results scores")
 
       results = senior_women_4_overall_bar.results.to_a.sort
       assert([woman_2, woman_4].include?(results[0].person), "Senior Women Overall BAR results person")
@@ -340,7 +345,7 @@ module Competitions
       assert_equal(300, results[0].points, "Senior Women Overall BAR results points")
       assert_equal(1, results[0].scores.size, "Women Overall BAR results scores")
 
-      assert_equal(original_results_count + 33, Result.count, "Total count of results in DB after BARs calculate!")
+      assert_equal(original_results_count + 35, Result.count, "Total count of results in DB after BARs calculate!")
     end
 
     test "masters state champs" do
