@@ -6,18 +6,20 @@ module Competitions
     include OverallBars::Races
 
     def create_children
-      Discipline.find_all_bar.
-      reject { |discipline| [Discipline[:age_graded], Discipline[:overall], Discipline[:team]].include?(discipline) }.
-      each do |discipline|
-        unless Bar.year(year).where(discipline: discipline.name).exists?
-          Bar.create!(
-            parent: self,
-            name: "#{year} #{discipline.name} BAR",
-            date: date,
-            discipline: discipline.name
-          )
-        end
-      end
+      Discipline
+        .find_all_bar
+        .reject { |discipline| [Discipline[:age_graded], Discipline[:overall], Discipline[:team]].include?(discipline) }
+        .reject { |discipline| Bar.year(year).where(discipline: discipline.name).exists? }
+        .each { |discipline| create_child discipline }
+    end
+
+    def create_child(discipline)
+      Bar.create!(
+        parent: self,
+        name: "#{year} #{discipline.name} BAR",
+        date: date,
+        discipline: discipline.name
+      )
     end
 
     def source_results_query(race)
