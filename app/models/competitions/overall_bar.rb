@@ -23,14 +23,14 @@ module Competitions
     end
 
     def source_results_query(race)
-      super.
-      where(
-        "(events.discipline not in (:disciplines) and races.category_id in (:categories))
-        or (events.discipline in (:disciplines) and races.category_id in (:mtb_categories))",
-        disciplines: Discipline["Mountain Bike"].names,
-        categories: categories_for(race),
-        mtb_categories: mtb_categories_for(race)
-      )
+      super
+        .where(
+          "(events.discipline not in (:disciplines) and races.category_id in (:categories))
+          or (events.discipline in (:disciplines) and races.category_id in (:mtb_categories))",
+          disciplines: Discipline["Mountain Bike"].names,
+          categories: categories_for(race),
+          mtb_categories: mtb_categories_for(race)
+        )
     end
 
     # Array of ids (integers)
@@ -41,9 +41,17 @@ module Competitions
 
       case race.category.name
       when "Senior Men"
-        [ ::Category.find_or_create_by(name: "Category 1 Men"), ::Category.find_or_create_by(name: "Elite Men"), ::Category.find_or_create_by(name: "Pro Men") ]
+        [
+          ::Category.find_or_create_by(name: "Pro Men"),
+          ::Category.find_or_create_by(name: "Elite Men"),
+          ::Category.find_or_create_by(name: "Category 1 Men")
+        ]
       when "Senior Women"
-        [ ::Category.find_or_create_by(name: "Elite Women"), ::Category.find_or_create_by(name: "Category 1 Women"), ::Category.find_or_create_by(name: "Pro Women") ]
+        [
+          ::Category.find_or_create_by(name: "Pro Women"),
+          ::Category.find_or_create_by(name: "Elite Women"),
+          ::Category.find_or_create_by(name: "Category 1 Women")
+        ]
       when "Category 3 Men"
         [ ::Category.find_or_create_by(name: "Category 2 Men") ]
       when "Category 3 Women"
@@ -81,7 +89,7 @@ module Competitions
       [ Competitions::Bar ]
     end
 
-    def after_source_results(results, race)
+    def after_source_results(results, _)
       results = reject_duplicate_discipline_results(results)
       # BAR Results with the same place are always ties, and never team results
       set_team_size_to_one results
@@ -96,14 +104,14 @@ module Competitions
     def reject_duplicate_discipline_results(source_results)
       filtered_results = []
 
-      source_results.group_by { |r| r["participant_id"] }.each do |participant_id, results|
-        results.select { |r| r["category_name"] == "Category 4 Men"}.each do |cat_4_result|
+      source_results.group_by { |r| r["participant_id"] }.each do |_, results|
+        results.select { |r| r["category_name"] == "Category 4 Men" }.each do |cat_4_result|
           results = results.reject do |r|
             r["category_name"] == "Category 5 Men" && r["discipline"] == cat_4_result["discipline"]
           end
         end
 
-        results.group_by { |r| r["discipline"] }.each do |discipline, discipline_results|
+        results.group_by { |r| r["discipline"] }.each do |_, discipline_results|
           filtered_results << discipline_results.sort_by { |r| r["points"].to_f }.reverse.first
         end
       end
@@ -116,7 +124,7 @@ module Competitions
       (1..300).to_a.reverse
     end
 
-    def maximum_events(race)
+    def maximum_events(_)
       5
     end
 
