@@ -65,7 +65,7 @@ module Competitions
       swan_island = SingleDayEvent.create!(
         name: "Swan Island",
         discipline: "Criterium",
-        date: Date.new(2004, 5, 17),
+        date: Date.new(2004, 5, 17)
       )
       swan_island_senior_men = swan_island.races.create!(category: senior_men, field_size: 4)
       swan_island_senior_men.results.create!(
@@ -177,7 +177,7 @@ module Competitions
       # Discipline BAR results past 300 don't count -- add fake result
       bar = Bar.year(2004).where(discipline: "Road").first
       assert_not_nil bar.parent, "Should have parent"
-      sr_men_road_bar = bar.races.detect {|r| r.category == senior_men}
+      sr_men_road_bar = bar.races.detect { |r| r.category == senior_men }
       sr_men_road_bar.results.create!(place: 305, person: alice)
 
       assert_difference "Result.count", 7 do
