@@ -119,7 +119,7 @@ class AcceptanceTest < ActiveSupport::TestCase
         end
       end
     rescue Timeout::Error
-      raise Timeout::Error, "Did not find '#{filename}' in #{AcceptanceTest.download_directory} within seconds 10 seconds. Found: #{Dir.entries(AcceptanceTest.download_directory).join(", ")}"
+      raise Timeout::Error, "Did not find '#{filename}' in #{AcceptanceTest.download_directory} within seconds 10 seconds. Found: #{Dir.entries(AcceptanceTest.download_directory).join(', ')}"
     end
   end
 

@@ -214,7 +214,7 @@ class Event < ActiveRecord::Base
 
   def inclusion_of_discipline
     if discipline.present? && Discipline.names.present? && !Discipline.names.include?(discipline)
-      errors.add :discipline, "'#{discipline}' is not in #{Discipline.names.join(", ")}"
+      errors.add :discipline, "'#{discipline}' is not in #{Discipline.names.join(', ')}"
     end
   end
 

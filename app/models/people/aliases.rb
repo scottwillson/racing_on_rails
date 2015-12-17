@@ -24,7 +24,7 @@ module People
 
         new_alias = Alias.new(name: name_was, person: self)
         unless new_alias.save
-          logger.error "Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(", ")}"
+          logger.error "Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(', ')}"
         end
         new_alias
       end

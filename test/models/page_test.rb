@@ -144,8 +144,8 @@ class PageTest < ActiveSupport::TestCase
     end
 
     Timecop.freeze(3.days.from_now) do
-      assert child.destroy, "Child destroy returned false. #{child.errors.full_messages.join(", ")}"
-      assert child.destroyed?, "Should have destroyed page. #{child.errors.full_messages.join(", ")}"
+      assert child.destroy, "Child destroy returned false. #{child.errors.full_messages.join(', ')}"
+      assert child.destroyed?, "Should have destroyed page. #{child.errors.full_messages.join(', ')}"
       assert_equal(1, parent.versions.size, "versions")
       assert(parent.reload.updated_at > updated_at, "Parent should updated updated_at after child destroyed")
     end

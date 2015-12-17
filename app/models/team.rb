@@ -84,7 +84,7 @@ class Team < ActiveRecord::Base
 
       new_alias = Alias.create!(name: name_was, team: self)
       unless new_alias.save
-        logger.error("Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(", ")}")
+        logger.error("Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(', ')}")
       end
       new_alias
     end

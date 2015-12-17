@@ -7,7 +7,7 @@ class EditorRequestMailerTest < ActionMailer::TestCase
       editor = FactoryGirl.create(:person, email: "molly@example.com", name: "Molly Cameron")
       person = FactoryGirl.create(:person, email: "hotwheels@yahoo.com", name: "Ryan Weaver")
       editor_request = person.editor_requests.new(editor: editor)
-      assert editor_request.valid?, "New request should be valid, but #{editor_request.errors.full_messages.join(", ")}"
+      assert editor_request.valid?, "New request should be valid, but #{editor_request.errors.full_messages.join(', ')}"
       email = EditorRequestMailer.editor_request(editor_request).deliver_now
 
       assert_equal "Ryan Weaver <hotwheels@yahoo.com>", email[:to].to_s, "email to"
@@ -21,7 +21,7 @@ class EditorRequestMailerTest < ActionMailer::TestCase
       editor = FactoryGirl.create(:person, email: "molly@example.com", name: "Molly Cameron")
       person = FactoryGirl.create(:person, email: "hotwheels@yahoo.com", name: "Ryan Weaver")
       editor_request = person.editor_requests.new(editor: editor)
-      assert editor_request.valid?, "New request should be valid, but #{editor_request.errors.full_messages.join(", ")}"
+      assert editor_request.valid?, "New request should be valid, but #{editor_request.errors.full_messages.join(', ')}"
       email = EditorRequestMailer.notification(editor_request).deliver_now
 
       assert_equal "Molly Cameron <molly@example.com>", email[:to].to_s
