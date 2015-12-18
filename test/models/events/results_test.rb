@@ -3,7 +3,6 @@ require "test_helper"
 module Events
   # :stopdoc:
   class ResultsTest < ActiveSupport::TestCase
-
     test "find all with results" do
       event = FactoryGirl.create(:result).event
       assert_equal([ event ], Event.find_all_with_results, "events")

@@ -3,6 +3,13 @@ module Admin
     before_action :assign_event
     before_action :require_administrator_or_promoter
 
+    def create
+      @event.add_races_from_previous_year
+      respond_to do |format|
+        format.js { render :show }
+      end
+    end
+
     def edit
       @races_collection = RacesCollection.new(@event)
       respond_to do |format|

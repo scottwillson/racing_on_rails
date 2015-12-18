@@ -27,7 +27,28 @@
       <% end -%>
       <% unless event.new_record? || event.races.present? %>
       <tr>
-        <td colspan="5" class="empty">No races. Click [+] to add a race.</td>
+        <td colspan="5" class="empty">No races. Click
+          <%= link_to(
+                admin_event_races_path(event),
+                remote: true,
+                method: :post,
+                class: "icon",
+                id: "create_race",
+                title: "Add race"
+              ) do %>
+            <span class="glyphicon glyphicon-plus-sign"></span>
+          <% end %>
+          to add a race.
+          <% if event.previous? && event.previous.races.present? %>
+            <%= link_to(
+                  "Add same races as last year",
+                  admin_event_races_collection_path(event),
+                  class: "obvious add-same-race",
+                  remote: true,
+                  method: :post
+            ) %>.
+          <% end %>
+        </td>
       </tr>
       <% end %>
       <% unless event.new_record? -%>

@@ -170,6 +170,23 @@ class Event < ActiveRecord::Base
     children.inject(_categories) { |cats, child| cats + child.categories }
   end
 
+  def previous?
+    previous.present?
+  end
+
+  def previous
+    Event.where(name: name).where(year: year - 1).first
+  end
+
+  def add_races_from_previous_year
+    categories = races.map(&:category)
+
+    previous.races
+      .map(&:category)
+      .reject { |c| c.in? categories }
+      .each { |c| races.create! category: c }
+  end
+
   def city_state
     if city.present?
       if state.present?
