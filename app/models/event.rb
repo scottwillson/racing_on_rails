@@ -69,25 +69,9 @@ class Event < ActiveRecord::Base
   belongs_to :region
 
   scope :today_and_future, -> { where("date >= :today || end_date >= :today", today: Time.zone.today) }
-
-  scope :year, lambda do |year|
-    where(
-      "date between ? and ?",
-      Time.zone.local(year).beginning_of_year.to_date,
-      Time.zone.local(year).end_of_year.to_date
-    )
-  end
-
-  scope :current_year, lambda do
-    where(date: Time.zone.local(RacingAssociation.current.effective_year).beginning_of_year.to_date..Time.zone.local(RacingAssociation.current.effective_year).end_of_year.to_date)
-  end
-
-  scope :upcoming_in_weeks, lambda do |number_of_weeks|
-    where(
-      "(date ?) || (end_date between :?)",
-      Time.zone.today..number_of_weeks.weeks.from_now.to_date
-    )
-  end
+  scope :year, ->(year) { where(date: year_range(year)) }
+  scope :current_year, -> { where(date: current_year_range) }
+  scope :upcoming_in_weeks, ->(weeks) { where("(date ?) || (end_date between :?)", Time.zone.today..weeks.weeks.from_now.to_date) }
 
   def self.upcoming(weeks = 2)
     single_day_events   = upcoming_single_day_events(weeks)
@@ -144,6 +128,15 @@ class Event < ActiveRecord::Base
       .where("events.discipline" => discipline_names)
       .where("bar_points > 0")
       .where("events.team_id" => team)
+  end
+
+  def self.current_year_range
+    effective_year = Time.zone.local(RacingAssociation.current.effective_year)
+    effective_year.beginning_of_year.to_date..effective_year.end_of_year.to_date
+  end
+
+  def self.year_range(year)
+    Time.zone.local(year).beginning_of_year.to_date..Time.zone.local(year).end_of_year.to_date
   end
 
   def destroy_races
