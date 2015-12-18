@@ -1,3 +1,6 @@
+AllCops:
+  RunRailsCops: true
+
 ClassLength:
   Enabled: false
 
@@ -24,6 +27,9 @@ Metrics/ModuleLength:
   CountComments: false
   Max: 300
 
+SingleLineBlockParams:
+  Enabled: false
+  
 SpaceInsideBrackets:
   Enabled: false
 
