@@ -16,5 +16,12 @@ module Events
       assert event.previous?
       assert_equal copperoplis, event.previous
     end
+
+    test "#previous fuzzy match" do
+      copperoplis = FactoryGirl.create(:event, name: "Copperopolis RR", date: 1.year.ago)
+      event = FactoryGirl.create(:event, name: "Copperopolis")
+      assert event.previous?
+      assert_equal copperoplis, event.previous
+    end
   end
 end

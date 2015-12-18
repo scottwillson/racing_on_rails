@@ -163,7 +163,15 @@ class Event < ActiveRecord::Base
   end
 
   def previous
-    Event.find_by(name: name, year: year - 1)
+    exact_match = Event.find_by(name: name, year: year - 1)
+    return exact_match if exact_match
+
+    best_match = Event.where(year: year - 1).group_by { |e| DamerauLevenshtein.distance(name, e.name) }.sort_by(&:first).first
+    if best_match && best_match.first <= 3
+      best_match.last.first
+    else
+      nil
+    end
   end
 
   def add_races_from_previous_year

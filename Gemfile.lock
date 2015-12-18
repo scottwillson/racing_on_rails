@@ -171,6 +171,11 @@ GEM
     concurrent-ruby (1.0.0)
     connection_pool (2.2.0)
     dalli (2.7.4)
+    damerau-levenshtein (1.1.0)
+      bundler (~> 1.7)
+      json (~> 1.8)
+      rake (~> 10.4)
+      rake-compiler (~> 0.9)
     database_cleaner (1.5.1)
     default_value_for (3.0.1)
       activerecord (>= 3.2.0, < 5.0)
@@ -322,6 +327,8 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (2.0.0)
     rake (10.4.2)
+    rake-compiler (0.9.5)
+      rake
     raygun4ruby (1.1.8)
       httparty (~> 0.11)
       json
@@ -461,6 +468,7 @@ DEPENDENCIES
   coffee-script-source (~> 1.7)
   connection_pool
   dalli
+  damerau-levenshtein
   database_cleaner
   default_value_for
   elasticsearch-model
