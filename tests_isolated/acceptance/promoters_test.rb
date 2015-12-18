@@ -28,7 +28,7 @@ class PromotersTest < AcceptanceTest
     end
     click_button "Save"
 
-    click_link "create_race"
+    click_link "create_race", match: :first
     within "form.editor_field" do
       fill_in "value", with: "Senior Women\n"
     end
@@ -43,7 +43,7 @@ class PromotersTest < AcceptanceTest
     click_link "events_tab"
     click_link "Cross Crusade: Alpenrose"
 
-    click_link "create_race"
+    click_link "create_race", match: :first
     within "form.editor_field" do
       fill_in "value", with: "Masters Women 40+\n"
     end
