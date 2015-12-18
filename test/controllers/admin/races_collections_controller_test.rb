@@ -27,7 +27,7 @@ module Admin
       @controller.expects :require_administrator_or_promoter
       race = FactoryGirl.create(:race)
       FactoryGirl.create(:race, event: race.event)
-      xhr :put, :update, event_id: race.event, races_collection: { text: "Senior Men\r\nCat 3"}
+      xhr :put, :update, event_id: race.event, races_collection: { text: "Senior Men\r\nCat 3" }
       assert_response :success
       assert_not_nil assigns[:races_collection], "@races_collection"
       assert_equal [ "Category 3", "Senior Men" ], race.event.races(true).map(&:name).sort

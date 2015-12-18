@@ -30,7 +30,7 @@
 #
 # It's debatable whether we need STI subclasses or not.
 class Event < ActiveRecord::Base
-  TYPES =  [ 'Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries' ]
+  TYPES = %w( Event SingleDayEvent MultiDayEvent Series WeeklySeries )
 
   include Events::Children
   include Events::Comparison
@@ -49,7 +49,8 @@ class Event < ActiveRecord::Base
   before_save :set_team
   before_destroy :destroy_event_team_memberships
 
-  validates_presence_of :date, :name
+  validates :date, presence: true
+  validates :name, presence: true
 
   validate :inclusion_of_discipline
 
@@ -58,39 +59,35 @@ class Event < ActiveRecord::Base
   belongs_to :number_issuer
   belongs_to :team
 
-
-  has_many   :races,
-             inverse_of: :event,
-             dependent: :destroy,
-             after_add: :children_changed,
-             after_remove: :children_changed
+  has_many :races,
+           inverse_of: :event,
+           dependent: :destroy,
+           after_add: :children_changed,
+           after_remove: :children_changed
 
   belongs_to :velodrome
   belongs_to :region
 
-  scope :today_and_future, lambda { where("date >= :today || end_date >= :today", today: Time.zone.today) }
+  scope :today_and_future, -> { where("date >= :today || end_date >= :today", today: Time.zone.today) }
 
-  scope :year, lambda { |year|
+  scope :year, lambda do |year|
     where(
       "date between ? and ?",
       Time.zone.local(year).beginning_of_year.to_date,
       Time.zone.local(year).end_of_year.to_date
     )
-  }
+  end
 
-  scope :current_year, lambda { where(
-    "date between ? and ?",
-    Time.zone.local(RacingAssociation.current.effective_year).beginning_of_year.to_date,
-    Time.zone.local(RacingAssociation.current.effective_year).end_of_year.to_date
-    )
-  }
+  scope :current_year, lambda do
+    where(date: Time.zone.local(RacingAssociation.current.effective_year).beginning_of_year.to_date..Time.zone.local(RacingAssociation.current.effective_year).end_of_year.to_date)
+  end
 
-  scope :upcoming_in_weeks, lambda { |number_of_weeks|
+  scope :upcoming_in_weeks, lambda do |number_of_weeks|
     where(
-      "(date between :today and :later) || (end_date between :today and :later)",
-      today: Time.zone.today,
-      later: number_of_weeks.weeks.from_now.to_date)
-  }
+      "(date ?) || (end_date between :?)",
+      Time.zone.today..number_of_weeks.weeks.from_now.to_date
+    )
+  end
 
   def self.upcoming(weeks = 2)
     single_day_events   = upcoming_single_day_events(weeks)
@@ -108,32 +105,32 @@ class Event < ActiveRecord::Base
   end
 
   def self.upcoming_single_day_events(weeks)
-    SingleDayEvent.
-      not_child.
-      where(postponed: false).
-      where(cancelled: false).
-      where(practice: false).
-      upcoming_in_weeks(weeks)
+    SingleDayEvent
+      .not_child
+      .where(postponed: false)
+      .where(cancelled: false)
+      .where(practice: false)
+      .upcoming_in_weeks(weeks)
   end
 
   def self.upcoming_multi_day_events(weeks)
-    MultiDayEvent.
-      where(postponed: false).
-      where(cancelled: false).
-      where(practice: false).
-      where(type: "MultiDayEvent").
-      upcoming_in_weeks(weeks)
+    MultiDayEvent
+      .where(postponed: false)
+      .where(cancelled: false)
+      .where(practice: false)
+      .where(type: "MultiDayEvent")
+      .upcoming_in_weeks(weeks)
   end
 
   def self.upcoming_series_child_events(weeks, multi_day_events)
-    SingleDayEvent.
-      includes(parent: :parent).
-      child.
-      where(postponed: false).
-      where(cancelled: false).
-      where(practice: false).
-      where.not(parent_id: multi_day_events).
-      upcoming_in_weeks(weeks)
+    SingleDayEvent
+      .includes(parent: :parent)
+      .child
+      .where(postponed: false)
+      .where(cancelled: false)
+      .where(practice: false)
+      .where.not(parent_id: multi_day_events)
+      .upcoming_in_weeks(weeks)
   end
 
   # Defaults state to RacingAssociation.current.state, date to today, name to Untitled
@@ -142,13 +139,11 @@ class Event < ActiveRecord::Base
     last_of_year = date.end_of_year
     discipline_names = [discipline]
     discipline_names << 'Circuit' if discipline.downcase == 'road'
-    Set.new(Event.select("distinct events.id, events.*").
-      where("events.date between ? and ?", first_of_year, last_of_year).
-      where("events.discipline in (?)", discipline_names).
-      where("bar_points > 0").
-      where("events.team_id = ?", team).
-      all
-    )
+    Event.select("distinct events.id, events.*")
+      .where("events.date" => first_of_year..last_of_year)
+      .where("events.discipline" => discipline_names)
+      .where("bar_points > 0")
+      .where("events.team_id" => team)
   end
 
   def destroy_races
@@ -166,8 +161,8 @@ class Event < ActiveRecord::Base
 
   # All races' Categories and all children's races' Categories
   def categories
-    _categories = races.map(&:category)
-    children.inject(_categories) { |cats, child| cats + child.categories }
+    race_categories = races.map(&:category)
+    children.inject(race_categories) { |cats, child| cats + child.categories }
   end
 
   def previous?
@@ -175,7 +170,7 @@ class Event < ActiveRecord::Base
   end
 
   def previous
-    Event.where(name: name).where(year: year - 1).first
+    Event.find_by(name: name, year: year - 1)
   end
 
   def add_races_from_previous_year
@@ -257,10 +252,10 @@ class Event < ActiveRecord::Base
   end
 
   def type_modifiable?
-    type.nil? || %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries }.include?(type)
+    type.nil? || %w( Event SingleDayEvent MultiDayEvent Series WeeklySeries ).include?(type)
   end
 
-  def as_json(options)
+  def as_json(_)
     super(
       only: [ :discipline, :name, :parent_id, :type ],
       methods: [ :sorted_races ],
@@ -289,7 +284,6 @@ class Event < ActiveRecord::Base
   def to_s
     "<#{self.class} #{id} #{discipline} #{name} #{start_date} #{end_date}"
   end
-
 
   private
 
