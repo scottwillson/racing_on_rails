@@ -7,9 +7,10 @@ module Events
       assert !Event.new.previous?
       assert_nil Event.new.previous
 
-      copperoplis = FactoryGirl.create(:event, name: "Copperopolis", date: 1.year.ago)
+      promoter = FactoryGirl.create(:person, name: "David Saltzman")
+      copperoplis = FactoryGirl.create(:event, name: "Copperopolis", date: 1.year.ago, promoter: promoter)
       event = FactoryGirl.create(:event, name: "Tabor")
-      assert !event.previous?
+      assert !event.previous?, "Did not expect previous event #{event.previous.try(:name)}"
       assert_nil event.previous
 
       event = FactoryGirl.create(:event, name: "Copperopolis")

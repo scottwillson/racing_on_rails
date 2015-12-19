@@ -38,6 +38,7 @@ class Event < ActiveRecord::Base
   include Events::Dates
   include Events::Defaults
   include Events::Naming
+  include Events::Previous
   include Events::Promoters
   include Events::Slugs
   include Events::Results
@@ -156,31 +157,6 @@ class Event < ActiveRecord::Base
   def categories
     race_categories = races.map(&:category)
     children.inject(race_categories) { |cats, child| cats + child.categories }
-  end
-
-  def previous?
-    previous.present?
-  end
-
-  def previous
-    exact_match = Event.find_by(name: name, year: year - 1)
-    return exact_match if exact_match
-
-    best_match = Event.where(year: year - 1).group_by { |e| DamerauLevenshtein.distance(name, e.name) }.sort_by(&:first).first
-    if best_match && best_match.first <= 3
-      best_match.last.first
-    else
-      nil
-    end
-  end
-
-  def add_races_from_previous_year
-    categories = races.map(&:category)
-
-    previous.races
-      .map(&:category)
-      .reject { |c| c.in? categories }
-      .each { |c| races.create! category: c }
   end
 
   def city_state
