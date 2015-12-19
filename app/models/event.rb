@@ -72,7 +72,12 @@ class Event < ActiveRecord::Base
   scope :today_and_future, -> { where("date >= :today || end_date >= :today", today: Time.zone.today) }
   scope :year, ->(year) { where(date: year_range(year)) }
   scope :current_year, -> { where(date: current_year_range) }
-  scope :upcoming_in_weeks, ->(weeks) { where("(date ?) || (end_date between :?)", Time.zone.today..weeks.weeks.from_now.to_date) }
+  scope :upcoming_in_weeks, ->(number_of_weeks) {
+    where(
+      "(date between :today and :later) || (end_date between :today and :later)",
+      today: Time.zone.today,
+      later: number_of_weeks.weeks.from_now.to_date)
+  }
 
   def self.upcoming(weeks = 2)
     single_day_events   = upcoming_single_day_events(weeks)
