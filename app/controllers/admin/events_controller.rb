@@ -25,7 +25,7 @@ module Admin
     # * event
     # * disciplines: List of all Disciplines + blank
     def edit
-      @previous = @event.previous
+      assign_previous
       if params['promoter_id'].present? && current_person.administrator?
         @event.promoter = Person.find(params['promoter_id'])
       end
@@ -302,6 +302,14 @@ module Admin
     end
 
     private
+
+    def assign_previous
+      @previous = nil
+
+      if @event.races.empty?
+        @previous = @event.previous
+      end
+    end
 
     def event_params
       _params = params_without_mobile.require(:event).permit(
