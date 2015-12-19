@@ -43,6 +43,7 @@ FactoryGirl.define do
 
   factory :event, class: "SingleDayEvent" do
     promoter factory: :person
+
     factory :multi_day_event, class: "MultiDayEvent"
     factory :series, class: "Series"
     factory :weekly_series, class: "WeeklySeries"

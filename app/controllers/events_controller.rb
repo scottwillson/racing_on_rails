@@ -5,7 +5,7 @@ class EventsController < ApplicationController
       format.html {
         if params[:person_id]
           @person = Person.find(params[:person_id])
-          @events = Event.editable_by(@person).current_year
+          @events = Event.editable_by(@person).current_year_and_later
         else
           redirect_to schedule_path
         end
