@@ -39,9 +39,9 @@
             <span class="glyphicon glyphicon-plus-sign"></span>
           <% end %>
           to add a race.
-          <% if event.previous? && event.previous.races.present? %>
+          <% if previous && previous.races.present? %>
             <%= link_to(
-                  "Add same races as last year",
+                  "Add same races last year's #{previous.name}",
                   admin_event_races_collection_path(event),
                   class: "obvious add-same-race",
                   remote: true,

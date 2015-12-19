@@ -25,6 +25,7 @@ module Admin
     # * event
     # * disciplines: List of all Disciplines + blank
     def edit
+      @previous = @event.previous
       if params['promoter_id'].present? && current_person.administrator?
         @event.promoter = Person.find(params['promoter_id'])
       end

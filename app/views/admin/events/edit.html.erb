@@ -9,7 +9,7 @@
     <div class="col-sm-6">
       <%= render partial: "parent", object: @event %>
       <%= render partial: "events", object: @event %>
-      <%= render partial: "admin/races_collections/show", locals: { event: @event } %>
+      <%= render partial: "admin/races_collections/show", locals: { event: @event, previous: @previous } %>
     </div>
     <div class="col-sm-6">
       <%= form_for(@event,
