@@ -31,9 +31,12 @@ module Events
       categories = races.map(&:category)
 
       previous.races
-        .map(&:category)
-        .reject { |c| c.in? categories }
-        .each { |c| races.create! category: c }
+        .reject { |r| r.category.in? categories }
+        .each { |r| add_race_from_previous_year(r) }
+    end
+
+    def add_race_from_previous_year(race)
+      races.create! category: race.category
     end
 
     def similar_promoter_name?(event)
