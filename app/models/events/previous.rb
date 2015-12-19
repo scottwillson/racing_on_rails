@@ -10,16 +10,17 @@ module Events
       exact_match = Event.find_by(name: name, year: year - 1)
       return exact_match if exact_match
 
-      diff = previous_year_events_with_similar_names.first.try(:first)
-      event = previous_year_events_with_similar_names.first.try(:last).try(:first)
+      diff, event = previous_best_match
       return unless event
       return event if diff <= 2
+      return event if similar_promoter_name?(event)
+      return event if diff < 5 && similar_dates?(event)
+    end
 
-      if event.promoter_name && promoter_name && DamerauLevenshtein.distance(event.promoter_name, promoter_name) <= 3
-        return event
-      end
-
-      return event if diff < 5 && ((event.date.month * 12 + event.date.day) - (date.month * 12 + date.day)).abs < 10
+    # return diff (0 = perfect match, > 0 partial match), event
+    def previous_best_match
+      match = previous_year_events_with_similar_names.first
+      [ match.try(:first), match.try(:last).try(:first) ]
     end
 
     def previous_year_events_with_similar_names
@@ -33,6 +34,16 @@ module Events
         .map(&:category)
         .reject { |c| c.in? categories }
         .each { |c| races.create! category: c }
+    end
+
+    def similar_promoter_name?(event)
+      event.promoter_name &&
+        promoter_name &&
+        DamerauLevenshtein.distance(event.promoter_name, promoter_name)  <= 3
+    end
+
+    def similar_dates?(event)
+      ((event.date.month * 12 + event.date.day) - (date.month * 12 + date.day)).abs < 10
     end
   end
 end
