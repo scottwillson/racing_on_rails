@@ -1,6 +1,24 @@
 {
   "ignored_warnings":[
     {
+      "warning_type":"Cross Site Scripting",
+      "warning_code":4,
+      "fingerprint":"c98e88e2b6b3b2309d7f76c4fab2942719a08423f57cc59fed85b624442b0019",
+      "message":"Unsafe model attribute in link_to href",
+      "file":"app/views/orders/suggestions/_suggestion.html.erb",
+      "line":15,
+      "link":"http://brakemanscanner.org/docs/warning_types/link_to_href",
+      "code":"link_to(add_suggestion_link_text(person, ::Order.new, ::Order.find(order_id)), suggestion_link(person, ::Order.new, ::Order.find(order_id)), :class => \"obvious\", :id => (\"add_#{::Order.new.label}_#{person.id}\"))",
+      "render_path":[{"type":"controller","class":"Orders::SuggestionsController","method":"show","line":13,"file":"app/controllers/orders/suggestions_controller.rb"},{"type":"template","name":"orders/suggestions/show","line":6,"file":"app/views/orders/suggestions/show.html.erb"}],
+      "location":{
+        "type":"template",
+        "template":"orders/suggestions/_suggestion"
+      },
+      "user_input":"::Order.find(order_id)",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
       "warning_type":"Redirect",
       "warning_code":18,
       "fingerprint":"1cb9fa313c87644fc948cdfdc1c96e9edf27d8de74c3135465e62b8de392dd6a",
@@ -294,7 +312,15 @@
       "line":17,
       "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code":"Page::Version.find(params[:id]).versioned.body",
-      "render_path":[{"type":"controller","class":"Admin::Pages::VersionsController","method":"edit","line":10,"file":"app/controllers/admin/pages/versions_controller.rb"}],
+      "render_path":[
+        {
+          "type":"controller",
+          "class":"Admin::Pages::VersionsController",
+          "method":"edit",
+          "line":10,
+          "file":"app/controllers/admin/pages/versions_controller.rb"
+        }
+      ],
       "location":{
         "type":"template",
         "template":"admin/pages/versions/edit"
@@ -312,7 +338,21 @@
       "line":2,
       "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code":"truncate(ArticleCategory.new.body, :length => 800, :separator => \" \")",
-      "render_path":[{"type":"controller","class":"ArticleCategoriesController","method":"show","line":14,"file":"app/controllers/article_categories_controller.rb"},{"type":"template","name":"article_categories/show","line":7,"file":"app/views/article_categories/show.html.erb"}],
+      "render_path":[
+        {
+          "type":"controller",
+          "class":"ArticleCategoriesController",
+          "method":"show",
+          "line":14,
+          "file":"app/controllers/article_categories_controller.rb"
+        },
+        {
+          "type":"template",
+          "name":"article_categories/show",
+          "line":7,
+          "file":"app/views/article_categories/show.html.erb"
+        }
+      ],
       "location":{
         "type":"template",
         "template":"article_categories/_article"
@@ -330,7 +370,15 @@
       "line":3,
       "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code":"Article.where(:id => params[:id]).first.title",
-      "render_path":[{"type":"controller","class":"ArticlesController","method":"show","line":10,"file":"app/controllers/articles_controller.rb"}],
+      "render_path":[
+        {
+          "type":"controller",
+          "class":"ArticlesController",
+          "method":"show",
+          "line":10,
+          "file":"app/controllers/articles_controller.rb"
+        }
+      ],
       "location":{
         "type":"template",
         "template":"articles/show"
@@ -348,7 +396,15 @@
       "line":4,
       "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code":"Article.where(:id => params[:id]).first.body",
-      "render_path":[{"type":"controller","class":"ArticlesController","method":"show","line":10,"file":"app/controllers/articles_controller.rb"}],
+      "render_path":[
+        {
+          "type":"controller",
+          "class":"ArticlesController",
+          "method":"show",
+          "line":10,
+          "file":"app/controllers/articles_controller.rb"
+        }
+      ],
       "location":{
         "type":"template",
         "template":"articles/show"
@@ -366,7 +422,14 @@
       "line":3,
       "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code":"(Unresolved Model).new.render(column).to_s",
-      "render_path":[{"type":"template","name":"results/_table","line":10,"file":"app/views/results/_table.html.erb"}],
+      "render_path":[
+        {
+          "type":"template",
+          "name":"results/_table",
+          "line":10,
+          "file":"app/views/results/_table.html.erb"
+        }
+      ],
       "location":{
         "type":"template",
         "template":"results/_result"
@@ -384,7 +447,14 @@
       "line":7,
       "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code":"(Unresolved Model).new.sponsors",
-      "render_path":[{"type":"template","name":"teams/index","line":18,"file":"app/views/teams/index.html.erb"}],
+      "render_path":[
+        {
+          "type":"template",
+          "name":"teams/index",
+          "line":18,
+          "file":"app/views/teams/index.html.erb"
+        }
+      ],
       "location":{
         "type":"template",
         "template":"teams/_team"
@@ -402,7 +472,15 @@
       "line":30,
       "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code":"render(action => Post.where(:mailing_list_id => MailingList.find(params[:mailing_list_id]).id).order(\"date desc\").page(params[:page]), {})",
-      "render_path":[{"type":"controller","class":"Admin::PostsController","method":"index","line":7,"file":"app/controllers/admin/posts_controller.rb"}],
+      "render_path":[
+        {
+          "type":"controller",
+          "class":"Admin::PostsController",
+          "method":"index",
+          "line":7,
+          "file":"app/controllers/admin/posts_controller.rb"
+        }
+      ],
       "location":{
         "type":"template",
         "template":"admin/posts/index"
@@ -420,7 +498,15 @@
       "line":15,
       "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code":"render(action => find_categories(name(params[:name])).paginate(:page => page, :per_page => 1000), {})",
-      "render_path":[{"type":"controller","class":"CategoriesController","method":"index","line":5,"file":"app/controllers/categories_controller.rb"}],
+      "render_path":[
+        {
+          "type":"controller",
+          "class":"CategoriesController",
+          "method":"index",
+          "line":5,
+          "file":"app/controllers/categories_controller.rb"
+        }
+      ],
       "location":{
         "type":"template",
         "template":"categories/index"
@@ -676,6 +762,6 @@
       "note":""
     }
   ],
-  "updated":"2015-12-19 21:00:38 -0800",
+  "updated":"2015-12-19 21:03:41 -0800",
   "brakeman_version":"3.1.2"
 }
