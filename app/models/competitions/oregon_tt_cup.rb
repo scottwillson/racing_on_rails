@@ -97,11 +97,12 @@ module Competitions
     end
 
     # Source events' categories don't match competition's categories.
-    # Some need to be split. For example: Junior Men 10-18 to Junior Men 10-12, Junior Men 13-14, etc.
-    # Some need to combined: For example: Masters Men 30-34 and Masters Men 35-39 to Masters Men 30-39
+    # Some need to be split: Junior Men 10-18 to Junior Men 10-12, Junior Men 13-14, etc.
+    # Some need to be combined: Masters Men 30-34 and Masters Men 35-39 to Masters Men 30-39
     # Both splitting and combining add races to the source events before calculation
     def before_calculate
       destroy_or_tt_cup_races
+      set_distances
 
       missing_categories.each do |event, categories|
         categories.each do |competition_category|
@@ -114,21 +115,34 @@ module Competitions
     # Destroy races created just to calculate the Oregon TT Cup
     def destroy_or_tt_cup_races
       source_events.each do |event|
-        event.races.select { |r| r.created_by.kind_of?(OregonTTCup) }.
-        each(&:destroy)
+        event.races
+          .select { |r| r.created_by.kind_of?(OregonTTCup) }
+          .each(&:destroy)
+      end
+    end
+
+    # Ensure distance is set so times can be adjusted. Some categories with different
+    # distances are combined.
+    def set_distances
+      source_events.reload.each do |event|
+        event.races.each do |race|
+          race.update_attributes!(distance: 12.4) if twenty_k?(race)
+          race.update_attributes!(distance: 6.2) if ten_k?(race)
+        end
       end
     end
 
     # Find competition categories that should be in source events, but are not
     def missing_categories
       missing_categories = Hash.new { |hash, key| hash[key] = [] }
-      source_events(true).each do |source_event|
+      source_events.reload.each do |source_event|
         category_names.each do |category_name|
           category = Category.where(name: category_name).first
           if category.age_group?
             if source_event.races.none? do |race|
                 race.category.gender == category.gender &&
-                race.category.ages == category.ages
+                race.category.ages == category.ages &&
+                race.any_results?
               end
               missing_categories[source_event] = missing_categories[source_event] << category
             end
@@ -219,6 +233,9 @@ module Competitions
         (result.person.racing_age.nil? || (result.person.racing_age >= competition_category.ages_begin && result.person.racing_age <= competition_category.ages_end))
       end.each do |result|
         time = result.time
+        if short?(result) && result.race.distance.present? && result.race.distance.to_f < 24.9
+          time = result.time * 2.2
+        end
         race.results.create!(
           place: result.place,
           person: result.person,
@@ -226,6 +243,35 @@ module Competitions
           time: time
         )
       end
+    end
+
+    def short?(event_or_result)
+      if event_or_result.respond_to?(:event_id)
+        event_or_result.event_id == 23543
+      else
+        event_or_result.id == 23543
+      end
+    end
+
+    def ten_k?(race)
+      short?(race) &&
+      race.category.name.in?([
+        "Junior Men 10-12",
+        "Junior Men 13-14",
+        "Junior Women 10-12",
+        "Junior Women 13-14"
+      ])
+    end
+
+    def twenty_k?(race)
+      short?(race) &&
+      race.category.name.in?([
+        "Masters Men 65-69",
+        "Masters Men 70+",
+        "Masters Women 55-59",
+        "Masters Women 60-64",
+        "Masters Women 65-69"
+      ])
     end
   end
 end
