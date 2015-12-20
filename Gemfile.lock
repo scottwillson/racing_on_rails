@@ -336,10 +336,10 @@ GEM
     redcarpet (3.3.3)
     ref (2.0.0)
     request_store (1.2.0)
-    rest-client (1.8.0)
+    rest-client (2.0.0.rc2)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
-      netrc (~> 0.7)
+      netrc (~> 0.8)
     ri_cal (0.8.8)
     roo (2.1.1)
       nokogiri (~> 1)
@@ -399,9 +399,8 @@ GEM
       colorize (>= 0.7.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stripe (1.31.0)
-      json (~> 1.8.1)
-      rest-client (~> 1.4)
+    stripe (1.5.21)
+      rest-client
     stud (0.0.22)
     table_print (1.5.4)
     tabular (0.4.2)
@@ -501,6 +500,7 @@ DEPENDENCIES
   rake
   raygun4ruby (~> 1.1)
   redcarpet
+  rest-client (>= 2.0.0.rc1)
   ri_cal
   roo
   roo-xls!
