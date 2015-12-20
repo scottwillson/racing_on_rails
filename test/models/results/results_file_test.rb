@@ -102,20 +102,6 @@ module Results
       assert_equal(2, Person.where(first_name: 'bruce', last_name: 'carter').count, 'Bruce Carters after import')
 
       assert(!event.races.empty?, 'event.races should not be empty')
-      event.races.each do |race|
-        assert_kind_of(Race, race, 'race')
-        assert_kind_of(Category, race.category, 'race.category')
-        race.results.sort.each do |result|
-          assert_kind_of(Result, result, 'result')
-          assert_kind_of(Person, result.person, 'result.person') unless result.person.nil?
-          assert_kind_of(Team, result.team, 'result.team') unless result.team.nil?
-          assert_kind_of(Category, result.category, 'result.category') unless result.category.nil?
-          result.place
-          result.person
-          result.team
-          result.first_name
-        end
-      end
 
       # Existing people, same name, different numbers
       bruce_1300 = event.races.first.results[6].person
