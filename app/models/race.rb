@@ -34,17 +34,8 @@ class Race < ActiveRecord::Base
   serialize :result_columns, Array
   serialize :custom_columns, Array
 
-  scope :year, lambda { |year|
-    where(
-      "date between ? and ?",
-      Time.zone.local(year).beginning_of_year.to_date,
-      Time.zone.local(year).end_of_year.to_date
-    )
-  }
-
-  scope :include_results, lambda {
-    includes(:category, { results: :team })
-  }
+  scope :include_results, -> { includes(:category, { results: :team })}
+  scope :year, ->(year) { where(date: Time.zone.local(year).beginning_of_year.to_date..Time.zone.local(year).end_of_year.to_date) }
 
   default_value_for(:result_columns) { DEFAULT_RESULT_COLUMNS.dup }
   default_value_for :custom_columns, []
