@@ -47,15 +47,15 @@ module Competitions
       true
     end
 
-    def maximum_events(race)
+    def maximum_events(_)
       8
     end
 
     def source_results_query(race)
-      super.
-      where(bar: true).
-      where("races.category_id" => categories_for(race)).
-      where("events.sanctioned_by" => RacingAssociation.current.default_sanctioned_by)
+      super
+        .where(bar: true)
+        .where("races.category_id" => categories_for(race))
+        .where("events.sanctioned_by" => RacingAssociation.current.default_sanctioned_by)
     end
 
     def categories_for(race)
@@ -73,7 +73,7 @@ module Competitions
       else
         []
       end.each do |name|
-        category = Category.where(name: name).first
+        category = Category.find_by(name: name)
         if category
           ids << category.id
         end
@@ -116,7 +116,7 @@ module Competitions
     def destroy_or_tt_cup_races
       source_events.each do |event|
         event.races
-          .select { |r| r.created_by.kind_of?(OregonTTCup) }
+          .select { |r| r.created_by.is_a?(OregonTTCup) }
           .each(&:destroy)
       end
     end
@@ -137,7 +137,7 @@ module Competitions
       missing_categories = Hash.new { |hash, key| hash[key] = [] }
       source_events.reload.each do |source_event|
         category_names.each do |category_name|
-          category = Category.where(name: category_name).first
+          category = Category.find_by(name: category_name)
           if category.age_group?
             if source_event.races.none? do |race|
                 race.category.gender == category.gender &&
@@ -155,17 +155,16 @@ module Competitions
 
     def split_races(event, competition_category)
       races_to_split = select_races_to_split(event, competition_category)
+      return unless races_to_split.present?
 
-      if races_to_split.present?
-        existing_race = event.races.detect { |r| r.category == competition_category }
-        race = existing_race || event.races.create!(category: competition_category, bar_points: 0, updated_by: self, visible: false)
+      existing_race = event.races.detect { |r| r.category == competition_category }
+      race = existing_race || event.races.create!(category: competition_category, bar_points: 0, updated_by: self, visible: false)
 
-        races_to_split.each do |race_to_split|
-          split_race race_to_split, race, competition_category
-        end
-
-        race.place_results_by_time
+      races_to_split.each do |race_to_split|
+        split_race race_to_split, race
       end
+
+      race.place_results_by_time
     end
 
     def select_races_to_split(event, competition_category)
@@ -180,21 +179,10 @@ module Competitions
       end
     end
 
-    def split_race(race_to_split, race, competition_category)
-      race_to_split.results.select do |result|
-        result.person &&
-        result.person.racing_age &&
-        competition_category.ages.include?(result.person.racing_age) &&
-        result.time &&
-        result.time > 0
-      end.each do |result|
-        race.results.create!(
-          place: result.place,
-          person: result.person,
-          team: result.team,
-          time: result.time,
-        )
-      end
+    def split_race(race_to_split, race)
+      race_to_split.results
+        .select { |result| split?(result) }
+        .each { |result| create_result(race, result) }
     end
 
     def combine_races(event, competition_category)
@@ -272,6 +260,23 @@ module Competitions
         "Masters Women 60-64",
         "Masters Women 65-69"
       ])
+    end
+
+    def split?(result)
+      result.person &&
+      result.person.racing_age &&
+      competition_category.ages.include?(result.person.racing_age) &&
+      result.time &&
+      result.time > 0
+    end
+
+    def create_result(race, result)
+      race.results.create!(
+        place: result.place,
+        person: result.person,
+        team: result.team,
+        time: result.time
+      )
     end
   end
 end
