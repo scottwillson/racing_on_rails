@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   helper_method :use_https?
   helper_method :page
 
-  protect_from_forgery
+  protect_from_forgery with: :exception
 
   include ActionController::ForceHTTPS
   include Authentication
