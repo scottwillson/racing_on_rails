@@ -14,7 +14,6 @@ class CategoriesController < ApplicationController
     end
   end
 
-
   protected
 
   def name(value)
