@@ -1,6 +1,229 @@
 {
   "ignored_warnings":[
     {
+      "warning_type":"Redirect",
+      "warning_code":18,
+      "fingerprint":"1cb9fa313c87644fc948cdfdc1c96e9edf27d8de74c3135465e62b8de392dd6a",
+      "message":"Possible unprotected redirect",
+      "file":"app/controllers/competitions/bar_controller.rb",
+      "line":18,
+      "link":"http://brakemanscanner.org/docs/warning_types/redirect/",
+      "code":"redirect_to(\"http://#{RacingAssociation.current.static_host}/bar/#{@year}/overall_by_age.html\")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Competitions::BarController",
+        "method":"show"
+      },
+      "user_input":"RacingAssociation.current.static_host",
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"Redirect",
+      "warning_code":18,
+      "fingerprint":"ead2ff6844add83d99527c47a7997af62f0e7c1bf33a42f57829bae9ffd49b39",
+      "message":"Possible unprotected redirect",
+      "file":"app/controllers/competitions/bar_controller.rb",
+      "line":20,
+      "link":"http://brakemanscanner.org/docs/warning_types/redirect/",
+      "code":"redirect_to(\"http://#{RacingAssociation.current.static_host}/bar/#{@year}\")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Competitions::BarController",
+        "method":"show"
+      },
+      "user_input":"RacingAssociation.current.static_host",
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"SQL Injection",
+      "warning_code":0,
+      "fingerprint":"02bd2e3deb8c695ce116a557b43eccbfec9049d86225d3958033772a1a25eb86",
+      "message":"Possible SQL injection",
+      "file":"app/models/competitions/competition.rb",
+      "line":328,
+      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code":"Competitions::Score.delete_all(\"competition_result_id in (select id from results where race_id in (#{races.select do\n (not race.name.in?(race_category_names))\n end.map(&:id).join(\",\")}))\")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Competitions::Competition",
+        "method":"delete_races"
+      },
+      "user_input":"races.select do\n (not race.name.in?(race_category_names))\n end.map(&:id).join(\",\")",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
+      "warning_type":"SQL Injection",
+      "warning_code":0,
+      "fingerprint":"632a9da715e0548db0b20801dee090aca6cf74d0301996e70836580aecf303bb",
+      "message":"Possible SQL injection",
+      "file":"app/models/competitions/competition.rb",
+      "line":189,
+      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code":"Result.select(\"distinct results.id as id\", \"1 as multiplier\", \"age\", \"categories.ability as category_ability\", \"categories.ages_begin as category_ages_begin\", \"categories.ages_end as category_ages_end\", \"categories.gender as category_gender\", \"events.bar_points as event_bar_points\", \"events.date\", \"events.discipline\", \"events.type\", \"gender\", \"member_from\", \"member_to\", \"parents_events.bar_points as parent_bar_points\", \"parents_events_2.bar_points as parent_parent_bar_points\", \"people.gender as person_gender\", \"people.name as person_name\", \"points_factor\", \"races.bar_points as race_bar_points\", \"results.#{participant_id_attribute} as participant_id\", \"results.event_id\", \"place\", \"results.points\", \"results.race_id\", \"results.race_name as category_name\", \"results.year\", \"team_member\", \"team_name\")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Competitions::Competition",
+        "method":"source_results_query"
+      },
+      "user_input":"participant_id_attribute",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
+      "warning_type":"SQL Injection",
+      "warning_code":0,
+      "fingerprint":"7cc5dadf1ecb785f90294746aa2287241023180ff4378be5d4ee9863adcc0b31",
+      "message":"Possible SQL injection",
+      "file":"app/models/competitions/competition.rb",
+      "line":238,
+      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code":"Result.select(\"distinct results.id as id\", \"1 as multiplier\", \"events.bar_points as event_bar_points\", \"events.date\", \"events.type\", \"member_from\", \"member_to\", \"parents_events.bar_points as parent_bar_points\", \"parents_events_2.bar_points as parent_parent_bar_points\", \"place\", \"points_factor\", \"races.bar_points as race_bar_points\", \"results.#{participant_id_attribute} as participant_id\", \"results.event_id\", \"results.points\", \"results.race_id\", \"results.race_name as category_name\", \"results.year\", \"team_member\", \"team_name\", \"true as upgrade\")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Competitions::Competition",
+        "method":"add_upgrade_results"
+      },
+      "user_input":"participant_id_attribute",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
+      "warning_type":"SQL Injection",
+      "warning_code":0,
+      "fingerprint":"e0e34e6bb4ae9249c358e0df1800bb1eedbc5d23125b340e7859523be57dc391",
+      "message":"Possible SQL injection",
+      "file":"app/models/weekly_series.rb",
+      "line":40,
+      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code":"WeeklySeries.connection.select_values(\"\\n          select distinct (DAYOFWEEK(date) - 1) as day_of_week\\n          from events\\n          where parent_id=#{self.id} and date between '#{date_range.begin.to_s(:db)}' and '#{date_range.end.to_s(:db)}'\\n          order by day_of_week\")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"WeeklySeries",
+        "method":"days_of_week"
+      },
+      "user_input":"date_range.begin",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
+      "warning_type":"Remote Code Execution",
+      "warning_code":24,
+      "fingerprint":"d28a2f0f7ecaf48a07d28e2f7343c41d7eb3584c4d9475210b795bc102983e34",
+      "message":"Unsafe reflection method const_get called with parameter value",
+      "file":"app/controllers/admin/events_controller.rb",
+      "line":291,
+      "link":"http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code":"Object.const_get(((params[:event][:type] or \"Event\") or \"SingleDayEvent\"))",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Admin::EventsController",
+        "method":"assign_new_event"
+      },
+      "user_input":"params[:event][:type]",
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"Cross Site Scripting",
+      "warning_code":2,
+      "fingerprint":"868c2e44847a31b8f045e250855f3ec84820c67d2d14b2939dfb18b998315f73",
+      "message":"Unescaped model attribute",
+      "file":"app/views/admin/pages/versions/edit.html.erb",
+      "line":17,
+      "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code":"Page::Version.find(params[:id]).versioned.body",
+      "render_path":[{"type":"controller","class":"Admin::Pages::VersionsController","method":"edit","line":10,"file":"app/controllers/admin/pages/versions_controller.rb"}],
+      "location":{
+        "type":"template",
+        "template":"admin/pages/versions/edit"
+      },
+      "user_input":"Page::Version.find(params[:id])",
+      "confidence":"Weak",
+      "note":""
+    },
+    {
+      "warning_type":"Cross Site Scripting",
+      "warning_code":2,
+      "fingerprint":"c4267d90c079d37a4af6fe65ba7a1b617ba05a6096b880fe42ccb1e8cf1e87b9",
+      "message":"Unescaped model attribute",
+      "file":"app/views/article_categories/_article.html.erb",
+      "line":2,
+      "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code":"truncate(ArticleCategory.new.body, :length => 800, :separator => \" \")",
+      "render_path":[{"type":"controller","class":"ArticleCategoriesController","method":"show","line":14,"file":"app/controllers/article_categories_controller.rb"},{"type":"template","name":"article_categories/show","line":7,"file":"app/views/article_categories/show.html.erb"}],
+      "location":{
+        "type":"template",
+        "template":"article_categories/_article"
+      },
+      "user_input":"ArticleCategory.new.body",
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"Cross Site Scripting",
+      "warning_code":2,
+      "fingerprint":"b5aab46786fd773d58e93cc5a4b504926527936b34be017410e6d59d9ae9797d",
+      "message":"Unescaped model attribute",
+      "file":"app/views/articles/show.html.erb",
+      "line":3,
+      "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code":"Article.where(:id => params[:id]).first.title",
+      "render_path":[{"type":"controller","class":"ArticlesController","method":"show","line":10,"file":"app/controllers/articles_controller.rb"}],
+      "location":{
+        "type":"template",
+        "template":"articles/show"
+      },
+      "user_input":null,
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"Cross Site Scripting",
+      "warning_code":2,
+      "fingerprint":"32d406867d48d958aab115dfd9d6d236667865dc9a095e929cc1e62eeca04238",
+      "message":"Unescaped model attribute",
+      "file":"app/views/articles/show.html.erb",
+      "line":4,
+      "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code":"Article.where(:id => params[:id]).first.body",
+      "render_path":[{"type":"controller","class":"ArticlesController","method":"show","line":10,"file":"app/controllers/articles_controller.rb"}],
+      "location":{
+        "type":"template",
+        "template":"articles/show"
+      },
+      "user_input":null,
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"Cross Site Scripting",
+      "warning_code":2,
+      "fingerprint":"a3792ad73fe3ddb29e74351abf230ba2442451bbefbb3a023981013ad7078fa7",
+      "message":"Unescaped model attribute",
+      "file":"app/views/results/_result.html.erb",
+      "line":3,
+      "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code":"(Unresolved Model).new.render(column).to_s",
+      "render_path":[{"type":"template","name":"results/_table","line":10,"file":"app/views/results/_table.html.erb"}],
+      "location":{
+        "type":"template",
+        "template":"results/_result"
+      },
+      "user_input":null,
+      "confidence":"High",
+      "note":""
+    },
+    {
       "warning_type":"Cross Site Scripting",
       "warning_code":2,
       "fingerprint":"e66e37eef4a1017801c70b90eaf0b9e23e78ff6335d0c0c9ab70476bacfd55ad",
@@ -17,6 +240,42 @@
       "user_input":null,
       "confidence":"High",
       "note":"Limited to admin users. Does echo raw HTML. Ideally would use Markdown."
+    },
+    {
+      "warning_type":"Dynamic Render Path",
+      "warning_code":15,
+      "fingerprint":"835c95d303e8533f2bd639bd9f0e0332f003894fefdf715303e12ef0bafb038b",
+      "message":"Render path contains parameter value",
+      "file":"app/views/admin/posts/index.html.erb",
+      "line":30,
+      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code":"render(action => Post.where(:mailing_list_id => MailingList.find(params[:mailing_list_id]).id).order(\"date desc\").page(params[:page]), {})",
+      "render_path":[{"type":"controller","class":"Admin::PostsController","method":"index","line":7,"file":"app/controllers/admin/posts_controller.rb"}],
+      "location":{
+        "type":"template",
+        "template":"admin/posts/index"
+      },
+      "user_input":"params[:page]",
+      "confidence":"Weak",
+      "note":""
+    },
+    {
+      "warning_type":"Format Validation",
+      "warning_code":30,
+      "fingerprint":"1eb9154d46381ae82a094c398ba1df536a3876bea089d1a5401b92b04d7e8ca4",
+      "message":"Insufficient validation for 'from_email' using /@/. Use \\A and \\z as anchors",
+      "file":"app/models/post.rb",
+      "line":12,
+      "link":"http://brakemanscanner.org/docs/warning_types/format_validation/",
+      "code":null,
+      "render_path":null,
+      "location":{
+        "type":"model",
+        "model":"Post"
+      },
+      "user_input":null,
+      "confidence":"High",
+      "note":""
     },
     {
       "warning_type":"Redirect",
@@ -247,6 +506,6 @@
       "note":""
     }
   ],
-  "updated":"2015-11-18 12:44:24 -0800",
-  "brakeman_version":"3.1.1"
+  "updated":"2015-12-19 20:06:18 -0800",
+  "brakeman_version":"3.1.2"
 }
