@@ -29,10 +29,9 @@ Metrics/ModuleLength:
 
 SingleLineBlockParams:
   Enabled: false
-  
+
 SpaceInsideBrackets:
   Enabled: false
 
 StringLiterals:
-  EnforcedStyle:
-    Enabled: false
+  EnforcedStyle: double_quotes
