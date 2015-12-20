@@ -39,6 +39,158 @@
       "note":""
     },
     {
+      "warning_type":"Cross Site Scripting",
+      "warning_code":84,
+      "fingerprint":"b412502a95d4c5dafe6f096bd5040b86c57d3c7f0f1ac622532b082b4bd01f8e",
+      "message":"Unescaped model attribute rendered inline",
+      "file":"app/controllers/pages_controller.rb",
+      "line":10,
+      "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting/",
+      "code":"render(inline => Page.find_by_normalized_path!(params[:path]).body, { :layout => \"application\" })",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"PagesController",
+        "method":"show"
+      },
+      "user_input":"Page.find_by_normalized_path!(params[:path]).body",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
+      "warning_type":"Dangerous Send",
+      "warning_code":23,
+      "fingerprint":"2f130b37567fef544f7395397a7103a9b9f1a2de9c2190010cf529876d8ac11d",
+      "message":"User controlled method execution",
+      "file":"app/controllers/admin/events_controller.rb",
+      "line":112,
+      "link":"http://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code":"Event.find(params[:id]).send(params[:name])",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Admin::EventsController",
+        "method":"update_attribute"
+      },
+      "user_input":"params[:name]",
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"Dangerous Send",
+      "warning_code":23,
+      "fingerprint":"f907513144575431cf0ee3f3445bace0ac08f86943a71e64e3b13f9cf6436977",
+      "message":"User controlled method execution",
+      "file":"app/controllers/admin/pages_controller.rb",
+      "line":52,
+      "link":"http://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code":"Page.find(params[:id]).send(params[:name])",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Admin::PagesController",
+        "method":"update_attribute"
+      },
+      "user_input":"params[:name]",
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"Dangerous Send",
+      "warning_code":23,
+      "fingerprint":"bc58f05f65035aa4bd08f50871b81b6f9e51743294974a632d59f093f4abf208",
+      "message":"User controlled method execution",
+      "file":"app/controllers/admin/people_controller.rb",
+      "line":125,
+      "link":"http://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code":"Person.find(params[:id]).send(params[:name])",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Admin::PeopleController",
+        "method":"update_attribute"
+      },
+      "user_input":"params[:name]",
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"Dangerous Send",
+      "warning_code":23,
+      "fingerprint":"e2fe971fb74e6e59fed3d9c07abcfb25d453a46e11f6ea81bbb58932c1c1c8c9",
+      "message":"User controlled method execution",
+      "file":"app/controllers/admin/races_controller.rb",
+      "line":58,
+      "link":"http://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code":"(Race.find(params[:id]) or (((Event.find(params[:event_id]) or Event.find(race_params[:event_id])) or Race.find(params[:id]).event).races.build(race_params) or ((Event.find(params[:event_id]) or Event.find(race_params[:event_id])) or Race.find(params[:id]).event).races.build)).send(params[:name])",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Admin::RacesController",
+        "method":"update_attribute"
+      },
+      "user_input":"params[:name]",
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"Dangerous Send",
+      "warning_code":23,
+      "fingerprint":"915bc3fb271ed35c1c2752e0c4c9e52d1451b857cf05aaa63f6c92aa9a9678a0",
+      "message":"User controlled method execution",
+      "file":"app/controllers/admin/results_controller.rb",
+      "line":59,
+      "link":"http://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code":"Result.find(params[:id]).send(\"#{params[:name]}_s\")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Admin::ResultsController",
+        "method":"update_attribute"
+      },
+      "user_input":"params[:name]",
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"Dangerous Send",
+      "warning_code":23,
+      "fingerprint":"5bc5ff506ee9c5a076a1bb57fc4eb70f7465b1979ec080e93441d378da550582",
+      "message":"User controlled method execution",
+      "file":"app/controllers/admin/results_controller.rb",
+      "line":61,
+      "link":"http://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code":"Result.find(params[:id]).send(params[:name])",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Admin::ResultsController",
+        "method":"update_attribute"
+      },
+      "user_input":"params[:name]",
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"Dangerous Send",
+      "warning_code":23,
+      "fingerprint":"3b891fce9f5d9cb272f22b35d5a68ab38480e4a3e074390350587da8c765e22b",
+      "message":"User controlled method execution",
+      "file":"app/controllers/admin/velodromes_controller.rb",
+      "line":45,
+      "link":"http://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code":"Velodrome.find(params[:id]).send(params[:name])",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Admin::VelodromesController",
+        "method":"update_attribute"
+      },
+      "user_input":"params[:name]",
+      "confidence":"High",
+      "note":""
+    },
+    {
       "warning_type":"SQL Injection",
       "warning_code":0,
       "fingerprint":"02bd2e3deb8c695ce116a557b43eccbfec9049d86225d3958033772a1a25eb86",
@@ -256,6 +408,24 @@
         "template":"admin/posts/index"
       },
       "user_input":"params[:page]",
+      "confidence":"Weak",
+      "note":""
+    },
+    {
+      "warning_type":"Dynamic Render Path",
+      "warning_code":15,
+      "fingerprint":"ce199673a6ab758324984b219fe87d22b0f2c522c9ca749ce2a3a8f177abaeb7",
+      "message":"Render path contains parameter value",
+      "file":"app/views/categories/index.html.erb",
+      "line":15,
+      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code":"render(action => find_categories(name(params[:name])).paginate(:page => page, :per_page => 1000), {})",
+      "render_path":[{"type":"controller","class":"CategoriesController","method":"index","line":5,"file":"app/controllers/categories_controller.rb"}],
+      "location":{
+        "type":"template",
+        "template":"categories/index"
+      },
+      "user_input":"params[:name]",
       "confidence":"Weak",
       "note":""
     },
@@ -506,6 +676,6 @@
       "note":""
     }
   ],
-  "updated":"2015-12-19 20:06:18 -0800",
+  "updated":"2015-12-19 21:00:38 -0800",
   "brakeman_version":"3.1.2"
 }
