@@ -23,7 +23,7 @@ class ResultsController < ApplicationController
 
   # All Results for Event
   def event
-    if !Event.exists?(params[:event_id])
+    if !Event.where(params[:event_id]).exists?
       return event_not_found(params[:event_id])
     end
 
