@@ -3,7 +3,7 @@ class AddOrderGateway < ActiveRecord::Migration
     add_column :orders, :gateway, :string, null: true, default: nil
     add_index :orders, :gateway
 
-    if RacingAssociation.current.short_name != "OBRA"
+    if RacingAssociation.current.short_name == "NABRA"
       Order.where(gateway: nil).purchased.update_all gateway: "elavon"
     end
   end
