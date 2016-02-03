@@ -19,6 +19,7 @@ module Admin
 
     def show
       @races_collection = RacesCollection.new(@event)
+      assign_previous
       respond_to do |format|
         format.js
       end
@@ -27,7 +28,8 @@ module Admin
     def update
       @races_collection = RacesCollection.new(@event)
       @races_collection.update(races_collection_params)
-      @event.races true
+      @event.races.reload
+      assign_previous
       respond_to do |format|
         format.js { render :show }
       end
@@ -37,6 +39,14 @@ module Admin
 
     def assign_event
       @event = Event.includes(races: :category).find(params[:event_id])
+    end
+
+    def assign_previous
+      @previous = nil
+
+      if @event.races.empty?
+        @previous = @event.previous
+      end
     end
 
     def races_collection_params

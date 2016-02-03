@@ -1,1 +1,1 @@
-jQuery('div#races_collection').replaceWith("<%= escape_javascript(render "show", event: @event) %>");
+jQuery('div#races_collection').replaceWith("<%= escape_javascript(render "show", event: @event, previous: @previous) %>");
