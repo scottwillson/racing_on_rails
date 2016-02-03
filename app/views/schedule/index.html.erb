@@ -70,8 +70,8 @@
   <% end -%>
 
   <ul class="page-links">
-    <li><%= link_to "Excel", format: :xls %></li>
-    <li><%= link_to "iCal", schedule_url(format: :ics, protocol: "webcal") %></li>
+    <li><%= link_to "Excel", { format: :xlsx }, download: "schedule.xlsx" %></li>
+    <li><%= link_to "iCal", schedule_url(format: :ics, protocol: "webcal"), download: "schedule.ics" %></li>
   </ul>
 
   <% content_for :head do -%>

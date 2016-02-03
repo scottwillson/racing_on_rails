@@ -177,10 +177,12 @@ module Schedule
     # params: year, sanctioning_organization, start, end, discipline, region
     def self.find(params)
       if RacingAssociation.current.include_multiday_events_on_schedule?
-        query = Event.where(parent_id: nil).where("type != ?", "Event").includes(:parent)
+        query = Event.where(parent_id: nil).where("type != ?", "Event")
       else
-        query = Event.where(type: "SingleDayEvent").includes(:parent)
+        query = Event.where(type: "SingleDayEvent")
       end
+
+      query = query.includes(:parent).includes(:promoter)
 
       if !RacingAssociation.current.show_practices_on_calendar?
         query = query.where(practice: false)

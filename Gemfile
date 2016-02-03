@@ -7,6 +7,8 @@ gem "acts_as_list"
 gem "acts_as_tree", git: "https://github.com/amerine/acts_as_tree.git"
 gem "Ascii85", require: "ascii85"
 gem "authlogic"
+gem "axlsx", "2.1.0.pre"
+gem "axlsx_rails", ">=0.4"
 gem "bcrypt"
 gem "bootstrap-datepicker-rails"
 gem "bootstrap-sass"
@@ -52,6 +54,7 @@ gem "vestal_versions", git: "https://github.com/scottwillson/vestal_versions.git
 gem "will_paginate", "~> 3.0"
 gem "will_paginate-bootstrap"
 gem "yui-compressor"
+gem "zip-zip"
 
 # Require after WillPaginate
 gem "elasticsearch-model"

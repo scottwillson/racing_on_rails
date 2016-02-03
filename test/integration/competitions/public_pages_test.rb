@@ -12,7 +12,7 @@ module Competitions
       get "/schedule"
       assert_response :success
 
-      get "/schedule.xls"
+      get "/schedule.xlsx"
       assert_response :success
 
       get "/schedule.ics"

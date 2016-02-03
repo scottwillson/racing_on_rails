@@ -39,7 +39,7 @@ class ScheduleController < ApplicationController
         render json: events.to_json
       }
       format.ics { render_ics }
-      format.xls { render_xls }
+      format.xlsx { headers['Content-Disposition'] = 'filename="schedule.xlsx"' }
     end
   end
 
@@ -62,7 +62,10 @@ class ScheduleController < ApplicationController
       end
       format.atom
       format.ics { render_ics }
-      format.xls { render_xls }
+      format.xlsx do
+        headers['Content-Disposition'] = 'filename="schedule.xlsx"'
+        render :index
+      end
     end
   end
 
@@ -92,6 +95,7 @@ class ScheduleController < ApplicationController
   private
 
   def render_ics
+    headers['Content-Disposition'] = "filename=\"schedule.ics\""
     send_data(
       RiCal.Calendar do |cal|
         parent_ids = @events.map(&:parent_id).compact.uniq
@@ -112,25 +116,6 @@ class ScheduleController < ApplicationController
       end,
       filename: "#{RacingAssociation.current.name} #{@year} Schedule.ics"
     )
-  end
-
-  def render_xls
-    send_data(CSV.generate(col_sep: "\t") do |csv|
-      csv << [ "id", "parent_id", "date", "name", "discipline", "flyer", "city", "state", "promoter_name" ]
-      @events.each do |event|
-        csv << [
-          event.id,
-          event.parent_id,
-          event.date.to_s(:db),
-          event.full_name,
-          event.discipline,
-          event.flyer,
-          event.city,
-          event.state,
-          event.promoter_name
-        ]
-      end
-    end, type: :xls)
   end
 
   def assign_schedule

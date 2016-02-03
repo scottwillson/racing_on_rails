@@ -1,0 +1,18 @@
+xlsx_package.workbook.add_worksheet(name: "schedule.xlsx") do |sheet|
+  sheet.add_row %w( id parent_id date name discipline flyer city state promoter_name promoter_phone promoter_email )
+  @events.each do |event|
+    sheet.add_row [
+      event.id,
+      event.parent_id,
+      event.date.to_s(:db),
+      event.full_name,
+      event.discipline,
+      event.flyer,
+      event.city,
+      event.state,
+      event.promoter_name,
+      link_to_event_phone(event),
+      event_email(event)
+    ]
+  end
+end

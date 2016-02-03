@@ -1,4 +1,4 @@
-require File.expand_path("../../test_helper", __FILE__)
+require "test_helper"
 
 # :stopdoc:
 class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
@@ -64,7 +64,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
   test "index excel" do
     FactoryGirl.create(:event)
-    get :index, format: :xls
+    get :index, format: :xlsx
     assert_response :success
   end
 
@@ -74,7 +74,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
     FactoryGirl.create(:event, discipline: "Mountain Bike")
 
-    get :index, discipline: "mtb", format: :xls
+    get :index, discipline: "mtb", format: :xlsx
     assert_response :success
   end
 
@@ -83,7 +83,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
     FactoryGirl.create(:event, discipline: "Road")
 
-    get :list, discipline: "road", format: :xls
+    get :list, discipline: "road", format: :xlsx
     assert_response :success
   end
 
@@ -276,7 +276,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:event, discipline: "Road")
 
-    get :list, discipline: "road", format: :xls
+    get :list, discipline: "road", format: :xlsx
     assert_response :success
   end
 

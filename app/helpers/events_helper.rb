@@ -3,8 +3,7 @@ module EventsHelper
   # Displays promoter email in promoter's name is blank.
   # Displays just promoter's name if there are no email addresses.
   def link_to_event_email(event)
-    email = event.email if event.email.present?
-    email = event.promoter.email if !email && event.promoter && event.promoter.email.present?
+    email = event_email(event)
 
     name = event.promoter.name if event.promoter && event.promoter.name.present?
     name = email if name.nil?
@@ -16,7 +15,14 @@ module EventsHelper
     end
   end
 
+  def event_email(event)
+    email = event.email if event.email.present?
+    email = event.promoter.email if !email && event.promoter && event.promoter.email.present?
+    email
+  end
+
   # FIXME Move to Event?
+  # TODO rename to event_phone
   def link_to_event_phone(event)
     return event.phone if event.phone.present?
     event.promoter.home_phone if event.promoter && event.promoter.home_phone.present?
