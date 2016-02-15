@@ -20,6 +20,17 @@ module Competitions
         assert_equal 0, Calculator.points(result(place: "DQ"), rules)
       end
 
+      def test_points_with_point_schedule_hash
+        rules = {
+          point_schedule: {
+            0 => [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ],
+            1 => [ 8, 5, 3 ]
+          }
+        }
+        assert_equal 13, Calculator.points(result(event_id: 0, place: "3"), rules)
+        assert_equal 3, Calculator.points(result(event_id: 1, place: "3"), rules)
+      end
+
       def test_points_considers_team_size
         rules = { point_schedule: [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ] }
         assert_equal 0, Calculator.points(result(place: "20", team_size: 2), rules)
