@@ -1,6 +1,5 @@
 module Competitions
   # Common superclass for Omniums and Series standings.
-  # Easy to miss override: Overall results only include members
   class Overall < Competition
    validates_presence_of :parent
    after_create :add_source_events
@@ -16,10 +15,9 @@ module Competitions
 
           overall = parent.try(:overall)
           if parent && parent.any_results_including_children?
-            unless parent.overall
+            if !overall
               # parent.create_overall will create an instance of Overall, which is probably not what we want
-              overall = self.new(parent_id: parent.id, date: parent.date)
-              overall.save!
+              overall = self.create!(parent_id: parent.id, date: parent.date)
               parent.overall = overall
             end
             overall.set_date

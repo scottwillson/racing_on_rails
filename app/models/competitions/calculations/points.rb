@@ -55,7 +55,15 @@ module Competitions
         if rules[:points_schedule_from_field_size]
           (result.field_size - numeric_place(result)) + 1
         else
-          rules[:point_schedule][numeric_place(result) - 1]
+          point_schedule_for_event(result, rules)[numeric_place(result) - 1]
+        end
+      end
+
+      def point_schedule_for_event(result, rules)
+        if rules[:point_schedule].respond_to?(:keys)
+          rules[:point_schedule][result.event_id]
+        else
+          rules[:point_schedule]
         end
       end
 
