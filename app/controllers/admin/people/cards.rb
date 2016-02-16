@@ -5,7 +5,7 @@ module Admin
 
       # Membership card stickers/labels
       def cards
-        @people = Person.where(print_card: true).order("last_name, first_name")
+        @people = Person.where(print_card: true).order("last_name, first_name").includes(:race_numbers).sort_by { |p| p.road_number || "" }
 
         ActiveSupport::Notifications.instrument "cards.people.admin.racing_on_rails", person_count: @people.count
 
