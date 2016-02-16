@@ -7,7 +7,7 @@ module Competitions
     end
 
     def category_names
-      [ "Women 1/2/3", "Women 4" ]
+      [ "Women 1/2", "Women 3", "Women 4/5" ]
     end
 
     def source_events?
@@ -18,12 +18,16 @@ module Competitions
       true
     end
 
+    def maximum_events(race)
+      5
+    end
+
     def source_event_types
       [ MultiDayEvent, SingleDayEvent, Event ]
     end
 
     def source_event_ids(race)
-      if women_4?(race)
+      if women_4_5?(race)
         source_events.map(&:id) - cat_123_only_event_ids
       else
         source_events.map(&:id)
@@ -48,8 +52,8 @@ module Competitions
 
     private
 
-    def women_4?(race)
-      race.category.name == "Women 4"
+    def women_4_5?(race)
+      race.category.name == "Women 4/5"
     end
   end
 end

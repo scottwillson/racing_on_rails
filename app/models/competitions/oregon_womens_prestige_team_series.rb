@@ -30,6 +30,10 @@ module Competitions
       true
     end
 
+    def maximum_events(race)
+      5
+    end
+
     def source_results_query(race)
       # Only consider results with categories that match +race+'s category
       if categories?
