@@ -186,7 +186,7 @@
         <%= f.labelled_text_field :post_event_fees %>
         <%= f.labelled_text_field :flyer_ad_fee %>
 
-        <%= f.labelled_text_area :notes %>
+        <%= f.labelled_text_area :notes, class: "ckeditor col-sm-12" %>
 
         <% end -%>
 
@@ -195,7 +195,7 @@
           <%= link_to("Delete", admin_event_path(@event), method: :delete, class: "btn btn-default", id: 'delete') unless @event.new_record? || !administrator? %>
           <% unless mobile_request? %>
           <div class="pull-right created_updated">
-            <% unless @event.updated_at.nil? %>Updated: <%= time_ago_in_words(@event.updated_at, include_seconds: true) + " ago" %><% end %>
+            <% unless @event.updated_at.nil? %>Updated: <%= time_ago_in_words(@event.updated_at, include_seconds: true) %> ago<% end %>
             <%= "New" if @event.new_record? %>
           </div>
           <% end %>
