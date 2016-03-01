@@ -11,7 +11,6 @@ module People
       :billing_street,
       :billing_zip,
       :bmx_category,
-      :card_brand,
       :card_expires_on,
       :card_printed_at,
       :ccx_category,

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160216152036) do
+ActiveRecord::Schema.define(version: 20160301180214) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -409,7 +409,6 @@ ActiveRecord::Schema.define(version: 20160216152036) do
     t.string   "billing_zip",                           limit: 255
     t.string   "billing_country_code",                  limit: 2,   default: "US"
     t.date     "card_expires_on"
-    t.string   "card_brand",                            limit: 255
     t.string   "ccx_category",                          limit: 255
     t.string   "dh_category",                           limit: 255
     t.string   "email",                                 limit: 255
@@ -551,7 +550,6 @@ ActiveRecord::Schema.define(version: 20160216152036) do
     t.string   "billing_state",                         limit: 255
     t.string   "billing_zip",                           limit: 255
     t.string   "billing_country_code",                  limit: 2,     default: "US"
-    t.string   "card_brand",                            limit: 255
     t.date     "card_expires_on"
     t.boolean  "membership_address_is_billing_address",               default: true,  null: false
     t.string   "license_type",                          limit: 255
@@ -779,7 +777,7 @@ ActiveRecord::Schema.define(version: 20160216152036) do
     t.boolean  "filter_schedule_by_region",                                      default: false,                                 null: false
     t.string   "default_region_id",                                  limit: 255
     t.boolean  "allow_iframes",                                                  default: false
-    t.string   "payment_gateway_name",                               limit: 255, default: "elavon"
+    t.string   "payment_gateway_name",                               limit: 255, default: "stripe"
   end
 
   create_table "refunds", force: :cascade do |t|
