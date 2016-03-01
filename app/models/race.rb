@@ -194,6 +194,8 @@ class Race < ActiveRecord::Base
         self.category = existing_category if existing_category
       end
     end
+
+    true
   end
 
   def has_result(row_hash)
