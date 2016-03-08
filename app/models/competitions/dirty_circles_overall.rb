@@ -40,6 +40,10 @@ module Competitions
       self.source_events = parent.children + hot_spots
     end
 
+    def before_calculate
+      add_source_events
+    end
+
     def set_name
       self.name = "Series Overall"
     end
