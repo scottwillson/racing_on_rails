@@ -161,7 +161,7 @@ module Competitions
       race = existing_race || event.races.create!(category: competition_category, bar_points: 0, updated_by: self, visible: false)
 
       races_to_split.each do |race_to_split|
-        split_race race_to_split, race
+        split_race competition_category, race_to_split, race
       end
 
       race.place_results_by_time
@@ -179,9 +179,9 @@ module Competitions
       end
     end
 
-    def split_race(race_to_split, race)
+    def split_race(competition_category, race_to_split, race)
       race_to_split.results
-        .select { |result| split?(result) }
+        .select { |result| split?(competition_category, result) }
         .each { |result| create_result(race, result) }
     end
 
@@ -262,7 +262,7 @@ module Competitions
       ])
     end
 
-    def split?(result)
+    def split?(competition_category, result)
       result.person &&
       result.person.racing_age &&
       competition_category.ages.include?(result.person.racing_age) &&
