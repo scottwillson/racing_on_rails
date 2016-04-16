@@ -433,6 +433,7 @@ ActiveRecord::Schema.define(version: 20160216152036) do
     t.datetime "updated_at"
     t.string   "work_phone",                            limit: 255
     t.string   "cell_fax",                              limit: 255
+    t.string   "card_brand",                            limit: 255
   end
 
   add_index "order_people", ["order_id"], name: "index_order_people_on_order_id", using: :btree
@@ -562,6 +563,7 @@ ActiveRecord::Schema.define(version: 20160216152036) do
     t.integer  "non_member_result_id",                  limit: 4
     t.string   "name",                                  limit: 255,   default: "",    null: false
     t.boolean  "other_people_with_same_name",                         default: false, null: false
+    t.string   "card_brand",                            limit: 255
   end
 
   add_index "people", ["crypted_password"], name: "index_people_on_crypted_password", using: :btree
@@ -777,7 +779,7 @@ ActiveRecord::Schema.define(version: 20160216152036) do
     t.boolean  "filter_schedule_by_region",                                      default: false,                                 null: false
     t.string   "default_region_id",                                  limit: 255
     t.boolean  "allow_iframes",                                                  default: false
-    t.string   "payment_gateway_name",                               limit: 255, default: "stripe"
+    t.string   "payment_gateway_name",                               limit: 255, default: "elavon"
   end
 
   create_table "refunds", force: :cascade do |t|
