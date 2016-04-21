@@ -625,6 +625,33 @@ ActiveRecord::Schema.define(version: 20160421043909) do
     t.integer  "quantity",   limit: 4,                            default: 1,     null: false
   end
 
+  create_table "posts", force: :cascade do |t|
+    t.text     "body",                 limit: 65535,              null: false
+    t.datetime "date",                                            null: false
+    t.string   "subject",              limit: 255,   default: "", null: false
+    t.string   "topica_message_id",    limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "mailing_list_id",      limit: 4,     default: 0,  null: false
+    t.integer  "position",             limit: 4
+    t.string   "from_name",            limit: 255
+    t.string   "from_email",           limit: 255
+    t.datetime "last_reply_at"
+    t.string   "last_reply_from_name", limit: 255
+    t.integer  "original_id",          limit: 4
+    t.integer  "replies_count",        limit: 4,     default: 0,  null: false
+  end
+
+  add_index "posts", ["date", "mailing_list_id"], name: "idx_date_list", using: :btree
+  add_index "posts", ["date"], name: "idx_date", using: :btree
+  add_index "posts", ["last_reply_at"], name: "index_posts_on_last_reply_at", using: :btree
+  add_index "posts", ["mailing_list_id"], name: "idx_mailing_list_id", using: :btree
+  add_index "posts", ["original_id"], name: "index_posts_on_original_id", using: :btree
+  add_index "posts", ["position"], name: "index_posts_on_position", using: :btree
+  add_index "posts", ["subject"], name: "idx_subject", using: :btree
+  add_index "posts", ["topica_message_id"], name: "idx_topica_message_id", unique: true, using: :btree
+  add_index "posts", ["updated_at"], name: "index_posts_on_updated_at", using: :btree
+
   add_index "product_variants", ["product_id"], name: "index_product_variants_on_product_id", using: :btree
 
   create_table "products", force: :cascade do |t|
