@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160216152036) do
+ActiveRecord::Schema.define(version: 20160421043909) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -210,7 +210,7 @@ ActiveRecord::Schema.define(version: 20160216152036) do
     t.string   "discipline",                     limit: 32
     t.string   "flyer",                          limit: 255
     t.string   "name",                           limit: 255
-    t.string   "notes",                          limit: 255,                            default: ""
+    t.text     "notes",                          limit: 65535
     t.string   "sanctioned_by",                  limit: 255
     t.string   "state",                          limit: 64
     t.string   "type",                           limit: 255
@@ -409,6 +409,7 @@ ActiveRecord::Schema.define(version: 20160216152036) do
     t.string   "billing_zip",                           limit: 255
     t.string   "billing_country_code",                  limit: 2,   default: "US"
     t.date     "card_expires_on"
+    t.string   "card_brand",                            limit: 255
     t.string   "ccx_category",                          limit: 255
     t.string   "dh_category",                           limit: 255
     t.string   "email",                                 limit: 255
@@ -433,7 +434,6 @@ ActiveRecord::Schema.define(version: 20160216152036) do
     t.datetime "updated_at"
     t.string   "work_phone",                            limit: 255
     t.string   "cell_fax",                              limit: 255
-    t.string   "card_brand",                            limit: 255
   end
 
   add_index "order_people", ["order_id"], name: "index_order_people_on_order_id", using: :btree
@@ -551,6 +551,7 @@ ActiveRecord::Schema.define(version: 20160216152036) do
     t.string   "billing_state",                         limit: 255
     t.string   "billing_zip",                           limit: 255
     t.string   "billing_country_code",                  limit: 2,     default: "US"
+    t.string   "card_brand",                            limit: 255
     t.date     "card_expires_on"
     t.boolean  "membership_address_is_billing_address",               default: true,  null: false
     t.string   "license_type",                          limit: 255
@@ -563,7 +564,6 @@ ActiveRecord::Schema.define(version: 20160216152036) do
     t.integer  "non_member_result_id",                  limit: 4
     t.string   "name",                                  limit: 255,   default: "",    null: false
     t.boolean  "other_people_with_same_name",                         default: false, null: false
-    t.string   "card_brand",                            limit: 255
   end
 
   add_index "people", ["crypted_password"], name: "index_people_on_crypted_password", using: :btree
@@ -611,33 +611,6 @@ ActiveRecord::Schema.define(version: 20160216152036) do
   end
 
   add_index "photos", ["updated_at"], name: "index_photos_on_updated_at", using: :btree
-
-  create_table "posts", force: :cascade do |t|
-    t.text     "body",                 limit: 65535,              null: false
-    t.datetime "date",                                            null: false
-    t.string   "subject",              limit: 255,   default: "", null: false
-    t.string   "topica_message_id",    limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "mailing_list_id",      limit: 4,     default: 0,  null: false
-    t.integer  "position",             limit: 4
-    t.string   "from_name",            limit: 255
-    t.string   "from_email",           limit: 255
-    t.datetime "last_reply_at"
-    t.string   "last_reply_from_name", limit: 255
-    t.integer  "original_id",          limit: 4
-    t.integer  "replies_count",        limit: 4,     default: 0,  null: false
-  end
-
-  add_index "posts", ["date", "mailing_list_id"], name: "idx_date_list", using: :btree
-  add_index "posts", ["date"], name: "idx_date", using: :btree
-  add_index "posts", ["last_reply_at"], name: "index_posts_on_last_reply_at", using: :btree
-  add_index "posts", ["mailing_list_id"], name: "idx_mailing_list_id", using: :btree
-  add_index "posts", ["original_id"], name: "index_posts_on_original_id", using: :btree
-  add_index "posts", ["position"], name: "index_posts_on_position", using: :btree
-  add_index "posts", ["subject"], name: "idx_subject", using: :btree
-  add_index "posts", ["topica_message_id"], name: "idx_topica_message_id", unique: true, using: :btree
-  add_index "posts", ["updated_at"], name: "index_posts_on_updated_at", using: :btree
 
   create_table "product_variants", force: :cascade do |t|
     t.integer  "product_id", limit: 4,                                            null: false
@@ -977,7 +950,6 @@ ActiveRecord::Schema.define(version: 20160216152036) do
   add_foreign_key "people_people", "people", name: "people_people_ibfk_2", on_delete: :cascade
   add_foreign_key "people_roles", "people", name: "people_roles_person_id", on_delete: :cascade
   add_foreign_key "people_roles", "roles", name: "roles_users_role_id_fk", on_delete: :cascade
-  add_foreign_key "posts", "mailing_lists", name: "posts_mailing_list_id_fk"
   add_foreign_key "race_numbers", "disciplines", name: "race_numbers_discipline_id_fk"
   add_foreign_key "race_numbers", "number_issuers", name: "race_numbers_number_issuer_id_fk"
   add_foreign_key "race_numbers", "people", name: "race_numbers_person_id", on_delete: :cascade
