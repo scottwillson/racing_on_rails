@@ -179,8 +179,8 @@ Rails.application.routes.draw do
     get '/oregon_cup' => 'competitions/oregon_cup#index', as: :oregon_cup_root
     get "/oregon_tt_cup/:year" => "competitions/competitions#show", type: "oregon_tt_cup"
     get "/oregon_tt_cup" => "competitions/competitions#show", type: "oregon_tt_cup"
-    get '/oregon_womens_prestige_series' => 'competitions/oregon_womens_prestige_series#show'
-    get '/owps' => 'competitions/oregon_womens_prestige_series#show'
+    get '/oregon_womens_prestige_series' => "competitions/competitions#show", type: "oregon_womens_prestige_series"
+    get '/owps' => "competitions/competitions#show", type: "oregon_womens_prestige_series"
     get "/:slug/join" => "event_team_memberships#new"
 
     resources :password_resets

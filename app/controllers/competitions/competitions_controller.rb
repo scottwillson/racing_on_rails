@@ -14,6 +14,8 @@ module Competitions
         competition_class = MbraBar
       elsif params[:type] == "oregon_tt_cup"
         competition_class = OregonTTCup
+      elsif params[:type] == "oregon_womens_prestige_series"
+        competition_class = OregonWomensPrestigeSeries
       else
         raise ActiveRecord::RecordNotFound.new("No competition of type: #{params[:type]}")
       end
