@@ -1,6 +1,10 @@
 module Competitions
   module OregonWomensPrestigeSeriesModules
     module Common
+      def members_only?
+        false
+      end
+
       def point_schedule
         [ 25, 21, 18, 16, 14, 12, 10, 8, 7, 6, 5, 4, 3, 2, 1 ]
       end
