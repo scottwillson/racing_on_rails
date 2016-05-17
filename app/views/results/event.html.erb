@@ -26,9 +26,7 @@
   <%= render partial: "start_list", locals: { start_list: @start_list } %>
   <% end %>
 
-  <%- if @event.notes.present? -%>
-  <div class="event_notes"><%= @event.notes.html_safe -%></div>
-  <%- end -%>
+  <%= content_tag(:div, @event.notes.html_safe, class: notes_class(@event)) if @event.notes.present? -%>
 
   <%- if @races.empty? && @event.is_a?(Competitions::Competition) -%>
   <p class="event_notes">No results for <%= @event.year %></p>

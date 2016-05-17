@@ -53,4 +53,12 @@ module EventsHelper
       link_to(text, event.flyer).html_safe
     end
   end
+
+  def notes_class(event)
+    if event.notes.count("\n") > 2
+      "event_notes large"
+    else
+      "event_notes"
+    end
+  end
 end
