@@ -415,6 +415,9 @@ table.child_single_day_events td.child a {
 
 .event_notes {
   text-align: center;
+  a {
+    text-decoration: underline;
+  }
 }
 
 // Event first aid providers

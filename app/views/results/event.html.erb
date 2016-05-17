@@ -27,7 +27,7 @@
   <% end %>
 
   <%- if @event.notes.present? -%>
-  <p class="event_notes"><%= @event.notes.html_safe -%></p>
+  <div class="event_notes"><%= @event.notes.html_safe -%></div>
   <%- end -%>
 
   <%- if @races.empty? && @event.is_a?(Competitions::Competition) -%>
