@@ -252,8 +252,6 @@ Rails.application.routes.draw do
     resources :teams do
       resources :results
     end
-    get '/track' => 'track#index', as: :track
-    get '/track/schedule' => 'track#schedule', as: :track_schedule
     resource :person_session
     get '/unauthorized' => 'person_sessions#unauthorized', as: :unauthorized
     get '/logout' => 'person_sessions#destroy', as: :logout

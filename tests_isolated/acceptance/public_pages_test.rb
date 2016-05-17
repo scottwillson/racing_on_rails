@@ -44,10 +44,6 @@ class PublicPagesTest < AcceptanceTest
     assert_page_has_content "Vanilla"
 
     visit "/teams/#{Team.find_by_name('Vanilla').id}/2004"
-
-    visit "/track"
-
-    visit "/track/schedule"
   end
 
   test "results page" do
