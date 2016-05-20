@@ -126,8 +126,6 @@ class UpdateObracxCatsAgain < ActiveRecord::Migration
         puts "-" * 80
         people.sort_by(&:name).each { |person| puts(person.name) }
       end
-
-      raise "rollback"
     end
   end
 end

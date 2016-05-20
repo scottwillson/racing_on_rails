@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160421043909) do
+ActiveRecord::Schema.define(version: 20160520000406) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -612,19 +612,6 @@ ActiveRecord::Schema.define(version: 20160421043909) do
 
   add_index "photos", ["updated_at"], name: "index_photos_on_updated_at", using: :btree
 
-  create_table "product_variants", force: :cascade do |t|
-    t.integer  "product_id", limit: 4,                                            null: false
-    t.string   "name",       limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.decimal  "price",                  precision: 10, scale: 2
-    t.integer  "position",   limit: 4,                            default: 0,     null: false
-    t.integer  "inventory",  limit: 4
-    t.boolean  "default",                                         default: false, null: false
-    t.boolean  "additional",                                      default: false, null: false
-    t.integer  "quantity",   limit: 4,                            default: 1,     null: false
-  end
-
   create_table "posts", force: :cascade do |t|
     t.text     "body",                 limit: 65535,              null: false
     t.datetime "date",                                            null: false
@@ -651,6 +638,19 @@ ActiveRecord::Schema.define(version: 20160421043909) do
   add_index "posts", ["subject"], name: "idx_subject", using: :btree
   add_index "posts", ["topica_message_id"], name: "idx_topica_message_id", unique: true, using: :btree
   add_index "posts", ["updated_at"], name: "index_posts_on_updated_at", using: :btree
+
+  create_table "product_variants", force: :cascade do |t|
+    t.integer  "product_id", limit: 4,                                            null: false
+    t.string   "name",       limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.decimal  "price",                  precision: 10, scale: 2
+    t.integer  "position",   limit: 4,                            default: 0,     null: false
+    t.integer  "inventory",  limit: 4
+    t.boolean  "default",                                         default: false, null: false
+    t.boolean  "additional",                                      default: false, null: false
+    t.integer  "quantity",   limit: 4,                            default: 1,     null: false
+  end
 
   add_index "product_variants", ["product_id"], name: "index_product_variants_on_product_id", using: :btree
 
@@ -977,6 +977,7 @@ ActiveRecord::Schema.define(version: 20160421043909) do
   add_foreign_key "people_people", "people", name: "people_people_ibfk_2", on_delete: :cascade
   add_foreign_key "people_roles", "people", name: "people_roles_person_id", on_delete: :cascade
   add_foreign_key "people_roles", "roles", name: "roles_users_role_id_fk", on_delete: :cascade
+  add_foreign_key "posts", "mailing_lists", name: "posts_mailing_list_id_fk"
   add_foreign_key "race_numbers", "disciplines", name: "race_numbers_discipline_id_fk"
   add_foreign_key "race_numbers", "number_issuers", name: "race_numbers_number_issuer_id_fk"
   add_foreign_key "race_numbers", "people", name: "race_numbers_person_id", on_delete: :cascade
