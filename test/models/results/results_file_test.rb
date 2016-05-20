@@ -410,6 +410,24 @@ module Results
       assert_equal 1086, results[19].time, 'row 19: 18:06.23 formatted as 18:06.2 in Excel'
     end
 
+    test "#same_time?" do
+       table = Tabular::Table.new([
+        { place: "1", name: "Joanne Eastwood", time: "24:21" },
+        { place: "2", name: "Nicole Pressprich", time: "" }
+      ])
+
+      assert ResultsFile.same_time?(table.rows.second)
+    end
+
+    test "#same_time? should consider place" do
+       table = Tabular::Table.new([
+        { place: "1", name: "Joanne Eastwood", time: "24:21" },
+        { place: "DNS", name: "Nicole Pressprich", time: "DNS" }
+      ])
+
+      assert !ResultsFile.same_time?(table.rows.second)
+    end
+
     def expected_results(event)
       expected_races = []
 
@@ -480,7 +498,7 @@ module Results
         { place: "1.0", name: "Moser" },
         { place: "1.0", name: "De Vlaminck" },
         { place: "1.0", name: "De Wolfe" }
-        ])
+      ])
 
       table.rows.each do |row|
         assert !results_file.race?(row), "Should not be a race: #{row}"

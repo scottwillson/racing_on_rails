@@ -101,7 +101,7 @@ module Results
     # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
     # This method doesn't handle some typical edge cases very well
     def time_to_s(time)
-      return '' if time == 0.0 or time.blank?
+      return '' if time == 0.0 || time.blank?
       positive = time >= 0
 
       if !positive
@@ -121,8 +121,8 @@ module Results
     # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
     # This method doesn't handle some typical edge cases very well
     def s_to_time(string)
-      if string.to_s.blank?
-        0.0
+      if string.to_s.blank? || !string.to_s[/\d/]
+        nil
       else
         string.gsub!(',', '.')
         parts = string.to_s.split(':')

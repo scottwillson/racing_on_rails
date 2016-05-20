@@ -28,6 +28,9 @@ class ResultTest < ActiveSupport::TestCase
 
     result.time = "20:23.0009"
     assert_equal 1223.001, result.time, "time should round to thousandths"
+
+    result.time = "DNS"
+    assert_equal nil, result.time, "bogus times should be nil"
   end
 
   test "time s" do
@@ -35,7 +38,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal nil, result.time, "no time"
     assert_equal '', result.time_s, 'no time_s'
     result.time_s = ''
-    assert_in_delta 0.0, result.time, 0.0001, "no time"
+    assert_equal nil, result.time, "bogus times should be nil"
 
     result.time = 2597.0
     assert_in_delta(2597.0, result.time, 0.0001, "time")

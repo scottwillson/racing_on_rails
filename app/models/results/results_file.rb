@@ -13,6 +13,16 @@ module Results
     attr_accessor :custom_columns
     attr_accessor :import_warnings
 
+    def self.same_time?(row)
+      return false unless row.previous
+      return true if row[:time].blank?
+
+      if row[:time].present?
+        row_time = row[:time].try(:to_s)
+        row_time && (row_time[/st/i] || row_time[/s\.t\./i])
+      end
+    end
+
     def initialize(source, event)
       self.event = event
       self.custom_columns = Set.new
@@ -104,7 +114,7 @@ module Results
       result = race.results.build(result_methods(row, race))
       result.updated_by = @event.name
 
-      if same_time?(row)
+      if Results::ResultsFile.same_time?(row)
         result.time = race.results[race.results.size - 2].time
       end
 
@@ -146,7 +156,6 @@ module Results
     def debug?
       ENV["DEBUG_RESULTS"].present? && Rails.logger.debug?
     end
-
 
     private
 
@@ -233,16 +242,6 @@ module Results
 
       unless keys.include?(:name) || (keys.include?(:first_name) && keys.include?(:lastname)) || keys.include?(:team_name)
         import_warnings << "No name column. Name, first name, last name or team name is required."
-      end
-    end
-
-    def same_time?(row)
-      return false unless row.previous
-      return true if row[:time].blank?
-
-      if row[:time].present?
-        row_time = row[:time].try(:to_s)
-        row_time && (row_time[/st/i] || row_time[/s\.t\./i])
       end
     end
   end
