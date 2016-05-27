@@ -629,7 +629,7 @@ ActiveRecord::Schema.define(version: 20160526225129) do
   end
 
   add_index "posts", ["date", "mailing_list_id"], name: "idx_date_list", using: :btree
-  add_index "posts", ["date"], name: "idx_date", using: :btree
+  add_index "posts", ["date"], name: "index_posts_on_date", using: :btree
   add_index "posts", ["last_reply_at"], name: "index_posts_on_last_reply_at", using: :btree
   add_index "posts", ["mailing_list_id"], name: "idx_mailing_list_id", using: :btree
   add_index "posts", ["original_id"], name: "index_posts_on_original_id", using: :btree
@@ -953,18 +953,18 @@ ActiveRecord::Schema.define(version: 20160526225129) do
   add_index "versions", ["user_name"], name: "index_versions_on_user_name", using: :btree
   add_index "versions", ["versioned_id", "versioned_type"], name: "index_versions_on_versioned_id_and_versioned_type", using: :btree
 
-  add_foreign_key "categories", "categories", column: "parent_id", name: "categories_categories_id_fk", on_delete: :cascade
+  add_foreign_key "categories", "categories", column: "parent_id", on_delete: :cascade
   add_foreign_key "competition_event_memberships", "events", column: "competition_id", name: "competition_event_memberships_competitions_id_fk", on_delete: :cascade
   add_foreign_key "competition_event_memberships", "events", name: "competition_event_memberships_events_id_fk", on_delete: :cascade
-  add_foreign_key "discipline_aliases", "disciplines", name: "discipline_aliases_disciplines_id_fk", on_delete: :cascade
+  add_foreign_key "discipline_aliases", "disciplines", on_delete: :cascade
   add_foreign_key "discipline_bar_categories", "categories", name: "discipline_bar_categories_categories_id_fk", on_delete: :cascade
-  add_foreign_key "discipline_bar_categories", "disciplines", name: "discipline_bar_categories_disciplines_id_fk", on_delete: :cascade
+  add_foreign_key "discipline_bar_categories", "disciplines", on_delete: :cascade
   add_foreign_key "discount_codes", "events", name: "discount_codes_ibfk_1"
   add_foreign_key "duplicates_people", "duplicates", name: "duplicates_racers_duplicates_id_fk", on_delete: :cascade
   add_foreign_key "duplicates_people", "people", name: "duplicates_people_person_id", on_delete: :cascade
   add_foreign_key "editor_requests", "people", column: "editor_id", name: "editor_requests_ibfk_1", on_delete: :cascade
   add_foreign_key "editor_requests", "people", name: "editor_requests_ibfk_2", on_delete: :cascade
-  add_foreign_key "events", "events", column: "parent_id", name: "events_events_id_fk", on_delete: :cascade
+  add_foreign_key "events", "events", column: "parent_id", on_delete: :cascade
   add_foreign_key "events", "number_issuers", name: "events_number_issuers_id_fk"
   add_foreign_key "events", "people", column: "promoter_id", name: "events_promoter_id", on_delete: :nullify
   add_foreign_key "events", "velodromes", name: "events_velodrome_id_fk"
