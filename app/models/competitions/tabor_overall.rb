@@ -27,6 +27,10 @@ module Competitions
       1
     end
 
+    def maximum_events(race)
+      5
+    end
+
     def point_schedule
       [ 100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11 ]
     end
