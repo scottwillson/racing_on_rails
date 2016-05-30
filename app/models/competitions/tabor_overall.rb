@@ -9,7 +9,7 @@ module Competitions
       [
         "Category 3 Men",
         "Category 4 Men",
-        "Category 4 Women",
+        "Category 4/5 Women",
         "Category 5 Men",
         "Masters Men 50+",
         "Masters Men 40+",
