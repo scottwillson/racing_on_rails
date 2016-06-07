@@ -7,4 +7,5 @@ RacingOnRails::Application.configure do
     racing_association.js
   )
   config.assets.precompile << %r(.*\.png$)
+  config.assets.precompile << %r(.*\.jpg$)
 end
