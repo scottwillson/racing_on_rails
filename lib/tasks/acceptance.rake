@@ -2,6 +2,7 @@ Rake::TestTask.new("test:acceptance") do |t|
   t.libs << "test"
   t.pattern = 'tests_isolated/acceptance/**/*_test.rb'
   t.verbose = true
+  t.warning = false
 end
 
 namespace :test do
