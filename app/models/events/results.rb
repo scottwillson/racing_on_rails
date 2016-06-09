@@ -13,30 +13,23 @@ module Events
         includes children: { races: [ :category, { results: :team } ] }
       }
 
-      scope :most_recent_with_recent_result, lambda { |weeks, sanctioned_by|
+      scope :most_recent_with_recent_result, lambda { |weeks|
         includes(races: [ :category, :results ]).
         includes(:parent).
         where("type != ?", "Event").
         where("type is not null").
         where("events.date >= ?", weeks).
-        where(sanctioned_by: sanctioned_by).
         where("id in (select event_id from results where competition_result = false and team_competition_result = false)").
         order("updated_at desc")
       }
 
       scope :with_recent_results, lambda { |weeks|
-        query = includes(parent: :parent).
-                where("type != ?", "Event").
-                where("type is not null").
-                where("events.date >= ?", weeks).
-                where("id in (select event_id from results where competition_result = false and team_competition_result = false)").
-                order("updated_at desc")
-
-        if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
-          query = query.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
-        end
-
-        query
+        includes(parent: :parent).
+        where("type != ?", "Event").
+        where("type is not null").
+        where("events.date >= ?", weeks).
+        where("id in (select event_id from results where competition_result = false and team_competition_result = false)").
+        order("updated_at desc")
       }
 
       scope :discipline, lambda { |discipline|
@@ -50,7 +43,6 @@ module Events
       }
 
       # Return [weekly_series, events] that have results
-      # Honors RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
       def self.find_all_with_results(year = Time.zone.today.year, discipline = nil)
         # Maybe this should be its own class, since it has knowledge of Event and Result?
 
@@ -62,10 +54,6 @@ module Events
                   uniq
 
         events = events.discipline(discipline)
-
-        if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
-          events = events.default_sanctioned_by
-        end
 
         ids = events.map(&:root_id).uniq
         Event.includes(children: [ :races, { children: :races } ]).where(id: ids)

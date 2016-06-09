@@ -14,10 +14,7 @@ class HomeController < ApplicationController
     @posts = recent_posts
 
     @events_with_recent_results = Event.with_recent_results(@home.weeks_of_recent_results.weeks.ago)
-    @most_recent_event_with_recent_result = Event.most_recent_with_recent_result(
-      @home.weeks_of_recent_results.weeks.ago,
-      RacingAssociation.current.default_sanctioned_by
-    )
+    @most_recent_event_with_recent_result = Event.most_recent_with_recent_result(@home.weeks_of_recent_results.weeks.ago)
 
     @news_category = ArticleCategory.where(name: "news")
     if @news_category
