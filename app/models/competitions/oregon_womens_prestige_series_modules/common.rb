@@ -22,6 +22,13 @@ module Competitions
       def cat_123_only_event_ids
         []
       end
+
+      def upgrades
+        {
+          "Women 3" => "Women 4/5",
+          "Women 1/2" => "Women 3"
+        }
+      end
     end
   end
 end
