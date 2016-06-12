@@ -6,6 +6,6 @@ before_script:
   - bundle exec rake db:setup RAILS_ENV=test
 
 rvm:
-  - "2.2.3"
+  - "2.3.1"
 
 sudo: false
