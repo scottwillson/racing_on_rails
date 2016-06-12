@@ -218,7 +218,9 @@ module Competitions
       race_to_combine.results.select do |result|
         result.time &&
         result.time > 0 &&
-        (result.person.racing_age.nil? || (result.person.racing_age >= competition_category.ages_begin && result.person.racing_age <= competition_category.ages_end))
+        (result.person&.racing_age.nil? || 
+          (result.person.racing_age >= competition_category.ages_begin && result.person.racing_age <= competition_category.ages_end)
+        )
       end.each do |result|
         time = result.time
         if short?(result) && result.race.distance.present? && result.race.distance.to_f < 24.9
