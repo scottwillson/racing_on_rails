@@ -186,7 +186,7 @@ module Competitions
           "distinct results.id as id",
           "1 as multiplier",
           "age",
-          "categories.ability as category_ability",
+          "categories.ability_begin as category_ability",
           "categories.ages_begin as category_ages_begin",
           "categories.ages_end as category_ages_end",
           "categories.gender as category_gender",

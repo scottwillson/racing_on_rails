@@ -7,6 +7,8 @@
 #
 # +friendly_param+ is used for friendly links on BAR pages. Example: senior_men
 class Category < ActiveRecord::Base
+  MAX = 999
+
   acts_as_tree
   include ActsAsTree::Validation
 
