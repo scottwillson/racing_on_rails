@@ -45,7 +45,7 @@ class CategoryTest < ActiveSupport::TestCase
     assert_equal(0, cat.ages_begin, 'ages_begin')
     assert_equal(999, cat.ages_end, 'ages_end is 999')
     assert_equal(0..999, cat.ages, 'Default age range is 0 to 999')
-    assert_equal(999, Category::MAX, 'Category::MAX')
+    assert_equal(999, ::Categories::MAXIMUM, '::Categories::MAXIMUM')
   end
 
   test "to friendly param" do

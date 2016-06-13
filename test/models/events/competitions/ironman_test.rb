@@ -105,7 +105,7 @@ module Competitions
         "age" => nil,
         "category_ability" => 0,
         "category_ages_begin" => 0,
-        "category_ages_end" => Category::MAX,
+        "category_ages_end" => ::Categories::MAXIMUM,
         "category_gender" => "M",
         "event_bar_points" => 1,
         "date" => Time.zone.today,

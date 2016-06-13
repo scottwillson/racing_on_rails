@@ -57,7 +57,7 @@ module Competitions
       result = { "category_name" => "Category 2 Women U35", "age" => 33, "category_gender" => "F", "category_ages_begin" => 0, "category_ages_end" => 34 }
       assert_equal "Women 19-34", team_standings.team_standings_category_for(result).name, "Category 2 Women U35"
 
-      result = { "category_name" => "Elite Men", "age" => 22, "category_gender" => "M", "category_ages_begin" => 0, "category_ages_end" => Category::MAX }
+      result = { "category_name" => "Elite Men", "age" => 22, "category_gender" => "M", "category_ages_begin" => 0, "category_ages_end" => ::Categories::MAXIMUM }
       assert_equal "Men 19-34", team_standings.team_standings_category_for(result).name, "Elite Men"
 
       result = { "category_name" => "Men 19-34", "category_gender" => "M", "category_ages_begin" => 19, "category_ages_end" => 34 }
@@ -66,7 +66,7 @@ module Competitions
       result = { "category_name" => "Category 2 Men U35", "category_gender" => "M", "category_ages_begin" => 0, "category_ages_end" => 34, "age" => 16 }
       assert_equal "Men 15-18", team_standings.team_standings_category_for(result).name, "Men 15-18"
 
-      result = { "category_name" => "Category 1 Men 45+", "category_gender" => "M", "category_ages_begin" => 45, "category_ages_end" => Category::MAX, "age" => 59 }
+      result = { "category_name" => "Category 1 Men 45+", "category_gender" => "M", "category_ages_begin" => 45, "category_ages_end" => ::Categories::MAXIMUM, "age" => 59 }
       assert_equal "Men 55+", team_standings.team_standings_category_for(result).name, "Category 1 Men 45+"
 
       result = { "category_name" => "Category 3 Men 19-44", "category_gender" => "M", "category_ages_begin" => 29, "category_ages_end" => 44, "age" => 43 }

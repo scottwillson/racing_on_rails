@@ -171,7 +171,7 @@ module Competitions
       event.races.select do |r|
         r.category.age_group? &&
         competition_category.age_group? &&
-        ((r.category.and_over? && competition_category.and_over?) || (r.category.ages_end != Category::MAX && competition_category.ages_end != Category::MAX)) &&
+        ((r.category.and_over? && competition_category.and_over?) || (r.category.ages_end != ::Categories::MAXIMUM && competition_category.ages_end != ::Categories::MAXIMUM)) &&
         r.category.gender     == competition_category.gender &&
         r.category.ages       != competition_category.ages &&
         r.category.ages_begin <= competition_category.ages_begin &&

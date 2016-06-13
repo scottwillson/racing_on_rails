@@ -1,4 +1,5 @@
 require_relative "../../test_case"
+require_relative "../../../../app/models/categories"
 require_relative "../../../../app/models/categories/ages"
 
 module Categories

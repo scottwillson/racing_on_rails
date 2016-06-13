@@ -28,7 +28,7 @@ module Categories
       elsif ability_from_name > 0
         ability_from_name
       else
-        Category::MAX
+        ::Categories::MAXIMUM
       end
     end
 

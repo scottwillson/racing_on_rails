@@ -103,7 +103,7 @@ module Competitions
         end
 
         ages_end = result["category_ages_end"]
-        if result["category_ages_begin"] == 45 && ages_end == Category::MAX
+        if result["category_ages_begin"] == 45 && ages_end == ::Categories::MAXIMUM
           ages_begin = 45
           ages_end = 54
         end
@@ -112,7 +112,7 @@ module Competitions
           ages_end = 34
         end
 
-        if ages_begin == 19 && ages_end == Category::MAX
+        if ages_begin == 19 && ages_end == ::Categories::MAXIMUM
           ages_begin = 19
           ages_end = 34
         end

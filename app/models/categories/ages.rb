@@ -25,7 +25,7 @@ module Categories
     end
 
     def age_group?
-      ages_begin && ages_end && (ages_begin != 0 || ages_end != Category::MAX)
+      ages_begin && ages_end && (ages_begin != 0 || ages_end != ::Categories::MAXIMUM)
     end
 
     def junior?
@@ -33,7 +33,7 @@ module Categories
     end
 
     def and_over?
-      ages_end && ages_end == Category::MAX
+      ages_end && ages_end == ::Categories::MAXIMUM
     end
 
     def set_age_from_name
@@ -44,18 +44,18 @@ module Categories
 
     def ages_from_name(name)
       if name["+"]
-        (name[/(\d\d)\+/].to_i)..Category::MAX
+        (name[/(\d\d)\+/].to_i)..::Categories::MAXIMUM
       elsif /(\d\d)-(\d\d)/.match(name)
         age_range_match = /(\d\d)-(\d\d)/.match(name)
         age_range_match[1].to_i..age_range_match[2].to_i
       elsif name["Junior"]
         10..18
       elsif name["Master"]
-        30..Category::MAX
+        30..::Categories::MAXIMUM
       elsif name[/U\d\d/]
         0..(/U(\d\d)/.match(name)[1].to_i - 1)
       else
-        0..Category::MAX
+        0..::Categories::MAXIMUM
       end
     end
   end
