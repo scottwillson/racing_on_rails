@@ -7,13 +7,13 @@ module Categories
     class Stub
       def self.before_save(symbol); end
       include Gender
-      attr_accessor :gender, :name
+      attr_accessor :name
     end
 
     def test_set_gender_from_name
       {
-        "Senior Men" => "M",
-        "Senior Women" => "F",
+        "Beginner Men" => "M",
+        "Beginner Women" => "F",
         "Category 1 Men 19-34" => "M",
         "Category 1 Men 35-44" => "M",
         "Category 1 Men 45+" => "M",
@@ -31,15 +31,37 @@ module Categories
         "Category 3 Women 10-14" => "F",
         "Category 3 Women 15-18" => "F",
         "Category 3 Women 19+" => "F",
+        "Category A" => "M",
+        "Category B" => "M",
+        "Category C" => "M",
+        "Category C/Juniors" => "M",
+        "Category Pro/1/2 Men" => "M",
+        "Clydesdale 200+" => "M",
         "Clydesdale" => "M",
         "Elite Men" => "M",
+        "Elite/Category 1 Women" => "F",
         "Elite/Category Women" => "F",
-        "Singlespeed" => "M"
+        "Expert (Category 1) Men 45+" => "M",
+        "Junior Men 15-16" => "M",
+        "Junior Men" => "M",
+        "Junior Women" =>  "F",
+        "Masters Men 1/2/3" => "M",
+        "Masters Men 4/5" => "M",
+        "Masters Men 50+" => "M",
+        "Masters Women 35+ A" => "F",
+        "Men U18" => "M",
+        "Senior Men Pro/1/2" => "M",
+        "Senior Men" => "M",
+        "Senior Women" => "F",
+        "Singlespeed" => "M",
+        "Women 1/2" => "F",
+        "Women 1/2/3" => "F",
+        "Women 4/5" => "F",
+        "Women A" => "F"
       }.each do |name, gender|
         category = Stub.new
         category.name = name
-        category.set_gender_from_name
-        assert_equal gender, category.gender, name
+        assert_equal gender, category.gender_from_name, name
       end
     end
   end
