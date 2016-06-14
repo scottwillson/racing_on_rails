@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(version: 20160613043531) do
     t.integer  "ability_begin",  limit: 4,   default: 0,   null: false
     t.integer  "ability_end",    limit: 4,   default: 999, null: false
     t.string   "equipment",      limit: 255
+    t.string   "weight",         limit: 255
   end
 
   add_index "categories", ["ability_begin"], name: "index_categories_on_ability_begin", using: :btree
@@ -94,6 +95,7 @@ ActiveRecord::Schema.define(version: 20160613043531) do
   add_index "categories", ["name"], name: "categories_name_index", unique: true, using: :btree
   add_index "categories", ["parent_id"], name: "index_categories_on_parent_id", using: :btree
   add_index "categories", ["updated_at"], name: "index_categories_on_updated_at", using: :btree
+  add_index "categories", ["weight"], name: "index_categories_on_weight", using: :btree
 
   create_table "competition_event_memberships", force: :cascade do |t|
     t.integer "competition_id", limit: 4,                 null: false

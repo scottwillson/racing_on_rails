@@ -20,6 +20,7 @@ class Category < ActiveRecord::Base
   include Categories::FriendlyParam
   include Categories::Gender
   include Categories::NameNormalization
+  include Categories::Weight
   include Export::Categories
 
   acts_as_list
