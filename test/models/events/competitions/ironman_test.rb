@@ -103,7 +103,7 @@ module Competitions
         "id" => 1,
         "multiplier" => 1,
         "age" => nil,
-        "category_ability" => 0,
+        "category_ability" => source_result.race.category.ability_begin,
         "category_ages_begin" => 0,
         "category_ages_end" => ::Categories::MAXIMUM,
         "category_gender" => "M",
