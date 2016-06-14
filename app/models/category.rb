@@ -15,6 +15,7 @@ class Category < ActiveRecord::Base
   include Categories::Ability
   include Categories::Ages
   include Categories::Cleanup
+  include Categories::Equipment
   include Comparable
   include Categories::FriendlyParam
   include Categories::Gender

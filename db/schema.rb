@@ -84,10 +84,12 @@ ActiveRecord::Schema.define(version: 20160613043531) do
     t.string   "gender",         limit: 255, default: "M", null: false
     t.integer  "ability_begin",  limit: 4,   default: 0,   null: false
     t.integer  "ability_end",    limit: 4,   default: 999, null: false
+    t.string   "equipment",      limit: 255
   end
 
   add_index "categories", ["ability_begin"], name: "index_categories_on_ability_begin", using: :btree
   add_index "categories", ["ability_end"], name: "index_categories_on_ability_end", using: :btree
+  add_index "categories", ["equipment"], name: "index_categories_on_equipment", using: :btree
   add_index "categories", ["friendly_param"], name: "index_categories_on_friendly_param", using: :btree
   add_index "categories", ["name"], name: "categories_name_index", unique: true, using: :btree
   add_index "categories", ["parent_id"], name: "index_categories_on_parent_id", using: :btree
