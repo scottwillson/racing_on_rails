@@ -17,8 +17,11 @@ module Categories
         "Athena" => nil,
         "Tandem" => "Tandem",
         "Eddy" => "Eddy",
+        "Fat Bike" => "Fat Bike",
+        "Merckx" => "Merckx",
         "Singlespeed" => "Singlespeed",
         "Singlespeed/Fixed" => "Singlespeed",
+        "Stampede" => "Stampede",
         "Unicycle" => "Unicycle",
       }.each do |name, equipment|
         category = Stub.new
