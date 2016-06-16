@@ -126,7 +126,7 @@ module Competitions
         ages_end = result["age"] || ages_end
 
         team_standings_categories.detect do |category|
-          if category.name == "Clydesdale" || category.name == "Singlespeed"
+          if category.name.in?([ "Clydesdale", "Singlespeed", "Singlespeed Men", "Singlespeed Women" ])
             if category.name == result["category_name"]
               return category
             else
@@ -147,7 +147,8 @@ module Competitions
       def find_or_create_team_standings_categories
         [
           Category.find_or_create_by_normalized_name("Clydesdale"),
-          Category.find_or_create_by_normalized_name("Singlespeed")
+          Category.find_or_create_by_normalized_name("Singlespeed Men"),
+          Category.find_or_create_by_normalized_name("Singlespeed Women")
         ] +
         %w{ Men Women }.map do |gender|
           [ "10-14", "15-18", "19-34", "35-44", "45-54", "55+" ].map do |ages|

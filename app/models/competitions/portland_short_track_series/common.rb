@@ -31,7 +31,8 @@ module Competitions
           "Clydesdale",
           "Elite Men",
           "Elite/Category 1 Women",
-          "Singlespeed"
+          "Singlespeed Men",
+          "Singlespeed Women",
         ]
       end
 
