@@ -12,6 +12,7 @@ module Categories
 
     def test_set_gender_from_name
       {
+        "Athena" => "F",
         "Beginner Men" => "M",
         "Beginner Women" => "F",
         "Category 1 Men 19-34" => "M",

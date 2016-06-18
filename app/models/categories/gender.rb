@@ -12,7 +12,7 @@ module Categories
 
     # Relies on normalized name
     def gender_from_name
-      if name[/women/i]
+      if name[/women|athena/i]
         "F"
       else
         "M"
