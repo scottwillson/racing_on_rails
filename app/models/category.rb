@@ -64,6 +64,7 @@ class Category < ActiveRecord::Base
   # Compare by position, then by name
   def <=>(other)
     return -1 if other.nil?
+    return super unless other.is_a?(Category)
     return 0 if self[:id] && self[:id] == other[:id]
     diff = (position <=> other.position)
     if diff == 0
