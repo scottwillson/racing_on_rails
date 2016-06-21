@@ -132,6 +132,7 @@ module Categories
       assert_equal "Six-day", Category.normalize_punctuation("Six-Day"), "Six-Day"
 
       assert_equal "Men 40+ B", Category.normalize_punctuation("Men 40+ - B"), "Men 40+ - B"
+      assert_equal "Junior Men 12-18", Category.normalize_age_group_punctuation("Junior Men (12-18)"), "Junior Men (12-18)"
     end
 
     test "#replace_roman_numeral_categories" do

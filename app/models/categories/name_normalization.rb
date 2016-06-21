@@ -127,6 +127,9 @@ module Categories
           name = name.gsub(%r{#{age}/#{age + 9}}, "#{age}-#{age + 5}")
           name = name.gsub(%r{#{age}/#{age + 4}}, "#{age}-#{age + 9}")
         end
+
+        name = name.gsub(%r{\((\d\d-\d\d)\)}, '\1')
+
         name
       end
 
