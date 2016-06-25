@@ -91,6 +91,8 @@ module Categories
           unless name[/laps/i]
             name = name.gsub(/(\d+) lap/i, '\1-Lap')
           end
+
+          name = name.gsub("Category 1/Pro", "Pro/Category 1")
         end
         name
       end
@@ -126,6 +128,7 @@ module Categories
         (30..90).each do |age|
           name = name.gsub(%r{#{age}/#{age + 9}}, "#{age}-#{age + 5}")
           name = name.gsub(%r{#{age}/#{age + 4}}, "#{age}-#{age + 9}")
+          name = name.gsub(%r{#{age}/#{age + 14}}, "#{age}-#{age + 14}")
         end
 
         name = name.gsub(%r{\((\d\d-\d\d)\)}, '\1')
@@ -211,7 +214,7 @@ module Categories
               "Sport"
             elsif token[/\Ajv\z/i]
               "Junior Varsity"
-            elsif token[/\Aclydesdales\z/i] || token[/\Aclyde(s)?\z/i] || token[/\Aclydsdales\z/i]
+            elsif token[/\Aclydesdales\z/i] || token[/\Aclyde(s)?\z/i] || token[/\Aclydsdales\z/i] || token[/\Aclydesdatle\z/i]
               "Clydesdale"
             elsif token[/\Awomen'?s\z/i] || token[/\Awoman'?s\z/i]
               "Women"

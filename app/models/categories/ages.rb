@@ -3,7 +3,7 @@ module Categories
     extend ActiveSupport::Concern
 
     included do
-      before_save :set_age_from_name
+      before_save :set_ages_from_name
     end
 
     # Return Range
@@ -36,10 +36,11 @@ module Categories
       ages_end && ages_end == ::Categories::MAXIMUM
     end
 
-    def set_age_from_name
+    def set_ages_from_name
       if ages_begin.nil? || ages_begin == 0
         self.ages = ages_from_name(name)
       end
+      ages
     end
 
     def ages_from_name(name)
