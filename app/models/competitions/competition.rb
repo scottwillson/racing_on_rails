@@ -482,8 +482,8 @@ module Competitions
       results.map(&:participant_id).uniq.each do |participant_id|
         team_ids_by_participant_id_hash[participant_id] = participant_id
       end
-      if team?
-      else
+
+      if !team?
         ::Person.select("id, team_id").where("id in (?)", results.map(&:participant_id).uniq).map do |person|
           team_ids_by_participant_id_hash[person.id] = person.team_id
         end
