@@ -141,6 +141,8 @@ module Competitions
           use_source_result_points: use_source_result_points?
         )
 
+        race.destroy_duplicate_results!
+        race.results.reload
         new_results, existing_results, obselete_results = partition_results(calculated_results, race)
         Rails.logger.debug "Calculator new_results:      #{new_results.size}"
         Rails.logger.debug "Calculator existing_results: #{existing_results.size}"
@@ -369,12 +371,12 @@ module Competitions
 
       new_participant_ids      = calculated_participant_ids - participant_ids
       existing_participant_ids = calculated_participant_ids & participant_ids
-      old_participant_ids      = participant_ids            - calculated_participant_ids
+      obsolete_participant_ids = participant_ids            - calculated_participant_ids
 
       [
         calculated_results.select { |r| r.participant_id.in?            new_participant_ids },
         calculated_results.select { |r| r.participant_id.in?            existing_participant_ids },
-        race.results.select       { |r| r[participant_id_attribute].in? old_participant_ids }
+        race.results.select       { |r| r[participant_id_attribute].in? obsolete_participant_ids }
       ]
     end
 

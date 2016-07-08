@@ -121,7 +121,7 @@ module Competitions
 
       assert_equal [ 9999 ], new_results.map(&:participant_id), "new_results"
       assert_equal [ result_2.person_id ], existing_results.map(&:participant_id), "existing_results"
-      assert_equal [ result_1.person_id ], obselete_results.map(&:person_id), "obselete_results"
+      assert_equal [ result_1 ], obselete_results, "obselete_results"
     end
   end
 end

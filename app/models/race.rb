@@ -323,6 +323,20 @@ class Race < ActiveRecord::Base
     result.destroy
   end
 
+  def destroy_duplicate_results!
+    duplicate_results = []
+
+    results.group_by(&:person_id).each do |person_id, person_results|
+      if person_results.size > 1
+        duplicate_results << person_results.drop(1)
+      end
+    end
+
+    duplicate_results.flatten.uniq.each do |result|
+      result.destroy!
+    end
+  end
+
   def any_results?
     results.any?
   end

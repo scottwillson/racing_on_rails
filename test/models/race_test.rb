@@ -470,4 +470,14 @@ class RaceTest < ActiveSupport::TestCase
     # TODO Manually-created people that only have this result
     # TODO Teams
   end
+
+  test "destroy_duplicate_results!" do
+    race = FactoryGirl.create(:race)
+    result_1 = FactoryGirl.create(:result, place: "1", race: race, event: race.event)
+    result_2 = FactoryGirl.create(:result, place: "2", race: race, event: race.event)
+    FactoryGirl.create(:result, place: "3", race: race, event: race.event, person: result_1.person)
+
+    race.destroy_duplicate_results!
+    assert_equal [ result_1, result_2 ], race.results.reload
+  end
 end
