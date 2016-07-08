@@ -36,9 +36,8 @@ module Competitions
         scores.
         group_by(&:event_id).
         sort_by { |_, event_scores| date_and_points(event_scores) }.
-        reverse.
-        map(&:last).
-        flatten[ 0, maximum ]
+        reverse[ 0, maximum ].
+        map(&:last)
       end
 
       def date_and_points(scores)
