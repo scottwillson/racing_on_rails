@@ -9,9 +9,8 @@ module Competitions
           # Upgrades don't count towards maximum events
           # Calculator needs to model results as map keyed by category, not an array,
           # to improve this code
-          upgrades = selected_scores.select { |s| s.upgrade }
-          reject_scores_greater_than_maximum_events(selected_scores.select { |s| !s.upgrade }, rules) +
-          upgrades
+          upgrades = selected_scores.select(&:upgrade)
+          reject_scores_greater_than_maximum_events(selected_scores.reject(&:upgrade), rules) + upgrades
         else
           selected_scores
         end
@@ -37,8 +36,9 @@ module Competitions
         scores.
         group_by(&:event_id).
         sort_by { |_, event_scores| date_and_points(event_scores) }.
-        reverse[ 0, maximum ].
-        map(&:last)
+        reverse.
+        map(&:last).
+        flatten[ 0, maximum ]
       end
 
       def date_and_points(scores)
