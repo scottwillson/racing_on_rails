@@ -102,7 +102,6 @@ module Competitions
     # Both splitting and combining add races to the source events before calculation
     def before_calculate
       destroy_or_tt_cup_races
-      set_distances
 
       missing_categories.each do |event, categories|
         categories.each do |competition_category|
@@ -118,17 +117,6 @@ module Competitions
         event.races
           .select { |r| r.created_by.is_a?(OregonTTCup) }
           .each(&:destroy)
-      end
-    end
-
-    # Ensure distance is set so times can be adjusted. Some categories with different
-    # distances are combined.
-    def set_distances
-      source_events.reload.each do |event|
-        event.races.each do |race|
-          race.update_attributes!(distance: 12.4) if twenty_k?(race)
-          race.update_attributes!(distance: 6.2) if ten_k?(race)
-        end
       end
     end
 
@@ -223,9 +211,6 @@ module Competitions
         )
       end.each do |result|
         time = result.time
-        if short?(result) && result.race.distance.present? && result.race.distance.to_f < 24.9
-          time = result.time * 2.2
-        end
         race.results.create!(
           place: result.place,
           person: result.person,
@@ -233,35 +218,6 @@ module Competitions
           time: time
         )
       end
-    end
-
-    def short?(event_or_result)
-      if event_or_result.respond_to?(:event_id)
-        event_or_result.event_id == 23543
-      else
-        event_or_result.id == 23543
-      end
-    end
-
-    def ten_k?(race)
-      short?(race) &&
-      race.category.name.in?([
-        "Junior Men 10-12",
-        "Junior Men 13-14",
-        "Junior Women 10-12",
-        "Junior Women 13-14"
-      ])
-    end
-
-    def twenty_k?(race)
-      short?(race) &&
-      race.category.name.in?([
-        "Masters Men 65-69",
-        "Masters Men 70+",
-        "Masters Women 55-59",
-        "Masters Women 60-64",
-        "Masters Women 65-69"
-      ])
     end
 
     def split?(competition_category, result)
