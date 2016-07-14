@@ -6,7 +6,7 @@ if [ "$DB" = '1' ]; then
   DISABLE_SPRING=1 rake db:migrate parallel:prepare;
 fi
 
-RECORD_RUNTIME=true DISABLE_SPRING=1 rake test:ruby parallel:test; \
+RECORD_RUNTIME=true DISABLE_SPRING=1 rake test:ruby && rake parallel:test; \
 RECORD_RUNTIME=true DISABLE_SPRING=1 parallel_test lib/registration_engine/test/{controllers,helpers,integration,mailers,models}; \
 rake test:acceptance; \
 rake registration_engine:test:acceptance
