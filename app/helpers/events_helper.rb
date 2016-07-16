@@ -41,6 +41,14 @@ module EventsHelper
     end
   end
 
+  def short_human_date_range(event)
+    if event.is_a?(MultiDayEvent)
+      event.date_range_s
+    else
+      event.date.to_s(:short_with_week_day)
+    end
+  end
+
   # Show link even if not approved
   def link_to_flyer(event, text = nil)
     return unless event
