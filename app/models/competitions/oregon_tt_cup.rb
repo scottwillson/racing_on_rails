@@ -101,7 +101,7 @@ module Competitions
     # Some need to be combined: Masters Men 30-34 and Masters Men 35-39 to Masters Men 30-39
     # Both splitting and combining add races to the source events before calculation
     def before_calculate
-      destroy_or_tt_cup_races
+      races_created_for_competition.each(&:destroy)
 
       missing_categories.each do |event, categories|
         categories.each do |competition_category|
@@ -109,15 +109,17 @@ module Competitions
           combine_races event, competition_category
         end
       end
+
+      races.reload
+      adjust_times
+      races_created_for_competition.each(&:place_results_by_time)
     end
 
-    # Destroy races created just to calculate the Oregon TT Cup
-    def destroy_or_tt_cup_races
-      source_events.each do |event|
-        event.races
-          .select { |r| r.created_by.is_a?(OregonTTCup) }
-          .each(&:destroy)
-      end
+    # Split or combined races created only to calculate the Oregon TT Cup
+    def races_created_for_competition
+      source_events.map do |event|
+        event.races.select { |r| r.created_by.is_a?(OregonTTCup) }
+      end.flatten
     end
 
     # Find competition categories that should be in source events, but are not
@@ -151,8 +153,6 @@ module Competitions
       races_to_split.each do |race_to_split|
         split_race competition_category, race_to_split, race
       end
-
-      race.place_results_by_time
     end
 
     def select_races_to_split(event, competition_category)
@@ -183,7 +183,6 @@ module Competitions
         races_to_combine.each do |race_to_combine|
           combine_race race_to_combine, race, competition_category
         end
-        race.place_results_by_time
       end
     end
 
@@ -209,15 +208,8 @@ module Competitions
         (result.person&.racing_age.nil? ||
           (result.person.racing_age >= competition_category.ages_begin && result.person.racing_age <= competition_category.ages_end)
         )
-      end.each do |result|
-        time = result.time
-        race.results.create!(
-          place: result.place,
-          person: result.person,
-          team: result.team,
-          time: time
-        )
       end
+      .each { |result| create_result(race, result) }
     end
 
     def split?(competition_category, result)
@@ -228,8 +220,26 @@ module Competitions
       result.time > 0
     end
 
+    def adjust_times
+      races_created_for_competition.each do |race|
+        distances = race.results.map(&:distance).compact.select(&:positive?)
+        if distances.size > 0
+          max_distance = distances.max
+          race.results.each do |result|
+            if result.distance.nil? || result.distance == 0
+              raise StandardError, "#{result.id} for #{result.race_full_name} #{result.event_full_name} does not have a distance"
+            end
+
+            new_time = result.time * (max_distance / result.distance) * 1.1
+            result.update!(time: new_time)
+          end
+        end
+      end
+    end
+
     def create_result(race, result)
       race.results.create!(
+        distance: result.distance,
         place: result.place,
         person: result.person,
         team: result.team,

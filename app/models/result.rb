@@ -113,7 +113,7 @@ class Result < ActiveRecord::Base
   end
 
   def distance
-    race && race.distance
+    self[:distance] || race&.distance
   end
 
   def event_id

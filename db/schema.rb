@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160613043531) do
+ActiveRecord::Schema.define(version: 20160724173321) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -84,8 +84,8 @@ ActiveRecord::Schema.define(version: 20160613043531) do
     t.string   "gender",         limit: 255, default: "M", null: false
     t.integer  "ability_begin",  limit: 4,   default: 0,   null: false
     t.integer  "ability_end",    limit: 4,   default: 999, null: false
-    t.string   "equipment",      limit: 255
     t.string   "weight",         limit: 255
+    t.string   "equipment",      limit: 255
   end
 
   add_index "categories", ["ability_begin"], name: "index_categories_on_ability_begin", using: :btree
@@ -812,21 +812,21 @@ ActiveRecord::Schema.define(version: 20160613043531) do
   create_table "results", force: :cascade do |t|
     t.integer  "category_id",             limit: 4
     t.integer  "person_id",               limit: 4
-    t.integer  "race_id",                 limit: 4,                     null: false
+    t.integer  "race_id",                 limit: 4,                                              null: false
     t.integer  "team_id",                 limit: 4
     t.integer  "age",                     limit: 4
     t.string   "city",                    limit: 128
     t.datetime "date_of_birth"
     t.boolean  "is_series"
-    t.string   "license",                 limit: 64,    default: ""
+    t.string   "license",                 limit: 64,                             default: ""
     t.string   "notes",                   limit: 255
-    t.string   "number",                  limit: 16,    default: ""
-    t.string   "place",                   limit: 8,     default: ""
-    t.integer  "place_in_category",       limit: 4,     default: 0
-    t.float    "points",                  limit: 24,    default: 0.0
-    t.float    "points_from_place",       limit: 24,    default: 0.0
-    t.float    "points_bonus_penalty",    limit: 24,    default: 0.0
-    t.float    "points_total",            limit: 24,    default: 0.0
+    t.string   "number",                  limit: 16,                             default: ""
+    t.string   "place",                   limit: 8,                              default: ""
+    t.integer  "place_in_category",       limit: 4,                              default: 0
+    t.float    "points",                  limit: 24,                             default: 0.0
+    t.float    "points_from_place",       limit: 24,                             default: 0.0
+    t.float    "points_bonus_penalty",    limit: 24,                             default: 0.0
+    t.float    "points_total",            limit: 24,                             default: 0.0
     t.string   "state",                   limit: 64
     t.string   "status",                  limit: 3
     t.float    "time",                    limit: 53
@@ -839,32 +839,33 @@ ActiveRecord::Schema.define(version: 20160613043531) do
     t.float    "time_total",              limit: 53
     t.integer  "laps",                    limit: 4
     t.string   "members_only_place",      limit: 8
-    t.integer  "points_bonus",            limit: 4,     default: 0,     null: false
-    t.integer  "points_penalty",          limit: 4,     default: 0,     null: false
+    t.integer  "points_bonus",            limit: 4,                              default: 0,     null: false
+    t.integer  "points_penalty",          limit: 4,                              default: 0,     null: false
     t.boolean  "preliminary"
-    t.boolean  "bar",                                   default: true
+    t.boolean  "bar",                                                            default: true
     t.string   "gender",                  limit: 8
     t.string   "category_class",          limit: 16
     t.string   "age_group",               limit: 16
     t.text     "custom_attributes",       limit: 65535
-    t.boolean  "competition_result",                                    null: false
-    t.boolean  "team_competition_result",                               null: false
+    t.boolean  "competition_result",                                                             null: false
+    t.boolean  "team_competition_result",                                                        null: false
     t.string   "category_name",           limit: 255
-    t.string   "event_date_range_s",      limit: 255,                   null: false
-    t.date     "date",                                                  null: false
-    t.date     "event_end_date",                                        null: false
-    t.integer  "event_id",                limit: 4,                     null: false
-    t.string   "event_full_name",         limit: 255,                   null: false
+    t.string   "event_date_range_s",      limit: 255,                                            null: false
+    t.date     "date",                                                                           null: false
+    t.date     "event_end_date",                                                                 null: false
+    t.integer  "event_id",                limit: 4,                                              null: false
+    t.string   "event_full_name",         limit: 255,                                            null: false
     t.string   "first_name",              limit: 255
     t.string   "last_name",               limit: 255
     t.string   "name",                    limit: 255
-    t.string   "race_name",               limit: 255,                   null: false
-    t.string   "race_full_name",          limit: 255,                   null: false
+    t.string   "race_name",               limit: 255,                                            null: false
+    t.string   "race_full_name",          limit: 255,                                            null: false
     t.string   "team_name",               limit: 255
-    t.integer  "year",                    limit: 4,                     null: false
+    t.integer  "year",                    limit: 4,                                              null: false
     t.integer  "non_member_result_id",    limit: 4
-    t.boolean  "single_event_license",                  default: false
-    t.boolean  "team_member",                           default: false, null: false
+    t.boolean  "single_event_license",                                           default: false
+    t.boolean  "team_member",                                                    default: false, null: false
+    t.decimal  "distance",                              precision: 10, scale: 2
   end
 
   add_index "results", ["category_id"], name: "index_results_on_category_id", using: :btree
