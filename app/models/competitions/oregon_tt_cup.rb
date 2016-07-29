@@ -116,6 +116,7 @@ module Competitions
       source_events.each do |event|
         event.races
           .select { |r| r.created_by.is_a?(OregonTTCup) }
+          .reject(&:visible?)
           .each(&:destroy)
       end
     end
