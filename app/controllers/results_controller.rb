@@ -55,6 +55,11 @@ class ResultsController < ApplicationController
       end
       format.json { render json: results_for_api(@event.id) }
       format.xml { render xml: results_for_api(@event.id) }
+      format.xlsx do
+        assign_event_data
+        headers['Content-Disposition'] = 'filename="results.xlsx"'
+        render :event
+      end
     end
   end
 

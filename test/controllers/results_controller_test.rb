@@ -1,4 +1,4 @@
-require File.expand_path("../../test_helper", __FILE__)
+require "test_helper"
 
 # :stopdoc:
 class ResultsControllerTest < ActionController::TestCase
@@ -50,6 +50,12 @@ class ResultsControllerTest < ActionController::TestCase
     assert_response(:success)
     assert_template("results/event")
     assert_not_nil(assigns["event"], "Should assign event")
+  end
+
+  test "series xls" do
+    series = FactoryGirl.create(:weekly_series_event_result).event.parent
+    get :event, event_id: series.to_param, format: :xlsx
+    assert_not_nil response.body
   end
 
   test "index" do

@@ -1,0 +1,10 @@
+xlsx_package.workbook.add_worksheet(name: "results.xlsx") do |sheet|
+  @event.races_with_results.each do |race|
+  sheet.add_row [ race.name ]
+    sheet.add_row(%w( place name total_points ) + (1..(@event.source_events.size)).to_a)
+    race.results.sort.each do |result|
+      sheet.add_row([ result.place, result.name, result.points ] + result.scores.map(&:points).sort.reverse)
+    end
+    sheet.add_row
+  end
+end
