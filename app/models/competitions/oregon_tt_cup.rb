@@ -101,7 +101,7 @@ module Competitions
     # Some need to be combined: Masters Men 30-34 and Masters Men 35-39 to Masters Men 30-39
     # Both splitting and combining add races to the source events before calculation
     def before_calculate
-      races_created_for_competition.each(&:destroy)
+      races_created_for_competition.reject(&:visible?).each(&:destroy)
 
       missing_categories.each do |event, categories|
         categories.each do |competition_category|
