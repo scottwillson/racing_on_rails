@@ -708,7 +708,7 @@ ActiveRecord::Schema.define(version: 20160724173321) do
   create_table "races", force: :cascade do |t|
     t.integer  "category_id",          limit: 4,                                              null: false
     t.string   "city",                 limit: 128
-    t.string   "distance",             limit: 255
+    t.decimal  "distance",                           precision: 10, scale: 2
     t.string   "state",                limit: 64
     t.integer  "field_size",           limit: 4
     t.integer  "laps",                 limit: 4
