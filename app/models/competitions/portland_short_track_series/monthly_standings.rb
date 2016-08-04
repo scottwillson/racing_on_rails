@@ -18,9 +18,8 @@ module Competitions
                   name: "#{month_name} Standings"
                 )
                 standings.date = Date.new(year, month)
-                if standings.source_events.none?
-                  standings.add_source_events
-                end
+                standings.end_date = Date.new(year, month)
+                standings.add_source_events
                 standings.set_date
                 standings.save!
                 standings.delete_races
@@ -45,14 +44,12 @@ module Competitions
       end
 
       def add_source_events
-        parent.children.select { |c| source_event_in_month?(c) }.each do |source_event|
-          source_events << source_event
-        end
+        self.source_events = parent.children.select { |c| source_event_in_month?(c) }
       end
 
       # If there's a single race in August, include it in July
       def source_event_in_month?(source_event)
-        source_event.date.month == date.month || source_event.date.month > MONTHS.last
+        source_event.date.month == date.month || (date.month == MONTHS.last && source_event.date.month > MONTHS.last)
       end
 
       def source_events?
