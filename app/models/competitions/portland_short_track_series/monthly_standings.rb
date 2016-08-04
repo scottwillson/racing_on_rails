@@ -3,13 +3,17 @@ module Competitions
     class MonthlyStandings < Competition
       include PortlandShortTrackSeries::Common
 
+      def self.months
+        [ 6, 7 ]
+      end
+
       def self.calculate!(year = Time.zone.today.year)
         ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
           transaction do
             parent = ::WeeklySeries.year(year).where(name: parent_event_name).first
 
             if parent && parent.any_results_including_children?
-              [ 6, 7 ].each do |month|
+              months.each do |month|
                 month_name = Date::MONTHNAMES[month]
                 standings = MonthlyStandings.find_or_create_by!(
                   parent: parent,
@@ -43,9 +47,14 @@ module Competitions
       end
 
       def add_source_events
-        parent.children.select { |c| c.date.month == date.month }.each do |source_event|
+        parent.children.select { |c| source_event_in_month?(c) }.each do |source_event|
           source_events << source_event
         end
+      end
+
+      # If there's a single race in August, include it in July
+      def source_event_in_month?(source_event)
+        source_event.date.month == date.month || source_event.date.month > months.last
       end
 
       def source_events?
