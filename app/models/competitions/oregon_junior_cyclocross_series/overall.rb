@@ -15,14 +15,18 @@ module Competitions
 
       def category_names
         [
+          "Junior Men 9",
           "Junior Men 10-12",
           "Junior Men 13-14",
           "Junior Men 15-16",
           "Junior Men 17-18",
+          "Junior Women 9",
+          "Elite Junior Men",
           "Junior Women 10-12",
           "Junior Women 13-14",
           "Junior Women 15-16",
-          "Junior Women 17-18"
+          "Junior Women 17-18",
+          "Elite Junior Women"
         ]
       end
 
