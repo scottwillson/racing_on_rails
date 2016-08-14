@@ -12,8 +12,8 @@ module Categories
       "Sport" => 2,
       "C" => 3,
       "Amateur" => 3,
-      "Beginner" => 3,
-      "Novice" => 4,
+      "Beginner" => 4,
+      "Novice" => 5,
     }.freeze
 
     included do
