@@ -39,8 +39,11 @@ module Competitions
     end
 
     def source_results_query(race)
-      super.
-      where("races.category_id" => categories_for(race))
+      super
+        .where("ages_begin = ? and ages_end = ?", race.category.ages_begin, race.category.ages_end)
+        .where("ability_begin = ? and ability_end = ?", race.category.ability_begin, race.category.ability_end)
+        .where("categories.gender" => race.category.gender)
+        .where("categories.equipment" => race.category.equipment)
     end
 
     def after_source_results(results, race)
