@@ -6,25 +6,25 @@ module Competitions
 
     def category_names
       [
-        "Category 1/2 Men",
-        "Category 2/3 Men",
-        "Category 3/4 Men",
-        "Category 5 Men",
+        "Beginner Men",
+        "Beginner Women",
+        "Junior Men 10-13",
         "Junior Men 14-18",
-        "Junior Men 9-13",
+        "Junior Women 10-13",
         "Junior Women 14-18",
-        "Junior Women 9-13",
-        "Masters Men 1/2 40+",
-        "Masters Men 2/3 40+",
-        "Masters Men 3/4 40+",
+        "Masters Men A 40+",
+        "Masters Men B 40+",
+        "Masters Men C 40+",
         "Masters Men 50+",
         "Masters Men 60+",
+        "Men A",
+        "Men B",
+        "Men C",
         "Singlespeed",
         "Stampede",
-        "Women 1/2",
-        "Women 3",
-        "Women 4",
-        "Women 5",
+        "Women A",
+        "Women B",
+        "Women C"
       ]
     end
 
