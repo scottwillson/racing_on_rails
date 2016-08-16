@@ -1,6 +1,21 @@
 <% @page_title = "Races: #{@category.name}" %>
 
 <h2><%= @category.name %></h2>
+
+<form class="form-horizontal" role="form">
+  <div class="row">
+    <div class="col-sm-6">
+      <%= labelled_text :category, :ability_range %>
+      <%= labelled_text :category, :ages %>
+      <%= labelled_text :category, :equipment %>
+    </div>
+    <div class="col-sm-6">
+      <%= labelled_text :category, :gender %>
+      <%= labelled_text :category, :weight %>
+    </div>
+  </div>
+</form>
+
 <%= table columns: 2 do %>
   <thead>
     <tr>
@@ -9,7 +24,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @category.races.each do |race| %>
+    <% @category.races.sort_by(&:date).reverse.each do |race| %>
     <tr>
       <td class="date"><%= link_to race.event.date.to_s(:mdY), event_results_path(race.event, anchor: "race_#{race.id}") %></td>
       <td><%= link_to race.event.name, event_results_path(race.event, anchor: "race_#{race.id}") %></td>
