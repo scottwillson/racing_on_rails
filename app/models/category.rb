@@ -33,6 +33,18 @@ class Category < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :friendly_param
 
+  scope :similar, lambda { |category|
+    where(
+      ability_begin: category.ability_begin,
+      ability_end: category.ability_end,
+      ages_begin: category.ages_begin,
+      ages_end: category.ages_end,
+      equipment: category.equipment,
+      gender: category.gender,
+      weight: category.weight
+    )
+  }
+
   # All categories with no parent (except root 'association' category)
   def self.find_all_unknowns
    Category.includes(:children).where(parent_id: nil).where("name != ?", RacingAssociation.current.short_name)
