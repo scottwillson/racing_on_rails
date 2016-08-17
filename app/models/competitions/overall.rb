@@ -44,6 +44,7 @@ module Competitions
         .where("ability_begin = ? and ability_end = ?", race.category.ability_begin, race.category.ability_end)
         .where("categories.gender" => race.category.gender)
         .where("categories.equipment" => race.category.equipment)
+        .where("categories.weight" => race.category.weight)
     end
 
     def after_source_results(results, race)
