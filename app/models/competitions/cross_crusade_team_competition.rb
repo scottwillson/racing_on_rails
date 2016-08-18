@@ -31,31 +31,59 @@ module Competitions
     end
 
     def category_names
-      [
-        "Athena",
-        "Beginner Men",
-        "Beginner Women",
-        "Category A",
-        "Category B",
-        "Category C",
-        "Clydesdale",
-        "Junior Men",
-        "Junior Women",
-        "Masters 35+ A",
-        "Masters 35+ B",
-        "Masters 35+ C",
-        "Masters 50+",
-        "Masters 60+",
-        "Masters Women 35+ A",
-        "Masters Women 35+ B",
-        "Masters Women 45+",
-        "Singlespeed Women",
-        "Singlespeed",
-        "Unicycle",
-        "Women A",
-        "Women B",
-        "Women C"
-      ]
+      if year < 2016
+        [
+          "Athena",
+          "Beginner Men",
+          "Beginner Women",
+          "Category A",
+          "Category B",
+          "Category C",
+          "Clydesdale",
+          "Junior Men",
+          "Junior Women",
+          "Masters 35+ A",
+          "Masters 35+ B",
+          "Masters 35+ C",
+          "Masters 50+",
+          "Masters 60+",
+          "Masters Women 35+ A",
+          "Masters Women 35+ B",
+          "Masters Women 45+",
+          "Singlespeed Women",
+          "Singlespeed",
+          "Unicycle",
+          "Women A",
+          "Women B",
+          "Women C"
+        ]
+      else
+        [
+          "Athena",
+          "Beginner Men",
+          "Beginner Women",
+          "Category 1/2",
+          "Category 3",
+          "Category 4",
+          "Clydesdale",
+          "Junior Men",
+          "Junior Women",
+          "Masters 35+ 1/2",
+          "Masters 35+ 3",
+          "Masters 35+ 4",
+          "Masters 50+",
+          "Masters 60+",
+          "Masters Women 35+ 1/2",
+          "Masters Women 35+ 3",
+          "Masters Women 45+",
+          "Singlespeed Women",
+          "Singlespeed",
+          "Unicycle",
+          "Women 1/2",
+          "Women 3",
+          "Women 4"
+        ]
+      end
     end
 
     def source_results_query(race)
@@ -67,7 +95,6 @@ module Competitions
       false
     end
 
-    # Member teams, people
     def members_only?
       false
     end

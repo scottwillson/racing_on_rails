@@ -2,46 +2,12 @@ module Competitions
   # Minimum three-race requirement
   # but ... should show not apply until there are at least three races
   class CrossCrusadeOverall < Overall
+    include Competitions::CrossCrusade::Common
+
     before_create :set_notes, :set_name
 
     def self.parent_event_name
       "Cross Crusade"
-    end
-
-    def category_names
-      [
-        "Athena",
-        "Beginner Men",
-        "Beginner Women",
-        "Category A",
-        "Category B",
-        "Category C",
-        "Clydesdale",
-        "Junior Men 10-12",
-        "Junior Men 13-14",
-        "Junior Men 15-16",
-        "Junior Men 17-18",
-        "Junior Men",
-        "Junior Women 10-12",
-        "Junior Women 13-14",
-        "Junior Women 15-16",
-        "Junior Women 17-18",
-        "Junior Women",
-        "Masters 35+ A",
-        "Masters 35+ B",
-        "Masters 35+ C",
-        "Masters 50+",
-        "Masters 60+",
-        "Masters Women 35+ A",
-        "Masters Women 35+ B",
-        "Masters Women 45+",
-        "Singlespeed Women",
-        "Singlespeed",
-        "Unicycle",
-        "Women A",
-        "Women B",
-        "Women C"
-      ]
     end
 
     def point_schedule
