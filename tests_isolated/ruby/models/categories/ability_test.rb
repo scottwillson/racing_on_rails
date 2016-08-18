@@ -54,6 +54,7 @@ module Categories
         "Junior Men - 2K" => 0..999,
         "Masters Men" => 0..999,
         "Masters Men 1/2/3" => 1..3,
+        "Masters Men 3 40+" => 3..3,
         "Masters Men 4/5 50+" => 4..5,
         "Masters Men 4/5" => 4..5,
         "Masters Men 50+ 4/5" => 4..5,

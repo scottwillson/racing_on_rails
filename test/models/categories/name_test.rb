@@ -41,6 +41,7 @@ module Categories
       assert_equal "Men U50 24-Hour", Category.new(name: "Men U50 24hr").name, "Men U50 24hr"
       assert_equal "Masters Men 30-34", Category.new(name: "Men Masters 30-34").name, "Men Masters 30-34"
       assert_equal "Masters Men 1/2/3 40+", Category.new(name: "Masters Men 1/2/3 40+").name, "Masters Men 1/2/3 40+"
+      assert_equal "Masters Men 3 40+", Category.new(name: "Masters Men 3 40+").name, "Masters Men 3 40+"
       assert_equal "Masters 30-34 Kilometer", Category.new(name: "Masters 30-34 Kilometer").name, "Masters 30-34 Kilometer"
       assert_equal "Masters Men 35-49 A/B", Category.new(name: "Masters Men 35/49 A/B").name, "Masters Men 35/49 A/B"
       assert_equal "4", Category.new(name: "4").name, "4"

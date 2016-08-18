@@ -101,9 +101,9 @@ module Categories
       def self.normalize_ability_punctuation(name)
         5.downto(2).each do |length|
           [ "P", 1, 2, 3, 4, 5 ].each_cons(length) do |cats|
-            [ " ", ".", "-" ].each do |delimiter|
+            [ " ", "\.", "-" ].each do |delimiter|
               # Don't combine 1/2/3 40+
-              unless name[%r{/\d#{delimiter}\d\d}]
+              unless name[%r{[/ ]\d#{delimiter}\d\d}]
                 name = name.gsub(%r{( ?)#{cats.join(delimiter)}( ?)}, "\\1#{cats.join("/")}\\2")
               end
             end

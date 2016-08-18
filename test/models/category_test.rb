@@ -89,5 +89,8 @@ class CategoryTest < ActiveSupport::TestCase
   test "add ages from name" do
     category = Category.create!(name: "Masters Men 60+")
     assert_equal 60..999, category.ages
+
+    category = Category.create!(name: "Masters Men 3 40+")
+    assert_equal 40..999, category.ages
   end
 end
