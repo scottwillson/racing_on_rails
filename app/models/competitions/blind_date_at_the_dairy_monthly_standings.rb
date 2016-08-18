@@ -1,6 +1,6 @@
 module Competitions
   class BlindDateAtTheDairyMonthlyStandings < Competition
-    include Competitions::BlindDateAtTheDairy::Categories
+    include Competitions::BlindDateAtTheDairy::Common
 
     def self.calculate!(year = Time.zone.today.year)
       ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
