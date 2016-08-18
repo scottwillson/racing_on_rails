@@ -1,8 +1,6 @@
 module Competitions
   class BlindDateAtTheDairyMonthlyStandings < Competition
-    def self.parent_event_name
-      "Blind Date at the Dairy"
-    end
+    include Competitions::BlindDateAtTheDairy::Categories
 
     def self.calculate!(year = Time.zone.today.year)
       ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
@@ -32,34 +30,6 @@ module Competitions
       true
     end
 
-    def category_names
-      [
-        "Beginner Men",
-        "Beginner Women",
-        "Junior Men 10-13",
-        "Junior Men 14-18",
-        "Junior Women 10-13",
-        "Junior Women 14-18",
-        "Masters Men A 40+",
-        "Masters Men B 40+",
-        "Masters Men C 40+",
-        "Masters Men 50+",
-        "Masters Men 60+",
-        "Men A",
-        "Men B",
-        "Men C",
-        "Singlespeed",
-        "Stampede",
-        "Women A",
-        "Women B",
-        "Women C"
-      ]
-    end
-
-    def point_schedule
-      [ 15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
-    end
-
     def source_results_query(race)
       super.
       where("races.category_id" => categories_for(race))
@@ -69,11 +39,6 @@ module Competitions
       parent.children.select { |c| c.date.month == date.month }.each do |source_event|
         source_events << source_event
       end
-    end
-
-    # Only members can score points?
-    def members_only?
-      false
     end
 
     def default_bar_points
