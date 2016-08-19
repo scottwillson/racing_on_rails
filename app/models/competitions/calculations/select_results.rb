@@ -10,6 +10,7 @@ module Competitions
         results = reject_dnfs(results, rules)
         results = select_members(results, rules)
         results = select_in_source_events(results, rules)
+        results = reject_upgrade_only(results)
         results = select_results_for(:event_id, results, rules[:results_per_event], rules[:use_source_result_points])
         results = select_results_for(:race_id, results, rules[:results_per_race], rules[:use_source_result_points])
         select_results_for_minimum_events results, rules
@@ -37,6 +38,20 @@ module Competitions
         else
           results
         end
+      end
+
+      # If participant's results are all upgrade results from a lower category,
+      # remove their results
+      def reject_upgrade_only(results)
+        results.group_by(&:participant_id)
+          .map do |participant_id, participant_results|
+            if participant_results.all? { |r| r.upgrade }
+              []
+            else
+              participant_results
+            end
+          end
+          .flatten
       end
 
       def select_results_for(field, results, limit, use_source_result_points)
