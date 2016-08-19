@@ -43,6 +43,7 @@ module Categories
         "Elite/Category 1 Women" => "F",
         "Elite/Category Women" => "F",
         "Expert (Category 1) Men 45+" => "M",
+        "Junior Girls 10-12" => "F",
         "Junior Men 15-16" => "M",
         "Junior Men" => "M",
         "Junior Women" =>  "F",
