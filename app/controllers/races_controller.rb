@@ -12,7 +12,7 @@ class RacesController < ApplicationController
       redirect_to event_results_path(@event)
     else
       @category = Category.includes(races: :event).find(params[:category_id])
-      @similar_categories = Category.similar(@category)
+      @same_categories = Category.same(@category)
     end
   end
 
