@@ -12,7 +12,7 @@ end
 puts `DISABLE_SPRING=1 rake parallel:create`
 puts `DISABLE_SPRING=1 rake parallel:prepare`
 
-[ "obra" ].each do |association|
+[ "aba", "atra", "mbra", "obra", "wsba" ].each do |association|
   puts association
   `./script/local #{association}`
   puts "Create databases"

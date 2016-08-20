@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 
-[ "", "aba", "atra", "mbra", "nabra", "obra", "wsba" ].shuffle.each do |association|
+[ "", "aba", "atra", "mbra", "obra", "wsba" ].shuffle.each do |association|
   if association == ""
     puts "*************************"
     puts "Run racing_on_rails tests"
