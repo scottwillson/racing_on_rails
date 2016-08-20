@@ -147,7 +147,6 @@ module Competitions
     test "person with overall results" do
       person = FactoryGirl.create(:person)
       event = CrossCrusadeOverall.create!(parent: Series.create!)
-      @senior_men = FactoryGirl.create(:category)
       event.races.create!(category: @senior_men).results.create!(place: "1")
       get :person, person_id: person.to_param
       assert_response :success
@@ -156,7 +155,6 @@ module Competitions
     test "person overall results" do
       person = FactoryGirl.create(:person)
       event = CrossCrusadeOverall.create!(parent: Series.create!)
-      @senior_men = FactoryGirl.create(:category)
       event.races.create!(category: @senior_men).results.create!(place: "1")
       get(:person_event, event_id: event.to_param, person_id: person.to_param)
       assert_response :success
