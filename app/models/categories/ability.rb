@@ -17,15 +17,15 @@ module Categories
     }.freeze
 
     included do
-      before_save :set_ability_range_from_name
+      before_save :set_abilities_from_name
     end
 
     # Pro/1/2 => 0..2
-    def set_ability_range_from_name
-      ability_range = ability_range_from_name
-      self.ability_begin = ability_range.first
-      self.ability_end = ability_range.last
-      ability_range
+    def set_abilities_from_name
+      abilities = abilities_from_name
+      self.ability_begin = abilities.first
+      self.ability_end = abilities.last
+      abilities
     end
 
     # Simply Women 3 or Men A?
@@ -96,7 +96,7 @@ module Categories
     end
 
     # Pro/1/2 => 0..2
-    def ability_range_from_name
+    def abilities_from_name
       name_token = strip_descriptive_tokens
       ability_from_name(name_token)..end_ability_from_name(name_token)
     end
@@ -109,7 +109,7 @@ module Categories
       self.ability_begin = value
     end
 
-    def ability_range
+    def abilities
       ability_begin..ability_end
     end
   end

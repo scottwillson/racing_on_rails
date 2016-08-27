@@ -54,7 +54,7 @@ class Category < ActiveRecord::Base
   def self.update_all_from_names!
     ::Category.transaction do
       Category.all.each do |category|
-        category.set_ability_range_from_name
+        category.set_abilities_from_name
         category.set_ages_from_name
         category.set_equipment_from_name
         category.set_gender_from_name

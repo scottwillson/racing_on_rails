@@ -11,7 +11,7 @@ module Categories
       attr_accessor :name
     end
 
-    def test_ability_range_from_name
+    def test_abilities_from_name
       {
         "12/24-Hour 2-Person" => 0..999,
         "A Group" => 0..999,
@@ -94,7 +94,7 @@ module Categories
       }.each do |name, ability|
         category = Stub.new
         category.name = name
-        assert_equal ability, category.ability_range_from_name, name
+        assert_equal ability, category.abilities_from_name, name
       end
     end
   end
