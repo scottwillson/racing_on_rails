@@ -50,6 +50,21 @@ class Category < ActiveRecord::Base
    Category.includes(:children).where(parent_id: nil).where("name != ?", RacingAssociation.current.short_name)
   end
 
+  # Update ability, age, equipment, etc. from names
+  def self.update_all_from_names!
+    ::Category.transaction do
+      Category.all.each do |category|
+        category.set_ability_range_from_name
+        category.set_ages_from_name
+        category.set_equipment_from_name
+        category.set_gender_from_name
+        category.set_weight_from_name
+
+        category.save!
+      end
+    end
+  end
+
   # Sr, Mst, Jr, Cat, Beg, Exp
   def self.short_name(name)
     return name if name.blank?
