@@ -1,3 +1,3 @@
 module Categories
-  MAXIMUM = 999
+  MAXIMUM = 999.freeze
 end

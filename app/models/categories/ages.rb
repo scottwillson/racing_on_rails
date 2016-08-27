@@ -2,10 +2,10 @@ module Categories
   module Ages
     extend ActiveSupport::Concern
 
-    ALL     = 0..::Categories::MAXIMUM
-    JUNIORS = 10..18
-    SENIOR  = 19..29
-    MASTERS = 30..::Categories::MAXIMUM
+    ALL     = 0..::Categories::MAXIMUM.freeze
+    JUNIORS = 10..18.freeze
+    SENIOR  = 19..29.freeze
+    MASTERS = 30..::Categories::MAXIMUM.freeze
 
     included do
       before_save :set_ages_from_name
