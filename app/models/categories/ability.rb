@@ -77,7 +77,13 @@ module Categories
 
     # Ignore tokens like A Group or Race 2 that include category tokens
     def strip_descriptive_tokens
-      name
+      stripped_name = name.dup
+      # Novice is Category 3 in MTB but 5 everywhere else
+      if stripped_name["Novice"] && stripped_name["Category"]
+        stripped_name = stripped_name.gsub("Novice", "")
+      end
+
+      stripped_name
         .gsub(%r{Race \d+}, "")
         .gsub(%r{Party of \d+}, "")
         .gsub(%r{Novice Men \w}, "Novice")

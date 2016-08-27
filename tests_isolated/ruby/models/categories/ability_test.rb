@@ -70,6 +70,8 @@ module Categories
         "Men U18" => 0..999,
         "Novice Men A" => 5..5,
         "Novice Men B" => 5..5,
+        "Novice (Category 3)" => 3..3,
+        "Category 3 (Novice)" => 3..3,
         "Party of 2" => 0..999,
         "Party of 9" => 0..999,
         "Race 1" => 0..999,
