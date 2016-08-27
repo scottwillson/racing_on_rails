@@ -57,8 +57,12 @@ module Categories
     end
 
     def ages_from_name(name)
-      if name["+"]
-        (name[/(\d\d)\+/].to_i)..::Categories::MAXIMUM
+      if name["+"] && !name[/\d\d\d\+/]
+        if name["Junior"]
+          (name[/(\d\d)\+/].to_i)..JUNIORS.end
+        else
+          (name[/(\d\d)\+/].to_i)..::Categories::MAXIMUM
+        end
       elsif /(\d\d)-(\d\d)/.match(name)
         age_range_match = /(\d\d)-(\d\d)/.match(name)
         age_range_match[1].to_i..age_range_match[2].to_i
