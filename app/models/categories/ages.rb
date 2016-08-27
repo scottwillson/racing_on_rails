@@ -6,6 +6,22 @@ module Categories
       before_save :set_ages_from_name
     end
 
+    def age_group?
+      ages_begin && ages_end && (ages_begin != 0 || ages_end != ::Categories::MAXIMUM)
+    end
+
+    def and_over?
+      ages_end && ages_end == ::Categories::MAXIMUM
+    end
+
+    def junior?
+      age_group? && ages_end <= 18
+    end
+
+    def masters?
+      age_group? && ages_begin >= 30
+    end
+
     # Return Range
     def ages
       ages_begin..ages_end
@@ -22,18 +38,6 @@ module Categories
         self.ages_begin = age_split[0].to_i unless age_split[0].nil?
         self.ages_end = age_split[1].to_i unless age_split[1].nil?
       end
-    end
-
-    def age_group?
-      ages_begin && ages_end && (ages_begin != 0 || ages_end != ::Categories::MAXIMUM)
-    end
-
-    def junior?
-      age_group? && ages_end <= 18
-    end
-
-    def and_over?
-      ages_end && ages_end == ::Categories::MAXIMUM
     end
 
     def set_ages_from_name
