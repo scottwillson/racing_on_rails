@@ -22,6 +22,10 @@ module Categories
       age_group? && ages_begin >= 30
     end
 
+    def senior?
+      age_group? && ages == 19..29
+    end
+
     # Return Range
     def ages
       ages_begin..ages_end
