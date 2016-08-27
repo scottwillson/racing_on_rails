@@ -2,6 +2,11 @@ module Categories
   module Ages
     extend ActiveSupport::Concern
 
+    ALL     = 0..::Categories::MAXIMUM
+    JUNIORS = 10..18
+    SENIOR  = 19..29
+    MASTERS = 30..::Categories::MAXIMUM
+
     included do
       before_save :set_ages_from_name
     end
@@ -15,15 +20,15 @@ module Categories
     end
 
     def junior?
-      age_group? && ages_end <= 18
+      age_group? && ages_end <= JUNIORS.end
     end
 
     def masters?
-      age_group? && ages_begin >= 30
+      age_group? && ages_begin >= MASTERS.begin
     end
 
     def senior?
-      age_group? && ages == 19..29
+      age_group? && ages.in?(SENIOR)
     end
 
     # Return Range
@@ -58,13 +63,13 @@ module Categories
         age_range_match = /(\d\d)-(\d\d)/.match(name)
         age_range_match[1].to_i..age_range_match[2].to_i
       elsif name["Junior"]
-        10..18
+        JUNIORS
       elsif name["Master"]
-        30..::Categories::MAXIMUM
+        MASTERS
       elsif name[/U\d\d/]
         0..(/U(\d\d)/.match(name)[1].to_i - 1)
       else
-        0..::Categories::MAXIMUM
+        ALL
       end
     end
   end
