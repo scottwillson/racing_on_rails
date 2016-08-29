@@ -112,5 +112,9 @@ module Categories
     def abilities
       ability_begin..ability_end
     end
+
+    def all_abilities?
+      abilities == ALL
+    end
   end
 end

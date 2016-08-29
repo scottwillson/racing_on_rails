@@ -2,7 +2,6 @@ module Categories
   module Ages
     extend ActiveSupport::Concern
 
-    ALL     = 0..::Categories::MAXIMUM.freeze
     JUNIORS = 10..18.freeze
     SENIOR  = 19..29.freeze
     MASTERS = 30..::Categories::MAXIMUM.freeze
