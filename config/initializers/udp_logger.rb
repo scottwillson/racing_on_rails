@@ -1,6 +1,6 @@
 if (Rails.env.test? || Rails.env.development?) && Rails.logger.level == 0
   ActiveSupport::Notifications.subscribe(/process_action.action_controller|racing_on_rails/) do |name, start, finish, id, payload|
-    Rails.logger.debug "#{name} #{payload}"
+    Rails.logger.debug "#{name} #{payload} #{finish - start}"
   end
 end
 
