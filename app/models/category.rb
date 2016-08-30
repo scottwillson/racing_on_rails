@@ -88,6 +88,16 @@ class Category < ActiveRecord::Base
     Category.short_name name
   end
 
+  def in?(other)
+    return false unless other && other.is_a?(Category)
+
+    abilities.in?(other.abilities) &&
+    ages.in?(other.ages) &&
+    equipment == other.equipment &&
+    (other.gender == "M" || gender == "F") &&
+    weight == other.weight
+  end
+
   # Compare by position, then by name
   def <=>(other)
     return -1 if other.nil?
