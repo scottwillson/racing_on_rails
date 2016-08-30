@@ -68,7 +68,6 @@ module Competitions
     def source_results_query(race)
       super.
       where(bar: true).
-      where("races.category_id" => categories_for(race)).
       where("events.sanctioned_by" => RacingAssociation.current.default_sanctioned_by).
       where("events.discipline in (:disciplines)
             or (events.discipline is null and parents_events.discipline in (:disciplines))

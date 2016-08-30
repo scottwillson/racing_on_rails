@@ -22,6 +22,11 @@ module Competitions
       )
     end
 
+    # BAR _does_ have categories, but selection is different than default
+    def categories?
+      false
+    end
+
     def source_results_query(race)
       super
         .where(

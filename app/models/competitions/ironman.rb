@@ -14,6 +14,10 @@ module Competitions
       false
     end
 
+    def categories?
+      false
+    end
+
     def dnf_points
       1
     end

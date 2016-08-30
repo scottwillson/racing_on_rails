@@ -18,10 +18,6 @@ module Competitions
       (OregonWomensPrestigeSeries.find_for_year(year) || OregonWomensPrestigeSeries.create).source_events
     end
 
-    def categories?
-      true
-    end
-
     def results_per_race
       3
     end
@@ -32,15 +28,6 @@ module Competitions
 
     def maximum_events(race)
       5
-    end
-
-    def source_results_query(race)
-      # Only consider results with categories that match +race+'s category
-      if categories?
-        super.where("races.category_id in (?)", categories_for(race))
-      else
-        super
-      end
     end
 
     def after_source_results(results, race)

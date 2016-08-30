@@ -48,7 +48,6 @@ module Competitions
     def source_results_query(race)
       super.
       where(bar: true).
-      where("races.category_id" => categories_for(race)).
       where("events.discipline in (:disciplines)
             or (events.discipline is null and parents_events.discipline in (:disciplines))
             or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (:disciplines))",

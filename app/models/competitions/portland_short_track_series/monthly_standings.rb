@@ -32,11 +32,6 @@ module Competitions
         true
       end
 
-      def source_results_query(race)
-        super.
-        where("races.category_id" => categories_for(race))
-      end
-
       def after_source_results(results, race)
         results.each do |result|
           result["multiplier"] = result["points_factor"] || 1

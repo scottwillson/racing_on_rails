@@ -38,11 +38,6 @@ module Competitions
         true
       end
 
-      def source_results_query(race)
-        super.
-        where("races.category_id" => categories_for(race))
-      end
-
       def create_slug
         "ojcs"
       end

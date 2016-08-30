@@ -9,11 +9,6 @@ module Competitions
       [ 100, 75, 60, 50, 45, 40, 35, 30, 25, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10 ]
     end
 
-    def source_results_query(race)
-      super.
-      where("races.category_id" => categories_for(race))
-    end
-
     # Women are often raced together and then scored separately. Combined Women 1/2/3 results count for Oregon Cup.
     # Mark Oregon Cup race by adding "Oregon Cup" to event name, race name, event notes, or race notes.
     def remove_duplicate_results(results)

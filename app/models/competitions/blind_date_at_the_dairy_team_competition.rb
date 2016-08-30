@@ -57,11 +57,6 @@ module Competitions
       end
     end
 
-    def source_results_query(race)
-      super.
-      where("races.category_id" => categories_for(race))
-    end
-
     def race_category_names
       [ "Team Competition" ]
     end

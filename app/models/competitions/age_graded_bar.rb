@@ -5,8 +5,11 @@ module Competitions
 
     def source_results_query(race)
       super.
-      where("races.category_id" => race.category.parent_id).
       where("people.date_of_birth between ? and ?", race.dates_of_birth.begin, race.dates_of_birth.end)
+    end
+
+    def categories_for(race)
+      [ race.category.parent_id ]
     end
 
     def source_event_types

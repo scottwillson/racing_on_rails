@@ -91,6 +91,10 @@ module Competitions
       where("results.race_name" => category_names)
     end
 
+    def categories?
+      false
+    end
+
     def most_points_win?
       false
     end

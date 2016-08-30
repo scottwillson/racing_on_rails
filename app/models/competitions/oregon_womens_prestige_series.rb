@@ -14,10 +14,6 @@ module Competitions
       true
     end
 
-    def categories?
-      true
-    end
-
     def maximum_events(race)
       5
     end
@@ -31,15 +27,6 @@ module Competitions
         source_events.map(&:id) - cat_123_only_event_ids
       else
         source_events.map(&:id)
-      end
-    end
-
-    def source_results_query(race)
-      # Only consider results with categories that match +race+'s category
-      if categories?
-        super.where("races.category_id" => categories_for(race))
-      else
-        super
       end
     end
 

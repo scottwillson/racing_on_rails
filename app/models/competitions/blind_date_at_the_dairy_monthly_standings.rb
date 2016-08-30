@@ -30,11 +30,6 @@ module Competitions
       true
     end
 
-    def source_results_query(race)
-      super.
-      where("races.category_id" => categories_for(race))
-    end
-
     def add_source_events
       parent.children.select { |c| c.date.month == date.month }.each do |source_event|
         source_events << source_event
