@@ -28,6 +28,7 @@ class Race < ActiveRecord::Base
 
   belongs_to :category
   belongs_to :event, inverse_of: :races
+  belongs_to :split_from, class_name: "Race"
   has_one :promoter, through: :event
   has_many :results, dependent: :destroy
 
@@ -168,7 +169,7 @@ class Race < ActiveRecord::Base
         column
       end
     end
-    columns << "bar" #if RacingAssociation.current.competitions.include?(:bar)
+    columns << "bar"
     columns.uniq!
     columns
   end
@@ -179,6 +180,36 @@ class Race < ActiveRecord::Base
 
   def symbolize_custom_columns
     self.custom_columns.map! { |col| col.to_s.to_sym }
+  end
+
+  def update_split_from!
+    if set_split_from
+      save!
+    end
+  end
+
+  def set_split_from
+    return false unless results.present?
+
+    event.races.reject { |race| race == self }.each do |race|
+      if category.in?(race.category) && results_in?(race)
+        self.split_from = race
+        return true
+      end
+    end
+
+    false
+  end
+
+  def results_in?(other_race)
+    people = results.sort.map(&:person_id)
+    other_race_people = other_race.results.sort.map(&:person_id)
+
+    people_not_in_other_race = people - other_race_people
+    return false if people_not_in_other_race.present?
+
+    people_in_other_race = people & other_race_people
+    people == people_in_other_race
   end
 
   # Ensure child team and people are not duplicates of existing records

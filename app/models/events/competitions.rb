@@ -31,6 +31,10 @@ module Events
       competition_event_membership.save!
     end
 
+    def update_split_from!
+      races.each(&:update_split_from!)
+    end
+
     def event_teams?
       false
     end

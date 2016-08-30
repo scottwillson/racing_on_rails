@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160822142816) do
+ActiveRecord::Schema.define(version: 20160830030439) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -727,6 +727,7 @@ ActiveRecord::Schema.define(version: 20160822142816) do
     t.integer  "field_limit",          limit: 4
     t.boolean  "additional_race_only",                                        default: false, null: false
     t.boolean  "visible",                                                     default: true
+    t.integer  "split_from_id",        limit: 4
   end
 
   add_index "races", ["bar_points"], name: "index_races_on_bar_points", using: :btree

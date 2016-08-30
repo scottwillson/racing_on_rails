@@ -113,6 +113,7 @@ module Competitions
       races.reload
       adjust_times
       races_created_for_competition.each(&:place_results_by_time)
+      source_events.each(&:update_split_from!)
     end
 
     # Split or combined races created only to calculate the Oregon TT Cup

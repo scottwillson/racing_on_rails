@@ -47,6 +47,8 @@ module Results
           table.rows.each do |row|
             race = import_row(row, race, table.columns.map(&:key))
           end
+
+          @event.update_split_from!
         end
 
         import_warnings = import_warnings.to_a.take(10)
