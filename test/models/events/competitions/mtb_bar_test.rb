@@ -1,4 +1,4 @@
-require File.expand_path("../../../../test_helper", __FILE__)
+require "test_helper"
 
 module Competitions
   # :stopdoc:
@@ -9,10 +9,10 @@ module Competitions
 
       junior_men        = FactoryGirl.create(:category, name: "Junior Men")
       expert_junior_men = FactoryGirl.create(:category, name: "Expert Junior Men", parent: junior_men)
-      sport_junior_men  = FactoryGirl.create(:category, name: "Sport Junior Men", parent: junior_men)
+      novice_junior_men  = FactoryGirl.create(:category, name: "Novice (Category 3) Junior Men 10-13", parent: junior_men)
       mtb.bar_categories << expert_junior_men
       mtb.bar_categories << junior_men
-      mtb.bar_categories << sport_junior_men
+      mtb.bar_categories << novice_junior_men
 
       marin_knobular = SingleDayEvent.create!(name: "Marin Knobular", date: Date.new(2001, 9, 7), discipline: "Mountain Bike")
       race = marin_knobular.races.create!(category: expert_junior_men)
@@ -22,7 +22,7 @@ module Competitions
       race.results.create!(person: chris_woods, place: 12)
 
       lemurian = SingleDayEvent.create!(name: "Lemurian", date: Date.new(2001, 9, 14), discipline: "Super D")
-      race = lemurian.races.create!(category: sport_junior_men)
+      race = lemurian.races.create!(category: novice_junior_men)
       race.results.create!(person: chris_woods, place: 14)
 
       Bar.calculate!(2001)
