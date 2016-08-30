@@ -20,7 +20,7 @@ module Competitions
       end
 
       def upgrade_points(result, rules)
-        [ result.points / 2.0, rules[:maximum_upgrade_points] ].min
+        [ result.points * rules[:upgrade_points_multiplier], rules[:maximum_upgrade_points] ].min
       end
 
       def numeric_place?(result)

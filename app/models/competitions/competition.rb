@@ -138,7 +138,8 @@ module Competitions
           results_per_race: results_per_race,
           source_event_ids: source_event_ids(race),
           team: team?,
-          use_source_result_points: use_source_result_points?
+          use_source_result_points: use_source_result_points?,
+          upgrade_points_multiplier: upgrade_points_multiplier
         )
 
         race.destroy_duplicate_results!
@@ -562,6 +563,10 @@ module Competitions
 
     def use_source_result_points?
       false
+    end
+
+    def upgrade_points_multiplier
+      0.50
     end
 
     # Team-based competition? False (default) implies it is person-based.

@@ -22,7 +22,8 @@ module Competitions
           results_per_race:                1,
           source_event_ids:                nil,
           team:                            false,
-          use_source_result_points:        false
+          use_source_result_points:        false,
+          upgrade_points_multiplier:       0.50
         }
       end
 
