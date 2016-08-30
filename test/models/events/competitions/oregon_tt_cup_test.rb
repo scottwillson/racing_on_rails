@@ -1,4 +1,4 @@
-require File.expand_path("../../../../test_helper", __FILE__)
+require "test_helper"
 
 module Competitions
   # :stopdoc:
@@ -12,7 +12,7 @@ module Competitions
       race = event.races.create!(category: masters_men_30_34, distance: 25)
       long_result = race.results.create!(place: "1", time: 3600, person: FactoryGirl.create(:person, name: "long"))
 
-      masters_men_35_14 = Category.where(name: "Masters Men 35-14").first_or_create!
+      masters_men_35_14 = Category.where(name: "Masters Men 35-39").first_or_create!
       race = event.races.create!(category: masters_men_35_14, distance: 12)
       short_result_1 = race.results.create!(place: "1", time: 1700, person: FactoryGirl.create(:person, name: "short 1"))
       short_result_2 = race.results.create!(place: "2", time: 1800, person: FactoryGirl.create(:person, name: "short 2"))
