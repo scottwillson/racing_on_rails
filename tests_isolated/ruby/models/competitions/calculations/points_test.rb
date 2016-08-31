@@ -86,7 +86,8 @@ module Competitions
           result(place: "2", points: 11, upgrade: true),
           maximum_upgrade_points: 100,
           point_schedule: [ 3, 2, 1 ],
-          use_source_result_points: false
+          use_source_result_points: false,
+          upgrade_points_multiplier: 0.50
         )
       end
 
