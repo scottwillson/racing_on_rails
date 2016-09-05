@@ -45,6 +45,22 @@ module Competitions
       assert_best_match_in [ @cat_4, @cat_4_women, @cat_4_5_women, @masters_men_4_5 ], @cat_4, event
     end
 
+    test "cyclocross categories" do
+      event = FactoryGirl.create(:event)
+      cat_2_3 = Category.find_or_create_by_normalized_name("Category 2/3")
+      cat_5 = Category.find_or_create_by_normalized_name("Category 5")
+
+      event.races.create!(category: @cat_1_2)
+      event.races.create!(category: cat_2_3)
+      event.races.create!(category: @cat_3_4)
+      event.races.create!(category: cat_5)
+
+      assert_best_match_in [ @cat_1, @cat_1_2, @cat_1_2_3, @cat_2  ], @cat_1_2, event
+      assert_best_match_in [ cat_2_3, @cat_3, @junior_men_3_4_5 ], cat_2_3, event
+      assert_best_match_in [ @cat_3_4, @cat_4, @cat_4_women, @cat_4_5_women, @masters_men_4_5 ], @cat_3_4, event
+      assert_best_match_in [ @masters_novice, cat_5 ], cat_5, event
+    end
+
     test "ability + gender" do
       event = FactoryGirl.create(:event)
       event.races.create!(category: @cat_1)
@@ -103,7 +119,7 @@ module Competitions
       end
 
       ::Category.where.not(id: categories).each do |category|
-        assert race_category != category.best_match_in(event), "#{race_category.name} should not be best_match_in for #{category.name} in event with categories #{event.races.map(&:name).join(', ')}"
+        assert race_category != category.best_match_in(event), "Did not expect #{race_category.name} to match #{category.name} in event with categories #{event.races.map(&:name).join(', ')}"
       end
     end
   end
