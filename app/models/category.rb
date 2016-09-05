@@ -33,8 +33,7 @@ class Category < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :friendly_param
 
-  # TODO rename to equivalent
-  scope :equal, lambda { |category|
+  scope :equivalent, lambda { |category|
     where(
       ability_begin: category.ability_begin,
       ability_end: category.ability_end,

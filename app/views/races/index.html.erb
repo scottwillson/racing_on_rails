@@ -16,7 +16,7 @@
   </div>
 </form>
 
-<h3>Similar</h3>
+<h3>Equivalent</h3>
 <%= table columns: 2 do %>
   <thead>
     <tr>
@@ -24,7 +24,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @equal_categories.sort_by(&:name).each do |category| %>
+    <% @equivalent_categories.sort_by(&:name).each do |category| %>
     <tr>
       <td><%= category.name %></td>
     </tr>
