@@ -9,6 +9,19 @@ module Competitions
         end
       end
 
+      # Remove Junior age-group categories
+      def after_source_results(results, race)
+        results.reject do |result|
+          result["category_name"]["Junior"] &&
+          result["category_ages_begin"] &&
+          (
+            result["category_ages_begin"] == 9 ||
+            result["category_ages_begin"] > 10 ||
+            result["category_ages_end"] < 18
+          )
+        end
+      end
+
       def category_names
         [
           "Athena",
