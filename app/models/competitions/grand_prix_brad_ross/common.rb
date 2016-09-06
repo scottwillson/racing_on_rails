@@ -28,8 +28,8 @@ module Competitions
           "Clydesdale",
           "Elite Junior Men",
           "Elite Junior Women",
-          "Junior Men",
-          "Junior Women",
+          "Junior Men 3/4/5",
+          "Junior Women 3/4/5",
           "Masters 50+ Men",
           "Masters 50+ Women",
           "Masters 60+ Men",
@@ -44,6 +44,8 @@ module Competitions
 
       def upgrades
         {
+          "Junior Men 3/4/5"     => "Elite Junior Men",
+          "Junior Women 3/4/5"   => "Elite Junior Women",
           "Category 5 Men"       => "Category 4 Men",
           "Category 5 Women"     => "Category 4 Women",
           "Category 4 Men"       => "Category 2/3 Men",
