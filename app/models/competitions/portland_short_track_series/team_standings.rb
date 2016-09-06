@@ -63,7 +63,7 @@ module Competitions
       # Unique reshuffling of results for this competition before calculation
       # Group by event and apply all below:
       # Group results into categories based on participant age and source result gender
-      # - M/F: 10-14, 15-18, 19-34, 35-44, 45-54, 55+
+      # - M/F: 10-14, 15-18, ::Categories::Ages::SENIOR.begin-34, 35-44, 45-54, 55+
       # - infer age from category if there is no participant age
       # Sort by ability category, then by place
       # reject bottom 10% from each category except the "lowest" (Cat 3s)
@@ -99,7 +99,7 @@ module Competitions
       def team_standings_category_for(result)
         ages_begin = result["category_ages_begin"]
         if ages_begin == 0
-          ages_begin = 19
+          ages_begin = ::Categories::Ages::SENIOR.begin
         end
 
         ages_end = result["category_ages_end"]
@@ -108,17 +108,17 @@ module Competitions
           ages_end = 54
         end
 
-        if ages_begin == 19 && ages_end == 44
+        if ages_begin == ::Categories::Ages::SENIOR.begin && ages_end == 44
           ages_end = 34
         end
 
-        if ages_begin == 19 && ages_end == ::Categories::MAXIMUM
-          ages_begin = 19
+        if ages_begin == ::Categories::Ages::SENIOR.begin && ages_end == ::Categories::MAXIMUM
+          ages_begin = ::Categories::Ages::SENIOR.begin
           ages_end = 34
         end
 
         if result["category_name"]["Elite"]
-          ages_begin = 19
+          ages_begin = ::Categories::Ages::SENIOR.begin
           ages_end = ages_begin
         end
 
