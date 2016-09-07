@@ -15,9 +15,8 @@ module Competitions
           result["category_name"]["Junior"] &&
           result["category_ages_begin"] &&
           (
-            result["category_ages_begin"] == 9 ||
-            result["category_ages_begin"] > 10 ||
-            result["category_ages_end"] < 18
+            result["category_ages_begin"] > ::Categories::Ages::JUNIORS.begin ||
+            result["category_ages_end"] < ::Categories::Ages::JUNIORS.end
           )
         end
       end
