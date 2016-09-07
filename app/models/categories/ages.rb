@@ -46,11 +46,18 @@ module Categories
         self.ages_begin = age_split[0].to_i unless age_split[0].nil?
         self.ages_end = age_split[1].to_i unless age_split[1].nil?
       end
+      self.ages
     end
 
     def set_ages_from_name
-      self.ages = ages_from_name(name)
+      if ages_begin.nil? || ages_begin == 0
+        self.ages = ages_from_name(name)
+      end
       ages
+    end
+
+    def set_ages_from_name!
+      self.ages = ages_from_name(name)
     end
 
     def ages_from_name(name)
