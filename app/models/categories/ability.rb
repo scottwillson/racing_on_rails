@@ -30,11 +30,11 @@ module Categories
 
     # Simply Women 3 or Men A?
     def single_ability(name_token)
-      single_ability_string = name_token[/ \d /] || name_token[/ (\d)\)/, 1] || name_token[/ (\d)\Z/, 1]
+      single_ability_string = name_token[/ [1-5] /] || name_token[/ ([1-5])\)/, 1] || name_token[/ ([1-5])\Z/, 1]
       if single_ability_string
         single_ability_string.to_i
-      elsif name_token[%r{\d[/-]\d}] && name_token[%r{(\d)[/-](\d)}, 1].to_i > 0
-        name_token[%r{(\d)[/-](\d)}, 1].to_i
+      elsif name_token[%r{[1-5][/-][1-5]}] && name_token[%r{([1-5])[/-]([1-5])}, 1].to_i > 0
+        name_token[%r{([1-5])[/-]([1-5])}, 1].to_i
       end
     end
 
@@ -68,11 +68,11 @@ module Categories
 
     # 1/3 or 1-3
     def abilities_joined_by_slashes_or_dashes?(name_token)
-      name_token[%r{\d[/-]\d}] && last_ability_joined_by_slash_or_dash(name_token) > 0
+      name_token[%r{[1-5][/-][1-5]}] && last_ability_joined_by_slash_or_dash(name_token) > 0
     end
 
     def last_ability_joined_by_slash_or_dash(name_token)
-      name_token[%r{(\d[/-])+(\d)}, 2].to_i
+      name_token[%r{([1-5][/-])+([1-5])}, 2].to_i
     end
 
     # Ignore tokens like A Group or Race 2 that include category tokens

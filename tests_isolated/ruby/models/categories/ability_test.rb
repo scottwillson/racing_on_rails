@@ -50,6 +50,7 @@ module Categories
         "Expert (Category 1) Men 45+" => 1..1,
         "Junior Men 15-16" => 0..999,
         "Junior Men" => 0..999,
+        "Junior Men 9" => 0..999,
         "Junior Women" => 0..999,
         "Junior Men - 2K" => 0..999,
         "Masters Men" => 0..999,
