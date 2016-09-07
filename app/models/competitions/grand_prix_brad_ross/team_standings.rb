@@ -32,6 +32,10 @@ module Competitions
         self.name = "Team Competition"
       end
 
+      def categories?
+        false
+      end
+
       def race_category_names
         [ "Team" ]
       end
@@ -63,7 +67,7 @@ module Competitions
       # Unique reshuffling of results for this competition before calculation
       # Group by event and apply all below:
       # Group results into categories based on participant age and source result gender
-      # - M/F: 10-14, 15-18, 19-34, 35-44, 45-54, 55+
+      # - M/F: 9-18, 19-34, 35+
       # - infer age from category if there is no participant age
       # Sort by ability category, then by place
       # reject bottom 10% from each category except the "lowest" (Cat 3s)
@@ -97,21 +101,40 @@ module Competitions
       end
 
       def team_standings_category_for(result)
-        ages_begin = result["age"]
-        ages_end = result["age"]
+        ages_begin = result["category_ages_begin"]
+        if ages_begin == 0
+          ages_begin = ::Categories::Ages::SENIOR.begin
+        end
+
+        ages_end = result["category_ages_end"]
+        if result["category_ages_begin"] == 35 && ages_end == ::Categories::MAXIMUM
+          ages_begin = 35
+          ages_end = 49
+        end
+
+        if ages_begin == ::Categories::Ages::SENIOR.begin && ages_end == ::Categories::MAXIMUM
+          ages_begin = ::Categories::Ages::SENIOR.begin
+          ages_end = 34
+        end
+
+        if result["category_name"]["Elite"]
+          ages_begin = ::Categories::Ages::SENIOR.begin
+          ages_end = ::Categories::Ages::SENIOR.begin
+        end
+
+        ages_begin = result["age"] || ages_begin
+        ages_end = result["age"] || ages_end
 
         team_standings_categories.detect do |category|
-          if category.name.in?([ "Clydesdale", "Singlespeed", "Singlespeed Men", "Singlespeed Women" ])
-            if category.name == result["category_name"]
-              return category
-            else
-              next
-            end
-          end
-
-          category.ages_begin <= ages_begin &&
-          category.ages_end   >= ages_end &&
-          category.gender     == result["category_gender"]
+          (category.equipment? && result["category_equipment"] == category.equipment && category.gender == result["category_gender"]) ||
+          (category.weight? && result["category_weight"] == category.weight && category.gender == result["category_gender"]) ||
+          (
+            !category.equipment? &&
+            !category.weight? &&
+            category.ages_begin <= ages_begin &&
+            category.ages_end   >= ages_end &&
+            category.gender     == result["category_gender"]
+          )
         end
       end
 
@@ -127,11 +150,10 @@ module Competitions
           Category.find_or_create_by_normalized_name("Singlespeed Women")
         ] +
         %w{ Men Women }.map do |gender|
-          [ "10-18", "19-34", "35-49", "50+" ].map do |ages|
+          [ "9-18", "19-34", "35-49", "50+" ].map do |ages|
             Category.find_or_create_by_normalized_name("#{gender} #{ages}")
-          end
-        end.
-        flatten
+          end.flatten
+        end.flatten
       end
 
       def sort_by_ability_and_place(results)
@@ -169,6 +191,8 @@ module Competitions
       end
 
       def add_points(category, results)
+        raise("#{results.first} has no category") unless category
+
         results.map.with_index do |result, index|
           place = index + 1
           result["points"] = 100.0 * ((results.size - place) + 1) / results.size

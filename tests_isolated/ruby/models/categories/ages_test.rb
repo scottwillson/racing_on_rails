@@ -31,11 +31,14 @@ module Categories
       category = Stub.new
       assert_equal 60..999, category.ages_from_name("Masters Men 60+")
       assert_equal 50..59, category.ages_from_name("Masters Men 50-59")
-      assert_equal 10..18, category.ages_from_name("Women Junior")
+      assert_equal 9..18, category.ages_from_name("Women Junior")
       assert_equal 30..999, category.ages_from_name("Master Men")
       assert_equal 0..34, category.ages_from_name("Category 2 Men U35")
       assert_equal 30..999, category.ages_from_name("Two-Person Masters 100+")
       assert_equal 15..18, category.ages_from_name("Junior 15+")
+      assert_equal 9..18, category.ages_from_name("Men 9-18")
+      assert_equal 9..9, category.ages_from_name("Junior Men 9")
+      assert_equal 9..18, category.ages_from_name("Junior Men 3/4/5")
     end
 
     def test_age_group

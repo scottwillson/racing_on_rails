@@ -106,6 +106,7 @@ module Competitions
         "category_ability" => source_result.race.category.ability_begin,
         "category_ages_begin" => 0,
         "category_ages_end" => ::Categories::MAXIMUM,
+        "category_equipment" => nil,
         "category_gender" => "M",
         "event_bar_points" => 1,
         "date" => Time.zone.today,

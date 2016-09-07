@@ -18,5 +18,9 @@ module Categories
         name[/Eddy|Fat Bike|Hardtail|Merckx|Stampede|Tandem|Unicycle/]
       end
     end
+
+    def equipment?
+      equipment.present?
+    end
   end
 end

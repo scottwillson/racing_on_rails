@@ -193,6 +193,7 @@ module Competitions
           "categories.ability_begin as category_ability",
           "categories.ages_begin as category_ages_begin",
           "categories.ages_end as category_ages_end",
+          "categories.equipment as category_equipment",
           "categories.gender as category_gender",
           "events.bar_points as event_bar_points",
           "events.date",
@@ -308,6 +309,7 @@ module Competitions
           category_ability
           category_ages_begin
           category_ages_end
+          category_equipment
           category_gender
           discipline
           event_bar_points

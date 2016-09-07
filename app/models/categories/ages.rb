@@ -2,7 +2,7 @@ module Categories
   module Ages
     extend ActiveSupport::Concern
 
-    JUNIORS = 10..18.freeze
+    JUNIORS =  9..18.freeze
     SENIOR  = 19..29.freeze
     MASTERS = 30..::Categories::MAXIMUM.freeze
 
@@ -58,15 +58,20 @@ module Categories
     def ages_from_name(name)
       if name["+"] && !name[/\d\d\d\+/]
         if name["Junior"]
-          (name[/(\d\d)\+/].to_i)..JUNIORS.end
+          (name[/(9|\d{2})\+/].to_i)..JUNIORS.end
         else
-          (name[/(\d\d)\+/].to_i)..::Categories::MAXIMUM
+          (name[/(\d{2})\+/].to_i)..::Categories::MAXIMUM
         end
-      elsif /(\d\d)-(\d\d)/.match(name)
-        age_range_match = /(\d\d)-(\d\d)/.match(name)
+      elsif /(9|\d{2})-(9|\d{2})/.match(name)
+        age_range_match = /(9|\d{2})-(9|\d{2})/.match(name)
         age_range_match[1].to_i..age_range_match[2].to_i
       elsif name["Junior"]
-        JUNIORS
+        if /[^\d](9|\d{2})/.match(name)
+          age = /[^\d](9|\d{2})/.match(name)[1].to_i
+          age..age
+        else
+          JUNIORS
+        end
       elsif name["Master"]
         MASTERS
       elsif name[/U\d\d/]

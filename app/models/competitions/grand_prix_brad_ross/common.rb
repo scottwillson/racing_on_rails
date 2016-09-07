@@ -54,22 +54,6 @@ module Competitions
       def point_schedule
         [ 100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
       end
-
-      def upgrades
-        {
-          "Junior Men 3/4/5"     => "Elite Junior Men",
-          "Junior Women 3/4/5"   => "Elite Junior Women",
-          "Category 5 Men"       => "Category 4 Men",
-          "Category 5 Women"     => "Category 4 Women",
-          "Category 4 Men"       => "Category 2/3 Men",
-          "Category 4 Women"     => "Category 3 Women",
-          "Category 4 35+ Men"   => "Category 3 35+ Men",
-          "Category 3 35+ Men"   => "Category 1/2 35+ Men",
-          "Category 3 35+ Women" => "Category 1/2 35+ Women",
-          "Category 3 Women"     => "Category 1/2 Women",
-          "Category 2/3 Men"     => "Category 1/2 Men"
-        }
-      end
     end
   end
 end
