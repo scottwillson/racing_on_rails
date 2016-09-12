@@ -102,7 +102,7 @@ module Competitions
     end
 
     def categories_for(race)
-      Category.where(name: source_results_category_names)
+      result_categories_by_race.values.flatten
     end
   end
 end
