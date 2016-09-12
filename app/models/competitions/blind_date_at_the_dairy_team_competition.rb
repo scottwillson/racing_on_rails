@@ -49,6 +49,10 @@ module Competitions
       true
     end
 
+    def categories?
+      false
+    end
+
     def add_source_events
       parent.children.each do |source_event|
         if source_event.name == parent_event_name
@@ -59,50 +63,6 @@ module Competitions
 
     def race_category_names
       [ "Team Competition" ]
-    end
-
-    def source_results_category_names
-      if year < 2016
-        [
-          "Beginner Men",
-          "Beginner Women",
-          "Masters Men A 40+",
-          "Masters Men B 40+",
-          "Masters Men C 40+",
-          "Masters Men 50+",
-          "Masters Men 60+",
-          "Men A",
-          "Men B",
-          "Men C",
-          "Singlespeed",
-          "Stampede",
-          "Women A",
-          "Women B",
-          "Women C"
-        ]
-      else
-        [
-          "Category 1/2 Men",
-          "Category 2/3 Men",
-          "Category 3/4 Men",
-          "Category 5 Men",
-          "Masters Men 1/2 40+",
-          "Masters Men 2/3 40+",
-          "Masters Men 3/4 40+",
-          "Masters Men 50+",
-          "Masters Men 60+",
-          "Singlespeed",
-          "Stampede",
-          "Women 1/2",
-          "Women 3",
-          "Women 4",
-          "Women 5",
-        ]
-      end
-    end
-
-    def categories_for(race)
-      result_categories_by_race.values.flatten
     end
   end
 end
