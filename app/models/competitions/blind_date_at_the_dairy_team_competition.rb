@@ -29,6 +29,10 @@ module Competitions
       true
     end
 
+    def source_results_query(race)
+      super(race).where.not("categories.ages_begin" => 9..18)
+    end
+
     def name
       "Team Competition"
     end
