@@ -30,6 +30,10 @@ module Competitions
       true
     end
 
+    def categories_for(race)
+      result_categories_by_race[race.category]
+    end
+
     def add_source_events
       parent.children.select { |c| c.date.month == date.month }.each do |source_event|
         source_events << source_event
