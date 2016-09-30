@@ -28,7 +28,7 @@ module Competitions
         ]
       end
 
-      def maximum_events(race)
+      def maximum_events(_)
         4
       end
 
