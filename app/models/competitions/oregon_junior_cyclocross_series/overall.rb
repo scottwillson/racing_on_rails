@@ -28,6 +28,10 @@ module Competitions
         ]
       end
 
+      def categories_for(race)
+        result_categories_by_race[race.category]
+      end
+
       def maximum_events(_)
         4
       end
