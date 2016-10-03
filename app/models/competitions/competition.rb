@@ -15,7 +15,7 @@ module Competitions
     include Competitions::Naming
     include Competitions::Points
 
-    TYPES = %w{
+    TYPES = %w(
       Competitions::AgeGradedBar
       Competitions::Bar
       Competitions::Cat4WomensRaceSeries
@@ -32,7 +32,7 @@ module Competitions
       Competitions::OverallBar
       Competitions::TaborOverall
       Competitions::TeamBar
-    }
+    ).freeze
 
     UNLIMITED = Float::INFINITY
 
@@ -86,10 +86,7 @@ module Competitions
 
     def create_races
       race_category_names.each do |name|
-        category = Category.where(name: name).first
-        if category.nil?
-          category = Category.create!(raw_name: name)
-        end
+        category = Category.where(name: name).first || Category.create!(raw_name: name)
         if !races.where(category: category).exists?
           if team?
             races.create! category: category, result_columns: %W{ place team_name points }
@@ -172,7 +169,7 @@ module Competitions
       if upgrades.present?
         upgrade_categories = upgrades.values.map { |categories| Array.wrap(categories) }.flatten.uniq
         categories_in_upgrade_order = upgrade_categories + (races.map(&:name) - upgrade_categories)
-        categories_in_upgrade_order.map { |name| races.detect { |race| race.name == name }}.compact
+        categories_in_upgrade_order.map { |name| races.detect { |race| race.name == name } }.compact
       else
         races
       end
