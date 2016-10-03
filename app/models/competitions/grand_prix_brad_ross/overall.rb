@@ -10,7 +10,7 @@ module Competitions
       end
 
       def maximum_events(race)
-        5
+        4
       end
 
       def upgrade_points_multiplier
