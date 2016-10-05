@@ -60,7 +60,7 @@ module Competitions
     def debug_result_categories_by_race(result_categories_by_race)
       result_categories_by_race.each do |competition_category, source_results_categories|
         source_results_categories.sort_by(&:name).each do |category|
-          logger.debug "result_categories_by_race for #{full_name} #{competition_category.name} #{category.name}"
+          logger.debug "result_categories_by_race for #{full_name} competition: #{competition_category.name} source: #{category.name}"
         end
       end
     end

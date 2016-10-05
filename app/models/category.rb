@@ -117,7 +117,7 @@ class Category < ActiveRecord::Base
   # Find best matching competition race for category. Iterate through traits (weight, equipment, ages, gender, abilities) until there is a
   # single match (or none).
   def best_match_in(event)
-    logger.debug "Category#best_match_in #{self.name} #{event.categories.map(&:name).join(', ')}"
+    logger.debug "Category#best_match_in #{name} in #{event.name}: #{event.categories.map(&:name).join(', ')}"
 
     candidate_categories = event.categories
 
@@ -184,7 +184,7 @@ class Category < ActiveRecord::Base
     return candidate_categories.first if candidate_categories.one?
     return nil if candidate_categories.empty?
 
-    raise "Multiple matches #{candidate_categories.map(&:name)} for #{self.name} in #{event.categories.map(&:name).join(', ')}"
+    raise "Multiple matches #{candidate_categories.map(&:name)} for #{name} in #{event.categories.map(&:name).join(', ')}"
   end
 
   # Compare by position, then by name
