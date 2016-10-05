@@ -20,16 +20,30 @@ module Competitions
           "Junior Men 15-16",
           "Junior Men 17-18",
           "Elite Junior Men",
+          "Junior Men 3/4/5",
           "Junior Women 9-12",
           "Junior Women 13-14",
           "Junior Women 15-16",
           "Junior Women 17-18",
-          "Elite Junior Women"
+          "Elite Junior Women",
+          "Junior Women 3/4/5"
         ]
       end
 
       def categories_for(race)
-        result_categories_by_race[race.category]
+        categories = result_categories_by_race[race.category]
+
+        if race.category.abilities == (0..0) || race.category.abilities == (3..5)
+          categories.reject do |category|
+            category.ages == (10..12) || category.ages == (9..9) || category.ages == (9..12)
+          end
+        elsif race.category.ages_begin == 9
+          Category.where(ages_begin: 9, ages_end: 9).where(gender: race.category.gender) +
+            Category.where(ages_begin: 10, ages_end: 12).where(gender: race.category.gender) +
+            Category.where(ages_begin: 9, ages_end: 12).where(gender: race.category.gender)
+        else
+          categories
+        end
       end
 
       def maximum_events(_)
