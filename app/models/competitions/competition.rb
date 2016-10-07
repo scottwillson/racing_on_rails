@@ -228,12 +228,16 @@ module Competitions
         query = query.where("events.type in (?)", source_event_types)
       end
 
-      # Only consider results with categories that match +race+'s category
-      if categories?
-        query = query.where("races.category_id" => categories_for(race))
-      end
+      query = query.merge(categories_clause(race))
 
       query
+    end
+
+    # Only consider results with categories that match +race+'s category
+    def categories_clause(race)
+      if categories?
+        Category.where("races.category_id" => categories_for(race))
+      end
     end
 
     def after_source_results(results, race)
