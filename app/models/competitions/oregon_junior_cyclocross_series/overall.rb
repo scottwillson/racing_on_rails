@@ -15,34 +15,27 @@ module Competitions
 
       def category_names
         [
-          "Junior Men 9-12",
-          "Junior Men 13-14",
-          "Junior Men 15-16",
-          "Junior Men 17-18",
+          "Junior Men 9-12 3/4/5",
+          "Junior Men 13-14 3/4/5",
+          "Junior Men 15-16 3/4/5",
+          "Junior Men 17-18 3/4/5",
           "Elite Junior Men",
-          "Junior Men 3/4/5",
-          "Junior Women 9-12",
-          "Junior Women 13-14",
-          "Junior Women 15-16",
-          "Junior Women 17-18",
-          "Elite Junior Women",
-          "Junior Women 3/4/5"
+          "Junior Women 9-12 3/4/5",
+          "Junior Women 13-14 3/4/5",
+          "Junior Women 15-16 3/4/5",
+          "Junior Women 17-18 3/4/5",
+          "Elite Junior Women"
         ]
       end
 
-      def categories_for(race)
-        categories = result_categories_by_race[race.category]
-
-        if race.category.abilities == (0..0) || race.category.abilities == (3..5)
-          categories.reject do |category|
-            category.ages == (10..12) || category.ages == (9..9) || category.ages == (9..12)
-          end
-        elsif race.category.ages_begin == 9
-          Category.where(ages_begin: 9, ages_end: 9).where(gender: race.category.gender) +
-            Category.where(ages_begin: 10, ages_end: 12).where(gender: race.category.gender) +
-            Category.where(ages_begin: 9, ages_end: 12).where(gender: race.category.gender)
+      def categories_clause(race)
+        if race.category.abilities == (0..0)
+          Category.where(ages_begin: 9, ages_end: 18, gender: race.category.gender, ability_begin: 0, ability_end: 0)
         else
-          categories
+          Category
+            .where(gender: race.category.gender, ability_begin: 0, ability_end: 999)
+            .where("ages_begin >= ?", race.category.ages_begin)
+            .where("ages_end <= ?", race.category.ages_end)
         end
       end
 
