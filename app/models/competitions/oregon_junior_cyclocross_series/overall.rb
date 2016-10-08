@@ -33,7 +33,8 @@ module Competitions
           Category.where(ages_begin: 9, ages_end: 18, gender: race.category.gender, ability_begin: 0, ability_end: 0)
         else
           Category
-            .where(gender: race.category.gender, ability_begin: 0, ability_end: 999)
+            .where(gender: race.category.gender)
+            .where("(ability_begin = 3 and ability_end = 5) or (ability_begin = 0 and ability_end = 999)")
             .where("ages_begin >= ?", race.category.ages_begin)
             .where("ages_end <= ?", race.category.ages_end)
         end
