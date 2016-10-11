@@ -15,12 +15,12 @@ module Competitions
       series.reload
       assert_equal(Date.new(2017, 10, 7), series.date, "Series date")
 
-      category_1_2 = Category.create!(name: "Category 1/2")
-      category_1_2_race = event.races.create!(category: category_1_2)
+      men_1_2 = Category.create!(name: "Men 1/2")
+      men_1_2_race = event.races.create!(category: men_1_2)
       weaver = FactoryGirl.create(:person)
-      category_1_2_race.results.create!(place: 1, person: weaver)
+      men_1_2_race.results.create!(place: 1, person: weaver)
       tonkin = FactoryGirl.create(:person)
-      category_1_2_race.results.create!(place: 9, person: tonkin)
+      men_1_2_race.results.create!(place: 9, person: tonkin)
 
       masters_35_plus_women = Category.find_or_create_by(name: "Masters Women 35+ 1/2")
       masters_race = event.races.create!(category: masters_35_plus_women)
@@ -31,11 +31,11 @@ module Competitions
 
       # Previous year should be ignored
       previous_event = Series.create!(name: "River City Bicycles Cyclocross Crusade").children.create!(date: Date.new(2006), name: "Cross Crusade #3")
-      previous_event.races.create!(category: category_1_2).results.create!(place: 6, person: weaver)
+      previous_event.races.create!(category: men_1_2).results.create!(place: 6, person: weaver)
 
       # Following year should be ignored
       following_event = Series.create!(name: "River City Bicycles Cyclocross Crusade").children.create!(date: Date.new(2018))
-      following_event.races.create!(category: category_1_2).results.create!(place: 10, person: weaver)
+      following_event.races.create!(category: men_1_2).results.create!(place: 10, person: weaver)
 
       CrossCrusadeOverall.calculate!(2017)
       overall = CrossCrusadeOverall.last
@@ -49,20 +49,20 @@ module Competitions
       assert_equal_dates Date.new(2017, 10, 7), overall.start_date, "Overall series start date"
       assert_equal_dates Date.new(2017, 11, 5), overall.end_date, "Overall series end date"
 
-      cx_a_overall_race = overall.races.detect { |race| race.category == category_1_2 }
-      assert_not_nil(cx_a_overall_race, "Should have Category 1/2 overall race")
-      assert_equal(2, cx_a_overall_race.results.size, "Category 1/2 race results")
+      cx_a_overall_race = overall.races.detect { |race| race.category == men_1_2 }
+      assert_not_nil(cx_a_overall_race, "Should have Men 1/2 overall race")
+      assert_equal(2, cx_a_overall_race.results.size, "Men 1/2 race results")
       results = cx_a_overall_race.results(true).sort
       result = results.first
       assert_equal(false, result.preliminary?, "Preliminary?")
-      assert_equal("1", result.place, "Category 1/2 first result place")
-      assert_equal(26, result.points, "Category 1/2 first result points")
-      assert_equal(weaver, result.person, "Category 1/2 first result person")
+      assert_equal("1", result.place, "Men 1/2 first result place")
+      assert_equal(26, result.points, "Men 1/2 first result points")
+      assert_equal(weaver, result.person, "Men 1/2 first result person")
       result = results.last
       assert_equal(false, result.preliminary?, "Preliminary?")
-      assert_equal("2", result.place, "Category 1/2 second result place")
-      assert_equal(10, result.points, "Category 1/2 second result points (double points for last result)")
-      assert_equal(tonkin, result.person, "Category 1/2 second result person")
+      assert_equal("2", result.place, "Men 1/2 second result place")
+      assert_equal(10, result.points, "Men 1/2 second result points (double points for last result)")
+      assert_equal(tonkin, result.person, "Men 1/2 second result person")
 
       masters_35_plus_women_overall_race = overall.races.detect { |race| race.category == masters_35_plus_women }
       assert_not_nil(masters_35_plus_women_overall_race, "Should have Masters Women overall race")
@@ -77,7 +77,7 @@ module Competitions
     test "many results" do
       series = Series.create!(name: "River City Bicycles Cyclocross Crusade")
       masters = Category.find_or_create_by(name: "Masters 35+ 1/2")
-      category_1_2 = Category.find_or_create_by(name: "Category 1/2")
+      men_1_2 = Category.find_or_create_by(name: "Men 1/2")
       singlespeed = Category.find_or_create_by(name: "Singlespeed")
       person = Person.create!(name: "John Browning")
 
@@ -89,7 +89,7 @@ module Competitions
 
       event = series.children.create!(date: Date.new(2018, 10, 19))
       event.races.create!(category: masters).results.create!(place: 2, person: person)
-      event.races.create!(category: category_1_2).results.create!(place: 4, person: person)
+      event.races.create!(category: men_1_2).results.create!(place: 4, person: person)
       event.races.create!(category: singlespeed).results.create!(place: 5, person: person)
 
       event = series.children.create!(date: Date.new(2018, 10, 26))
@@ -100,7 +100,7 @@ module Competitions
 
       event = series.children.create!(date: Date.new(2018, 11, 9))
       event.races.create!(category: masters).results.create!(place: 1, person: person)
-      event.races.create!(category: category_1_2).results.create!(place: 20, person: person)
+      event.races.create!(category: men_1_2).results.create!(place: 20, person: person)
       event.races.create!(category: singlespeed).results.create!(place: 12, person: person)
 
       event = series.children.create!(date: Date.new(2018, 11, 10))
@@ -108,7 +108,7 @@ module Competitions
 
       event = series.children.create!(date: Date.new(2018, 11, 17))
       event.races.create!(category: masters).results.create!(place: 3, person: person)
-      event.races.create!(category: category_1_2).results.create!(place: 20, person: person)
+      event.races.create!(category: men_1_2).results.create!(place: 20, person: person)
 
       CrossCrusadeOverall.calculate! 2018
 
@@ -122,9 +122,9 @@ module Competitions
       assert_equal(26 + 26 + 0 + 26 + 0 + 26 + 20 + 26 + 0, result.points, "points")
       assert_equal(person, result.person, "person")
 
-      category_1_2_overall_race = CrossCrusadeOverall.last.races.detect { |race| race.category == category_1_2 }
-      assert_not_nil(category_1_2_overall_race, "Should have Category 1/2 overall race")
-      results = category_1_2_overall_race.results(true).sort
+      men_1_2_overall_race = CrossCrusadeOverall.last.races.detect { |race| race.category == men_1_2 }
+      assert_not_nil(men_1_2_overall_race, "Should have Men 1/2 overall race")
+      results = men_1_2_overall_race.results(true).sort
       result = results.first
       assert_equal(false, result.preliminary?, "Preliminary?")
       assert_equal("1", result.place, "place")
