@@ -45,7 +45,7 @@ module Competitions
       discipline.bar_categories << senior_men
       discipline.bar_categories << senior_women
 
-      cross_crusade = Series.create!(name: "Cross Crusade")
+      cross_crusade = Series.create!(name: "River City Bicycles Cyclocross Crusade")
       barton = SingleDayEvent.create!(
         name: "Cross Crusade: Barton Park",
         discipline: "Cyclocross",

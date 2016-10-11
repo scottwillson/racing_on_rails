@@ -7,7 +7,7 @@ module Competitions
     before_create :set_notes, :set_name
 
     def self.parent_event_name
-      "Cross Crusade"
+      "River City Bicycles Cyclocross Crusade"
     end
 
     def point_schedule
@@ -30,14 +30,8 @@ module Competitions
       self.name = "Series Overall"
     end
 
-    # Use combined Junior results from race day. Don't combine all the age groups races into one.
     def categories_for(race)
-      case race.name
-      when "Junior Men", "Junior Women"
-        [ Category.find_or_create_by(name: race.name) ]
-      else
-        super race
-      end
+      result_categories_by_race[race.category]
     end
   end
 end

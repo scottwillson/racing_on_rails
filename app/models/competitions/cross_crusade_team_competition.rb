@@ -8,12 +8,12 @@ module Competitions
     def self.calculate!(year = Time.zone.today.year)
       ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
         transaction do
-          series = Series.where(name: "Cross Crusade").year(year).first
+          series = Series.where(name: "River City Bicycles Cyclocross Crusade").year(year).first
 
           if series && series.any_results_including_children?
             team_competition = series.child_competitions.detect { |c| c.is_a? CrossCrusadeTeamCompetition }
             unless team_competition
-              team_competition = self.new(parent_id: series.id)
+              team_competition = new(parent_id: series.id)
               team_competition.save!
             end
             team_competition.set_date
@@ -60,35 +60,37 @@ module Competitions
       else
         [
           "Athena",
-          "Beginner Men",
-          "Beginner Women",
-          "Category 1/2",
-          "Category 3",
-          "Category 4",
           "Clydesdale",
-          "Junior Men",
-          "Junior Women",
+          "Elite Junior Men",
+          "Elite Junior Women",
+          "Junior Men 3/4/5",
+          "Junior Women 3/4/5",
           "Masters 35+ 1/2",
           "Masters 35+ 3",
           "Masters 35+ 4",
           "Masters 50+",
           "Masters 60+",
+          "Masters 70+",
           "Masters Women 35+ 1/2",
           "Masters Women 35+ 3",
-          "Masters Women 45+",
+          "Masters Women 50+",
+          "Men 1/2",
+          "Men 2/3",
+          "Men 4",
+          "Men 5",
           "Singlespeed Women",
           "Singlespeed",
           "Unicycle",
           "Women 1/2",
           "Women 3",
-          "Women 4"
+          "Women 4",
+          "Women 5"
         ]
       end
     end
 
-    def source_results_query(race)
-      super.
-      where("results.race_name" => category_names)
+    def categories_for(race)
+      result_categories_by_race[race.category]
     end
 
     def categories?
@@ -112,7 +114,7 @@ module Competitions
     end
 
     def set_notes
-      self.notes = %Q{ In accordance with the Geneva Conventions, the official teams of the Cross Crusade have entered into a State of War for domination of the realm. <a href="http://crosscrusade.com/series.html" class="obvious">rules of engagement</a>. }
+      self.notes = 'In accordance with the Geneva Conventions, the official teams of the Cross Crusade have entered into a State of War for domination of the realm. <a href="http://crosscrusade.com/series.html" class="obvious">rules of engagement</a>.'
     end
 
     def set_name

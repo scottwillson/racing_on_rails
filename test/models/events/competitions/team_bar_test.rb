@@ -57,7 +57,7 @@ module Competitions
       alice = FactoryGirl.create(:person, name: "Alice", team: gentle_lovers)
       matson = FactoryGirl.create(:person, name: "Matson", team: kona)
 
-      cross_crusade = Series.create!(name: "Cross Crusade")
+      cross_crusade = Series.create!(name: "River City Bicycles Cyclocross Crusade")
       barton = SingleDayEvent.create!(
         name: "Cross Crusade: Barton Park",
         discipline: "Cyclocross",

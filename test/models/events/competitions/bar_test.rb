@@ -36,7 +36,7 @@ module Competitions
       discipline = FactoryGirl.create(:discipline, name: "Criterium")
       discipline.bar_categories << senior_men
 
-      cross_crusade = Series.create!(name: "Cross Crusade", discipline: "Cyclocross")
+      cross_crusade = Series.create!(name: "River City Bicycles Cyclocross Crusade", discipline: "Cyclocross")
       barton = SingleDayEvent.create!(
         name: "Cross Crusade: Barton Park",
         discipline: "Cyclocross",

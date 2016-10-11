@@ -4,7 +4,7 @@ module Competitions
   # :stopdoc:
   class CrossCrusadeOverallTest < ActiveSupport::TestCase
     test "recalc with one event" do
-      series = Series.create!(name: "Cross Crusade")
+      series = Series.create!(name: "River City Bicycles Cyclocross Crusade")
       event = series.children.create!(date: Date.new(2017, 10, 7), name: "Cross Crusade #4")
 
       series.children.create!(date: Date.new(2017, 10, 14))
@@ -30,21 +30,20 @@ module Competitions
       masters_race.results.create!(place: 19, person: molly)
 
       # Previous year should be ignored
-      previous_event = Series.create!(name: "Cross Crusade").children.create!(date: Date.new(2006), name: "Cross Crusade #3")
+      previous_event = Series.create!(name: "River City Bicycles Cyclocross Crusade").children.create!(date: Date.new(2006), name: "Cross Crusade #3")
       previous_event.races.create!(category: category_1_2).results.create!(place: 6, person: weaver)
 
       # Following year should be ignored
-      following_event = Series.create!(name: "Cross Crusade").children.create!(date: Date.new(2018))
+      following_event = Series.create!(name: "River City Bicycles Cyclocross Crusade").children.create!(date: Date.new(2018))
       following_event.races.create!(category: category_1_2).results.create!(place: 10, person: weaver)
 
       CrossCrusadeOverall.calculate!(2017)
-      series = Series.find(series.id)
       overall = CrossCrusadeOverall.last
       assert_not_nil(overall, "Should add new Overall Competition child to parent Series")
       assert_equal 31, overall.races.size, "Overall races"
 
       assert_equal "Series Overall", overall.name, "Overall name"
-      assert_equal "Cross Crusade: Series Overall", overall.full_name, "Overall full name"
+      assert_equal "River City Bicycles Cyclocross Crusade: Series Overall", overall.full_name, "Overall full name"
       assert(!overall.notes.blank?, "Should have notes about rules")
       assert_equal_dates Date.new(2017, 10, 7), overall.date, "Overall series date"
       assert_equal_dates Date.new(2017, 10, 7), overall.start_date, "Overall series start date"
@@ -76,7 +75,7 @@ module Competitions
     end
 
     test "many results" do
-      series = Series.create!(name: "Cross Crusade")
+      series = Series.create!(name: "River City Bicycles Cyclocross Crusade")
       masters = Category.find_or_create_by(name: "Masters 35+ 1/2")
       category_1_2 = Category.find_or_create_by(name: "Category 1/2")
       singlespeed = Category.find_or_create_by(name: "Singlespeed")
