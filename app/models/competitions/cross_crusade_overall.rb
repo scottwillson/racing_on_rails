@@ -33,5 +33,9 @@ module Competitions
     def categories_for(race)
       result_categories_by_race[race.category]
     end
+
+    def categories_clause(race)
+      super.where.not("categories.name like ? or (ability_begin = 3 and ability_end = 5)", "%elite%")
+    end
   end
 end
