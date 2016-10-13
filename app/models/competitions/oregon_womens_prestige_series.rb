@@ -10,6 +10,14 @@ module Competitions
       [ "Women 1/2", "Women 3", "Women 4/5" ]
     end
 
+    def categories_for(race)
+      if race.name == "Women 1/2"
+        super << Category.where(name: "Pro/1/2 Women").first
+      else
+        super
+      end
+    end
+
     def source_events?
       true
     end
