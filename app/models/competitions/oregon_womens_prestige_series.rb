@@ -13,6 +13,8 @@ module Competitions
     def categories_for(race)
       if race.name == "Women 1/2"
         super << Category.where(name: "Pro/1/2 Women").first
+      elsif race.name == "Women 3"
+        super << Category.where(name: "Category 3 Women").first
       else
         super
       end
