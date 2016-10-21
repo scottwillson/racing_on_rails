@@ -93,6 +93,10 @@ module Competitions
       result_categories_by_race[race.category]
     end
 
+    def categories_clause(race)
+      Category.where("races.category_id" => categories_for(race)).where.not("categories.name like ? or (ability_begin = 3 and ability_end = 5)", "%elite%")
+    end
+
     def categories?
       false
     end
