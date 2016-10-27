@@ -37,3 +37,6 @@ SpaceInsideBrackets:
 
 StringLiterals:
   EnforcedStyle: double_quotes
+
+Style/VariableNumber:
+  Enabled: false

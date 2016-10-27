@@ -149,26 +149,26 @@ module Competitions
 
       # Weekly series overall should count, not individual race
       blind_date = WeeklySeries.create!(name: "Blind Date", discipline: "Cyclocross", date: Date.new(2004, 9, 1))
-      blind_date.
-      races.create!(category: men_a).
-      results.create!(
-        place: 15,
-        person: tonkin
-      )
+      blind_date
+        .races.create!(category: men_a)
+        .results.create!(
+          place: 15,
+          person: tonkin
+        )
 
-      blind_date.children.create!(date: Date.new(2004, 9, 1)).
-      races.create!(category: men_a).
-      results.create!(
-        place: 1,
-        person: tonkin
-      )
+      blind_date.children.create!(date: Date.new(2004, 9, 1))
+                .races.create!(category: men_a)
+                .results.create!(
+                  place: 1,
+                  person: tonkin
+                )
 
-      blind_date.children.create!(date: Date.new(2004, 9, 8)).
-      races.create!(category: men_a).
-      results.create!(
-        place: 3,
-        person: tonkin
-      )
+      blind_date.children.create!(date: Date.new(2004, 9, 8))
+                .races.create!(category: men_a)
+                .results.create!(
+                  place: 3,
+                  person: tonkin
+                )
 
       # Previous year
       event = FactoryGirl.build(:event, date: Date.new(2003))
@@ -200,12 +200,12 @@ module Competitions
       assert_equal(1, results[1].scores.size, "Weaver Men A Cyclocross BAR results scores")
 
       track_bar = Bar.find_by_name("2004 Track BAR")
-      assert_not_nil(track_bar, 'Track BAR')
+      assert_not_nil(track_bar, "Track BAR")
       sr_men_track = track_bar.races.detect { |r| r.category == senior_men }
-      assert_not_nil(sr_men_track, 'Senior Men Track BAR')
+      assert_not_nil(sr_men_track, "Senior Men Track BAR")
       tonkin_track_bar_result = sr_men_track.results.detect { |result| result.person == tonkin }
-      assert_not_nil(tonkin_track_bar_result, 'Tonkin Track BAR result')
-      assert_equal(12, tonkin_track_bar_result.points, 'Tonkin Track BAR points')
+      assert_not_nil(tonkin_track_bar_result, "Tonkin Track BAR result")
+      assert_equal(12, tonkin_track_bar_result.points, "Tonkin Track BAR points")
     end
 
     test "calculate team events" do
@@ -243,15 +243,6 @@ module Competitions
       sr_men_track = track_bar.races.detect { |r| r.category == senior_men }
       result = sr_men_track.results.detect { |r| r.person == person }
       assert_equal(10, result.points, "points")
-    end
-
-    test "count category 4 5 results" do
-      category_4_5_men = FactoryGirl.create(:category, name: "Category 4/5 Men")
-      category_4_men = FactoryGirl.create(:category, name: "Category 4 Men")
-      category_4_5_men.children << category_4_men
-
-      cats = Bar.new.categories_for(Race.new(category: category_4_men))
-      assert_same_elements [ category_4_5_men, category_4_men ], cats, "Should include Cat 4/5 in Cat 4 results"
     end
 
     test "masters 4 5" do

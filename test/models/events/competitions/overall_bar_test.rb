@@ -187,7 +187,7 @@ module Competitions
       assert_equal(Date.new(2004, 1, 1), overall_bar.date, "2004 Bar date")
       assert_equal("2004 Overall BAR", overall_bar.name, "2004 Bar name")
       assert_equal_dates(Time.zone.today, overall_bar.updated_at, "BAR last updated")
-      assert_equal(15, overall_bar.races.size, "2004 Overall Bar races")
+      assert_equal(17, overall_bar.races.size, "2004 Overall Bar races")
       assert_equal 6, overall_bar.children.size, "Overall BAR children"
 
       senior_men_overall_bar = overall_bar.races.detect do |b|
@@ -337,30 +337,27 @@ module Competitions
       assert_equal(2, cat_5_road_bar.results.size, "Cat 5 Overall BAR results")
 
       overall_bar = OverallBar.find_by_date(Date.new(current_year, 1, 1))
-      cat_4_5_overall_bar = overall_bar.races.detect { |race| race.category == category_4_5_men }
-      assert_equal(4, cat_4_5_overall_bar.results.size, "Cat 4/5 Overall BAR results")
+      cat_4_overall_bar = overall_bar.races.detect { |race| race.category == category_4_men }
+      assert_equal(4, cat_4_overall_bar.results.size, "Cat 4 Overall BAR results")
 
-      matson_result = cat_4_5_overall_bar.results.detect { |result| result.person == matson }
-      assert_equal("1", matson_result.place, "Matson Cat 4/5 Overall BAR place")
-      assert_equal(1497.0, matson_result.points, "Matson Cat 4/5 Overall BAR points")
-      assert_equal(5, matson_result.scores.size, "Matson Cat 4/5 Overall BAR 1st place scores")
+      matson_result = cat_4_overall_bar.results.detect { |result| result.person == matson }
+      assert_equal("1", matson_result.place, "Matson Cat 4 Overall BAR place")
+      assert_equal(1198.0, matson_result.points, "Matson Cat 4 Overall BAR points")
+      assert_equal(4, matson_result.scores.size, "Matson Cat 4 Overall BAR 1st place scores")
 
-      weaver_result = cat_4_5_overall_bar.results.detect { |result| result.person == weaver }
-      assert_equal("2", weaver_result.place, "Weaver Cat 4/5 Overall BAR place")
+      weaver_result = cat_4_overall_bar.results.detect { |result| result.person == weaver }
+      assert_equal("2", weaver_result.place, "Weaver Cat 4 Overall BAR place")
       assert_equal(300, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Road" }.points, "Road points")
-      assert_equal(300, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Time Trial" }.points, "Time Trial points")
       assert_equal(299, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Mountain Bike" }.points, "Mountain Bike points")
       assert_equal(298, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Track" }.points, "Track points")
       assert_equal(297, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Criterium" }.points, "Criterium points")
-      assert_equal(300 + 300 + 299 + 298 + 297, weaver_result.points, "Weaver Cat 4/5 Overall BAR points")
-      assert_equal(5, weaver_result.scores.size, "Weaver Cat 4/5 Overall BAR 1st place scores")
+      assert_equal(300 + 299 + 298 + 297, weaver_result.points, "Weaver Cat 4 Overall BAR points")
+      assert_equal(4, weaver_result.scores.size, "Weaver Cat 4 Overall BAR 1st place scores")
 
-      tonkin_result = cat_4_5_overall_bar.results.detect { |result| result.person == tonkin }
-      assert_equal("3", tonkin_result.place, "Tonkin Cat 4/5 Overall BAR place")
-      assert_equal(898.0, tonkin_result.points, "Tonkin Cat 4/5 Overall BAR points")
-      assert_equal(3, tonkin_result.scores.size, "Tonkin Cat 4/5 Overall BAR 1st place scores")
-      assert_equal(299, tonkin_result.scores.detect { |s| s.source_result.race.discipline == "Road" }.points, "Road points")
-      assert_equal(category_5_men, tonkin_result.scores.detect { |s| s.source_result.race.discipline == "Road" }.source_result.race.category, "Road category")
+      tonkin_result = cat_4_overall_bar.results.detect { |result| result.person == tonkin }
+      assert_equal("3", tonkin_result.place, "Tonkin Cat 4 Overall BAR place")
+      assert_equal(599.0, tonkin_result.points, "Tonkin Cat 4 Overall BAR points")
+      assert_equal(2, tonkin_result.scores.size, "Tonkin Cat 4 Overall BAR 1st place scores")
       assert_equal(300, tonkin_result.scores.detect { |s| s.source_result.race.discipline == "Track" }.points, "Track points")
       assert_equal(category_4_men, tonkin_result.scores.detect { |s| s.source_result.race.discipline == "Track" }.source_result.race.category, "Road category")
       assert_equal(299, tonkin_result.scores.detect { |s| s.source_result.race.discipline == "Criterium" }.points, "Criterium points")

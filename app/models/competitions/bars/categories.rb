@@ -21,13 +21,6 @@ module Competitions
           end
         end
 
-        # Cat 4/5 is a special case. Can't config in database because it's a circular relationship.
-        category_4_5_men = ::Category.find_by_name("Category 4/5 Men")
-        category_4_men = ::Category.find_by_name("Category 4 Men")
-        if category_4_5_men && category_4_men && race.category == category_4_men
-          cats << category_4_5_men
-        end
-
         cats
       end
     end
