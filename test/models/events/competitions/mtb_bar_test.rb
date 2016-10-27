@@ -247,8 +247,11 @@ module Competitions
       senior_men_3_overall_bar = overall_bar.races.detect { |race| race.name == "Category 3 Men" }
       assert_equal(2, senior_men_3_overall_bar.results.size, "Senior Men 3 Overall BAR results")
 
-      senior_men_4_5_overall_bar = overall_bar.races.detect { |race| race.name == "Category 4/5 Men" }
-      assert_equal(2, senior_men_4_5_overall_bar.results.size, "Senior Men 4/5 Overall BAR results")
+      senior_men_4_overall_bar = overall_bar.races.detect { |race| race.name == "Category 4 Men" }
+      assert_equal(2, senior_men_4_overall_bar.results.size, "Senior Men 4 Overall BAR results")
+
+      senior_men_5_overall_bar = overall_bar.races.detect { |race| race.name == "Category 5 Men" }
+      assert_equal(0, senior_men_5_overall_bar.results.size, "Senior Men 5 Overall BAR results")
 
       senior_women_overall_bar = overall_bar.races.detect { |race| race.name == "Senior Women" }
       assert_equal(4, senior_women_overall_bar.results.size, "Senior Women Overall BAR results")
@@ -291,7 +294,7 @@ module Competitions
       assert_equal(300, results[1].points, "Men 3 Overall BAR results points")
       assert_equal(1, results[1].scores.size, "Men 3 Overall BAR results scores")
 
-      results = senior_men_4_5_overall_bar.results.to_a.sort
+      results = senior_men_4_overall_bar.results.to_a.sort
       assert_equal weaver, results[0].person, "Men 4 Overall BAR results person"
       assert_equal("1", results[0].place, "Men 4 Overall BAR results place")
       assert_equal(600, results[0].points, "Men 4 Overall BAR results points")
