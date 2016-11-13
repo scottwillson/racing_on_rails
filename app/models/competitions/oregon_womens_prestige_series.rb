@@ -15,6 +15,8 @@ module Competitions
         super << Category.where(name: "Pro/1/2 Women").first
       elsif race.name == "Women 3"
         super << Category.where(name: "Category 3 Women").first
+      elsif race.name == "Women 4/5"
+        super << Category.where(name: "Category 4/5 Women").first
       else
         super
       end
