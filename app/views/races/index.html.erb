@@ -37,6 +37,7 @@
     <tr>
       <th>Date</th>
       <th>Event</th>
+      <th>Discipline</th>
     </tr>
   </thead>
   <tbody>
@@ -44,6 +45,7 @@
     <tr>
       <td class="date"><%= link_to race.event.date.to_s(:mdY), event_results_path(race.event, anchor: "race_#{race.id}") %></td>
       <td><%= link_to race.event.name, event_results_path(race.event, anchor: "race_#{race.id}") %></td>
+      <td><%= race.event.discipline %></td>
     </tr>
     <% end %>
   </tbody>
