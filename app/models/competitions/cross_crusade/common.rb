@@ -42,6 +42,10 @@ module Competitions
           [
             "Athena",
             "Clydesdale",
+            "Elite Junior Men",
+            "Elite Junior Women",
+            "Junior Men 3/4/5",
+            "Junior Women 3/4/5",
             "Junior Men 10-12",
             "Junior Men 13-14",
             "Junior Men 15-16",

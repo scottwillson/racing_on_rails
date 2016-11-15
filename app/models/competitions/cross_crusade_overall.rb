@@ -35,7 +35,20 @@ module Competitions
     end
 
     def categories_clause(race)
-      super.where.not("categories.name like ? or (ability_begin = 3 and ability_end = 5)", "%elite%")
+      if race.name["Elite"] || race.name["3/4/5"]
+        super
+      else
+        super.where.not("categories.name like ? or (ability_begin = 3 and ability_end = 5)", "%elite%")
+      end
+    end
+
+    def after_calculate
+      races.select { |race| race.name["Elite"] || race.name["3/4/5"] }
+           .each do |race|
+             race.update_attributes! bar_points: 0
+           end
+
+      super
     end
   end
 end
