@@ -5,7 +5,7 @@
 # cx_memberships? Offers cyclocross memberships
 # eager_match_on_license? Trust license number in results? Use it to match People instead of name.
 class RacingAssociation < ActiveRecord::Base
-  # TODO bmx_numbers? Shouldn't this be in disciplines?
+  # TODO bmx_numbers? Shouldn"t this be in disciplines?
 
   belongs_to :cat4_womens_race_series_category, class_name: "Category"
   belongs_to :default_region, class_name: "Region"
@@ -19,9 +19,7 @@ class RacingAssociation < ActiveRecord::Base
   serialize :sanctioning_organizations
 
   default_value_for :administrator_tabs do
-    Set.new([
-      :schedule, :first_aid, :people, :teams, :velodromes, :categories, :cat4_womens_race_series, :article_categories, :articles, :pages
-    ])
+    Set.new([ :schedule, :first_aid, :people, :teams, :velodromes, :categories, :cat4_womens_race_series, :article_categories, :articles, :pages ])
   end
 
   default_value_for :cat4_womens_race_series_category_id do
@@ -124,14 +122,12 @@ class RacingAssociation < ActiveRecord::Base
   end
 
   def cyclocross_season_end
-    Time.zone.local(Time.zone.now.year, 11, 30).end_of_day
+    Time.zone.local(Time.zone.now.year, 12, 14).end_of_day
   end
 
   def rental_numbers
     if rental_numbers_start && rental_numbers_end
       rental_numbers_start..rental_numbers_end
-    else
-      nil
     end
   end
 
@@ -151,9 +147,9 @@ class RacingAssociation < ActiveRecord::Base
 
   def priority_country_options
     if country_code == "US"
-      [ ['United States', 'US'], ['Canada', 'CA'] ]
+      [ [ "United States", "US" ], [ "Canada", "CA" ] ]
     else
-      [ ['Canada', 'CA'], ['United States', 'US'] ]
+      [ [ "Canada", "CA" ], [ "United States", "US" ] ]
     end
   end
 
