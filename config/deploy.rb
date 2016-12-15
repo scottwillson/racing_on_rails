@@ -1,10 +1,10 @@
 lock "3.6.1"
 
-set :linked_dirs, %w{log public/assets public/system public/uploads tmp/pids tmp/cache tmp/sockets vendor/bundle }
-set :linked_files, %w{config/database.yml config/newrelic.yml config/secrets.yml}
+set :linked_dirs, %w( log public/assets public/system public/uploads tmp/pids tmp/cache tmp/sockets vendor/bundle )
+set :linked_files, %w( config/database.yml config/newrelic.yml config/secrets.yml )
 
 set :bundle_jobs, 4
-set :bundle_without, %w{development test}.join(' ')
+set :bundle_without, %w( development test )
 
 set :puma_preload_app, false
 set :puma_threads, [ 8, 32 ]
@@ -54,7 +54,7 @@ namespace :deploy do
 
   task :cache_error_pages do
     on roles :app do
-      %w{ 404 422 500 503 }.each do |status_code|
+      %w( 404 422 500 503 ).each do |status_code|
         execute :curl, "--silent --fail http://#{fetch :app_hostname}/#{status_code} -o #{release_path}/public/#{status_code}.html"
       end
     end
@@ -63,12 +63,12 @@ end
 
 task :compress_assets_7z do
   on roles(:app) do
-    assets_path = release_path.join('public', fetch(:assets_prefix))
-    execute "find -L #{assets_path} \\( -name *.js -o -name *.css -o -name *.ico \\) -exec bash -c '[ ! -f {}.gz ] && 7z a -tgzip -mx=9 {}.gz {}' \\; "
+    assets_path = release_path.join("public", fetch(:assets_prefix))
+    execute "find -L #{assets_path} \\( -name *.js -o -name *.css -o -name *.ico \\) -exec bash -c '[ ! -f {}.gz ] && 7z a -tgzip -mx=9 {}.gz {}' \\;"
   end
 end
 
-after 'deploy:normalize_assets', 'compress_assets_7z'
+after "deploy:normalize_assets", "compress_assets_7z"
 before "deploy:updated", "deploy:local_code"
 before "deploy:updated", "deploy:registration_engine"
 after "deploy:finished", "deploy:cache_error_pages"
