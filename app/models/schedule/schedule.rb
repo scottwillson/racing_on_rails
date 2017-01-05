@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Schedule
   # Single year's event schedule. Hierarchical model or Arrays: Schedule --> Month --> Week --> Day --> SingleDayEvent
   class Schedule
@@ -52,6 +54,7 @@ module Schedule
     end
 
     def self.has_event?(row)
+
       row[:name].present? && row[:date].present? && (row[:notes].blank? || !row[:notes]["Not on calendar"])
     end
 

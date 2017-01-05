@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Schedule
   class ColumnMapper < Tabular::ColumnMapper
     MAP = {
@@ -16,7 +18,7 @@ module Schedule
       where: :city,
       flyer_approved?: :flyer_approved,
       velodrome: :velodrome_name
-    }
+    }.freeze
 
     def map(key)
       return nil if is_blank?(key)
