@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Competitions
@@ -26,7 +28,7 @@ module Competitions
       hot_spots.results.create!(place: "1", person: hot_spot_winner)
       hot_spots.results.create!(place: "2", person: hot_spot_only)
 
-      DirtyCirclesOverall.calculate!
+      DirtyCirclesOverall.calculate! 2016
 
       overall = DirtyCirclesOverall.first
       results = overall.races.where(category: category).first.results
