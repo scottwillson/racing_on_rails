@@ -1,0 +1,7 @@
+#! /usr/bin/env ruby
+
+%w{ aba atra mbra obra wsba }.each do |association|
+  puts "Restart #{association}"
+  `script/local #{association}`
+  puts `cap production puma:restart`
+end
