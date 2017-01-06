@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Card < Prawn::Document
   def initialize
     super(
@@ -8,7 +10,7 @@ class Card < Prawn::Document
 
   def to_pdf(people, index = 0)
     Array.wrap(people).each do |person|
-      if index > 0 && (index % 15 == 0)
+      if index.positive? && (index % 15).zero?
         start_new_page
       end
 
@@ -45,7 +47,7 @@ class Card < Prawn::Document
       draw_text "1", at: [ card_left_side + 171, card_top - 44 ]
       draw_text "7", at: [ card_left_side + 171, card_top - 61 ]
 
-      index = index + 1
+      index += 1
     end
 
     render
