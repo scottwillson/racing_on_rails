@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
@@ -18,7 +20,7 @@ class ResultsTest < AcceptanceTest
       visit "/admin/events"
     end
 
-    if Time.zone.today.month == 1 && Time.zone.today.day < 6
+    if Time.zone.today.month == 1 && Time.zone.today.day < 4
       visit "/admin/events?year=#{Time.zone.today.year - 1}"
     end
 
