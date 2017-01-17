@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Bike racing team of People
 #
 # Like People, Teams may have many alternate names. These are modelled as Aliases. Historical names from previous years are stored as Names.
@@ -22,31 +24,20 @@ class Team < ActiveRecord::Base
   has_many :results
 
   def self.find_by_name_or_alias(name)
-    team = Team.find_by_name(name)
-    if team.nil?
-      team_alias = Alias.where(name: name, aliasable_type: "Team").first
-      if team_alias
-        team = team_alias.team
-      end
-    end
-    team
+    Team.find_by_name(name) || Alias.where(name: name, aliasable_type: "Team").first&.team
   end
 
   def self.find_by_name_or_alias_or_create(name)
-    team = find_by_name_or_alias(name)
-    if team.nil?
-      team = Team.create(name: name)
-    end
-    team
+    find_by_name_or_alias(name) || Team.create(name: name)
   end
 
   def self.name_like(name)
     name_like = "%#{name}%"
-    Team.
-      where('teams.name like ? or aliases.name like ?', name_like, name_like).
-      includes(:aliases).
-      references(:aliases).
-      order("teams.name")
+    Team
+      .where("teams.name like ? or aliases.name like ?", name_like, name_like)
+      .includes(:aliases)
+      .references(:aliases)
+      .order("teams.name")
   end
 
   def teams_with_same_name
@@ -71,16 +62,16 @@ class Team < ActiveRecord::Base
 
   # If name changes to match existing alias, destroy the alias
   def destroy_shadowed_aliases
-    Alias.destroy_all(['name = ?', name])
+    Alias.destroy_all name: name
   end
 
   def add_alias_for_old_name
     if !new_record? &&
-      name_was.present? &&
-      name.present? &&
-      name_was.casecmp(name) != 0 &&
-      !Alias.exists?(['name = ? and aliasable_id = ? and aliasable_type = ?', name_was, id, "Team"]) &&
-      !Team.exists?(["name = ?", name_was])
+       name_was.present? &&
+       name.present? &&
+       name_was.casecmp(name) != 0 &&
+       !Alias.exists?(name: name_was, aliasable_id: id, aliasable_type: "Team") &&
+       !Team.exists?(name: name_was)
 
       new_alias = Alias.create!(name: name_was, team: self)
       unless new_alias.save
@@ -90,15 +81,11 @@ class Team < ActiveRecord::Base
     end
   end
 
-  def has_alias?(alias_name)
-    aliases.detect { |a| a.name.casecmp(alias_name) == 0 }
-  end
-
   # Moves another Team's aliases, results, and people to this Team,
   # and delete the other Team.
   # Also adds the other Team's name as a new alias
   def merge(team)
-    raise(ArgumentError, 'Cannot merge nil team') unless team
+    raise(ArgumentError, "Cannot merge nil team") unless team
     return false if team == self
 
     Team.transaction do
@@ -106,9 +93,6 @@ class Team < ActiveRecord::Base
       team.reload
       results true
       team.results true
-
-      related_events = (results.map(&:event) + team.results.map(&:event) + events + team.events).compact.uniq
-
       team.create_team_for_historical_results!
       team.results true
 
@@ -155,7 +139,7 @@ class Team < ActiveRecord::Base
     end
   end
 
-  def member_in_year?(date = Time.zone.today)
+  def member_in_year?(_date)
     member
   end
 
