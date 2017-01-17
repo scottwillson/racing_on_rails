@@ -1,4 +1,5 @@
 # coding: utf-8
+# frozen_string_literal: true
 
 require File.expand_path("../../../test_helper", __FILE__)
 
@@ -13,7 +14,7 @@ module Teams
       assert_equal "Twin Peaks",     team.name(2009)
       assert_equal "Twin Peaks",     team.name(2010)
       assert_equal "Team Tecate",    team.name(2011)
-      assert_equal "Tecate-Una Mas",    team.name(2012)
+      assert_equal "Tecate-Una Mas", team.name(2012)
       assert_equal "Tecate-Una Mas", team.name(Time.zone.today)
       assert_equal "Tecate-Una Mas", team.name(Time.zone.today.next_year)
       assert_equal "Tecate-Una Mas", team.name
@@ -107,7 +108,7 @@ module Teams
       team.names.create!(name: "Mapei", year: 2001)
       team.names.create!(name: "Mapei-Clas", year: 2002)
       team.names.create!(name: "Quick Step", year: 2003)
-      assert_equal(3, team.names.size, "Historical names. #{team.names.map {|n| n.name}.join(', ')}")
+      assert_equal(3, team.names.size, "Historical names. #{team.names.map(&:name).join(', ')}")
       assert_equal("Mapei", team.name(2000), "Historical name 2000")
       assert_equal("Mapei", team.name(2001), "Historical name 2001")
       assert_equal("Mapei-Clas", team.name(2002), "Historical name 2002")
@@ -191,45 +192,45 @@ module Teams
     test "create and override alias" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
-      assert_not_nil(Team.find_by_name('Vanilla'), 'Vanilla should exist')
-      assert_not_nil(Alias.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles alias should exist')
-      assert_nil(Team.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles should not exist')
+      assert_not_nil(Team.find_by_name("Vanilla"), "Vanilla should exist")
+      assert_not_nil(Alias.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles alias should exist")
+      assert_nil(Team.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles should not exist")
 
-      dupe = Team.create!(name: 'Vanilla Bicycles')
-      assert(dupe.valid?, 'Dupe Vanilla should be valid')
+      dupe = Team.create!(name: "Vanilla Bicycles")
+      assert(dupe.valid?, "Dupe Vanilla should be valid")
 
-      assert_not_nil(Team.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles should exist')
-      assert_not_nil(Team.find_by_name('Vanilla'), 'Vanilla should exist')
-      assert_nil(Alias.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles alias should not exist')
-      assert_nil(Alias.find_by_name('Vanilla'), 'Vanilla alias should not exist')
+      assert_not_nil(Team.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles should exist")
+      assert_not_nil(Team.find_by_name("Vanilla"), "Vanilla should exist")
+      assert_nil(Alias.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles alias should not exist")
+      assert_nil(Alias.find_by_name("Vanilla"), "Vanilla alias should not exist")
     end
 
     test "update to alias" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
-      assert_not_nil(Team.find_by_name('Vanilla'), 'Vanilla should exist')
-      assert_not_nil(Alias.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles alias should exist')
-      assert_nil(Team.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles should not exist')
+      assert_not_nil(Team.find_by_name("Vanilla"), "Vanilla should exist")
+      assert_not_nil(Alias.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles alias should exist")
+      assert_nil(Team.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles should not exist")
 
-      vanilla.name = 'Vanilla Bicycles'
+      vanilla.name = "Vanilla Bicycles"
       vanilla.save!
-      assert(vanilla.valid?, 'Renamed Vanilla should be valid')
+      assert(vanilla.valid?, "Renamed Vanilla should be valid")
 
-      assert_not_nil(Team.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles should exist')
-      assert_nil(Team.find_by_name('Vanilla'), 'Vanilla should not exist')
-      assert_nil(Alias.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles alias should not exist')
-      assert_not_nil(Alias.find_by_name('Vanilla'), 'Vanilla alias should exist')
+      assert_not_nil(Team.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles should exist")
+      assert_nil(Team.find_by_name("Vanilla"), "Vanilla should not exist")
+      assert_nil(Alias.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles alias should not exist")
+      assert_not_nil(Alias.find_by_name("Vanilla"), "Vanilla alias should exist")
     end
 
     test "update name different case" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
-      assert_equal('Vanilla', vanilla.name, 'Name before update')
-      vanilla.name = 'vanilla'
+      assert_equal("Vanilla", vanilla.name, "Name before update")
+      vanilla.name = "vanilla"
       vanilla.save
-      assert(vanilla.errors.empty?, 'Should have no errors after save')
+      assert(vanilla.errors.empty?, "Should have no errors after save")
       vanilla.reload
-      assert_equal('vanilla', vanilla.name, 'Name after update')
+      assert_equal("vanilla", vanilla.name, "Name after update")
     end
   end
 end
