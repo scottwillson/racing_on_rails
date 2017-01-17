@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 module Competitions
   # See Bar class.
   class OverallBar < Competition
     include OverallBars::Categories
-    # include OverallBars::Points
     include OverallBars::Races
 
     def create_children
