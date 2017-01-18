@@ -1,4 +1,5 @@
-# TODO Delete
+# frozen_string_literal: true
+
 module Competitions
   module OverallBars
     module Categories
