@@ -23,6 +23,16 @@ module Competitions
           end
         end
 
+        if race.category.name == "Category 2/3 Men" && race.discipline == "Cyclocross"
+          cats << ::Category.find_by_name("Category 3 Men")
+          cats << ::Category.find_by_name("Men 3")
+        end
+
+        if race.category.name == "Category 1/2 Men" && race.discipline == "Cyclocross"
+          cats.delete ::Category.find_by_name("Category 3 Men")
+          cats.delete ::Category.find_by_name("Men 3")
+        end
+
         cats
       end
     end

@@ -45,6 +45,14 @@ module Competitions
           end
         end
 
+        if race.category.name == "Category 3 Men"
+          categories << ::Category.find_by_name("Category 2/3 Men")
+        end
+
+        if race.category.name == "Senior Men"
+          categories.delete ::Category.find_by_name("Category 2/3 Men")
+        end
+
         categories
       end
 
