@@ -67,7 +67,7 @@ class Race < ActiveRecord::Base
   end
 
   def discipline
-    self.event.discipline if event
+    event&.discipline
   end
 
   def category_name
@@ -79,7 +79,7 @@ class Race < ActiveRecord::Base
   end
 
   def name
-    self.category_name
+    category_name
   end
 
   # Combine with event name
