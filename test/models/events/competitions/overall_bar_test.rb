@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # There is duplication between BAR tests, but refactring the tests should wait until the Competition refactoring is complete
 
 require File.expand_path("../../../../test_helper", __FILE__)
@@ -187,7 +189,7 @@ module Competitions
       assert_equal(Date.new(2004, 1, 1), overall_bar.date, "2004 Bar date")
       assert_equal("2004 Overall BAR", overall_bar.name, "2004 Bar name")
       assert_equal_dates(Time.zone.today, overall_bar.updated_at, "BAR last updated")
-      assert_equal(17, overall_bar.races.size, "2004 Overall Bar races")
+      assert_equal(18, overall_bar.races.size, "2004 Overall Bar races")
       assert_equal 6, overall_bar.children.size, "Overall BAR children"
 
       senior_men_overall_bar = overall_bar.races.detect do |b|
