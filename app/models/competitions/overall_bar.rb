@@ -77,6 +77,7 @@ module Competitions
 
     def category_names
       [
+        "Athena",
         "Clydesdale",
         "Category 3 Men",
         "Category 3 Women",
