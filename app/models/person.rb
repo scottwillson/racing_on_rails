@@ -169,14 +169,14 @@ class Person < ActiveRecord::Base
     if value.nil?
       self[:gender] = nil
     else
-      value.upcase!
+      value = value.upcase
       case value
-      when 'M', 'MALE', 'BOY'
-        self[:gender] = 'M'
-      when 'F', 'FEMALE', 'GIRL'
-        self[:gender] = 'F'
+      when "M", "MALE", "BOY"
+        self[:gender] = "M"
+      when "F", "FEMALE", "GIRL"
+        self[:gender] = "F"
       else
-        self[:gender] = 'M'
+        self[:gender] = "M"
       end
     end
   end
