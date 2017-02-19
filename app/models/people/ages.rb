@@ -5,10 +5,10 @@ module People
     def date_of_birth=(value)
       if value.is_a?(String)
         if value[%r{^\d\d/\d\d/\d\d$}]
-          value.gsub! %r{(\d+)/(\d+)/(\d+)}, '19\3/\1/\2'
+          value = value.gsub %r{(\d+)/(\d+)/(\d+)}, '19\3/\1/\2'
         else
-          value.gsub!(/^00/, '19')
-          value.gsub!(/^(\d+\/\d+\/)(\d\d)$/, '\119\2')
+          value = value.gsub(/^00/, '19')
+          value = value.gsub(/^(\d+\/\d+\/)(\d\d)$/, '\119\2')
         end
       end
 
