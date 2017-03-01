@@ -7,8 +7,9 @@ class ReplaceAdminRoleWithFlag < ActiveRecord::Migration
   end
 
   def up
-    add_column :people, :administrator, :boolean, default: false, null: false
+    add_column(:people, :administrator, :boolean, default: false, null: false) rescue nil
 
+    Person.reset_column_information
     transaction do
       Person.includes(:roles).where("roles.name" => "Administrator").each do |person|
         person.update! administrator: true
@@ -31,6 +32,7 @@ class ReplaceAdminRoleWithFlag < ActiveRecord::Migration
       t.integer "person_id", limit: 4, null: false
     end
 
+    Person.reset_column_information
     transaction do
       administrator = Role.create!(name: "Administrator")
       Person.where(administrator: true).each do |person|
