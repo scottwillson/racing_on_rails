@@ -123,7 +123,6 @@ module People
             names << other_person.names
             race_numbers << other_person.race_numbers
             results << other_person.results
-            roles << (other_person.roles - roles)
 
             begin
               versions << other_person.versions

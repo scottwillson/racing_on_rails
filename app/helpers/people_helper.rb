@@ -1,7 +1,7 @@
 module PeopleHelper
   # Is current Person an administrator?
   def administrator?
-    current_person.try :administrator?
+    current_person&.administrator?
   end
 
   # Is current Person a promoter?

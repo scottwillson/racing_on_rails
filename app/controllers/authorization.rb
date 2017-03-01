@@ -98,7 +98,7 @@ module Authorization
   end
 
   def administrator?
-    current_person.try :administrator?
+    current_person&.administrator?
   end
 
   def official?

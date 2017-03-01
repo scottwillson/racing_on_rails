@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160905152543) do
+ActiveRecord::Schema.define(version: 20170228153822) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -570,6 +570,7 @@ ActiveRecord::Schema.define(version: 20160905152543) do
     t.integer  "non_member_result_id",                  limit: 4
     t.string   "name",                                  limit: 255,   default: "",    null: false
     t.boolean  "other_people_with_same_name",                         default: false, null: false
+    t.boolean  "administrator",                                       default: false, null: false
   end
 
   add_index "people", ["crypted_password"], name: "index_people_on_crypted_password", using: :btree
@@ -596,14 +597,6 @@ ActiveRecord::Schema.define(version: 20160905152543) do
   add_index "people_people", ["editor_id", "person_id"], name: "index_people_people_on_editor_id_and_person_id", unique: true, using: :btree
   add_index "people_people", ["editor_id"], name: "index_people_people_on_editor_id", using: :btree
   add_index "people_people", ["person_id"], name: "index_people_people_on_person_id", using: :btree
-
-  create_table "people_roles", id: false, force: :cascade do |t|
-    t.integer "role_id",   limit: 4, null: false
-    t.integer "person_id", limit: 4, null: false
-  end
-
-  add_index "people_roles", ["person_id"], name: "index_people_roles_on_person_id", using: :btree
-  add_index "people_roles", ["role_id"], name: "role_id", using: :btree
 
   create_table "photos", force: :cascade do |t|
     t.text     "caption",    limit: 65535
@@ -880,12 +873,6 @@ ActiveRecord::Schema.define(version: 20160905152543) do
   add_index "results", ["updated_at"], name: "index_results_on_updated_at", using: :btree
   add_index "results", ["year"], name: "index_results_on_year", using: :btree
 
-  create_table "roles", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "scores", force: :cascade do |t|
     t.integer  "competition_result_id", limit: 4
     t.integer  "source_result_id",      limit: 4
@@ -983,8 +970,6 @@ ActiveRecord::Schema.define(version: 20160905152543) do
   add_foreign_key "people", "teams"
   add_foreign_key "people_people", "people", column: "editor_id", name: "people_people_ibfk_1", on_delete: :cascade
   add_foreign_key "people_people", "people", name: "people_people_ibfk_2", on_delete: :cascade
-  add_foreign_key "people_roles", "people", name: "people_roles_person_id", on_delete: :cascade
-  add_foreign_key "people_roles", "roles", name: "roles_users_role_id_fk", on_delete: :cascade
   add_foreign_key "posts", "mailing_lists", name: "posts_mailing_list_id_fk"
   add_foreign_key "race_numbers", "disciplines", name: "race_numbers_discipline_id_fk"
   add_foreign_key "race_numbers", "number_issuers", name: "race_numbers_number_issuer_id_fk"
