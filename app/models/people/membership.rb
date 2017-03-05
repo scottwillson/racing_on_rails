@@ -85,7 +85,7 @@ module People
       if member_from && member_from < YEAR_1900
         self.member_from = member_from_was
       end
-      
+
       self.member_to = member_to_was if member_to && member_to < YEAR_1900
     end
 

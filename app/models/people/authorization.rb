@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module People
   module Authorization
     extend ActiveSupport::Concern

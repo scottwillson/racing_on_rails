@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module People
   module Ages
     extend ActiveSupport::Concern
@@ -7,28 +8,24 @@ module People
         if value[%r{^\d\d/\d\d/\d\d$}]
           value = value.gsub %r{(\d+)/(\d+)/(\d+)}, '19\3/\1/\2'
         else
-          value = value.gsub(/^00/, '19')
+          value = value.gsub(/^00/, "19")
           value = value.gsub(/^(\d+\/\d+\/)(\d\d)$/, '\119\2')
         end
       end
 
       if value && value.to_s.size < 5
         int_value = value.to_i
-        if int_value > 10 && int_value <= 99
-          value = "01/01/19#{value}"
-        end
-        if int_value > 0 && int_value <= 10
-          value = "01/01/20#{value}"
-        end
+        value = "01/01/19#{value}" if int_value > 10 && int_value <= 99
+        value = "01/01/20#{value}" if int_value > 0 && int_value <= 10
       end
 
       # Don't overwrite month and day if we're just passing in the same year
       if self[:date_of_birth] && value
-        if value.is_a?(String)
-          new_date = Date.parse(value)
-        else
-          new_date = value
-        end
+        new_date = if value.is_a?(String)
+                     Date.parse(value)
+                   else
+                     value
+                   end
         if new_date.year == self[:date_of_birth].year && new_date.month == 1 && new_date.day == 1
           return
         end
@@ -53,16 +50,12 @@ module People
 
     # Under 18 years old
     def junior?
-      if date_of_birth
-        date_of_birth >= Date.new(18.years.ago.year, 1, 1)
-      end
+      date_of_birth >= Date.new(18.years.ago.year, 1, 1) if date_of_birth
     end
 
     # Over 18 years old
     def senior?
-      if date_of_birth
-        date_of_birth < Date.new(18.years.ago.year, 1, 1)
-      end
+      date_of_birth < Date.new(18.years.ago.year, 1, 1) if date_of_birth
     end
 
     def female?
@@ -99,10 +92,7 @@ module People
     end
 
     def cyclocross_racing_age
-      if date_of_birth
-        racing_age + 1
-      end
+      racing_age + 1 if date_of_birth
     end
-
   end
 end

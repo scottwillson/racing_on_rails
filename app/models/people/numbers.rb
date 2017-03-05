@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module People
   module Numbers
     extend ActiveSupport::Concern
@@ -6,14 +7,14 @@ module People
       has_many :race_numbers, -> { includes(:discipline, :number_issuer) }, dependent: :destroy
 
       accepts_nested_attributes_for :race_numbers,
-        reject_if: proc { |attributes| !attributes.has_key?(:value) || attributes[:value].blank? }
+                                    reject_if: proc { |attributes| !attributes.key?(:value) || attributes[:value].blank? }
 
       def self.find_all_by_number(number)
-        RaceNumber.
-          includes(:person).
-          where(year: [ RacingAssociation.current.year, RacingAssociation.current.next_year ]).
-          where(value: number).
-          map(&:person)
+        RaceNumber
+          .includes(:person)
+          .where(year: [ RacingAssociation.current.year, RacingAssociation.current.next_year ])
+          .where(value: number)
+          .map(&:person)
       end
     end
 
@@ -26,8 +27,8 @@ module People
       end
       number = race_numbers(reload).detect do |race_number|
         race_number.year == year &&
-        race_number.discipline_id == RaceNumber.discipline_id(discipline_param) &&
-        race_number.number_issuer.name == RacingAssociation.current.short_name
+          race_number.discipline_id == RaceNumber.discipline_id(discipline_param) &&
+          race_number.number_issuer.name == RacingAssociation.current.short_name
       end
       number.try :value
     end
@@ -38,12 +39,12 @@ module People
     def add_number(value, discipline, issuer = nil, _year = year)
       return false if discipline.blank? && value.blank?
 
-      if discipline.nil? || !discipline.numbers?
-        mapped_discipline = Discipline[:road]
-      else
-        mapped_discipline = discipline
-      end
-      issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name) if issuer.nil?
+      mapped_discipline = if discipline.nil? || !discipline.numbers?
+                            Discipline[:road]
+                          else
+                            discipline
+                          end
+      issuer = NumberIssuer.find_by(name: RacingAssociation.current.short_name) if issuer.nil?
       _year ||= RacingAssociation.current.year
 
       if value.present?
@@ -53,9 +54,7 @@ module People
           create_number value, mapped_discipline, issuer, updated_by, _year
         end
       else
-        if !new_record?
-          destroy_number discipline, issuer, _year
-        end
+        destroy_number discipline, issuer, _year unless new_record?
       end
     end
 
@@ -93,9 +92,9 @@ module People
       if new_record?
         race_numbers.any? do |n|
           n.value == value &&
-          n.discipline == discipline &&
-          n.number_issuer == issuer &&
-          n.year == year
+            n.discipline == discipline &&
+            n.number_issuer == issuer &&
+            n.year == year
         end
       else
         RaceNumber.where(

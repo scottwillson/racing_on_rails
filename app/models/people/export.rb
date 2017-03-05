@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module People
   module Export
     extend ActiveSupport::Concern
@@ -5,14 +6,14 @@ module People
     included do
       # Flattened, straight SQL dump for export to Excel, FinishLynx, or SportsBase.
       def self.find_all_for_export(date = Time.zone.today, include_people = "members_only")
-        association_number_issuer_id = NumberIssuer.find_by_name(RacingAssociation.current.short_name).id
+        association_number_issuer_id = NumberIssuer.find_by(name: RacingAssociation.current.short_name).id
         if include_people == "members_only"
           where_clause = "WHERE (member_to >= '#{date}')"
         elsif include_people == "print_cards"
           where_clause = "WHERE  (member_to >= '#{date}') and print_card is true"
         end
 
-        people = Person.connection.select_all(%Q{
+        people = Person.connection.select_all(%{
           SELECT people.id, license, first_name, last_name, teams.name as team_name, team_id, people.notes,
                  member_from, member_to, member_usac_to,
                  (member_from IS NOT NULL AND member_to IS NOT NULL AND member_from <= NOW() AND member_to >= NOW()) as member,

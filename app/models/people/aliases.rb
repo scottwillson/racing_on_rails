@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module People
   module Aliases
     extend ActiveSupport::Concern
@@ -11,7 +12,7 @@ module People
 
     # If name changes to match existing alias, destroy the alias
     def destroy_shadowed_aliases
-      Alias.destroy_all(['name = ?', name]) if first_name_changed? || last_name_changed?
+      Alias.destroy_all(["name = ?", name]) if first_name_changed? || last_name_changed?
     end
 
     def add_alias_for_old_name
@@ -19,7 +20,7 @@ module People
          name_was.present? &&
          name.present? &&
          name_was.casecmp(name) != 0 &&
-         !Alias.exists?(['name = ? and aliasable_id = ? and aliasable_type = ?', name_was, id, "Person"]) &&
+         !Alias.exists?(["name = ? and aliasable_id = ? and aliasable_type = ?", name_was, id, "Person"]) &&
          !Person.exists?(["name = ?", name_was])
 
         new_alias = Alias.new(name: name_was, person: self)

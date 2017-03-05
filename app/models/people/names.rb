@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module People
   module Names
     extend ActiveSupport::Concern
@@ -15,7 +16,7 @@ module People
 
         name = args.join(" ") if options.empty?
 
-        name = name || options[:name]
+        name ||= options[:name]
         first_name = options[:first_name]
         last_name = options[:last_name]
 
@@ -35,12 +36,12 @@ module People
         return Person.none if name.blank?
 
         name_like = "%#{name.strip}%"
-        Person.
-          where("people.name like ? or aliases.name like ?", name_like, name_like).
-          includes(:team).
-          includes(:aliases).
-          references(:aliases).
-          order('last_name, first_name')
+        Person
+          .where("people.name like ? or aliases.name like ?", name_like, name_like)
+          .includes(:team)
+          .includes(:aliases)
+          .references(:aliases)
+          .order("last_name, first_name")
       end
 
       def self.find_by_name(name)
@@ -53,7 +54,7 @@ module People
     end
 
     def split_name(value)
-      if value.include?(',')
+      if value.include?(",")
         split_name_by(value, ",").reverse
       else
         split_name_by value, " "
@@ -61,10 +62,10 @@ module People
     end
 
     def split_name_by(value, delimiter)
-      parts = value.
-        split(delimiter).
-        map(&:strip).
-        compact
+      parts = value
+              .split(delimiter)
+              .map(&:strip)
+              .compact
 
       case parts.size
       when 0
@@ -89,7 +90,7 @@ module People
       return [] if name.blank?
 
       Person.where.not(id: id).where("soundex(name) = soundex(?)", name.strip) +
-      Person.where(first_name: last_name).where(last_name: first_name)
+        Person.where(first_name: last_name).where(last_name: first_name)
     end
 
     # Name on year. Could be rolled into Nameable?
@@ -100,12 +101,12 @@ module People
 
     def first_name(date_or_year = nil)
       year = parse_year(date_or_year)
-      name_record_for_year(year).try(:first_name) || read_attribute(:first_name)
+      name_record_for_year(year).try(:first_name) || self[:first_name]
     end
 
     def last_name(date_or_year = nil)
       year = parse_year(date_or_year)
-      name_record_for_year(year).try(:last_name) || read_attribute(:last_name)
+      name_record_for_year(year).try(:last_name) || self[:last_name]
     end
 
     def email_with_name
@@ -139,7 +140,7 @@ module People
     # Name. If +name+ is blank, returns email and phone
     def name_or_contact_info
       if name.blank?
-        [email, home_phone].join(', ')
+        [email, home_phone].join(", ")
       else
         name
       end
@@ -159,8 +160,8 @@ module People
     end
 
     def set_name_blank
-      self[:first_name] = ''
-      self[:last_name] = ''
+      self[:first_name] = ""
+      self[:last_name] = ""
       name
     end
 
@@ -173,6 +174,5 @@ module People
       self[:name] = Person.full_name(first_name, value).try :strip
       self[:last_name] = value.try :strip
     end
-
   end
 end

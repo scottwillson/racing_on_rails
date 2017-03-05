@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module People
   # 'club' ...this is often team in USAC download. How handle? Use club for team if no team? and if both, ignore club?
   #  'NCCA club' ...can have this in addition to club and team. should team be many to many?
@@ -57,18 +58,17 @@ module People
       "card"                                   => :print_card,
       "sex"                                    => :gender,
       "What is your occupation? (optional)"    => :occupation,
-      "Suspension"                             => :status,   # e.g. "SUSPENDED - Contact USA Cycling"
+      "Suspension"                             => :status, # e.g. "SUSPENDED - Contact USA Cycling"
       "Interests"                              => :notes,
       "Donation"                               => :notes,
       "Singlespeed"                            => :notes,
       "Tandem"                                 => :notes
-    }
+    }.freeze
 
     def map(key)
       return nil if is_blank?(key) || !person_instance.respond_to?(key)
       MAP[key] || symbolize(key)
     end
-
 
     private
 
