@@ -7,7 +7,7 @@ gem "acts_as_list"
 gem "acts_as_tree", git: "https://github.com/amerine/acts_as_tree.git"
 gem "Ascii85", require: "ascii85"
 gem "authlogic"
-gem "axlsx", "2.1.0.pre"
+gem "axlsx", git: "https://github.com/randym/axlsx.git"
 gem "axlsx_rails", ">=0.4"
 gem "bcrypt"
 gem "bootstrap-datepicker-rails"
@@ -44,6 +44,8 @@ gem "ri_cal"
 gem "roo", "= 2.1.1"
 gem "roo-xls", git: "https://github.com/scottwillson/roo-xls.git", branch: "preserve-fractional-seconds"
 gem "ruby-ole"
+# Security update
+gem "rubyzip", ">= 1.2.1"
 gem "sass-rails", "~> 5"
 gem "scrypt"
 gem "spreadsheet"
@@ -78,15 +80,15 @@ group :development, :test do
 end
 
 group :test do
-  gem "codeclimate-test-reporter", require: nil
-  gem "minitest", "~> 5.4"
   gem "capybara"
-  gem "poltergeist"
-  gem "selenium-webdriver"
+  gem "codeclimate-test-reporter", require: nil
   gem "database_cleaner"
   gem "factory_girl_rails"
   gem "fakeweb"
+  gem "minitest", "~> 5.4"
   gem "mocha", require: false
+  gem "poltergeist"
+  gem "selenium-webdriver"
   gem "timecop"
 end
 
