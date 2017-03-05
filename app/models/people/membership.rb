@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module People
   module Membership
     extend ActiveSupport::Concern
@@ -27,7 +28,7 @@ module People
           self.member_to = Time.zone.local(RacingAssociation.current.effective_year).end_of_year.to_date
         end
       elsif !value && member?
-        if self.member_from.year == RacingAssociation.current.year
+        if member_from.year == RacingAssociation.current.year
           self.member_from = nil
           self.member_to = nil
         else
@@ -45,10 +46,10 @@ module People
       end
 
       date_as_date = case date
-      when Date, DateTime, Time
-        Time.zone.local(date.year, date.month, date.day)
-      else
-        Time.zone.parse(date)
+                     when Date, DateTime, Time
+                       Time.zone.local(date.year, date.month, date.day)
+                     else
+                       Time.zone.parse(date)
       end
 
       self[:member_from] = date_as_date
@@ -70,20 +71,22 @@ module People
     # Validates member_from and member_to
     def membership_dates
       if member_to && !member_from
-        errors.add('member_from', "cannot be nil if member_to is not nil (#{member_to})")
+        errors.add("member_from", "cannot be nil if member_to is not nil (#{member_to})")
       end
+
       if member_from && !member_to
-        errors.add('member_to', "cannot be nil if member_from is not nil (#{member_from})")
+        errors.add("member_to", "cannot be nil if member_from is not nil (#{member_from})")
       end
+
       if member_from && member_to && member_from.to_date > member_to.to_date
-        errors.add('member_to', "cannot be greater than member_from: #{member_from}")
+        errors.add("member_to", "cannot be greater than member_from: #{member_from}")
       end
+
       if member_from && member_from < YEAR_1900
         self.member_from = member_from_was
       end
-      if member_to && member_to < YEAR_1900
-        self.member_to = member_to_was
-      end
+      
+      self.member_to = member_to_was if member_to && member_to < YEAR_1900
     end
 
     def renewed?
