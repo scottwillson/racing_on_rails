@@ -204,7 +204,7 @@ module Admin
 
         assert_equal("Mt. Hood One Day", event.name, 'name')
         assert_equal(original_attributes["date"].to_date, event.date, 'date')
-        assert_equal(original_attributes["flyer"], event.flyer, 'flyer')
+        assert_nil(event.flyer, 'flyer')
         assert_equal(original_attributes["sanctioned_by"], event.sanctioned_by, 'sanctioned_by')
         assert_equal(original_attributes["flyer_approved"], event.flyer_approved, 'flyer_approved')
         assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
@@ -247,4 +247,3 @@ module Admin
     end
   end
 end
-

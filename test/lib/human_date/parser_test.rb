@@ -9,7 +9,7 @@ module HumanDate
     end
 
     test "parse nil" do
-      assert_equal nil, HumanDate::Parser.new.parse(nil)
+      assert_nil HumanDate::Parser.new.parse(nil)
     end
 
     test "parse ISO date time" do
@@ -18,7 +18,7 @@ module HumanDate
     end
 
     test "parse bogus date should return nil" do
-      assert_equal nil, HumanDate::Parser.new.parse("XYZ")
+      assert_nil HumanDate::Parser.new.parse("XYZ")
     end
   end
 end

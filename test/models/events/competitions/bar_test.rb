@@ -275,7 +275,7 @@ module Competitions
       Bar.new.categories_for(Race.new(category: node.reload))
       Bar.new.categories_for(Race.new(category: leaf.reload))
 
-      assert_equal nil, root.parent, "root parent"
+      assert_nil root.parent, "root parent"
       assert_equal root, node.parent, "node parent"
       assert_equal node, leaf.parent, "leaf parent"
     end

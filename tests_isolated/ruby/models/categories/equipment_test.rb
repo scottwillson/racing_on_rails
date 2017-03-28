@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../../test_case"
 require_relative "../../../../app/models/categories/equipment"
 
@@ -5,7 +7,7 @@ module Categories
   # :stopdoc:
   class EquipmentTest < Ruby::TestCase
     class Stub
-      def self.before_save(symbol); end
+      def self.before_save(_); end
       include Equipment
       attr_accessor :name
     end
@@ -22,11 +24,17 @@ module Categories
         "Singlespeed" => "Singlespeed",
         "Singlespeed/Fixed" => "Singlespeed",
         "Stampede" => "Stampede",
-        "Unicycle" => "Unicycle",
+        "Unicycle" => "Unicycle"
       }.each do |name, equipment|
         category = Stub.new
         category.name = name
-        assert_equal equipment, category.equipment_from_name, name
+
+        # Grr.
+        if equipment
+          assert_equal equipment, category.equipment_from_name, name
+        else
+          assert_nil category.equipment_from_name, name
+        end
       end
     end
   end

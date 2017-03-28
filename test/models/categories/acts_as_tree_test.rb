@@ -12,7 +12,7 @@ module Categories
       node.reload.descendants
       leaf.reload.descendants
 
-      assert_equal nil, root.reload.parent, "root parent"
+      assert_nil root.reload.parent, "root parent"
       assert_equal root, node.reload.parent, "node parent"
       assert_equal node, leaf.reload.parent, "leaf parent"
     end

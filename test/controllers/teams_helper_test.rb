@@ -13,7 +13,7 @@ class TeamsHelperTest < ActionController::TestCase
   test "blank link to contact" do
     get(:index)
     team = Team.new
-    assert_equal(nil, link_to_contact(team), "blank contact name")
+    assert_nil(link_to_contact(team), "blank contact name")
   end
 
   test "name only link to contact" do

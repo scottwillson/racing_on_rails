@@ -17,12 +17,12 @@ module Competitions
     end
 
     test "find for year" do
-      assert_equal nil, Competition.find_for_year, "Should not find anything when no Competitions in DB"
-      assert_equal nil, Competition.find_for_year(2005), "Should not find anything when no Competitions in DB"
+      assert_nil Competition.find_for_year, "Should not find anything when no Competitions in DB"
+      assert_nil Competition.find_for_year(2005), "Should not find anything when no Competitions in DB"
 
       competition = Competition.create!
       assert_equal competition, Competition.find_for_year, "Should find current Competition"
-      assert_equal nil, Competition.find_for_year(2005), "Should not find anything when no Competitions in DB for this year"
+      assert_nil Competition.find_for_year(2005), "Should not find anything when no Competitions in DB for this year"
 
       competition_in_2005 = Competition.create!(date: Time.zone.local(2005))
       assert_equal competition, Competition.find_for_year, "Should find current Competition"
@@ -30,11 +30,11 @@ module Competitions
     end
 
     test "team competition find for year" do
-      assert_equal nil, TestCompetition.find_for_year, "find with nothing in DB"
+      assert_nil TestCompetition.find_for_year, "find with nothing in DB"
 
       competition = TestCompetition.create!
       assert_equal competition, TestCompetition.find_for_year, "find in DB"
-      assert_equal nil, TestCompetition.find_for_year(2005), "find in DB, different year"
+      assert_nil TestCompetition.find_for_year(2005), "find in DB, different year"
 
       competition = TestCompetition.create!(date: Date.new(2005))
       assert_equal competition, TestCompetition.find_for_year(2005), "find in DB with multiple events"

@@ -89,8 +89,8 @@ class SetAssociationsTest < ActiveSupport::TestCase
     # no person, no team
     result = race.results.create!(place: 1, number: '')
     result.save!
-    assert_equal(nil, result.name, 'person name')
-    assert_equal(nil, result.team_name, 'team name')
+    assert_nil(result.name, 'person name')
+    assert_nil(result.team_name, 'team name')
   end
 
   test "set associated records" do

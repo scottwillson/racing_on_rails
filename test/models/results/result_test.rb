@@ -11,14 +11,14 @@ class ResultTest < ActiveSupport::TestCase
 
   test "person first last name" do
     result = Result.new
-    assert_equal(nil, result.first_name, "Person first name w/nil person")
-    assert_equal(nil, result.last_name, "Person last name w/nil person")
-    assert_equal(nil, result.team_name, "Person team name w/nil person")
+    assert_nil(result.first_name, "Person first name w/nil person")
+    assert_nil(result.last_name, "Person last name w/nil person")
+    assert_nil(result.team_name, "Person team name w/nil person")
   end
 
   test "name" do
     result = Result.new
-    assert_equal(nil, result.name, "Person name w/nil person")
+    assert_nil(result.name, "Person name w/nil person")
 
     result = FactoryGirl.create(:result, person: FactoryGirl.create(:person, name: "Ryan Weaver"))
     assert_equal("Ryan Weaver", result.name, "Person name")
@@ -35,7 +35,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal("Clara", result.person.name, "Person name")
 
     result = Result.new
-    assert_equal(nil, result.name, "Person name")
+    assert_nil(result.name, "Person name")
     result.name = 'Clara Hughes'
     assert_equal("Clara Hughes", result.name, "Person name")
     assert_equal("Clara", result.first_name, "Person first_name")
@@ -143,11 +143,11 @@ class ResultTest < ActiveSupport::TestCase
 
   test "category name" do
     result = Result.new(place: "22", last_name: "Ulrich")
-    assert_equal(nil, result.category_name, "category_name")
+    assert_nil(result.category_name, "category_name")
 
     result.category = Category.find_or_create_by(name: "Senior Men Pro/1/2")
     assert_equal("Senior Men Pro/1/2", result.category.name, "category_name")
-    assert_equal(nil, result.category_name, "category_name")
+    assert_nil(result.category_name, "category_name")
     result.race = FactoryGirl.create(:race)
     result.save!
     assert_equal("Senior Men Pro/1/2", result.category_name, "category_name")
@@ -160,7 +160,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal("", result.category_name, "category_name")
 
     result.category_name = nil
-    assert_equal(nil, result.category_name, "category_name")
+    assert_nil(result.category_name, "category_name")
   end
 
   test "person team" do
@@ -176,10 +176,10 @@ class ResultTest < ActiveSupport::TestCase
     assert(!person.new_record?, 'person new record')
     assert(!team.new_record?, 'team new record')
     assert_equal(team, result.team, 'result team')
-    assert_equal(nil, person.team, 'result team')
+    assert_nil(person.team, 'result team')
     sorella_forte = Team.find_by_name('Sorella Forte')
     assert_equal(sorella_forte, result.team, 'result team')
-    assert_equal(nil, person.team, 'result team')
+    assert_nil(person.team, 'result team')
 
     race = FactoryGirl.create(:race)
     result = race.results.build(place: '3', number: '932')
@@ -191,7 +191,7 @@ class ResultTest < ActiveSupport::TestCase
     result.save!
     bike_gallery_from_db = Team.find_by_name('Bike Gallery')
     assert_equal(bike_gallery_from_db, result.team, 'result team')
-    assert_equal(nil, person.team, 'result team')
+    assert_nil(person.team, 'result team')
     assert_not_equal(bike_gallery_from_db, person.team, 'result team')
 
     person_with_no_team = Person.create!(last_name: 'Ollerenshaw', first_name: 'Doug')
@@ -202,7 +202,7 @@ class ResultTest < ActiveSupport::TestCase
 
     result.save!
     assert_equal(vanilla, result.team, 'result team')
-    assert_equal(nil, person_with_no_team.team, 'result team')
+    assert_nil(person_with_no_team.team, 'result team')
   end
 
   test "event" do
@@ -546,7 +546,7 @@ class ResultTest < ActiveSupport::TestCase
     result = race.reload.results.create!(place: "1", custom_attributes: { run: "9:00" })
     assert_equal "9:00", result.custom_attribute(:run), "run custom_attribute"
     assert_equal "9:00", result.custom_attribute("run"), "run custom_attribute"
-    assert_equal nil, result.custom_attribute(:"20100929"), "numerical column"
+    assert_nil result.custom_attribute(:"20100929"), "numerical column"
     assert_raise(NoMethodError) { result.foo_bar }
     assert_raise(NoMethodError) { result.custom_attribute(:foo_bar) }
 

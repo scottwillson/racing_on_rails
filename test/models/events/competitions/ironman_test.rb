@@ -152,7 +152,7 @@ module Competitions
       ironman_result = ironman.races.first.results.first
       assert_equal "1", ironman_result.place, "place"
       assert_equal person.id, ironman_result.person_id, "person_id"
-      assert_equal person.team_id, ironman_result.team_id, "team_id"
+      assert_nil ironman_result.team_id, "team_id"
       assert_equal ironman_result.event, ironman_result.event, "event"
       assert_equal ironman.races.first, ironman_result.race, "race"
       assert_equal true, ironman_result.competition_result?, "competition_result"

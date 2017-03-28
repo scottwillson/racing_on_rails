@@ -98,7 +98,7 @@ class PersonFileTest < ActiveSupport::TestCase
     assert_equal(2, road_numbers.count, 'Brian Abers road_numbers')
     assert road_numbers.any? { |n| n.value == "824" }, "Should preseve Brian Abers road number"
     assert road_numbers.any? { |n| n.value == "825" }, "Should add Brian Abers new road number"
-    assert_equal(nil, brian_abers.dh_number, 'Brian Abers dh_number should be removed')
+    assert_nil(brian_abers.dh_number, 'Brian Abers dh_number should be removed')
     assert(!brian_abers.print_card?, 'brian_abers.print_card? after import')
 
     all_heidi_babi = Person.find_all_by_name('heidi babi')
@@ -109,7 +109,7 @@ class PersonFileTest < ActiveSupport::TestCase
     assert_equal_dates(Time.zone.today, heidi_babi.member_from, 'Heidi Babi member from')
     assert_equal_dates(Date.new(Time.zone.today.year, 12, 31), heidi_babi.member_to, 'Heidi Babi member to')
     assert_equal_dates('1973-03-12', heidi_babi.date_of_birth, 'Birth date')
-    assert_equal(nil, heidi_babi.notes, 'Heidi Babi notes')
+    assert_nil(heidi_babi.notes, 'Heidi Babi notes')
     assert_equal('11408 NE 102ND ST', heidi_babi.street, 'Heidi Babi street')
     assert_equal('360-896-3827', heidi_babi.home_phone, 'Heidi home phone')
     assert_equal('360-696-9272', heidi_babi.work_phone, 'Heidi work phone')
@@ -124,7 +124,7 @@ class PersonFileTest < ActiveSupport::TestCase
     assert_equal_dates('2000-01-01', rene_babi.member_from, 'Rene Babi member from')
     assert_equal_dates(Date.new(Time.zone.today.year, 12, 31), rene_babi.member_to, 'Rene Babi member to')
     assert_equal_dates('1980-08-04', rene_babi.date_of_birth, 'Birth date')
-    assert_equal(nil, rene_babi.notes, 'Rene Babi notes')
+    assert_nil(rene_babi.notes, 'Rene Babi notes')
     assert_equal('1431 SE Columbia Way', rene_babi.street, 'Rene Babi street')
     assert(rene_babi.print_card?, 'rene_babi.print_card? after import')
     assert_equal('190A', rene_babi.road_number, 'Rene road_number')
@@ -137,7 +137,7 @@ class PersonFileTest < ActiveSupport::TestCase
     assert_equal_dates('2000-01-01', scott_seaton.member_from, 'Scott Seaton member from')
     assert_equal_dates(Date.new(Time.zone.today.year, 12, 31), scott_seaton.member_to, 'Scott Seaton member to')
     assert_equal_dates('1976-01-10', scott_seaton.date_of_birth, 'Birth date')
-    assert_equal(nil, scott_seaton.notes, 'Scott Seaton notes')
+    assert_nil(scott_seaton.notes, 'Scott Seaton notes')
     assert_equal('1654 NW 2nd', scott_seaton.street, 'Scott Seaton street')
     assert_equal('Bend', scott_seaton.city, 'Scott Seaton city')
     assert_equal('OR', scott_seaton.state, 'Scott Seaton state')

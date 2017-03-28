@@ -191,13 +191,17 @@ module Results
         actual_race.results.sort.each_with_index do |result, result_index|
           expected_result = expected_race.results[result_index]
           assert_equal(expected_result.place, result.place, "place for race #{index} result #{result_index}")
-          assert_equal(expected_result.first_name, result.first_name, "first_name for race #{index} result #{result_index}")
+          if expected_result.first_name
+            assert_equal(expected_result.first_name, result.first_name, "first_name for race #{index} result #{result_index}")
+          else
+            assert_nil(result.first_name, "first_name for race #{index} result #{result_index}")
+          end
           assert_equal(expected_result.last_name, result.last_name, "last_name for race #{index} result #{result_index}")
           assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
           assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
           assert_equal(expected_result.number, result.number, "Result number for race #{index} result #{result_index}")
           if result.person and RaceNumber.rental?(result.number, Discipline[event.discipline])
-            assert_equal(nil, result.person.road_number, "Road number")
+            assert_nil(result.person.road_number, "Road number")
           end
         end
       end

@@ -135,7 +135,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal(fast_twitch_series.start_date, fast_twitch_series.date, "Fast Twitch start date and date")
     sql_results = WeeklySeries.connection.select_one("select date from events where id=#{fast_twitch_series.id}")
     assert_equal_dates("2006-05-12", sql_results["date"], "Fast Twitch start date and date column from DB")
-    assert_equal(nil, sql_results["flyer"], "Fast Twitch parent series flyer")
+    assert_nil(sql_results["flyer"], "Fast Twitch parent series flyer")
 
     assert_not_nil(cream_puff, "Should have imported Cream Puff")
     assert(cream_puff.instance_of?(SingleDayEvent), "Cream Puff should be SingleDayEvent")
@@ -166,7 +166,7 @@ class ScheduleTest < ActiveSupport::TestCase
       assert_equal("bike-central@bike-central.com", event.promoter.email, "Fast Twitch Fridays promoter name")
       assert_equal(RacingAssociation.current.default_sanctioned_by, event.sanctioned_by, "Fast Twitch sanctioned_by")
       assert_equal(fast_twitch_series, event.parent, "Fast Twitch Fridays parent")
-      assert_equal(nil, event.flyer, "Fast Twitch flyer")
+      assert_nil(event.flyer, "Fast Twitch flyer")
     end
     assert_equal(1, Person.where(first_name: 'Jen', last_name: 'Featheringill').count, "Jen Featheringill should only be listed once in promoters")
 

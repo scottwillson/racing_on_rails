@@ -153,8 +153,8 @@ module Admin
       assert_response(:success)
 
       result.reload
-      assert_equal(nil, result.first_name, 'first_name')
-      assert_equal(nil, result.last_name, 'last_name')
+      assert_nil(result.first_name, 'first_name')
+      assert_nil(result.last_name, 'last_name')
       assert_equal(original_team_name, result.team_name, 'team_name')
       assert_nil(result.person(true), 'person')
     end
@@ -213,8 +213,8 @@ module Admin
       assert_response(:success)
 
       result.reload
-      assert_equal(nil, result.first_name, 'first_name')
-      assert_equal(nil, result.last_name, 'last_name')
+      assert_nil(result.first_name, 'first_name')
+      assert_nil(result.last_name, 'last_name')
       assert_equal(original_team_name, result.team_name, 'team_name')
       assert_nil(result.person(true), 'person')
     end

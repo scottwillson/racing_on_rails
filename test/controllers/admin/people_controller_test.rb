@@ -181,7 +181,7 @@ module Admin
       change = changes["team_id"]
       assert_not_nil change, "Should have change for team ID"
       assert_equal vanilla.id, change.first, "Team ID before"
-      assert_equal nil, change.last, "Team ID after"
+      assert_nil change.last, "Team ID after"
       assert_equal @administrator, molly.updated_by_person, "updated_by_person"
     end
 

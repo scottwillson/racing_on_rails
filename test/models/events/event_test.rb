@@ -148,7 +148,7 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "team name" do
-    assert_equal(nil, Event.new.team_name, "team_name")
+    assert_nil(Event.new.team_name, "team_name")
     assert_equal("", Event.new(team: Team.new(name: "")).team_name, "team_name")
     assert_equal("Vanilla", Event.new(team: Team.new(name: "Vanilla")).team_name, "team_name")
   end

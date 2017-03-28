@@ -38,6 +38,6 @@ class PeopleHelperTest < ActionView::TestCase
   test "new person" do
     person = Person.new
     current_person = FactoryGirl.create(:person)
-    assert_equal(nil, account_permission_return_to(person, current_person))
+    assert_nil(account_permission_return_to(person, current_person))
   end
 end

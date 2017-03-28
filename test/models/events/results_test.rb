@@ -153,7 +153,7 @@ module Events
 
     test "results_updated_at" do
       event = FactoryGirl.create(:event)
-      assert_equal nil, event.results_updated_at, "results_updated_at with no results"
+      assert_nil event.results_updated_at, "results_updated_at with no results"
 
       result = nil
       travel_to 1.day.ago do

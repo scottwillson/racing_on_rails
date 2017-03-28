@@ -293,7 +293,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "name or login" do
-    assert_equal nil, Person.new.name_or_login
+    assert_nil Person.new.name_or_login
     assert_equal "dario@example.com", Person.new(email: "dario@example.com").name_or_login
     assert_equal "the_dario", Person.new(login: "the_dario").name_or_login
     assert_equal "Dario", Person.new(name: "Dario").name_or_login
@@ -823,35 +823,35 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal('Petaluma, CA', person.hometown, 'Person hometown')
 
     person = Person.new
-    assert_equal(nil, person.city, 'New Person city')
-    assert_equal(nil, person.state, 'New Person state')
+    assert_nil(person.city, 'New Person city')
+    assert_nil(person.state, 'New Person state')
     person.hometown = ''
-    assert_equal(nil, person.city, 'New Person city')
-    assert_equal(nil, person.state, 'New Person state')
+    assert_nil(person.city, 'New Person city')
+    assert_nil(person.state, 'New Person state')
     person.hometown = nil
-    assert_equal(nil, person.city, 'New Person city')
-    assert_equal(nil, person.state, 'New Person state')
+    assert_nil(person.city, 'New Person city')
+    assert_nil(person.state, 'New Person state')
 
     person.hometown = 'Newport'
     assert_equal('Newport', person.city, 'New Person city')
-    assert_equal(nil, person.state, 'New Person state')
+    assert_nil(person.state, 'New Person state')
 
     person.hometown = 'Newport, RI'
     assert_equal('Newport', person.city, 'New Person city')
     assert_equal('RI', person.state, 'New Person state')
 
     person.hometown = nil
-    assert_equal(nil, person.city, 'New Person city')
-    assert_equal(nil, person.state, 'New Person state')
+    assert_nil(person.city, 'New Person city')
+    assert_nil(person.state, 'New Person state')
 
     person.hometown = ''
-    assert_equal(nil, person.city, 'New Person city')
-    assert_equal(nil, person.state, 'New Person state')
+    assert_nil(person.city, 'New Person city')
+    assert_nil(person.state, 'New Person state')
 
     person.hometown = 'Newport, RI'
     person.hometown = ''
-    assert_equal(nil, person.city, 'New Person city')
-    assert_equal(nil, person.state, 'New Person state')
+    assert_nil(person.city, 'New Person city')
+    assert_nil(person.state, 'New Person state')
   end
 
   test "create and override alias" do

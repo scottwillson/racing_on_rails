@@ -319,7 +319,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("Boise", results["city"], "SingleDayEvent city")
     assert_equal("Mountain Bike", results["discipline"], "SingleDayEvent discipline")
     assert_equal("scott.willson@gmail.com", results["email"], "SingleDayEvent email")
-    assert_equal(nil, results["flyer"], "SingleDayEvent flyer")
+    assert_nil(results["flyer"], "SingleDayEvent flyer")
     assert_equal(1, results["flyer_approved"], "SingleDayEvent flyer")
     assert_equal(candi_murray.id, results["promoter_id"].to_i, "SingleDayEvent promoter_id")
     assert_equal("911", results["phone"], "SingleDayEvent phone")
@@ -336,7 +336,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal_dates("2007-06-26", results["date"], "SingleDayEvent start_date")
     assert_equal("Boise", results["city"], "SingleDayEvent city")
     assert_equal("Mountain Bike", results["discipline"], "SingleDayEvent discipline")
-    assert_equal(nil, results["flyer"], "SingleDayEvent flyer")
+    assert_nil(results["flyer"], "SingleDayEvent flyer")
     assert_equal(1, results["flyer_approved"], "SingleDayEvent flyer")
     assert_equal(candi_murray.id, results["promoter_id"].to_i, "SingleDayEvent promoter_id")
     assert_equal("UCI", results["sanctioned_by"], "SingleDayEvent sanctioned_by")
@@ -351,7 +351,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal_dates("2007-06-19", results["date"], "MultiDayEvent start_date")
     assert_equal("Boise", results["city"], "MultiDayEvent city")
     assert_equal("Mountain Bike", results["discipline"], "MultiDayEvent discipline")
-    assert_equal(nil, results["flyer"], "MultiDayEvent flyer")
+    assert_nil(results["flyer"], "MultiDayEvent flyer")
     assert_equal(1, results["flyer_approved"], "MultiDayEvent flyer")
     assert_equal(candi_murray.id, results["promoter_id"].to_i, "MultiDayEvent promoter_id")
     assert_equal("UCI", results["sanctioned_by"], "MultiDayEvent sanctioned_by")
@@ -412,8 +412,8 @@ class MultiDayEventTest < ActiveSupport::TestCase
   test "update children should consider blank as nil" do
     parent = MultiDayEvent.create!
     child = parent.children.create!
-    assert_equal(nil, parent.flyer, "parent flyer")
-    assert_equal(nil, child.flyer, "child flyer")
+    assert_nil(parent.flyer, "parent flyer")
+    assert_nil(child.flyer, "child flyer")
 
     parent.flyer = "http://example.com/flyers/1"
     parent.save!
@@ -426,7 +426,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     child.flyer = nil
     child.save!
     assert_equal("", parent.flyer, "parent flyer")
-    assert_equal(nil, child.flyer, "child flyer")
+    assert_nil(child.flyer, "child flyer")
 
     parent.flyer = "http://example.com/flyers/1"
     parent.save!
@@ -436,8 +436,8 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     parent = MultiDayEvent.create!
     child = parent.children.create!(flyer: "")
-    assert_equal(nil, parent.flyer, "parent flyer")
-    assert_equal(nil, child.flyer, "child flyer")
+    assert_nil(parent.flyer, "parent flyer")
+    assert_nil(child.flyer, "child flyer")
 
     parent.flyer = "http://example.com/flyers/1"
     parent.save!
@@ -500,15 +500,15 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     parent = MultiDayEvent.create!(city: nil)
     child = parent.children.create!
-    assert_equal(nil, child.city, "child should inherit parent values unless specified")
+    assert_nil(child.city, "child should inherit parent values unless specified")
 
     parent = MultiDayEvent.create!(city: nil)
     child = parent.children.create!(city: nil)
-    assert_equal(nil, child.city, "child should inherit parent values unless specified")
+    assert_nil(child.city, "child should inherit parent values unless specified")
 
     parent = MultiDayEvent.create!
     child = parent.children.create!(city: nil)
-    assert_equal(nil, child.city, "child should inherit parent values unless specified")
+    assert_nil(child.city, "child should inherit parent values unless specified")
 
     parent = MultiDayEvent.create!
     child = parent.children.create!(city: "city")
@@ -516,7 +516,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     parent = MultiDayEvent.create!
     child = parent.children.create!
-    assert_equal(nil, child.city, "child should inherit parent values unless specified")
+    assert_nil(child.city, "child should inherit parent values unless specified")
 
     parent = MultiDayEvent.create!(city: "")
     child = parent.children.create!

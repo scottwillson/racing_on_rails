@@ -139,7 +139,7 @@ class RacingAssociationTest < ActiveSupport::TestCase
   end
 
   test "number issuer" do
-    assert_equal nil, RacingAssociation.current.number_issuer
+    assert_nil RacingAssociation.current.number_issuer
 
     FactoryGirl.create(:number_issuer, name: "AVC")
     number_issuer = FactoryGirl.create(:number_issuer, name: RacingAssociation.current.short_name)

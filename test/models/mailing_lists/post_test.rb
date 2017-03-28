@@ -40,13 +40,13 @@ class PostTest < ActiveSupport::TestCase
 
   test "from" do
     post = Post.new
-    assert_equal nil, post.from_name, "from_name"
-    assert_equal nil, post.from_email, "from_email"
+    assert_nil post.from_name, "from_name"
+    assert_nil post.from_email, "from_email"
     assert !post.valid?
 
     post = Post.new(from_email: "cmurray@obra.org")
     assert_equal "cmurray@obra.org", post.from_email, "from_email"
-    assert_equal nil, post.from_name, "from_name"
+    assert_nil post.from_name, "from_name"
     assert_equal "cmurray@obra.org", post.from_email, "from_email"
 
     post = Post.new(from_email: "cmurray@obra.org", from_name: "Candi Murray", mailing_list: MailingList.new, subject: "Subject")
@@ -65,11 +65,11 @@ class PostTest < ActiveSupport::TestCase
     second_post.reload
     reply_to_original.reload
 
-    assert_equal nil, original.newer, "original newer"
+    assert_nil original.newer, "original newer"
     assert_equal second_post, original.older, "original older"
 
     assert_equal original, second_post.newer, "second_post newer"
-    assert_equal nil, second_post.older, "second_post older"
+    assert_nil second_post.older, "second_post older"
 
     assert_equal original, reply_to_original.newer, "reply_to_original newer"
     assert_equal second_post, reply_to_original.older, "reply_to_original older"
@@ -83,7 +83,7 @@ class PostTest < ActiveSupport::TestCase
 
     assert !post.new_record?
     assert_equal post.date, post.last_reply_at, "last_reply_at"
-    assert_equal nil, post.original, "no original"
+    assert_nil post.original, "no original"
     assert post.replies.empty?, "no replies"
     assert_equal 0, post.replies_count, "replies_count"
   end
@@ -106,7 +106,7 @@ class PostTest < ActiveSupport::TestCase
 
     original.reload
     assert_equal reply.date, original.last_reply_at, "last_reply_at"
-    assert_equal nil, original.original, "no original"
+    assert_nil original.original, "no original"
     assert_equal [ reply ], original.replies, "should add reply"
     assert_equal 1, original.replies(true).size, "replies_count"
     assert_equal 1, original.replies_count, "replies_count"
@@ -120,10 +120,10 @@ class PostTest < ActiveSupport::TestCase
     second_reply = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "Re: My bike")
     post_on_different_subject = FactoryGirl.create(:post, mailing_list: mailing_list, subject: "Something else")
 
-    assert_equal nil, Post.find_original(original)
+    assert_nil Post.find_original(original)
     assert_equal original, Post.find_original(reply)
     assert_equal original, Post.find_original(second_reply)
-    assert_equal nil, Post.find_original(post_on_different_subject)
+    assert_nil Post.find_original(post_on_different_subject)
   end
 
   test "normalize subject" do

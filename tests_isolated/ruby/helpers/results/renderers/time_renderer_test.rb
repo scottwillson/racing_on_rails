@@ -9,7 +9,7 @@ module Results
       def test_render_nil
         row = Tabular::Table.new([{time: nil}]).rows.first
         column = stub("column", key: :time, precision: 0, cells: [])
-        assert_equal nil, TimeRenderer.render(column, row)
+        assert_nil TimeRenderer.render(column, row)
       end
 
       def test_render_zero

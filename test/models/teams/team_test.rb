@@ -97,8 +97,8 @@ module Teams
       person.destroy
       assert !Person.exists?(person.id), "Updater Person should be destroyed"
 
-      assert_equal nil, team.versions(true).last.user, " version user"
-      assert_equal nil, team.updated_by_person, "updated_by_person"
+      assert_nil team.versions(true).last.user, " version user"
+      assert_nil team.updated_by_person, "updated_by_person"
     end
   end
 end
