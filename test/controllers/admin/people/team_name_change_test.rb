@@ -26,7 +26,8 @@ module Admin
       end
 
       test "update team name to existing team" do
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        vanilla = Team.create!(name: "Vanilla")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron", team: vanilla)
         assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
         xhr :put, :update_attribute,
             id: molly.to_param,
@@ -39,8 +40,9 @@ module Admin
       end
 
       test "update team name to blank" do
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
-        assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
+        vanilla = Team.create!(name: "Vanilla")
+        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron", team: vanilla)
+        assert_equal(vanilla, molly.team, 'Molly should be on Vanilla')
         xhr :put, :update_attribute,
             id: molly.to_param,
             name: "team_name",

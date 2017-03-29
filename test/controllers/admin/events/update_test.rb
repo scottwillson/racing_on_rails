@@ -211,7 +211,7 @@ module Admin
         assert_equal(original_attributes["cancelled"], event.cancelled, 'cancelled')
         assert_equal(original_attributes["state"], event.state, 'state')
         assert_equal(original_attributes["promoter_id"], event.promoter_id, 'promoter_id')
-        assert_equal(original_attributes["number_issuer_id"], event.number_issuer_id, 'number_issuer_id')
+        assert_nil(event.number_issuer_id, 'number_issuer_id')
         assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
       end
 
@@ -234,14 +234,14 @@ module Admin
 
         assert_equal("Mt. Hood Series", event.name, 'name')
         assert_equal(original_attributes["date"].to_date, event.date, 'date')
-        assert_equal(original_attributes["flyer"], event.flyer, 'flyer')
+        assert_nil(event.flyer, 'flyer')
         assert_equal(original_attributes["sanctioned_by"], event.sanctioned_by, 'sanctioned_by')
         assert_equal(original_attributes["flyer_approved"], event.flyer_approved, 'flyer_approved')
         assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
         assert_equal(original_attributes["cancelled"], event.cancelled, 'cancelled')
         assert_equal(original_attributes["state"], event.state, 'state')
         assert_equal(original_attributes["promoter_id"], event.promoter_id, 'promoter_id')
-        assert_equal(original_attributes["number_issuer_id"], event.number_issuer_id, 'number_issuer_id')
+        assert_nil(event.number_issuer_id, 'number_issuer_id')
         assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
       end
     end
