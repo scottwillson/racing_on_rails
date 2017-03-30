@@ -4,6 +4,7 @@ class DuplicatePerson
   attr_accessor :id, :name
 
   def self.all(limit = 20)
+    limit ||= 20
     # Hash of people, keyed by name
     people = all_grouped_by_name(limit)
     people = sort_people_by_created_at(people)

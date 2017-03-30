@@ -1,6 +1,6 @@
 class DuplicatePeopleController < Admin::AdminController
   def index
-    @people = DuplicatePerson.all
+    @people = DuplicatePerson.all(params[:limit]&.to_i)
   end
 
   def destroy
