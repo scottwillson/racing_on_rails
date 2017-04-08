@@ -23,7 +23,10 @@ module Schedule
         table.column_mapper = ::Schedule::ColumnMapper.new
         table.read(file_path)
         table.strip!
+
         events = parse_events(table.rows)
+        return if events.empty?
+
         delete_all_future_events events
         multi_day_events = find_multi_day_events(events)
         save events, multi_day_events
@@ -45,16 +48,12 @@ module Schedule
     def self.parse_events(rows)
       events = []
       rows.each do |row|
-        if has_event?(row)
-          events << Schedule.parse(row)
-        end
+        events << Schedule.parse(row) if event?(row)
       end
-      events.compact!
-      events
+      events.compact
     end
 
-    def self.has_event?(row)
-
+    def self.event?(row)
       row[:name].present? && row[:date].present? && (row[:notes].blank? || !row[:notes]["Not on calendar"])
     end
 
@@ -62,13 +61,11 @@ module Schedule
     def self.parse(row)
       logger.debug(row.inspect) if logger.debug?
 
-      if row[:discipline] == "Clinic"
-        row[:instructional] = true
-      end
+      row[:instructional] = true if row[:discipline] == "Clinic"
 
       if row[:discipline]
         discipline = Discipline.find_via_alias(row[:discipline])
-        if discipline != nil
+        if discipline.present?
           row[:discipline] = discipline.name
         else
           row[:discipline] = RacingAssociation.current.default_discipline
@@ -76,20 +73,18 @@ module Schedule
       end
 
       if row[:sanctioned_by].nil?
-        if row[:notes] == 'national'
-          row[:sanctioned_by] = 'USA Cycling'
-        elsif row[:notes] == 'international'
-          row[:sanctioned_by] = 'UCI'
+        if row[:notes] == "national"
+          row[:sanctioned_by] = "USA Cycling"
+        elsif row[:notes] == "international"
+          row[:sanctioned_by] = "UCI"
         end
       end
 
       event_hash = row.to_hash
-      promoter = Person.find_by_info(row[:promoter_name], row[:promoter_email], row[:promoter_phone])
+      promoter = Person.first_by_info(row[:promoter_name], row[:promoter_email], row[:promoter_phone])
 
       if promoter
-        if promoter.name.blank?
-          promoter.update!(name: row[:promoter_name])
-        end
+        promoter.update!(name: row[:promoter_name]) if promoter.name.blank?
 
         if promoter.home_phone.blank?
           promoter.update!(home_phone: row[:promoter_phone])
@@ -104,10 +99,10 @@ module Schedule
         end
       elsif row[:promoter_name].present? || row[:promoter_email].present? || row[:promoter_phone].present?
         promoter = Person.create!(
-                    name: row[:promoter_name],
-                    email: row[:promoter_email],
-                    home_phone: row[:promoter_phone]
-                  )
+          name: row[:promoter_name],
+          email: row[:promoter_email],
+          home_phone: row[:promoter_phone]
+        )
       end
 
       event_hash.delete :promoter_email
@@ -134,7 +129,7 @@ module Schedule
       events_by_name = Hash.new
       events.each do |event|
         logger.debug "Find multi-day events #{event.name}"
-        event_array = events_by_name[event.name] || Array.new
+        event_array = events_by_name[event.name] || []
         event_array << event
         events_by_name[event.name] = event_array if event_array.size == 1
       end
@@ -153,9 +148,7 @@ module Schedule
     def self.add_one_day_events_to_parents(events, multi_day_events)
       events.each do |event|
         parent = multi_day_events[event.name]
-        if parent
-          parent.events << event
-        end
+        parent.events << event if parent
       end
     end
 
@@ -187,7 +180,7 @@ module Schedule
 
       query = query.includes(:parent).includes(:promoter)
 
-      if !RacingAssociation.current.show_practices_on_calendar?
+      unless RacingAssociation.current.show_practices_on_calendar?
         query = query.where(practice: false)
       end
 

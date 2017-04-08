@@ -70,7 +70,7 @@ class Person < ActiveRecord::Base
       order(:last_name, :first_name)
   end
 
-  def self.find_by_info(name, email = nil, home_phone = nil)
+  def self.first_by_info(name, email = nil, home_phone = nil)
     if name.present?
       Person.find_by_name(name)
     else
@@ -113,7 +113,7 @@ class Person < ActiveRecord::Base
 
   # Cannot have promoters with duplicate contact information
   def unique_info
-    person = Person.find_by_info(name, email, home_phone)
+    person = Person.first_by_info(name, email, home_phone)
     if person && person != self
       errors.add("existing person with name '#{name}'")
     end

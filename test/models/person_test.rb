@@ -1041,25 +1041,25 @@ class PersonTest < ActiveSupport::TestCase
 
   test "find by info" do
     promoter = FactoryGirl.create(:promoter, name: "Brad Ross")
-    assert_equal(promoter, Person.find_by_info("Brad ross"))
-    assert_equal(promoter, Person.find_by_info("Brad ross", "brad@foo.com"))
+    assert_equal(promoter, Person.first_by_info("Brad ross"))
+    assert_equal(promoter, Person.first_by_info("Brad ross", "brad@foo.com"))
 
     administrator = FactoryGirl.create(:administrator)
-    assert_equal(administrator, Person.find_by_info("Candi Murray"))
-    assert_equal(administrator, Person.find_by_info("Candi Murray", "admin@example.com", "(503) 555-1212"))
-    assert_equal(administrator, Person.find_by_info("", "admin@example.com", "(503) 555-1212"))
-    assert_equal(administrator, Person.find_by_info("", "admin@example.com"))
+    assert_equal(administrator, Person.first_by_info("Candi Murray"))
+    assert_equal(administrator, Person.first_by_info("Candi Murray", "admin@example.com", "(503) 555-1212"))
+    assert_equal(administrator, Person.first_by_info("", "admin@example.com", "(503) 555-1212"))
+    assert_equal(administrator, Person.first_by_info("", "admin@example.com"))
 
-    assert_nil(Person.find_by_info("", "mike_murray@obra.org", "(451) 324-8133"))
-    assert_nil(Person.find_by_info("", "membership@obra.org"))
+    assert_nil(Person.first_by_info("", "mike_murray@obra.org", "(451) 324-8133"))
+    assert_nil(Person.first_by_info("", "membership@obra.org"))
 
     promoter = Person.new(name: '', home_phone: "(212) 522-1872")
     promoter.save!
-    assert_equal(promoter, Person.find_by_info("", "", "(212) 522-1872"))
+    assert_equal(promoter, Person.first_by_info("", "", "(212) 522-1872"))
 
     promoter = Person.new(name: '', email: "cjw@cjw.net")
     promoter.save!
-    assert_equal(promoter, Person.find_by_info("", "cjw@cjw.net", ""))
+    assert_equal(promoter, Person.first_by_info("", "cjw@cjw.net", ""))
   end
 
   test "save blank" do

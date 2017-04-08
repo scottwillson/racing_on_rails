@@ -6,69 +6,69 @@ CSV.open("schedule.csv", "wb") do |csv|
        .first
        .events
        .each do |ics_event|
-              # puts
-              # puts '-' * 160
-              # puts ics_event.to_s
+    # puts
+    # puts '-' * 160
+    # puts ics_event.to_s
 
-              end_date = ics_event.dtstart
-              if (ics_event.dtend - ics_event.dtstart) > 1
-                end_date = ics_event.dtend
-              end
+    end_date = ics_event.dtstart
+    if (ics_event.dtend - ics_event.dtstart) > 1
+      end_date = ics_event.dtend
+    end
 
-              description = ics_event.description.split("\n")
+    description = ics_event.description.split("\n")
 
-              next if description.size < 2
+    next if description.size < 2
 
-              description.each { |x| puts x }
-              promoter = description.first && description.first.gsub("From: ", "")
-              promoter_name = promoter[/\A([^<]+)/, 1].strip
-              promoter_email = promoter[/<([^>]+)/, 1].strip
+    description.each { |x| puts x }
+    promoter = description.first&.gsub("From: ", "")
+    promoter_name = promoter[/\A([^<]+)/, 1].strip
+    promoter_email = promoter[/<([^>]+)/, 1].strip
 
-              first_aid = "no"
-              first_aid_line = description.detect { |l| l[/First Aid/] }
-              if first_aid_line && first_aid_line["Yes"].present?
-                first_aid = "Needed"
-              end
+    first_aid = "no"
+    first_aid_line = description.detect { |l| l[/First Aid/] }
+    if first_aid_line && first_aid_line["Yes"].present?
+      first_aid = "Needed"
+    end
 
-              discipline_line = description.detect { |l| l[/Discipline/] }
-              discipline = discipline_line && discipline_line[/Discipline: (.*)/, 1]
+    discipline_line = description.detect { |l| l[/Discipline/] }
+    discipline = discipline_line && discipline_line[/Discipline: (.*)/, 1]
 
-              location = ics_event.location
+    location = ics_event.location
 
-              if location.blank?
-                location_line = description.detect { |l| l[/Location/] }
-                location = location_line && location_line[/Location: (.*)/, 1]
-              end
+    if location.blank?
+      location_line = description.detect { |l| l[/Location/] }
+      location = location_line && location_line[/Location: (.*)/, 1]
+    end
 
-              if location.present?
-                location = location.gsub(", USA", "")
-                location = location.gsub(/\d{5}/, "")
-              end
+    if location.present?
+      location = location.gsub(", USA", "")
+      location = location.gsub(/\d{5}/, "")
+    end
 
-              puts
-              puts(
-                name: ics_event.summary,
-                start_date: ics_event.dtstart.to_s(:db),
-                end_date: end_date.to_s(:db),
-                location: location,
-                promoter_name: promoter_name,
-                promoter_email: promoter_email,
-                first_aid_provider: first_aid,
-                discipline: discipline,
-                notes: ics_event.description
-              )
+    puts
+    puts(
+      name: ics_event.summary,
+      start_date: ics_event.dtstart.to_s(:db),
+      end_date: end_date.to_s(:db),
+      location: location,
+      promoter_name: promoter_name,
+      promoter_email: promoter_email,
+      first_aid_provider: first_aid,
+      discipline: discipline,
+      notes: ics_event.description
+    )
 
-              (ics_event.dtstart..end_date).each do |day|
-                csv << [
-                  ics_event.summary,
-                  day.to_s(:db),
-                  location,
-                  promoter_name,
-                  promoter_email,
-                  discipline,
-                  first_aid,
-                  ics_event.description
-                ]
-              end
+    (ics_event.dtstart..end_date).each do |day|
+      csv << [
+        ics_event.summary,
+        day.to_s(:db),
+        location,
+        promoter_name,
+        promoter_email,
+        discipline,
+        first_aid,
+        ics_event.description
+      ]
+    end
   end
 end
