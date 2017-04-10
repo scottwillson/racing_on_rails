@@ -69,7 +69,7 @@ module Competitions
       end
 
       hot_spots.each do |event|
-        event_points_schedule[event.id] = [ 6, 4, 2, 1 ]
+        event_points_schedule[event.id] = [ 5, 3, 1 ]
       end
 
       event_points_schedule
