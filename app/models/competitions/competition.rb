@@ -143,6 +143,7 @@ module Competitions
         race.results.reload
 
         new_results, existing_results, obselete_results = partition_results(calculated_results, race)
+        Rails.logger.debug "Calculator source results:   #{results.size}"
         Rails.logger.debug "Calculator new_results:      #{new_results.size}"
         Rails.logger.debug "Calculator existing_results: #{existing_results.size}"
         Rails.logger.debug "Calculator obselete_results: #{obselete_results.size}"
