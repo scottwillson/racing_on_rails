@@ -35,7 +35,7 @@ module Events
       scope :discipline, lambda { |discipline|
         if discipline
           if discipline == Discipline['road']
-            where discipline: [ discipline.name, "Circuit" ]
+            where discipline: [ discipline.name, "Circuit", "Road/Gravel" ]
           else
             where discipline: discipline.name
           end

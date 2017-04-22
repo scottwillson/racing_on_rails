@@ -52,7 +52,7 @@ class Discipline < ActiveRecord::Base
   def names
     case name
     when "Road"
-      [ nil, "", 'Circuit', "Criterium", "Road", "Time Trial", "Singlespeed", "Tour" ]
+      [ nil, "", 'Circuit', "Criterium", "Road", "Road/Gravel", "Time Trial", "Singlespeed", "Tour" ]
     when "Mountain Bike"
       [ 'Downhill', 'Mountain Bike', 'Super D', "Short Track" ]
     else

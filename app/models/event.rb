@@ -131,6 +131,7 @@ class Event < ActiveRecord::Base
     last_of_year = date.end_of_year
     discipline_names = [discipline]
     discipline_names << 'Circuit' if discipline.downcase == 'road'
+    discipline_names << 'Road/Gravel' if discipline.downcase == 'road'
     Event.select("distinct events.id, events.*")
       .where("events.date" => first_of_year..last_of_year)
       .where("events.discipline" => discipline_names)

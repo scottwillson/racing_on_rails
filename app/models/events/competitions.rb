@@ -21,6 +21,7 @@ module Events
       def self.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
         discipline_names = [discipline]
         discipline_names << 'Circuit' if discipline.downcase == 'road'
+        discipline_names << 'Road/Gravel' if discipline.downcase == 'road'
         Event.distinct.year(year).where(discipline: discipline_names).where("bar_points > 0")
       end
     end

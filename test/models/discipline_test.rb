@@ -22,6 +22,7 @@ class DisciplineTest < ActiveSupport::TestCase
 
   test "instance names" do
     assert_equal(%w{ Circuit }, Discipline.new(name: "Circuit").names, "Circuit names")
+    assert_equal(%w{ Road/Gravel }, Discipline.new(name: "Circuit").names, "Circuit names")
     assert_equal(["Downhill", "Mountain Bike", "Super D", "Short Track"], Discipline.new(name: "Mountain Bike").names, "Mountain Bike names")
     assert_equal(["Downhill"], Discipline.new(name: "Downhill").names, "Downhill names")
   end
