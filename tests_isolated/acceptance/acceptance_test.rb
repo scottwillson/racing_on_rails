@@ -452,8 +452,6 @@ class AcceptanceTest < ActiveSupport::TestCase
     Capybara::Poltergeist::Driver.new app, options
   end
 
-  Capybara.configure do |config|
-    config.current_driver = default_driver
-    config.javascript_driver = javascript_driver
-  end
+  Capybara.current_driver = default_driver
+  Capybara.javascript_driver = javascript_driver
 end
