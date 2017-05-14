@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   class OregonWomensPrestigeSeries < Competition
     include Competitions::OregonWomensPrestigeSeriesModules::Common
@@ -12,12 +14,12 @@ module Competitions
 
     def categories_for(race)
       if race.name == "Women 1/2"
-        super << Category.where(name: "Pro/1/2 Women").first
+        super << Category.find_by(name: "Pro/1/2 Women")
       elsif race.name == "Women 3"
-        super << Category.where(name: "Category 3 Women").first
+        super << Category.find_by(name: "Category 3 Women")
       elsif race.name == "Women 4/5"
-        super << Category.where(name: "Category 4/5 Women").first
-        super << Category.where(name: "Women 4").first
+        super << Category.find_by(name: "Category 4/5 Women")
+        super << Category.find_by(name: "Women 4")
       else
         super
       end
@@ -27,7 +29,7 @@ module Competitions
       true
     end
 
-    def maximum_events(race)
+    def maximum_events(_)
       5
     end
 
@@ -43,12 +45,11 @@ module Competitions
       end
     end
 
-    def after_source_results(results, race)
+    def after_source_results(results, _)
       # Ignore BAR points multiplier. Leave query "universal".
       set_multiplier results
       results
     end
-
 
     private
 
