@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   # Mount Tabor Overall Series results
   class TaborOverall < Overall
@@ -25,10 +27,6 @@ module Competitions
 
     def default_bar_points
       1
-    end
-
-    def maximum_events(race)
-      5
     end
 
     def point_schedule
