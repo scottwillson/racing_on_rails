@@ -77,9 +77,7 @@ module Competitions
         []
       end.each do |name|
         category = Category.find_by(name: name)
-        if category
-          ids << category.id
-        end
+        ids << category.id if category
       end
 
       ids
@@ -132,14 +130,13 @@ module Competitions
       source_events.reload.each do |source_event|
         category_names.each do |category_name|
           category = Category.find_by(name: category_name)
-          if category.age_group?
-            if source_event.races.none? do |race|
-                race.category.gender == category.gender &&
-                race.category.ages == category.ages &&
-                race.any_results?
-              end
-              missing_categories[source_event] = missing_categories[source_event] << category
+          next unless category.age_group?
+          if source_event.races.none? do |race|
+              race.category.gender == category.gender &&
+              race.category.ages == category.ages &&
+              race.any_results?
             end
+            missing_categories[source_event] = missing_categories[source_event] << category
           end
         end
       end
@@ -173,8 +170,8 @@ module Competitions
 
     def split_race(competition_category, race_to_split, race)
       race_to_split.results
-        .select { |result| split?(competition_category, result) }
-        .each { |result| create_result(race, result) }
+                   .select { |result| split?(competition_category, result) }
+                   .each { |result| create_result(race, result) }
     end
 
     def combine_races(event, competition_category)
@@ -217,11 +214,10 @@ module Competitions
     end
 
     def split?(competition_category, result)
-      result.person &&
-      result.person.racing_age &&
-      competition_category.ages.include?(result.person.racing_age) &&
-      result.time &&
-      result.time > 0
+      result.person&.racing_age &&
+        competition_category.ages.include?(result.person.racing_age) &&
+        result.time &&
+        result.time > 0
     end
 
     def adjust_times
