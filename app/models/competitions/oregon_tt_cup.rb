@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   # Year-long OBRA TT competition
   class OregonTTCup < Competition
