@@ -97,6 +97,10 @@ module Competitions
       results
     end
 
+    def source_events_include_children(reload = false)
+      source_events(reload) + source_events.flat_map(&:children)
+    end
+
     # Source events' categories don't match competition's categories.
     # Some need to be split: Junior Men 10-18 to Junior Men 10-12, Junior Men 13-14, etc.
     # Some need to be combined: Masters Men 30-34 and Masters Men 35-39 to Masters Men 30-39
@@ -105,6 +109,7 @@ module Competitions
       races_created_for_competition.reject(&:visible?).each(&:destroy)
 
       missing_categories.each do |event, categories|
+        logger.debug "Missing categories for #{event.full_name}: #{categories.map(&:name).sort}"
         categories.each do |competition_category|
           split_races event, competition_category
           combine_races event, competition_category
@@ -114,12 +119,12 @@ module Competitions
       races.reload
       adjust_times
       races_created_for_competition.each(&:place_results_by_time)
-      source_events.each(&:update_split_from!)
+      source_events_include_children.each(&:update_split_from!)
     end
 
     # Split or combined races created only to calculate the Oregon TT Cup
     def races_created_for_competition
-      source_events.map do |event|
+      source_events_include_children.map do |event|
         event.races.select { |r| r.created_by.is_a?(OregonTTCup) }
       end.flatten
     end
@@ -127,7 +132,7 @@ module Competitions
     # Find competition categories that should be in source events, but are not
     def missing_categories
       missing_categories = Hash.new { |hash, key| hash[key] = [] }
-      source_events.reload.each do |source_event|
+      source_events_include_children(true).each do |source_event|
         category_names.each do |category_name|
           category = Category.find_by(name: category_name)
           next unless category.age_group?
@@ -157,7 +162,8 @@ module Competitions
     end
 
     def select_races_to_split(event, competition_category)
-      event.races.select do |r|
+      (event.races + event.children.flat_map(&:races)).select do |r|
+        r.any_results? &&
         r.category.age_group? &&
         competition_category.age_group? &&
         ((r.category.and_over? && competition_category.and_over?) || (r.category.ages_end != ::Categories::MAXIMUM && competition_category.ages_end != ::Categories::MAXIMUM)) &&
@@ -175,9 +181,10 @@ module Competitions
     end
 
     def combine_races(event, competition_category)
-      races_to_combine = select_races_to_combine(event.races, competition_category)
+      races_to_combine = select_races_to_combine(event.races + event.children.flat_map(&:races), competition_category)
 
       if races_to_combine.present?
+        logger.debug "Combine races for #{event.full_name} #{competition_category.name}: #{races_to_combine.map(&:name).sort}"
         existing_race = event.races.detect { |r| r.category == competition_category }
         race = existing_race || event.races.create!(category: competition_category, bar_points: 0, updated_by: self, visible: false)
 
@@ -189,6 +196,7 @@ module Competitions
 
     def select_races_to_combine(races, competition_category)
       races.select do |r|
+        r.any_results? &&
         r.category.age_group? &&
         competition_category.age_group? &&
         r.category.gender     == competition_category.gender &&
