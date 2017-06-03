@@ -73,6 +73,14 @@ module Competitions
         [ "Women Category 4", "Women Category 4/5" ]
       when "Category 3 Women"
         [ "Women Category 3" ]
+      when "Masters Men 40-49"
+        [ "Masters Men 40-49", "Men 160-199" ]
+      when "Masters Men 50-59"
+        [ "Masters Men 50-59", "Men 200-239" ]
+      when "Masters Men 60-69"
+        [ "Masters Men 60-69", "Men 240+" ]
+      when "Masters Women 50-59"
+        [ "Masters Women 50-59", "Women 200-239" ]
       else
         []
       end.each do |name|
@@ -84,6 +92,10 @@ module Competitions
     end
 
     def after_source_results(results, race)
+      results.each do |result|
+        result["team_size"] = 1
+      end
+
       if race.name == "Tandem"
         beginning_of_year = Time.zone.now.beginning_of_year
         end_of_year = Time.zone.now.end_of_year
@@ -108,11 +120,11 @@ module Competitions
     def before_calculate
       races_created_for_competition.reject(&:visible?).each(&:destroy)
 
-      missing_categories.each do |event, categories|
-        logger.debug "Missing categories for #{event.full_name}: #{categories.map(&:name).sort}"
-        categories.each do |competition_category|
-          split_races event, competition_category
-          combine_races event, competition_category
+      source_events_include_children(true).each do |source_event|
+        missing_categories(source_event).each do |competition_category|
+          logger.debug "Missing category for #{source_event.full_name}: #{competition_category.name}"
+          split_races source_event, competition_category
+          combine_races source_event, competition_category
         end
       end
 
@@ -125,24 +137,24 @@ module Competitions
     # Split or combined races created only to calculate the Oregon TT Cup
     def races_created_for_competition
       source_events_include_children.map do |event|
-        event.races.select { |r| r.created_by.is_a?(OregonTTCup) }
+        event.races.select { |r| r.created_by.is_a?(Competitions::OregonTTCup) }
       end.flatten
     end
 
     # Find competition categories that should be in source events, but are not
-    def missing_categories
-      missing_categories = Hash.new { |hash, key| hash[key] = [] }
-      source_events_include_children(true).each do |source_event|
-        category_names.each do |category_name|
-          category = Category.find_by(name: category_name)
-          next unless category.age_group?
-          if source_event.races.none? do |race|
-              race.category.gender == category.gender &&
-              race.category.ages == category.ages &&
-              race.any_results?
-            end
-            missing_categories[source_event] = missing_categories[source_event] << category
-          end
+    def missing_categories(source_event)
+      # TODO use select instead?
+      missing_categories = []
+      category_names.each do |category_name|
+        category = Category.find_by(name: category_name)
+        next unless category.age_group?
+
+        if source_event.races.none? do |race|
+             race.category.gender == category.gender &&
+             race.category.ages == category.ages &&
+             race.any_results?
+           end
+          missing_categories << category
         end
       end
 
@@ -164,13 +176,14 @@ module Competitions
     def select_races_to_split(event, competition_category)
       (event.races + event.children.flat_map(&:races)).select do |r|
         r.any_results? &&
-        r.category.age_group? &&
-        competition_category.age_group? &&
-        ((r.category.and_over? && competition_category.and_over?) || (r.category.ages_end != ::Categories::MAXIMUM && competition_category.ages_end != ::Categories::MAXIMUM)) &&
-        r.category.gender     == competition_category.gender &&
-        r.category.ages       != competition_category.ages &&
-        r.category.ages_begin <= competition_category.ages_begin &&
-        r.category.ages_end   >= competition_category.ages_end
+          r.category.age_group? &&
+          competition_category.age_group? &&
+          ((r.category.and_over? && competition_category.and_over?) ||
+            (r.category.ages_end != ::Categories::MAXIMUM && competition_category.ages_end != ::Categories::MAXIMUM)) &&
+          r.category.gender     == competition_category.gender &&
+          r.category.ages       != competition_category.ages &&
+          r.category.ages_begin <= competition_category.ages_begin &&
+          r.category.ages_end   >= competition_category.ages_end
       end
     end
 
@@ -197,16 +210,16 @@ module Competitions
     def select_races_to_combine(races, competition_category)
       races.select do |r|
         r.any_results? &&
-        r.category.age_group? &&
-        competition_category.age_group? &&
-        r.category.gender     == competition_category.gender &&
-        r.category.ages       != competition_category.ages &&
-        (
-          (r.category.ages_begin >= competition_category.ages_begin && r.category.ages_end <= competition_category.ages_end) ||
-          (r.category.ages_begin > competition_category.ages_begin &&
-           r.category.ages_begin < competition_category.ages_end &&
-           r.category.and_over?)
-        )
+          r.category.age_group? &&
+          competition_category.age_group? &&
+          r.category.gender     == competition_category.gender &&
+          r.category.ages       != competition_category.ages &&
+          (
+            (r.category.ages_begin >= competition_category.ages_begin && r.category.ages_end <= competition_category.ages_end) ||
+            (r.category.ages_begin > competition_category.ages_begin &&
+             r.category.ages_begin < competition_category.ages_end &&
+             r.category.and_over?)
+          )
       end
     end
 

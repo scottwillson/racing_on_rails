@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module People
   module Ages
     extend ActiveSupport::Concern
