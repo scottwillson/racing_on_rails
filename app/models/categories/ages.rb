@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Categories
   module Ages
     extend ActiveSupport::Concern
 
-    JUNIORS =  9..18.freeze
-    SENIOR  = 19..29.freeze
+    JUNIORS =  9..18
+    SENIOR  = 19..29
     MASTERS = 30..::Categories::MAXIMUM.freeze
 
     included do
@@ -61,7 +63,15 @@ module Categories
     end
 
     def ages_from_name(name)
-      if name["+"] && !name[/\d\d\d\+/]
+      if name[/\d{3}-\d{3}/]
+        age_range_match = /(\d{3})-(\d{3})/.match(name)
+        ages_begin = age_range_match[1].to_i / team_size(name)
+        ages_end = ((age_range_match[2].to_i + 1) / team_size(name)) - 1
+        ages_begin..ages_end
+      elsif name[/\d{3}\+/]
+        ages_begin = name[/(\d{3})\+/]
+        (ages_begin.to_i / team_size(name))..::Categories::MAXIMUM
+      elsif name["+"]
         if name["Junior"]
           (name[/(9|1\d)\+/].to_i)..JUNIORS.end
         else
@@ -83,6 +93,14 @@ module Categories
         0..(/U(\d\d)/.match(name)[1].to_i - 1)
       else
         ALL
+      end
+    end
+
+    def team_size(name)
+      if name["Two-Person"]
+        2
+      else
+        4
       end
     end
   end
