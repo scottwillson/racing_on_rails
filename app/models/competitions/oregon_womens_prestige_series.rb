@@ -17,6 +17,7 @@ module Competitions
         super << Category.find_by(name: "Pro/1/2 Women")
       elsif race.name == "Women 3"
         super << Category.find_by(name: "Category 3 Women")
+        super << Category.find_by(name: "Women Category 3")
       elsif race.name == "Women 4/5"
         super << Category.find_by(name: "Category 4/5 Women")
         super << Category.find_by(name: "Women 4")
