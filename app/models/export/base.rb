@@ -1,4 +1,6 @@
-require 'csv'
+# frozen_string_literal: true
+
+require "csv"
 
 module Export
   def self.export_all
@@ -18,14 +20,12 @@ module Export
   end
 
   module Base
-    private
-
     def self.export(sql, basename)
       # remove any existing tmp file
       path = Base.tmp_path basename
       path.unlink if path.exist?
       FileUtils.mkdir_p path.dirname unless path.dirname.exist?
-      FileUtils.chmod 0777, path.dirname
+      FileUtils.chmod "u=rwx,g=rwx,o=rwx", path.dirname
 
       # ensure the /public/export directory exists
       target = Base.public_path basename
