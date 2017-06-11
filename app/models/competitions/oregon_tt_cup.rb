@@ -109,10 +109,6 @@ module Competitions
       results
     end
 
-    def source_events_include_children(reload = false)
-      source_events(reload) + source_events.flat_map(&:children)
-    end
-
     # Source events' categories don't match competition's categories.
     # Some need to be split: Junior Men 10-18 to Junior Men 10-12, Junior Men 13-14, etc.
     # Some need to be combined: Masters Men 30-34 and Masters Men 35-39 to Masters Men 30-39
@@ -120,7 +116,7 @@ module Competitions
     def before_calculate
       races_created_for_competition.reject(&:visible?).each(&:destroy)
 
-      source_events_include_children(true).each do |source_event|
+      source_events(true).each do |source_event|
         missing_categories(source_event).each do |competition_category|
           logger.debug "Missing category for #{source_event.full_name}: #{competition_category.name}"
           split_races source_event, competition_category
@@ -131,34 +127,28 @@ module Competitions
       races.reload
       adjust_times
       races_created_for_competition.each(&:place_results_by_time)
-      source_events_include_children.each(&:update_split_from!)
+      source_events.each(&:update_split_from!)
     end
 
     # Split or combined races created only to calculate the Oregon TT Cup
     def races_created_for_competition
-      source_events_include_children.map do |event|
+      source_events.map do |event|
         event.races.select { |r| r.created_by.is_a?(Competitions::OregonTTCup) }
       end.flatten
     end
 
     # Find competition categories that should be in source events, but are not
     def missing_categories(source_event)
-      # TODO use select instead?
-      missing_categories = []
-      category_names.each do |category_name|
-        category = Category.find_by(name: category_name)
-        next unless category.age_group?
-
-        if source_event.races.none? do |race|
-             race.category.gender == category.gender &&
-             race.category.ages == category.ages &&
-             race.any_results?
-           end
-          missing_categories << category
+      category_names
+        .map { |category_name| Category.find_by(name: category_name) }
+        .select(&:age_group?)
+        .select do |category|
+          source_event.races.none? do |race|
+            race.category.gender == category.gender &&
+              race.category.ages == category.ages &&
+              race.any_results?
+          end
         end
-      end
-
-      missing_categories
     end
 
     def split_races(event, competition_category)
