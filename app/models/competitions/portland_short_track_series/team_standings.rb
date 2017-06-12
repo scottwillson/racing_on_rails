@@ -36,6 +36,10 @@ module Competitions
         [ "Team" ]
       end
 
+      def categories?
+        false
+      end
+
       def team?
         true
       end
@@ -73,6 +77,7 @@ module Competitions
           _results = results.select { |r| r["event_id"] == event_id }
           _results = _results.select { |r| r["place"].to_i > 0 }
           _results = group_results_by_team_standings_categories(_results)
+          puts _results.keys
 
           _results.each do |category, category_results|
             _category_results = sort_by_ability_and_place(category_results)
@@ -90,6 +95,8 @@ module Competitions
         grouped_results = Hash.new { |h, k| h[k] = [] }
 
         results.each do |result|
+          category = team_standings_category_for(result)
+          raise("No team standings category for #{result}") unless category
           grouped_results[team_standings_category_for(result)] << result
         end
 
@@ -103,9 +110,23 @@ module Competitions
         end
 
         ages_end = result["category_ages_end"]
+        if result["category_ages_begin"] == 40 && ages_end == 49
+          ages_begin = 45
+          ages_end = 54
+        end
+
         if result["category_ages_begin"] == 45 && ages_end == ::Categories::MAXIMUM
           ages_begin = 45
           ages_end = 54
+        end
+
+        if result["category_ages_begin"] == 50 && ages_end == ::Categories::MAXIMUM
+          ages_begin = 45
+          ages_end = 54
+        end
+
+        if ages_begin == ::Categories::Ages::SENIOR.begin && ages_end == 39
+          ages_end = 34
         end
 
         if ages_begin == ::Categories::Ages::SENIOR.begin && ages_end == 44
