@@ -17,7 +17,7 @@ module Competitions
 
       person = FactoryGirl.create(:person)
       event = FactoryGirl.create(:event, parent: weekly_series)
-      event.races.create!(category: Category.create!(name: "Category 2 Women 35-44")).results.create!(place: 1, person: person)
+      event.races.create!(category: Category.create!(name: "Category 2 Women U45")).results.create!(place: 1, person: person)
 
       event = FactoryGirl.create(:event, parent: weekly_series)
       event.races.create!(category: Category.create!(name: "Elite/Category 1 Women")).results.create!(place: 13, person: person)
@@ -26,7 +26,7 @@ module Competitions
 
       overall = PortlandShortTrackSeries::Overall.first
 
-      race = overall.races.detect { |r| r.name == "Category 2 Women 35-44" }
+      race = overall.races.detect { |r| r.name == "Category 2 Women U45" }
       assert_equal 1, race.results.size
       assert_equal 100, race.results.first.points
 

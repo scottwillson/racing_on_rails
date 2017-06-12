@@ -11,28 +11,26 @@ module Competitions
 
       def category_names
         [
-          "Category 1 Men 19-34",
-          "Category 1 Men 35-44",
+          "Category 1 Men 19-44",
           "Category 1 Men 45+",
-          "Category 2 Men 35-44",
-          "Category 2 Men 45-54",
-          "Category 2 Men 55+",
-          "Category 2 Men U35",
-          "Category 2 Women 35-44",
+          "Category 2 Men U40",
+          "Category 2 Men 40-49",
+          "Category 2 Men 50-59",
+          "Category 2 Men 60+",
+          "Category 2 Women U45",
           "Category 2 Women 45+",
-          "Category 2 Women U35",
-          "Category 3 Men 10-14",
-          "Category 3 Men 15-18",
-          "Category 3 Men 19-44",
-          "Category 3 Men 45+",
-          "Category 3 Women 10-14",
-          "Category 3 Women 15-18",
+          "Category 3 Men 10-13",
+          "Category 3 Men 14-18",
+          "Category 3 Men 19-39",
+          "Category 3 Men 40-49",
+          "Category 3 Men 50+",
+          "Category 3 Women 10-13",
+          "Category 3 Women 14-18",
           "Category 3 Women 19+",
           "Clydesdale",
           "Elite Men",
           "Elite/Category 1 Women",
-          "Singlespeed Men",
-          "Singlespeed Women",
+          "Singlespeed"
         ]
       end
 
@@ -42,18 +40,14 @@ module Competitions
 
       def upgrades
         {
-          "Category 2 Men 35-44"   =>   "Category 3 Men 19-44",
-          "Category 2 Men 45-54"   =>   "Category 3 Men 45+",
-          "Category 2 Men 55+"     =>   "Category 3 Men 45+",
-          "Category 2 Men U35"     => [ "Category 3 Men 10-14", "Category 3 Men 15-18" ],
-          "Category 2 Women 35-44" =>   "Category 3 Women 19+",
-          "Category 2 Women 45+"   =>   "Category 3 Women 19+",
-          "Category 2 Women U35"   => [ "Category 3 Women 10-14", "Category 3 Women 15-18", "Category 3 Women 19+" ],
-          "Category 1 Men 19-34"   =>   "Category 2 Men U35",
-          "Category 1 Men 35-44"   =>   "Category 2 Men 35-44",
-          "Category 1 Men 45+"     => [ "Category 2 Men 45-54", "Category 2 Men 55+" ],
-          "Elite Men"              => [ "Category 1 Men 19-34", "Category 1 Men 35-44", "Category 1 Men 45+" ],
-          "Elite/Category 1 Women" => [ "Category 2 Women 35-44", "Category 2 Women 45+", "Category 2 Women U35" ]
+          "Category 2 Men U40" => [ "Category 3 Men 10-13", "Category 3 Men 14-18", "Category 3 Men 19-39" ],
+          "Category 2 Men 40-49" => "Category 3 Men 40-49",
+          "Category 2 Men 50-59" => "Category 3 Men 50+",
+          "Category 2 Women U45" => [ "Category 3 Women 10-13", "Category 3 Women 14-18", "Category 3 Women 19+" ],
+          "Category 1 Men 19-44" => "Category 2 Men U40",
+          "Category 1 Men 45+"   => [ "Category 2 Men 40-49", "Category 2 Men 50-59", "Category 2 Men 60+" ],
+          "Elite/Category 1 Women" => [ "Category 2 Women U45", "Category 2 Women 45+" ],
+          "Elite Men" => [ "Category 1 Men 19-44", "Category 1 Men 45+" ]
         }
       end
     end

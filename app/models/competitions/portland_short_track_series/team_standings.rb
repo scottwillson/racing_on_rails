@@ -12,10 +12,10 @@ module Competitions
           transaction do
             series = WeeklySeries.where(name: parent_event_name).year(year).first
 
-            if series && series.any_results_including_children?
+            if series&.any_results_including_children?
               team_competition = series.child_competitions.detect { |c| c.is_a? TeamStandings }
               unless team_competition
-                team_competition = self.new(parent_id: series.id)
+                team_competition = new(parent_id: series.id)
                 team_competition.save!
               end
               team_competition.set_date
