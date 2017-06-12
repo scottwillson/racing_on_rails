@@ -77,7 +77,6 @@ module Competitions
           _results = results.select { |r| r["event_id"] == event_id }
           _results = _results.select { |r| r["place"].to_i > 0 }
           _results = group_results_by_team_standings_categories(_results)
-          puts _results.keys
 
           _results.each do |category, category_results|
             _category_results = sort_by_ability_and_place(category_results)
