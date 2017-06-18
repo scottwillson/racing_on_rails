@@ -84,7 +84,7 @@ group :test do
   gem "codeclimate-test-reporter", require: nil
   gem "database_cleaner"
   gem "factory_girl_rails"
-  gem "fakeweb"
+  gem "fakeweb", git: "https://github.com/SamMolokanov/fakeweb.git", branch: "ruby-2-4-1-support"
   gem "minitest", "~> 5.4"
   gem "mocha", require: false
   gem "poltergeist"

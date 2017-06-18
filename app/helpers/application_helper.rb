@@ -30,7 +30,7 @@ module ApplicationHelper
       "1"
     when FalseClass
       "0"
-    when Fixnum
+    when Integer
       value
     when NilClass
       ""
