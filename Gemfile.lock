@@ -468,6 +468,8 @@ DEPENDENCIES
   bullet
   bundler
   bundler-audit
+  capistrano
+  capistrano-bundler
   capistrano-rails
   capistrano-rvm
   capistrano3-puma
