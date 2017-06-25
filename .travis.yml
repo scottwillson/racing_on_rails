@@ -1,6 +1,8 @@
 language: ruby
 cache: bundler
 bundler_args: --without production,staging
+services:
+  - mysql
 script: "bundle exec rake test:ruby && bundle exec rake && bundle exec rake test:acceptance"
 before_script:
   - mysql -e 'drop database if exists racing_on_rails_test'

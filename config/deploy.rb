@@ -55,7 +55,7 @@ namespace :deploy do
   task :cache_error_pages do
     on roles :app do
       %w( 404 422 500 503 ).each do |status_code|
-        execute :curl, "--silent --fail http://#{fetch :app_hostname}/#{status_code} -o #{release_path}/public/#{status_code}.html"
+        execute :curl, "--silent --fail --retry 1 http://#{fetch :app_hostname}/#{status_code} -o #{release_path}/public/#{status_code}.html"
       end
     end
   end
