@@ -7,7 +7,8 @@ script: "bundle exec rake test:ruby && bundle exec rake && bundle exec rake test
 before_install:
   - mysql -e 'drop database if exists racing_on_rails_test'
   - mysql -e 'create database if not exists racing_on_rails_test'
-  - bundle exec rake db:setup RAILS_ENV=test
+before_script:
+  - bundle exec rake db:migrate RAILS_ENV=test
 
 rvm:
   - "2.4.1"
