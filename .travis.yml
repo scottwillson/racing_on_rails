@@ -7,7 +7,7 @@ script: "bundle exec rake test:ruby && bundle exec rake && bundle exec rake test
 before_install:
   - mysql -e 'drop database if exists racing_on_rails_test'
   - mysql -e 'create database if not exists racing_on_rails_test'
-  - mysql -e "grant all privileges on `racing_on_rails_test`.* to 'ror_test'@'localhost'"
+  - mysql -e "grant all on racing_on_rails_test.* to 'ror_test'@'localhost'"
 before_script:
   - bundle exec rake db:setup RAILS_ENV=test
 
