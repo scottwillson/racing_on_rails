@@ -9,4 +9,5 @@ before_script:
 rvm:
   - "2.4.1"
 
+dist: trusty
 sudo: false
