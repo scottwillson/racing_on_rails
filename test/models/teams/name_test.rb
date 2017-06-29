@@ -192,34 +192,34 @@ module Teams
     test "create and override alias" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
-      assert_not_nil(Team.find_by_name("Vanilla"), "Vanilla should exist")
-      assert_not_nil(Alias.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles alias should exist")
-      assert_nil(Team.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles should not exist")
+      assert_not_nil(Team.find_by(name: "Vanilla"), "Vanilla should exist")
+      assert_not_nil(Alias.find_by(name: "Vanilla Bicycles"), "Vanilla Bicycles alias should exist")
+      assert_nil(Team.find_by(name: "Vanilla Bicycles"), "Vanilla Bicycles should not exist")
 
       dupe = Team.create!(name: "Vanilla Bicycles")
       assert(dupe.valid?, "Dupe Vanilla should be valid")
 
-      assert_not_nil(Team.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles should exist")
-      assert_not_nil(Team.find_by_name("Vanilla"), "Vanilla should exist")
-      assert_nil(Alias.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles alias should not exist")
-      assert_nil(Alias.find_by_name("Vanilla"), "Vanilla alias should not exist")
+      assert_not_nil(Team.find_by(name: "Vanilla Bicycles"), "Vanilla Bicycles should exist")
+      assert_not_nil(Team.find_by(name: "Vanilla"), "Vanilla should exist")
+      assert_nil(Alias.find_by(name: "Vanilla Bicycles"), "Vanilla Bicycles alias should not exist")
+      assert_nil(Alias.find_by(name: "Vanilla"), "Vanilla alias should not exist")
     end
 
     test "update to alias" do
       vanilla = FactoryGirl.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
-      assert_not_nil(Team.find_by_name("Vanilla"), "Vanilla should exist")
-      assert_not_nil(Alias.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles alias should exist")
-      assert_nil(Team.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles should not exist")
+      assert_not_nil(Team.find_by(name: "Vanilla"), "Vanilla should exist")
+      assert_not_nil(Alias.find_by(name: "Vanilla Bicycles"), "Vanilla Bicycles alias should exist")
+      assert_nil(Team.find_by(name: "Vanilla Bicycles"), "Vanilla Bicycles should not exist")
 
       vanilla.name = "Vanilla Bicycles"
       vanilla.save!
       assert(vanilla.valid?, "Renamed Vanilla should be valid")
 
-      assert_not_nil(Team.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles should exist")
-      assert_nil(Team.find_by_name("Vanilla"), "Vanilla should not exist")
-      assert_nil(Alias.find_by_name("Vanilla Bicycles"), "Vanilla Bicycles alias should not exist")
-      assert_not_nil(Alias.find_by_name("Vanilla"), "Vanilla alias should exist")
+      assert_not_nil(Team.find_by(name: "Vanilla Bicycles"), "Vanilla Bicycles should exist")
+      assert_nil(Team.find_by(name: "Vanilla"), "Vanilla should not exist")
+      assert_nil(Alias.find_by(name: "Vanilla Bicycles"), "Vanilla Bicycles alias should not exist")
+      assert_not_nil(Alias.find_by(name: "Vanilla"), "Vanilla alias should exist")
     end
 
     test "update name different case" do
