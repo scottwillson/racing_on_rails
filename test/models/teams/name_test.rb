@@ -161,7 +161,7 @@ module Teams
 
       team.reload
       assert_equal("Gründelbrüisers/Stewie Bicycles", team.name, "Team name")
-      assert_equal(0, team.aliases.count, "aliases")
+      assert_equal(0, team.aliases.count, "Expected no aliases, but have: #{team.aliases.map(&:name).join(', ')}")
       assert_equal(1, team.names.count, "Historical names")
     end
 
