@@ -1,4 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
+# frozen_string_literal: true
+
+require_relative "../acceptance_test"
 
 # :stopdoc:
 class EventsTest < AcceptanceTest
@@ -18,7 +20,7 @@ class EventsTest < AcceptanceTest
 
     fill_in "event_name", with: "Sausalito Criterium"
     click_button "Save"
-    assert_page_has_content "Created Sausalito Criterium"
+    wait_for_page_content "Created Sausalito Criterium"
 
     visit "/admin/events"
     assert_page_has_content "Sausalito Criterium"
@@ -136,7 +138,7 @@ class EventsTest < AcceptanceTest
     assert_page_has_content "Senior Men Pro/1/2"
     assert_page_has_content "Senior Men 3"
 
-    kings_valley = Event.find_by_name_and_date("Kings Valley Road Race", "2003-12-31")
+    kings_valley = Event.find_by(name: "Kings Valley Road Race", date: "2003-12-31")
     click_link "destroy_race_#{race_1.id}"
 
     visit "/admin/events?year=2003"
