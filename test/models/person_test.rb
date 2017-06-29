@@ -57,7 +57,7 @@ class PersonTest < ActiveSupport::TestCase
 
   test "team name should preserve aliases" do
     team = Team.create!(name: "Sorella Forte Elite Team")
-    event = SingleDayEvent.create!(date: 1.years.ago)
+    event = SingleDayEvent.create!(date: 1.year.ago)
     senior_men = FactoryGirl.create(:category)
     event.races.create!(category: senior_men).results.create!(team: team)
     team.aliases.create!(name: "Sorella Forte")
@@ -591,7 +591,7 @@ class PersonTest < ActiveSupport::TestCase
     person.date_of_birth = Date.new(18.years.ago.year, 12, 31)
     assert(person.junior?, 'Junior?')
 
-    person.date_of_birth = Date.new(21.years.ago.year, 1, 1)
+    person.date_of_birth = Date.new(21.year.ago.year, 1, 1)
     assert(!person.junior?, 'Junior?')
 
     person.date_of_birth = Date.new(12.years.ago.year, 12, 31)

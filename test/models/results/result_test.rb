@@ -474,10 +474,10 @@ class ResultTest < ActiveSupport::TestCase
   test "stable name on old results" do
     team = Team.create!(name: "Tecate-Una Mas")
 
-    event = SingleDayEvent.create!(date: 1.years.ago)
+    event = SingleDayEvent.create!(date: 1.year.ago)
     senior_men = FactoryGirl.create(:category)
     old_result = event.races.create!(category: senior_men).results.create!(team: team)
-    team.names.create!(name: "Twin Peaks", year: 1.years.ago.year)
+    team.names.create!(name: "Twin Peaks", year: 1.year.ago.year)
 
     event = SingleDayEvent.create!(date: Time.zone.today)
     result = event.races.create!(category: senior_men).results.create!(team: team)

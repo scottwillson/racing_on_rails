@@ -22,7 +22,7 @@ module Teams
 
     test "create new name if there are results from previous year" do
       team = Team.create!(name: "Twin Peaks")
-      event = SingleDayEvent.create!(date: 1.years.ago)
+      event = SingleDayEvent.create!(date: 1.year.ago)
       senior_men = FactoryGirl.create(:category)
       old_result = event.races.create!(category: senior_men).results.create!(team: team)
       assert_equal("Twin Peaks", old_result.team_name, "Team name on old result")
@@ -52,7 +52,7 @@ module Teams
 
       result.destroy
 
-      event = SingleDayEvent.create!(date: 1.years.ago)
+      event = SingleDayEvent.create!(date: 1.year.ago)
       event.races.create!(category: senior_men).results.create!(team: team)
       team.results_before_this_year?
       assert(team.results_before_this_year?, "results_before_this_year? with results only a year ago")
@@ -132,10 +132,10 @@ module Teams
 
     test "rename to other teams name" do
       team_o_safeway = Team.create!(name: "Team Oregon/Safeway")
-      team_o_safeway.names.create!(name: "Team Oregon", year: 1.years.ago.year)
+      team_o_safeway.names.create!(name: "Team Oregon", year: 1.year.ago.year)
 
       team_o_river_city = Team.create!(name: "Team Oregon/River City")
-      event = SingleDayEvent.create!(date: 1.years.ago)
+      event = SingleDayEvent.create!(date: 1.year.ago)
       senior_men = FactoryGirl.create(:category)
       event.races.create!(category: senior_men).results.create!(team: team_o_river_city)
       team_o_river_city.name = "Team Oregon"
@@ -153,7 +153,7 @@ module Teams
     # Reproduce UTF-8 conversion issues
     test "rename to alias" do
       team = Team.create!(name: "Grundelbruisers/Stewie Bicycles")
-      team.names.create!(name: "Grundelbruisers/Stewie Bicycles", year: 1.years.ago.year)
+      team.names.create!(name: "Grundelbruisers/Stewie Bicycles", year: 1.year.ago.year)
 
       team.reload
       team.name = "Gründelbrüisers/Stewie Bicycles"
@@ -167,10 +167,10 @@ module Teams
 
     test "different teams with same name" do
       team_o_safeway = Team.create!(name: "Team Oregon/Safeway")
-      team_o_safeway.names.create!(name: "Team Oregon", year: 1.years.ago.year)
+      team_o_safeway.names.create!(name: "Team Oregon", year: 1.year.ago.year)
 
       team_o_river_city = Team.create!(name: "Team Oregon/River City")
-      team_o_river_city.names.create!(name: "Team Oregon", year: 1.years.ago.year)
+      team_o_river_city.names.create!(name: "Team Oregon", year: 1.year.ago.year)
     end
 
     test "renamed teams should keep aliases" do
