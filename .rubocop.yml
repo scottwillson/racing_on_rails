@@ -30,6 +30,9 @@ Metrics/ModuleLength:
   CountComments: false
   Max: 300
 
+Rails/FilePath:
+  Enabled: false
+
 SingleLineBlockParams:
   Enabled: false
 
