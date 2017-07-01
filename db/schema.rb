@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170228153822) do
+ActiveRecord::Schema.define(version: 20170701201331) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -783,7 +783,6 @@ ActiveRecord::Schema.define(version: 20170228153822) do
   end
 
   create_table "refunds", force: :cascade do |t|
-    t.integer  "order_id",     limit: 4
     t.decimal  "amount",                 precision: 10, scale: 2
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -791,7 +790,6 @@ ActiveRecord::Schema.define(version: 20170228153822) do
   end
 
   add_index "refunds", ["line_item_id"], name: "index_refunds_on_line_item_id", using: :btree
-  add_index "refunds", ["order_id"], name: "index_refunds_on_order_id", using: :btree
 
   create_table "regions", force: :cascade do |t|
     t.string   "name",           limit: 255, null: false
