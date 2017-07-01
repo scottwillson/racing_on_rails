@@ -44,7 +44,7 @@ gem "rest-client", ">= 2.0.0.rc1"
 gem "ri_cal"
 # Later versions break fractional seconds in Excel import
 gem "roo", "= 2.1.1"
-gem "roo-xls", git: "https://github.com/scottwillson/roo-xls.git", branch: "preserve-fractional-seconds"
+gem "roo-xls"
 gem "ruby-ole"
 # Security update
 gem "rubyzip", ">= 1.2.1"
