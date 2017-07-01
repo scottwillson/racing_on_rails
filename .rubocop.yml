@@ -42,6 +42,9 @@ SpaceInsideBrackets:
 StringLiterals:
   EnforcedStyle: double_quotes
 
+Style/NumericPredicate:
+  Enabled: false  
+
 Style/SpaceInsidePercentLiteralDelimiters:
   Enabled: false
 
