@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 if (Rails.env.test? || Rails.env.development?) && Rails.logger.level == 0
-  ActiveSupport::Notifications.subscribe(/process_action.action_controller|racing_on_rails/) do |name, start, finish, id, payload|
+  ActiveSupport::Notifications.subscribe(/process_action.action_controller|racing_on_rails/) do |name, start, finish, _, payload|
     Rails.logger.debug "#{name} #{payload} #{finish - start}"
   end
 end
@@ -9,7 +11,7 @@ if Rails.env.production? || Rails.env.staging?
   parameter_filter = ActionDispatch::Http::ParameterFilter.new(Rails.application.config.filter_parameters)
 
   ActiveSupport::Notifications.subscribe(/process_action.action_controller|racing_on_rails/) do |name, start, finish, id, payload|
-    if payload[:status] && payload[:status].is_a?(Fixnum)
+    if payload[:status] && payload[:status].is_a?(Integer)
       payload[:status] = payload[:status].to_s
     end
 
@@ -21,9 +23,7 @@ if Rails.env.production? || Rails.env.staging?
       message: name,
       racing_association: RacingAssociation.current.short_name,
       start: start
-    }.merge(
-      parameter_filter.filter payload
-    )
+    }.merge(parameter_filter.filter(payload))
 
     # Ideally, would traverse params and fix encodings
     begin
