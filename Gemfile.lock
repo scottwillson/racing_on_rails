@@ -31,6 +31,15 @@ GIT
       ttfunk (~> 1.0.3)
 
 GIT
+  remote: https://github.com/scottwillson/roo.git
+  revision: 79d50ac01497abe567acccf8c3aee54500c72c17
+  branch: v2.1.1-ruby-2-4
+  specs:
+    roo (2.1.1)
+      nokogiri (~> 1)
+      rubyzip (~> 1.1, < 2.0.0)
+
+GIT
   remote: https://github.com/scottwillson/vestal_versions.git
   revision: 7bf136030e307ac42d9d6aceaf7719677080d9f6
   specs:
@@ -355,9 +364,6 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     ri_cal (0.8.8)
-    roo (2.1.1)
-      nokogiri (~> 1)
-      rubyzip (~> 1.1, < 2.0.0)
     roo-xls (1.1.0)
       nokogiri
       roo (>= 2.0.0beta1, < 3)
@@ -512,7 +518,7 @@ DEPENDENCIES
   redcarpet
   rest-client (>= 2.0.0.rc1)
   ri_cal
-  roo (= 2.1.1)
+  roo!
   roo-xls
   rubocop
   ruby-ole
