@@ -11,7 +11,7 @@ module Competitions
 
       def category_names
         [
-          "Category 1 Men 19-44",
+          "Category 1 Men U45",
           "Category 1 Men 45+",
           "Category 2 Men U40",
           "Category 2 Men 40-49",
@@ -44,10 +44,10 @@ module Competitions
           "Category 2 Men 40-49" => "Category 3 Men 40-49",
           "Category 2 Men 50-59" => "Category 3 Men 50+",
           "Category 2 Women U45" => [ "Category 3 Women 10-13", "Category 3 Women 14-18", "Category 3 Women 19+" ],
-          "Category 1 Men 19-44" => "Category 2 Men U40",
+          "Category 1 Men U45" => "Category 2 Men U40",
           "Category 1 Men 45+"   => [ "Category 2 Men 40-49", "Category 2 Men 50-59", "Category 2 Men 60+" ],
           "Elite/Category 1 Women" => [ "Category 2 Women U45", "Category 2 Women 45+" ],
-          "Elite Men" => [ "Category 1 Men 19-44", "Category 1 Men 45+" ]
+          "Elite Men" => [ "Category 1 Men U45", "Category 1 Men 45+" ]
         }
       end
     end
