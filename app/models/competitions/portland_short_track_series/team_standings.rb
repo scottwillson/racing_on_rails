@@ -15,7 +15,7 @@ module Competitions
             series = WeeklySeries.where(name: parent_event_name).year(year).first
 
             if series && series.any_results_including_children?
-              team_competition = series.child_competitions.detect { |c| c.is_a? self.class }
+              team_competition = self.year(year).first
               unless team_competition
                 team_competition = new(parent_id: series.id)
                 team_competition.save!
