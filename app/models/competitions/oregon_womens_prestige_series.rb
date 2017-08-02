@@ -30,10 +30,6 @@ module Competitions
       true
     end
 
-    def maximum_events(_)
-      5
-    end
-
     def source_event_types
       [ MultiDayEvent, SingleDayEvent, Event ]
     end
