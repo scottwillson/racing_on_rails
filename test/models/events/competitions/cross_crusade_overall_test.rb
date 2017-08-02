@@ -119,7 +119,7 @@ module Competitions
       assert_equal(false, result.preliminary?, "Preliminary?")
       assert_equal("1", result.place, "place")
       assert_equal(7, result.scores.size, "Scores")
-      assert_equal(26 + 26 + 0 + 26 + 0 + 26 + 20 + 26 + 0, result.points, "points")
+      assert_equal(26 + 26 + 0 + 26 + 0 + 26 + 20 + 26 + 20, result.points, "points")
       assert_equal(person, result.person, "person")
 
       men_1_2_overall_race = CrossCrusadeOverall.last.races.detect { |race| race.category == men_1_2 }
