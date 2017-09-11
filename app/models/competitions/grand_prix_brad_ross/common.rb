@@ -5,7 +5,7 @@ module Competitions
 
       included do
         def self.parent_event_name
-          "Grand Prix Brad Ross"
+          "GPCM"
         end
       end
 
