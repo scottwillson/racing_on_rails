@@ -4,4 +4,6 @@
   puts "Deploy #{association}"
   `script/local #{association}`
   puts `cap production deploy`
+  puts `cap production puma:stop`
+  puts `cap production puma:start`
 end
