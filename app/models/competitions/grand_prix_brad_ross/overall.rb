@@ -6,11 +6,11 @@ module Competitions
       before_create :set_name
 
       def minimum_events
-        4
+        5
       end
 
       def maximum_events(race)
-        4
+        6
       end
 
       def upgrade_points_multiplier
