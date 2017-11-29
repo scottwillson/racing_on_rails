@@ -23,7 +23,7 @@ module Competitions
     end
 
     def set_notes
-      self.notes = %Q{ Three event minimum. Results that don't meet the minimum are listed in italics. See the <a href="http://crosscrusade.com/series.html">series rules</a>. }
+      self.notes = %Q{ Three event minimum. Results that don't meet the minimum are listed in italics. See the <a href="http://www.crosscrusade.com/series-info-rules/">series rules</a>. }
     end
 
     def set_name
