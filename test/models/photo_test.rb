@@ -2,7 +2,7 @@ require "test_helper"
 
 class PhotoTest < ActiveSupport::TestCase
   test "create" do
-    FactoryGirl.create :photo
+    FactoryBot.create :photo
   end
 
   test "set title on validate from caption" do

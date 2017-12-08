@@ -4,8 +4,8 @@ require_relative "racing_on_rails/integration_test"
 class LoginIntegrationTest < RacingOnRails::IntegrationTest
   def setup
     super
-    @administrator = FactoryGirl.create(:administrator)
-    @member = FactoryGirl.create(:person_with_login, login: "bob.jones")
+    @administrator = FactoryBot.create(:administrator)
+    @member = FactoryBot.create(:person_with_login, login: "bob.jones")
   end
 
   # logged-in?, person_id?, same person?, admin?

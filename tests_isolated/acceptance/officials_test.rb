@@ -5,20 +5,20 @@ class OfficialsTest < AcceptanceTest
   test "view assignments" do
     javascript!
 
-    FactoryGirl.create(:discipline, name: "Cyclocross")
-    FactoryGirl.create(:discipline, name: "Downhill")
-    FactoryGirl.create(:discipline, name: "Mountain Bike")
-    FactoryGirl.create(:discipline, name: "Road")
-    FactoryGirl.create(:discipline, name: "Singlespeed")
-    FactoryGirl.create(:discipline, name: "Track")
-    FactoryGirl.create(:number_issuer, name: RacingAssociation.current.short_name)
+    FactoryBot.create(:discipline, name: "Cyclocross")
+    FactoryBot.create(:discipline, name: "Downhill")
+    FactoryBot.create(:discipline, name: "Mountain Bike")
+    FactoryBot.create(:discipline, name: "Road")
+    FactoryBot.create(:discipline, name: "Singlespeed")
+    FactoryBot.create(:discipline, name: "Track")
+    FactoryBot.create(:number_issuer, name: RacingAssociation.current.short_name)
 
     visit "/admin/first_aid_providers"
 
     visit "/people"
     assert page.has_no_selector? "export_link"
 
-    member = FactoryGirl.create(:person_with_login, official: true)
+    member = FactoryBot.create(:person_with_login, official: true)
     login_as member
 
     visit "/admin/first_aid_providers"

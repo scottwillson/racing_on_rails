@@ -18,14 +18,14 @@ class IndexTest < ActionController::TestCase
   end
 
   test "list" do
-    FactoryGirl.create(:person, first_name: "Bob", last_name: "Jones")
+    FactoryBot.create(:person, first_name: "Bob", last_name: "Jones")
     get(:list, name: 'jone')
     assert_response(:success)
     assert_not_nil(@response.body.index("Jones"), "Search for jone should find Jones #{@response}")
   end
 
   test "index as promoter" do
-    promoter = FactoryGirl.create(:promoter)
+    promoter = FactoryBot.create(:promoter)
     PersonSession.create(promoter)
     get(:index)
     assert_response(:success)
@@ -37,7 +37,7 @@ class IndexTest < ActionController::TestCase
   end
 
   test "find" do
-    weaver = FactoryGirl.create(:person)
+    weaver = FactoryBot.create(:person)
     get(:index, name: "weav")
     assert_response(:success)
     assert_not_nil(assigns["people"], "Should assign people")
@@ -54,7 +54,7 @@ class IndexTest < ActionController::TestCase
   end
 
   test "find empty name" do
-    FactoryGirl.create(:person)
+    FactoryBot.create(:person)
     get(:index, name: '')
     assert_response(:success)
     assert_not_nil(assigns["people"], "Should assign people")
@@ -64,7 +64,7 @@ class IndexTest < ActionController::TestCase
   end
 
   test "ajax ssl find" do
-    FactoryGirl.create(:person)
+    FactoryBot.create(:person)
     use_ssl
     xhr :get, :index, name: "weav", format: "json"
     assert @response.body["Weaver"], "Response should include Weaver in #{@response.body}"

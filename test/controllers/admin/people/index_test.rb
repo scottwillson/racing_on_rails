@@ -21,7 +21,7 @@ module Admin
 
       test "not logged in edit" do
         destroy_person_session
-        person = FactoryGirl.create(:person)
+        person = FactoryBot.create(:person)
         get(:edit, id: person.to_param)
         assert_nil(@request.session["person"], "No person in session")
         assert_redirected_to new_person_session_url(secure_redirect_options)
@@ -37,7 +37,7 @@ module Admin
       end
 
       test "find" do
-        person = FactoryGirl.create(:person)
+        person = FactoryBot.create(:person)
         get(:index, name: 'weav')
         assert_response :success
         assert_template("admin/people/index")
@@ -48,9 +48,9 @@ module Admin
       end
 
       test "find by number" do
-        FactoryGirl.create(:discipline)
-        FactoryGirl.create(:number_issuer)
-        person = FactoryGirl.create(:person, road_number: "777")
+        FactoryBot.create(:discipline)
+        FactoryBot.create(:number_issuer)
+        person = FactoryBot.create(:person, road_number: "777")
         get(:index, name: '777')
         assert_response :success
         assert_template("admin/people/index")
@@ -61,7 +61,7 @@ module Admin
       end
 
       test "find nothing" do
-        FactoryGirl.create(:person)
+        FactoryBot.create(:person)
         get(:index, name: 's7dfnacs89danfx')
         assert_response :success
         assert_template("admin/people/index")
@@ -80,7 +80,7 @@ module Admin
       end
 
       test "find limit" do
-        FactoryGirl.create_list(:person, 100)
+        FactoryBot.create_list(:person, 100)
         get(:index, name: 'Ryan')
         assert_response :success
         assert_template("admin/people/index")
@@ -91,7 +91,7 @@ module Admin
       end
 
       test "blank name" do
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
             id: molly.to_param,
             name: "name",
@@ -106,7 +106,7 @@ module Admin
       end
 
       test "index with cookie" do
-        FactoryGirl.create(:person)
+        FactoryBot.create(:person)
         @request.cookies["person_name"] = "weaver"
         get(:index)
         assert_response :success

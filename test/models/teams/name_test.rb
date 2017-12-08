@@ -23,7 +23,7 @@ module Teams
     test "create new name if there are results from previous year" do
       team = Team.create!(name: "Twin Peaks")
       event = SingleDayEvent.create!(date: 1.year.ago)
-      senior_men = FactoryGirl.create(:category)
+      senior_men = FactoryBot.create(:category)
       old_result = event.races.create!(category: senior_men).results.create!(team: team)
       assert_equal("Twin Peaks", old_result.team_name, "Team name on old result")
 
@@ -46,7 +46,7 @@ module Teams
       assert(!team.results_before_this_year?, "results_before_this_year? with no results")
 
       event = SingleDayEvent.create!(date: Time.zone.today)
-      senior_men = FactoryGirl.create(:category)
+      senior_men = FactoryBot.create(:category)
       result = event.races.create!(category: senior_men).results.create!(team: team)
       assert(!team.results_before_this_year?, "results_before_this_year? with results in this year")
 
@@ -71,7 +71,7 @@ module Teams
     test "rename multiple times" do
       team = Team.create!(name: "Twin Peaks")
       event = SingleDayEvent.create!(date: 3.years.ago)
-      senior_men = FactoryGirl.create(:category)
+      senior_men = FactoryBot.create(:category)
       event.races.create!(category: senior_men).results.create!(team: team)
       assert_equal(0, team.names(true).size, "names")
 
@@ -96,7 +96,7 @@ module Teams
     end
 
     test "name date or year" do
-      team = FactoryGirl.create(:team, name: "Vanilla")
+      team = FactoryBot.create(:team, name: "Vanilla")
       team.names.create!(name: "Sacha's Team", year: 2001)
       assert_equal("Sacha's Team", team.name(Date.new(2001, 12, 31)), "name for 2001-12-31")
       assert_equal("Sacha's Team", team.name(Date.new(2001)), "name for 2001-01-01")
@@ -104,7 +104,7 @@ module Teams
     end
 
     test "multiple names" do
-      team = FactoryGirl.create(:team, name: "Vanilla")
+      team = FactoryBot.create(:team, name: "Vanilla")
       team.names.create!(name: "Mapei", year: 2001)
       team.names.create!(name: "Mapei-Clas", year: 2002)
       team.names.create!(name: "Quick Step", year: 2003)
@@ -120,7 +120,7 @@ module Teams
     end
 
     test "rename to old name" do
-      team = FactoryGirl.create(:team, name: "Vanilla")
+      team = FactoryBot.create(:team, name: "Vanilla")
       team.names.create!(name: "Sacha's Team", year: 2001)
       assert_equal(1, team.names.size, "Historical names")
       assert_equal("Sacha's Team", team.name(2001), "Historical name 2001")
@@ -136,7 +136,7 @@ module Teams
 
       team_o_river_city = Team.create!(name: "Team Oregon/River City")
       event = SingleDayEvent.create!(date: 1.year.ago)
-      senior_men = FactoryGirl.create(:category)
+      senior_men = FactoryBot.create(:category)
       event.races.create!(category: senior_men).results.create!(team: team_o_river_city)
       team_o_river_city.name = "Team Oregon"
       team_o_river_city.save!
@@ -176,7 +176,7 @@ module Teams
     test "renamed teams should keep aliases" do
       team = Team.create!(name: "Twin Peaks/The Bike Nook")
       event = SingleDayEvent.create!(date: 3.years.ago)
-      senior_men = FactoryGirl.create(:category)
+      senior_men = FactoryBot.create(:category)
       event.races.create!(category: senior_men).results.create!(team: team)
       team.aliases.create!(name: "Twin Peaks")
       assert_equal(0, team.names(true).size, "names")
@@ -190,7 +190,7 @@ module Teams
     end
 
     test "create and override alias" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla")
+      vanilla = FactoryBot.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
       assert_not_nil(Team.find_by(name: "Vanilla"), "Vanilla should exist")
       assert_not_nil(Alias.find_by(name: "Vanilla Bicycles"), "Vanilla Bicycles alias should exist")
@@ -206,7 +206,7 @@ module Teams
     end
 
     test "update to alias" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla")
+      vanilla = FactoryBot.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
       assert_not_nil(Team.find_by(name: "Vanilla"), "Vanilla should exist")
       assert_not_nil(Alias.find_by(name: "Vanilla Bicycles"), "Vanilla Bicycles alias should exist")
@@ -223,7 +223,7 @@ module Teams
     end
 
     test "update name different case" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla")
+      vanilla = FactoryBot.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
       assert_equal("Vanilla", vanilla.name, "Name before update")
       vanilla.name = "vanilla"

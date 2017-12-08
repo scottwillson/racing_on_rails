@@ -4,12 +4,12 @@ module Competitions
   # :stopdoc:
   class MtbBarTest < ActiveSupport::TestCase
     test "no masters or junior ability categories" do
-      FactoryGirl.create(:discipline, name: "Super D")
-      mtb = FactoryGirl.create(:discipline, name: "Mountain Bike")
+      FactoryBot.create(:discipline, name: "Super D")
+      mtb = FactoryBot.create(:discipline, name: "Mountain Bike")
 
-      junior_men        = FactoryGirl.create(:category, name: "Junior Men")
-      expert_junior_men = FactoryGirl.create(:category, name: "Expert Junior Men", parent: junior_men)
-      novice_junior_men  = FactoryGirl.create(:category, name: "Novice (Category 3) Junior Men 10-13", parent: junior_men)
+      junior_men        = FactoryBot.create(:category, name: "Junior Men")
+      expert_junior_men = FactoryBot.create(:category, name: "Expert Junior Men", parent: junior_men)
+      novice_junior_men  = FactoryBot.create(:category, name: "Novice (Category 3) Junior Men 10-13", parent: junior_men)
       mtb.bar_categories << expert_junior_men
       mtb.bar_categories << junior_men
       mtb.bar_categories << novice_junior_men
@@ -41,11 +41,11 @@ module Competitions
 
     test "numerical mtb categories" do
       # Map categories as if they were road cats
-      mtb         = FactoryGirl.create(:discipline, name: "Mountain Bike")
-      road        = FactoryGirl.create(:discipline, name: "Road")
-      overall     = FactoryGirl.create(:discipline, name: "Overall")
-      short_track = FactoryGirl.create(:discipline, name: "Short Track")
-                    FactoryGirl.create(:discipline, name: "Downhill")
+      mtb         = FactoryBot.create(:discipline, name: "Mountain Bike")
+      road        = FactoryBot.create(:discipline, name: "Road")
+      overall     = FactoryBot.create(:discipline, name: "Overall")
+      short_track = FactoryBot.create(:discipline, name: "Short Track")
+                    FactoryBot.create(:discipline, name: "Downhill")
 
       elite_men = Category.find_or_create_by(name: "Elite Men")
       senior_men = Category.find_or_create_by(name: "Senior Men")
@@ -116,20 +116,20 @@ module Competitions
       short_track.bar_categories << Category.find_by_name("Category 3 Men")
 
       # Create road and MTB/DH result for each category
-      tonkin = FactoryGirl.create(:person, name: "Tonkin")
+      tonkin = FactoryBot.create(:person, name: "Tonkin")
       event = SingleDayEvent.create!(discipline: "Road")
       event.races.create!(category: elite_men, field_size: 6).results.create!(place: "3", person: tonkin)
 
-      weaver = FactoryGirl.create(:person, name: "Weaver")
+      weaver = FactoryBot.create(:person, name: "Weaver")
       event.races.create!(category: men_1, field_size: 6).results.create!(place: "2", person: weaver)
 
-      molly = FactoryGirl.create(:person, name: "Molly")
+      molly = FactoryBot.create(:person, name: "Molly")
       event.races.create!(category: men_2, field_size: 6).results.create!(place: "5", person: molly)
 
-      alice = FactoryGirl.create(:person, name: "Alice")
+      alice = FactoryBot.create(:person, name: "Alice")
       event.races.create!(category: men_3, field_size: 6).results.create!(place: "6", person: alice)
 
-      matson = FactoryGirl.create(:person, name: "Matson")
+      matson = FactoryBot.create(:person, name: "Matson")
       event.races.create!(category: category_4_men, field_size: 6).results.create!(place: "1", person: matson)
 
       event = SingleDayEvent.create!(discipline: "Mountain Bike")
@@ -352,9 +352,9 @@ module Competitions
     end
 
     test "masters state champs" do
-      mtb = FactoryGirl.create(:discipline, name: "Mountain Bike")
+      mtb = FactoryBot.create(:discipline, name: "Mountain Bike")
       event = SingleDayEvent.create!(name: "Mudslinger", date: Date.new(2001, 9, 7), discipline: "Mountain Bike", bar_points: 2)
-      masters_men = FactoryGirl.create(:category, name: "Masters Men")
+      masters_men = FactoryBot.create(:category, name: "Masters Men")
       masters_men_45_54 = masters_men.children.create!(name: "Masters Men 45 -54")
       race = event.races.create!(category: masters_men_45_54)
       kc = Person.create!(name: "KC Mautner", member_from: Date.new(2001, 1, 1))

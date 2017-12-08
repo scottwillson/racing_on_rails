@@ -16,19 +16,19 @@ module Admin
     end
 
     test "edit" do
-      category = FactoryGirl.create(:category)
+      category = FactoryBot.create(:category)
       get :edit, id: category
     end
 
     test "update should save name as-is" do
-      category = FactoryGirl.create(:category)
+      category = FactoryBot.create(:category)
       patch :update, id: category, category: { raw_name: "JUNIORS" }
       assert_equal "JUNIORS", category.reload.name
       assert_redirected_to edit_admin_category_path(category)
     end
 
     test "invalid update" do
-      category = FactoryGirl.create(:category)
+      category = FactoryBot.create(:category)
       patch :update, id: category, category: { raw_name: "" }
       assert_response :success
     end

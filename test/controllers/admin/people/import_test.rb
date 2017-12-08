@@ -11,13 +11,13 @@ module Admin
         create_administrator_session
         use_ssl
 
-        FactoryGirl.create(:discipline, name: "Cyclocross")
-        FactoryGirl.create(:discipline, name: "Downhill")
-        FactoryGirl.create(:discipline, name: "Mountain Bike")
-        FactoryGirl.create(:discipline, name: "Road")
-        FactoryGirl.create(:discipline, name: "Singlespeed")
-        FactoryGirl.create(:discipline, name: "Track")
-        FactoryGirl.create(:number_issuer)
+        FactoryBot.create(:discipline, name: "Cyclocross")
+        FactoryBot.create(:discipline, name: "Downhill")
+        FactoryBot.create(:discipline, name: "Mountain Bike")
+        FactoryBot.create(:discipline, name: "Road")
+        FactoryBot.create(:discipline, name: "Singlespeed")
+        FactoryBot.create(:discipline, name: "Track")
+        FactoryBot.create(:number_issuer)
       end
 
       test "preview import" do
@@ -44,7 +44,7 @@ module Admin
       end
 
       test "import" do
-        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         existing_duplicate = Duplicate.new(new_attributes: Person.new(name: "Erik Tonkin").attributes)
         existing_duplicate.people << tonkin
         existing_duplicate.save!
@@ -65,7 +65,7 @@ module Admin
       end
 
       test "import next year" do
-        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         existing_duplicate = Duplicate.new(new_attributes: Person.new(name: 'Erik Tonkin').attributes)
         existing_duplicate.people << tonkin
         existing_duplicate.save!
@@ -102,8 +102,8 @@ module Admin
       end
 
       test "import with duplicates" do
-        FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
-        FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
+        FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         people_before_import = Person.count
 
         fixture_file_upload("membership/duplicates.xlsx", "application/vnd.ms-excel", :binary)
@@ -133,12 +133,12 @@ module Admin
       end
 
       test "resolve duplicates" do
-        FactoryGirl.create(:person, first_name: "Alice", last_name: "Pennington")
+        FactoryBot.create(:person, first_name: "Alice", last_name: "Pennington")
 
-        FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         Person.create!(name: 'Erik Tonkin')
 
-        FactoryGirl.create(:person, first_name: "Ryan", last_name: "Weaver")
+        FactoryBot.create(:person, first_name: "Ryan", last_name: "Weaver")
         Person.create!(name: 'Ryan Weaver', city: 'Kenton')
         weaver_3 = Person.create!(name: 'Ryan Weaver', city: 'Lake Oswego')
         alice_2 = Person.create!(name: 'Alice Pennington', road_category: '3')

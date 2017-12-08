@@ -5,8 +5,8 @@ class SetAssociationsTest < ActiveSupport::TestCase
   setup :number_issuer
 
   def number_issuer
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline)
+    FactoryBot.create(:number_issuer)
+    FactoryBot.create(:discipline)
   end
 
   test "set associated records 2" do
@@ -25,13 +25,13 @@ class SetAssociationsTest < ActiveSupport::TestCase
   end
 
   test "find by alias" do
-    kona = FactoryGirl.create(:team, name: "Kona")
-    tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
+    kona = FactoryBot.create(:team, name: "Kona")
+    tonkin = FactoryBot.create(:person, name: "Erik Tonkin")
     Alias.create!(team: kona, name: 'Kona Les Gets')
     Alias.create!(person: tonkin, name: 'Erin Tonkin')
 
     # new, no aliases
-    race = FactoryGirl.create(:race)
+    race = FactoryBot.create(:race)
     result = race.results.create!(place: 1, first_name: 'Fausto', last_name: 'Coppi', team_name: 'Bianchi', number: '')
     assert_equal('Fausto Coppi', result.name, 'person name')
     assert_equal('Bianchi', result.team_name, 'team name')
@@ -94,12 +94,12 @@ class SetAssociationsTest < ActiveSupport::TestCase
   end
 
   test "set associated records" do
-    tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
-    FactoryGirl.create(:result, person: tonkin)
+    tonkin = FactoryBot.create(:person, name: "Erik Tonkin")
+    FactoryBot.create(:result, person: tonkin)
     tonkin.aliases.create!(name: "Eric Tonkin")
 
     # Same name, number as existing person
-    kings_valley_pro_1_2_2004 = FactoryGirl.create(:race)
+    kings_valley_pro_1_2_2004 = FactoryBot.create(:race)
     results = kings_valley_pro_1_2_2004.results
     result_1 = results.create!(place: 1, first_name: 'Erik', last_name: 'Tonkin', number: '104')
     assert_equal(tonkin, result_1.person, 'Person')
@@ -118,13 +118,13 @@ class SetAssociationsTest < ActiveSupport::TestCase
   end
 
   test "set associated records non road" do
-    FactoryGirl.create(:cyclocross_discipline)
-    FactoryGirl.create(:mtb_discipline)
+    FactoryBot.create(:cyclocross_discipline)
+    FactoryBot.create(:mtb_discipline)
 
-    tonkin = FactoryGirl.create(:person, name: "Erik Tonkin", ccx_number: '555A')
+    tonkin = FactoryBot.create(:person, name: "Erik Tonkin", ccx_number: '555A')
 
-    kings_valley_2004 = FactoryGirl.create(:event, discipline: "Cyclocross")
-    kings_valley_pro_1_2_2004 = FactoryGirl.create(:race, event: kings_valley_2004)
+    kings_valley_2004 = FactoryBot.create(:event, discipline: "Cyclocross")
+    kings_valley_pro_1_2_2004 = FactoryBot.create(:race, event: kings_valley_2004)
 
     # CX: Same name, different number as existing person
     results = kings_valley_pro_1_2_2004.results
@@ -133,13 +133,13 @@ class SetAssociationsTest < ActiveSupport::TestCase
   end
 
   test "differentiate people by license" do
-    tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
+    tonkin = FactoryBot.create(:person, name: "Erik Tonkin")
     tonkin.license = "12345"
     tonkin.save!
 
     tonkin_clone = Person.create!(name: "Erik Tonkin", license: "999999")
 
-    kings_valley_pro_1_2_2004 = FactoryGirl.create(:race)
+    kings_valley_pro_1_2_2004 = FactoryBot.create(:race)
     results = kings_valley_pro_1_2_2004.results
     result = results.create!(place: 1, first_name: 'Erik', last_name: 'Tonkin', license: '12345')
     assert_equal(tonkin, result.person, 'Person')
@@ -154,7 +154,7 @@ class SetAssociationsTest < ActiveSupport::TestCase
     # Same number
     Person.create!(name: "Jenny Biker", road_number: "600")
 
-    senior_men = FactoryGirl.create(:category)
+    senior_men = FactoryBot.create(:category)
     results = SingleDayEvent.create!.races.create!(category: senior_men).results
     result = results.create!(place: 1, first_name: 'Joe', last_name: 'Racer', number: "550")
     assert_equal(person_clone, result.person, 'Person')
@@ -177,7 +177,7 @@ class SetAssociationsTest < ActiveSupport::TestCase
     person_clone = Person.create!(name: "Joe Racer")
     Person.create!(name: "Jenny Biker")
     person_with_same_number = Person.create!(name: "Eddy Racer", road_number: "600")
-    senior_men = FactoryGirl.create(:category)
+    senior_men = FactoryBot.create(:category)
     SingleDayEvent.create!.races.create!(category: senior_men).results.create!(person: person_with_same_number)
 
     results = SingleDayEvent.create!.races.create!(category: senior_men).results
@@ -206,7 +206,7 @@ class SetAssociationsTest < ActiveSupport::TestCase
     person_clone = Person.create!(name: "Joe Racer")
     Person.create!(name: "Jenny Biker")
     person_with_same_number = Person.create!(name: "Eddy Racer", road_number: "600")
-    senior_men = FactoryGirl.create(:category)
+    senior_men = FactoryBot.create(:category)
     SingleDayEvent.create!.races.create!(category: senior_men).results.create!(person: person_with_same_number)
 
     results = SingleDayEvent.create!.races.create!(category: senior_men).results
@@ -219,10 +219,10 @@ class SetAssociationsTest < ActiveSupport::TestCase
 
   test "find people" do
     # TODO Add warning that numbers don't match
-    tonkin = FactoryGirl.create(:person, name: 'Erik Tonkin', team: FactoryGirl.create(:team, name: "Kona"))
+    tonkin = FactoryBot.create(:person, name: 'Erik Tonkin', team: FactoryBot.create(:team, name: "Kona"))
     tonkin.race_numbers.create(value: "104", year: 2004)
-    event = FactoryGirl.create(:event, date: Time.zone.local(2004, 3))
-    race = FactoryGirl.create(:race, event: event)
+    event = FactoryBot.create(:event, date: Time.zone.local(2004, 3))
+    race = FactoryBot.create(:race, event: event)
 
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin')
     assert_equal([tonkin], result.find_people.to_a, 'first_name + last_name')
@@ -324,7 +324,7 @@ class SetAssociationsTest < ActiveSupport::TestCase
     result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: 'Camerati', number: '987')
     assert_equal([tonkin, tonkin_clone], result.find_people.to_a, 'first_name, last_name, wrong team, wrong number')
 
-    vanilla = FactoryGirl.create(:team, name: "Vanilla")
+    vanilla = FactoryBot.create(:team, name: "Vanilla")
     vanilla.aliases.create!(name: "Vanilla Bicycles")
     tonkin_clone.team = vanilla
     tonkin_clone.save!
@@ -354,17 +354,17 @@ class SetAssociationsTest < ActiveSupport::TestCase
   end
 
   test "assign results to existing person with same name instead of creating a new one" do
-    tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
-    FactoryGirl.create(:result, person: tonkin)
-    new_tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
+    tonkin = FactoryBot.create(:person, name: "Erik Tonkin")
+    FactoryBot.create(:result, person: tonkin)
+    new_tonkin = FactoryBot.create(:person, name: "Erik Tonkin")
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should have 2 Tonkins")
     assert_equal(2, Person.find_all_by_name_or_alias(first_name: "Erik", last_name: "Tonkin").size, "Should have 2 Tonkins")
 
     # A very old result
-    category = FactoryGirl.create(:category)
+    category = FactoryBot.create(:category)
     SingleDayEvent.create!(date: Date.new(1980)).races.create!(category: category).results.create!(person: new_tonkin)
 
-    race = FactoryGirl.create(:race)
+    race = FactoryBot.create(:race)
     result = race.results.create!(place: 1, first_name: 'Erik', last_name: 'Tonkin')
 
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should not create! new Tonkin")
@@ -372,7 +372,7 @@ class SetAssociationsTest < ActiveSupport::TestCase
   end
 
   test "most recent person if no results" do
-    tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
+    tonkin = FactoryBot.create(:person, name: "Erik Tonkin")
     new_tonkin = Person.create!(name: "Erik Tonkin")
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should have 2 Tonkins")
     assert_equal(2, Person.find_all_by_name_or_alias("Erik", "Tonkin").size, "Should have 2 Tonkins")
@@ -383,7 +383,7 @@ class SetAssociationsTest < ActiveSupport::TestCase
     new_tonkin.city = "Brussels"
     new_tonkin.save!
 
-    race = FactoryGirl.create(:race)
+    race = FactoryBot.create(:race)
     result = race.results.create!(place: 1, first_name: 'Erik', last_name: 'Tonkin')
 
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should not create! new Tonkin")
@@ -391,7 +391,7 @@ class SetAssociationsTest < ActiveSupport::TestCase
   end
 
   test "find people among duplicates" do
-    FactoryGirl.create(:cyclocross_discipline)
+    FactoryBot.create(:cyclocross_discipline)
 
     Timecop.freeze(Date.new(Time.zone.today.year, 6)) do
       Person.create!(name: "Mary Yax").race_numbers.create!(value: "157")
@@ -401,7 +401,7 @@ class SetAssociationsTest < ActiveSupport::TestCase
       jt_2.race_numbers.create!(value: "157", discipline: Discipline[:cyclocross])
 
       # Bad discipline name—should cause name to not match
-      senior_men = FactoryGirl.create(:category)
+      senior_men = FactoryBot.create(:category)
       cx_race = SingleDayEvent.create!(discipline: "Cyclocross").races.create!(category: senior_men)
       result = cx_race.results.create!(place: 1, first_name: 'John', last_name: 'Thompson', number: "157")
       assert_equal jt_2, result.person, "Should assign person based on correct discipline number"
@@ -410,18 +410,18 @@ class SetAssociationsTest < ActiveSupport::TestCase
 
   test "multiple scores for same race" do
     competition = Competitions::Competition.create!(name: 'KOM')
-    cx_a = FactoryGirl.create(:category)
+    cx_a = FactoryBot.create(:category)
     competition_race = competition.races.create!(category: cx_a)
-    tonkin = FactoryGirl.create(:person)
+    tonkin = FactoryBot.create(:person)
     competition_result = competition_race.results.create!(person: tonkin, points: 5)
 
-    race = FactoryGirl.create(:race)
-    tonkin = FactoryGirl.create(:person)
+    race = FactoryBot.create(:race)
+    tonkin = FactoryBot.create(:person)
     source_result = race.results.create!(person: tonkin)
 
     assert(competition_result.scores.create_if_best_result_for_race(source_result: source_result, points: 10))
 
-    jack_frost_pro_1_2 = FactoryGirl.create(:race)
+    jack_frost_pro_1_2 = FactoryBot.create(:race)
     source_result = jack_frost_pro_1_2.results.build(person: tonkin)
     assert(competition_result.scores.create_if_best_result_for_race(source_result: source_result, points: 10))
 
@@ -429,24 +429,24 @@ class SetAssociationsTest < ActiveSupport::TestCase
     assert_nil(competition_result.scores.create_if_best_result_for_race(source_result: source_result, points: 10))
 
     # Need a lot more tests
-    expert_junior_men = FactoryGirl.create(:category)
+    expert_junior_men = FactoryBot.create(:category)
     competition_race = competition.races.create!(category: expert_junior_men)
     race.event.races.create!(category: expert_junior_men)
-    vanilla = FactoryGirl.create(:team)
+    vanilla = FactoryBot.create(:team)
     source_result = jack_frost_pro_1_2.results.build(team: vanilla)
     competition_result = competition_race.results.create!(team: vanilla)
     assert(competition_result.scores.create_if_best_result_for_race(source_result: source_result, points: 10))
     source_result = jack_frost_pro_1_2.results.build(team: vanilla)
     assert_not_nil(competition_result.scores.create_if_best_result_for_race(source_result: source_result, points: 2))
-    jack_frost_masters_35_plus_women = FactoryGirl.create(:race)
+    jack_frost_masters_35_plus_women = FactoryBot.create(:race)
     source_result = jack_frost_masters_35_plus_women.results.build(team: vanilla)
     assert(competition_result.scores.create_if_best_result_for_race(source_result: source_result, points: 4))
   end
 
   test "do not match blank licenses" do
     Person.create!(name: 'Rocket, The', license: "")
-    weaver = FactoryGirl.create(:person, name: "Ryan Weaver", first_name: 'Ryan', last_name: 'Weaver')
-    race = FactoryGirl.create(:race)
+    weaver = FactoryBot.create(:person, name: "Ryan Weaver", first_name: 'Ryan', last_name: 'Weaver')
+    race = FactoryBot.create(:race)
     result = race.results.create!(first_name: 'Ryan', last_name: 'Weaver', event: race.event)
     assert_same_elements([weaver], result.find_people.to_a, "blank license shouldn't match anything")
   end

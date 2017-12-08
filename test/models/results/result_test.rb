@@ -5,8 +5,8 @@ class ResultTest < ActiveSupport::TestCase
   setup :number_issuer
 
   def number_issuer
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline)
+    FactoryBot.create(:number_issuer)
+    FactoryBot.create(:discipline)
   end
 
   test "person first last name" do
@@ -20,11 +20,11 @@ class ResultTest < ActiveSupport::TestCase
     result = Result.new
     assert_nil(result.name, "Person name w/nil person")
 
-    result = FactoryGirl.create(:result, person: FactoryGirl.create(:person, name: "Ryan Weaver"))
+    result = FactoryBot.create(:result, person: FactoryBot.create(:person, name: "Ryan Weaver"))
     assert_equal("Ryan Weaver", result.name, "Person name")
 
     person = Person.new(last_name: 'Willson')
-    result = FactoryGirl.create(:result, person: person)
+    result = FactoryBot.create(:result, person: person)
     assert_equal("Willson", result.person.name, "Person name")
     assert_equal("Willson", result.name, "Person name")
     result.save!
@@ -41,7 +41,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal("Clara", result.first_name, "Person first_name")
     assert_equal("Hughes", result.last_name, "Person last_name")
 
-    race = FactoryGirl.create(:race)
+    race = FactoryBot.create(:race)
     result = race.results.build
     result.name = 'Walrod, Marjon'
     assert_equal("Walrod, Marjon", result.name, "Person name")
@@ -128,7 +128,7 @@ class ResultTest < ActiveSupport::TestCase
 
   test "team name" do
     attributes = {place: "22", team_name: "T-Mobile"}
-    result = FactoryGirl.create(:race).results.build(attributes)
+    result = FactoryBot.create(:race).results.build(attributes)
     assert_equal("T-Mobile", result.team_name, "person.team_name")
     assert_equal("T-Mobile", result.team.name, "person.team")
 
@@ -148,7 +148,7 @@ class ResultTest < ActiveSupport::TestCase
     result.category = Category.find_or_create_by(name: "Senior Men Pro/1/2")
     assert_equal("Senior Men Pro/1/2", result.category.name, "category_name")
     assert_nil(result.category_name, "category_name")
-    result.race = FactoryGirl.create(:race)
+    result.race = FactoryBot.create(:race)
     result.save!
     assert_equal("Senior Men Pro/1/2", result.category_name, "category_name")
 
@@ -164,8 +164,8 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   test "person team" do
-    event = FactoryGirl.create(:event)
-    race = FactoryGirl.create(:race, event: event)
+    event = FactoryBot.create(:event)
+    race = FactoryBot.create(:race, event: event)
     result = race.results.build(place: '3', number: '932')
     person = Person.new(last_name: 'Kovach', first_name: 'Barry')
     team = Team.new(name: 'Sorella Forte ')
@@ -181,7 +181,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal(sorella_forte, result.team, 'result team')
     assert_nil(person.team, 'result team')
 
-    race = FactoryGirl.create(:race)
+    race = FactoryBot.create(:race)
     result = race.results.build(place: '3', number: '932')
     result.person = person
     new_team = Team.new(name: 'Bike Gallery')
@@ -197,7 +197,7 @@ class ResultTest < ActiveSupport::TestCase
     person_with_no_team = Person.create!(last_name: 'Ollerenshaw', first_name: 'Doug')
     result = race.results.build(place: '3', number: '932')
     result.person = person_with_no_team
-    vanilla = FactoryGirl.create(:team)
+    vanilla = FactoryBot.create(:team)
     result.team = vanilla
 
     result.save!
@@ -206,8 +206,8 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   test "event" do
-    event = FactoryGirl.create(:event)
-    result = event.races.create!(category: FactoryGirl.create(:category)).results.create!
+    event = FactoryBot.create(:event)
+    result = event.races.create!(category: FactoryBot.create(:category)).results.create!
     result.reload
     assert_equal(event, result.event, 'Result event')
   end
@@ -283,7 +283,7 @@ class ResultTest < ActiveSupport::TestCase
     racing_association.rental_numbers = 51..99
     racing_association.save!
 
-    kings_valley_pro_1_2_2004 = FactoryGirl.create(:race)
+    kings_valley_pro_1_2_2004 = FactoryBot.create(:race)
     results = kings_valley_pro_1_2_2004.results
     result = results.create!(place: 1, first_name: 'Clara', last_name: 'Willson', number: '300')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
@@ -294,7 +294,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(result.person.xc_number.blank?, 'MTB number')
 
     event = SingleDayEvent.create!(discipline: "Road")
-    senior_women = FactoryGirl.create(:category)
+    senior_women = FactoryBot.create(:category)
     race = event.races.create!(category: senior_women)
     result = race.results.create!(place: 2, first_name: 'Eddy', last_name: 'Merckx', number: '200')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
@@ -313,7 +313,7 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   test "save number alt" do
-    kings_valley_pro_1_2_2004 = FactoryGirl.create(:race)
+    kings_valley_pro_1_2_2004 = FactoryBot.create(:race)
     results = kings_valley_pro_1_2_2004.results
     result = results.create!(place: 1, first_name: 'Clara', last_name: 'Willson', number: '300')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
@@ -324,7 +324,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(result.person.xc_number.blank?, 'MTB number')
 
     event = SingleDayEvent.create!(discipline: "Road")
-    senior_women = FactoryGirl.create(:category)
+    senior_women = FactoryBot.create(:category)
     race = event.races.create!(category: senior_women)
     result = race.results.create!(place: 2, first_name: 'Eddy', last_name: 'Merckx', number: '200')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
@@ -343,10 +343,10 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   test "person scope" do
-    molly = FactoryGirl.create(:person)
-    FactoryGirl.create(:result, person: molly)
-    FactoryGirl.create(:result, person: molly)
-    FactoryGirl.create(:result, person: molly)
+    molly = FactoryBot.create(:person)
+    FactoryBot.create(:result, person: molly)
+    FactoryBot.create(:result, person: molly)
+    FactoryBot.create(:result, person: molly)
 
     results = Result.person(molly)
     assert_not_nil(results)
@@ -368,7 +368,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(result.last_event?, "Only event should be last event")
 
     # Series overall
-    banana_belt_series = FactoryGirl.create(:series)
+    banana_belt_series = FactoryBot.create(:series)
     banana_belt_1 = banana_belt_series.children.create!(date: 1.week.from_now)
     banana_belt_2 = banana_belt_series.children.create!(date: 2.weeks.from_now)
     series_result = banana_belt_series.races.create!(category: category).results.create!
@@ -475,7 +475,7 @@ class ResultTest < ActiveSupport::TestCase
     team = Team.create!(name: "Tecate-Una Mas")
 
     event = SingleDayEvent.create!(date: 1.year.ago)
-    senior_men = FactoryGirl.create(:category)
+    senior_men = FactoryBot.create(:category)
     old_result = event.races.create!(category: senior_men).results.create!(team: team)
     team.names.create!(name: "Twin Peaks", year: 1.year.ago.year)
 
@@ -513,9 +513,9 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   test "competition result" do
-    FactoryGirl.create(:discipline, name: "Team")
-    senior_men = FactoryGirl.create(:category, name: "Senior Men")
-    result = FactoryGirl.create(:result)
+    FactoryBot.create(:discipline, name: "Team")
+    senior_men = FactoryBot.create(:category, name: "Senior Men")
+    result = FactoryBot.create(:result)
     assert !result.competition_result?, "SingleDayEvent competition_result?"
 
     result = Competitions::Ironman.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
@@ -526,9 +526,9 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   test "team competition result" do
-    FactoryGirl.create(:discipline, name: "Team")
-    senior_men = FactoryGirl.create(:category, name: "Senior Men")
-    result = FactoryGirl.create(:result)
+    FactoryBot.create(:discipline, name: "Team")
+    senior_men = FactoryBot.create(:category, name: "Senior Men")
+    result = FactoryBot.create(:result)
     assert !result.team_competition_result?, "SingleDayEvent team_competition_result?"
 
     result = Competitions::Ironman.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
@@ -539,8 +539,8 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   test "custom attributes" do
-    banana_belt_1 = FactoryGirl.create(:event)
-    senior_men = FactoryGirl.create(:category)
+    banana_belt_1 = FactoryBot.create(:event)
+    senior_men = FactoryBot.create(:category)
     race = banana_belt_1.races.create!(category: senior_men, result_columns: [ "place" ], custom_columns: [ "run", 20100929 ])
 
     result = race.reload.results.create!(place: "1", custom_attributes: { run: "9:00" })

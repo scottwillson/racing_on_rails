@@ -5,18 +5,18 @@ class TeamsTest < AcceptanceTest
   setup :javascript!
 
   test "edit" do
-    FactoryGirl.create(:team, name: "Kona")
-    vanilla = FactoryGirl.create(:team, name: "Vanilla")
+    FactoryBot.create(:team, name: "Kona")
+    vanilla = FactoryBot.create(:team, name: "Vanilla")
     vanilla.aliases.create!(name: "Vanilla Bicycles")
-    gl = FactoryGirl.create(:team, name: "Gentle Lovers")
+    gl = FactoryBot.create(:team, name: "Gentle Lovers")
     gl.aliases.create!(name: "Gentile Lovers")
-    FactoryGirl.create(:team, name: "Chocolate")
-    dfl = FactoryGirl.create(:team, name: "Team dFL")
+    FactoryBot.create(:team, name: "Chocolate")
+    dfl = FactoryBot.create(:team, name: "Team dFL")
     visit '/teams'
 
     find("a[href='/teams/#{gl.id}']").click
 
-    login_as FactoryGirl.create(:administrator)
+    login_as FactoryBot.create(:administrator)
 
     visit "/admin/teams"
     assert_page_has_content "Enter part of a team's name"
@@ -70,13 +70,13 @@ class TeamsTest < AcceptanceTest
   end
 
   test "drag and drop" do
-    kona = FactoryGirl.create(:team, name: "Kona")
-    vanilla = FactoryGirl.create(:team, name: "Vanilla")
-    FactoryGirl.create(:team, name: "Chocolate")
-    FactoryGirl.create(:team, name: "Team dFL")
-    FactoryGirl.create(:team, name: "Gentle Lovers")
+    kona = FactoryBot.create(:team, name: "Kona")
+    vanilla = FactoryBot.create(:team, name: "Vanilla")
+    FactoryBot.create(:team, name: "Chocolate")
+    FactoryBot.create(:team, name: "Team dFL")
+    FactoryBot.create(:team, name: "Gentle Lovers")
 
-    login_as FactoryGirl.create(:administrator)
+    login_as FactoryBot.create(:administrator)
 
     visit "/admin/teams"
     fill_in "name", with: "a\n"
@@ -95,14 +95,14 @@ class TeamsTest < AcceptanceTest
   end
 
   test "merge confirm" do
-    FactoryGirl.create(:team, name: "Kona")
-    vanilla = FactoryGirl.create(:team, name: "Vanilla")
+    FactoryBot.create(:team, name: "Kona")
+    vanilla = FactoryBot.create(:team, name: "Vanilla")
     vanilla.aliases.create!(name: "Vanilla Bicycles")
-    FactoryGirl.create(:team, name: "Chocolate")
-    FactoryGirl.create(:team, name: "Team dFL")
-    gl = FactoryGirl.create(:team, name: "Gentle Lovers")
+    FactoryBot.create(:team, name: "Chocolate")
+    FactoryBot.create(:team, name: "Team dFL")
+    gl = FactoryBot.create(:team, name: "Gentle Lovers")
 
-    login_as FactoryGirl.create(:administrator)
+    login_as FactoryBot.create(:administrator)
 
     visit "/admin/teams"
     fill_in "name", with: "e\n"

@@ -148,7 +148,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
   end
 
   test "destroy" do
-    mt_hood = FactoryGirl.create(:stage_race)
+    mt_hood = FactoryBot.create(:stage_race)
     mt_hood.destroy
     assert(!Event.exists?(mt_hood.id), "Mt. Hood Stage Race should be deleted")
   end
@@ -167,7 +167,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
 
   test "date range s long" do
-    mt_hood = FactoryGirl.create(:stage_race)
+    mt_hood = FactoryBot.create(:stage_race)
     assert_equal("7/11/2005-7/13/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
     last_day = mt_hood.children.last
     last_day.date = Date.new(2005, 8, 1)
@@ -175,7 +175,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     mt_hood = Event.find(mt_hood.id)
     assert_equal("7/11/2005-8/1/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
 
-    kings_valley = FactoryGirl.create(:event, date: Date.new(2003, 12, 31))
+    kings_valley = FactoryBot.create(:event, date: Date.new(2003, 12, 31))
     assert_equal("12/31/2003", kings_valley.date_range_s(:long), "date_range_s(long)")
   end
 
@@ -189,14 +189,14 @@ class MultiDayEventTest < ActiveSupport::TestCase
     single_event_1.email = "info@elkhornclassic.com"
     single_event_1.flyer = "http://google.com"
     single_event_1.phone = "718 671-1999"
-    promoter = FactoryGirl.create(:person)
+    promoter = FactoryBot.create(:person)
     single_event_1.promoter = promoter
     single_event_1.sanctioned_by = "FIAC"
     single_event_1.state = "NY"
     single_event_1.prize_list = 3000
-    gentle_lovers = FactoryGirl.create(:team)
+    gentle_lovers = FactoryBot.create(:team)
     single_event_1.team_id = gentle_lovers.id
-    alpenrose = FactoryGirl.create(:velodrome)
+    alpenrose = FactoryBot.create(:velodrome)
     single_event_1.velodrome_id = alpenrose.id
     single_event_1.save!
 
@@ -299,15 +299,15 @@ class MultiDayEventTest < ActiveSupport::TestCase
     multi_day_event.email = "scott.willson@gmail.com"
     multi_day_event.flyer = nil
     multi_day_event.flyer_approved = true
-    candi_murray = FactoryGirl.create(:person)
+    candi_murray = FactoryBot.create(:person)
     multi_day_event.promoter = candi_murray
     multi_day_event.phone = "911"
     multi_day_event.sanctioned_by = "UCI"
     assert_not_nil(multi_day_event.promoter, "event.promoter")
     multi_day_event.prize_list = 4000
-    vanilla = FactoryGirl.create(:team)
+    vanilla = FactoryBot.create(:team)
     multi_day_event.team_id = vanilla.to_param
-    trexlertown = FactoryGirl.create(:velodrome)
+    trexlertown = FactoryBot.create(:velodrome)
     multi_day_event.velodrome_id = trexlertown.to_param
     multi_day_event.beginner_friendly = true
     multi_day_event.save!
@@ -382,7 +382,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     multi_day_event.discipline = "Road"
     multi_day_event.flyer = "http://www.myseasons.com/"
     multi_day_event.sanctioned_by = "UCI"
-    brad_ross = FactoryGirl.create(:person)
+    brad_ross = FactoryBot.create(:person)
     multi_day_event.promoter = brad_ross
     multi_day_event.save!
 
@@ -458,7 +458,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
   end
 
   test "full name" do
-    stage_race = FactoryGirl.create(:stage_race, name: "Mt. Hood Classic")
+    stage_race = FactoryBot.create(:stage_race, name: "Mt. Hood Classic")
     assert_equal('Mt. Hood Classic', stage_race.name, 'stage_race full_name')
   end
 
@@ -611,23 +611,23 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert(!series_parent.missing_parent?, 'missing_parent?')
     assert_nil(series_parent.missing_parent, 'missing_parent')
 
-    stage_race = FactoryGirl.create(:stage_race)
+    stage_race = FactoryBot.create(:stage_race)
     assert(!stage_race.missing_parent?, 'missing_parent?')
     assert_nil(stage_race.missing_parent, 'missing_parent')
   end
 
   test "guess type" do
-    mt_hood_1 = FactoryGirl.build(:event, date: Date.new(2007, 7, 11))
-    mt_hood_2 = FactoryGirl.build(:event, date: Date.new(2007, 7, 12))
+    mt_hood_1 = FactoryBot.build(:event, date: Date.new(2007, 7, 11))
+    mt_hood_2 = FactoryBot.build(:event, date: Date.new(2007, 7, 12))
     assert_equal(MultiDayEvent, MultiDayEvent.guess_type([ mt_hood_1, mt_hood_2 ]), 'MultiDayEvent')
 
-    banana_belt_1 = FactoryGirl.build(:event, date: Date.new(2004, 1, 4))
-    banana_belt_2 = FactoryGirl.build(:event, date: Date.new(2004, 1, 11))
-    banana_belt_3 = FactoryGirl.build(:event, date: Date.new(2004, 1, 18))
+    banana_belt_1 = FactoryBot.build(:event, date: Date.new(2004, 1, 4))
+    banana_belt_2 = FactoryBot.build(:event, date: Date.new(2004, 1, 11))
+    banana_belt_3 = FactoryBot.build(:event, date: Date.new(2004, 1, 18))
     assert_equal(Series, MultiDayEvent.guess_type([ banana_belt_1, banana_belt_2, banana_belt_3 ]), 'Series')
 
-    pir = FactoryGirl.build(:event, date: Date.new(2005, 7, 5))
-    pir_2 = FactoryGirl.build(:event, date: Date.new(2005, 7, 12))
+    pir = FactoryBot.build(:event, date: Date.new(2005, 7, 5))
+    pir_2 = FactoryBot.build(:event, date: Date.new(2005, 7, 12))
     assert_equal(WeeklySeries, MultiDayEvent.guess_type([ pir, pir_2 ]), 'WeeklySeries')
   end
 
@@ -638,7 +638,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     event.children.create!
     assert_equal(0, event.children_with_results.size, "children_with_results: child with no results")
 
-    cat_4_women = FactoryGirl.create(:category)
+    cat_4_women = FactoryBot.create(:category)
     event.children.create!.races.create!(category: cat_4_women).results.create!
     assert_equal(1, event.children_with_results.size, "cached: events_with_results: 1 children with results")
     event = Event.find(event.id)
@@ -665,7 +665,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     parent_event = Event.find(parent_event.id)
     assert(!parent_event.completed?, "Event with all children with no results should not be completed")
 
-    cat_4_women = FactoryGirl.create(:category)
+    cat_4_women = FactoryBot.create(:category)
     parent_event.children.first.races.create!(category: cat_4_women).results.create!
     parent_event = Event.find(parent_event.id)
     assert(!parent_event.completed?, "Event with only one child with results should not be completed")
@@ -687,13 +687,13 @@ class MultiDayEventTest < ActiveSupport::TestCase
   end
 
   test "propagate races" do
-    series = FactoryGirl.create(:series)
+    series = FactoryBot.create(:series)
     banana_belt_1 = series.children.create!
     banana_belt_2 = series.children.create!
     banana_belt_3 = series.children.create!
 
-    sr_p_1_2 = FactoryGirl.create(:category)
-    senior_women = FactoryGirl.create(:category)
+    sr_p_1_2 = FactoryBot.create(:category)
+    senior_women = FactoryBot.create(:category)
     series.races.create!(category: sr_p_1_2)
     series.races.create!(category: senior_women)
     banana_belt_1.races.create!(category: sr_p_1_2)

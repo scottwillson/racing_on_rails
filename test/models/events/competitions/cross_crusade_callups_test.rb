@@ -4,7 +4,7 @@ module Competitions
   # :stopdoc:
   class CrossCrusadeCallupsTest < ActiveSupport::TestCase
     test "calculate" do
-      result = FactoryGirl.create(:result)
+      result = FactoryBot.create(:result)
       series = CrossCrusadeCallups.create!
       series.source_events << result.event
       CrossCrusadeCallups.calculate!

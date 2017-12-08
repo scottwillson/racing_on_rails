@@ -4,14 +4,14 @@ require_relative "../../../test_helper"
 module Posts
   class MigrationTest < ActiveSupport::TestCase
     test "reposition! empty mailing list" do
-      mailing_list = FactoryGirl.create(:mailing_list)
+      mailing_list = FactoryBot.create(:mailing_list)
       Post.reposition! mailing_list
     end
 
     test "reposition!" do
-      mailing_list = FactoryGirl.create(:mailing_list)
+      mailing_list = FactoryBot.create(:mailing_list)
       one_day_ago = 1.day.ago
-      last_original = FactoryGirl.create(
+      last_original = FactoryBot.create(
         :post,
         mailing_list: mailing_list,
         subject: "For Sale: Trek Madrone",
@@ -19,7 +19,7 @@ module Posts
         last_reply_at: one_day_ago,
         position: 0
       )
-      first_original = FactoryGirl.create(
+      first_original = FactoryBot.create(
         :post,
         mailing_list: mailing_list,
         subject: "Autographed TDF Jersey",
@@ -27,7 +27,7 @@ module Posts
         last_reply_at: 4.days.ago,
         position: 2
       )
-      reply_to_last_original = FactoryGirl.create(
+      reply_to_last_original = FactoryBot.create(
         :post,
         mailing_list: mailing_list,
         subject: "re: For Sale: Trek Madrone",
@@ -44,25 +44,25 @@ module Posts
     end
 
     test "add replies! empty database" do
-      mailing_list = FactoryGirl.create(:mailing_list)
+      mailing_list = FactoryBot.create(:mailing_list)
       Post.add_replies! mailing_list
       assert_equal 0, Post.count
     end
 
     test "add replies!" do
-      mailing_list = FactoryGirl.create(:mailing_list)
-      FactoryGirl.create(:post, mailing_list: mailing_list, subject: "For Sale: Trek Madrone", from_name: "Lance")
-      FactoryGirl.create(:post, mailing_list: mailing_list, subject: "Autographed TDF Jersey")
+      mailing_list = FactoryBot.create(:mailing_list)
+      FactoryBot.create(:post, mailing_list: mailing_list, subject: "For Sale: Trek Madrone", from_name: "Lance")
+      FactoryBot.create(:post, mailing_list: mailing_list, subject: "Autographed TDF Jersey")
 
       Post.add_replies! mailing_list
       assert_equal 2, Post.original.count
     end
 
     test "add replies! should consolidate similar posts" do
-      mailing_list = FactoryGirl.create(:mailing_list)
-      original = FactoryGirl.create(:post, mailing_list: mailing_list, subject: "FS: Trek Madrone", date: 3.days.ago)
-      first_reply = FactoryGirl.create(:post, mailing_list: mailing_list, subject: "Re: FS: Trek Madrone", date: 2.days.ago)
-      second_reply = FactoryGirl.create(:post, mailing_list: mailing_list, subject: "fs: trek madrone", date: 1.day.ago)
+      mailing_list = FactoryBot.create(:mailing_list)
+      original = FactoryBot.create(:post, mailing_list: mailing_list, subject: "FS: Trek Madrone", date: 3.days.ago)
+      first_reply = FactoryBot.create(:post, mailing_list: mailing_list, subject: "Re: FS: Trek Madrone", date: 2.days.ago)
+      second_reply = FactoryBot.create(:post, mailing_list: mailing_list, subject: "fs: trek madrone", date: 1.day.ago)
 
       Post.add_replies! mailing_list
 

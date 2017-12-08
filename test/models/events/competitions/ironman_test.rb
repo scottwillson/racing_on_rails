@@ -4,10 +4,10 @@ module Competitions
   # :stopdoc:
   class IronmanTest < ActiveSupport::TestCase
     test "count single day events" do
-      old_team = FactoryGirl.create(:team, name: "Old Team")
-      person = FactoryGirl.create(:person, team: old_team)
+      old_team = FactoryBot.create(:team, name: "Old Team")
+      person = FactoryBot.create(:person, team: old_team)
       series = Series.create!
-      senior_men = FactoryGirl.create(:category)
+      senior_men = FactoryBot.create(:category)
       series.races.create!(category: senior_men).results.create(place: "1", person: person)
 
       Ironman.any_instance.expects(:expire_cache).at_least_once
@@ -20,7 +20,7 @@ module Competitions
       event.races.create!(category: senior_men).results.create(place: "1", person: person, team_name: "Source Result Team")
 
       # Change team
-      team = FactoryGirl.create(:team, name: "Current Team")
+      team = FactoryBot.create(:team, name: "Current Team")
       person.team = team
       person.save!
 
@@ -40,10 +40,10 @@ module Competitions
     end
 
     test "count child events" do
-      person = FactoryGirl.create(:person)
+      person = FactoryBot.create(:person)
       event = SingleDayEvent.create!
       child = event.children.create!
-      senior_men = FactoryGirl.create(:category)
+      senior_men = FactoryBot.create(:category)
       child.races.create!(category: senior_men).results.create(place: "1", person: person)
       assert(child.ironman?, "Child event should count towards Ironman")
 
@@ -55,9 +55,9 @@ module Competitions
     end
 
     test "skip anything other than single day event" do
-      person = FactoryGirl.create(:person)
-      event = FactoryGirl.create(:time_trial_event)
-      senior_men = FactoryGirl.create(:category)
+      person = FactoryBot.create(:person)
+      event = FactoryBot.create(:time_trial_event)
+      senior_men = FactoryBot.create(:category)
       event.races.create!(category: senior_men).results.create(place: "99", person: person)
       combined_results = CombinedTimeTrialResults.create!(parent: event)
       assert(!combined_results.ironman?, "CombinedTimeTrialResults event should not count towards Ironman")
@@ -70,8 +70,8 @@ module Competitions
     end
 
     test "parent event results do not count" do
-      person = FactoryGirl.create(:person)
-      senior_men = FactoryGirl.create(:category)
+      person = FactoryBot.create(:person)
+      senior_men = FactoryBot.create(:category)
       series = Series.create!
       series.races.create!(category: senior_men).results.create(place: "1", person: person)
 
@@ -96,8 +96,8 @@ module Competitions
     end
 
     test "source results" do
-      person = FactoryGirl.create(:person, name: "Greg Lemond", member_from: Date.new(2005, 8, 1), member_to: Date.new(2010, 12, 31))
-      source_result = FactoryGirl.create(:result, place: "12", person: person)
+      person = FactoryBot.create(:person, name: "Greg Lemond", member_from: Date.new(2005, 8, 1), member_to: Date.new(2010, 12, 31))
+      source_result = FactoryBot.create(:result, place: "12", person: person)
       ironman = Ironman.create!
       expected = {
         "id" => 1,
@@ -135,9 +135,9 @@ module Competitions
     end
 
     test "create competition results for" do
-      person = FactoryGirl.create(:person)
-      result1 = FactoryGirl.create(:result, person: person)
-      result2 = FactoryGirl.create(:result, person: person)
+      person = FactoryBot.create(:person)
+      result1 = FactoryBot.create(:result, person: person)
+      result2 = FactoryBot.create(:result, person: person)
 
       Struct.new("TestResult", :place, :participant_id, :preliminary, :points, :scores)
       Struct.new("TestScore", :points, :source_result_id, :notes)
@@ -172,8 +172,8 @@ module Competitions
     end
 
     test "team ids by person id hash no results" do
-      team = FactoryGirl.create(:team)
-      person = FactoryGirl.create(:person, team: team)
+      team = FactoryBot.create(:team)
+      person = FactoryBot.create(:person, team: team)
       ironman = Ironman.create!
       Struct.new("TestResult2", :participant_id)
       assert_equal({ person.id => team.id }, ironman.team_ids_by_participant_id_hash([ Struct::TestResult2.new(person.id) ]))
@@ -181,7 +181,7 @@ module Competitions
 
     test "create score" do
       ironman = Ironman.create!
-      source_result = FactoryGirl.create(:result)
+      source_result = FactoryBot.create(:result)
       competition_result = ironman.races.first.results.create!
       score = ironman.create_score(competition_result, source_result.id, 12, "")
       assert_equal source_result.id, score.source_result_id, "source_result_id"

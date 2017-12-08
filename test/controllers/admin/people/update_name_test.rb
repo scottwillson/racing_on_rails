@@ -13,7 +13,7 @@ module Admin
       end
 
       test "update name" do
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
             id: molly.to_param,
             name: "name",
@@ -26,7 +26,7 @@ module Admin
       end
 
       test "update same name" do
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
             id: molly.to_param,
             name: "name",
@@ -40,7 +40,7 @@ module Admin
       end
 
       test "update same name different case" do
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
             id: molly.to_param,
             name: "name",
@@ -55,8 +55,8 @@ module Admin
 
       test "update to existing name" do
         # Should ask to merge
-        FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
             id: molly.to_param,
             name: "name",
@@ -72,7 +72,7 @@ module Admin
       end
 
       test "update to existing alias" do
-        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         tonkin.aliases.create!(name: "Eric Tonkin")
 
         xhr :put, :update_attribute,
@@ -92,7 +92,7 @@ module Admin
       end
 
       test "update to existing alias different case" do
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         molly.aliases.create!(name: "Mollie Cameron")
         assert !Alias.exists?(name: 'Molly Cameron')
 
@@ -113,8 +113,8 @@ module Admin
       end
 
       test "update to other person existing alias" do
-        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         molly.aliases.create!(name: "Mollie Cameron")
 
         xhr :put, :update_attribute,
@@ -132,13 +132,13 @@ module Admin
       end
 
       test "update to other person existing alias and duplicate names" do
-        FactoryGirl.create(:discipline)
-        FactoryGirl.create(:number_issuer)
+        FactoryBot.create(:discipline)
+        FactoryBot.create(:number_issuer)
 
-        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         # Molly with different road number
         Person.create!(name: 'Molly Cameron', road_number: '1009')
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         molly.aliases.create!(name: "Mollie Cameron")
 
         assert_equal 0, Person.where(first_name: 'Mollie', last_name: 'Cameron').count, 'Mollies in database'

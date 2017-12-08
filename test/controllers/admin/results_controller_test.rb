@@ -10,7 +10,7 @@ module Admin
     end
 
     test "update no team" do
-      result = FactoryGirl.create(:result, team: nil)
+      result = FactoryBot.create(:result, team: nil)
       xhr :put,
           :update_attribute,
           id: result.to_param,
@@ -23,8 +23,8 @@ module Admin
     end
 
     test "update no team to existing" do
-      result = FactoryGirl.create(:result, team: nil)
-      FactoryGirl.create(:team, name: "Vanilla")
+      result = FactoryBot.create(:result, team: nil)
+      FactoryBot.create(:team, name: "Vanilla")
 
       xhr :put,
           :update_attribute,
@@ -39,7 +39,7 @@ module Admin
     end
 
     test "update no team to new" do
-      result = FactoryGirl.create(:result, team: nil)
+      result = FactoryBot.create(:result, team: nil)
 
       xhr :put,
           :update_attribute,
@@ -53,8 +53,8 @@ module Admin
     end
 
     test "update no team to alias" do
-      result = FactoryGirl.create(:result, team: nil)
-      gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
+      result = FactoryBot.create(:result, team: nil)
+      gentle_lovers = FactoryBot.create(:team, name: "Gentle Lovers")
       gentle_lovers.aliases.create!(name: "Gentile Lovers")
 
       xhr :put,
@@ -69,7 +69,7 @@ module Admin
     end
 
     test "update to no team" do
-      result = FactoryGirl.create(:result)
+      result = FactoryBot.create(:result)
 
       xhr :put,
           :update_attribute,
@@ -83,8 +83,8 @@ module Admin
     end
 
     test "update to existing team" do
-      result = FactoryGirl.create(:result, team: nil)
-      vanilla = FactoryGirl.create(:team, name: "Vanilla")
+      result = FactoryBot.create(:result, team: nil)
+      vanilla = FactoryBot.create(:team, name: "Vanilla")
 
       xhr :put,
           :update_attribute,
@@ -98,7 +98,7 @@ module Admin
     end
 
     test "update to new team" do
-      result = FactoryGirl.create(:result, team: nil)
+      result = FactoryBot.create(:result, team: nil)
 
       xhr :put,
           :update_attribute,
@@ -112,8 +112,8 @@ module Admin
     end
 
     test "update to team alias" do
-      result = FactoryGirl.create(:result)
-      gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
+      result = FactoryBot.create(:result)
+      gentle_lovers = FactoryBot.create(:team, name: "Gentle Lovers")
       gentle_lovers.aliases.create!(name: "Gentile Lovers")
 
       xhr :put,
@@ -128,7 +128,7 @@ module Admin
     end
 
     test "set result points" do
-      result = FactoryGirl.create(:result)
+      result = FactoryBot.create(:result)
 
       xhr :put,
           :update_attribute,
@@ -142,7 +142,7 @@ module Admin
     end
 
     test "update no person" do
-      result = FactoryGirl.create(:result, person: nil)
+      result = FactoryBot.create(:result, person: nil)
       original_team_name = result.team_name
 
       xhr :put,
@@ -160,8 +160,8 @@ module Admin
     end
 
     test "update no person to existing" do
-      result = FactoryGirl.create(:result, person: nil)
-      tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+      result = FactoryBot.create(:result, person: nil)
+      tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
       tonkin.aliases.create!(name: "Eric Tonkin")
       original_team_name = result.team_name
 
@@ -180,8 +180,8 @@ module Admin
     end
 
     test "update no person to alias" do
-      result = FactoryGirl.create(:result, person: nil)
-      tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+      result = FactoryBot.create(:result, person: nil)
+      tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
       tonkin.aliases.create!(name: "Eric Tonkin")
 
       original_team_name = result.team_name
@@ -201,7 +201,7 @@ module Admin
     end
 
     test "update to no person" do
-      result = FactoryGirl.create(:result)
+      result = FactoryBot.create(:result)
 
       original_team_name = result.team_name
 
@@ -220,8 +220,8 @@ module Admin
     end
 
     test "update to different person" do
-      result = FactoryGirl.create(:result, person: nil)
-      tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+      result = FactoryBot.create(:result, person: nil)
+      tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
       tonkin.aliases.create!(name: "Eric Tonkin")
 
       original_team_name = result.team_name
@@ -242,8 +242,8 @@ module Admin
     end
 
     test "update to alias" do
-      result = FactoryGirl.create(:result, person: nil)
-      tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+      result = FactoryBot.create(:result, person: nil)
+      tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
       tonkin.aliases.create!(name: "Eric Tonkin")
       original_team_name = result.team_name
 
@@ -264,12 +264,12 @@ module Admin
     end
 
     test "update to new person" do
-      FactoryGirl.create(:number_issuer)
-      FactoryGirl.create(:discipline)
+      FactoryBot.create(:number_issuer)
+      FactoryBot.create(:discipline)
 
-      weaver = FactoryGirl.create(:person, first_name: "Ryan", last_name: "Weaver")
-      FactoryGirl.create_list(:result, 3, person: weaver)
-      result = FactoryGirl.create(:result, person: weaver)
+      weaver = FactoryBot.create(:person, first_name: "Ryan", last_name: "Weaver")
+      FactoryBot.create_list(:result, 3, person: weaver)
+      result = FactoryBot.create(:result, person: weaver)
 
       xhr :put,
           :update_attribute,
@@ -293,7 +293,7 @@ module Admin
     end
 
     test "update attribute should format times" do
-      result = FactoryGirl.create(:result, time: 600)
+      result = FactoryBot.create(:result, time: 600)
       xhr :put,
           :update_attribute,
           id: result.to_param,
@@ -305,7 +305,7 @@ module Admin
     end
 
     test "person" do
-      weaver = FactoryGirl.create(:result).person
+      weaver = FactoryBot.create(:result).person
 
       get(:index, person_id: weaver.to_param.to_s)
 
@@ -315,17 +315,17 @@ module Admin
     end
 
     test "find person" do
-      FactoryGirl.create(:person, first_name: "Ryan", last_name: "Weaver")
-      FactoryGirl.create(:person, name: "Alice")
-      tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+      FactoryBot.create(:person, first_name: "Ryan", last_name: "Weaver")
+      FactoryBot.create(:person, name: "Alice")
+      tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
       post(:find_person, name: 'e', ignore_id: tonkin.id)
       assert_response(:success)
       assert_template('admin/results/_people')
     end
 
     test "find person one result" do
-      weaver = FactoryGirl.create(:person)
-      tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+      weaver = FactoryBot.create(:person)
+      tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
 
       post(:find_person, name: weaver.name, ignore_id: tonkin.id)
 
@@ -334,14 +334,14 @@ module Admin
     end
 
     test "find person no results" do
-      tonkin = FactoryGirl.create(:person)
+      tonkin = FactoryBot.create(:person)
       post(:find_person, name: 'not a person in the database', ignore_id: tonkin.id)
       assert_response(:success)
       assert_template('admin/results/_people')
     end
 
     test "results" do
-      weaver = FactoryGirl.create(:result).person
+      weaver = FactoryBot.create(:result).person
 
       post(:results, person_id: weaver.id)
 
@@ -350,15 +350,15 @@ module Admin
     end
 
     test "scores" do
-      result = FactoryGirl.create(:result)
+      result = FactoryBot.create(:result)
       post(:scores, id: result.id, format: "js")
       assert_response(:success)
     end
 
     test "move" do
-      weaver = FactoryGirl.create(:result).person
-      tonkin = FactoryGirl.create(:person)
-      result = FactoryGirl.create(:result, person: tonkin)
+      weaver = FactoryBot.create(:result).person
+      tonkin = FactoryBot.create(:person)
+      result = FactoryBot.create(:result, person: tonkin)
 
       assert tonkin.results.include?(result)
       assert !weaver.results.include?(result)
@@ -371,11 +371,11 @@ module Admin
     end
 
     test "create" do
-      race = FactoryGirl.create(:race)
-      tonkin_result = FactoryGirl.create(:result, race: race, place: "1")
-      weaver_result = FactoryGirl.create(:result, race: race, place: "2")
-      matson_result = FactoryGirl.create(:result, race: race, place: "3")
-      molly_result = FactoryGirl.create(:result, race: race, place: "16")
+      race = FactoryBot.create(:race)
+      tonkin_result = FactoryBot.create(:result, race: race, place: "1")
+      weaver_result = FactoryBot.create(:result, race: race, place: "2")
+      matson_result = FactoryBot.create(:result, race: race, place: "3")
+      molly_result = FactoryBot.create(:result, race: race, place: "16")
 
       xhr(:post, :create, race_id: race.id, before_result_id: weaver_result.id)
       assert_response(:success)
@@ -460,7 +460,7 @@ module Admin
     end
 
     test "destroy" do
-      result_2 = FactoryGirl.create(:result)
+      result_2 = FactoryBot.create(:result)
       assert_not_nil(result_2, 'Result should exist in DB')
 
       xhr(:post, :destroy, id: result_2.to_param)

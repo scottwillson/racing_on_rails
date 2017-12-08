@@ -4,18 +4,18 @@ module Competitions
   # :stopdoc:
   class OregonTTCupTest < ActiveSupport::TestCase
     test "recalc with one event" do
-      event = FactoryGirl.create(:time_trial_event)
+      event = FactoryBot.create(:time_trial_event)
       competition = OregonTTCup.create!
       competition.source_events << event
 
       masters_men_30_34 = Category.where(name: "Masters Men 30-34").first_or_create!
       race = event.races.create!(category: masters_men_30_34, distance: 25)
-      long_result = race.results.create!(place: "1", time: 3600, person: FactoryGirl.create(:person, name: "long"))
+      long_result = race.results.create!(place: "1", time: 3600, person: FactoryBot.create(:person, name: "long"))
 
       masters_men_35_14 = Category.where(name: "Masters Men 35-39").first_or_create!
       race = event.races.create!(category: masters_men_35_14, distance: 12)
-      short_result_1 = race.results.create!(place: "1", time: 1700, person: FactoryGirl.create(:person, name: "short 1"))
-      short_result_2 = race.results.create!(place: "2", time: 1800, person: FactoryGirl.create(:person, name: "short 2"))
+      short_result_1 = race.results.create!(place: "1", time: 1700, person: FactoryBot.create(:person, name: "short 1"))
+      short_result_2 = race.results.create!(place: "2", time: 1800, person: FactoryBot.create(:person, name: "short 2"))
 
       OregonTTCup.calculate!
 
@@ -30,13 +30,13 @@ module Competitions
     end
 
     test "split_from races" do
-      event = FactoryGirl.create(:time_trial_event)
+      event = FactoryBot.create(:time_trial_event)
       competition = OregonTTCup.create!
       competition.source_events << event
 
-      racer_10 = FactoryGirl.create(:person, name: "Racer 10", date_of_birth: 10.years.ago)
-      racer_13 = FactoryGirl.create(:person, name: "Racer 13", date_of_birth: 13.years.ago)
-      racer_14 = FactoryGirl.create(:person, name: "Racer 14", date_of_birth: 14.years.ago)
+      racer_10 = FactoryBot.create(:person, name: "Racer 10", date_of_birth: 10.years.ago)
+      racer_13 = FactoryBot.create(:person, name: "Racer 13", date_of_birth: 13.years.ago)
+      racer_14 = FactoryBot.create(:person, name: "Racer 14", date_of_birth: 14.years.ago)
 
       junior_10_14 = Category.where(name: "Junior Men 10-14").first_or_create!
       race_10_14 = event.races.create!(category: junior_10_14, distance: 25)

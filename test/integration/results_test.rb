@@ -3,13 +3,13 @@ require_relative "racing_on_rails/integration_test"
 # :stopdoc:
 class ResultsTest < RacingOnRails::IntegrationTest
   test "custom columns" do
-    FactoryGirl.create(:discipline)
-    FactoryGirl.create(:discipline, name: "Downhill")
-    FactoryGirl.create(:number_issuer)
+    FactoryBot.create(:discipline)
+    FactoryBot.create(:discipline, name: "Downhill")
+    FactoryBot.create(:number_issuer)
 
-    goto_login_page_and_login_as FactoryGirl.create(:administrator)
+    goto_login_page_and_login_as FactoryBot.create(:administrator)
 
-    event = FactoryGirl.create(:result).event
+    event = FactoryBot.create(:result).event
     get edit_admin_event_path(event)
     assert_response :success
 

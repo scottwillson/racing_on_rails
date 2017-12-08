@@ -16,15 +16,15 @@ module Competitions
         event.races.create!(category: category)
       end
 
-      winner = FactoryGirl.create(:person, name: "winner")
+      winner = FactoryBot.create(:person, name: "winner")
       event = series.children.first
       event.races.first.results.create!(place: "1", person: winner)
 
-      hot_spot_winner = FactoryGirl.create(:person, name: "hot_spot_winner")
+      hot_spot_winner = FactoryBot.create(:person, name: "hot_spot_winner")
       event.races.first.results.create!(place: "2", person: hot_spot_winner)
 
       hot_spots = event.children.create!(name: "Hot Spots").races.create!(category: category)
-      hot_spot_only = FactoryGirl.create(:person, name: "hot_spot_only")
+      hot_spot_only = FactoryBot.create(:person, name: "hot_spot_only")
       hot_spots.results.create!(place: "1", person: hot_spot_winner)
       hot_spots.results.create!(place: "2", person: hot_spot_only)
 

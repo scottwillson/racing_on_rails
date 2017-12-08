@@ -5,8 +5,8 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
   setup :use_ssl
 
   test "#create for person name" do
-    person = FactoryGirl.create(:person)
-    event_team = FactoryGirl.create(:event_team)
+    person = FactoryBot.create(:person)
+    event_team = FactoryBot.create(:event_team)
     login_as event_team.event.promoter
 
     post :create,
@@ -24,8 +24,8 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
   end
 
   test "#create for existing person" do
-    person = FactoryGirl.create(:person)
-    event_team = FactoryGirl.create(:event_team)
+    person = FactoryBot.create(:person)
+    event_team = FactoryBot.create(:event_team)
     login_as event_team.event.promoter
 
     post :create,
@@ -44,8 +44,8 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
   end
 
   test "#create for existing person and existing event team" do
-    event_team_membership = FactoryGirl.create(:event_team_membership)
-    person = FactoryGirl.create(:person)
+    event_team_membership = FactoryBot.create(:event_team_membership)
+    person = FactoryBot.create(:person)
     event_team = event_team_membership.event_team
     login_as event_team.event.promoter
 
@@ -66,9 +66,9 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
   end
 
   test "#create current person" do
-    person = FactoryGirl.create(:person)
+    person = FactoryBot.create(:person)
     login_as person
-    event_team = FactoryGirl.create(:event_team)
+    event_team = FactoryBot.create(:event_team)
 
     post :create, event_team_id: event_team
 
@@ -80,11 +80,11 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
   end
 
   test "#create current person join different team" do
-    event_team_membership = FactoryGirl.create(:event_team_membership)
+    event_team_membership = FactoryBot.create(:event_team_membership)
     person = event_team_membership.person
     event_team = event_team_membership.event_team
     login_as person
-    different_event_team = FactoryGirl.create(:event_team, event: event_team_membership.event)
+    different_event_team = FactoryBot.create(:event_team, event: event_team_membership.event)
 
     post :create, event_team_id: different_event_team
 
@@ -98,16 +98,16 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
   end
 
   test "#create current_person required" do
-    event_team = FactoryGirl.create(:event_team)
+    event_team = FactoryBot.create(:event_team)
     post :create, event_team_id: event_team
     assert_redirected_to new_person_session_path
   end
 
   test "#create admin required" do
-    person = FactoryGirl.create(:person)
-    different_person = FactoryGirl.create(:person)
+    person = FactoryBot.create(:person)
+    different_person = FactoryBot.create(:person)
     login_as person
-    event_team = FactoryGirl.create(:event_team)
+    event_team = FactoryBot.create(:event_team)
 
     post :create,
       event_team_id: event_team,
@@ -119,9 +119,9 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
   end
 
   test "#destroy" do
-    person = FactoryGirl.create(:person)
+    person = FactoryBot.create(:person)
     login_as person
-    event_team_membership = FactoryGirl.create(:event_team_membership, person: person)
+    event_team_membership = FactoryBot.create(:event_team_membership, person: person)
 
     delete :destroy, id: event_team_membership
 
@@ -131,10 +131,10 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
   end
 
   test "#destroy for another person" do
-    administrator = FactoryGirl.create(:administrator)
-    different_person = FactoryGirl.create(:person)
+    administrator = FactoryBot.create(:administrator)
+    different_person = FactoryBot.create(:person)
     login_as administrator
-    event_team_membership = FactoryGirl.create(:event_team_membership, person: different_person)
+    event_team_membership = FactoryBot.create(:event_team_membership, person: different_person)
 
     delete :destroy, id: event_team_membership
 
@@ -143,7 +143,7 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
   end
 
     test "#destroy current_person required" do
-      event_team_membership = FactoryGirl.create(:event_team_membership)
+      event_team_membership = FactoryBot.create(:event_team_membership)
       delete :destroy, id: event_team_membership
       assert_redirected_to new_person_session_path
     end

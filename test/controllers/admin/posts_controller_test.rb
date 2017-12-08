@@ -6,29 +6,29 @@ module Admin
     setup :use_ssl
 
     test "index" do
-      login_as FactoryGirl.create(:administrator)
-      post = FactoryGirl.create(:post)
+      login_as FactoryBot.create(:administrator)
+      post = FactoryBot.create(:post)
       get :index, mailing_list_id: post.mailing_list.to_param
       assert_response :success
       assert_template layout: "admin/application"
     end
 
     test "non admin index" do
-      login_as FactoryGirl.create(:person)
-      mailing_list = FactoryGirl.create(:mailing_list)
+      login_as FactoryBot.create(:person)
+      mailing_list = FactoryBot.create(:mailing_list)
       get :index, mailing_list_id: mailing_list.to_param
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
 
     test "index anonymous" do
-      mailing_list = FactoryGirl.create(:mailing_list)
+      mailing_list = FactoryBot.create(:mailing_list)
       get :index, mailing_list_id: mailing_list.to_param
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
 
     test "new" do
-      login_as FactoryGirl.create(:administrator)
-      mailing_list = FactoryGirl.create(:mailing_list)
+      login_as FactoryBot.create(:administrator)
+      mailing_list = FactoryBot.create(:mailing_list)
       get :new, mailing_list_id: mailing_list.to_param
       assert_response :success
     end
@@ -38,8 +38,8 @@ module Admin
       Post.any_instance.expects(:save!).never
       @controller.expects(:edit_admin_mailing_list_post_path).returns("/edit")
 
-      login_as FactoryGirl.create(:administrator)
-      mailing_list = FactoryGirl.create(:mailing_list)
+      login_as FactoryBot.create(:administrator)
+      mailing_list = FactoryBot.create(:mailing_list)
       post :create, mailing_list_id: mailing_list.to_param, post: {
         from_name: "Mike Murray",
         from_email: "mmurray@obra.org",
@@ -58,8 +58,8 @@ module Admin
       Post.expects(:save).returns(true)
       Post.any_instance.expects(:save!).never
 
-      login_as FactoryGirl.create(:administrator)
-      mailing_list = FactoryGirl.create(:mailing_list, name: "obra")
+      login_as FactoryBot.create(:administrator)
+      mailing_list = FactoryBot.create(:mailing_list, name: "obra")
       post :receive, mailing_list_id: mailing_list.to_param, raw: fixture_file_upload("email/for_sale.eml")
       assert_not_nil assigns(:post), @post
       assert assigns(:post).errors.empty?, assigns(:post).errors.full_messages.join(", ")
@@ -67,17 +67,17 @@ module Admin
     end
 
     test "edit" do
-      login_as FactoryGirl.create(:administrator)
-      mailing_list = FactoryGirl.create(:mailing_list)
-      post = FactoryGirl.create(:post)
+      login_as FactoryBot.create(:administrator)
+      mailing_list = FactoryBot.create(:mailing_list)
+      post = FactoryBot.create(:post)
       get :edit, mailing_list_id: mailing_list.to_param, id: post.to_param
       assert_response :success
     end
 
     test "update" do
-      login_as FactoryGirl.create(:administrator)
-      mailing_list = FactoryGirl.create(:mailing_list)
-      post = FactoryGirl.create(:post)
+      login_as FactoryBot.create(:administrator)
+      mailing_list = FactoryBot.create(:mailing_list)
+      post = FactoryBot.create(:post)
 
       Post.expects(:save).returns(true)
       Post.any_instance.expects(:save!).never
@@ -98,14 +98,14 @@ module Admin
     end
 
     test "destroy" do
-      login_as FactoryGirl.create(:administrator)
-      mailing_list = FactoryGirl.create(:mailing_list)
+      login_as FactoryBot.create(:administrator)
+      mailing_list = FactoryBot.create(:mailing_list)
 
-      original = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "My bike")
+      original = FactoryBot.build(:post, mailing_list: mailing_list, subject: "My bike")
       Post.save original, mailing_list
       assert_equal 0, original.reload.replies_count, "replies_count"
 
-      reply = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "Re: My bike", date: 10.minutes.ago)
+      reply = FactoryBot.build(:post, mailing_list: mailing_list, subject: "Re: My bike", date: 10.minutes.ago)
       assert_equal 0, original.reload.replies_count, "replies_count"
       Post.save reply, mailing_list
       assert_equal 1, original.reload.replies_count, "replies_count"

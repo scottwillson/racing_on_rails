@@ -10,7 +10,7 @@ class PersonTest < ActiveSupport::TestCase
     team = Team.new(name: "7-11")
 
     person.team = team
-    admin = FactoryGirl.create(:administrator)
+    admin = FactoryBot.create(:administrator)
     Person.current = admin
     person.save!
 
@@ -26,7 +26,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal admin, person.updated_by_person, "updated_by_person"
     assert_equal 1, person.versions.size, "Should create initial version"
 
-    another_admin = FactoryGirl.create(:person)
+    another_admin = FactoryBot.create(:person)
     Person.current = another_admin
     person.city = "Boulder"
     person.save!
@@ -42,7 +42,7 @@ class PersonTest < ActiveSupport::TestCase
 
   test "save existing team" do
     assert_nil(Person.find_by_last_name("Hampsten"), "Hampsten should not be in DB")
-    FactoryGirl.create(:team, name: "Vanilla").aliases.create!(name: "Vanilla Bicycles")
+    FactoryBot.create(:team, name: "Vanilla").aliases.create!(name: "Vanilla Bicycles")
     assert_not_nil(Team.find_by_name("Vanilla"), "Vanilla should be in DB")
 
     person = Person.new(last_name: "Hampsten")
@@ -58,7 +58,7 @@ class PersonTest < ActiveSupport::TestCase
   test "team name should preserve aliases" do
     team = Team.create!(name: "Sorella Forte Elite Team")
     event = SingleDayEvent.create!(date: 1.year.ago)
-    senior_men = FactoryGirl.create(:category)
+    senior_men = FactoryBot.create(:category)
     event.races.create!(category: senior_men).results.create!(team: team)
     team.aliases.create!(name: "Sorella Forte")
     assert_equal(0, team.names(true).size, "names")
@@ -76,8 +76,8 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "do not merge other people with same name" do
-    person_1 = FactoryGirl.create(:person, name: "Molly Cameron", other_people_with_same_name: true)
-    person_2 = FactoryGirl.create(:person, name: "Molly Cameron")
+    person_1 = FactoryBot.create(:person, name: "Molly Cameron", other_people_with_same_name: true)
+    person_2 = FactoryBot.create(:person, name: "Molly Cameron")
 
     assert !person_1.merge(person_2)
     assert !person_2.merge(person_1)
@@ -86,10 +86,10 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "merge" do
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline, name: "Road")
+    FactoryBot.create(:number_issuer)
+    FactoryBot.create(:discipline, name: "Road")
 
-    person_to_keep = FactoryGirl.create(
+    person_to_keep = FactoryBot.create(
       :person_with_login,
       login: "molly",
       city: "Berlin",
@@ -105,13 +105,13 @@ class PersonTest < ActiveSupport::TestCase
     )
     person_to_keep.aliases.create!(name: "Mollie Cameron")
     person_to_keep_old_password = person_to_keep.crypted_password
-    FactoryGirl.create(:result, person: person_to_keep)
-    FactoryGirl.create(:result, person: person_to_keep)
-    FactoryGirl.create(:result, person: person_to_keep)
-    event_team_membership = FactoryGirl.create(:event_team_membership, person: person_to_keep)
+    FactoryBot.create(:result, person: person_to_keep)
+    FactoryBot.create(:result, person: person_to_keep)
+    FactoryBot.create(:result, person: person_to_keep)
+    event_team_membership = FactoryBot.create(:event_team_membership, person: person_to_keep)
 
-    team = FactoryGirl.create(:team, name: "Gentle Lovers")
-    person_to_merge = FactoryGirl.create(
+    team = FactoryBot.create(:team, name: "Gentle Lovers")
+    person_to_merge = FactoryBot.create(
       :person,
       member_to: Time.zone.local(2008, 12, 31),
       city: "Middletown",
@@ -124,10 +124,10 @@ class PersonTest < ActiveSupport::TestCase
     )
     person_to_merge.race_numbers.create!(value: "102")
     person_to_merge.race_numbers.create!(year: 2004, value: "104")
-    FactoryGirl.create(:result, person: person_to_merge)
-    FactoryGirl.create(:result, person: person_to_merge)
+    FactoryBot.create(:result, person: person_to_merge)
+    FactoryBot.create(:result, person: person_to_merge)
     person_to_merge.aliases.create!(name: "Eric Tonkin")
-    FactoryGirl.create(:event_team_membership, person: person_to_merge, event_team: event_team_membership.event_team)
+    FactoryBot.create(:event_team_membership, person: person_to_merge, event_team: event_team_membership.event_team)
 
     assert Person.where(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
     assert_equal(3, Result.where(person_id: person_to_keep.id).count, "Molly's results")
@@ -198,8 +198,8 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "merge login" do
-    person_to_keep = FactoryGirl.create(:person)
-    person_to_merge = FactoryGirl.create(:person_with_login, login: "tonkin")
+    person_to_keep = FactoryBot.create(:person)
+    person_to_merge = FactoryBot.create(:person_with_login, login: "tonkin")
 
     Timecop.freeze(1.hour.from_now) do
       person_to_merge_old_password = person_to_merge.crypted_password
@@ -218,10 +218,10 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "merge two logins" do
-    person_to_keep = FactoryGirl.create(:person, login: "molly", password: "secret", password_confirmation: "secret")
+    person_to_keep = FactoryBot.create(:person, login: "molly", password: "secret", password_confirmation: "secret")
     person_to_keep_old_password = person_to_keep.crypted_password
 
-    person_to_merge = FactoryGirl.create(:person, login: "tonkin", password: "secret", password_confirmation: "secret")
+    person_to_merge = FactoryBot.create(:person, login: "tonkin", password: "secret", password_confirmation: "secret")
 
     person_to_keep.reload
     person_to_merge.reload
@@ -234,19 +234,19 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "merge no alias dup names" do
-    FactoryGirl.create(:discipline, name: "Cyclocross")
-    FactoryGirl.create(:discipline, name: "Road")
-    FactoryGirl.create(:number_issuer)
+    FactoryBot.create(:discipline, name: "Cyclocross")
+    FactoryBot.create(:discipline, name: "Road")
+    FactoryBot.create(:number_issuer)
 
-    person_to_keep = FactoryGirl.create(:person, login: "molly", password: "secret", password_confirmation: "secret")
-    FactoryGirl.create(:result, person: person_to_keep)
-    FactoryGirl.create(:result, person: person_to_keep)
-    FactoryGirl.create(:result, person: person_to_keep)
+    person_to_keep = FactoryBot.create(:person, login: "molly", password: "secret", password_confirmation: "secret")
+    FactoryBot.create(:result, person: person_to_keep)
+    FactoryBot.create(:result, person: person_to_keep)
+    FactoryBot.create(:result, person: person_to_keep)
     person_to_keep.aliases.create!(name: "Mollie Cameron")
 
-    person_to_merge = FactoryGirl.create(:person, login: "tonkin", password: "secret", password_confirmation: "secret")
-    FactoryGirl.create(:result, person: person_to_merge)
-    FactoryGirl.create(:result, person: person_to_merge)
+    person_to_merge = FactoryBot.create(:person, login: "tonkin", password: "secret", password_confirmation: "secret")
+    FactoryBot.create(:result, person: person_to_merge)
+    FactoryBot.create(:result, person: person_to_merge)
     person_to_merge.aliases.create!(name: "Eric Tonkin")
 
     # Same name as merged
@@ -548,9 +548,9 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "duplicate" do
-    FactoryGirl.create(:discipline, name: "Cyclocross")
-    FactoryGirl.create(:discipline, name: "Road")
-    FactoryGirl.create(:number_issuer)
+    FactoryBot.create(:discipline, name: "Cyclocross")
+    FactoryBot.create(:discipline, name: "Road")
+    FactoryBot.create(:number_issuer)
 
     Person.create(first_name: 'Otis', last_name: 'Guy')
     person = Person.new(first_name: 'Otis', last_name: 'Guy')
@@ -639,19 +639,19 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "bmx category" do
-    person = FactoryGirl.create(:person)
+    person = FactoryBot.create(:person)
     assert_nil(person.bmx_category, "BMX category")
     person.bmx_category = "H100"
     assert_equal("H100", person.bmx_category, "BMX category")
   end
 
   test "blank numbers" do
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline, name: "Cyclocross")
-    FactoryGirl.create(:discipline, name: "Downhill")
-    FactoryGirl.create(:discipline, name: "Road")
-    FactoryGirl.create(:discipline, name: "Time Trial")
-    FactoryGirl.create(:discipline, name: "Track")
+    FactoryBot.create(:number_issuer)
+    FactoryBot.create(:discipline, name: "Cyclocross")
+    FactoryBot.create(:discipline, name: "Downhill")
+    FactoryBot.create(:discipline, name: "Road")
+    FactoryBot.create(:discipline, name: "Time Trial")
+    FactoryBot.create(:discipline, name: "Track")
 
     person = Person.new
     assert_nil(person.ccx_number, 'cross number after new')
@@ -691,14 +691,14 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "numbers" do
-    FactoryGirl.create(:number_issuer)
-    cyclocross = FactoryGirl.create(:discipline, name: "Cyclocross")
-    FactoryGirl.create(:discipline_alias, discipline: cyclocross, alias: "cx")
-    FactoryGirl.create(:discipline_alias, discipline: cyclocross, alias: "ccx")
-    FactoryGirl.create(:discipline, name: "Road")
-    FactoryGirl.create(:discipline, name: "Time Trial")
+    FactoryBot.create(:number_issuer)
+    cyclocross = FactoryBot.create(:discipline, name: "Cyclocross")
+    FactoryBot.create(:discipline_alias, discipline: cyclocross, alias: "cx")
+    FactoryBot.create(:discipline_alias, discipline: cyclocross, alias: "ccx")
+    FactoryBot.create(:discipline, name: "Road")
+    FactoryBot.create(:discipline, name: "Time Trial")
 
-    person = FactoryGirl.create(:person)
+    person = FactoryBot.create(:person)
     tonkin = Person.create!(updated_by: person)
     tonkin.road_number = "102"
     road_number = tonkin.race_numbers.first
@@ -713,11 +713,11 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "blank non-number discipline should not delete road number" do
-    FactoryGirl.create :number_issuer
-    FactoryGirl.create :discipline, name: "Road", numbers: true
-    FactoryGirl.create :discipline, name: "Track", numbers: false
+    FactoryBot.create :number_issuer
+    FactoryBot.create :discipline, name: "Road", numbers: true
+    FactoryBot.create :discipline, name: "Track", numbers: false
 
-    person = FactoryGirl.create(:person, road_number: "1002")
+    person = FactoryBot.create(:person, road_number: "1002")
     person = Person.find(person.id)
     assert_equal "1002", person.road_number
 
@@ -749,16 +749,16 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "find all by number" do
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline, name: "Road")
-    person = FactoryGirl.create(:person, road_number: "340")
+    FactoryBot.create(:number_issuer)
+    FactoryBot.create(:discipline, name: "Road")
+    person = FactoryBot.create(:person, road_number: "340")
     found_person = Person.find_all_by_number('340')
     assert_equal([person], found_person, 'Should find Matson')
   end
 
   test "name_like" do
     assert_equal([], Person.name_like("foo123"), "foo123 should find no names")
-    weaver = FactoryGirl.create(:person, name: "Ryan Weaver")
+    weaver = FactoryBot.create(:person, name: "Ryan Weaver")
     assert_equal([weaver], Person.name_like("eav"), "'eav' should find Weaver")
 
     weaver.last_name = "O'Weaver"
@@ -773,13 +773,13 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "where_name_or_number_like" do
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline, name: "Road")
+    FactoryBot.create(:number_issuer)
+    FactoryBot.create(:discipline, name: "Road")
 
-    weaver = FactoryGirl.create(:person, name: "Ryan Weaver", road_number: "666")
+    weaver = FactoryBot.create(:person, name: "Ryan Weaver", road_number: "666")
     weaver.aliases.create! name: "Brian Weaver"
 
-    someone_else = FactoryGirl.create(:person, name: "Scott Willson", road_number: "6")
+    someone_else = FactoryBot.create(:person, name: "Scott Willson", road_number: "6")
     someone_else.aliases.create! name: "Scott Wilson"
 
     assert_equal [], Person.where_name_or_number_like("foo123"), "foo123 should find no names"
@@ -789,7 +789,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "find by name" do
-    weaver = FactoryGirl.create(:person, name: "Ryan Weaver")
+    weaver = FactoryBot.create(:person, name: "Ryan Weaver")
     assert_equal weaver, Person.find_by_name("Ryan Weaver"), "find_by_name"
 
     person = Person.create!(first_name: "Sam")
@@ -855,7 +855,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "create and override alias" do
-    person = FactoryGirl.create(:person, name: "Molly Cameron")
+    person = FactoryBot.create(:person, name: "Molly Cameron")
     person.aliases.create!(name: "Mollie Cameron")
 
     assert_not_nil(Person.find_by_name('Molly Cameron'), 'Molly Cameron should exist')
@@ -872,7 +872,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "update to alias" do
-    person = FactoryGirl.create(:person, name: "Molly Cameron")
+    person = FactoryBot.create(:person, name: "Molly Cameron")
     person.aliases.create!(name: "Mollie Cameron")
 
     # Reload to set old name correctly
@@ -910,11 +910,11 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "add number" do
-    FactoryGirl.create :discipline, name: "Road"
-    FactoryGirl.create :number_issuer
+    FactoryBot.create :discipline, name: "Road"
+    FactoryBot.create :number_issuer
 
     person = Person.create!
-    event = FactoryGirl.create(:event)
+    event = FactoryBot.create(:event)
     person.updated_by = event
     person.add_number "7890", nil
     assert_equal "7890", person.road_number, "Road number after add with nil discipline"
@@ -922,9 +922,9 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "add number from non number discipline" do
-    FactoryGirl.create :discipline, name: "Circuit", numbers: false
-    FactoryGirl.create :discipline, name: "Road"
-    FactoryGirl.create :number_issuer
+    FactoryBot.create :discipline, name: "Circuit", numbers: false
+    FactoryBot.create :discipline, name: "Road"
+    FactoryBot.create :number_issuer
 
     person = Person.create!
     circuit_race = Discipline[:circuit]
@@ -934,12 +934,12 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "other people with same name" do
-    molly = FactoryGirl.create(:person, name: "Molly Cameron")
+    molly = FactoryBot.create(:person, name: "Molly Cameron")
     molly.aliases.create!(name: "Mollie Cameron")
 
     assert_equal([], molly.all_other_people_with_same_name, "No other people named 'Molly Cameron'")
 
-    person = FactoryGirl.create(:person, name: "Mollie Cameron")
+    person = FactoryBot.create(:person, name: "Mollie Cameron")
     assert_equal([], molly.all_other_people_with_same_name, "No other people named 'Mollie Cameron'")
 
     Person.create!(name: "Mollie Cameron")
@@ -947,8 +947,8 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "force other_people_with_same_name for merge" do
-    person = FactoryGirl.create(:person, name: "Molly Cameron", other_people_with_same_name: true)
-    person_2 = FactoryGirl.create(:person, name: "Molly Cameron", other_people_with_same_name: true)
+    person = FactoryBot.create(:person, name: "Molly Cameron", other_people_with_same_name: true)
+    person_2 = FactoryBot.create(:person, name: "Molly Cameron", other_people_with_same_name: true)
 
     assert !person_2.merge?(person), "merge? should honor other_people_with_same_name"
     assert !person.merge?(person_2), "merge? should honor other_people_with_same_name"
@@ -957,17 +957,17 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "dh number with no downhill discipline" do
-    downhill = FactoryGirl.create(:discipline, name: "Downhill")
+    downhill = FactoryBot.create(:discipline, name: "Downhill")
     downhill.destroy
     Discipline.reset
 
     assert(!Discipline.exists?(name: "Downhill"), "Downhill should be deleted")
-    person = FactoryGirl.create(:person)
+    person = FactoryBot.create(:person)
     assert_nil(person.dh_number, "DH number")
   end
 
   test "find all by name or alias" do
-    tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
+    tonkin = FactoryBot.create(:person, name: "Erik Tonkin")
     tonkin.aliases.create!(name: "Eric Tonkin")
     Person.create!(name: "Erik Tonkin")
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should have 2 Tonkins")
@@ -976,25 +976,25 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "find all for export" do
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline, name: "Cyclocross")
-    FactoryGirl.create(:discipline, name: "Downhill")
-    FactoryGirl.create(:discipline, name: "Mountain Bike")
-    FactoryGirl.create(:discipline, name: "Road")
-    FactoryGirl.create(:discipline, name: "Singlespeed")
-    FactoryGirl.create(:discipline, name: "Time Trial")
-    FactoryGirl.create(:discipline, name: "Track")
+    FactoryBot.create(:number_issuer)
+    FactoryBot.create(:discipline, name: "Cyclocross")
+    FactoryBot.create(:discipline, name: "Downhill")
+    FactoryBot.create(:discipline, name: "Mountain Bike")
+    FactoryBot.create(:discipline, name: "Road")
+    FactoryBot.create(:discipline, name: "Singlespeed")
+    FactoryBot.create(:discipline, name: "Time Trial")
+    FactoryBot.create(:discipline, name: "Track")
 
-    FactoryGirl.create(:person, name: "Molly Cameron")
-    kona = FactoryGirl.create(:team, name: "Kona")
-    FactoryGirl.create(
+    FactoryBot.create(:person, name: "Molly Cameron")
+    kona = FactoryBot.create(:team, name: "Kona")
+    FactoryBot.create(
       :person,
       name: "Erik Tonkin",
       team: kona,
       track_category: "4"
     )
-    FactoryGirl.create(:person, name: "Mark Matson", team: kona)
-    FactoryGirl.create(
+    FactoryBot.create(:person, name: "Mark Matson", team: kona)
+    FactoryBot.create(
       :person,
       name: "Alice Pennington",
       date_of_birth: 30.years.ago,
@@ -1002,9 +1002,9 @@ class PersonTest < ActiveSupport::TestCase
       member_to: Time.zone.now.end_of_year.to_date,
       track_category: "5"
     )
-    FactoryGirl.create(:person, name: "Candi Murray")
-    FactoryGirl.create(:person)
-    FactoryGirl.create(:person, name: "Kevin Condron")
+    FactoryBot.create(:person, name: "Candi Murray")
+    FactoryBot.create(:person)
+    FactoryBot.create(:person, name: "Kevin Condron")
 
     people = Person.find_all_for_export
     assert_equal("Molly", people[0]["first_name"], "Row 0 first_name")
@@ -1016,7 +1016,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "find or create by name" do
-    tonkin = FactoryGirl.create(:person, name: "Erik Tonkin")
+    tonkin = FactoryBot.create(:person, name: "Erik Tonkin")
     person = Person.find_or_create_by(name: "Erik Tonkin")
     assert_equal tonkin, person, "Should find existing person"
 
@@ -1040,11 +1040,11 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "find by info" do
-    promoter = FactoryGirl.create(:promoter, name: "Brad Ross")
+    promoter = FactoryBot.create(:promoter, name: "Brad Ross")
     assert_equal(promoter, Person.first_by_info("Brad ross"))
     assert_equal(promoter, Person.first_by_info("Brad ross", "brad@foo.com"))
 
-    administrator = FactoryGirl.create(:administrator)
+    administrator = FactoryBot.create(:administrator)
     assert_equal(administrator, Person.first_by_info("Candi Murray"))
     assert_equal(administrator, Person.first_by_info("Candi Murray", "admin@example.com", "(503) 555-1212"))
     assert_equal(administrator, Person.first_by_info("", "admin@example.com", "(503) 555-1212"))
@@ -1076,9 +1076,9 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "administrator" do
-    administrator = FactoryGirl.create(:administrator)
-    promoter = FactoryGirl.create(:promoter)
-    member = FactoryGirl.create(:person)
+    administrator = FactoryBot.create(:administrator)
+    promoter = FactoryBot.create(:promoter)
+    member = FactoryBot.create(:person)
 
     assert(administrator.administrator?, 'administrator administrator?')
     assert(!promoter.administrator?, 'promoter administrator?')
@@ -1086,9 +1086,9 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "promoter" do
-    administrator = FactoryGirl.create(:administrator)
-    promoter = FactoryGirl.create(:promoter)
-    member = FactoryGirl.create(:person)
+    administrator = FactoryBot.create(:administrator)
+    promoter = FactoryBot.create(:promoter)
+    member = FactoryBot.create(:person)
 
     assert !administrator.promoter?, "administrator promoter?"
     assert promoter.promoter?, "promoter promoter?"
@@ -1148,7 +1148,7 @@ class PersonTest < ActiveSupport::TestCase
 
   test "destroy with editors" do
     person = Person.create!
-    alice = FactoryGirl.create(:person)
+    alice = FactoryBot.create(:person)
     person.editors << alice
     assert alice.editable_people.any?, "should be editor"
     person.destroy
@@ -1157,7 +1157,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "multiple names" do
-    person = FactoryGirl.create(:person, name: "Ryan Weaver")
+    person = FactoryBot.create(:person, name: "Ryan Weaver")
 
     person.names.create!(first_name: "R", last_name: "Weavedog", name: "R Weavedog", year: 2001)
     person.names.create!(first_name: "Mister", last_name: "Weavedog", name: "Mister Weavedog", year: 2002)
@@ -1185,10 +1185,10 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "create new name if there are results from previous year" do
-    person = FactoryGirl.create(:person, name: "Ryan Weaver")
+    person = FactoryBot.create(:person, name: "Ryan Weaver")
     person = Person.find(person.id)
     event = SingleDayEvent.create!(date: 1.year.ago)
-    senior_men = FactoryGirl.create(:category)
+    senior_men = FactoryBot.create(:category)
     old_result = event.races.create!(category: senior_men).results.create!(person: person)
     assert_equal("Ryan Weaver", old_result.name, "Name on old result")
     assert_equal("Ryan", old_result.first_name, "first_name on old result")
@@ -1236,7 +1236,7 @@ class PersonTest < ActiveSupport::TestCase
   test "can edit" do
     p1 = Person.create!
     p2 = Person.create!
-    admin = FactoryGirl.create(:administrator)
+    admin = FactoryBot.create(:administrator)
 
     assert !p1.can_edit?(p2)
     assert !p1.can_edit?(admin)
@@ -1283,8 +1283,8 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "event editor" do
-    event = FactoryGirl.create(:event)
-    person = FactoryGirl.create(:person)
+    event = FactoryBot.create(:event)
+    person = FactoryBot.create(:person)
 
     assert event.editors.empty?, "Event should have no editors"
     assert_not_nil event.promoter, "Event should have promoter"

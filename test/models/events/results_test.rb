@@ -4,29 +4,29 @@ module Events
   # :stopdoc:
   class ResultsTest < ActiveSupport::TestCase
     test "find all with results" do
-      event = FactoryGirl.create(:result).event
+      event = FactoryBot.create(:result).event
       assert_equal([ event ], Event.find_all_with_results, "events")
     end
 
     test "find all with results with year" do
-      event_with_results = FactoryGirl.create(:event, date: Date.new(2003))
-      race = FactoryGirl.create(:race, event: event_with_results)
-      FactoryGirl.create(:result, race: race)
+      event_with_results = FactoryBot.create(:event, date: Date.new(2003))
+      race = FactoryBot.create(:race, event: event_with_results)
+      FactoryBot.create(:result, race: race)
 
       # Event and race + event with no results
-      FactoryGirl.create(:event, date: Date.new(2003))
-      FactoryGirl.create(:race)
+      FactoryBot.create(:event, date: Date.new(2003))
+      FactoryBot.create(:race)
 
       assert_equal([ event_with_results ], Event.find_all_with_results(2003), "events")
 
-      event_with_results = FactoryGirl.create(:event, date: Date.new(2004))
-      race = FactoryGirl.create(:race, event: event_with_results)
-      FactoryGirl.create(:result, race: race)
+      event_with_results = FactoryBot.create(:event, date: Date.new(2004))
+      race = FactoryBot.create(:race, event: event_with_results)
+      FactoryBot.create(:result, race: race)
 
-      weekly_series_with_results = FactoryGirl.create(:weekly_series, date: Date.new(2004))
+      weekly_series_with_results = FactoryBot.create(:weekly_series, date: Date.new(2004))
       series_event = weekly_series_with_results.children.create!
-      race = FactoryGirl.create(:race, event: series_event)
-      FactoryGirl.create(:result, race: race)
+      race = FactoryBot.create(:race, event: series_event)
+      FactoryBot.create(:result, race: race)
 
       events = Event.find_all_with_results(2004)
       assert_equal_events([ event_with_results, weekly_series_with_results].sort, events.sort, "events")
@@ -35,24 +35,24 @@ module Events
     end
 
     test "find all with results with discipline" do
-      FactoryGirl.create(:discipline, name: "Road")
-      FactoryGirl.create(:discipline, name: "Circuit")
-      FactoryGirl.create(:discipline, name: "Criterium")
-      FactoryGirl.create(:discipline, name: "Track")
+      FactoryBot.create(:discipline, name: "Road")
+      FactoryBot.create(:discipline, name: "Circuit")
+      FactoryBot.create(:discipline, name: "Criterium")
+      FactoryBot.create(:discipline, name: "Track")
 
-      event_with_results = FactoryGirl.create(:event, date: Date.new(2003))
-      race = FactoryGirl.create(:race, event: event_with_results)
-      FactoryGirl.create(:result, race: race)
+      event_with_results = FactoryBot.create(:event, date: Date.new(2003))
+      race = FactoryBot.create(:race, event: event_with_results)
+      FactoryBot.create(:result, race: race)
 
       assert_equal([ event_with_results ], Event.find_all_with_results(2003, Discipline["Road"]), "events")
 
       assert_equal([], Event.find_all_with_results(2003, Discipline["Criterium"]), "events")
 
-      circuit_race = FactoryGirl.create(:event, discipline: "Circuit")
-      category = FactoryGirl.create(:category)
+      circuit_race = FactoryBot.create(:event, discipline: "Circuit")
+      category = FactoryBot.create(:category)
       circuit_race.races.create!(category: category).results.create!
 
-      track_event = FactoryGirl.create(:event, discipline: "Track")
+      track_event = FactoryBot.create(:event, discipline: "Track")
       track_event.races.create!(category: category).results.create!
 
       track_series = WeeklySeries.create!(discipline: "Track")
@@ -69,7 +69,7 @@ module Events
       series = WeeklySeries.create!
       series_event = series.children.create!
       child_event = series_event.children.create!
-      child_event.races.create!(category: FactoryGirl.create(:category)).results.create!
+      child_event.races.create!(category: FactoryBot.create(:category)).results.create!
 
       assert(child_event.is_a?(Event), "Child event should be an Event")
       assert(!child_event.is_a?(SingleDayEvent), "Child event should not be an SingleDayEvent")
@@ -81,29 +81,29 @@ module Events
       assert(!Event.new.any_results?, "New Event should not have results")
 
       event = SingleDayEvent.create!
-      race = event.races.create!(category: FactoryGirl.create(:category))
+      race = event.races.create!(category: FactoryBot.create(:category))
       assert(!event.any_results?, "Event with race, but no results should not have results")
 
-      race.results.create!(place: 200, person: FactoryGirl.create(:person))
+      race.results.create!(place: 200, person: FactoryBot.create(:person))
       assert(event.any_results?, "Event with one result should have results")
     end
 
     test "races with results" do
-      bb3 = FactoryGirl.create(:event)
+      bb3 = FactoryBot.create(:event)
       assert(bb3.races_with_results.empty?, 'No races')
 
-      sr_p_1_2 = FactoryGirl.create(:category)
+      sr_p_1_2 = FactoryBot.create(:category)
       bb3.races.create!(category: sr_p_1_2)
       assert(bb3.races_with_results.empty?, 'No results')
 
-      senior_women = FactoryGirl.create(:category)
+      senior_women = FactoryBot.create(:category)
       race_1 = bb3.races.create!(category: senior_women)
       race_1.results.create!
       assert_equal([race_1], bb3.races_with_results, 'One results')
 
       race_2 = bb3.races.create!(category: sr_p_1_2)
       race_2.results.create!
-      women_4 = FactoryGirl.create(:category)
+      women_4 = FactoryBot.create(:category)
       bb3.races.create!(category: women_4)
       assert_same_elements [ race_2, race_1 ], bb3.races_with_results, 'Two races with results'
     end
@@ -117,7 +117,7 @@ module Events
       assert_equal(0, event.children_with_results.size, "events_with_results: child with no results")
       assert_equal(0, event.children_with_results.size, "children_with_results: child with no results")
 
-      category = FactoryGirl.create(:category)
+      category = FactoryBot.create(:category)
       event.children.create!.races.create!(category: category).results.create!
       assert_equal(1, event.children_with_results.size, "cached: events_with_results: 1 children with results")
       assert_equal(1, event.children_with_results.size, "refresh cache: events_with_results: 1 children with results")
@@ -129,9 +129,9 @@ module Events
     end
 
     test "children with results only child events" do
-      series_event = FactoryGirl.create(:series_event)
+      series_event = FactoryBot.create(:series_event)
       child_event = series_event.children.create!
-      FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: child_event))
+      FactoryBot.create(:result, race: FactoryBot.create(:race, event: child_event))
       series = Event.find(series_event.parent_id)
 
       assert_equal(1, series.children_with_results.size, "Should have child with results")
@@ -141,9 +141,9 @@ module Events
     end
 
     test "has results including children" do
-      series_event = FactoryGirl.create(:weekly_series_event)
+      series_event = FactoryBot.create(:weekly_series_event)
       child_event = series_event.children.create!
-      FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: child_event))
+      FactoryBot.create(:result, race: FactoryBot.create(:race, event: child_event))
       series = Event.find(series_event.parent_id)
 
       assert(series.any_results_including_children?, "Series any_results_including_children?")
@@ -152,12 +152,12 @@ module Events
     end
 
     test "results_updated_at" do
-      event = FactoryGirl.create(:event)
+      event = FactoryBot.create(:event)
       assert_nil event.results_updated_at, "results_updated_at with no results"
 
       result = nil
       travel_to 1.day.ago do
-        result = FactoryGirl.create(:result)
+        result = FactoryBot.create(:result)
       end
       assert_equal result.reload.updated_at, result.event.results_updated_at, "results_updated_at should use result updated_at"
     end

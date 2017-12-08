@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 # :stopdoc:
 class PagesTest < AcceptanceTest
   test "pages" do
-    login_as FactoryGirl.create(:administrator)
+    login_as FactoryBot.create(:administrator)
 
     visit "/admin/pages"
 

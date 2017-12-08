@@ -20,11 +20,11 @@ module Competitions
     end
 
     test "results pages" do
-      FactoryGirl.create(:discipline)
-      team = FactoryGirl.create(:team)
-      person = FactoryGirl.create(:person, team: team)
-      event = FactoryGirl.create(:event, date: Date.new(2004, 2))
-      senior_men = FactoryGirl.create(:category)
+      FactoryBot.create(:discipline)
+      team = FactoryBot.create(:team)
+      person = FactoryBot.create(:person, team: team)
+      event = FactoryBot.create(:event, date: Date.new(2004, 2))
+      senior_men = FactoryBot.create(:category)
       race = event.races.create!(category: senior_men)
       result = race.results.create(place: "1", person: person, team: team)
 
@@ -42,7 +42,7 @@ module Competitions
       assert_select "a", result.team_name
       assert_select "h2", result.team_name
 
-      result = FactoryGirl.create(:result)
+      result = FactoryBot.create(:result)
       get "/events/#{result.event.to_param}"
       assert_response :success
       assert_select ".name a", result.name
@@ -71,7 +71,7 @@ module Competitions
     end
 
     test "first aid providers" do
-      person = FactoryGirl.create(:person_with_login, official: true)
+      person = FactoryBot.create(:person_with_login, official: true)
       https! if RacingAssociation.current.ssl?
 
       get "/admin/first_aid_providers"
@@ -84,8 +84,8 @@ module Competitions
     end
 
     test "mailing lists" do
-      mailing_list = FactoryGirl.create(:mailing_list)
-      mailing_list_post = FactoryGirl.create(:post, mailing_list: mailing_list)
+      mailing_list = FactoryBot.create(:mailing_list)
+      mailing_list_post = FactoryBot.create(:post, mailing_list: mailing_list)
 
       get "/"
       assert_response :success

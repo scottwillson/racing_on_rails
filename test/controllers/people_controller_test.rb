@@ -5,7 +5,7 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class PeopleControllerTest < ActionController::TestCase
   test "edit" do
-    member = FactoryGirl.create(:person_with_login)
+    member = FactoryBot.create(:person_with_login)
     use_ssl
     login_as member
     get :edit, id: member.to_param
@@ -15,7 +15,7 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   test "edit promoter" do
-    promoter = FactoryGirl.create(:promoter)
+    promoter = FactoryBot.create(:promoter)
     use_ssl
     login_as promoter
     get :edit, id: promoter.to_param
@@ -24,8 +24,8 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   test "edit as editor" do
-    member = FactoryGirl.create(:person_with_login)
-    molly = FactoryGirl.create(:person)
+    member = FactoryBot.create(:person_with_login)
+    molly = FactoryBot.create(:person)
     molly.editors << member
     use_ssl
     login_as member
@@ -36,15 +36,15 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   test "must be logged in" do
-    member = FactoryGirl.create(:person_with_login)
+    member = FactoryBot.create(:person_with_login)
     use_ssl
     get :edit, id: member.to_param
     assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
   test "cant see other people info" do
-    member = FactoryGirl.create(:person_with_login)
-    weaver = FactoryGirl.create(:person)
+    member = FactoryBot.create(:person_with_login)
+    weaver = FactoryBot.create(:person)
     use_ssl
     login_as member
     get :edit, id: weaver.to_param
@@ -52,8 +52,8 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   test "admins can see people info" do
-    member = FactoryGirl.create(:person_with_login)
-    administrator = FactoryGirl.create(:administrator)
+    member = FactoryBot.create(:person_with_login)
+    administrator = FactoryBot.create(:administrator)
     use_ssl
     login_as administrator
     get :edit, id: member.to_param
@@ -63,8 +63,8 @@ class PeopleControllerTest < ActionController::TestCase
 
   test "update" do
     use_ssl
-    person = FactoryGirl.create(:person_with_login, first_name: "Bob", last_name: "Jones")
-    gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
+    person = FactoryBot.create(:person_with_login, first_name: "Bob", last_name: "Jones")
+    gentle_lovers = FactoryBot.create(:team, name: "Gentle Lovers")
     login_as person
     put :update, id: person.to_param, person: { team_name: "Gentle Lovers" }
     assert_redirected_to edit_person_path(person)
@@ -84,12 +84,12 @@ class PeopleControllerTest < ActionController::TestCase
 
   test "update no name" do
     use_ssl
-    editor = FactoryGirl.create(:administrator, login: "my_login", first_name: "", last_name: "")
-    gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
+    editor = FactoryBot.create(:administrator, login: "my_login", first_name: "", last_name: "")
+    gentle_lovers = FactoryBot.create(:team, name: "Gentle Lovers")
 
     login_as editor
 
-    person = FactoryGirl.create(:person)
+    person = FactoryBot.create(:person)
     put :update, id: person.to_param, person: { team_name: "Gentle Lovers" }
     assert_redirected_to edit_person_path(person)
     person = Person.find(person.id)
@@ -107,10 +107,10 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   test "update by editor" do
-    person = FactoryGirl.create(:person)
-    molly = FactoryGirl.create(:person)
+    person = FactoryBot.create(:person)
+    molly = FactoryBot.create(:person)
     person.editors << molly
-    gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
+    gentle_lovers = FactoryBot.create(:team, name: "Gentle Lovers")
 
     use_ssl
     login_as molly
@@ -121,7 +121,7 @@ class PeopleControllerTest < ActionController::TestCase
 
   test "account" do
     use_ssl
-    member = FactoryGirl.create(:person_with_login)
+    member = FactoryBot.create(:person_with_login)
     login_as member
     get :account
     assert_redirected_to edit_person_path(member)
@@ -129,7 +129,7 @@ class PeopleControllerTest < ActionController::TestCase
 
   test "account with person" do
     use_ssl
-    member = FactoryGirl.create(:person_with_login)
+    member = FactoryBot.create(:person_with_login)
     login_as member
     get :account, id: member.to_param
     assert_redirected_to edit_person_path(member)
@@ -137,7 +137,7 @@ class PeopleControllerTest < ActionController::TestCase
 
   test "account with another person" do
     use_ssl
-    member = FactoryGirl.create(:person_with_login)
+    member = FactoryBot.create(:person_with_login)
     login_as member
     another_person = Person.create!
     get :account, id: another_person.to_param
@@ -152,13 +152,13 @@ class PeopleControllerTest < ActionController::TestCase
 
   test "account with person not logged in" do
     use_ssl
-    member = FactoryGirl.create(:person_with_login)
+    member = FactoryBot.create(:person_with_login)
     get :account, id: member.to_param
     assert_redirected_to edit_person_path(member)
   end
 
   test "new when logged in" do
-    member = FactoryGirl.create(:person_with_login)
+    member = FactoryBot.create(:person_with_login)
     login_as member
     use_ssl
     get :new_login
@@ -173,8 +173,8 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   test "find by name as xml" do
-    FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
-    FactoryGirl.create(:person, first_name: "Kevin", last_name: "Condron")
+    FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
+    FactoryBot.create(:person, first_name: "Kevin", last_name: "Condron")
 
     get :index, name: "ron", format: "xml"
     assert_response :success
@@ -183,7 +183,7 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   test "find by license as xml" do
-    FactoryGirl.create(:person, first_name: "Mark", last_name: "Matson", license: "576")
+    FactoryBot.create(:person, first_name: "Mark", last_name: "Matson", license: "576")
     get :index, name: "m", license: 576, format: "xml"
     assert_response :success
     assert_select "first-name", "Mark"

@@ -4,17 +4,17 @@ module Competitions
   # :stopdoc:
   class MbraTeamBarTest < ActiveSupport::TestCase
     test "calculate" do
-      road = FactoryGirl.create(:discipline, name: "Road")
+      road = FactoryBot.create(:discipline, name: "Road")
 
-      senior_men   = FactoryGirl.create(:category, name: "Cat 1/2 Men")
-      senior_women = FactoryGirl.create(:category, name: "Cat 1/2/3 Women")
+      senior_men   = FactoryBot.create(:category, name: "Cat 1/2 Men")
+      senior_women = FactoryBot.create(:category, name: "Cat 1/2/3 Women")
       road.bar_categories << senior_men
       road.bar_categories << senior_women
 
-      kona          = FactoryGirl.create(:team)
-      chocolate     = FactoryGirl.create(:team, member: false)
-      gentle_lovers = FactoryGirl.create(:team)
-      vanilla = FactoryGirl.create(:team)
+      kona          = FactoryBot.create(:team)
+      chocolate     = FactoryBot.create(:team, member: false)
+      gentle_lovers = FactoryBot.create(:team)
+      vanilla = FactoryBot.create(:team)
 
       swan_island = SingleDayEvent.create!(
         name: "Swan Island",
@@ -33,21 +33,21 @@ module Competitions
 
       swan_island_senior_men = swan_island.races.create(category: senior_men, field_size: 7)
 
-      tonkin = FactoryGirl.create(:person)
+      tonkin = FactoryBot.create(:person)
       swan_island_senior_men.results.create(
         place: 1,
         person: tonkin,
         team: kona
       )
 
-      weaver = FactoryGirl.create(:person)
+      weaver = FactoryBot.create(:person)
       swan_island_senior_men.results.create(
         place: 2,
         person: weaver,
         team: kona
       )
 
-      matson = FactoryGirl.create(:person)
+      matson = FactoryBot.create(:person)
       swan_island_senior_men.results.create(
         place: 3,
         person: matson,
@@ -55,7 +55,7 @@ module Competitions
       )
 
       # non-member team -> no bat results
-      molly = FactoryGirl.create(:person)
+      molly = FactoryBot.create(:person)
       swan_island_senior_men.results.create(
         place: 4,
         person: molly,
@@ -63,21 +63,21 @@ module Competitions
       )
 
       # no team -> no bat results
-      member = FactoryGirl.create(:person)
+      member = FactoryBot.create(:person)
       swan_island_senior_men.results.create(
         place: 5,
         person: member
       )
 
       # team does not sponsor an event for the discipline -> no bat results
-      member = FactoryGirl.create(:person)
+      member = FactoryBot.create(:person)
       swan_island_senior_men.results.create(
         place: 6,
         person: member,
         team: vanilla
       )
 
-      alice = FactoryGirl.create(:person)
+      alice = FactoryBot.create(:person)
       swan_island_senior_men.results.create(
         place: "DNF",
         person: alice,

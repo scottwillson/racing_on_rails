@@ -3,10 +3,10 @@ require File.expand_path("../../../test_helper", __FILE__)
 # :stopdoc:
 class UpcomingTest < ActiveSupport::TestCase
   test "different dates" do
-    FactoryGirl.create(:discipline, name: "Mountain Bike")
-    FactoryGirl.create(:discipline, name: "Road")
-    FactoryGirl.create(:discipline, name: "Time Trial")
-    FactoryGirl.create(:discipline, name: "Track")
+    FactoryBot.create(:discipline, name: "Mountain Bike")
+    FactoryBot.create(:discipline, name: "Road")
+    FactoryBot.create(:discipline, name: "Time Trial")
+    FactoryBot.create(:discipline, name: "Track")
 
     RacingAssociation.current.show_only_association_sanctioned_races_on_calendar = true
 
@@ -77,9 +77,9 @@ class UpcomingTest < ActiveSupport::TestCase
   end
 
   test "midweek multiday event" do
-    FactoryGirl.create(:discipline, name: "Mountain Bike")
-    FactoryGirl.create(:discipline, name: "Road")
-    FactoryGirl.create(:discipline, name: "Track")
+    FactoryBot.create(:discipline, name: "Mountain Bike")
+    FactoryBot.create(:discipline, name: "Road")
+    FactoryBot.create(:discipline, name: "Track")
 
     six_day = MultiDayEvent.create!(
       date: Date.new(2006, 6, 12), name: 'Alpenrose Six Day', discipline: 'Track', flyer_approved: true
@@ -118,7 +118,7 @@ class UpcomingTest < ActiveSupport::TestCase
   end
 
   test "weekly series" do
-    FactoryGirl.create(:discipline, name: "Road")
+    FactoryBot.create(:discipline, name: "Road")
 
     series = WeeklySeries.create!(
       date: Date.new(1999, 6, 8), name: 'PIR'
@@ -161,7 +161,7 @@ class UpcomingTest < ActiveSupport::TestCase
   end
 
   test "series" do
-    FactoryGirl.create(:discipline, name: "Road")
+    FactoryBot.create(:discipline, name: "Road")
 
     estacada_tt = Series.create!(
       date: Date.new(1999, 6, 8), name: 'Estacada'

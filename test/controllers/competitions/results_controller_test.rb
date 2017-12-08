@@ -8,28 +8,28 @@ module Competitions
     def setup
       super
 
-      association_category = FactoryGirl.create(:category, name: "CBRA")
-      @senior_men          = FactoryGirl.create(:category, name: "Senior Men", parent: association_category)
-      @senior_women        = FactoryGirl.create(:category, name: "Senior Women", parent: association_category)
+      association_category = FactoryBot.create(:category, name: "CBRA")
+      @senior_men          = FactoryBot.create(:category, name: "Senior Men", parent: association_category)
+      @senior_women        = FactoryBot.create(:category, name: "Senior Women", parent: association_category)
 
-      discipline = FactoryGirl.create(:discipline, name: "Road")
+      discipline = FactoryBot.create(:discipline, name: "Road")
       discipline.bar_categories << @senior_men
       discipline.bar_categories << @senior_women
 
-      discipline = FactoryGirl.create(:discipline, name: "Time Trial")
+      discipline = FactoryBot.create(:discipline, name: "Time Trial")
       discipline.bar_categories << @senior_men
       discipline.bar_categories << @senior_women
 
-      discipline = FactoryGirl.create(:discipline, name: "Overall")
+      discipline = FactoryBot.create(:discipline, name: "Overall")
       discipline.bar_categories << @senior_men
       discipline.bar_categories << @senior_women
 
-      FactoryGirl.create(:discipline, name: "Mountain Bike")
+      FactoryBot.create(:discipline, name: "Mountain Bike")
     end
 
     test "person" do
-      weaver = FactoryGirl.create(:person)
-      weaver_banana_belt = FactoryGirl.create(:result, person: weaver, category: @senior_men)
+      weaver = FactoryBot.create(:person)
+      weaver_banana_belt = FactoryBot.create(:result, person: weaver, category: @senior_men)
       competition = RiderRankings.create!
       competition_result = competition.races.create!(category: @senior_men).results.create!
       Score.create!(competition_result: competition_result, source_result: weaver_banana_belt, points: 1)
@@ -42,8 +42,8 @@ module Competitions
     end
 
     test "competition" do
-      person = FactoryGirl.create(:person)
-      FactoryGirl.create(:event, date: Date.new(2004)).races.create!(category: @senior_women).results.create!(place: "1", person: person)
+      person = FactoryBot.create(:person)
+      FactoryBot.create(:event, date: Date.new(2004)).races.create!(category: @senior_women).results.create!(place: "1", person: person)
 
       Competitions::Bar.calculate!(2004)
       bar = Bar.year(2004).where(discipline: "Road").first
@@ -59,9 +59,9 @@ module Competitions
 
     # A Competition calculated from another Competition
     test "overall bar" do
-      FactoryGirl.create(:event, date: Date.new(2004)).races.create!(category: @senior_women).results.create!(place: "1", person: FactoryGirl.create(:person))
-      event = FactoryGirl.create(:event, date: Date.new(2004))
-      FactoryGirl.create(:result, event: event)
+      FactoryBot.create(:event, date: Date.new(2004)).races.create!(category: @senior_women).results.create!(place: "1", person: FactoryBot.create(:person))
+      event = FactoryBot.create(:event, date: Date.new(2004))
+      FactoryBot.create(:result, event: event)
 
       Competitions::Bar.calculate!(2004)
       bar = Bar.year(2004).where(discipline: "Road").first
@@ -126,10 +126,10 @@ module Competitions
     end
 
     test "competition team" do
-      FactoryGirl.create(:discipline, name: "Team")
+      FactoryBot.create(:discipline, name: "Team")
       team = Team.create!(name: "dfl", member: true)
-      person = FactoryGirl.create(:person)
-      FactoryGirl.create(:event, date: Date.new(2004, 2)).races.create!(category: @senior_women).results.create!(place: "1", person: person, team: team)
+      person = FactoryBot.create(:person)
+      FactoryBot.create(:event, date: Date.new(2004, 2)).races.create!(category: @senior_women).results.create!(place: "1", person: person, team: team)
       Bar.calculate!(2004)
       TeamBar.calculate!(2004)
       bar = TeamBar.first
@@ -145,7 +145,7 @@ module Competitions
     end
 
     test "person with overall results" do
-      person = FactoryGirl.create(:person)
+      person = FactoryBot.create(:person)
       event = CrossCrusadeOverall.create!(parent: Series.create!)
       event.races.create!(category: @senior_men).results.create!(place: "1")
       get :person, person_id: person.to_param
@@ -153,7 +153,7 @@ module Competitions
     end
 
     test "person overall results" do
-      person = FactoryGirl.create(:person)
+      person = FactoryBot.create(:person)
       event = CrossCrusadeOverall.create!(parent: Series.create!)
       event.races.create!(category: @senior_men).results.create!(place: "1")
       get(:person_event, event_id: event.to_param, person_id: person.to_param)

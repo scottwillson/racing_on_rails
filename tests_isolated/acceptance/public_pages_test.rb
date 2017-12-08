@@ -87,7 +87,7 @@ class PublicPagesTest < AcceptanceTest
   test "people" do
     javascript!
 
-    FactoryGirl.create(:person, name: "Alice Pennington")
+    FactoryBot.create(:person, name: "Alice Pennington")
     visit "/people"
     assert_no_text "Pennington"
     assert_no_text "Weaver"
@@ -102,29 +102,29 @@ class PublicPagesTest < AcceptanceTest
   private
 
   def create_results
-    FactoryGirl.create(:discipline, name: "Road")
-    FactoryGirl.create(:discipline, name: "Track")
-    FactoryGirl.create(:discipline, name: "Time Trial")
-    FactoryGirl.create(:discipline, name: "Cyclocross")
-    FactoryGirl.create(:discipline, name: "Mountain Bike")
+    FactoryBot.create(:discipline, name: "Road")
+    FactoryBot.create(:discipline, name: "Track")
+    FactoryBot.create(:discipline, name: "Time Trial")
+    FactoryBot.create(:discipline, name: "Cyclocross")
+    FactoryBot.create(:discipline, name: "Mountain Bike")
 
-    promoter = FactoryGirl.create(:person, name: "Brad Ross", home_phone: "(503) 555-1212")
-    @new_event = FactoryGirl.create(:event, promoter: promoter, date: Date.new(RacingAssociation.current.effective_year, 5))
-    @alice = FactoryGirl.create(:person, name: "Alice Pennington")
+    promoter = FactoryBot.create(:person, name: "Brad Ross", home_phone: "(503) 555-1212")
+    @new_event = FactoryBot.create(:event, promoter: promoter, date: Date.new(RacingAssociation.current.effective_year, 5))
+    @alice = FactoryBot.create(:person, name: "Alice Pennington")
     Timecop.freeze(Date.new(RacingAssociation.current.effective_year, 5, 2)) do
-      FactoryGirl.create(:result, event: @new_event)
+      FactoryBot.create(:result, event: @new_event)
     end
 
-    FactoryGirl.create(:event, name: "Kings Valley Road Race", date: Time.zone.local(2004).end_of_year.to_date).
-      races.create!(category: FactoryGirl.create(:category, name: "Senior Women 1/2/3")).
+    FactoryBot.create(:event, name: "Kings Valley Road Race", date: Time.zone.local(2004).end_of_year.to_date).
+      races.create!(category: FactoryBot.create(:category, name: "Senior Women 1/2/3")).
       results.create!(place: "2", person: @alice)
 
-    event = FactoryGirl.create(:event, name: "Jack Frost", date: Time.zone.local(2002, 1, 17), discipline: "Time Trial")
-    event.races.create!(category: FactoryGirl.create(:category, name: "Senior Women")).results.create!(place: "1", person: @alice)
-    weaver = FactoryGirl.create(:person, name: "Ryan Weaver")
-    event.races.create!(category: FactoryGirl.create(:category, name: "Senior Men")).results.create!(place: "2", person: weaver)
+    event = FactoryBot.create(:event, name: "Jack Frost", date: Time.zone.local(2002, 1, 17), discipline: "Time Trial")
+    event.races.create!(category: FactoryBot.create(:category, name: "Senior Women")).results.create!(place: "1", person: @alice)
+    weaver = FactoryBot.create(:person, name: "Ryan Weaver")
+    event.races.create!(category: FactoryBot.create(:category, name: "Senior Men")).results.create!(place: "2", person: weaver)
 
-    FactoryGirl.create(:team, name: "Gentle Lovers")
-    FactoryGirl.create(:team, name: "Vanilla")
+    FactoryBot.create(:team, name: "Gentle Lovers")
+    FactoryBot.create(:team, name: "Vanilla")
   end
 end

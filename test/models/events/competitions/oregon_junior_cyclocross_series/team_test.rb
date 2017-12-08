@@ -13,21 +13,21 @@ module Competitions
         event_team = EventTeam.create!(team: team, event: series)
 
         junior_men_10_12 = Category.find_or_create_by(name: "Junior Men 9-12")
-        person = FactoryGirl.create(:person)
+        person = FactoryBot.create(:person)
         person.event_team_memberships.create!(event_team: event_team)
         race = event.races.create!(category: junior_men_10_12)
         race.results.create!(place: 3, person: person)
 
-        person = FactoryGirl.create(:person)
+        person = FactoryBot.create(:person)
         person.event_team_memberships.create!(event_team: event_team)
         race.results.create!(place: 5, person: person)
 
-        person = FactoryGirl.create(:person)
+        person = FactoryBot.create(:person)
         person.event_team_memberships.create!(event_team: event_team)
         race.results.create!(place: 17, person: person)
 
         # Fourth-best result
-        person = FactoryGirl.create(:person)
+        person = FactoryBot.create(:person)
         person.event_team_memberships.create!(event_team: event_team)
         race.results.create!(place: 18, person: person)
 
@@ -35,12 +35,12 @@ module Competitions
         event_team = EventTeam.create!(team: team, event: series)
 
         # Only members (people) count
-        person = FactoryGirl.create(:past_member)
+        person = FactoryBot.create(:past_member)
         person.event_team_memberships.create!(event_team: event_team)
         race.results.create!(place: 2, person: person)
 
         # Only 2 members
-        person = FactoryGirl.create(:person)
+        person = FactoryBot.create(:person)
         person.event_team_memberships.create!(event_team: event_team)
         race.results.create!(place: 4, person: person)
 

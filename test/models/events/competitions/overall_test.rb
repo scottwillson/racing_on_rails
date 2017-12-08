@@ -43,9 +43,9 @@ module Competitions
 
       men_a = Category.find_or_create_by(name: "Men A")
       men_a_race = series.children[0].races.create!(category: men_a)
-      weaver = FactoryGirl.create(:person)
+      weaver = FactoryBot.create(:person)
       men_a_race.results.create!(place: 1, person: weaver)
-      tonkin = FactoryGirl.create(:person)
+      tonkin = FactoryBot.create(:person)
       men_a_race.results.create!(place: 2, person: tonkin)
 
       men_a_race = series.children[1].races.create!(category: men_a)
@@ -145,7 +145,7 @@ module Competitions
       event = series.children.create!(date: Date.new(2007, 10, 14))
 
       men_a_race = event.races.create!(category: men_a)
-      alice = FactoryGirl.create(:person)
+      alice = FactoryBot.create(:person)
       men_a_race.results.create!(place: 17, person: alice)
 
       age_graded_race = AgeGradedBar.create!(name: "Age Graded Results for BAR/Championships").races.create!(category: men_a)
@@ -161,7 +161,7 @@ module Competitions
     test "should count for bar, nor ironman" do
       series = Series.create!(name: "Test Series")
       men_a = Category.find_or_create_by(name: "Men A")
-      series.children.create!(date: Date.new(2008)).races.create!(category: men_a).results.create!(place: "4", person: FactoryGirl.create(:person))
+      series.children.create!(date: Date.new(2008)).races.create!(category: men_a).results.create!(place: "4", person: FactoryBot.create(:person))
 
       TestOverall.calculate!(2008)
       series.reload

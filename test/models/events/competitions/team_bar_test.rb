@@ -4,58 +4,58 @@ module Competitions
   # :stopdoc:
   class TeamBarTest < ActiveSupport::TestCase
     test "calculate" do
-      association_category = FactoryGirl.create(:category, name: "CBRA")
-      team                 = FactoryGirl.create(:category, name: "Team", parent: association_category)
-      senior_men           = FactoryGirl.create(:category, name: "Senior Men", parent: association_category)
-      men_a                = FactoryGirl.create(:category, name: "Men A", parent: senior_men)
-      sr_p_1_2             = FactoryGirl.create(:category, name: "Senior Men Pro/1/2", parent: senior_men)
-      senior_women         = FactoryGirl.create(:category, name: "Senior Women", parent: association_category)
+      association_category = FactoryBot.create(:category, name: "CBRA")
+      team                 = FactoryBot.create(:category, name: "Team", parent: association_category)
+      senior_men           = FactoryBot.create(:category, name: "Senior Men", parent: association_category)
+      men_a                = FactoryBot.create(:category, name: "Men A", parent: senior_men)
+      sr_p_1_2             = FactoryBot.create(:category, name: "Senior Men Pro/1/2", parent: senior_men)
+      senior_women         = FactoryBot.create(:category, name: "Senior Women", parent: association_category)
 
-      discipline = FactoryGirl.create(:discipline, name: "Road")
+      discipline = FactoryBot.create(:discipline, name: "Road")
       discipline.bar_categories << senior_men
       discipline.bar_categories << senior_women
       discipline.bar_categories << team
 
-      discipline = FactoryGirl.create(:discipline, name: "Time Trial")
+      discipline = FactoryBot.create(:discipline, name: "Time Trial")
       discipline.bar_categories << senior_men
       discipline.bar_categories << senior_women
       discipline.bar_categories << team
 
-      discipline = FactoryGirl.create(:discipline, name: "Cyclocross")
+      discipline = FactoryBot.create(:discipline, name: "Cyclocross")
       discipline.bar_categories << men_a
       discipline.bar_categories << team
 
-      discipline = FactoryGirl.create(:discipline, name: "Track")
+      discipline = FactoryBot.create(:discipline, name: "Track")
       discipline.bar_categories << senior_men
       discipline.bar_categories << senior_women
       discipline.bar_categories << team
 
-      discipline = FactoryGirl.create(:discipline, name: "Criterium")
+      discipline = FactoryBot.create(:discipline, name: "Criterium")
       discipline.bar_categories << senior_men
       discipline.bar_categories << senior_women
       discipline.bar_categories << team
 
-      discipline = FactoryGirl.create(:discipline, name: "Team")
+      discipline = FactoryBot.create(:discipline, name: "Team")
       discipline.bar_categories << senior_men
       discipline.bar_categories << senior_women
       discipline.bar_categories << team
 
-      discipline = FactoryGirl.create(:discipline, name: "Overall")
+      discipline = FactoryBot.create(:discipline, name: "Overall")
       discipline.bar_categories << senior_men
       discipline.bar_categories << senior_women
 
       # Required for source results query
-      FactoryGirl.create(:discipline, name: "Mountain Bike")
+      FactoryBot.create(:discipline, name: "Mountain Bike")
 
-      kona = FactoryGirl.create(:team, name: "Kona")
-      gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
-      vanilla = FactoryGirl.create(:team, name: "Vanilla")
+      kona = FactoryBot.create(:team, name: "Kona")
+      gentle_lovers = FactoryBot.create(:team, name: "Gentle Lovers")
+      vanilla = FactoryBot.create(:team, name: "Vanilla")
 
-      tonkin = FactoryGirl.create(:person, name: "Tonkin", team: kona)
-      weaver = FactoryGirl.create(:person, name: "Weaver", team: gentle_lovers)
-      molly = FactoryGirl.create(:person, name: "Molly", team: vanilla)
-      alice = FactoryGirl.create(:person, name: "Alice", team: gentle_lovers)
-      matson = FactoryGirl.create(:person, name: "Matson", team: kona)
+      tonkin = FactoryBot.create(:person, name: "Tonkin", team: kona)
+      weaver = FactoryBot.create(:person, name: "Weaver", team: gentle_lovers)
+      molly = FactoryBot.create(:person, name: "Molly", team: vanilla)
+      alice = FactoryBot.create(:person, name: "Alice", team: gentle_lovers)
+      matson = FactoryBot.create(:person, name: "Matson", team: kona)
 
       cross_crusade = Series.create!(name: "River City Bicycles Cyclocross Crusade")
       barton = SingleDayEvent.create!(
@@ -166,12 +166,12 @@ module Competitions
         team: kona
       )
 
-      event = FactoryGirl.create(:event, date: Date.new(2004), name: "Banana Belt")
+      event = FactoryBot.create(:event, date: Date.new(2004), name: "Banana Belt")
       race = event.races.create!(category: sr_p_1_2)
       race.results.create!(place: "1", person: tonkin, team: kona)
       race.results.create!(place: "3", person: matson, team: kona)
 
-      event = FactoryGirl.create(:event, date: Date.new(2004), name: "Kings Valley")
+      event = FactoryBot.create(:event, date: Date.new(2004), name: "Kings Valley")
       race = event.races.create!(category: senior_women)
       race.results.create!(place: "2", person: alice, team: gentle_lovers)
       race.results.create!(place: "15", person: molly, team: vanilla)

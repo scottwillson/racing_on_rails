@@ -9,7 +9,7 @@ class RaceTest < ActiveSupport::TestCase
 
   test "save existing category" do
     race = Race.new(
-      event: FactoryGirl.create(:event),
+      event: FactoryBot.create(:event),
       category_name: "Masters 35+ Women"
     )
     race.find_associated_records
@@ -48,7 +48,7 @@ class RaceTest < ActiveSupport::TestCase
   end
 
   test "bar points" do
-    race = FactoryGirl.create(:race)
+    race = FactoryBot.create(:race)
     assert_nil(race[:bar_points], 'BAR points column value')
     assert_equal(1, race.bar_points, 'BAR points')
 
@@ -86,10 +86,10 @@ class RaceTest < ActiveSupport::TestCase
 
   # Return value from field_size column. If column is blank, count results
   test "field size" do
-    race = FactoryGirl.create(:race)
+    race = FactoryBot.create(:race)
     assert_equal(0, race.field_size, 'New race field size')
 
-    4.times { FactoryGirl.create(:result, race: race) }
+    4.times { FactoryBot.create(:result, race: race) }
     race.results(true)
     assert_equal(4, race.field_size, 'Race field size with empty field_size column')
 
@@ -98,7 +98,7 @@ class RaceTest < ActiveSupport::TestCase
   end
 
   test "place results by points" do
-    race = FactoryGirl.create(:race)
+    race = FactoryBot.create(:race)
     race.place_results_by_points
 
     first_result = race.results.create!
@@ -112,7 +112,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(second_result, race.results.last, 'Last result')
     assert_equal('1', race.results.last.place, 'Last result place')
 
-    race = FactoryGirl.create(:race)
+    race = FactoryBot.create(:race)
     [
       race.results.create!(points: 90, place: 4),
       race.results.create!(points: 0, place: 5),
@@ -148,10 +148,10 @@ class RaceTest < ActiveSupport::TestCase
   # Look at source results for tie-breaking
   # Intentional nonsense in some results and points to test sorting
   test "competition place results by points" do
-    race = FactoryGirl.create(:race)
+    race = FactoryBot.create(:race)
 
     20.times do
-      FactoryGirl.create(:result, race: race)
+      FactoryBot.create(:result, race: race)
     end
 
     ironman = Competitions::Ironman.create!
@@ -331,19 +331,19 @@ class RaceTest < ActiveSupport::TestCase
   end
 
   test "calculate members only places" do
-    event = FactoryGirl.create(:event)
-    race = event.races.create!(category: FactoryGirl.create(:category))
+    event = FactoryBot.create(:event)
+    race = event.races.create!(category: FactoryBot.create(:category))
     race.calculate_members_only_places!
 
-    race = event.races.create!(category: FactoryGirl.create(:category))
+    race = event.races.create!(category: FactoryBot.create(:category))
     non_members = []
     for i in 0..2
       non_members << Person.create!(name: "Non member #{i}", member: false)
       assert(!non_members[i].member?, 'Should not be a member')
     end
 
-    weaver = FactoryGirl.create(:person)
-    molly = FactoryGirl.create(:person)
+    weaver = FactoryBot.create(:person)
+    molly = FactoryBot.create(:person)
 
     race.results.create!(place: '1', person: non_members[0])
     race.results.create!(place: '2', person: weaver)
@@ -375,15 +375,15 @@ class RaceTest < ActiveSupport::TestCase
   end
 
   test "calculate members only places should not trigger combined results calculation" do
-    FactoryGirl.create(:discipline, name: "Time Trial")
+    FactoryBot.create(:discipline, name: "Time Trial")
     event = SingleDayEvent.create!(discipline: "Time Trial")
-    senior_men = FactoryGirl.create(:category)
+    senior_men = FactoryBot.create(:category)
     race = event.races.create!(category: senior_men)
     non_member = Person.create!
     assert(!non_member.member?, "Person member?")
     race.results.create!(place: "1", person: non_member, time: 100)
 
-    weaver = FactoryGirl.create(:person)
+    weaver = FactoryBot.create(:person)
     assert(weaver.member?, "Person member?")
     race.results.create!(place: "2", person: weaver, time: 102)
 
@@ -401,7 +401,7 @@ class RaceTest < ActiveSupport::TestCase
 
   test "dates of birth" do
     event = SingleDayEvent.create!(date: Time.zone.today)
-    senior_men = FactoryGirl.create(:category)
+    senior_men = FactoryBot.create(:category)
     race = event.races.create!(category: senior_men)
     assert_equal_dates(Date.new(Time.zone.today.year - 999, 1, 1), race.dates_of_birth.begin, 'race.dates_of_birth.begin')
     assert_equal_dates(Date.new(Time.zone.today.year, 12, 31), race.dates_of_birth.end, 'race.dates_of_birth.end')
@@ -447,13 +447,13 @@ class RaceTest < ActiveSupport::TestCase
   end
 
   test "destroy should destroy related people" do
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline, name: "Road")
+    FactoryBot.create(:number_issuer)
+    FactoryBot.create(:discipline, name: "Road")
 
     mathew_braun = Person.create!(name: "Mathew Braun", email: "mtb@example.com")
     event = SingleDayEvent.create!
-    race = event.races.create!(category: FactoryGirl.create(:category))
-    weaver = FactoryGirl.create(:person)
+    race = event.races.create!(category: FactoryBot.create(:category))
+    weaver = FactoryBot.create(:person)
     race.results.create!(place: "1", person: weaver)
     result = race.results.create!(place: "2", person: Person.new(name: "Jonah Braun"))
     race.results.create!(place: "3", person: mathew_braun)
@@ -472,10 +472,10 @@ class RaceTest < ActiveSupport::TestCase
   end
 
   test "destroy_duplicate_results!" do
-    race = FactoryGirl.create(:race)
-    result_1 = FactoryGirl.create(:result, place: "1", race: race, event: race.event)
-    result_2 = FactoryGirl.create(:result, place: "2", race: race, event: race.event)
-    FactoryGirl.create(:result, place: "3", race: race, event: race.event, person: result_1.person)
+    race = FactoryBot.create(:race)
+    result_1 = FactoryBot.create(:result, place: "1", race: race, event: race.event)
+    result_2 = FactoryBot.create(:result, place: "2", race: race, event: race.event)
+    FactoryBot.create(:result, place: "3", race: race, event: race.event, person: result_1.person)
 
     race.destroy_duplicate_results!
     assert_equal [ result_1, result_2 ], race.results.reload

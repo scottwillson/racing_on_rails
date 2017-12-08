@@ -50,7 +50,7 @@ module Categories
     end
 
     test "find_or_create_by_normalized_name" do
-      category = FactoryGirl.create(:category, name: "Senior Men")
+      category = FactoryBot.create(:category, name: "Senior Men")
       assert_equal category, Category.find_or_create_by_normalized_name(" Senior   Men  ")
     end
 

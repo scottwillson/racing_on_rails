@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :person_alias, class: Alias do
     sequence(:name) { |n| "Person Alias #{n}" }
     person

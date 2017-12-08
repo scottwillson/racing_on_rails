@@ -3,7 +3,7 @@ require_relative "racing_on_rails/integration_test"
 # :stopdoc:
 class PeopleTest < RacingOnRails::IntegrationTest
   test "index" do
-    FactoryGirl.create(:person, first_name: "Ryan", last_name: "Weaver")
+    FactoryBot.create(:person, first_name: "Ryan", last_name: "Weaver")
     get "/people"
     assert_response :success
 
@@ -27,9 +27,9 @@ class PeopleTest < RacingOnRails::IntegrationTest
   end
 
   test "import" do
-    FactoryGirl.create :discipline
-    FactoryGirl.create :number_issuer
-    goto_login_page_and_login_as FactoryGirl.create(:administrator)
+    FactoryBot.create :discipline
+    FactoryBot.create :number_issuer
+    goto_login_page_and_login_as FactoryBot.create(:administrator)
     post "/admin/people/preview_import",
          people_file: fixture_file_upload(
            "#{ActionController::TestCase.fixture_path}membership/upload.xlsx",

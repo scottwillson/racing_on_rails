@@ -17,7 +17,7 @@ module Admin
     end
 
     test "index" do
-      FactoryGirl.create(:velodrome)
+      FactoryBot.create(:velodrome)
       get(:index)
       assert_response(:success)
       assert_template("admin/velodromes/index")
@@ -42,14 +42,14 @@ module Admin
     end
 
     test "edit" do
-      velodrome = FactoryGirl.create(:velodrome)
+      velodrome = FactoryBot.create(:velodrome)
       get(:edit, id: velodrome.id)
       assert_response(:success)
       assert_equal(velodrome, assigns["velodrome"], "Should assign velodrome")
     end
 
     test "update" do
-      velodrome = FactoryGirl.create(:velodrome)
+      velodrome = FactoryBot.create(:velodrome)
       put(:update, id: velodrome.id, velodrome: { name: "T Town", website: "www" })
       assert_redirected_to(edit_admin_velodrome_path(velodrome))
       velodrome.reload
@@ -58,14 +58,14 @@ module Admin
     end
 
     test "destroy" do
-      velodrome = FactoryGirl.create(:velodrome)
+      velodrome = FactoryBot.create(:velodrome)
       delete :destroy, id: velodrome.id
       assert(!Velodrome.exists?(velodrome.id), "Should delete velodrome")
       assert_not_nil(flash[:notice], "Should have flash :notice")
     end
 
     test "update name" do
-      velodrome = FactoryGirl.create(:velodrome)
+      velodrome = FactoryBot.create(:velodrome)
       xhr(:put,
           :update_attribute,
           id: velodrome.to_param,
@@ -78,7 +78,7 @@ module Admin
     end
 
     test "update website" do
-      velodrome = FactoryGirl.create(:velodrome)
+      velodrome = FactoryBot.create(:velodrome)
       xhr(:put,
           :update_attribute,
           id: velodrome.to_param,

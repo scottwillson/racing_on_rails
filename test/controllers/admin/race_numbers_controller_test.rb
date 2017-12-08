@@ -10,7 +10,7 @@ module Admin
     end
 
     test "destroy" do
-      race_number = FactoryGirl.create(:race_number)
+      race_number = FactoryBot.create(:race_number)
       assert_not_nil(RaceNumber.find(race_number.id), 'RaceNumber should exist')
 
       xhr :delete, :destroy, id: race_number.to_param

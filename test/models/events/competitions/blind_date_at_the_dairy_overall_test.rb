@@ -13,8 +13,8 @@ module Competitions
         )
         
         series.children.each do |event|
-          race = FactoryGirl.create(:race, event: event)
-          FactoryGirl.create(:result, event: event, race: race, place: "1")
+          race = FactoryBot.create(:race, event: event)
+          FactoryBot.create(:result, event: event, race: race, place: "1")
         end
       
         BlindDateAtTheDairyOverall.calculate!

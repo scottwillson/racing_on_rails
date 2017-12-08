@@ -11,8 +11,8 @@ module Competitions
     def setup
       super
       big_team = Team.create(name: "T" * 60)
-      weaver = FactoryGirl.create(:person, first_name: "f" * 60, last_name: "T" * 60, team: big_team)
-      FactoryGirl.create(:race).results.create! person: weaver, team: big_team
+      weaver = FactoryBot.create(:person, first_name: "f" * 60, last_name: "T" * 60, team: big_team)
+      FactoryBot.create(:race).results.create! person: weaver, team: big_team
       @bar = Bar.calculate! 2004
     end
 
@@ -50,8 +50,8 @@ module Competitions
 
     test "bad discipline" do
       masters_men = Category.find_by_name("Masters Men")
-      FactoryGirl.create(:category, name: "Masters Men 30-34", parent: masters_men)
-      FactoryGirl.create(:discipline, name: "Overall")
+      FactoryBot.create(:category, name: "Masters Men 30-34", parent: masters_men)
+      FactoryBot.create(:discipline, name: "Overall")
       get :show, discipline: "badbadbad", year: "2004", category: "masters_men_30_34"
       assert_response :success
       assert_template "bar/show"
@@ -60,8 +60,8 @@ module Competitions
 
     test "bad year" do
       masters_men = Category.find_by_name("Masters Men")
-      FactoryGirl.create(:category, name: "Masters Men 30-34", parent: masters_men)
-      FactoryGirl.create(:discipline, name: "Overall")
+      FactoryBot.create(:category, name: "Masters Men 30-34", parent: masters_men)
+      FactoryBot.create(:discipline, name: "Overall")
       get :show, discipline: "overall", year: "19", category: "masters_men_30_34"
       assert_response :success
       assert_template "bar/show"
@@ -70,8 +70,8 @@ module Competitions
 
     test "bad category" do
       masters_men = Category.find_by_name("Masters Men")
-      FactoryGirl.create(:category, name: "Masters Men 30-34", parent: masters_men)
-      FactoryGirl.create(:discipline, name: "Overall")
+      FactoryBot.create(:category, name: "Masters Men 30-34", parent: masters_men)
+      FactoryBot.create(:discipline, name: "Overall")
       get :show, discipline: "overall", year: "2009", category: "dhaskjdhal"
       assert_response :success
       assert_template "bar/show"

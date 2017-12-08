@@ -10,7 +10,7 @@ class MailingListsControllerTest < ActionController::TestCase
   end
 
   test "confirm" do
-    obra_race = FactoryGirl.create(:mailing_list)
+    obra_race = FactoryBot.create(:mailing_list)
     get :confirm, mailing_list_id: obra_race.id
     assert_response :success
     assert_template "mailing_lists/confirm"
@@ -18,7 +18,7 @@ class MailingListsControllerTest < ActionController::TestCase
   end
 
   test "confirm private reply" do
-    obra_race = FactoryGirl.create(:mailing_list)
+    obra_race = FactoryBot.create(:mailing_list)
     get(:confirm_private_reply, mailing_list_id: obra_race.id)
     assert_response(:success)
     assert_template("mailing_lists/confirm_private_reply")

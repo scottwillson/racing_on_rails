@@ -34,7 +34,7 @@ class ResultsHelperTest < ActionView::TestCase
   end
 
   test "edit results table" do
-    race = FactoryGirl.create(:result).race
+    race = FactoryBot.create(:result).race
     table = Nokogiri::HTML(edit_results_table(race))
     assert table.css("table.results").present?
   end

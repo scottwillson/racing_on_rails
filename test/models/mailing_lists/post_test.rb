@@ -56,10 +56,10 @@ class PostTest < ActiveSupport::TestCase
   end
 
   test "newer should get next lowest original and older should get next highest original" do
-    mailing_list = FactoryGirl.create(:mailing_list)
-    original = FactoryGirl.create(:post, mailing_list: mailing_list, last_reply_at: 1.day.ago, position: 3)
-    second_post = FactoryGirl.create(:post, mailing_list: mailing_list, last_reply_at: 4.days.ago, position: 1)
-    reply_to_original = FactoryGirl.create(:post, mailing_list: mailing_list, last_reply_at: 1.days.ago, original_id: original.id, position: 2)
+    mailing_list = FactoryBot.create(:mailing_list)
+    original = FactoryBot.create(:post, mailing_list: mailing_list, last_reply_at: 1.day.ago, position: 3)
+    second_post = FactoryBot.create(:post, mailing_list: mailing_list, last_reply_at: 4.days.ago, position: 1)
+    reply_to_original = FactoryBot.create(:post, mailing_list: mailing_list, last_reply_at: 1.days.ago, original_id: original.id, position: 2)
 
     original.reload
     second_post.reload
@@ -76,8 +76,8 @@ class PostTest < ActiveSupport::TestCase
   end
 
   test "save with no original" do
-    mailing_list = FactoryGirl.build(:mailing_list)
-    post = FactoryGirl.build(:post, mailing_list: mailing_list)
+    mailing_list = FactoryBot.build(:mailing_list)
+    post = FactoryBot.build(:post, mailing_list: mailing_list)
 
     Post.save post, mailing_list
 
@@ -89,9 +89,9 @@ class PostTest < ActiveSupport::TestCase
   end
 
   test "save should update original and add reply" do
-    mailing_list = FactoryGirl.create(:mailing_list, subject_line_prefix: "Juniors")
-    original = FactoryGirl.create(:post, mailing_list: mailing_list, last_reply_at: 3.days.ago, date: 3.day.ago, subject: "My bike")
-    reply = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "Re: My bike", date: 10.minutes.ago)
+    mailing_list = FactoryBot.create(:mailing_list, subject_line_prefix: "Juniors")
+    original = FactoryBot.create(:post, mailing_list: mailing_list, last_reply_at: 3.days.ago, date: 3.day.ago, subject: "My bike")
+    reply = FactoryBot.build(:post, mailing_list: mailing_list, subject: "Re: My bike", date: 10.minutes.ago)
 
     ApplicationController.expects :expire_cache
     Post.save reply, mailing_list
@@ -114,11 +114,11 @@ class PostTest < ActiveSupport::TestCase
   end
 
   test "find original" do
-    mailing_list = FactoryGirl.create(:mailing_list, subject_line_prefix: "Juniors")
-    original = FactoryGirl.create(:post, mailing_list: mailing_list, last_reply_at: 1.day.ago, date: 1.day.ago, subject: "My bike")
-    reply = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "[Juniors] Re: My bike")
-    second_reply = FactoryGirl.build(:post, mailing_list: mailing_list, subject: "Re: My bike")
-    post_on_different_subject = FactoryGirl.create(:post, mailing_list: mailing_list, subject: "Something else")
+    mailing_list = FactoryBot.create(:mailing_list, subject_line_prefix: "Juniors")
+    original = FactoryBot.create(:post, mailing_list: mailing_list, last_reply_at: 1.day.ago, date: 1.day.ago, subject: "My bike")
+    reply = FactoryBot.build(:post, mailing_list: mailing_list, subject: "[Juniors] Re: My bike")
+    second_reply = FactoryBot.build(:post, mailing_list: mailing_list, subject: "Re: My bike")
+    post_on_different_subject = FactoryBot.create(:post, mailing_list: mailing_list, subject: "Something else")
 
     assert_nil Post.find_original(original)
     assert_equal original, Post.find_original(reply)
@@ -133,17 +133,17 @@ class PostTest < ActiveSupport::TestCase
   end
 
   test "require valid email" do
-    post = FactoryGirl.build(:post, from_email: "silversuitesresidences.com/?id=167")
+    post = FactoryBot.build(:post, from_email: "silversuitesresidences.com/?id=167")
     assert !post.valid?
     assert post.errors[:from_email], "Expected error on :from_email. Had: #{post.errors.full_messages}"
   end
 
   test "recent should only show public lists" do
-    public_list = FactoryGirl.create(:mailing_list, public: true)
-    public_post = FactoryGirl.create(:post, mailing_list: public_list)
+    public_list = FactoryBot.create(:mailing_list, public: true)
+    public_post = FactoryBot.create(:post, mailing_list: public_list)
 
-    private_list = FactoryGirl.create(:mailing_list, public: false)
-    private_post = FactoryGirl.create(:post, mailing_list: private_list)
+    private_list = FactoryBot.create(:mailing_list, public: false)
+    private_post = FactoryBot.create(:post, mailing_list: private_list)
 
     assert Post.recent.include?(public_post)
     assert !Post.recent.include?(private_post)

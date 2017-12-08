@@ -5,25 +5,25 @@ class ResultsControllerTest < ActionController::TestCase
   def setup
     super
 
-    association_category = FactoryGirl.create(:category, name: "CBRA")
-    @senior_men          = FactoryGirl.create(:category, name: "Senior Men", parent: association_category)
-    @senior_women        = FactoryGirl.create(:category, name: "Senior Women", parent: association_category)
+    association_category = FactoryBot.create(:category, name: "CBRA")
+    @senior_men          = FactoryBot.create(:category, name: "Senior Men", parent: association_category)
+    @senior_women        = FactoryBot.create(:category, name: "Senior Women", parent: association_category)
 
-    discipline = FactoryGirl.create(:discipline, name: "Road")
+    discipline = FactoryBot.create(:discipline, name: "Road")
     discipline.bar_categories << @senior_men
     discipline.bar_categories << @senior_women
 
-    discipline = FactoryGirl.create(:discipline, name: "Time Trial")
+    discipline = FactoryBot.create(:discipline, name: "Time Trial")
     discipline.bar_categories << @senior_men
     discipline.bar_categories << @senior_women
 
-    discipline = FactoryGirl.create(:discipline, name: "Overall")
+    discipline = FactoryBot.create(:discipline, name: "Overall")
     discipline.bar_categories << @senior_men
     discipline.bar_categories << @senior_women
   end
 
   test "event" do
-    banana_belt_1 = FactoryGirl.create(:event)
+    banana_belt_1 = FactoryBot.create(:event)
     get(:event, event_id: banana_belt_1.to_param)
     assert_response(:success)
     assert_template("results/event")
@@ -32,7 +32,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
 
   test "big names" do
-    banana_belt_1 = FactoryGirl.create(:result).event
+    banana_belt_1 = FactoryBot.create(:result).event
     big_team = Team.create!(name: "T" * 60)
     big_person = Person.create!(first_name: "f" * 60, last_name: "L" * 60, team: big_team)
     banana_belt_1.races.first.results.create!(place: 20, person: big_person, team: big_team, number: '')
@@ -45,7 +45,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
 
   test "event tt" do
-    jack_frost = FactoryGirl.create(:time_trial_event)
+    jack_frost = FactoryBot.create(:time_trial_event)
     get :event, event_id: jack_frost.to_param
     assert_response(:success)
     assert_template("results/event")
@@ -53,13 +53,13 @@ class ResultsControllerTest < ActionController::TestCase
   end
 
   test "series xls" do
-    series = FactoryGirl.create(:weekly_series_event_result).event.parent
+    series = FactoryBot.create(:weekly_series_event_result).event.parent
     get :event, event_id: series.to_param, format: :xlsx
     assert_not_nil response.body
   end
 
   test "index" do
-    future_national_federation_event = FactoryGirl.create(:event, date: Date.new(2004, 3), sanctioned_by: "USA Cycling")
+    future_national_federation_event = FactoryBot.create(:event, date: Date.new(2004, 3), sanctioned_by: "USA Cycling")
     get(:index, year: "2004")
     assert_response(:success)
     assert_template("results/index")
@@ -70,7 +70,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
 
   test "index only shows sanctioned events" do
-    future_national_federation_event = FactoryGirl.create(:event, date: 1.day.from_now, sanctioned_by: "USA Cycling")
+    future_national_federation_event = FactoryBot.create(:event, date: 1.day.from_now, sanctioned_by: "USA Cycling")
     get(:index)
     assert_response(:success)
     assert_template("results/index")
@@ -81,7 +81,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
 
   test "index road" do
-    FactoryGirl.create(:event, date: Date.new(2004)).races.create!(category: @senior_women).results.create!(place: "1", person: Person.create!, team: Team.create!(name: "dfl"))
+    FactoryBot.create(:event, date: Date.new(2004)).races.create!(category: @senior_women).results.create!(place: "1", person: Person.create!, team: Team.create!(name: "dfl"))
     get(:index, year: "2004", discipline: 'road')
     assert_response(:success)
     assert_template("results/index")
@@ -180,7 +180,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
 
   test "person with year" do
-    weaver = FactoryGirl.create(:person)
+    weaver = FactoryBot.create(:person)
     result = SingleDayEvent.create!(date: Date.new(2008)).races.create!(category: @senior_men).results.create!(person: weaver, place: "1")
 
     get :person, person_id: weaver.to_param, year: "2008"
@@ -194,7 +194,7 @@ class ResultsControllerTest < ActionController::TestCase
   test "person long name" do
     big_team = Team.create!(name: "T" * 60)
     big_person = Person.create!(first_name: "f" * 60, last_name: "L" * 60, team: big_team)
-    FactoryGirl.create(:result, person: big_person, team: big_team, place: 2, number: '99')
+    FactoryBot.create(:result, person: big_person, team: big_team, place: 2, number: '99')
 
     get :person, person_id: big_person.to_param
     assert_response(:success)
@@ -206,7 +206,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
 
   test "column headers display correctly" do
-    result = FactoryGirl.create(:result, points_bonus: 8, points_penalty: -2, laps: 9)
+    result = FactoryBot.create(:result, points_bonus: 8, points_penalty: -2, laps: 9)
 
     get :event, event_id: result.event_id
     assert_response :success
@@ -223,18 +223,18 @@ class ResultsControllerTest < ActionController::TestCase
   end
 
   test "person json" do
-    person = FactoryGirl.create(:result).person
+    person = FactoryBot.create(:result).person
     get :person, person_id: person.id, format: :json
   end
 
   test "person json with year" do
-    result = FactoryGirl.create(:result)
+    result = FactoryBot.create(:result)
     get :person, person_id: result.person_id, format: :json, year: result.year
   end
 
   test "person xml" do
     Timecop.freeze(Time.zone.local(2015, 11)) do
-      person = FactoryGirl.create(:result).person
+      person = FactoryBot.create(:result).person
       get :person, person_id: person.id, format: :xml
       assert_equal "application/xml", @response.content_type
       [
@@ -273,31 +273,31 @@ class ResultsControllerTest < ActionController::TestCase
   end
 
   test "team" do
-    team = FactoryGirl.create(:result).team
+    team = FactoryBot.create(:result).team
     get :team, team_id: team.id
   end
 
   test "team json" do
-    team = FactoryGirl.create(:result).team
+    team = FactoryBot.create(:result).team
     get :team, team_id: team.id, format: :json
   end
 
   test "team xml" do
-    team = FactoryGirl.create(:result).team
+    team = FactoryBot.create(:result).team
     get :team, team_id: team.id, format: :xml
   end
 
   test "index xml" do
-    FactoryGirl.create(:result)
+    FactoryBot.create(:result)
     get :index, format: :xml
     assert_response :success
   end
 
   test "show unregistered teams in results" do
-    kona = FactoryGirl.create(:team, member: false, name: "Kona")
-    gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
-    result = FactoryGirl.create(:result, team: kona)
-    FactoryGirl.create(:result, team: gentle_lovers, race: result.race)
+    kona = FactoryBot.create(:team, member: false, name: "Kona")
+    gentle_lovers = FactoryBot.create(:team, name: "Gentle Lovers")
+    result = FactoryBot.create(:result, team: kona)
+    FactoryBot.create(:result, team: gentle_lovers, race: result.race)
 
     get :event, event_id: result.event.to_param
     assert_response :success
@@ -309,10 +309,10 @@ class ResultsControllerTest < ActionController::TestCase
     RacingAssociation.current.unregistered_teams_in_results = true
     RacingAssociation.current.save!
 
-    kona = FactoryGirl.create(:team, member: false, name: "Kona")
-    FactoryGirl.create(:team, name: "Gentle Lovers")
-    @senior_men = FactoryGirl.create(:category)
-    tonkin = FactoryGirl.create(:person)
+    kona = FactoryBot.create(:team, member: false, name: "Kona")
+    FactoryBot.create(:team, name: "Gentle Lovers")
+    @senior_men = FactoryBot.create(:category)
+    tonkin = FactoryBot.create(:person)
 
     event = SingleDayEvent.create!
     race = event.races.create!(category: @senior_men)
@@ -329,10 +329,10 @@ class ResultsControllerTest < ActionController::TestCase
     RacingAssociation.current.unregistered_teams_in_results = false
     RacingAssociation.current.save!
 
-    kona = FactoryGirl.create(:team, member: false, name: "Kona")
-    gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers", member: true)
-    result = FactoryGirl.create(:result, team: kona)
-    FactoryGirl.create(:result, team: gentle_lovers, race: result.race)
+    kona = FactoryBot.create(:team, member: false, name: "Kona")
+    gentle_lovers = FactoryBot.create(:team, name: "Gentle Lovers", member: true)
+    result = FactoryBot.create(:result, team: kona)
+    FactoryBot.create(:result, team: gentle_lovers, race: result.race)
 
     get :event, event_id: result.event.to_param
     assert_response :success

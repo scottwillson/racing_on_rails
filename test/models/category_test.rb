@@ -14,12 +14,12 @@ class CategoryTest < ActiveSupport::TestCase
 
   # Relies on ActiveRecord ==
   test "sort" do
-    [ FactoryGirl.build(:category, id: 2), FactoryGirl.build(:category, id: 1), FactoryGirl.build(:category)].sort
+    [ FactoryBot.build(:category, id: 2), FactoryBot.build(:category, id: 1), FactoryBot.build(:category)].sort
   end
 
   test "equal" do
-    senior_men = FactoryGirl.build(:category, name: "Senior Men", id: 1)
-    senior_men_2 = FactoryGirl.build(:category, name: "Senior Men", id: 1)
+    senior_men = FactoryBot.build(:category, name: "Senior Men", id: 1)
+    senior_men_2 = FactoryBot.build(:category, name: "Senior Men", id: 1)
     assert_equal(senior_men, senior_men_2, 'Senior Men instances')
     assert_equal(senior_men_2, senior_men, 'Senior Men instances')
 
@@ -29,19 +29,19 @@ class CategoryTest < ActiveSupport::TestCase
   end
 
   test "no circular parents" do
-    category = FactoryGirl.build(:category, name: "Senior Men", id: 1)
+    category = FactoryBot.build(:category, name: "Senior Men", id: 1)
     category.parent = category
     assert !category.valid?
   end
 
   test "no circular parents <<" do
-    category = FactoryGirl.build(:category, name: "Senior Men", id: 1)
+    category = FactoryBot.build(:category, name: "Senior Men", id: 1)
     category.children << category
     assert !category.valid?
   end
 
   test "ages default" do
-    cat = FactoryGirl.build(:category)
+    cat = FactoryBot.build(:category)
     assert_equal(0, cat.ages_begin, 'ages_begin')
     assert_equal(999, cat.ages_end, 'ages_end is 999')
     assert_equal(0..999, cat.ages, 'Default age range is 0 to 999')
@@ -50,26 +50,26 @@ class CategoryTest < ActiveSupport::TestCase
 
   test "to friendly param" do
     assert_equal('', Category.new.to_friendly_param, 'nil friendly_param')
-    assert_equal('senior_men', FactoryGirl.build(:category, name: "Senior Men").to_friendly_param, 'senior_men friendly_param')
-    assert_equal('pro_expert_women', FactoryGirl.build(:category, name: "Pro, Expert Women").to_friendly_param, 'pro_expert_women friendly_param')
-    assert_equal('category_4_5_men', FactoryGirl.build(:category, name: "Category 4/5 Men").to_friendly_param, 'men_4 param')
-    assert_equal('singlespeed_fixed', FactoryGirl.build(:category, name: "Singlespeed/Fixed").to_friendly_param, 'single_speed_fixed friendly_param')
-    assert_equal('masters_35_plus', FactoryGirl.build(:category, name: "Masters 35+").to_friendly_param, 'masters_35_plus friendly_param')
-    assert_equal('pro_semi_pro_men', FactoryGirl.build(:category, name: "Pro, Semi-Pro Men").to_friendly_param, 'pro_semi_pro_men friendly_param')
-    assert_equal('category_3_200m_tt', FactoryGirl.build(:category, name: 'Category 3 - 200m TT').to_friendly_param, 'Category 3 - 200m TT friendly_param')
-    assert_equal('junior_varisty_15_18_beginner', FactoryGirl.build(:category, name: 'Jr Varisty 15 -18 Beginner').to_friendly_param, 'Jr Varisty 15 -18 Beginner friendly_param')
-    assert_equal('tandem_mixed_co_ed', FactoryGirl.build(:category, name: 'Tandem - Mixed (Co-Ed)').to_friendly_param, 'Tandem - Mixed (Co-Ed) friendly_param')
-    assert_equal('tandem', FactoryGirl.build(:category, name: '(Tandem)').to_friendly_param, '(Tandem) friendly_param')
+    assert_equal('senior_men', FactoryBot.build(:category, name: "Senior Men").to_friendly_param, 'senior_men friendly_param')
+    assert_equal('pro_expert_women', FactoryBot.build(:category, name: "Pro, Expert Women").to_friendly_param, 'pro_expert_women friendly_param')
+    assert_equal('category_4_5_men', FactoryBot.build(:category, name: "Category 4/5 Men").to_friendly_param, 'men_4 param')
+    assert_equal('singlespeed_fixed', FactoryBot.build(:category, name: "Singlespeed/Fixed").to_friendly_param, 'single_speed_fixed friendly_param')
+    assert_equal('masters_35_plus', FactoryBot.build(:category, name: "Masters 35+").to_friendly_param, 'masters_35_plus friendly_param')
+    assert_equal('pro_semi_pro_men', FactoryBot.build(:category, name: "Pro, Semi-Pro Men").to_friendly_param, 'pro_semi_pro_men friendly_param')
+    assert_equal('category_3_200m_tt', FactoryBot.build(:category, name: 'Category 3 - 200m TT').to_friendly_param, 'Category 3 - 200m TT friendly_param')
+    assert_equal('junior_varisty_15_18_beginner', FactoryBot.build(:category, name: 'Jr Varisty 15 -18 Beginner').to_friendly_param, 'Jr Varisty 15 -18 Beginner friendly_param')
+    assert_equal('tandem_mixed_co_ed', FactoryBot.build(:category, name: 'Tandem - Mixed (Co-Ed)').to_friendly_param, 'Tandem - Mixed (Co-Ed) friendly_param')
+    assert_equal('tandem', FactoryBot.build(:category, name: '(Tandem)').to_friendly_param, '(Tandem) friendly_param')
   end
 
   test "find by friendly param" do
-    category = FactoryGirl.create(:category, name: "Pro, Semi-Pro Men")
+    category = FactoryBot.create(:category, name: "Pro, Semi-Pro Men")
     assert_equal category, Category.find_by_friendly_param("pro_semi_pro_men")
   end
 
   test "ambiguous find by param" do
-    senior_men = FactoryGirl.create(:category, name: "Senior Men")
-    senior_men_2 = FactoryGirl.create(:category, name: "Senior/Men")
+    senior_men = FactoryBot.create(:category, name: "Senior Men")
+    senior_men_2 = FactoryBot.create(:category, name: "Senior/Men")
     assert_equal('senior_men', senior_men.friendly_param)
     assert_equal('senior_men', senior_men_2.friendly_param)
     assert_raises(Categories::AmbiguousParamException) { Category.find_by_friendly_param('senior_men') }

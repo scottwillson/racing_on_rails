@@ -3,7 +3,7 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class PostsControllerTest < ActionController::TestCase
   test "new" do
-    obra_chat = FactoryGirl.create(:mailing_list)
+    obra_chat = FactoryBot.create(:mailing_list)
     get :new, mailing_list_id: obra_chat.id
     assert_template "posts/new"
     assert_not_nil assigns["mailing_list"], "Should assign mailing_list"
@@ -17,7 +17,7 @@ class PostsControllerTest < ActionController::TestCase
   end
 
   test "new reply" do
-    obra_race = FactoryGirl.create(:mailing_list)
+    obra_race = FactoryBot.create(:mailing_list)
     original_post = Post.create!(
       mailing_list: obra_race,
       subject: "Only OBRA Race Message",
@@ -43,43 +43,43 @@ class PostsControllerTest < ActionController::TestCase
   end
 
   test "index" do
-    mailing_list = FactoryGirl.create(:mailing_list)
+    mailing_list = FactoryBot.create(:mailing_list)
     get :index, mailing_list_id: mailing_list.id
     assert_response :success
   end
 
   test "index atom" do
-    mailing_list = FactoryGirl.create(:mailing_list)
+    mailing_list = FactoryBot.create(:mailing_list)
     get :index, mailing_list_id: mailing_list.id, format: :atom
     assert_response :success
   end
 
   test "index rss" do
-    mailing_list = FactoryGirl.create(:mailing_list)
+    mailing_list = FactoryBot.create(:mailing_list)
     get :index, mailing_list_id: mailing_list.id, format: :rss
     assert_redirected_to format: :atom
   end
 
   test "index with date" do
-    post = FactoryGirl.create(:post)
+    post = FactoryBot.create(:post)
     get :index, mailing_list_id: post.mailing_list.id, month: 12, year: 2007
     assert_response :success
   end
 
   test "index with bogus date" do
-    post = FactoryGirl.create(:post)
+    post = FactoryBot.create(:post)
     get :index, mailing_list_id: post.mailing_list.id, month: 25, year: 7
     assert_response :success
   end
 
   test "index with bogus page" do
-    post = FactoryGirl.create(:post)
+    post = FactoryBot.create(:post)
     get :index, mailing_list_id: post.mailing_list.id, page: "atz"
     assert_response :success
   end
 
   test "list" do
-    obra_chat = FactoryGirl.create(:mailing_list)
+    obra_chat = FactoryBot.create(:mailing_list)
     for index in 1..22
       date = Time.zone.now.beginning_of_month + index * 3600 * 24
       Post.create!(
@@ -92,7 +92,7 @@ class PostsControllerTest < ActionController::TestCase
       )
     end
 
-    obra_race = FactoryGirl.create(:mailing_list)
+    obra_race = FactoryBot.create(:mailing_list)
     Post.create!(
       mailing_list: obra_race,
       subject: "Only OBRA Race Message",
@@ -117,7 +117,7 @@ class PostsControllerTest < ActionController::TestCase
   test "post" do
     MailingListMailer.deliveries.clear
 
-    obra_chat = FactoryGirl.create(:mailing_list)
+    obra_chat = FactoryBot.create(:mailing_list)
     subject = "Spynergy for Sale"
     from_name = "Tim Schauer"
     from_email = "tim.schauer@butlerpress.com"
@@ -147,7 +147,7 @@ class PostsControllerTest < ActionController::TestCase
   end
 
   test "post reply" do
-    obra_chat = FactoryGirl.create(:mailing_list)
+    obra_chat = FactoryBot.create(:mailing_list)
     subject = "Spynergy for Sale"
     from_name = "Tim Schauer"
     from_email = "tim.schauer@butlerpress.com"
@@ -187,7 +187,7 @@ class PostsControllerTest < ActionController::TestCase
   end
 
   test "post invalid reply" do
-    obra_chat = FactoryGirl.create(:mailing_list)
+    obra_chat = FactoryBot.create(:mailing_list)
     subject = "Spynergy for Sale"
     reply_to_post = Post.create!(
       mailing_list: obra_chat,
@@ -221,7 +221,7 @@ class PostsControllerTest < ActionController::TestCase
   test "post smtp 502 error" do
     MailingListMailer.deliveries.clear
 
-    obra_chat = FactoryGirl.create(:mailing_list)
+    obra_chat = FactoryBot.create(:mailing_list)
     subject = "Spynergy for Sale"
     from_name = "Tim Schauer"
     from_email = "tim.schauer@butlerpress.com"
@@ -248,7 +248,7 @@ class PostsControllerTest < ActionController::TestCase
   test "post smtp 5450 error" do
     MailingListMailer.deliveries.clear
 
-    obra_chat = FactoryGirl.create(:mailing_list)
+    obra_chat = FactoryBot.create(:mailing_list)
     subject = "Spynergy for Sale"
     from_name = "Tim Schauer"
     from_email = "tim.schauer@butlerpress.com"
@@ -273,7 +273,7 @@ class PostsControllerTest < ActionController::TestCase
   end
 
   test "show" do
-    obra_race = FactoryGirl.create(:mailing_list)
+    obra_race = FactoryBot.create(:mailing_list)
     new_post = Post.create!(
       mailing_list: obra_race,
       subject: "Only OBRA Race Message",
@@ -303,7 +303,7 @@ class PostsControllerTest < ActionController::TestCase
   end
 
   test "spam post should not cause error" do
-    obra_chat = FactoryGirl.create(:mailing_list)
+    obra_chat = FactoryBot.create(:mailing_list)
     post(:create, { "commit" => "Post", "mailing_list_id" => obra_chat.to_param,
                   "post" => { "from_name" => "strap",
                                "body" => "<a href= http://www.blogextremo.com/elroybrito >strap on gallery</a> <a href= http://emmittmcclaine.blogownia.pl >lesbian strap on</a> <a href= http://www.cherryade.com/margenemohabeer >strap on sex</a> ",

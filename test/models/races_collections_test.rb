@@ -26,7 +26,7 @@ class RacesCollectionTest < ActiveSupport::TestCase
   end
 
   test "update blank no races" do
-    event = FactoryGirl.create(:event)
+    event = FactoryBot.create(:event)
 
     races_collection = RacesCollection.new(event)
     races_collection.update text: ""
@@ -36,7 +36,7 @@ class RacesCollectionTest < ActiveSupport::TestCase
   end
 
   test "update add races" do
-    event = FactoryGirl.create(:event)
+    event = FactoryBot.create(:event)
 
     races_collection = RacesCollection.new(event)
     races_collection.update text: "\r\nMen A\r\n\r\nMen B\r\n\r\n"
@@ -46,7 +46,7 @@ class RacesCollectionTest < ActiveSupport::TestCase
   end
 
   test "update remove races" do
-    event = FactoryGirl.create(:event)
+    event = FactoryBot.create(:event)
     event.races.create! category: Category.new(name: "Men A")
     event.races.create! category: Category.new(name: "Beginners")
 

@@ -18,14 +18,14 @@ module Admin
 
     test "not logged in edit" do
       destroy_person_session
-      vanilla = FactoryGirl.create(:team)
+      vanilla = FactoryBot.create(:team)
       get(:edit, id: vanilla.to_param)
       assert_redirected_to new_person_session_url(secure_redirect_options)
       assert_nil(@request.session["person"], "No person in session")
     end
 
     test "find" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
+      vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
       get(:index, name: 'van')
       assert_response(:success)
       assert_template("admin/teams/index")
@@ -36,8 +36,8 @@ module Admin
     end
 
     test "find nothing" do
-      FactoryGirl.create(:team, name: "Vanilla Bicycles")
-      FactoryGirl.create(:team)
+      FactoryBot.create(:team, name: "Vanilla Bicycles")
+      FactoryBot.create(:team)
 
       get(:index, name: 's7dfnacs89danfx')
       assert_response(:success)
@@ -47,7 +47,7 @@ module Admin
     end
 
     test "find empty name" do
-      FactoryGirl.create(:team, name: "Vanilla Bicycles")
+      FactoryBot.create(:team, name: "Vanilla Bicycles")
 
       get(:index, name: '')
       assert_response(:success)
@@ -68,7 +68,7 @@ module Admin
     end
 
     test "index with cookie" do
-      FactoryGirl.create(:team, name: "Gentle Lovers")
+      FactoryBot.create(:team, name: "Gentle Lovers")
       @request.cookies["team_name"] = "gentle"
       get(:index)
       assert_response(:success)
@@ -79,7 +79,7 @@ module Admin
     end
 
     test "index rjs" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
+      vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
       xhr :get, :index, name: 'nilla'
       assert_response(:success)
       assert_template("admin/teams/index")
@@ -88,7 +88,7 @@ module Admin
     end
 
     test "blank name" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
+      vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
       assert_raise(ActiveRecord::RecordInvalid) do
         xhr :put, :update_attribute,
             id: vanilla.to_param,
@@ -104,7 +104,7 @@ module Admin
     end
 
     test "set name" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
+      vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
       xhr :put, :update_attribute,
           id: vanilla.to_param,
           name: "name",
@@ -119,7 +119,7 @@ module Admin
     end
 
     test "set name same name" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
+      vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
       xhr :put, :update_attribute,
           id: vanilla.to_param,
           name: "name",
@@ -133,7 +133,7 @@ module Admin
     end
 
     test "set name same name different case" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
+      vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
       xhr :put, :update_attribute,
           id: vanilla.to_param,
           name: "name",
@@ -147,8 +147,8 @@ module Admin
     end
 
     test "set name to existing name" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla Bicycles")
-      FactoryGirl.create(:team, name: "Kona")
+      vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
+      FactoryBot.create(:team, name: "Kona")
 
       xhr :put, :update_attribute,
           id: vanilla.to_param,
@@ -165,7 +165,7 @@ module Admin
     end
 
     test "set name to existing alias" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla")
+      vanilla = FactoryBot.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
 
       xhr :put, :update_attribute,
@@ -187,7 +187,7 @@ module Admin
     end
 
     test "set name to existing alias different case" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla")
+      vanilla = FactoryBot.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
 
       vanilla = vanilla
@@ -209,10 +209,10 @@ module Admin
     end
 
     test "set name to other team existing alias" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla")
+      vanilla = FactoryBot.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
 
-      kona = FactoryGirl.create(:team, name: "Kona")
+      kona = FactoryBot.create(:team, name: "Kona")
 
       xhr :put, :update_attribute,
           id: kona.to_param,
@@ -260,7 +260,7 @@ module Admin
     end
 
     test "destroy team with results should not cause hard errors" do
-      team = FactoryGirl.create(:result).team
+      team = FactoryBot.create(:result).team
       delete(:destroy, id: team.id)
       assert(Team.exists?(team.id), 'Team should not have been destroyed')
       assert(!assigns(:team).errors.empty?, "Team should have error")
@@ -268,8 +268,8 @@ module Admin
     end
 
     test "merge?" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla")
-      kona = FactoryGirl.create(:team)
+      vanilla = FactoryBot.create(:team, name: "Vanilla")
+      kona = FactoryBot.create(:team)
       xhr :put, :update_attribute,
           id: kona.to_param,
           name: "name",
@@ -282,8 +282,8 @@ module Admin
     end
 
     test "merge" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla")
-      kona = FactoryGirl.create(:team, name: "Kona")
+      vanilla = FactoryBot.create(:team, name: "Vanilla")
+      kona = FactoryBot.create(:team, name: "Kona")
       assert(Team.find_by_name('Kona'), 'Kona should be in database')
 
       xhr :post, :merge, id: vanilla.id, other_team_id: kona.to_param
@@ -295,8 +295,8 @@ module Admin
     end
 
     test "toggle member" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla")
-      result = FactoryGirl.create(:result, team: vanilla)
+      vanilla = FactoryBot.create(:team, name: "Vanilla")
+      result = FactoryBot.create(:result, team: vanilla)
 
       assert_equal(true, vanilla.member, 'member before update')
       post(:toggle_member, id: vanilla.to_param)
@@ -315,7 +315,7 @@ module Admin
     end
 
     test "edit" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla")
+      vanilla = FactoryBot.create(:team, name: "Vanilla")
       get(:edit, id: vanilla.to_param)
       assert_response(:success)
       assert_template("admin/teams/edit")
@@ -324,7 +324,7 @@ module Admin
     end
 
     test "destroy name" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla")
+      vanilla = FactoryBot.create(:team, name: "Vanilla")
       vanilla.names.create!(name: "Generic Team", year: 1990)
       assert_equal(1, vanilla.names.count, "Vanilla names")
       name = vanilla.names.first
@@ -348,7 +348,7 @@ module Admin
     end
 
     test "update" do
-      team = FactoryGirl.create(:team, name: "Vanilla")
+      team = FactoryBot.create(:team, name: "Vanilla")
       post(:update, id: team.to_param, team: { name: "Speedvagen",
                                                      website: "http://speedvagen.net",
                                                      sponsors: %Q{<a href="http://stumptowncoffeeroasters">Stumptown</a>},
@@ -369,7 +369,7 @@ module Admin
     end
 
     test "invalid update" do
-      team = FactoryGirl.create(:team, name: "Vanilla")
+      team = FactoryBot.create(:team, name: "Vanilla")
       post :update, id: team.to_param, team: { name: "" }
       assert_response :success
       assert_not_nil assigns(:team), "@team"

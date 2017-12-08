@@ -8,7 +8,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   test "admin login" do
-    FactoryGirl.create(:administrator)
+    FactoryBot.create(:administrator)
     post :create, person_session: { login: "admin@example.com", password: "secret" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert assigns["person_session"].errors.empty?, assigns["person_session"].errors.full_messages.join
@@ -18,7 +18,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   test "member login" do
-    member = FactoryGirl.create(:person_with_login)
+    member = FactoryBot.create(:person_with_login)
     post :create, person_session: { login: member.login, password: "secret" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert assigns["person_session"].errors.empty?, assigns["person_session"].errors.full_messages.join
@@ -28,7 +28,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   test "login failure" do
-    FactoryGirl.create(:administrator)
+    FactoryBot.create(:administrator)
     post :create, person_session: { login: "admin@example.com", password: "bad password" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(!assigns["person_session"].errors.empty?, "@person_session should have errors")
@@ -38,7 +38,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   test "blank login should fail" do
-    FactoryGirl.create(:administrator)
+    FactoryBot.create(:administrator)
     post :create, person_session: { login: "", password: "" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(assigns["person_session"].errors.present?, "@person_session should have errors")
@@ -58,7 +58,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   test "logout" do
-    member = FactoryGirl.create(:person_with_login)
+    member = FactoryBot.create(:person_with_login)
     login_as member
 
     delete :destroy
@@ -71,7 +71,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   test "logout administrator" do
-    administrator = FactoryGirl.create(:administrator)
+    administrator = FactoryBot.create(:administrator)
     login_as administrator
 
     delete :destroy
@@ -94,7 +94,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   test "logout no ssl" do
-    administrator = FactoryGirl.create(:administrator)
+    administrator = FactoryBot.create(:administrator)
     PersonSession.create(administrator)
 
     delete :destroy
@@ -118,7 +118,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   test "show loggedin" do
-    member = FactoryGirl.create(:person_with_login)
+    member = FactoryBot.create(:person_with_login)
     login_as member
     get :show
     assert_response :success

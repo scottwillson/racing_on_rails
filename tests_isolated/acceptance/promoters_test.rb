@@ -5,16 +5,16 @@ class PromotersTest < AcceptanceTest
   test "browse" do
     javascript!
 
-    FactoryGirl.create(:discipline, name: "Cyclocross")
-    FactoryGirl.create(:discipline, name: "Downhill")
-    FactoryGirl.create(:discipline, name: "Mountain Bike")
-    FactoryGirl.create(:discipline, name: "Road")
-    FactoryGirl.create(:discipline, name: "Singlespeed")
-    FactoryGirl.create(:discipline, name: "Track")
-    FactoryGirl.create(:number_issuer, name: RacingAssociation.current.short_name)
+    FactoryBot.create(:discipline, name: "Cyclocross")
+    FactoryBot.create(:discipline, name: "Downhill")
+    FactoryBot.create(:discipline, name: "Mountain Bike")
+    FactoryBot.create(:discipline, name: "Road")
+    FactoryBot.create(:discipline, name: "Singlespeed")
+    FactoryBot.create(:discipline, name: "Track")
+    FactoryBot.create(:number_issuer, name: RacingAssociation.current.short_name)
 
     year = RacingAssociation.current.effective_year
-    promoter = FactoryGirl.create(:promoter)
+    promoter = FactoryBot.create(:promoter)
     series = Series.create!(name: "Cross Crusade Series", promoter: promoter, date: Date.new(year, 10))
     event = SingleDayEvent.create!(name: "Cross Crusade: Alpenrose", promoter: promoter, date: Date.new(year, 10))
     series.children << event

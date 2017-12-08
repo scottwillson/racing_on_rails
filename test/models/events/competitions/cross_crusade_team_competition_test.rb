@@ -4,13 +4,13 @@ module Competitions
   # :stopdoc:
   class CrossCrusadeTeamCompetitionTest < ActiveSupport::TestCase
     test "recalc with one event" do
-      weaver = FactoryGirl.create(:person)
-      tonkin = FactoryGirl.create(:person)
-      alice = FactoryGirl.create(:person)
+      weaver = FactoryBot.create(:person)
+      tonkin = FactoryBot.create(:person)
+      alice = FactoryBot.create(:person)
 
-      gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers", member: false)
-      kona = FactoryGirl.create(:team, name: "Kona", member: true)
-      vanilla = FactoryGirl.create(:team, name: "Vanilla", member: true)
+      gentle_lovers = FactoryBot.create(:team, name: "Gentle Lovers", member: false)
+      kona = FactoryBot.create(:team, name: "Kona", member: true)
+      vanilla = FactoryBot.create(:team, name: "Vanilla", member: true)
 
       series = Series.create!(name: "River City Bicycles Cyclocross Crusade")
       event = series.children.create!(date: Date.new(2017, 10, 7))
@@ -98,11 +98,11 @@ module Competitions
     end
 
     test "missing teams penalty" do
-      alice = FactoryGirl.create(:person)
+      alice = FactoryBot.create(:person)
 
-      gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers", member: false)
-      kona = FactoryGirl.create(:team, name: "Kona", member: true)
-      vanilla = FactoryGirl.create(:team, name: "Vanilla", member: true)
+      gentle_lovers = FactoryBot.create(:team, name: "Gentle Lovers", member: false)
+      kona = FactoryBot.create(:team, name: "Kona", member: true)
+      vanilla = FactoryBot.create(:team, name: "Vanilla", member: true)
 
       series = Series.create!(name: "River City Bicycles Cyclocross Crusade")
       series.children.create! date: Date.new(2017, 10, 7)

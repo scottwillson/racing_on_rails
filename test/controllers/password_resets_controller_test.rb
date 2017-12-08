@@ -9,7 +9,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
 
   test "forgot password" do
     ActionMailer::Base.deliveries.clear
-    FactoryGirl.create(:administrator)
+    FactoryBot.create(:administrator)
     post :create, email: "admin@example.com"
     assert_response :redirect
     assert_redirected_to new_password_reset_url(secure_redirect_options)
@@ -39,14 +39,14 @@ class PasswordResetsControllerTest < ActionController::TestCase
   end
 
   test "edit" do
-    member = FactoryGirl.create(:person_with_login)
+    member = FactoryBot.create(:person_with_login)
     get :edit, id: member.perishable_token
     assert_response :success
     assert_equal(member, assigns["person"], "@person")
   end
 
   test "update admin" do
-    administrator = FactoryGirl.create(:administrator)
+    administrator = FactoryBot.create(:administrator)
     password = administrator.crypted_password
     post :update, id: administrator.perishable_token, person: { password: "my new password", password_confirmation: "my new password" }
     assert_not_nil(assigns["person"], "@person")
@@ -58,7 +58,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
   end
 
   test "update member" do
-    person = FactoryGirl.create(:person_with_login, login: "bob.jones")
+    person = FactoryBot.create(:person_with_login, login: "bob.jones")
     password = person.crypted_password
     post :update, id: person.perishable_token, person: { password: "my new password", password_confirmation: "my new password" }
     assert_not_nil(assigns["person"], "@person")
@@ -73,7 +73,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
   end
 
   test "invalid update" do
-    member = FactoryGirl.create(:person_with_login, login: "bob.jones")
+    member = FactoryBot.create(:person_with_login, login: "bob.jones")
     password = member.crypted_password
     post :update, id: member.perishable_token, person: { password: "my new password", password_confirmation: "another password that doesn't match" }
     assert_nil(assigns["person_session"], "@person_session")
@@ -86,7 +86,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
   end
 
   test "blank update" do
-    member = FactoryGirl.create(:person_with_login)
+    member = FactoryBot.create(:person_with_login)
     password = member.crypted_password
     post :update, id: member.perishable_token, person: { password: "", password_confirmation: "" }
     assert_nil(assigns["person_session"], "@person_session")

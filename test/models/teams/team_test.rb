@@ -7,11 +7,11 @@ module Teams
   class TeamTest < ActiveSupport::TestCase
     test "find by name or alias or create" do
       # Add person alias with team name to expose bug
-      person = FactoryGirl.create(:person)
+      person = FactoryBot.create(:person)
       person.aliases.create!(name: "Gentile Lovers")
       person.aliases.create!(name: "Gentle Lovers")
 
-      gentle_lovers = FactoryGirl.create(:team, name: "Gentle Lovers")
+      gentle_lovers = FactoryBot.create(:team, name: "Gentle Lovers")
       gentle_lovers.aliases.create!(name: "Gentile Lovers")
       assert_equal(gentle_lovers, Team.find_by_name_or_alias_or_create('Gentle Lovers'), 'Gentle Lovers')
       assert_equal(gentle_lovers, Team.find_by_name_or_alias_or_create('Gentile Lovers'), 'Gentle Lovers alias')
@@ -47,7 +47,7 @@ module Teams
     end
 
     test "find all by name like" do
-      vanilla = FactoryGirl.create(:team, name: "Vanilla")
+      vanilla = FactoryBot.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
       assert_same_elements [vanilla], Team.name_like("Vanilla"), "Vanilla"
       assert_same_elements [vanilla], Team.name_like("Vanilla Bicycles"), "Vanilla Bicycles"
@@ -59,7 +59,7 @@ module Teams
     end
 
     test "create dupe" do
-      FactoryGirl.create(:team, name: "Vanilla")
+      FactoryBot.create(:team, name: "Vanilla")
       dupe = Team.new(name: 'Vanilla')
       assert(!dupe.valid?, 'Dupe Vanilla should not be valid')
     end
@@ -86,8 +86,8 @@ module Teams
     end
 
     test "delete updated by" do
-      team = FactoryGirl.create(:team)
-      person = FactoryGirl.create(:person)
+      team = FactoryBot.create(:team)
+      person = FactoryBot.create(:person)
       team.updated_by = person
       team.name = "7-11"
       team.save!

@@ -10,7 +10,7 @@ module Admin
     end
 
     test "create" do
-      article_category = FactoryGirl.create(:article_category)
+      article_category = FactoryBot.create(:article_category)
       post :create,
         article: {
           article_category_id: article_category.id,

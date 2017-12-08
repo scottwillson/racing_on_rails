@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
 # :stopdoc:
 class MailingListsTest < AcceptanceTest
   test "mailing lists" do
-    mailing_list = FactoryGirl.create(:mailing_list, name: "obra")
+    mailing_list = FactoryBot.create(:mailing_list, name: "obra")
     mailing_list.posts.create!(
       subject: "Schedule Changes",
       date: "2004-12-31",

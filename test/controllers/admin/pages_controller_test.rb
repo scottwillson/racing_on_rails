@@ -18,7 +18,7 @@ module Admin
     end
 
     test "update title inplace" do
-      page = FactoryGirl.create(:page)
+      page = FactoryBot.create(:page)
 
       xhr(:patch, :update_attribute,
           id: page.to_param,
@@ -34,12 +34,12 @@ module Admin
     end
 
     test "edit page" do
-      page = FactoryGirl.create(:page)
+      page = FactoryBot.create(:page)
       get(:edit, id: page.id)
     end
 
     test "update page" do
-      page = FactoryGirl.create(:page)
+      page = FactoryBot.create(:page)
       put(:update,
           id: page.to_param,
           page: {
@@ -57,7 +57,7 @@ module Admin
 
     test "update page parent" do
       parent_page = Page.create!(title: "Root")
-      page = FactoryGirl.create(:page)
+      page = FactoryBot.create(:page)
       put(:update,
           id: page.to_param,
           page: {
@@ -80,7 +80,7 @@ module Admin
 
     test "new page parent" do
       assert_equal 0, Page.count
-      parent_page = FactoryGirl.create(:page)
+      parent_page = FactoryBot.create(:page)
       get(:new, page: { parent_id: parent_page.to_param })
       page = assigns(:page)
       assert_not_nil(page, "@page")
@@ -103,7 +103,7 @@ module Admin
     end
 
     test "create child page" do
-      parent_page = FactoryGirl.create(:page)
+      parent_page = FactoryBot.create(:page)
       post(:create,
           page: {
             title: "My Awesome Bike Racing Page",
@@ -121,14 +121,14 @@ module Admin
     end
 
     test "delete page" do
-      page = FactoryGirl.create(:page)
+      page = FactoryBot.create(:page)
       delete(:destroy, id: page.to_param)
       assert_redirected_to(admin_pages_path)
       assert(!Page.exists?(page.id), "Page should be deleted")
     end
 
     test "delete parent page" do
-      page = FactoryGirl.create(:page)
+      page = FactoryBot.create(:page)
       page.children.create!
       page.reload
       delete(:destroy, id: page.to_param)
@@ -137,7 +137,7 @@ module Admin
     end
 
     test "delete child page" do
-      page = FactoryGirl.create(:page).children.create!
+      page = FactoryBot.create(:page).children.create!
       delete(:destroy, id: page.to_param)
       assert_redirected_to(admin_pages_path)
       assert(!Page.exists?(page.id), "Page should be deleted")

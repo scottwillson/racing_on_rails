@@ -5,18 +5,18 @@ class PeopleTest < AcceptanceTest
   setup :javascript!
 
   test "edit" do
-    FactoryGirl.create(:discipline)
-    FactoryGirl.create(:mtb_discipline)
-    FactoryGirl.create(:number_issuer, name: RacingAssociation.current.short_name)
-    administrator = FactoryGirl.create(:administrator, name: "Candi Murray")
+    FactoryBot.create(:discipline)
+    FactoryBot.create(:mtb_discipline)
+    FactoryBot.create(:number_issuer, name: RacingAssociation.current.short_name)
+    administrator = FactoryBot.create(:administrator, name: "Candi Murray")
     login_as administrator
-    molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron", team_name: "Vanilla", license: "202")
+    molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron", team_name: "Vanilla", license: "202")
     molly.aliases.create!(name: "Mollie Cameron")
-    FactoryGirl.create(:result, person: molly)
-    matson = FactoryGirl.create(:person, first_name: "Mark", last_name: "Matson", team_name: "Kona", license: "340", road_number: "765")
-    alice = FactoryGirl.create(:person, first_name: "Alice", last_name: "Pennington", team_name: "Gentle Lovers", license: "230")
-    brad = FactoryGirl.create(:person, first_name: "Brad", last_name: "Ross")
-    weaver = FactoryGirl.create(:person, first_name: "Ryan", last_name: "Weaver", team_name: "Gentle Lovers", license: "341")
+    FactoryBot.create(:result, person: molly)
+    matson = FactoryBot.create(:person, first_name: "Mark", last_name: "Matson", team_name: "Kona", license: "340", road_number: "765")
+    alice = FactoryBot.create(:person, first_name: "Alice", last_name: "Pennington", team_name: "Gentle Lovers", license: "230")
+    brad = FactoryBot.create(:person, first_name: "Brad", last_name: "Ross")
+    weaver = FactoryBot.create(:person, first_name: "Ryan", last_name: "Weaver", team_name: "Gentle Lovers", license: "341")
 
     visit '/admin/people'
     fill_in "name", with: "a\n"
@@ -119,9 +119,9 @@ class PeopleTest < AcceptanceTest
   end
 
   test "merge confirm" do
-    login_as FactoryGirl.create(:administrator, name: "Candi Murray")
-    FactoryGirl.create(:person, name: "Molly Cameron")
-    FactoryGirl.create(:person, name: "Mark Matson")
+    login_as FactoryBot.create(:administrator, name: "Candi Murray")
+    FactoryBot.create(:person, name: "Molly Cameron")
+    FactoryBot.create(:person, name: "Mark Matson")
 
     visit "/admin/people"
     fill_in "name", with: "a\n"
@@ -163,17 +163,17 @@ class PeopleTest < AcceptanceTest
   end
 
   test "export" do
-    FactoryGirl.create(:discipline, name: "Cyclocross")
-    FactoryGirl.create(:discipline, name: "Downhill")
-    FactoryGirl.create(:discipline, name: "Mountain Bike")
-    FactoryGirl.create(:discipline, name: "Road")
-    FactoryGirl.create(:discipline, name: "Singlespeed")
-    FactoryGirl.create(:discipline, name: "Track")
-    FactoryGirl.create(:number_issuer, name: RacingAssociation.current.short_name)
+    FactoryBot.create(:discipline, name: "Cyclocross")
+    FactoryBot.create(:discipline, name: "Downhill")
+    FactoryBot.create(:discipline, name: "Mountain Bike")
+    FactoryBot.create(:discipline, name: "Road")
+    FactoryBot.create(:discipline, name: "Singlespeed")
+    FactoryBot.create(:discipline, name: "Track")
+    FactoryBot.create(:number_issuer, name: RacingAssociation.current.short_name)
 
-    FactoryGirl.create(:person, name: "Erik Tonkin", team_name: "Kona", license: "102")
+    FactoryBot.create(:person, name: "Erik Tonkin", team_name: "Kona", license: "102")
 
-    login_as FactoryGirl.create(:administrator)
+    login_as FactoryBot.create(:administrator)
 
     visit '/admin/people'
     assert page.has_selector? '#export_button'
@@ -215,7 +215,7 @@ class PeopleTest < AcceptanceTest
   end
 
   test "import" do
-    login_as FactoryGirl.create(:administrator)
+    login_as FactoryBot.create(:administrator)
     visit '/admin/people'
     attach_file 'people_file', "#{Rails.root}/test/fixtures/membership/upload.xlsx"
   end

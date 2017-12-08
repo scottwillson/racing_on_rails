@@ -22,7 +22,7 @@ class PageTest < ActiveSupport::TestCase
   end
 
   test "depth" do
-    page = FactoryGirl.create(:page)
+    page = FactoryBot.create(:page)
     assert_equal(0, page.depth, "depth")
 
     child = page.children.create!(body: "<h2>Child</h2>", title: "Child")
@@ -33,7 +33,7 @@ class PageTest < ActiveSupport::TestCase
   end
 
   test "updated by person" do
-    administrator = FactoryGirl.create(:administrator)
+    administrator = FactoryBot.create(:administrator)
     Person.current = administrator
     page = Page.create!(body: "<h1>Welcome</h1>", title: "")
     page.versions(true)
@@ -42,7 +42,7 @@ class PageTest < ActiveSupport::TestCase
   end
 
   test "Do not update path or slug when title changes" do
-    page = FactoryGirl.create(:page)
+    page = FactoryBot.create(:page)
     page.title = "Super Fun"
     page.save!
     assert_equal("plain", page.path, "title")
@@ -56,9 +56,9 @@ class PageTest < ActiveSupport::TestCase
   end
 
   test "Versions updated on create and save" do
-    admin = FactoryGirl.create(:administrator)
+    admin = FactoryBot.create(:administrator)
     Person.current = admin
-    parent = FactoryGirl.create(:page)
+    parent = FactoryBot.create(:page)
     page = parent.children.create!(title: "New Page", body: "Original content")
 
     assert_equal("New Page", page.title, "title")
@@ -90,8 +90,8 @@ class PageTest < ActiveSupport::TestCase
   end
 
   test "Versions updated on update" do
-    parent = FactoryGirl.create(:page)
-    admin = FactoryGirl.create(:administrator)
+    parent = FactoryBot.create(:page)
+    admin = FactoryBot.create(:administrator)
     Person.current = admin
     page = parent.children.create!(title: "New Page", body: "Original content")
 
@@ -120,12 +120,12 @@ class PageTest < ActiveSupport::TestCase
   end
 
   test "update updated at if child changes" do
-    parent = FactoryGirl.create(:page)
+    parent = FactoryBot.create(:page)
     updated_at = parent.updated_at
 
     child = nil
     Timecop.freeze(Time.zone.now.tomorrow) do
-      admin = FactoryGirl.create(:administrator)
+      admin = FactoryBot.create(:administrator)
       Person.current = admin
       child = parent.children.create!(title: "New Page", body: "Original content")
       assert_equal(1, parent.versions.size, "versions")

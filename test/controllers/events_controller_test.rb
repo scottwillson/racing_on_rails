@@ -8,7 +8,7 @@ class EventsControllerTest < ActionController::TestCase
   end
 
   test "index with person id" do
-    promoter = FactoryGirl.create(:promoter)
+    promoter = FactoryBot.create(:promoter)
     get :index, person_id: promoter
     assert_response :success
     assert_select ".nav.tabs", count: 0
@@ -17,7 +17,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "index with person id promoter" do
     Timecop.freeze(Time.zone.local(2012)) do
-      promoter = FactoryGirl.create(:promoter)
+      promoter = FactoryBot.create(:promoter)
       PersonSession.create(promoter)
 
       use_ssl
@@ -31,7 +31,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "index as xml" do
     Timecop.freeze(Time.zone.local(2012, 5)) do
-      FactoryGirl.create(:event)
+      FactoryBot.create(:event)
       get :index, format: "xml"
       assert_response :success
       assert_equal "application/xml", @response.content_type

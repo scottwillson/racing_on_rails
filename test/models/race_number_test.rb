@@ -3,17 +3,17 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class RaceNumberTest < ActiveSupport::TestCase
   test "defaults" do
-    FactoryGirl.create(:number_issuer, name: "AVC")
-    association_number_issuer = FactoryGirl.create(:number_issuer, name: "CBRA")
+    FactoryBot.create(:number_issuer, name: "AVC")
+    association_number_issuer = FactoryBot.create(:number_issuer, name: "CBRA")
 
-    FactoryGirl.create(:discipline, name: "Road")
-    track = FactoryGirl.create(:discipline, name: "Track")
-    FactoryGirl.create(:discipline, name: "Cyclocross")
+    FactoryBot.create(:discipline, name: "Road")
+    track = FactoryBot.create(:discipline, name: "Track")
+    FactoryBot.create(:discipline, name: "Cyclocross")
 
     racing_association = RacingAssociation.current
     racing_association.update! default_discipline: "Track"
 
-    person = FactoryGirl.create(:person)
+    person = FactoryBot.create(:person)
     race_number = RaceNumber.create!(value: '999', person: person)
     assert_equal RacingAssociation.current.effective_year, race_number.year, 'year default'
     assert_equal track, race_number.discipline, 'year discipline'
@@ -21,11 +21,11 @@ class RaceNumberTest < ActiveSupport::TestCase
   end
 
   test "create" do
-    FactoryGirl.create(:number_issuer)
-    road = FactoryGirl.create(:discipline, name: "Road")
-    track = FactoryGirl.create(:discipline, name: "Track")
-    alice = FactoryGirl.create(:person)
-    molly = FactoryGirl.create(:person)
+    FactoryBot.create(:number_issuer)
+    road = FactoryBot.create(:discipline, name: "Road")
+    track = FactoryBot.create(:discipline, name: "Track")
+    alice = FactoryBot.create(:person)
+    molly = FactoryBot.create(:person)
     elkhorn = NumberIssuer.create!(name: 'Elkhorn Classic SR')
     race_number = RaceNumber.create!(person: alice, value: 'A103', year: 2001, number_issuer: elkhorn, discipline: road, updated_by: molly)
     assert_equal molly, race_number.created_by, "created_by"
@@ -69,10 +69,10 @@ class RaceNumberTest < ActiveSupport::TestCase
   end
 
   test "cannot create exact same number for person" do
-    alice = FactoryGirl.create(:person)
+    alice = FactoryBot.create(:person)
     obra = NumberIssuer.find_or_create_by(name: 'CBRA')
-    cyclocross = FactoryGirl.create(:discipline, name: "Cyclocross")
-    FactoryGirl.create(:discipline, name: "Road")
+    cyclocross = FactoryBot.create(:discipline, name: "Cyclocross")
+    FactoryBot.create(:discipline, name: "Road")
 
     RaceNumber.create!(person: alice, value: '876', year: 2001, number_issuer: obra, discipline: cyclocross)
     number = RaceNumber.create(person: alice, value: '876', year: 2001, number_issuer: obra, discipline: cyclocross)
@@ -80,12 +80,12 @@ class RaceNumberTest < ActiveSupport::TestCase
   end
 
   test "rental" do
-    alice = FactoryGirl.create(:person)
+    alice = FactoryBot.create(:person)
     racing_association = RacingAssociation.current
     racing_association.rental_numbers = 51..99
     racing_association.save!
-    FactoryGirl.create(:number_issuer)
-    road = FactoryGirl.create(:discipline, name: "Road")
+    FactoryBot.create(:number_issuer)
+    road = FactoryBot.create(:discipline, name: "Road")
     elkhorn = NumberIssuer.create!(name: 'Elkhorn Classic SR')
 
     assert(RaceNumber.new(person: alice, value: '10', year: 2001, number_issuer: elkhorn, discipline: road).valid?)
@@ -125,12 +125,12 @@ class RaceNumberTest < ActiveSupport::TestCase
   end
 
   test "rental no rental numbers" do
-    alice = FactoryGirl.create(:person)
+    alice = FactoryBot.create(:person)
     racing_association = RacingAssociation.current
     racing_association.rental_numbers = nil
     racing_association.save!
-    FactoryGirl.create(:number_issuer)
-    road = FactoryGirl.create(:discipline, name: "Road")
+    FactoryBot.create(:number_issuer)
+    road = FactoryBot.create(:discipline, name: "Road")
     elkhorn = NumberIssuer.create!(name: 'Elkhorn Classic SR')
 
     assert(RaceNumber.new(person: alice, value: '10', year: 2001, number_issuer: elkhorn, discipline: road).valid?)
@@ -170,10 +170,10 @@ class RaceNumberTest < ActiveSupport::TestCase
   end
 
   test "create bmx" do
-    alice = FactoryGirl.create(:person)
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline, name: "Road")
-    bmx = FactoryGirl.create(:discipline, name: "BMX")
+    alice = FactoryBot.create(:person)
+    FactoryBot.create(:number_issuer)
+    FactoryBot.create(:discipline, name: "Road")
+    bmx = FactoryBot.create(:discipline, name: "BMX")
     elkhorn = NumberIssuer.create!(name: 'Elkhorn Classic SR')
     race_number = RaceNumber.create!(person: alice, value: 'A103', year: 2001, number_issuer: elkhorn, discipline: bmx)
     assert_equal(alice, race_number.person, 'New number person')
@@ -183,9 +183,9 @@ class RaceNumberTest < ActiveSupport::TestCase
   end
 
   test "destroy" do
-    alice = FactoryGirl.create(:person)
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline, name: "Road")
+    alice = FactoryBot.create(:person)
+    FactoryBot.create(:number_issuer)
+    FactoryBot.create(:discipline, name: "Road")
     elkhorn = NumberIssuer.create!(name: 'Elkhorn Classic SR')
     RaceNumber.create!(person: alice, value: 'A103', year: 2001, number_issuer: elkhorn)
     alice.results.clear
@@ -194,10 +194,10 @@ class RaceNumberTest < ActiveSupport::TestCase
   end
 
   test "gender" do
-    alice = FactoryGirl.create(:person)
-    tonkin = FactoryGirl.create(:person)
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline, name: "Road")
+    alice = FactoryBot.create(:person)
+    tonkin = FactoryBot.create(:person)
+    FactoryBot.create(:number_issuer)
+    FactoryBot.create(:discipline, name: "Road")
 
     RacingAssociation.current.gender_specific_numbers = false
 
@@ -212,12 +212,12 @@ class RaceNumberTest < ActiveSupport::TestCase
   end
 
   test "gender alt" do
-    alice = FactoryGirl.create(:person)
-    FactoryGirl.create(:person)
-    molly = FactoryGirl.create(:person)
+    alice = FactoryBot.create(:person)
+    FactoryBot.create(:person)
+    molly = FactoryBot.create(:person)
 
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline, name: "Road")
+    FactoryBot.create(:number_issuer)
+    FactoryBot.create(:discipline, name: "Road")
 
     RacingAssociation.current.gender_specific_numbers = true
 

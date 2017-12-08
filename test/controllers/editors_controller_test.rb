@@ -8,8 +8,8 @@ class EditorsControllerTest < ActionController::TestCase
   end
 
   test "create" do
-    promoter = FactoryGirl.create(:promoter)
-    member = FactoryGirl.create(:person_with_login)
+    promoter = FactoryBot.create(:promoter)
+    member = FactoryBot.create(:person_with_login)
 
     login_as member
     post :create, id: member.to_param, editor_id: promoter.to_param
@@ -19,8 +19,8 @@ class EditorsControllerTest < ActionController::TestCase
   end
 
   test "create by get" do
-    promoter = FactoryGirl.create(:promoter)
-    member = FactoryGirl.create(:person_with_login)
+    promoter = FactoryBot.create(:promoter)
+    member = FactoryBot.create(:person_with_login)
 
     login_as member
     get :create, id: member.to_param, editor_id: promoter.to_param
@@ -30,9 +30,9 @@ class EditorsControllerTest < ActionController::TestCase
   end
 
   test "create as admin" do
-    administrator = FactoryGirl.create(:administrator)
-    promoter = FactoryGirl.create(:promoter)
-    member = FactoryGirl.create(:person_with_login)
+    administrator = FactoryBot.create(:administrator)
+    promoter = FactoryBot.create(:promoter)
+    member = FactoryBot.create(:person_with_login)
 
     login_as administrator
     post :create, id: member.to_param, editor_id: promoter.to_param
@@ -42,15 +42,15 @@ class EditorsControllerTest < ActionController::TestCase
   end
 
   test "login required" do
-    promoter = FactoryGirl.create(:promoter)
-    member = FactoryGirl.create(:person)
+    promoter = FactoryBot.create(:promoter)
+    member = FactoryBot.create(:person)
     post :create, id: member.to_param, editor_id: promoter.to_param
     assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
   test "security" do
-    promoter = FactoryGirl.create(:promoter)
-    member = FactoryGirl.create(:person_with_login)
+    promoter = FactoryBot.create(:promoter)
+    member = FactoryBot.create(:person_with_login)
 
     login_as promoter
     post :create, id: member.to_param, editor_id: promoter.to_param
@@ -60,8 +60,8 @@ class EditorsControllerTest < ActionController::TestCase
   end
 
   test "already exists" do
-    promoter = FactoryGirl.create(:promoter)
-    member = FactoryGirl.create(:person_with_login)
+    promoter = FactoryBot.create(:promoter)
+    member = FactoryBot.create(:person_with_login)
 
     member.editors << promoter
 
@@ -73,9 +73,9 @@ class EditorsControllerTest < ActionController::TestCase
   end
 
   test "admin" do
-    administrator = FactoryGirl.create(:administrator)
-    promoter = FactoryGirl.create(:promoter)
-    member = FactoryGirl.create(:person_with_login)
+    administrator = FactoryBot.create(:administrator)
+    promoter = FactoryBot.create(:promoter)
+    member = FactoryBot.create(:person_with_login)
 
     login_as administrator
     post :create, id: member.to_param, editor_id: promoter.to_param, return_to: "admin"
@@ -85,22 +85,22 @@ class EditorsControllerTest < ActionController::TestCase
   end
 
   test "person not found" do
-    member = FactoryGirl.create(:person_with_login)
+    member = FactoryBot.create(:person_with_login)
 
     login_as member
     assert_raise(ActiveRecord::RecordNotFound) { post :create, editor_id: "37812361287", id: member.to_param }
   end
 
   test "editor not found" do
-    member = FactoryGirl.create(:person_with_login)
+    member = FactoryBot.create(:person_with_login)
 
     login_as member
     assert_raise(ActiveRecord::RecordNotFound) { post :create, editor_id: member.to_param, id: "2312631872343" }
   end
 
   test "deny access" do
-    promoter = FactoryGirl.create(:promoter)
-    member = FactoryGirl.create(:person_with_login)
+    promoter = FactoryBot.create(:promoter)
+    member = FactoryBot.create(:person_with_login)
 
     member.editors << promoter
 
@@ -112,8 +112,8 @@ class EditorsControllerTest < ActionController::TestCase
   end
 
   test "deny access by get" do
-    promoter = FactoryGirl.create(:promoter)
-    member = FactoryGirl.create(:person_with_login)
+    promoter = FactoryBot.create(:promoter)
+    member = FactoryBot.create(:person_with_login)
 
     member.editors << promoter
 

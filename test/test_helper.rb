@@ -49,7 +49,7 @@ class ActiveSupport::TestCase
   def login_as(person)
     case person
     when Symbol
-      PersonSession.create FactoryGirl.create(person).reload
+      PersonSession.create FactoryBot.create(person).reload
     when Person
       PersonSession.create person.reload
     else
@@ -116,7 +116,7 @@ class ActiveSupport::TestCase
   end
 
   def create_administrator_session
-    @administrator = Person.find_by_login("admin@example.com") || FactoryGirl.create(:administrator)
+    @administrator = Person.find_by_login("admin@example.com") || FactoryBot.create(:administrator)
     PersonSession.create(@administrator)
   end
 

@@ -6,23 +6,23 @@ require File.expand_path("../../../test_helper", __FILE__)
 module Teams
   class MergeTest < ActiveSupport::TestCase
     test "merge" do
-      team_to_keep = FactoryGirl.create(:team, name: "Vanilla")
+      team_to_keep = FactoryBot.create(:team, name: "Vanilla")
       team_to_keep.aliases.create!(name: "Vanilla Bicycles")
-      FactoryGirl.create(:result, team: team_to_keep)
-      FactoryGirl.create(:time_trial_result, team: team_to_keep)
-      FactoryGirl.create(:person, team: team_to_keep)
+      FactoryBot.create(:result, team: team_to_keep)
+      FactoryBot.create(:time_trial_result, team: team_to_keep)
+      FactoryBot.create(:person, team: team_to_keep)
 
-      team_to_merge = FactoryGirl.create(:team, name: "Gentle Lovers")
+      team_to_merge = FactoryBot.create(:team, name: "Gentle Lovers")
       team_to_merge.aliases.create!(name: "Gentile Lovers")
-      FactoryGirl.create(:time_trial_result, team: team_to_merge)
-      FactoryGirl.create(:person, team: team_to_merge)
-      FactoryGirl.create(:person, team: team_to_merge)
-      FactoryGirl.create(:person, team: team_to_merge)
-      event = FactoryGirl.create(:event)
+      FactoryBot.create(:time_trial_result, team: team_to_merge)
+      FactoryBot.create(:person, team: team_to_merge)
+      FactoryBot.create(:person, team: team_to_merge)
+      FactoryBot.create(:person, team: team_to_merge)
+      event = FactoryBot.create(:event)
       event_team = EventTeam.create!(team: team_to_merge, event: event)
-      FactoryGirl.create(:event_team_membership, event_team: event_team)
+      FactoryBot.create(:event_team_membership, event_team: event_team)
       event_team = EventTeam.create!(team: team_to_keep, event: event)
-      FactoryGirl.create(:event_team_membership, event_team: event_team)
+      FactoryBot.create(:event_team_membership, event_team: event_team)
 
       CombinedTimeTrialResults.calculate!
 
@@ -68,7 +68,7 @@ module Teams
       team_to_keep_last_year = team_to_keep.names.create!(name: "Team Oregon/River City Bicycles", year: last_year)
 
       event = SingleDayEvent.create!
-      senior_men = FactoryGirl.create(:category)
+      senior_men = FactoryBot.create(:category)
       event.races.create!(category: senior_men).results.create!(place: "10", team: team_to_keep)
 
       event = SingleDayEvent.create!(date: Date.new(last_year))

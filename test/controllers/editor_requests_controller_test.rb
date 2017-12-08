@@ -8,8 +8,8 @@ class EditorRequestsControllerTest < ActionController::TestCase
   end
 
   test "create" do
-    promoter = FactoryGirl.create(:person_with_login)
-    member = FactoryGirl.create(:person, email: "person@example.com")
+    promoter = FactoryBot.create(:person_with_login)
+    member = FactoryBot.create(:person, email: "person@example.com")
 
     login_as promoter
     post :create, id: member.to_param, editor_id: promoter.to_param
@@ -21,8 +21,8 @@ class EditorRequestsControllerTest < ActionController::TestCase
   end
 
   test "dupes" do
-    promoter = FactoryGirl.create(:person_with_login)
-    member = FactoryGirl.create(:person, email: "person@example.com")
+    promoter = FactoryBot.create(:person_with_login)
+    member = FactoryBot.create(:person, email: "person@example.com")
     existing_editor_request = member.editor_requests.create!(editor: promoter)
 
     login_as promoter
@@ -36,8 +36,8 @@ class EditorRequestsControllerTest < ActionController::TestCase
   end
 
   test "already editor" do
-    promoter = FactoryGirl.create(:person_with_login)
-    member = FactoryGirl.create(:person, email: "person@example.com")
+    promoter = FactoryBot.create(:person_with_login)
+    member = FactoryBot.create(:person, email: "person@example.com")
 
     member.editors << promoter
     login_as promoter
@@ -49,22 +49,22 @@ class EditorRequestsControllerTest < ActionController::TestCase
   end
 
   test "not found" do
-    promoter = FactoryGirl.create(:person_with_login)
+    promoter = FactoryBot.create(:person_with_login)
     login_as promoter
     assert_raise(ActiveRecord::RecordNotFound) { post(:create, id: 1231232213133, editor_id: promoter.to_param) }
   end
 
   test "must login" do
-    promoter = FactoryGirl.create(:person)
-    member = FactoryGirl.create(:person, email: "person@example.com")
+    promoter = FactoryBot.create(:person)
+    member = FactoryBot.create(:person, email: "person@example.com")
     post :create, id: member.to_param, editor_id: promoter.to_param
     assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
   test "security" do
-    promoter = FactoryGirl.create(:promoter)
-    member = FactoryGirl.create(:person, email: "person@example.com")
-    past_member = FactoryGirl.create(:person_with_login)
+    promoter = FactoryBot.create(:promoter)
+    member = FactoryBot.create(:person, email: "person@example.com")
+    past_member = FactoryBot.create(:person_with_login)
 
     login_as past_member
     post :create, id: member.to_param, editor_id: promoter.to_param
@@ -72,8 +72,8 @@ class EditorRequestsControllerTest < ActionController::TestCase
   end
 
   test "show" do
-    promoter = FactoryGirl.create(:promoter)
-    member = FactoryGirl.create(:person, email: "person@example.com")
+    promoter = FactoryBot.create(:promoter)
+    member = FactoryBot.create(:person, email: "person@example.com")
 
     editor_request = member.editor_requests.create!(editor: promoter)
     get :show, person_id: member.to_param, id: editor_request.token
@@ -82,8 +82,8 @@ class EditorRequestsControllerTest < ActionController::TestCase
   end
 
   test "show not found" do
-    promoter = FactoryGirl.create(:promoter)
-    member = FactoryGirl.create(:person, email: "person@example.com")
+    promoter = FactoryBot.create(:promoter)
+    member = FactoryBot.create(:person, email: "person@example.com")
 
     member.editor_requests.create!(editor: promoter)
     assert_raise(ActiveRecord::RecordNotFound) { get(:show, person_id: member.to_param, id: "12367127836shdgadasd") }

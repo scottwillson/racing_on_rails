@@ -154,7 +154,7 @@ class MobileTest < RacingOnRails::IntegrationTest
   end
 
   test "mobile browser, mobile template" do
-    result = FactoryGirl.create(:result)
+    result = FactoryBot.create(:result)
 
     get "/events/#{result.event_id}/results", {}, { "HTTP_USER_AGENT" => "Android" }
     assert_redirected_to "/m/events/#{result.event_id}/results"
@@ -237,7 +237,7 @@ class MobileTest < RacingOnRails::IntegrationTest
   end
 
   test "popular pages" do
-    FactoryGirl.create(:result)
+    FactoryBot.create(:result)
 
     get "http://example.com/m/"
     assert_response :success
@@ -248,7 +248,7 @@ class MobileTest < RacingOnRails::IntegrationTest
     get "http://example.com/m/results"
     assert_response :success
 
-    mailing_list = FactoryGirl.create(:mailing_list)
+    mailing_list = FactoryBot.create(:mailing_list)
     get "http://example.com/m/mailing_lists"
     assert_response :success
 
@@ -257,7 +257,7 @@ class MobileTest < RacingOnRails::IntegrationTest
   end
 
   test "mailing list" do
-    mailing_list_post = FactoryGirl.create(:post)
+    mailing_list_post = FactoryBot.create(:post)
     get "http://example.com/m/posts/#{mailing_list_post.id}"
     assert_response :success
   end

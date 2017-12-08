@@ -7,7 +7,7 @@ module Competitions
 
     test "index" do
       event = OregonCup.create!(date: Date.new(2004, 3, 18))
-      race = event.races.create!(category: FactoryGirl.create(:category))
+      race = event.races.create!(category: FactoryBot.create(:category))
       race.results.create!(place: 1, person: Person.create!(name: "Floyd Landis"))
 
       get :index, year: "2004"

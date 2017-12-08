@@ -10,7 +10,7 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     assert(!pir.new_record?, "PIR new?")
     assert_equal(0, pir.children.size, 'PIR events')
     assert_equal(1, pir.bar_points, "Weekly Series BAR points")
-    category = FactoryGirl.create(:category)
+    category = FactoryBot.create(:category)
     race = pir.races.create!(category: category)
     assert_equal(1, race.bar_points, "Weekly Series race BAR points")
 

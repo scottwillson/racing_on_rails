@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
 # :stopdoc:
 class PasswordResetsTest < AcceptanceTest
   test "reset not logged in" do
-    FactoryGirl.create(:person_with_login, email: "member@example.com")
+    FactoryBot.create(:person_with_login, email: "member@example.com")
     visit "/person_session/new"
     click_link "forgot"
     fill_in "email", with: "member@example.com"
@@ -27,7 +27,7 @@ class PasswordResetsTest < AcceptanceTest
   end
 
   test "reset logged in" do
-    FactoryGirl.create(:person_with_login, email: "member@example.com")
+    FactoryBot.create(:person_with_login, email: "member@example.com")
     visit "/login"
     fill_in "person_session_login", with: "bob.jones"
     fill_in "person_session_password", with: "secret"

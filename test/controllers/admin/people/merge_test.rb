@@ -13,8 +13,8 @@ module Admin
       end
 
       test "merge?" do
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
-        tonkin = FactoryGirl.create(:person)
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
+        tonkin = FactoryBot.create(:person)
         xhr :put, :update_attribute,
             id: tonkin.to_param,
             name: "name",
@@ -29,8 +29,8 @@ module Admin
       end
 
       test "merge" do
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
-        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
+        tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
 
         xhr :post, :merge, other_person_id: tonkin.to_param, id: molly.to_param, format: :js
@@ -42,7 +42,7 @@ module Admin
       end
 
       test "merge same person" do
-        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
 
         xhr :post, :merge, other_person_id: tonkin.to_param, id: tonkin.to_param, format: :js
@@ -53,12 +53,12 @@ module Admin
       end
 
       test "dupes merge?" do
-        FactoryGirl.create(:discipline)
-        FactoryGirl.create(:number_issuer)
+        FactoryBot.create(:discipline)
+        FactoryBot.create(:number_issuer)
 
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         molly_with_different_road_number = Person.create(name: 'Molly Cameron', road_number: '987123')
-        tonkin = FactoryGirl.create(:person)
+        tonkin = FactoryBot.create(:person)
         xhr :put, :update_attribute,
             id: tonkin.to_param,
             name: "name",
@@ -74,15 +74,15 @@ module Admin
       end
 
       test "dupes merge one has road number one has cross number?" do
-        FactoryGirl.create(:discipline)
-        FactoryGirl.create(:cyclocross_discipline)
-        FactoryGirl.create(:number_issuer)
+        FactoryBot.create(:discipline)
+        FactoryBot.create(:cyclocross_discipline)
+        FactoryBot.create(:number_issuer)
 
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         molly.ccx_number = '102'
         molly.save!
         molly_with_different_cross_number = Person.create(name: 'Molly Cameron', ccx_number: '810', road_number: '1009')
-        tonkin = FactoryGirl.create(:person)
+        tonkin = FactoryBot.create(:person)
         xhr :put, :update_attribute,
             id: tonkin.to_param,
             name: "name",
@@ -103,8 +103,8 @@ module Admin
       end
 
       test "dupes merge alias?" do
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
-        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
+        tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         tonkin.aliases.create!(name: "Eric Tonkin")
 
         xhr :put, :update_attribute,
@@ -120,11 +120,11 @@ module Admin
       end
 
       test "dupe merge" do
-        FactoryGirl.create(:discipline)
-        FactoryGirl.create(:number_issuer)
+        FactoryBot.create(:discipline)
+        FactoryBot.create(:number_issuer)
 
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
-        tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
+        tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         tonkin_with_different_road_number = Person.create(name: 'Erik Tonkin', road_number: 'YYZ')
         assert(tonkin_with_different_road_number.valid?, "tonkin_with_different_road_number not valid: #{tonkin_with_different_road_number.errors.full_messages.join(', ')}")
         assert_equal(tonkin_with_different_road_number.new_record?, false, 'tonkin_with_different_road_number should be saved')

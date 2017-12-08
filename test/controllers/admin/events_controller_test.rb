@@ -16,14 +16,14 @@ module Admin
     end
 
     test "destroy event" do
-      jack_frost = FactoryGirl.create(:event)
+      jack_frost = FactoryBot.create(:event)
       delete(:destroy, id: jack_frost.to_param, commit: 'Delete')
       assert_redirected_to(admin_events_path(year: jack_frost.date.year))
       assert(!Event.exists?(jack_frost.id), "Jack Frost should have been destroyed")
     end
 
     test "destroy event ajax" do
-      event = FactoryGirl.create(:event)
+      event = FactoryBot.create(:event)
       event.destroy_races
       xhr(:delete, :destroy, id: event.to_param, commit: 'Delete')
       assert_response(:success)
@@ -47,8 +47,8 @@ module Admin
     end
 
     test "save different promoter" do
-      promoter = FactoryGirl.create(:person)
-      banana_belt = FactoryGirl.create(:event, promoter: promoter)
+      promoter = FactoryBot.create(:person)
+      banana_belt = FactoryBot.create(:event, promoter: promoter)
 
       post(:update,
            "commit" => "Save",
@@ -66,10 +66,10 @@ module Admin
     end
 
     test "set parent" do
-      event = FactoryGirl.create(:event, name: "The Event")
+      event = FactoryBot.create(:event, name: "The Event")
       assert_nil(event.parent)
 
-      parent = FactoryGirl.create(:series, name: "The Event")
+      parent = FactoryBot.create(:series, name: "The Event")
       get(:set_parent, parent_id: parent, child_id: event)
 
       event.reload
@@ -78,8 +78,8 @@ module Admin
     end
 
     test "missing parent" do
-      FactoryGirl.create(:series, name: "The Event")
-      event = FactoryGirl.create(:event, name: "The Event")
+      FactoryBot.create(:series, name: "The Event")
+      event = FactoryBot.create(:event, name: "The Event")
       assert(event.missing_parent?, "Event should be missing parent")
       get(:edit, id: event.to_param)
       assert_response(:success)
@@ -87,8 +87,8 @@ module Admin
     end
 
     test "missing children" do
-      event = FactoryGirl.create(:series, name: "The Event")
-      FactoryGirl.create(:event, name: "The Event")
+      event = FactoryBot.create(:series, name: "The Event")
+      FactoryBot.create(:event, name: "The Event")
       assert(event.missing_children?, "Event should be missing children")
       assert_not_nil(event.missing_children, "Event should be missing children")
       get(:edit, id: event.to_param)
@@ -112,9 +112,9 @@ module Admin
 
     test "add children" do
       Timecop.freeze(Time.zone.local(RacingAssociation.current.year, 10, 3)) do
-        FactoryGirl.create(:event, name: "Event", date: 1.month.from_now)
+        FactoryBot.create(:event, name: "Event", date: 1.month.from_now)
 
-        event = FactoryGirl.create(:series, name: "Event")
+        event = FactoryBot.create(:series, name: "Event")
         get(:add_children, parent_id: event.to_param)
         assert_redirected_to edit_admin_event_path(event)
         event.reload.children(true)
@@ -138,7 +138,7 @@ module Admin
     end
 
     test "links to years" do
-      FactoryGirl.create(:event, date: Date.new(2003, 6))
+      FactoryBot.create(:event, date: Date.new(2003, 6))
       get(:index, year: "2004")
 
       link = @response.body["href=\"/admin/events?year=2003"]
@@ -169,15 +169,15 @@ module Admin
     end
 
     test "destroy child event" do
-      event = FactoryGirl.create(:series_event)
+      event = FactoryBot.create(:series_event)
       event.destroy_races
       delete(:destroy, id: event.to_param, commit: 'Delete')
       assert(!Event.exists?(event.id), "Should have deleted Event")
     end
 
     test "destroy races" do
-      jack_frost = FactoryGirl.create(:time_trial_event)
-      jack_frost.races.create!(category: FactoryGirl.create(:category)).results.create!(place: "1", person: FactoryGirl.create(:person), time: 1200)
+      jack_frost = FactoryBot.create(:time_trial_event)
+      jack_frost.races.create!(category: FactoryBot.create(:category)).results.create!(place: "1", person: FactoryBot.create(:person), time: 1200)
       CombinedTimeTrialResults.calculate!
       assert_not_nil(jack_frost.combined_results, "Event should have combined results before destroying races")
       assert_equal(1, jack_frost.races.count, "Races before destroy")
@@ -191,8 +191,8 @@ module Admin
 
     test "events for year" do
       Timecop.freeze(2005, 6) do
-        single_day_event = FactoryGirl.create(:event, date: 3.days.from_now, name: "Single Day Event")
-        multi_day_event_with_children = FactoryGirl.create(:stage_race, name: "Stage Race")
+        single_day_event = FactoryBot.create(:event, date: 3.days.from_now, name: "Single Day Event")
+        multi_day_event_with_children = FactoryBot.create(:stage_race, name: "Stage Race")
         multi_day_event = MultiDayEvent.create!(date: 1.week.ago, name: "Childless MultiDayEvent")
 
         expected_events = [ single_day_event, multi_day_event ] + multi_day_event_with_children.children

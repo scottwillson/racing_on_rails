@@ -70,7 +70,7 @@ module Competitions
 
     test "calc no source results" do
       competition = TestCompetition.find_or_create_for_year
-      competition.source_events << FactoryGirl.create(:event)
+      competition.source_events << FactoryBot.create(:event)
       TestCompetition.calculate!
     end
 
@@ -84,9 +84,9 @@ module Competitions
       competition = TestCompetition.find_or_create_for_year
       assert_equal(0, competition.source_events.count, 'Events')
 
-      competition.source_events << FactoryGirl.create(:event)
+      competition.source_events << FactoryBot.create(:event)
       assert_equal(1, competition.source_events.count, 'Events')
-      competition.source_events << FactoryGirl.create(:event)
+      competition.source_events << FactoryBot.create(:event)
       assert_equal(2, competition.source_events.count, 'Events')
     end
 
@@ -108,8 +108,8 @@ module Competitions
     test "partition_results" do
       competition = TestCompetition.find_or_create_for_year
       race = competition.races(true).first
-      result_1 = FactoryGirl.create(:result, race: race, event: competition)
-      result_2 = FactoryGirl.create(:result, race: race, event: competition)
+      result_1 = FactoryBot.create(:result, race: race, event: competition)
+      result_2 = FactoryBot.create(:result, race: race, event: competition)
 
       new_calculated_result = ::Struct::CalculatorResult.new
       new_calculated_result.participant_id = 9999

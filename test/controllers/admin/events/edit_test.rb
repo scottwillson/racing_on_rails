@@ -13,7 +13,7 @@ module Admin
       end
 
       test "edit" do
-        event = FactoryGirl.create(:event, velodrome: FactoryGirl.create(:velodrome))
+        event = FactoryBot.create(:event, velodrome: FactoryBot.create(:velodrome))
         get(:edit, id: event.to_param)
         assert_response(:success)
         assert_template("admin/events/edit")
@@ -37,7 +37,7 @@ module Admin
       end
 
       test "edit parent" do
-        event = FactoryGirl.create(:series)
+        event = FactoryBot.create(:series)
         get(:edit, id: event.to_param)
         assert_response(:success)
         assert_template("admin/events/edit")
@@ -46,7 +46,7 @@ module Admin
       end
 
       test "edit no results" do
-        event = FactoryGirl.create(:event)
+        event = FactoryBot.create(:event)
         get(:edit, id: event.to_param)
         assert_response(:success)
         assert_template("admin/events/edit")
@@ -55,7 +55,7 @@ module Admin
       end
 
       test "edit with promoter" do
-        event = FactoryGirl.create(:event)
+        event = FactoryBot.create(:event)
         get(:edit, id: event.to_param)
         assert_response(:success)
         assert_template("admin/events/edit")
@@ -64,7 +64,7 @@ module Admin
       end
 
       test "edit as promoter" do
-        event = FactoryGirl.create(:event)
+        event = FactoryBot.create(:event)
         login_as event.promoter
         get :edit, id: event.to_param
         assert_response :success
@@ -73,8 +73,8 @@ module Admin
       end
 
       test "promoter can only edit own events" do
-        event = FactoryGirl.create(:event)
-        event_2 = FactoryGirl.create(:event)
+        event = FactoryBot.create(:event)
+        event_2 = FactoryBot.create(:event)
 
         login_as event_2.promoter
         get :edit, id: event.to_param
@@ -82,8 +82,8 @@ module Admin
       end
 
       test "edit as editor" do
-        event = FactoryGirl.create(:event)
-        person = FactoryGirl.create(:person)
+        event = FactoryBot.create(:event)
+        person = FactoryBot.create(:person)
         event.editors << person
         login_as person
         get :edit, id: event.to_param
@@ -93,14 +93,14 @@ module Admin
       end
 
       test "edit child event" do
-        event = FactoryGirl.create(:series_event)
+        event = FactoryBot.create(:series_event)
         get(:edit, id: event.id)
         assert_response(:success)
       end
 
       test "edit combined results" do
-        event = FactoryGirl.create(:time_trial_event)
-        FactoryGirl.create(:result, event: event)
+        event = FactoryBot.create(:time_trial_event)
+        FactoryBot.create(:result, event: event)
         combined = CombinedTimeTrialResults.create!(parent: event)
         get(:edit, id: combined.id)
         assert_response(:success)

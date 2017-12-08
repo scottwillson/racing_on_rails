@@ -12,7 +12,7 @@ module Admin
     end
 
     test "destroy person alias" do
-      person = FactoryGirl.create(:person)
+      person = FactoryBot.create(:person)
       person_alias = person.aliases.create!(name: "Alias")
       delete :destroy, id: person_alias.to_param, person_id: person_alias.person.to_param, format: "js"
       assert_response :success
@@ -20,7 +20,7 @@ module Admin
     end
 
     test "destroy team alias" do
-      team = FactoryGirl.create(:team)
+      team = FactoryBot.create(:team)
       team_alias = team.aliases.create!(name: "Alias")
       delete :destroy, id: team_alias.to_param, team_id: team_alias.team.to_param, format: "js"
       assert_response :success

@@ -5,7 +5,7 @@ module Admin
   class HomeTest < AcceptanceTest
     test "edit" do
       visit "/"
-      login_as FactoryGirl.create(:administrator)
+      login_as FactoryBot.create(:administrator)
 
       visit "/photos/new"
       attach_file "photo_image", "#{Rails.root}/test/fixtures/photo.jpg"

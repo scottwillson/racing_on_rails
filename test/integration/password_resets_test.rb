@@ -3,7 +3,7 @@ require_relative "racing_on_rails/integration_test"
 # :stopdoc:
 class PasswordResetsTest < RacingOnRails::IntegrationTest
   test "shared email address" do
-    person = FactoryGirl.create(:person_with_login)
+    person = FactoryBot.create(:person_with_login)
 
     same_email = Person.create!(login: "jane.jones", email: "member@example.com")
     same_email.password = "wolfie"

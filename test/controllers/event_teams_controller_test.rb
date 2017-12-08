@@ -5,40 +5,40 @@ class EventTeamsControllerTest < ActionController::TestCase
   setup :use_ssl
 
   test "index" do
-    event_team_membership = FactoryGirl.create(:event_team_membership)
+    event_team_membership = FactoryBot.create(:event_team_membership)
     get :index, event_id: event_team_membership.event
     assert_response :success
   end
 
   test "index empty" do
-    event = FactoryGirl.create(:event)
+    event = FactoryBot.create(:event)
     get :index, event_id: event
     assert_response :success
   end
 
   test "index for admin" do
     login_as :administrator
-    event_team_membership = FactoryGirl.create(:event_team_membership)
+    event_team_membership = FactoryBot.create(:event_team_membership)
     get :index, event_id: event_team_membership.event
     assert_response :success
   end
 
   test "index for promoter" do
-    event_team_membership = FactoryGirl.create(:event_team_membership)
+    event_team_membership = FactoryBot.create(:event_team_membership)
     login_as event_team_membership.event.promoter
     get :index, event_id: event_team_membership.event
     assert_response :success
   end
 
   test "create requires current_person" do
-    event = FactoryGirl.create(:event)
+    event = FactoryBot.create(:event)
     post :create, event_id: event, team_attributes: { name: "Grant HS" }
     assert_redirected_to new_person_session_path
   end
 
   test "create" do
-    person = FactoryGirl.create(:person)
-    event = FactoryGirl.create(:event)
+    person = FactoryBot.create(:person)
+    event = FactoryBot.create(:event)
 
     assert_difference "EventTeamMembership.count" do
       login_as person

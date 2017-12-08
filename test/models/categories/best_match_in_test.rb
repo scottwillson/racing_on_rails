@@ -33,7 +33,7 @@ module Competitions
     end
 
     test "ability only" do
-      event = FactoryGirl.create(:event)
+      event = FactoryBot.create(:event)
       event.races.create!(category: @cat_1)
       event.races.create!(category: @cat_2)
       event.races.create!(category: @cat_3)
@@ -46,7 +46,7 @@ module Competitions
     end
 
     test "cyclocross categories" do
-      event = FactoryGirl.create(:event)
+      event = FactoryBot.create(:event)
       cat_2_3 = Category.find_or_create_by_normalized_name("Category 2/3")
       cat_5 = Category.find_or_create_by_normalized_name("Category 5")
 
@@ -62,7 +62,7 @@ module Competitions
     end
 
     test "ability + gender" do
-      event = FactoryGirl.create(:event)
+      event = FactoryBot.create(:event)
       event.races.create!(category: @cat_1)
       event.races.create!(category: @cat_2)
       event.races.create!(category: @cat_3)
@@ -76,7 +76,7 @@ module Competitions
     end
 
     test "ages" do
-      event = FactoryGirl.create(:event)
+      event = FactoryBot.create(:event)
       event.races.create!(category: @senior_men)
       event.races.create!(category: @senior_women)
       event.races.create!(category: @cat_3)
@@ -99,13 +99,13 @@ module Competitions
     end
 
     test "equipment" do
-      event = FactoryGirl.create(:event)
+      event = FactoryBot.create(:event)
       event.races.create!(category: @singlespeed)
       assert_best_match_in [ @singlespeed, @singlespeed_men, @singlespeed_women ], @singlespeed, event
     end
 
     test "equipment + gender" do
-      event = FactoryGirl.create(:event)
+      event = FactoryBot.create(:event)
       event.races.create!(category: @singlespeed_men)
       event.races.create!(category: @singlespeed_women)
 

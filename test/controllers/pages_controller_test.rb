@@ -84,6 +84,6 @@ class PagesControllerTest < ActionController::TestCase
   end
 
   def create_page
-    FactoryGirl.create(:page)
+    FactoryBot.create(:page)
   end
 end

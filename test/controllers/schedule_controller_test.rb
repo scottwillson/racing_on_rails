@@ -3,9 +3,9 @@ require "test_helper"
 # :stopdoc:
 class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   test "index" do
-    FactoryGirl.create(:discipline)
-    FactoryGirl.create(:mtb_discipline)
-    FactoryGirl.create(:number_issuer)
+    FactoryBot.create(:discipline)
+    FactoryBot.create(:mtb_discipline)
+    FactoryBot.create(:number_issuer)
 
     year = 2006
 
@@ -38,7 +38,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   end
 
   test "index only shows visible events" do
-    future_national_federation_event = FactoryGirl.create(:event, sanctioned_by: "USA Cycling")
+    future_national_federation_event = FactoryBot.create(:event, sanctioned_by: "USA Cycling")
 
     get :index
     html = @response.body
@@ -51,45 +51,45 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   end
 
   test "index rss" do
-    FactoryGirl.create(:event)
+    FactoryBot.create(:event)
     get :index, format: :rss
     assert_redirected_to schedule_path(format: :atom)
   end
 
   test "index atom" do
-    FactoryGirl.create(:event)
+    FactoryBot.create(:event)
     get :index, format: :atom
     assert_response :success
   end
 
   test "index excel" do
-    FactoryGirl.create(:event)
+    FactoryBot.create(:event)
     get :index, format: :xlsx
     assert_response :success
   end
 
   test "index excel discipline" do
-    FactoryGirl.create(:discipline)
-    FactoryGirl.create(:mtb_discipline)
+    FactoryBot.create(:discipline)
+    FactoryBot.create(:mtb_discipline)
 
-    FactoryGirl.create(:event, discipline: "Mountain Bike")
+    FactoryBot.create(:event, discipline: "Mountain Bike")
 
     get :index, discipline: "mtb", format: :xlsx
     assert_response :success
   end
 
   test "index excel discipline list" do
-    FactoryGirl.create(:discipline)
+    FactoryBot.create(:discipline)
 
-    FactoryGirl.create(:event, discipline: "Road")
+    FactoryBot.create(:event, discipline: "Road")
 
     get :list, discipline: "road", format: :xlsx
     assert_response :success
   end
 
   test "road index" do
-    FactoryGirl.create(:discipline)
-    FactoryGirl.create(:mtb_discipline)
+    FactoryBot.create(:discipline)
+    FactoryBot.create(:mtb_discipline)
     year = 2006
 
     SingleDayEvent.create!(
@@ -118,9 +118,9 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   end
 
   test "mtb index" do
-    FactoryGirl.create(:discipline)
-    FactoryGirl.create(:mtb_discipline)
-    FactoryGirl.create(:number_issuer)
+    FactoryBot.create(:discipline)
+    FactoryBot.create(:mtb_discipline)
+    FactoryBot.create(:number_issuer)
     year = 2006
 
     SingleDayEvent.create!(
@@ -150,9 +150,9 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
   test "filter by sanctioning organization" do
     Timecop.freeze(2010, 2) do
-      FactoryGirl.create(:event, sanctioned_by: "FIAC", name: "FIAC Event")
-      FactoryGirl.create(:event, sanctioned_by: "UCI", name: "UCI Event")
-      FactoryGirl.create(:event, sanctioned_by: "CBRA", name: "CBRA Event")
+      FactoryBot.create(:event, sanctioned_by: "FIAC", name: "FIAC Event")
+      FactoryBot.create(:event, sanctioned_by: "UCI", name: "UCI Event")
+      FactoryBot.create(:event, sanctioned_by: "CBRA", name: "CBRA Event")
       racing_association = RacingAssociation.current
       racing_association.filter_schedule_by_sanctioning_organization = true
       racing_association.show_only_association_sanctioned_races_on_calendar = false
@@ -168,9 +168,9 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
   test "filter by sanctioning organization with filter" do
     Timecop.freeze(2010, 2) do
-      FactoryGirl.create(:event, sanctioned_by: "FIAC", name: "FIAC Event")
-      FactoryGirl.create(:event, sanctioned_by: "UCI", name: "UCI Event")
-      FactoryGirl.create(:event, sanctioned_by: "CBRA", name: "CBRA Event")
+      FactoryBot.create(:event, sanctioned_by: "FIAC", name: "FIAC Event")
+      FactoryBot.create(:event, sanctioned_by: "UCI", name: "UCI Event")
+      FactoryBot.create(:event, sanctioned_by: "CBRA", name: "CBRA Event")
       racing_association = RacingAssociation.current
       racing_association.filter_schedule_by_sanctioning_organization = true
       racing_association.show_only_association_sanctioned_races_on_calendar = false
@@ -194,8 +194,8 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       oregon = Region.create! name: "Oregon"
       Region.create! name: "Northern California"
 
-      FactoryGirl.create(:event, region: wa, name: "WA Event")
-      FactoryGirl.create(:event, region: oregon, name: "OR Event")
+      FactoryBot.create(:event, region: wa, name: "WA Event")
+      FactoryBot.create(:event, region: oregon, name: "OR Event")
 
       get :index, region: "washington"
       html = @response.body
@@ -205,9 +205,9 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   end
 
   test "index with alias" do
-    FactoryGirl.create(:discipline)
-    FactoryGirl.create(:mtb_discipline)
-    FactoryGirl.create(:number_issuer)
+    FactoryBot.create(:discipline)
+    FactoryBot.create(:mtb_discipline)
+    FactoryBot.create(:number_issuer)
 
     year = 2006
 
@@ -242,8 +242,8 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   end
 
   test "mtb list" do
-    FactoryGirl.create(:discipline)
-    FactoryGirl.create(:mtb_discipline)
+    FactoryBot.create(:discipline)
+    FactoryBot.create(:mtb_discipline)
 
     year = 2006
 
@@ -273,8 +273,8 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   end
 
   test "list excel discipline" do
-    FactoryGirl.create(:discipline)
-    FactoryGirl.create(:event, discipline: "Road")
+    FactoryBot.create(:discipline)
+    FactoryBot.create(:event, discipline: "Road")
 
     get :list, discipline: "road", format: :xlsx
     assert_response :success
@@ -291,8 +291,8 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   end
 
   test "mtb index as json" do
-    FactoryGirl.create(:discipline)
-    FactoryGirl.create(:mtb_discipline)
+    FactoryBot.create(:discipline)
+    FactoryBot.create(:mtb_discipline)
     SingleDayEvent.create!(
       name: "Banana Belt I",
       city: "Hagg Lake",
@@ -319,8 +319,8 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   end
 
   test "mtb calendar as json" do
-    FactoryGirl.create(:discipline)
-    FactoryGirl.create(:mtb_discipline)
+    FactoryBot.create(:discipline)
+    FactoryBot.create(:mtb_discipline)
     SingleDayEvent.create!(
       name: "Banana Belt I",
       city: "Hagg Lake",

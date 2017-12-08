@@ -10,7 +10,7 @@ module Admin
     end
 
     test "index" do
-      FactoryGirl.create(:event, date: 3.days.from_now)
+      FactoryBot.create(:event, date: 3.days.from_now)
       get(:index)
       assert_response(:success)
       assert_template("admin/first_aid_providers/index")
@@ -22,7 +22,7 @@ module Admin
     end
 
     test "index as txt" do
-      FactoryGirl.create :event, date: 3.days.from_now
+      FactoryBot.create :event, date: 3.days.from_now
       get :index, format: "text"
       assert_response :success
     end
@@ -47,21 +47,21 @@ module Admin
     end
 
     test "non official" do
-      login_as FactoryGirl.create(:person)
+      login_as FactoryBot.create(:person)
       get :index
       assert_redirected_to new_person_session_url(secure_redirect_options)
       assert_select ".in_place_editable", 0, "Should be read-only for officials"
     end
 
     test "official" do
-      person = FactoryGirl.create(:person_with_login, official: true)
+      person = FactoryBot.create(:person_with_login, official: true)
       login_as person
       get :index
       assert_response :success
     end
 
     test "email" do
-      FactoryGirl.create(:event, date: 3.days.from_now)
+      FactoryBot.create(:event, date: 3.days.from_now)
       get :index, format: "text"
       assert_response :success
     end

@@ -30,7 +30,7 @@ class LoginTest < ActionController::TestCase
   test "create login with token" do
     ActionMailer::Base.deliveries.clear
 
-    person = FactoryGirl.create(:person)
+    person = FactoryBot.create(:person)
     person.reset_perishable_token!
     use_ssl
     post :create_login,
@@ -205,7 +205,7 @@ class LoginTest < ActionController::TestCase
   end
 
   test "new login with token" do
-    person = FactoryGirl.create(:person_with_login)
+    person = FactoryBot.create(:person_with_login)
     person.reset_perishable_token!
     use_ssl
     get :new_login, id: person.perishable_token
@@ -214,7 +214,7 @@ class LoginTest < ActionController::TestCase
   end
 
   test "new login with token logged in" do
-    person = FactoryGirl.create(:person)
+    person = FactoryBot.create(:person)
     person.reset_perishable_token!
     login_as person
     use_ssl
@@ -385,8 +385,8 @@ class LoginTest < ActionController::TestCase
   end
 
   test "create login with current race number and name" do
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline)
+    FactoryBot.create(:number_issuer)
+    FactoryBot.create(:discipline)
 
     ActionMailer::Base.deliveries.clear
     existing_person = Person.create!(license: "123", name: "Speed Racer", road_number: "9871")

@@ -18,7 +18,7 @@ module Admin
       end
 
       test "update child event" do
-        event = FactoryGirl.create(:event)
+        event = FactoryBot.create(:event)
 
         assert_not_equal('Banana Belt One', event.name, 'name')
         assert_not_equal(2, event.bar_points, 'bar_points')
@@ -38,7 +38,7 @@ module Admin
       end
 
       test "update nil disciplines" do
-        event = FactoryGirl.create(:series_event)
+        event = FactoryBot.create(:series_event)
         event.update(discipline: nil)
         assert_nil(event[:discipline], 'discipline')
         assert_equal('Road', event.parent.discipline, 'Parent event discipline')
@@ -55,8 +55,8 @@ module Admin
       end
 
       test "update discipline same as parent child events" do
-        FactoryGirl.create(:discipline)
-        event = FactoryGirl.create(:series_event)
+        FactoryBot.create(:discipline)
+        event = FactoryBot.create(:series_event)
         assert_equal('Road', event[:discipline], 'discipline')
         assert_equal('Road', event.discipline, 'Parent event discipline')
 
@@ -72,11 +72,11 @@ module Admin
       end
 
       test "update existing combined results" do
-        FactoryGirl.create(:discipline)
-        FactoryGirl.create(:discipline, name: "Mountain Bike")
-        FactoryGirl.create(:discipline, name: "Time Trial")
-        source_event = FactoryGirl.create(:time_trial_event)
-        FactoryGirl.create(:result, event: source_event)
+        FactoryBot.create(:discipline)
+        FactoryBot.create(:discipline, name: "Mountain Bike")
+        FactoryBot.create(:discipline, name: "Time Trial")
+        source_event = FactoryBot.create(:time_trial_event)
+        FactoryBot.create(:result, event: source_event)
         source_event.bar_points = 2
         source_event.save!
         event = CombinedTimeTrialResults.create!(parent: source_event)
@@ -93,8 +93,8 @@ module Admin
       end
 
       test "update event" do
-        event = FactoryGirl.create(:event)
-        brad_ross = FactoryGirl.create(:person, first_name: "Brad", last_name: "Ross")
+        event = FactoryBot.create(:event)
+        brad_ross = FactoryBot.create(:person, first_name: "Brad", last_name: "Ross")
 
         assert_not_equal('Banana Belt One', event.name, 'name')
         assert_not_equal('Forest Grove', event.city, 'city')
@@ -138,10 +138,10 @@ module Admin
       end
 
       test "update single day to multi day" do
-        number_issuer = FactoryGirl.create(:number_issuer)
-        FactoryGirl.create(:number_issuer, name: "Stage Race")
+        number_issuer = FactoryBot.create(:number_issuer)
+        FactoryBot.create(:number_issuer, name: "Stage Race")
         for type in [MultiDayEvent, Series, WeeklySeries]
-          event = FactoryGirl.create(:event)
+          event = FactoryBot.create(:event)
 
           post(:update,
                "commit" => "Save",
@@ -161,8 +161,8 @@ module Admin
       end
 
       test "update to event" do
-        FactoryGirl.create(:number_issuer)
-        number_issuer = FactoryGirl.create(:number_issuer, name: "Stage Race")
+        FactoryBot.create(:number_issuer)
+        number_issuer = FactoryBot.create(:number_issuer, name: "Stage Race")
 
         [ MultiDayEvent, Series, WeeklySeries, SingleDayEvent ].each do |type|
           event = type.create!
@@ -185,7 +185,7 @@ module Admin
       end
 
       test "update multi day to single day" do
-        event = FactoryGirl.create(:stage_race)
+        event = FactoryBot.create(:stage_race)
         original_attributes = event.attributes.clone
 
         post(:update,
@@ -217,7 +217,7 @@ module Admin
 
       # MultiDayEvent -> Series
       test "update multi day to series" do
-        event = FactoryGirl.create(:stage_race)
+        event = FactoryBot.create(:stage_race)
         original_attributes = event.attributes.clone
 
         put(:update,

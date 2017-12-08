@@ -10,17 +10,17 @@ module Admin
       create_administrator_session
       use_ssl
 
-      @cyclocross = FactoryGirl.create(:cyclocross_discipline)
-      FactoryGirl.create(:discipline, name: "Downhill")
-      @mountain_bike = FactoryGirl.create(:mtb_discipline)
-      @road = FactoryGirl.create(:discipline, name: "Road")
-      FactoryGirl.create(:discipline, name: "Singlespeed")
-      FactoryGirl.create(:discipline, name: "Track")
-      @association = FactoryGirl.create(:number_issuer)
+      @cyclocross = FactoryBot.create(:cyclocross_discipline)
+      FactoryBot.create(:discipline, name: "Downhill")
+      @mountain_bike = FactoryBot.create(:mtb_discipline)
+      @road = FactoryBot.create(:discipline, name: "Road")
+      FactoryBot.create(:discipline, name: "Singlespeed")
+      FactoryBot.create(:discipline, name: "Track")
+      @association = FactoryBot.create(:number_issuer)
     end
 
     test "toggle member" do
-      molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron")
+      molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
       assert_equal(true, molly.member, 'member before update')
       post(:toggle_member, id: molly.to_param)
       assert_response :success
@@ -41,7 +41,7 @@ module Admin
     end
 
     test "edit" do
-      alice = FactoryGirl.create(:person)
+      alice = FactoryBot.create(:person)
 
       get(:edit, id: alice.to_param)
       assert_response :success
@@ -49,7 +49,7 @@ module Admin
     end
 
     test "edit created by import file" do
-      alice = FactoryGirl.create(:person)
+      alice = FactoryBot.create(:person)
       alice.updated_by = ImportFile.create!(name: "some_very_long_import_file_name.xls")
       alice.save!
 
@@ -88,7 +88,7 @@ module Admin
 
     test "update new number" do
       Timecop.freeze(Date.new(2008, 6)) do
-        molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron", road_number: "202")
+        molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron", road_number: "202")
         assert_equal('202', molly.road_number(true, 2008), 'Road number')
         assert_equal('202', molly.road_number(true), 'Road number')
         molly_road_number = RaceNumber.last
@@ -138,10 +138,10 @@ module Admin
     end
 
     test "update" do
-      vanilla = FactoryGirl.create(:team)
-      molly = FactoryGirl.create(:person, first_name: "Molly", last_name: "Cameron", road_number: "2", team: vanilla)
+      vanilla = FactoryBot.create(:team)
+      molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron", road_number: "2", team: vanilla)
       Alias.create!(name: "Mollie Cameron", person: molly)
-      FactoryGirl.create :result, person: molly, team: vanilla
+      FactoryBot.create :result, person: molly, team: vanilla
       assert_equal 1, molly.versions.size, "versions"
       molly_road_number = RaceNumber.first
 
@@ -186,7 +186,7 @@ module Admin
     end
 
     test "update bad member from date" do
-      person = FactoryGirl.create(:person)
+      person = FactoryBot.create(:person)
       put(:update, "commit" => "Save", "person" => {
                    "member_from(1i)" => "","member_from(2i)" => "10", "member_from(3i)" => "19",
                    "member_to(3i)" => "31", "date_of_birth(2i)" => "1", "city" => "Hood River",
@@ -207,7 +207,7 @@ module Admin
     end
 
     test "one print card" do
-      tonkin = FactoryGirl.create(:person)
+      tonkin = FactoryBot.create(:person)
 
       get(:card, format: "pdf", id: tonkin.to_param)
 
@@ -230,7 +230,7 @@ module Admin
     end
 
     test "print cards" do
-      tonkin = FactoryGirl.create(:person)
+      tonkin = FactoryBot.create(:person)
       tonkin.print_card = true
       tonkin.ccx_category = "Clydesdale"
       tonkin.mtb_category = "Beginner"
@@ -268,8 +268,8 @@ module Admin
     end
 
     test "edit with event" do
-      kings_valley = FactoryGirl.create(:event)
-      promoter = FactoryGirl.create(:person)
+      kings_valley = FactoryBot.create(:event)
+      promoter = FactoryBot.create(:person)
       get(:edit, id: promoter.to_param, event_id: kings_valley.to_param.to_s)
       assert_equal(promoter, assigns['person'], "Should assign 'person'")
       assert_equal(kings_valley, assigns['event'], "Should Kings Valley assign 'event'")
@@ -277,7 +277,7 @@ module Admin
     end
 
     test "new with event" do
-      kings_valley = FactoryGirl.create(:event)
+      kings_valley = FactoryBot.create(:event)
       get(:new, event_id: kings_valley.to_param)
       assert_not_nil(assigns['person'], "Should assign 'person'")
       assert(assigns['person'].new_record?, 'Promoter should be new record')
@@ -286,8 +286,8 @@ module Admin
     end
 
     test "remember event id on update" do
-       promoter = FactoryGirl.create(:person)
-       jack_frost = FactoryGirl.create(:event)
+       promoter = FactoryBot.create(:person)
+       jack_frost = FactoryBot.create(:event)
 
       put(:update, id: promoter.id,
         "person" => {"home_phone" => "(510) 410-2201", "email" => "fred@whatley.net"},
@@ -302,7 +302,7 @@ module Admin
     end
 
     test "remember event id on create" do
-      jack_frost = FactoryGirl.create(:event)
+      jack_frost = FactoryBot.create(:event)
       post(
         :create,
         "person" => {"first_name" => "Fred", "last_name" => "Whatley", "home_phone" => "(510) 410-2201", "email" => "fred@whatley.net"},
@@ -317,7 +317,7 @@ module Admin
     end
 
     test "destroy" do
-      person = FactoryGirl.create(:person)
+      person = FactoryBot.create(:person)
       delete :destroy, id: person.id
       assert !Person.exists?(person.id)
       assert_redirected_to admin_people_path
@@ -325,7 +325,7 @@ module Admin
     end
 
     test "cannot destroy" do
-      result = FactoryGirl.create(:result)
+      result = FactoryBot.create(:result)
       person = result.person
       delete :destroy, id: person.id
       assert Person.exists?(person.id)

@@ -14,42 +14,42 @@ module Competitions
     test "calculate" do
       competition = OregonWomensPrestigeTeamSeries.create!
 
-      event_1 = FactoryGirl.create(:event)
+      event_1 = FactoryBot.create(:event)
       competition.source_events << event_1
       women_12 = Category.where(name: "Women 1/2").first_or_create
       race_event_1_women_12 = event_1.races.create!(category: women_12, bar_points: 0)
       women_4 = Category.where(name: "Women 4/5").first_or_create
       race_event_1_women_4 = event_1.races.create!(category: women_4)
-      race_event_1_senior_men = FactoryGirl.create(:race, event: event_1)
+      race_event_1_senior_men = FactoryBot.create(:race, event: event_1)
 
-      event_2 = FactoryGirl.create(:event)
+      event_2 = FactoryBot.create(:event)
       competition.source_events << event_2
       race_event_2_women_12 = event_2.races.create!(category: women_12)
       race_event_2_women_4 = event_2.races.create!(category: women_4)
 
-      team_1 = FactoryGirl.create(:team)
-      team_2 = FactoryGirl.create(:team)
-      team_3 = FactoryGirl.create(:team)
+      team_1 = FactoryBot.create(:team)
+      team_2 = FactoryBot.create(:team)
+      team_3 = FactoryBot.create(:team)
 
       # scoring results
-      FactoryGirl.create(:result, race: race_event_1_women_12, place: 1,   team: team_1)
-      FactoryGirl.create(:result, race: race_event_1_women_12, place: 2,   team: team_1)
-      FactoryGirl.create(:result, race: race_event_1_women_12, place: 9,   team: team_1)
-      FactoryGirl.create(:result, race: race_event_1_women_12, place: 6,   team: team_1)
-      FactoryGirl.create(:result, race: race_event_1_women_4,  place: 3,   team: team_1)
-      FactoryGirl.create(:result, race: race_event_2_women_12, place: 13,  team: team_2)
-      FactoryGirl.create(:result, race: race_event_2_women_12, place: 14,  team: team_2)
-      FactoryGirl.create(:result, race: race_event_2_women_12, place: 15,  team: team_3)
-      FactoryGirl.create(:result, race: race_event_2_women_12, place: 5,   team: team_1)
+      FactoryBot.create(:result, race: race_event_1_women_12, place: 1,   team: team_1)
+      FactoryBot.create(:result, race: race_event_1_women_12, place: 2,   team: team_1)
+      FactoryBot.create(:result, race: race_event_1_women_12, place: 9,   team: team_1)
+      FactoryBot.create(:result, race: race_event_1_women_12, place: 6,   team: team_1)
+      FactoryBot.create(:result, race: race_event_1_women_4,  place: 3,   team: team_1)
+      FactoryBot.create(:result, race: race_event_2_women_12, place: 13,  team: team_2)
+      FactoryBot.create(:result, race: race_event_2_women_12, place: 14,  team: team_2)
+      FactoryBot.create(:result, race: race_event_2_women_12, place: 15,  team: team_3)
+      FactoryBot.create(:result, race: race_event_2_women_12, place: 5,   team: team_1)
 
       # Too low a place to score
-      FactoryGirl.create(:result, race: race_event_2_women_4, place: 16, team: team_1)
+      FactoryBot.create(:result, race: race_event_2_women_4, place: 16, team: team_1)
 
       # Not a series category
-      FactoryGirl.create(:result, race: race_event_1_senior_men, place: 4, team: team_2)
+      FactoryBot.create(:result, race: race_event_1_senior_men, place: 4, team: team_2)
 
       # Not a series event
-      FactoryGirl.create(:result, place: 2, team: team_3)
+      FactoryBot.create(:result, place: 2, team: team_3)
 
       OregonWomensPrestigeTeamSeries.calculate!
 
@@ -60,24 +60,24 @@ module Competitions
     test "only count best team TTT result" do
       competition = OregonWomensPrestigeTeamSeries.create!
 
-      event_1 = FactoryGirl.create(:event)
+      event_1 = FactoryBot.create(:event)
       competition.source_events << event_1
       women_12 = Category.where(name: "Women 1/2").first_or_create
       race_event_1_women_12 = event_1.races.create!(category: women_12)
 
-      team_1 = FactoryGirl.create(:team)
-      team_2 = FactoryGirl.create(:team)
-      FactoryGirl.create(:team)
+      team_1 = FactoryBot.create(:team)
+      team_2 = FactoryBot.create(:team)
+      FactoryBot.create(:team)
 
-      FactoryGirl.create(:result, race: race_event_1_women_12, place: 1, team: team_1)
-      FactoryGirl.create(:result, race: race_event_1_women_12, place: 1, team: team_1)
-      FactoryGirl.create(:result, race: race_event_1_women_12, place: 1, team: team_1)
-      FactoryGirl.create(:result, race: race_event_1_women_12, place: 1, team: team_1)
-      FactoryGirl.create(:result, race: race_event_1_women_12, place: 2, team: team_2)
-      FactoryGirl.create(:result, race: race_event_1_women_12, place: 2, team: team_2)
-      FactoryGirl.create(:result, race: race_event_1_women_12, place: 3, team: team_1)
-      FactoryGirl.create(:result, race: race_event_1_women_12, place: 3, team: team_1)
-      FactoryGirl.create(:result, race: race_event_1_women_12, place: 3, team: team_1)
+      FactoryBot.create(:result, race: race_event_1_women_12, place: 1, team: team_1)
+      FactoryBot.create(:result, race: race_event_1_women_12, place: 1, team: team_1)
+      FactoryBot.create(:result, race: race_event_1_women_12, place: 1, team: team_1)
+      FactoryBot.create(:result, race: race_event_1_women_12, place: 1, team: team_1)
+      FactoryBot.create(:result, race: race_event_1_women_12, place: 2, team: team_2)
+      FactoryBot.create(:result, race: race_event_1_women_12, place: 2, team: team_2)
+      FactoryBot.create(:result, race: race_event_1_women_12, place: 3, team: team_1)
+      FactoryBot.create(:result, race: race_event_1_women_12, place: 3, team: team_1)
+      FactoryBot.create(:result, race: race_event_1_women_12, place: 3, team: team_1)
       OregonWomensPrestigeTeamSeries.calculate!
 
       race = competition.races.find { |r| r.category.name == "Team" }

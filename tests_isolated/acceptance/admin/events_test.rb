@@ -7,14 +7,14 @@ class EventsTest < AcceptanceTest
   test "events" do
     javascript!
 
-    candi = FactoryGirl.create(:person, name: "Candi Murray", home_phone: "(503) 555-1212", email: "admin@example.com")
-    gl = FactoryGirl.create(:team, name: "Gentle Lovers")
-    kings_valley = FactoryGirl.create(:event, name: "Kings Valley Road Race", date: "2003-12-31")
-    race_1 = kings_valley.races.create!(category: FactoryGirl.create(:category, name: "Senior Men Pro/1/2"))
-    kings_valley.races.create!(category: FactoryGirl.create(:category, name: "Senior Men 3"))
+    candi = FactoryBot.create(:person, name: "Candi Murray", home_phone: "(503) 555-1212", email: "admin@example.com")
+    gl = FactoryBot.create(:team, name: "Gentle Lovers")
+    kings_valley = FactoryBot.create(:event, name: "Kings Valley Road Race", date: "2003-12-31")
+    race_1 = kings_valley.races.create!(category: FactoryBot.create(:category, name: "Senior Men Pro/1/2"))
+    kings_valley.races.create!(category: FactoryBot.create(:category, name: "Senior Men 3"))
 
     visit "/"
-    login_as FactoryGirl.create(:administrator)
+    login_as FactoryBot.create(:administrator)
 
     click_link "New Event"
 

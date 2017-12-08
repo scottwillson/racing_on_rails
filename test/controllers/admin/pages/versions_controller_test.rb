@@ -11,7 +11,7 @@ module Admin
       end
 
       test "Edit page version" do
-        page = FactoryGirl.create(:page)
+        page = FactoryBot.create(:page)
         page.update title: "New Title"
         version = page.versions.last
         get(:edit, id: version.to_param)

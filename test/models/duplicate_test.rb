@@ -3,8 +3,8 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class DuplicateTest < ActiveSupport::TestCase
   test "create" do
-    tonkin = FactoryGirl.create(:person)
-    alice = FactoryGirl.create(:person)
+    tonkin = FactoryBot.create(:person)
+    alice = FactoryBot.create(:person)
 
     new_person = {first_name: 'Magnus', last_name: 'Tonkin'}
     Duplicate.create!(new_attributes: new_person, people: [ tonkin, alice ])

@@ -6,8 +6,8 @@ module Competitions
   # :stopdoc:
   class PortlandShortTrackSeriesTest < ActiveSupport::TestCase
     test "calculate" do
-      weekly_series = FactoryGirl.create(:weekly_series, name: "Portland Short Track Series")
-      event = FactoryGirl.create(:event, parent: weekly_series)
+      weekly_series = FactoryBot.create(:weekly_series, name: "Portland Short Track Series")
+      event = FactoryBot.create(:event, parent: weekly_series)
       event.races.create!(category: Category.create!(name: "Elite Men")).results.create!(place: 1, person: Person.new, age: 30)
 
       PortlandShortTrackSeries::Overall.calculate!
@@ -15,13 +15,13 @@ module Competitions
     end
 
     test "calculate upgrades" do
-      weekly_series = FactoryGirl.create(:weekly_series, name: "Portland Short Track Series")
+      weekly_series = FactoryBot.create(:weekly_series, name: "Portland Short Track Series")
 
-      person = FactoryGirl.create(:person)
-      event = FactoryGirl.create(:event, parent: weekly_series)
+      person = FactoryBot.create(:person)
+      event = FactoryBot.create(:event, parent: weekly_series)
       event.races.create!(category: Category.create!(name: "Category 2 Women U45")).results.create!(place: 1, person: person)
 
-      event = FactoryGirl.create(:event, parent: weekly_series)
+      event = FactoryBot.create(:event, parent: weekly_series)
       event.races.create!(category: Category.create!(name: "Elite/Category 1 Women")).results.create!(place: 13, person: person)
 
       PortlandShortTrackSeries::Overall.calculate!

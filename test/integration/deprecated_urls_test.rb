@@ -4,7 +4,7 @@ require_relative "racing_on_rails/integration_test"
 # Replacements for deprecated URLs.
 class DeprecatedURLsTest < RacingOnRails::IntegrationTest
   test "event results" do
-    event = FactoryGirl.create(:event)
+    event = FactoryBot.create(:event)
 
     get "/events/#{event.id}/results"
     assert_response :success
@@ -16,7 +16,7 @@ class DeprecatedURLsTest < RacingOnRails::IntegrationTest
   end
 
   test "team results" do
-    team = FactoryGirl.create(:team)
+    team = FactoryBot.create(:team)
 
     get "/teams/#{team.id}/results"
     assert_response :success

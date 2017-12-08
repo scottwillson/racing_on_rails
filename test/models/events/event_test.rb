@@ -3,7 +3,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 # :stopdoc:
 class EventTest < ActiveSupport::TestCase
   test "validate discipline" do
-    FactoryGirl.create(:discipline, name: "Road")
+    FactoryBot.create(:discipline, name: "Road")
     event = Event.new(discipline: "Foo")
     assert !event.valid?, "Event with bogus Discipline should not be valid"
     assert event.errors[:discipline]
@@ -27,47 +27,47 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "set promoter by name no id" do
-    promoter = FactoryGirl.create(:person, name: "Brad Ross")
+    promoter = FactoryBot.create(:person, name: "Brad Ross")
     event = SingleDayEvent.create!(promoter_name: "Brad Ross")
     assert_equal promoter, event.promoter, "Should set promoter from name, even without promoter_id"
   end
 
   test "set promoter by name with id" do
-    promoter = FactoryGirl.create(:person, name: "Brad Ross")
+    promoter = FactoryBot.create(:person, name: "Brad Ross")
     event = SingleDayEvent.create!(promoter_name: "Brad Ross", promoter_id: promoter.id)
     assert_equal promoter, event.promoter, "Should set promoter from name and/or promoter_id"
   end
 
   test "set promoter by name and ignore bogus id" do
-    promoter = FactoryGirl.create(:person, name: "Brad Ross")
+    promoter = FactoryBot.create(:person, name: "Brad Ross")
     event = SingleDayEvent.create!(promoter_name: "Brad Ross", promoter_id: "1281928")
     assert_equal promoter, event.promoter, "Should set promoter from name and ignore bogus promoter_id"
   end
 
   test "set promoter by name and ignore wrong id" do
-    promoter = FactoryGirl.create(:person, name: "Brad Ross")
-    person = FactoryGirl.create(:person)
+    promoter = FactoryBot.create(:person, name: "Brad Ross")
+    person = FactoryBot.create(:person)
 
     event = SingleDayEvent.create!(promoter_name: "Brad Ross", promoter_id: person.id)
     assert_equal promoter, event.promoter, "Should set promoter from name, even another person's promoter_id"
   end
 
   test "choose promoter by id with multiple same names" do
-    FactoryGirl.create(:person, name: "Brad Ross")
+    FactoryBot.create(:person, name: "Brad Ross")
     brad_ross_2 = Person.create!(name: "Brad Ross")
     event = SingleDayEvent.create!(promoter_name: "Brad Ross", promoter_id: brad_ross_2.id)
     assert_equal brad_ross_2, event.promoter, "Should use promoter_id to choose between duplicates"
   end
 
   test "non unique promoter wrong id" do
-    promoter = FactoryGirl.create(:person, name: "Brad Ross")
+    promoter = FactoryBot.create(:person, name: "Brad Ross")
     brad_ross_2 = Person.create!(name: "Brad Ross")
     event = SingleDayEvent.create!(promoter_name: "Brad Ross", promoter_id: "12378129")
     assert [promoter, brad_ross_2].include?(event.promoter), "Should choose a Person from duplicates, even without a matching promoter_id"
   end
 
   test "new promoter wrong id" do
-    event = SingleDayEvent.create!(promoter_name: "Marie Le Blanc", promoter_id: FactoryGirl.create(:person).id)
+    event = SingleDayEvent.create!(promoter_name: "Marie Le Blanc", promoter_id: FactoryBot.create(:person).id)
     new_promoter = Person.find_by_name("Marie Le Blanc")
     assert_not_nil new_promoter, "Should create new promoter"
     assert_equal new_promoter, event.promoter, "Should use create new promoter and ignore bad promoter_id"
@@ -81,46 +81,46 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "set promoter by alias" do
-    promoter = FactoryGirl.create(:person, name: "Molly Cameron")
+    promoter = FactoryBot.create(:person, name: "Molly Cameron")
     promoter.aliases.create(name: "Mollie Cameron")
     event = SingleDayEvent.create!(promoter_name: "Mollie Cameron")
     assert_equal promoter, event.promoter, "Should set promoter from alias"
   end
 
   test "remove promoter" do
-    FactoryGirl.create(:person, name: "Mollie Cameron")
+    FactoryBot.create(:person, name: "Mollie Cameron")
     event = SingleDayEvent.create!(promoter_name: "Mollie Cameron")
     event.update(promoter_name: "")
     assert_nil event.promoter, "Blank promoter name should remove promoter"
   end
 
   test "set team by name no id" do
-    team = FactoryGirl.create(:team, name: "Vanilla")
+    team = FactoryBot.create(:team, name: "Vanilla")
     event = SingleDayEvent.create!(team_name: "Vanilla")
     assert_equal team, event.team, "Should set team from name, even without team_id"
   end
 
   test "set team by name with id" do
-    team = FactoryGirl.create(:team, name: "Vanilla")
+    team = FactoryBot.create(:team, name: "Vanilla")
     event = SingleDayEvent.create!(team_name: "Vanilla", team_id: team.id)
     assert_equal team, event.team, "Should set team from name and/or team_id"
   end
 
   test "set team by name and ignore bogus id" do
-    team = FactoryGirl.create(:team, name: "Vanilla")
+    team = FactoryBot.create(:team, name: "Vanilla")
     event = SingleDayEvent.create!(team_name: "Vanilla", team_id: "1281928")
     assert_equal team, event.team, "Should set team from name and ignore bogus team_id"
   end
 
   test "set team by name and ignore wrong id" do
-    team = FactoryGirl.create(:team, name: "Vanilla")
-    another_team = FactoryGirl.create(:team)
+    team = FactoryBot.create(:team, name: "Vanilla")
+    another_team = FactoryBot.create(:team)
     event = SingleDayEvent.create!(team_name: "Vanilla", team_id: another_team.id)
     assert_equal team, event.team, "Should set team from name, even another person's team_id"
   end
 
   test "new team wrong id" do
-    team = FactoryGirl.create(:team, name: "Vanilla")
+    team = FactoryBot.create(:team, name: "Vanilla")
     event = SingleDayEvent.create!(team_name: "Katusha", team_id: team.id)
     new_team = Team.find_by_name("Katusha")
     assert_not_nil new_team, "Should create new team"
@@ -135,7 +135,7 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "set team by alias" do
-    team = FactoryGirl.create(:team, name: "Vanilla")
+    team = FactoryBot.create(:team, name: "Vanilla")
     team.aliases.create!(name: "Vanilla Bicycles")
     event = SingleDayEvent.create!(team_name: "Vanilla Bicycles")
     assert_equal team, event.team, "Should set team from alias"
@@ -154,10 +154,10 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "destroy races" do
-    kings_valley = FactoryGirl.create(:event)
-    kings_valley.races.create!(category: FactoryGirl.create(:category))
-    kings_valley.races.create!(category: FactoryGirl.create(:category))
-    kings_valley.races.create!(category: FactoryGirl.create(:category))
+    kings_valley = FactoryBot.create(:event)
+    kings_valley.races.create!(category: FactoryBot.create(:category))
+    kings_valley.races.create!(category: FactoryBot.create(:category))
+    kings_valley.races.create!(category: FactoryBot.create(:category))
 
     assert(!kings_valley.races.empty?, "Should have races")
     kings_valley.destroy_races
@@ -165,7 +165,7 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "no delete with results" do
-    event = FactoryGirl.create(:result).event
+    event = FactoryBot.create(:result).event
     event = Event.find(event.id)
     assert(!event.destroy, 'Should not be destroyed')
     assert(!event.errors.empty?, 'Should have errors')
@@ -177,7 +177,7 @@ class EventTest < ActiveSupport::TestCase
     assert(!event.multi_day_event_children_with_no_parent?)
     assert(event.multi_day_event_children_with_no_parent.empty?)
 
-    event = FactoryGirl.create(:event)
+    event = FactoryBot.create(:event)
     assert(!event.multi_day_event_children_with_no_parent?)
     assert(event.multi_day_event_children_with_no_parent.empty?)
 
@@ -186,7 +186,7 @@ class EventTest < ActiveSupport::TestCase
     assert(!(event.multi_day_event_children_with_no_parent?))
     assert(event.multi_day_event_children_with_no_parent.empty?)
 
-    series = FactoryGirl.create(:series)
+    series = FactoryBot.create(:series)
     3.times { series.children.create! }
     assert(!series.multi_day_event_children_with_no_parent?)
     assert(!series.children[0].multi_day_event_children_with_no_parent?)
@@ -213,7 +213,7 @@ class EventTest < ActiveSupport::TestCase
     assert(!(pir_2.multi_day_event_children_with_no_parent.empty?))
     assert(!(pir_3.multi_day_event_children_with_no_parent.empty?))
 
-    mt_hood = FactoryGirl.create(:stage_race, name: "Mt. Hood Classic")
+    mt_hood = FactoryBot.create(:stage_race, name: "Mt. Hood Classic")
     assert(!mt_hood.multi_day_event_children_with_no_parent?)
     assert(!mt_hood.children[0].multi_day_event_children_with_no_parent?)
     assert(!mt_hood.children[1].multi_day_event_children_with_no_parent?)
@@ -235,7 +235,7 @@ class EventTest < ActiveSupport::TestCase
     event = MultiDayEvent.create!(name: 'PIR')
     assert_orphans(2, event)
 
-    banana_belt_series = FactoryGirl.create(:series)
+    banana_belt_series = FactoryBot.create(:series)
     banana_belt_series.children.create!
     assert_no_orphans(banana_belt_series)
     assert_no_orphans(banana_belt_series.children.first)
@@ -246,7 +246,7 @@ class EventTest < ActiveSupport::TestCase
     assert_no_orphans(pir_1)
     assert_no_orphans(pir_2)
 
-    stage_race = FactoryGirl.create(:multi_day_event)
+    stage_race = FactoryBot.create(:multi_day_event)
     stage_1 = stage_race.children.create!
     stage_2 = stage_race.children.create!
     assert_no_orphans(stage_race)
@@ -263,7 +263,7 @@ class EventTest < ActiveSupport::TestCase
 
   test "inspect" do
     event = SingleDayEvent.create!
-    event.races.create!(category: FactoryGirl.create(:category)).results.create!(place: 1)
+    event.races.create!(category: FactoryBot.create(:category)).results.create!(place: 1)
     event.inspect
   end
 
@@ -303,7 +303,7 @@ class EventTest < ActiveSupport::TestCase
 
     Timecop.freeze(1.day.ago) do
       updated_at = event.updated_at
-      event.races.create!(category: FactoryGirl.create(:category))
+      event.races.create!(category: FactoryBot.create(:category))
       event.reload
       assert event.updated_at > updated_at, "Updated at should change after adding a race"
     end
@@ -340,11 +340,11 @@ class EventTest < ActiveSupport::TestCase
     event = SingleDayEvent.create!
     assert_equal [], event.categories, "categories for event with no races"
 
-    category_1 = FactoryGirl.create(:category)
+    category_1 = FactoryBot.create(:category)
     event.races.create!(category: category_1)
     assert_same_elements [ category_1 ], event.categories, "categories for event with one race"
 
-    category_2 = FactoryGirl.create(:category)
+    category_2 = FactoryBot.create(:category)
     event.races.create!(category: category_2)
     assert_same_elements [ category_1, category_2 ], event.categories, "categories for event with two races"
   end
@@ -354,13 +354,13 @@ class EventTest < ActiveSupport::TestCase
     assert_equal [], parent.categories, "categories for event with no races"
 
     event = parent.children.create!(name: "child")
-    category_1 = FactoryGirl.create(:category)
+    category_1 = FactoryBot.create(:category)
     event.races.create!(category: category_1)
     assert_same_elements [ category_1 ], parent.categories, "categories from child"
 
-    category_2 = FactoryGirl.create(:category)
-    category_3 = FactoryGirl.create(:category)
-    category_4 = FactoryGirl.create(:category)
+    category_2 = FactoryBot.create(:category)
+    category_3 = FactoryBot.create(:category)
+    category_4 = FactoryBot.create(:category)
     event.races.create!(category: category_2)
     parent.races.create!(category: category_3)
     parent.races.create!(category: category_4)
@@ -372,7 +372,7 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "propagate races" do
-    FactoryGirl.create(:event).propagate_races
+    FactoryBot.create(:event).propagate_races
   end
 
   test "email bang" do
@@ -393,7 +393,7 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "attributes_for_duplication" do
-    attributes = FactoryGirl.create(:event).attributes_for_duplication
+    attributes = FactoryBot.create(:event).attributes_for_duplication
     assert !attributes.include?("id"), "attributes_for_duplication should not include id"
     assert !attributes.include?("updated_at"), "attributes_for_duplication should not include updated_at"
     assert attributes.include?("name"), "attributes_for_duplication should include name"

@@ -3,11 +3,11 @@ require_relative "racing_on_rails/integration_test"
 # :stopdoc:
 class PublicPagesIntegrationTest < RacingOnRails::IntegrationTest
   test "results pages" do
-    FactoryGirl.create(:discipline)
-    team = FactoryGirl.create(:team)
-    person = FactoryGirl.create(:person, team: team)
-    event = FactoryGirl.create(:event, date: Date.new(2004, 2))
-    senior_men = FactoryGirl.create(:category)
+    FactoryBot.create(:discipline)
+    team = FactoryBot.create(:team)
+    person = FactoryBot.create(:person, team: team)
+    event = FactoryBot.create(:event, date: Date.new(2004, 2))
+    senior_men = FactoryBot.create(:category)
     race = event.races.create!(category: senior_men)
     result = race.results.create(place: "1", person: person, team: team)
 
@@ -29,8 +29,8 @@ class PublicPagesIntegrationTest < RacingOnRails::IntegrationTest
   end
 
   test "competitions" do
-    FactoryGirl.create(:category, name: "Men Cat 1-2")
-    FactoryGirl.create(:category, name: "Women Cat 1-2")
+    FactoryBot.create(:category, name: "Men Cat 1-2")
+    FactoryBot.create(:category, name: "Women Cat 1-2")
     wsba = Competitions::WsbaBarr.create!(date: Date.new(2004))
 
     get "/wsba_barr/2004"

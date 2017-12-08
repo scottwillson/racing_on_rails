@@ -5,18 +5,18 @@ module Events
   class DatesTest < ActiveSupport::TestCase
     test "find years" do
       Timecop.freeze(Date.new(2012)) do
-        FactoryGirl.create(:event, date: Date.new(2007))
-        FactoryGirl.create(:event, date: Date.new(2008))
-        FactoryGirl.create(:event, date: Date.new(2009))
+        FactoryBot.create(:event, date: Date.new(2007))
+        FactoryBot.create(:event, date: Date.new(2008))
+        FactoryBot.create(:event, date: Date.new(2009))
         years = Event.find_all_years
         assert_equal_enumerables [ 2012, 2011, 2010, 2009, 2008, 2007 ], years, "Should find all years with events"
       end
     end
 
     test "today and future" do
-      past_event = FactoryGirl.create(:event, date: 1.day.ago.to_date)
-      today_event = FactoryGirl.create(:event)
-      future_event = FactoryGirl.create(:event, date: 1.day.from_now.to_date)
+      past_event = FactoryBot.create(:event, date: 1.day.ago.to_date)
+      today_event = FactoryBot.create(:event)
+      future_event = FactoryBot.create(:event, date: 1.day.from_now.to_date)
       # Start in past but end in future
       multi_day_event = Series.create!
       multi_day_event.children.create!(date: 1.day.ago.to_date)

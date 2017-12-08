@@ -4,7 +4,7 @@ class PhotosControllerTest < ActionController::TestCase
   setup :use_ssl
 
   test "index" do
-    FactoryGirl.create(:photo)
+    FactoryBot.create(:photo)
     login_as :administrator
     get :index
     assert_response :success
@@ -17,7 +17,7 @@ class PhotosControllerTest < ActionController::TestCase
   end
 
   test "edit" do
-    photo = FactoryGirl.create(:photo)
+    photo = FactoryBot.create(:photo)
     login_as :administrator
     get :edit, id: photo.id
     assert_response :success
@@ -38,7 +38,7 @@ class PhotosControllerTest < ActionController::TestCase
   end
 
   test "edit should require administrator" do
-    photo = FactoryGirl.create(:photo)
+    photo = FactoryBot.create(:photo)
     get :edit, id: photo.id
     assert_redirected_to new_person_session_path
   end
@@ -58,7 +58,7 @@ class PhotosControllerTest < ActionController::TestCase
   end
 
   test "update should require administrator" do
-    photo = FactoryGirl.create(:photo)
+    photo = FactoryBot.create(:photo)
     put :update, id: photo.id, photo: { caption: "New Caption" }
     assert_redirected_to new_person_session_path
   end

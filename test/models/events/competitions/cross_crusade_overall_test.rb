@@ -17,16 +17,16 @@ module Competitions
 
       men_1_2 = Category.create!(name: "Men 1/2")
       men_1_2_race = event.races.create!(category: men_1_2)
-      weaver = FactoryGirl.create(:person)
+      weaver = FactoryBot.create(:person)
       men_1_2_race.results.create!(place: 1, person: weaver)
-      tonkin = FactoryGirl.create(:person)
+      tonkin = FactoryBot.create(:person)
       men_1_2_race.results.create!(place: 9, person: tonkin)
 
       masters_35_plus_women = Category.find_or_create_by(name: "Masters Women 35+ 1/2")
       masters_race = event.races.create!(category: masters_35_plus_women)
-      alice = FactoryGirl.create(:person)
+      alice = FactoryBot.create(:person)
       masters_race.results.create!(place: 15, person: alice)
-      molly = FactoryGirl.create(:person)
+      molly = FactoryBot.create(:person)
       masters_race.results.create!(place: 19, person: molly)
 
       # Previous year should be ignored

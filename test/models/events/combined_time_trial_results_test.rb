@@ -3,7 +3,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 # :stopdoc:
 class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
   test "create" do
-    combined_results = CombinedTimeTrialResults.create_combined_results(FactoryGirl.create(:time_trial_event))
+    combined_results = CombinedTimeTrialResults.create_combined_results(FactoryBot.create(:time_trial_event))
     assert_equal('Combined', combined_results.name, 'name')
     assert_equal(false, combined_results.ironman, 'Ironman')
     assert_equal(0, combined_results.bar_points, 'bar points')
@@ -11,23 +11,23 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
   end
 
   test "combined tt" do
-    event = FactoryGirl.create(:time_trial_event)
-    race_1 = FactoryGirl.create(:race, event: event)
-    race_2 = FactoryGirl.create(:race, event: event)
-    race_3 = FactoryGirl.create(:race, event: event)
-    result_1 = FactoryGirl.create(:result, race: race_1, place: "1", time: "1800")
-    result_2 = FactoryGirl.create(:result, race: race_1, place: "2", time: "2112")
-    result_3 = FactoryGirl.create(:result, race: race_2, place: "9", time: "1801")
+    event = FactoryBot.create(:time_trial_event)
+    race_1 = FactoryBot.create(:race, event: event)
+    race_2 = FactoryBot.create(:race, event: event)
+    race_3 = FactoryBot.create(:race, event: event)
+    result_1 = FactoryBot.create(:result, race: race_1, place: "1", time: "1800")
+    result_2 = FactoryBot.create(:result, race: race_1, place: "2", time: "2112")
+    result_3 = FactoryBot.create(:result, race: race_2, place: "9", time: "1801")
     # Dupe result in different category should be ignored
-    FactoryGirl.create(:result, race: race_3, place: "4", time: "1801", person: result_3.person)
+    FactoryBot.create(:result, race: race_3, place: "4", time: "1801", person: result_3.person)
 
     # Results with no time should not be included
-    FactoryGirl.create(:result, race: race_2, place: "10")
+    FactoryBot.create(:result, race: race_2, place: "10")
 
     # Only include finishers
-    FactoryGirl.create(:result, race: race_1, place: "DNF")
-    FactoryGirl.create(:result, race: race_1, place: "DNF", time: 0)
-    FactoryGirl.create(:result, race: race_1, place: "DQ", time: 12)
+    FactoryBot.create(:result, race: race_1, place: "DNF")
+    FactoryBot.create(:result, race: race_1, place: "DNF", time: 0)
+    FactoryBot.create(:result, race: race_1, place: "DQ", time: 12)
 
     CombinedTimeTrialResults.calculate!
     combined_results = event.combined_results(true)
@@ -56,10 +56,10 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
 
   test "destroy" do
     series = Series.create!(discipline: "Time Trial")
-    FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: series), place: "1", time: 1000)
+    FactoryBot.create(:result, race: FactoryBot.create(:race, event: series), place: "1", time: 1000)
 
     event = series.children.create!
-    FactoryGirl.create(:result, race: FactoryGirl.create(:race, event: event), place: "1", time: 500)
+    FactoryBot.create(:result, race: FactoryBot.create(:race, event: event), place: "1", time: 500)
 
     CombinedTimeTrialResults.calculate!
 
@@ -74,9 +74,9 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
   end
 
   test "should not calculate combined results for combined results" do
-    event = FactoryGirl.create(:time_trial_event)
-    race = FactoryGirl.create(:race, event: event)
-    FactoryGirl.create(:result, race: race, place: "1", time: 1800)
+    event = FactoryBot.create(:time_trial_event)
+    race = FactoryBot.create(:race, event: event)
+    FactoryBot.create(:result, race: race, place: "1", time: 1800)
 
     CombinedTimeTrialResults.calculate!
 
@@ -101,20 +101,20 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     tt_result_2 = nil
 
     travel_to 1.day.ago do
-      tt_result_1 = FactoryGirl.create(:time_trial_result)
+      tt_result_1 = FactoryBot.create(:time_trial_result)
 
       # Create TT result + combined results, then remove result
       # Should destroy
-      result = FactoryGirl.create(:time_trial_result)
+      result = FactoryBot.create(:time_trial_result)
       tt_with_no_results = result.event
       CombinedTimeTrialResults.calculate!
       assert_equal 2, CombinedTimeTrialResults.count, "CombinedTimeTrialResults"
       result.destroy!
 
-      tt_result_2 = FactoryGirl.create(:time_trial_result)
-      FactoryGirl.create(:result)
-      FactoryGirl.create(:event)
-      FactoryGirl.create(:event, discipline: "Time Trial")
+      tt_result_2 = FactoryBot.create(:time_trial_result)
+      FactoryBot.create(:result)
+      FactoryBot.create(:event)
+      FactoryBot.create(:event, discipline: "Time Trial")
 
       CombinedTimeTrialResults.calculate!
       assert_equal 2, CombinedTimeTrialResults.count, "CombinedTimeTrialResults"
@@ -138,14 +138,14 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
   end
 
   test "requires_combined_results_events" do
-    tt = FactoryGirl.create(:time_trial_result).event
+    tt = FactoryBot.create(:time_trial_result).event
 
-    FactoryGirl.create(:result)
+    FactoryBot.create(:result)
 
-    event = FactoryGirl.create(:time_trial_result).event
+    event = FactoryBot.create(:time_trial_result).event
     event.update_attributes auto_combined_results: false
 
-    FactoryGirl.create(:event, discipline: "Time Trial")
+    FactoryBot.create(:event, discipline: "Time Trial")
 
     assert_equal [ tt ], CombinedTimeTrialResults.requires_combined_results_events
   end

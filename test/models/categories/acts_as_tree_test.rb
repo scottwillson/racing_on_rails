@@ -4,9 +4,9 @@ module Categories
   # :stopdoc:
   class ActsAsTreeTest < ActiveSupport::TestCase
     test "#descendants should not modify association" do
-      root = FactoryGirl.create(:category)
-      node = FactoryGirl.create(:category, parent: root)
-      leaf = FactoryGirl.create(:category, parent: node)
+      root = FactoryBot.create(:category)
+      node = FactoryBot.create(:category, parent: root)
+      leaf = FactoryBot.create(:category, parent: node)
 
       root.reload.descendants
       node.reload.descendants

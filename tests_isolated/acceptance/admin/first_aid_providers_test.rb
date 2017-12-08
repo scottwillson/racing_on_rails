@@ -7,13 +7,13 @@ class FirstAidProvidersTest < AcceptanceTest
   test "first aid providers" do
     # FIXME Punt!
     if Time.zone.today.month < 12
-      login_as FactoryGirl.create(:administrator)
-      promoter = FactoryGirl.create(:person, name: "Brad Ross")
-      FactoryGirl.create(:event, promoter: promoter, date: 2.days.from_now, first_aid_provider: "Megan Weaver", name: "Copperopolis")
-      FactoryGirl.create(:event, date: 4.days.from_now, name: "Giro di SF")
-      event_3 = FactoryGirl.create(:event, date: 3.days.ago, name: "San Ardo")
-      FactoryGirl.create(:event, date: 2.weeks.from_now, name: "Snelling")
-      FactoryGirl.create(:event, date: 3.weeks.from_now, name: "Berkeley Hills")
+      login_as FactoryBot.create(:administrator)
+      promoter = FactoryBot.create(:person, name: "Brad Ross")
+      FactoryBot.create(:event, promoter: promoter, date: 2.days.from_now, first_aid_provider: "Megan Weaver", name: "Copperopolis")
+      FactoryBot.create(:event, date: 4.days.from_now, name: "Giro di SF")
+      event_3 = FactoryBot.create(:event, date: 3.days.ago, name: "San Ardo")
+      FactoryBot.create(:event, date: 2.weeks.from_now, name: "Snelling")
+      FactoryBot.create(:event, date: 3.weeks.from_now, name: "Berkeley Hills")
 
       visit "/admin/first_aid_providers"
 

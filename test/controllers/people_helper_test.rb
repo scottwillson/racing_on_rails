@@ -12,12 +12,12 @@ class PeopleHelperTest < ActionView::TestCase
   end
 
   test "administrator admin" do
-    @current_person = FactoryGirl.create(:administrator)
+    @current_person = FactoryBot.create(:administrator)
     assert administrator?, "administrator? with no one logged-in"
   end
 
   test "administrator promoter" do
-    @current_person = FactoryGirl.create(:promoter)
+    @current_person = FactoryBot.create(:promoter)
     assert !administrator?, "administrator? with no one logged-in"
   end
 
@@ -31,13 +31,13 @@ class PeopleHelperTest < ActionView::TestCase
   end
 
   test "promoter person promoter" do
-    @current_person = FactoryGirl.create(:promoter)
+    @current_person = FactoryBot.create(:promoter)
     assert promoter?, "promoter? with no one logged-in"
   end
 
   test "pronoun" do
-    weaver = FactoryGirl.create(:person, first_name: "Ryan", last_name: "Weaver")
-    tonkin = FactoryGirl.create(:person, first_name: "Erik", last_name: "Tonkin")
+    weaver = FactoryBot.create(:person, first_name: "Ryan", last_name: "Weaver")
+    tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
     assert_equal "Ryan Weaver", pronoun(weaver, tonkin)
     assert_equal "me", pronoun(weaver, weaver)
     assert_equal "me", pronoun(tonkin, tonkin)

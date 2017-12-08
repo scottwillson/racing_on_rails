@@ -6,12 +6,12 @@ module Competitions
   # :stopdoc:
   class MbraBarTest < ActiveSupport::TestCase
     test "calculate" do
-      road = FactoryGirl.create(:discipline, name: "Road")
-      FactoryGirl.create(:discipline, name: "Mountain Bike")
-      FactoryGirl.create(:discipline, name: "Cyclocross")
+      road = FactoryBot.create(:discipline, name: "Road")
+      FactoryBot.create(:discipline, name: "Mountain Bike")
+      FactoryBot.create(:discipline, name: "Cyclocross")
 
-      senior_men = FactoryGirl.create(:category, name: "Category 1/2 Men")
-      senior_women = FactoryGirl.create(:category, name: "Category 1/2/3 Women")
+      senior_men = FactoryBot.create(:category, name: "Category 1/2 Men")
+      senior_women = FactoryBot.create(:category, name: "Category 1/2/3 Women")
       road.bar_categories << senior_men
       road.bar_categories << senior_women
 
@@ -22,31 +22,31 @@ module Competitions
       )
       swan_island_senior_men = swan_island.races.create(category: senior_men, field_size: 5)
 
-      tonkin = FactoryGirl.create(:person)
+      tonkin = FactoryBot.create(:person)
       swan_island_senior_men.results.create(
         place: 1,
         person: tonkin
       )
 
-      molly = FactoryGirl.create(:person)
+      molly = FactoryBot.create(:person)
       swan_island_senior_men.results.create(
         place: 2,
         person: molly
       )
 
-      weaver = FactoryGirl.create(:person)
+      weaver = FactoryBot.create(:person)
       swan_island_senior_men.results.create(
         place: 3,
         person: weaver
       )
 
-      alice = FactoryGirl.create(:person)
+      alice = FactoryBot.create(:person)
       swan_island_senior_men.results.create(
         place: "DNF",
         person: alice
       )
 
-      matson = FactoryGirl.create(:person)
+      matson = FactoryBot.create(:person)
       swan_island_senior_men.results.create(
         place: "DQ",
         person: matson
@@ -117,8 +117,8 @@ module Competitions
         place: 2,
         person: weaver
       )
-      FactoryGirl.create(:result, place: 4, event: duck_island, race: duck_island_senior_men)
-      FactoryGirl.create(:result, place: 5, event: duck_island, race: duck_island_senior_men)
+      FactoryBot.create(:result, place: 4, event: duck_island, race: duck_island_senior_men)
+      FactoryBot.create(:result, place: 5, event: duck_island, race: duck_island_senior_men)
 
       senior_women_duck_island = duck_island.races.create(category: senior_women, field_size: 1)
       senior_women_duck_island.results.create(
@@ -206,13 +206,13 @@ module Competitions
     end
 
     test "upgrade scoring" do
-      road = FactoryGirl.create(:discipline, name: "Road")
-      FactoryGirl.create(:discipline, name: "Mountain Bike")
-      FactoryGirl.create(:discipline, name: "Cyclocross")
+      road = FactoryBot.create(:discipline, name: "Road")
+      FactoryBot.create(:discipline, name: "Mountain Bike")
+      FactoryBot.create(:discipline, name: "Cyclocross")
 
-      senior_men = FactoryGirl.create(:category, raw_name: "Category 1/2 Men")
-      senior_women = FactoryGirl.create(:category, raw_name: "Category 1/2/3 Women")
-      cat_4_women = FactoryGirl.create(:category, raw_name: "Category 4 Women")
+      senior_men = FactoryBot.create(:category, raw_name: "Category 1/2 Men")
+      senior_women = FactoryBot.create(:category, raw_name: "Category 1/2/3 Women")
+      cat_4_women = FactoryBot.create(:category, raw_name: "Category 4 Women")
       road.bar_categories << senior_men
       road.bar_categories << senior_women
       road.bar_categories << cat_4_women
@@ -223,12 +223,12 @@ module Competitions
         date: Date.new(2008, 5, 17)
       )
       cat_4_women_swan_island = swan_island.races.create(category: cat_4_women, field_size: 23)
-      molly = FactoryGirl.create(:person)
+      molly = FactoryBot.create(:person)
       cat_4_women_swan_island.results.create(
         place: 1,
         person: molly
       )
-      FactoryGirl.create_list(:result, 22, event: swan_island, race: cat_4_women_swan_island, place: 2)
+      FactoryBot.create_list(:result, 22, event: swan_island, race: cat_4_women_swan_island, place: 2)
       goose_island = SingleDayEvent.create!(
         name: "Goose Island",
         discipline: "Road",
@@ -239,7 +239,7 @@ module Competitions
         place: 1,
         person: molly
       )
-      FactoryGirl.create_list(:result, 2, event: goose_island, race: cat_1_2_3_women_goose_island, place: 3)
+      FactoryBot.create_list(:result, 2, event: goose_island, race: cat_1_2_3_women_goose_island, place: 3)
 
       MbraBar.calculate!(2008)
       road_bar = MbraBar.find_by_name("2008 Road BAR")
@@ -265,7 +265,7 @@ module Competitions
         place: 1,
         person: molly
       )
-      FactoryGirl.create_list(:result, 26, event: duck_island, race: cat_4_women_duck_island)
+      FactoryBot.create_list(:result, 26, event: duck_island, race: cat_4_women_duck_island)
        MbraBar.calculate!(2008)
       road_bar = MbraBar.find_by_name("2008 Road BAR")
       cat_4_women_road_bar = road_bar.races.detect {|b| b.name == "Category 4 Women" }

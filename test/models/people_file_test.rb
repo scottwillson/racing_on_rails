@@ -3,11 +3,11 @@ require "test_helper"
 # :stopdoc:
 class PersonFileTest < ActiveSupport::TestCase
   test "import" do
-    FactoryGirl.create(:discipline, name: "Cyclocross")
-    FactoryGirl.create(:discipline, name: "Downhill")
-    FactoryGirl.create(:discipline, name: "Mountain Bike")
-    FactoryGirl.create(:discipline, name: "Road")
-    FactoryGirl.create(:number_issuer)
+    FactoryBot.create(:discipline, name: "Cyclocross")
+    FactoryBot.create(:discipline, name: "Downhill")
+    FactoryBot.create(:discipline, name: "Mountain Bike")
+    FactoryBot.create(:discipline, name: "Road")
+    FactoryBot.create(:number_issuer)
 
     # Pre-existing people
     Person.create!(
@@ -154,8 +154,8 @@ class PersonFileTest < ActiveSupport::TestCase
   end
 
   test "import duplicates" do
-    existing_person_with_login = FactoryGirl.create(:person_with_login, name: "Erik Tonkin")
-    existing_person = FactoryGirl.create(:person, name: "Erik Tonkin")
+    existing_person_with_login = FactoryBot.create(:person_with_login, name: "Erik Tonkin")
+    existing_person = FactoryBot.create(:person, name: "Erik Tonkin")
 
     file = File.new("#{Rails.root}/test/fixtures/membership/duplicates.xlsx")
     people_file = PeopleFile.new(file)

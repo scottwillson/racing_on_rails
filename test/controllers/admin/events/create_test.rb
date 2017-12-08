@@ -14,7 +14,7 @@ module Admin
 
       test "create event" do
         assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
-        person = FactoryGirl.create(:person)
+        person = FactoryBot.create(:person)
 
         post(:create,
              "commit" => "Save",
@@ -44,7 +44,7 @@ module Admin
       end
 
       test "create child event" do
-        person = FactoryGirl.create(:person)
+        person = FactoryBot.create(:person)
         parent = SingleDayEvent.create!
         assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
 
@@ -80,7 +80,7 @@ module Admin
       test "create child for multi day event" do
         parent = MultiDayEvent.create!
         assert_nil(SingleDayEvent.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
-        person = FactoryGirl.create(:person)
+        person = FactoryBot.create(:person)
 
         post(:create,
              "commit" => "Save",
@@ -112,7 +112,7 @@ module Admin
 
       test "create series" do
         assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
-        person = FactoryGirl.create(:person)
+        person = FactoryBot.create(:person)
 
         post(:create,
              "commit" => "Save",
@@ -131,7 +131,7 @@ module Admin
 
       test "create single day event" do
         assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
-        person = FactoryGirl.create(:person)
+        person = FactoryBot.create(:person)
 
         post(:create,
              "commit" => "Save",

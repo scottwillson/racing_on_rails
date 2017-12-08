@@ -5,8 +5,8 @@ class ResultTest < ActiveSupport::TestCase
   setup :number_issuer
 
   def number_issuer
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:discipline)
+    FactoryBot.create(:number_issuer)
+    FactoryBot.create(:discipline)
   end
 
   test "set time" do
