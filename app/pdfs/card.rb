@@ -36,7 +36,7 @@ class Card < Prawn::Document
 
       draw_text "#{RacingAssociation.current.short_name} License # #{person.license}", at: [ card_left_side, card_top - 72 ]
 
-      fill_color "DC40D2"
+      fill_color "e62b1e"
       rectangle [ card_left_side + 164, card_top + 10 ], 20, 84
       fill
 
@@ -45,7 +45,7 @@ class Card < Prawn::Document
       draw_text "2", at: [ card_left_side + 171, card_top - 10 ]
       draw_text "0", at: [ card_left_side + 171, card_top - 27 ]
       draw_text "1", at: [ card_left_side + 171, card_top - 44 ]
-      draw_text "7", at: [ card_left_side + 171, card_top - 61 ]
+      draw_text "8", at: [ card_left_side + 171, card_top - 61 ]
 
       index += 1
     end
