@@ -15,14 +15,24 @@ CSV.open("schedule.csv", "wb") do |csv|
       end_date = ics_event.dtend
     end
 
-    description = ics_event.description.split("\n")
+    original_description = ics_event.description.split("-::~")[0]
+    description = original_description.split("\n")
 
     next if description.size < 2
 
-    description.each { |x| puts x }
+    # description.each { |x| puts x }
+
     promoter = description.first&.gsub("From: ", "")
-    promoter_name = promoter[/\A([^<]+)/, 1].strip
-    promoter_email = promoter[/<([^>]+)/, 1].strip
+    promoter_name = ""
+    promoter_email = ""
+    if promoter.present?
+      begin
+        promoter_name = promoter[/\A([^<]+)/, 1].strip
+        promoter_email = promoter[/<([^>]+)/, 1].strip
+      rescue => e
+        puts "#{e}: Could not parse promoter name and email from #{promoter}"
+      end
+    end
 
     first_aid = "no"
     first_aid_line = description.detect { |l| l[/First Aid/] }
@@ -55,7 +65,7 @@ CSV.open("schedule.csv", "wb") do |csv|
       promoter_email: promoter_email,
       first_aid_provider: first_aid,
       discipline: discipline,
-      notes: ics_event.description
+      notes: original_description
     )
 
     (ics_event.dtstart..end_date).each do |day|
@@ -67,7 +77,7 @@ CSV.open("schedule.csv", "wb") do |csv|
         promoter_email,
         discipline,
         first_aid,
-        ics_event.description
+        original_description
       ]
     end
   end
