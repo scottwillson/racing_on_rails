@@ -537,6 +537,7 @@ DEPENDENCIES
   sass-rails (~> 5)
   scrypt
   selenium-webdriver
+  simplecov
   spreadsheet
   spring
   stripe

@@ -20,6 +20,7 @@
 /.idea/
 /local
 chromedriver.log
+coverage
 db/*.sqlite3
 db/acceptance_structure.sql
 db/production.sql
