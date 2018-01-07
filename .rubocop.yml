@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.5
 
 Rails:
   Enabled: true
@@ -8,6 +8,9 @@ ClassLength:
   Enabled: false
 
 Documentation:
+  Enabled: false
+
+Layout/SpaceInsidePercentLiteralDelimiters:
   Enabled: false
 
 LineLength:
@@ -30,23 +33,20 @@ Metrics/ModuleLength:
   CountComments: false
   Max: 300
 
+Naming/VariableNumber:
+  Enabled: false
+
 Rails/FilePath:
   Enabled: false
 
 SingleLineBlockParams:
   Enabled: false
 
-SpaceInsideBrackets:
-  Enabled: false
-
 StringLiterals:
   EnforcedStyle: double_quotes
 
-Style/NumericPredicate:
-  Enabled: false  
-
-Style/SpaceInsidePercentLiteralDelimiters:
+Style/GuardClause:
   Enabled: false
 
-Style/VariableNumber:
+Style/NumericPredicate:
   Enabled: false
