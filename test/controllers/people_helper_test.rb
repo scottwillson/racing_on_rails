@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -44,10 +46,7 @@ class PeopleHelperTest < ActionView::TestCase
     assert_equal "Erik Tonkin", pronoun(tonkin, weaver)
   end
 
-
   private
 
-  def current_person
-    @current_person
-  end
+  attr_reader :current_person
 end

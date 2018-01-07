@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../test_helper", __FILE__)
 
 module Competitions
@@ -30,26 +32,26 @@ module Competitions
     end
 
     test "defaults" do
-      get :show, year: "#{Time.zone.today.year}", discipline: "overall", category: "senior_men"
+      get :show, year: Time.zone.today.year.to_s, discipline: "overall", category: "senior_men"
       assert_response :success
       assert_template "bar/show"
     end
 
     test "show empty" do
-      get :show, year: "#{Time.zone.today.year}", discipline: "road", category: "senior_men"
+      get :show, year: Time.zone.today.year.to_s, discipline: "road", category: "senior_men"
       assert_response :success
       assert_template "bar/show"
     end
 
     test "show" do
       Bar.calculate! Time.zone.today.year
-      get :show, year: "#{Time.zone.today.year}", discipline: "road", category: "senior_women"
+      get :show, year: Time.zone.today.year.to_s, discipline: "road", category: "senior_women"
       assert_response :success
       assert_template "bar/show"
     end
 
     test "bad discipline" do
-      masters_men = Category.find_by_name("Masters Men")
+      masters_men = Category.find_by(name: "Masters Men")
       FactoryBot.create(:category, name: "Masters Men 30-34", parent: masters_men)
       FactoryBot.create(:discipline, name: "Overall")
       get :show, discipline: "badbadbad", year: "2004", category: "masters_men_30_34"
@@ -59,7 +61,7 @@ module Competitions
     end
 
     test "bad year" do
-      masters_men = Category.find_by_name("Masters Men")
+      masters_men = Category.find_by(name: "Masters Men")
       FactoryBot.create(:category, name: "Masters Men 30-34", parent: masters_men)
       FactoryBot.create(:discipline, name: "Overall")
       get :show, discipline: "overall", year: "19", category: "masters_men_30_34"
@@ -69,7 +71,7 @@ module Competitions
     end
 
     test "bad category" do
-      masters_men = Category.find_by_name("Masters Men")
+      masters_men = Category.find_by(name: "Masters Men")
       FactoryBot.create(:category, name: "Masters Men 30-34", parent: masters_men)
       FactoryBot.create(:discipline, name: "Overall")
       get :show, discipline: "overall", year: "2009", category: "dhaskjdhal"

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module People
   # 'club' ...this is often team in USAC download. How handle? Use club for team if no team? and if both, ignore club?
   #  'NCCA club' ...can have this in addition to club and team. should team be many to many?

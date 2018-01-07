@@ -65,11 +65,11 @@ module Schedule
 
       if row[:discipline]
         discipline = Discipline.find_via_alias(row[:discipline])
-        if discipline.present?
-          row[:discipline] = discipline.name
-        else
-          row[:discipline] = RacingAssociation.current.default_discipline
-        end
+        row[:discipline] = if discipline.present?
+                             discipline.name
+                           else
+                             RacingAssociation.current.default_discipline
+                           end
       end
 
       if row[:sanctioned_by].nil?
@@ -111,9 +111,7 @@ module Schedule
 
       event_hash.delete :series
 
-      if event_hash.key?(:flyer_approved) && event_hash[:flyer_approved].nil?
-        event_hash[:flyer_approved] = false
-      end
+      event_hash[:flyer_approved] = false if event_hash.key?(:flyer_approved) && event_hash[:flyer_approved].nil?
 
       event = SingleDayEvent.new(event_hash)
 
@@ -126,7 +124,7 @@ module Schedule
       logger.debug "Find multi-day events"
 
       # Hash of Arrays keyed by event name
-      events_by_name = Hash.new
+      events_by_name = {}
       events.each do |event|
         logger.debug "Find multi-day events #{event.name}"
         event_array = events_by_name[event.name] || []
@@ -137,9 +135,7 @@ module Schedule
       multi_day_events = []
       events_by_name.each do |name, event_array|
         logger.debug "Create multi-day event #{name}"
-        if event_array.size > 1
-          multi_day_events << MultiDayEvent.create_from_children(event_array)
-        end
+        multi_day_events << MultiDayEvent.create_from_children(event_array) if event_array.size > 1
       end
 
       multi_day_events
@@ -148,16 +144,14 @@ module Schedule
     def self.add_one_day_events_to_parents(events, multi_day_events)
       events.each do |event|
         parent = multi_day_events[event.name]
-        parent.events << event if parent
+        parent&.events << event
       end
     end
 
     def self.save(events, multi_day_events)
       events.each do |event|
         logger.debug "Save #{event.name}"
-        unless Event.where(name: event.name, date: event.date).exists?
-          event.save!
-        end
+        event.save! unless Event.where(name: event.name, date: event.date).exists?
       end
       multi_day_events.each do |event|
         logger.debug "Save #{event.name}"
@@ -172,17 +166,15 @@ module Schedule
 
     # params: year, sanctioning_organization, start, end, discipline, region
     def self.find(params)
-      if RacingAssociation.current.include_multiday_events_on_schedule?
-        query = Event.where(parent_id: nil).where("type != ?", "Event")
-      else
-        query = Event.where(type: "SingleDayEvent")
-      end
+      query = if RacingAssociation.current.include_multiday_events_on_schedule?
+                Event.where(parent_id: nil).where("type != ?", "Event")
+              else
+                Event.where(type: "SingleDayEvent")
+              end
 
       query = query.includes(:parent).includes(:promoter)
 
-      unless RacingAssociation.current.show_practices_on_calendar?
-        query = query.where(practice: false)
-      end
+      query = query.where(practice: false) unless RacingAssociation.current.show_practices_on_calendar?
 
       if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
         query = query.where(sanctioned_by: RacingAssociation.current.default_sanctioned_by)
@@ -192,20 +184,16 @@ module Schedule
 
       start_date = params[:start]
       end_date = params[:end]
-      if !(start_date.present? && end_date.present?)
+      unless start_date.present? && end_date.present?
         start_date = Time.zone.local(params[:year]).beginning_of_year.to_date
         end_date = Time.zone.local(params[:year]).end_of_year.to_date
       end
       query = query.where("date between ? and ?", start_date, end_date)
 
-      if params[:discipline].present?
-        query = query.where(discipline: params[:discipline].name)
-      end
+      query = query.where(discipline: params[:discipline].name) if params[:discipline].present?
 
       if RacingAssociation.current.filter_schedule_by_region?
-        if params[:region].present?
-          query = query.where(region_id: params[:region].id)
-        end
+        query = query.where(region_id: params[:region].id) if params[:region].present?
       end
 
       Schedule.new(params[:year], query)

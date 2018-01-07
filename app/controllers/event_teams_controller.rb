@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EventTeamsController < ApplicationController
   force_https
 
@@ -5,9 +7,9 @@ class EventTeamsController < ApplicationController
 
   def index
     @event = Event
-      .includes(event_teams: :team)
-      .includes(event_team_memberships: [ { event_team: :team, person: :editors } ])
-      .find(params[:event_id])
+             .includes(event_teams: :team)
+             .includes(event_team_memberships: [{ event_team: :team, person: :editors }])
+             .find(params[:event_id])
     @event_team = EventTeam.new(event: @event, team: Team.new)
 
     if @event.event_teams?
@@ -35,7 +37,7 @@ class EventTeamsController < ApplicationController
   def event_team_params
     params_without_mobile.require(:event_team).permit(
       :event_id,
-      team_attributes: [ :name ]
+      team_attributes: [:name]
     )
   end
 end

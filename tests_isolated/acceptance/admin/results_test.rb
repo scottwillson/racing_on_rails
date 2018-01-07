@@ -20,9 +20,7 @@ class ResultsTest < AcceptanceTest
       visit "/admin/events"
     end
 
-    if Time.zone.today.month == 1 && Time.zone.today.day < 4
-      visit "/admin/events?year=#{Time.zone.today.year - 1}"
-    end
+    visit "/admin/events?year=#{Time.zone.today.year - 1}" if Time.zone.today.month == 1 && Time.zone.today.day < 4
 
     visit_event event
 
@@ -38,8 +36,8 @@ class ResultsTest < AcceptanceTest
     assert_no_text "Ryan Weaver"
     assert_page_has_content "Megan Weaver"
 
-    weaver = Person.find_by_name("Ryan Weaver")
-    megan = Person.find_by_name("Megan Weaver")
+    weaver = Person.find_by(name: "Ryan Weaver")
+    megan = Person.find_by(name: "Megan Weaver")
     assert weaver != megan, "Should create new person, not rename existing one"
 
     fill_in_inline "#result_#{result.id}_team_name", with: "River City"
@@ -89,10 +87,8 @@ class ResultsTest < AcceptanceTest
   def assert_bar_toggled(result)
     bar_was = result.bar?
     begin
-      Timeout::timeout(10) do
-        while result.reload.bar? == bar_was
-          sleep 0.25
-        end
+      Timeout.timeout(10) do
+        sleep 0.25 while result.reload.bar? == bar_was
       end
     rescue Timeout::Error
       raise Timeout::Error, "result.bar? did not change from '#{bar_was}'"

@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 class AddCategoryWeight < ActiveRecord::Migration
   require "category"
 
   class Category < ::Category
-    def set_equipment_from_name
-    end
+    def set_equipment_from_name; end
   end
 
   def change

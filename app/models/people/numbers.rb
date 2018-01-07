@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module People
   module Numbers
     extend ActiveSupport::Concern
@@ -12,7 +13,7 @@ module People
       def self.find_all_by_number(number)
         RaceNumber
           .includes(:person)
-          .where(year: [ RacingAssociation.current.year, RacingAssociation.current.next_year ])
+          .where(year: [RacingAssociation.current.year, RacingAssociation.current.next_year])
           .where(value: number)
           .map(&:person)
       end
@@ -22,9 +23,7 @@ module People
       return nil if discipline_param.nil?
 
       year ||= RacingAssociation.current.year
-      if discipline_param.is_a?(Discipline)
-        discipline_param = discipline_param.to_param
-      end
+      discipline_param = discipline_param.to_param if discipline_param.is_a?(Discipline)
       number = race_numbers(reload).detect do |race_number|
         race_number.year == year &&
           race_number.discipline_id == RaceNumber.discipline_id(discipline_param) &&

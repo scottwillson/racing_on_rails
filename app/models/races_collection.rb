@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class RacesCollection
   include ActiveModel::Model
   attr_accessor :event
-  validates_presence_of :event
+  validates :event, presence: true
 
   def initialize(event)
     super event: event
@@ -17,11 +19,11 @@ class RacesCollection
   end
 
   def text
-    event.races.sort.
-    map do |race|
+    event.races.sort
+         .map do |race|
       race_text race
-    end.
-    join "\n"
+    end
+         .join "\n"
   end
 
   def update(attributes)
@@ -30,9 +32,7 @@ class RacesCollection
     category_attributes_by_name = parse_text attributes[:text]
 
     event.races.each do |race|
-      if !race.name.in?(category_attributes_by_name.keys)
-        race.destroy
-      end
+      race.destroy unless race.name.in?(category_attributes_by_name.keys)
     end
 
     existing_category_names = event.races.map(&:name)
@@ -64,6 +64,6 @@ class RacesCollection
   end
 
   def parse_line(line)
-    [ line.strip, {} ]
+    [line.strip, {}]
   end
 end

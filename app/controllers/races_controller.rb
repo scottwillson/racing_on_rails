@@ -1,5 +1,6 @@
-class RacesController < ApplicationController
+# frozen_string_literal: true
 
+class RacesController < ApplicationController
   # Show Races for a Category
   # === Params
   # * id: Category ID

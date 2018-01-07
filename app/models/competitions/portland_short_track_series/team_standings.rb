@@ -14,7 +14,7 @@ module Competitions
           transaction do
             series = WeeklySeries.where(name: parent_event_name).year(year).first
 
-            if series && series.any_results_including_children?
+            if series&.any_results_including_children?
               team_competition = self.year(year).first
               unless team_competition
                 team_competition = new(parent_id: series.id)
@@ -58,14 +58,12 @@ module Competitions
 
       def add_source_events
         parent.children.each do |source_event|
-          if source_event.name == parent_event_name
-            source_events << source_event
-          end
+          source_events << source_event if source_event.name == parent_event_name
         end
       end
 
       def race_category_names
-        [ "Team Competition" ]
+        ["Team Competition"]
       end
     end
   end

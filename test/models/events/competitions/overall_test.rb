@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../../test_helper", __FILE__)
 
 module Competitions
@@ -9,18 +11,18 @@ module Competitions
       end
 
       def category_names
-        [ "Men A" ]
+        ["Men A"]
       end
 
       def point_schedule
-        [ 26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+        [26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
       end
 
       def minimum_events
         2
       end
 
-      def maximum_events(race)
+      def maximum_events(_race)
         6
       end
     end
@@ -79,7 +81,7 @@ module Competitions
       date = Date.new(2008, 10, 19)
       [8, 3, 10, 7, 8, 7, 8].each do |place|
         series.children.create!(date: date).races.create!(category: men_a).results.create!(place: place, person: person)
-        date = date + 7
+        date += 7
       end
 
       # Simulate 7 of 8 events. Last, double-point event still in future
@@ -103,7 +105,7 @@ module Competitions
       date = Date.new(2008, 10, 19)
       [8, 8, 8, 7, 6, 8, 7, 9].each do |place|
         series.children.create!(date: date).races.create!(category: men_a).results.create!(place: place, person: person)
-        date = date + 7
+        date += 7
       end
 
       TestOverall.calculate!(2008)
@@ -123,7 +125,7 @@ module Competitions
       date = Date.new(2008, 10, 19)
       [8, 3, 10, "DNF", 8, 7, 8].each do |place|
         series.children.create!(date: date).races.create!(category: men_a).results.create!(place: place, person: person)
-        date = date + 7
+        date += 7
       end
 
       # Simulate 7 of 8 events. Last, double-point, event, still in future

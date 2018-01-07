@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Race result
 #
 # Race is the only required attribute -- even +person+ and +place+ can be blank
@@ -24,18 +26,18 @@ class Result < ActiveRecord::Base
   belongs_to :race
   belongs_to :team
 
-  validates_presence_of :race
+  validates :race, presence: true
 
   scope :person_event, lambda { |person, event|
-    includes(scores: [ :source_result, :competition_result ]).
-    where(event: event).
-    where(person: person)
+    includes(scores: %i[source_result competition_result])
+      .where(event: event)
+      .where(person: person)
   }
 
   scope :team_event, lambda { |team, event|
-    includes(scores: [ :source_result, :competition_result ]).
-    where("results.event_id" => event.id).
-    where(team_id: team.id)
+    includes(scores: %i[source_result competition_result])
+      .where("results.event_id" => event.id)
+      .where(team_id: team.id)
   }
 
   attr_accessor :updated_by
@@ -53,7 +55,7 @@ class Result < ActiveRecord::Base
   end
 
   def set_team
-    if team && team.new_record?
+    if team&.new_record?
       team.updated_by = event
       if team.name.blank?
         self.team = nil
@@ -66,32 +68,30 @@ class Result < ActiveRecord::Base
 
   # Destroy Team that only exist because they were created by importing results
   def destroy_teams
-    if team && team.no_results? && team.no_people? && team.created_from_result? && team.never_updated?
-      team.destroy
-    end
+    team.destroy if team&.no_results? && team.no_people? && team.created_from_result? && team.never_updated?
   end
 
   def category_name=(name)
-    if name.blank?
-      self.category = nil
-    else
-      self.category = Category.find_or_create_by_normalized_name(name)
-    end
+    self.category = if name.blank?
+                      nil
+                    else
+                      Category.find_or_create_by_normalized_name(name)
+                    end
     self[:category_name] = name.try(:to_s)
   end
 
   def team_size
-    if race_id
-      @team_size ||= Result.where(race_id: race_id, place: place).count
-    else
-      @team_size ||= 1
-    end
+    @team_size ||= if race_id
+                     Result.where(race_id: race_id, place: place).count
+                   else
+                     1
+                   end
   end
 
   # Not blank, DNF, DNS, DQ.
   def finished?
     return false if place.blank?
-    return false if ["DNF", "DNS", "DQ"].include?(place)
+    return false if %w[DNF DNS DQ].include?(place)
     numeric_place?
   end
 
@@ -101,11 +101,11 @@ class Result < ActiveRecord::Base
 
   # Does this result belong to the last event in a MultiDayEvent?
   def last_event?
-    return false unless self.event && event.parent
+    return false unless event&.parent
     return false unless event.parent.respond_to?(:parent)
     return true unless event.parent
 
-    !(event.parent && (event.parent.end_date != self.date))
+    !(event.parent && (event.parent.end_date != date))
   end
 
   def date
@@ -121,17 +121,15 @@ class Result < ActiveRecord::Base
   end
 
   def event(reload = false)
-    if race(reload)
-      race.event(reload)
-    end
+    race.event(reload) if race(reload)
   end
 
   def laps
-    self[:laps] || (race && race.laps)
+    self[:laps] || (race&.laps)
   end
 
   def place
-    self[:place] || ''
+    self[:place] || ""
   end
 
   def points
@@ -144,18 +142,14 @@ class Result < ActiveRecord::Base
 
   # Hot spots
   def points_bonus_penalty=(value)
-    if value == nil || value == ""
-      value = 0
-    end
-    write_attribute(:points_bonus_penalty, value)
+    value = 0 if value.nil? || value == ""
+    self[:points_bonus_penalty] = value
   end
 
   # Points from placing at finish, not from hot spots
   def points_from_place=(value)
-    if value == nil || value == ""
-      value = 0
-    end
-    write_attribute(:points_from_place, value)
+    value = 0 if value.nil? || value == ""
+    self[:points_from_place] = value
   end
 
   # Person's current team name
@@ -169,12 +163,8 @@ class Result < ActiveRecord::Base
 
   def team_name=(value)
     team_id_will_change!
-    if team.nil? || team.name != value
-      self.team = Team.new(name: value)
-    end
-    if person && person.team_name != value
-      person.team = team
-    end
+    self.team = Team.new(name: value) if team.nil? || team.name != value
+    person.team = team if person && person.team_name != value
     self[:team_name] = value
   end
 
@@ -183,16 +173,13 @@ class Result < ActiveRecord::Base
   end
 
   def every_person_is_a_member?
-    if RacingAssociation.current.exempt_team_categories.nil? || RacingAssociation.current.exempt_team_categories.include?(race.category.name)
-      return true
-    end
+    return true if RacingAssociation.current.exempt_team_categories.nil? || RacingAssociation.current.exempt_team_categories.include?(race.category.name)
 
-    Result.where(race_id: race_id, place: place).where.not(id: id).each do |result|
-      if result.person_id && !result.person.member?(date)
-        # bad side effect
-        self.update_attributes members_only_place: ""
-        return false
-      end
+    Result.where(race_id: race_id, place: place).where.not(id: id).find_each do |result|
+      next unless result.person_id && !result.person.member?(date)
+      # bad side effect
+      update_attributes members_only_place: ""
+      return false
     end
 
     true
@@ -231,7 +218,7 @@ class Result < ActiveRecord::Base
 
   # Add +race+ and +race#event+ name, time and points to default to_s
   def to_long_s
-    "#<Result #{id}\t#{place}\t#{race.event.name}\t#{race.name} (#{race.id})\t#{name}\t#{team_name}\t#{self.category_name}\t#{points}\t#{time_s if self[:time]}>"
+    "#<Result #{id}\t#{place}\t#{race.event.name}\t#{race.name} (#{race.id})\t#{name}\t#{team_name}\t#{category_name}\t#{points}\t#{time_s if self[:time]}>"
   end
 
   def to_s

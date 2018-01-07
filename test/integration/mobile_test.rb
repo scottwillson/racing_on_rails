@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:
@@ -25,9 +27,7 @@ class MobileTest < RacingOnRails::IntegrationTest
     assert_template "people/index"
 
     # MBRA has custom template
-    if css_select("th.license").empty? && css_select("#people-list").empty?
-      flunk "Expected th.license or #people-list"
-    end
+    flunk "Expected th.license or #people-list" if css_select("th.license").empty? && css_select("#people-list").empty?
 
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
@@ -50,7 +50,7 @@ class MobileTest < RacingOnRails::IntegrationTest
   end
 
   test "mobile browser" do
-    get "/", {}, { "HTTP_USER_AGENT" => "Android" }
+    get "/", {}, "HTTP_USER_AGENT" => "Android"
     assert_redirected_to "/m/"
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
@@ -79,7 +79,7 @@ class MobileTest < RacingOnRails::IntegrationTest
   end
 
   test "mobile path, mobile browser" do
-    get "/m/", {}, { "HTTP_USER_AGENT" => "Android" }
+    get "/m/", {}, "HTTP_USER_AGENT" => "Android"
     assert_response :success
     assert_template "home/index"
     assert_select "#home_page_results_table", 1
@@ -126,7 +126,7 @@ class MobileTest < RacingOnRails::IntegrationTest
   end
 
   test "mobile browser, full_site param" do
-    get "/", { full_site: 1 }, { "HTTP_USER_AGENT" => "Android" }
+    get "/", { full_site: 1 }, "HTTP_USER_AGENT" => "Android"
     assert_response :success
     assert_template "home/index"
     assert_select "#home_page_results_table"
@@ -134,21 +134,21 @@ class MobileTest < RacingOnRails::IntegrationTest
   end
 
   test "mobile browser, mobile param" do
-    get "/", { mobile_site: 1 }, { "HTTP_USER_AGENT" => "Android" }
+    get "/", { mobile_site: 1 }, "HTTP_USER_AGENT" => "Android"
     assert_redirected_to "/m/"
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
 
   test "mobile browser, custom page" do
     Page.create!(slug: "home")
-    get "/", {}, { "HTTP_USER_AGENT" => "Android" }
+    get "/", {}, "HTTP_USER_AGENT" => "Android"
     assert_redirected_to "/m/"
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
 
   test "mobile browser, custom mobile page" do
     Page.create!(slug: "mobile/home", body: "<p class='custom-mobile'></p>")
-    get "/", {}, { "HTTP_USER_AGENT" => "Android" }
+    get "/", {}, "HTTP_USER_AGENT" => "Android"
     assert_redirected_to "/m/"
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
@@ -156,7 +156,7 @@ class MobileTest < RacingOnRails::IntegrationTest
   test "mobile browser, mobile template" do
     result = FactoryBot.create(:result)
 
-    get "/events/#{result.event_id}/results", {}, { "HTTP_USER_AGENT" => "Android" }
+    get "/events/#{result.event_id}/results", {}, "HTTP_USER_AGENT" => "Android"
     assert_redirected_to "/m/events/#{result.event_id}/results"
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end

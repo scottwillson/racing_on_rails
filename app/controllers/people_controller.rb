@@ -1,22 +1,24 @@
-class PeopleController < ApplicationController
-  force_https except: [ :index, :list, :show ]
+# frozen_string_literal: true
 
-  before_action :require_current_person, only: [ :edit, :update, :card ]
-  before_action :assign_person, only: [ :edit, :update, :card ]
-  before_action :require_same_person_or_administrator_or_editor, only: [ :edit, :update, :card ]
+class PeopleController < ApplicationController
+  force_https except: %i[index list show]
+
+  before_action :require_current_person, only: %i[edit update card]
+  before_action :assign_person, only: %i[edit update card]
+  before_action :require_same_person_or_administrator_or_editor, only: %i[edit update card]
 
   def index
     respond_to do |format|
       format.html { find_people }
       format.js { find_people }
-      format.xml { render xml: find_people.to_xml(only: [ :id, :first_name, :last_name ]) }
-      format.json { render json: find_people.as_json(only: [ :id, :first_name, :last_name, :name, :city ], methods: [ :team_name ] ) }
+      format.xml { render xml: find_people.to_xml(only: %i[id first_name last_name]) }
+      format.json { render json: find_people.as_json(only: %i[id first_name last_name name city], methods: [:team_name]) }
     end
   end
 
   def list
-    people_list = Array.new
-    Person.name_like(params['name']).each { |person| people_list.push( { "label" => person.name, "id" => person.id} ) }
+    people_list = []
+    Person.name_like(params["name"]).each { |person| people_list.push("label" => person.name, "id" => person.id) }
     render json: people_list
   end
 
@@ -53,7 +55,7 @@ class PeopleController < ApplicationController
 
   # Page to create a new login
   def new_login
-    if current_person && current_person.login.present?
+    if current_person&.login.present?
       flash[:notice] = "You already have a login. You can change your login or password here on your account page."
       return redirect_to(edit_person_path(current_person))
     end
@@ -91,7 +93,11 @@ class PeopleController < ApplicationController
         @person.reset_perishable_token!
         ActiveSupport::Notifications.instrument "create_for_existing_person.login.people.racing_on_rails", login: person_params[:login]
         flash[:notice] = "Created your new login"
-        PersonMailer.new_login_confirmation(@person).deliver_now rescue nil
+        begin
+          PersonMailer.new_login_confirmation(@person).deliver_now
+        rescue StandardError
+          nil
+        end
         return redirect_to(edit_person_path(@person))
       else
         return render(:new_login)
@@ -108,10 +114,10 @@ class PeopleController < ApplicationController
     if license.present?
       @person = Person.name_like(person_params[:name]).detect do |person|
         person.license == license ||
-        person.race_numbers.any? { |num| num.value == license && (num.year == RacingAssociation.current.effective_year || num.year == RacingAssociation.current.effective_year - 1) }
+          person.race_numbers.any? { |num| num.value == license && (num.year == RacingAssociation.current.effective_year || num.year == RacingAssociation.current.effective_year - 1) }
       end
 
-      if @person && @person.login.present?
+      if @person&.login.present?
         flash.now[:warn] = "Sorry, there's already a login for number ##{license}. <a href=\"/password_resets/new\" class=\"obvious\">Forgot your password?</a>"
         @person = Person.new(person_params)
         return render(:new_login)
@@ -125,40 +131,32 @@ class PeopleController < ApplicationController
     @person = Person.new if @person.nil?
     @person.attributes = person_params
 
-    if person_params[:password].blank?
-      @person.errors.add :password, "can't be blank"
-    end
+    @person.errors.add :password, "can't be blank" if person_params[:password].blank?
 
-    if person_params[:email].blank?
-      @person.errors.add :email, "can't be blank"
-    end
+    @person.errors.add :email, "can't be blank" if person_params[:email].blank?
 
-    if person_params[:email].blank? || !person_params[:email][Authlogic::Regex.email]
-      @person.errors.add :email, "must been email address"
-    end
+    @person.errors.add :email, "must been email address" if person_params[:email].blank? || !person_params[:email][Authlogic::Regex.email]
 
-    if person_params[:login].blank?
-      @person.errors.add :login, "can't be blank"
-    end
+    @person.errors.add :login, "can't be blank" if person_params[:login].blank?
 
-    if person_params[:license].present? && person_params[:license].strip[/\D+/]
-      @person.errors.add :license, "should only be numbers"
-    end
+    @person.errors.add :license, "should only be numbers" if person_params[:license].present? && person_params[:license].strip[/\D+/]
 
     if person_params[:name].present? && person_params[:name].strip[/^\d+$/]
       @person.errors.add :name, "is a number. Did you accidently type your license in the name field?"
     end
 
-    if @person.errors.any?
-      return render(:new_login)
-    end
+    return render(:new_login) if @person.errors.any?
 
     if @person.update(person_params)
       set_created_by @person
       flash[:notice] = "Created your new login"
       ActiveSupport::Notifications.instrument "create_person.login.people.racing_on_rails", login: person_params[:login]
       PersonSession.create @person
-      PersonMailer.new_login_confirmation(@person).deliver_now rescue nil
+      begin
+        PersonMailer.new_login_confirmation(@person).deliver_now
+      rescue StandardError
+        nil
+      end
       if @return_to.present?
         uri = URI.parse(@return_to)
         redirect_to URI::Generic.build(path: uri.path, query: uri.query).to_s
@@ -171,16 +169,15 @@ class PeopleController < ApplicationController
     end
   end
 
-
   private
 
   def find_people
     @name = params[:name].try(:strip)
-    if @name.present?
-      @people = Person.name_like(@name[0, 32]).page(page)
-    else
-      @people = Person.none
-    end
+    @people = if @name.present?
+                Person.name_like(@name[0, 32]).page(page)
+              else
+                Person.none
+              end
   end
 
   def set_created_by(person)

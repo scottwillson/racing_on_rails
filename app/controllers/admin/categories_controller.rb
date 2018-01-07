@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   # Manage Asssociation and BAR categories
   class CategoriesController < Admin::AdminController
@@ -34,11 +36,11 @@ module Admin
           @category.save!
 
           # parent_id could be nil, so can't use @category.children
-          if @category.parent_id
-            @children = @category.parent.children
-          else
-            @children = Category.find_all_unknowns
-          end
+          @children = if @category.parent_id
+                        @category.parent.children
+                      else
+                        Category.find_all_unknowns
+                      end
         end
 
         type.html do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Export
   module People
     include Export::Base
@@ -10,28 +12,28 @@ module Export
     private
 
     def Person.export_data
-      basename = 'people.csv'
+      basename = "people.csv"
       path = Base.tmp_path basename
       path.unlink if path.exist?
       FileUtils.mkdir_p path.dirname unless path.dirname.exist?
-      FileUtils.chmod 0777, path.dirname
+      FileUtils.chmod 0o777, path.dirname
       target = Base.public_path basename
       target.dirname.mkdir unless target.dirname.exist?
 
       people = Person.find_all_for_export(Date.new, nil)
-      outfile = File.open(target, 'wb')
+      outfile = File.open(target, "wb")
       CSV.open(outfile, "wb") do |csv|
         people.each do |person|
           person.each do |field|
             if field[1].blank?
-              key=field[0]
+              key = field[0]
               person[key] = '\N'
             end
           end
-          csv << [person['id'], person['first_name'], person['last_name'], person['city'],
-                  person['state'], person['date_of_birth'], person['license'], person['team_id'],
-                  person['gender'], person['ccx_category'], person['road_category'], person['track_category'],
-                  person['mtb_category'], person['dh_category']]
+          csv << [person["id"], person["first_name"], person["last_name"], person["city"],
+                  person["state"], person["date_of_birth"], person["license"], person["team_id"],
+                  person["gender"], person["ccx_category"], person["road_category"], person["track_category"],
+                  person["mtb_category"], person["dh_category"]]
         end
       end
 
@@ -49,9 +51,9 @@ module Export
     end
 
     def Person.export_columns
-      [
-        'id', "first_name", "last_name", "city", "state", "date_of_birth", "license",
-        "team_id", "gender", "ccx_category", "road_category", "track_category", "mtb_category", "dh_category"
+      %w[
+        id first_name last_name city state date_of_birth license
+        team_id gender ccx_category road_category track_category mtb_category dh_category
       ]
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RacingOnRails::Application.configure do
   require "syslog/logger"
 
@@ -20,5 +22,5 @@ RacingOnRails::Application.configure do
   config.i18n.fallbacks                                     = true
   config.log_level                                          = :info
   config.logger                                             = Syslog::Logger.new("racing_on_rails", Syslog::LOG_LOCAL4)
-  config.serve_static_files                                = false
+  config.serve_static_files = false
 end

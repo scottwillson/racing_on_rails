@@ -9,18 +9,18 @@ module Competitions
     end
 
     def category_names
-      [ "Women 1/2", "Women 3", "Women 4/5" ]
+      ["Women 1/2", "Women 3", "Women 4/5"]
     end
 
     def categories_for(race)
       if race.name == "Women 1/2"
-        super + [ Category.find_by(name: "Pro/1/2 Women"), Category.find_by(name: "Women Category 1/2") ]
+        super + [Category.find_by(name: "Pro/1/2 Women"), Category.find_by(name: "Women Category 1/2")]
       elsif race.name == "Women 3"
-        super + [ Category.find_by(name: "Category 3 Women"), Category.find_by(name: "Women Category 3") ]
+        super + [Category.find_by(name: "Category 3 Women"), Category.find_by(name: "Women Category 3")]
       elsif race.name == "Women 4/5"
-        super + [ Category.find_by(name: "Category 4/5 Women"),
-                  Category.find_by(name: "Women 4"),
-                  Category.find_by(name: "Women Category 4/5") ]
+        super + [Category.find_by(name: "Category 4/5 Women"),
+                 Category.find_by(name: "Women 4"),
+                 Category.find_by(name: "Women Category 4/5")]
       else
         super
       end
@@ -31,7 +31,7 @@ module Competitions
     end
 
     def source_event_types
-      [ MultiDayEvent, SingleDayEvent, Event ]
+      [MultiDayEvent, SingleDayEvent, Event]
     end
 
     def source_event_ids(race)

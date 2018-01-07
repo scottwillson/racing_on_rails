@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 # All categories' results in a time trial by time
 # Adds +combined_results+ if Time Trial Event.
 # Destroy +combined_results+ if they exist, but should not
 # All the calculation happens synchronously, which isn't ideal. Logic overlaps heavily with Competition as well.
 class CombinedTimeTrialResults < Event
-  validates_uniqueness_of :parent_id, message: "Event can only have one CombinedTimeTrialResults"
+  validates :parent_id, uniqueness: { message: "Event can only have one CombinedTimeTrialResults" }
   validate { |combined_results| combined_results.combined_results.nil? }
 
   default_value_for :auto_combined_results, false
@@ -23,15 +25,15 @@ class CombinedTimeTrialResults < Event
   end
 
   def self.requires_combined_results_events
-    event_ids = Result.
-      joins(:event).
-      where("place is not null and cast(place as signed) > 0").
-      where("results.time > 0").
-      where(events: { discipline: "Time Trial", auto_combined_results: true }).
-      pluck(:event_id).
-      uniq
+    event_ids = Result
+                .joins(:event)
+                .where("place is not null and cast(place as signed) > 0")
+                .where("results.time > 0")
+                .where(events: { discipline: "Time Trial", auto_combined_results: true })
+                .pluck(:event_id)
+                .uniq
 
-      Event.find(event_ids)
+    Event.find(event_ids)
   end
 
   def self.has_combined_results_events
@@ -51,9 +53,7 @@ class CombinedTimeTrialResults < Event
   end
 
   def self.create_combined_results(event)
-    unless event.combined_results
-      event.create_combined_results(name: "Combined")
-    end
+    event.create_combined_results(name: "Combined") unless event.combined_results
     event.combined_results
   end
 
@@ -74,9 +74,7 @@ class CombinedTimeTrialResults < Event
   end
 
   def calculate!
-    if !should_calculate?
-      return false
-    end
+    return false unless should_calculate?
 
     transaction do
       destroy_races
@@ -93,12 +91,10 @@ class CombinedTimeTrialResults < Event
 
   def select_source_results
     parent.races.map do |race|
-      race.results.select do |result|
-        result.finished_time_trial?
-      end
-    end.
-    flatten.
-    uniq { |r| [ r.person_id, r.time ] }
+      race.results.select(&:finished_time_trial?)
+    end
+          .flatten
+          .uniq { |r| [r.person_id, r.time] }
   end
 
   def create_combined_by_time_results(combined_race, source_results)

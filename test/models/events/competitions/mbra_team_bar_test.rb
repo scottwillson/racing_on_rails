@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../../test_helper", __FILE__)
 
 module Competitions
@@ -96,8 +98,8 @@ module Competitions
         MbraTeamBar.calculate!(2008)
       end
 
-      road_bat = MbraTeamBar.find_by_name("2008 Road BAT")
-      men_road_bat = road_bat.races.detect {|b| b.category == senior_men }
+      road_bat = MbraTeamBar.find_by(name: "2008 Road BAT")
+      men_road_bat = road_bat.races.detect { |b| b.category == senior_men }
       assert_equal(senior_men, men_road_bat.category, "Senior Men BAT race BAT cat")
       assert_equal(2, men_road_bat.results.size, "Senior Men Road BAT results")
 
@@ -110,7 +112,7 @@ module Competitions
       assert_equal("2", results[1].place, "Senior Men Road BAT results place")
       assert_equal(0.5, results[1].points, "Senior Men Road BAT results points")
 
-      women_road_bar = road_bat.races.detect {|b| b.category == senior_women }
+      women_road_bar = road_bat.races.detect { |b| b.category == senior_women }
       assert_equal(senior_women, women_road_bar.category, "Senior Women BAT race BAT cat")
       assert_equal(0, women_road_bar.results.size, "Senior Women Road BAT results")
 
@@ -139,8 +141,8 @@ module Competitions
         MbraTeamBar.calculate!(2008)
       end
 
-      road_bat = MbraTeamBar.find_by_name("2008 Road BAT")
-      men_road_bat = road_bat.races.detect {|b| b.category == senior_men }
+      road_bat = MbraTeamBar.find_by(name: "2008 Road BAT")
+      men_road_bat = road_bat.races.detect { |b| b.category == senior_men }
       assert_equal(senior_men, men_road_bat.category, "Senior Men BAT race BAT cat")
       assert_equal(2, men_road_bat.results.size, "Senior Men Road BAT results")
 

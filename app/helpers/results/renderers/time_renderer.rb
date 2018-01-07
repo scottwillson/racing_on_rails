@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Results
   module Renderers
     class TimeRenderer < DefaultResultRenderer
@@ -10,7 +12,7 @@ module Results
         minutes = (time / 60) % 60
         hours = time / (60 * 60)
 
-        precision = [ column.precision, 3 ].min
+        precision = [column.precision, 3].min
         if precision == 0
           case column.cells.compact.map(&:to_i).max
           when 60..3599

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Events
   # Editors, too. Should just be has_many :promoters
   module Promoters
@@ -18,8 +19,8 @@ module Events
         elsif person.administrator?
           # No scope
         else
-          joins("left outer join editors_events on event_id = events.id").
-          where("promoter_id = :person_id or editors_events.editor_id = :person_id", person_id: person)
+          joins("left outer join editors_events on event_id = events.id")
+            .where("promoter_id = :person_id or editors_events.editor_id = :person_id", person_id: person)
         end
       }
     end
@@ -27,12 +28,12 @@ module Events
     def editable_by?(person)
       return false unless person
       person.administrator? ||
-      person == promoter ||
-      editors.include?(person)
+        person == promoter ||
+        editors.include?(person)
     end
 
     def promoter_name
-      promoter.name if promoter
+      promoter&.name
     end
 
     def promoter_name=(value)
@@ -42,28 +43,22 @@ module Events
     def set_promoter
       if new_promoter_name.present?
         promoters = Person.find_all_by_name_or_alias(new_promoter_name)
-        case promoters.size
-        when 0
-          self.promoter = Person.create!(name: new_promoter_name)
-        when 1
-          self.promoter = promoters.first
-        else
-          self.promoter = promoters.detect { |promoter| promoter.id == promoter_id } || promoters.first
-        end
+        self.promoter = case promoters.size
+                        when 0
+                          Person.create!(name: new_promoter_name)
+                        when 1
+                          promoters.first
+                        else
+                          promoters.detect { |promoter| promoter.id == promoter_id } || promoters.first
+                        end
       elsif new_promoter_name == ""
         self.promoter = nil
       end
     end
 
-    # Find valid email—either promoter's email or event email. If all are blank, raise exception.
+    # Find valid email: either promoter's email or event email. If all are blank, raise exception.
     def email!
-      if promoter.try(:email).present?
-        promoter.email
-      elsif email.present?
-        email
-      else
-        raise BlankEmail, "Event #{name} has no email"
-      end
+      promoter.try(:email).presence || email.presence || raise(BlankEmail, "Event #{name} has no email")
     end
 
     class BlankEmail < StandardError; end

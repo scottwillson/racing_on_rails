@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   # Tie a Competition Result to its source Result from a SingleDayEvent, and holds the points earned for the Competition
   #
@@ -14,13 +16,13 @@ module Competitions
   # * source_result: 3rd, Mudslinger
   # * competition_result: 200th Ironman
   class Score < ActiveRecord::Base
-    belongs_to :source_result, class_name: 'Result', foreign_key: 'source_result_id'
-    belongs_to :competition_result, class_name: 'Result', foreign_key: 'competition_result_id'
+    belongs_to :source_result, class_name: "Result", foreign_key: "source_result_id"
+    belongs_to :competition_result, class_name: "Result", foreign_key: "competition_result_id"
 
     # Intentionally validate ids. validates_presence_of :association causes it to load.
     # TODO Try :inverse to fix this
-    validates_presence_of :source_result_id, :competition_result_id, :points
-    validates_numericality_of :points
+    validates :source_result_id, :competition_result_id, :points, presence: true
+    validates :points, numericality: true
 
     before_save :cache_date
 

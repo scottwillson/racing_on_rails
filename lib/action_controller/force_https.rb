@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ActionController
   # Modified version of Rails' force_ssl. Active in development Rails environment. Also uses
   # old ssl_requirement behavior that builds full URL.
@@ -15,7 +17,7 @@ module ActionController
       def force_https(options = {})
         options.delete(:host)
         before_action(options) do
-          if self.force_https?
+          if force_https?
             force_https!
             false
           end
@@ -32,7 +34,7 @@ module ActionController
     end
 
     def force_https!
-      redirect_to({ protocol: "https", port: 443, params: request.query_parameters }, { status: :moved_permanently })
+      redirect_to({ protocol: "https", port: 443, params: request.query_parameters }, status: :moved_permanently)
       flash.keep
     end
   end

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module Competitions
   module Naming
     def name
-      self[:name] ||= "#{self.date.year} #{friendly_name}"
+      self[:name] ||= "#{date.year} #{friendly_name}"
     end
 
     def default_name

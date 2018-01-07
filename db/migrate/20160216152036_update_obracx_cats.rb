@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UpdateObracxCats < ActiveRecord::Migration
   def change
     if RacingAssociation.current.short_name == "OBRA"

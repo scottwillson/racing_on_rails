@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module People
   module Authorization
     extend ActiveSupport::Concern
@@ -23,13 +24,9 @@ module People
     end
 
     def validate_unique_editors(editor)
-      if editors.include?(editor)
-        raise ActiveRecord::ActiveRecordError, "Can't add duplicate editor #{editor.name} for #{name}"
-      end
+      raise ActiveRecord::ActiveRecordError, "Can't add duplicate editor #{editor.name} for #{name}" if editors.include?(editor)
 
-      if editor == self
-        raise ActiveRecord::ActiveRecordError, "Can't be editor for self"
-      end
+      raise ActiveRecord::ActiveRecordError, "Can't be editor for self" if editor == self
     end
 
     def account_permissions

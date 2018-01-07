@@ -7,7 +7,7 @@ module Competitions
   class DirtyCirclesOverallTest < ActiveSupport::TestCase
     test "calculate" do
       series = Series.create!(name: "Dirty Circles")
-      series.children.create!(date: Date.new(2016, 3,  8), name: "Dirty Circles 1")
+      series.children.create!(date: Date.new(2016, 3, 8), name: "Dirty Circles 1")
       series.children.create!(date: Date.new(2016, 3, 15), name: "Dirty Circles 2")
       series.children.create!(date: Date.new(2016, 3, 22), name: "Dirty Circles 3")
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Export
   module Categories
     include Export::Base
@@ -24,7 +26,7 @@ module Export
     end
 
     def Category.export_data_sql
-      "SELECT #{Category.export_columns.join(",")}
+      "SELECT #{Category.export_columns.join(',')}
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"'
        LINES TERMINATED BY '\\n'
@@ -32,7 +34,7 @@ module Export
     end
 
     def Category.export_columns
-      [ "id", "parent_id", "name" ]
+      %w[id parent_id name]
     end
   end
 end

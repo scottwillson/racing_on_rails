@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module Schedule
   # Month in yearly Schedule::Schedule
   class Month
-
     # January, February ...
     attr_reader :name
 
@@ -21,19 +22,15 @@ module Schedule
       end_of_month = Date.new(year, month).to_time.at_end_of_month
       until day.to_time > end_of_month
         @weeks << Week.new(self, day)
-        day = day + 7
+        day += 7
       end
     end
 
-    def name_abbr
-      @name_abbr
-    end
+    attr_reader :name_abbr
 
     # Monday of this week's day as a number
     def monday_of_week(day)
-      until day.wday == 0
-        day = day - 1
-      end
+      day -= 1 until day.wday == 0
       day
     end
 
@@ -50,16 +47,16 @@ module Schedule
     end
 
     def updated_at
-      weeks.
-      map(&:days).
-      flatten.
-      map(&:events).
-      flatten.
-      max_by(&:updated_at)
+      weeks
+        .map(&:days)
+        .flatten
+        .map(&:events)
+        .flatten
+        .max_by(&:updated_at)
     end
 
     def to_s
-      "#<Schedule::Month #{name} #{date.strftime('%x') if date}>"
+      "#<Schedule::Month #{name} #{date&.strftime('%x')}>"
     end
   end
 end

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Competitions
   class BlindDateAtTheDairyOverall < Overall
     include Competitions::BlindDateAtTheDairy::Common
 
-    def maximum_events(race)
+    def maximum_events(_race)
       4
     end
 
@@ -10,9 +12,7 @@ module Competitions
       super
 
       race = races.detect { |r| r.name == "Beginner" }
-      if race
-        race.update_attributes! visible: false
-      end
+      race&.update_attributes! visible: false
 
       BlindDateAtTheDairyMonthlyStandings.calculate!
     end

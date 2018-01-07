@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   class CompetitionsController < ApplicationController
     def show
@@ -17,7 +19,7 @@ module Competitions
       elsif params[:type] == "oregon_womens_prestige_series"
         competition_class = OregonWomensPrestigeSeries
       else
-        raise ActiveRecord::RecordNotFound.new("No competition of type: #{params[:type]}")
+        raise ActiveRecord::RecordNotFound, "No competition of type: #{params[:type]}"
       end
 
       @event = competition_class.year(@year).first || competition_class.new(date: Time.zone.local(@year))
@@ -29,9 +31,7 @@ module Competitions
         @single_day_event_children = Event.none
         @source_events = Event.none
       else
-        if @event.respond_to?(:source_events)
-          @source_events = @event.source_events.include_results
-        end
+        @source_events = @event.source_events.include_results if @event.respond_to?(:source_events)
 
         @races = Race.where(event_id: @event.id).include_results
         @single_day_event_children = SingleDayEvent.where(parent_id: @event.id).include_child_results

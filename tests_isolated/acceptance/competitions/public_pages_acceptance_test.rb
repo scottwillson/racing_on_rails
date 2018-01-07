@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../acceptance_test"
 
 module Competitions
@@ -39,7 +41,7 @@ module Competitions
 
       Timecop.freeze(2009, 4) do
         banana_belt_masters_30_34 = banana_belt_1.races.create!(category: masters_30_34)
-        banana_belt_masters_30_34.results.create!(person: weaver, place: '10')
+        banana_belt_masters_30_34.results.create!(person: weaver, place: "10")
 
         Bar.calculate! 2009
         OverallBar.calculate! 2009
@@ -67,7 +69,6 @@ module Competitions
       page.has_css?("title", text: /Age Graded/)
     end
 
-
     private
 
     def create_results
@@ -83,9 +84,9 @@ module Competitions
         FactoryBot.create(:result, event: @new_event)
       end
 
-      FactoryBot.create(:event, name: "Kings Valley Road Race", date: Time.zone.local(2004).end_of_year.to_date).
-        races.create!(category: FactoryBot.create(:category, name: "Senior Women 1/2/3")).
-        results.create!(place: "2", person: @alice)
+      FactoryBot.create(:event, name: "Kings Valley Road Race", date: Time.zone.local(2004).end_of_year.to_date)
+                .races.create!(category: FactoryBot.create(:category, name: "Senior Women 1/2/3"))
+                .results.create!(place: "2", person: @alice)
 
       event = FactoryBot.create(:event, name: "Jack Frost", date: Time.zone.local(2002, 1, 17), discipline: "Time Trial")
       event.races.create!(category: FactoryBot.create(:category, name: "Senior Women")).results.create!(place: "1", person: @alice)

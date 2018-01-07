@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # CMS web page. Tree structure. Versioned.
 # User render_page helper to look for Page before falling back on Rails templates.
 # Pages uses ERb and can execute Ruby code just like a template, so admin users can
@@ -11,14 +13,14 @@ class Page < ActiveRecord::Base
   include SentientUser
 
   before_validation :set_slug, :set_path, :set_body
-  validates_uniqueness_of :path, message: "'%{value}' has already been taken"
+  validates :path, uniqueness: { message: "'%{value}' has already been taken" }
 
   after_create :update_parent
   after_destroy :update_parent
 
   # Friendly param. Last segment in +path+
   def set_slug
-    self.slug = title.downcase.gsub(" ", "_") if slug.blank?
+    self.slug = title.downcase.tr(" ", "_") if slug.blank?
     slug
   end
 

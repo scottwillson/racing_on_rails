@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../racing_on_rails/integration_test"
 
 module Competitions
@@ -26,7 +28,7 @@ module Competitions
       event = FactoryBot.create(:event, date: Date.new(2004, 2))
       senior_men = FactoryBot.create(:category)
       race = event.races.create!(category: senior_men)
-      result = race.results.create(place: "1", person: person, team: team)
+      race.results.create(place: "1", person: person, team: team)
 
       Ironman.calculate! 2004
       event = Ironman.find_for_year(2004)

@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 module Admin
   # Add, delete, and edit Person information. Also merge.
   class PeopleController < Admin::AdminController
     before_action :require_current_person
     # Funky permissions filtering here to allow officials and promoters download Excel file
-    skip_filter :require_administrator, only: :index
+    skip_action_callback :require_administrator, only: :index
     before_action :require_administrator_or_promoter_or_official, only: :index
     before_action :remember_event
-    layout 'admin/application', except: [ :card, :cards ]
+    layout "admin/application", except: %i[card cards]
 
     include ApplicationHelper
     include ActionView::Helpers::TextHelper
@@ -28,7 +30,7 @@ module Admin
     # === Assigns
     # * person: Array of People
     def index
-      return export if params['format'] == 'ppl' || params['format'] == 'xls'
+      return export if params["format"] == "ppl" || params["format"] == "xls"
 
       @current_year = current_date.year
       assign_name
@@ -195,9 +197,7 @@ module Admin
     def assign_race_numbers
       @disciplines = Discipline.numbers
       @number_issuers = NumberIssuer.all
-      if @person.race_numbers.none?(&:new_record?)
-        @person.race_numbers.build(person_id: @person.id)
-      end
+      @person.race_numbers.build(person_id: @person.id) if @person.race_numbers.none?(&:new_record?)
     end
 
     def current_date
@@ -209,12 +209,12 @@ module Admin
     end
 
     def remember_event
-      @event = Event.find(params['event_id']) unless params['event_id'].blank?
+      @event = Event.find(params["event_id"]) if params["event_id"].present?
     end
 
     def require_administrator_or_promoter
       unless current_person.administrator? ||
-        current_person && current_person.promoter? && params[:format] == "xls" && params[:excel_layout] == "scoring_sheet"
+             current_person&.promoter? && params[:format] == "xls" && params[:excel_layout] == "scoring_sheet"
         redirect_to unauthorized_path
       end
     end
@@ -298,7 +298,7 @@ module Admin
         :wants_mail,
         :work_phone,
         :zip,
-        race_numbers_attributes: [ :discipline_id, :id, :number_issuer_id, :value, :year ]
+        race_numbers_attributes: %i[discipline_id id number_issuer_id value year]
       )
     end
   end

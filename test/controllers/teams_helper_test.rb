@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class TeamsHelperTest < ActionController::TestCase
-
   tests TeamsController
 
   include TeamsHelper
@@ -25,12 +26,12 @@ class TeamsHelperTest < ActionController::TestCase
   test "name and email link to contact" do
     get(:index)
     team = Team.new(contact_name: "Davis Phinney", contact_email: "david@team.com")
-    assert_equal(%Q{<a href="mailto:david@team.com">Davis Phinney</a>}, link_to_contact(team), "contact name and email")
+    assert_equal(%(<a href="mailto:david@team.com">Davis Phinney</a>), link_to_contact(team), "contact name and email")
   end
 
   test "email only link to contact" do
     get(:index)
     team = Team.new(contact_email: "david@team.com")
-    assert_equal(%Q{<a href="mailto:david@team.com">david@team.com</a>}, link_to_contact(team), "contact email only")
+    assert_equal(%(<a href="mailto:david@team.com">david@team.com</a>), link_to_contact(team), "contact email only")
   end
 end

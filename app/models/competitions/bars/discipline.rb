@@ -6,11 +6,11 @@ module Competitions
       def disciplines_for(race)
         case race.discipline
         when "Road"
-          [ "Road", "Road/Gravel", "Circuit" ]
+          ["Road", "Road/Gravel", "Circuit"]
         when "Mountain Bike"
-          [ "Mountain Bike", "Downhill", "Super D" ]
+          ["Mountain Bike", "Downhill", "Super D"]
         else
-          [ race.discipline ]
+          [race.discipline]
         end
       end
     end

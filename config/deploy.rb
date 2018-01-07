@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 lock "3.10.0"
 
-set :linked_dirs, %w( log public/assets public/system public/uploads tmp/pids tmp/cache tmp/sockets vendor/bundle )
-set :linked_files, %w( config/database.yml config/newrelic.yml config/secrets.yml )
+set :linked_dirs, %w[ log public/assets public/system public/uploads tmp/pids tmp/cache tmp/sockets vendor/bundle ]
+set :linked_files, %w[ config/database.yml config/newrelic.yml config/secrets.yml ]
 
 set :bundle_jobs, 4
-set :bundle_without, %w( development test )
+set :bundle_without, %w[ development test ]
 
 set :puma_preload_app, false
-set :puma_threads, [ 8, 32 ]
+set :puma_threads, [8, 32]
 set :puma_workers, 1
 
 load "local/config/deploy.rb" if File.exist?("local/config/deploy.rb")
@@ -39,13 +41,9 @@ namespace :deploy do
   task :registration_engine do
     on roles :app do
       if fetch(:application) == "obra" || fetch(:application) == "nabra"
-        if test("[ -e \"#{release_path}/lib/registration_engine\" ]")
-          execute :rm, "-rf \"#{release_path}/lib/registration_engine\""
-        end
+        execute :rm, "-rf \"#{release_path}/lib/registration_engine\"" if test("[ -e \"#{release_path}/lib/registration_engine\" ]")
 
-        if test("[ -L \"#{release_path}/lib/registration_engine\" ]")
-          execute :rm, "-rf \"#{release_path}/lib/registration_engine\""
-        end
+        execute :rm, "-rf \"#{release_path}/lib/registration_engine\"" if test("[ -L \"#{release_path}/lib/registration_engine\" ]")
 
         execute :git, "clone git@github.com:scottwillson/registration_engine.git #{release_path}/lib/registration_engine"
       end
@@ -54,7 +52,7 @@ namespace :deploy do
 
   task :cache_error_pages do
     on roles :app do
-      %w( 404 422 500 503 ).each do |status_code|
+      %w[ 404 422 500 503 ].each do |status_code|
         execute :curl, "--silent --fail --retry 1 http://#{fetch :app_hostname}/#{status_code} -o #{release_path}/public/#{status_code}.html"
       end
     end

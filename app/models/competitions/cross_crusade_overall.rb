@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   # Minimum three-race requirement
   # but ... should show not apply until there are at least three races
@@ -11,19 +13,19 @@ module Competitions
     end
 
     def point_schedule
-      [ 26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+      [26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     end
 
     def minimum_events
       3
     end
 
-    def maximum_events(race)
+    def maximum_events(_race)
       7
     end
 
     def set_notes
-      self.notes = %Q{ Three event minimum. Results that don't meet the minimum are listed in italics. See the <a href="http://www.crosscrusade.com/series-info-rules/">series rules</a>. }
+      self.notes = %( Three event minimum. Results that don't meet the minimum are listed in italics. See the <a href="http://www.crosscrusade.com/series-info-rules/">series rules</a>. )
     end
 
     def set_name

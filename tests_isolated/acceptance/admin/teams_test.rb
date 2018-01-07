@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
@@ -12,7 +14,7 @@ class TeamsTest < AcceptanceTest
     gl.aliases.create!(name: "Gentile Lovers")
     FactoryBot.create(:team, name: "Chocolate")
     dfl = FactoryBot.create(:team, name: "Team dFL")
-    visit '/teams'
+    visit "/teams"
 
     find("a[href='/teams/#{gl.id}']").click
 
@@ -36,7 +38,7 @@ class TeamsTest < AcceptanceTest
     assert has_checked_field?("team_member_#{vanilla.id}")
     assert has_checked_field?("team_member_#{gl.id}")
     uncheck "team_member_#{gl.id}"
-    wait_for_no :field, "team_member_#{gl.id}", { checked: true }
+    wait_for_no :field, "team_member_#{gl.id}", checked: true
 
     visit "/admin/teams"
     assert !has_checked_field?("team_member_#{gl.id}")
@@ -44,7 +46,7 @@ class TeamsTest < AcceptanceTest
     click_link "show_#{dfl.id}"
     assert_page_has_content "Team dFL"
 
-    visit '/admin/teams'
+    visit "/admin/teams"
     click_link "edit_#{vanilla.id}"
     assert_page_has_content "Vanilla"
 
@@ -59,10 +61,8 @@ class TeamsTest < AcceptanceTest
     fill_in_inline "#team_#{vanilla.id}_name", with: "Sacha's Team"
 
     begin
-      Timeout::timeout(10) do
-        until Team.find(vanilla.id).name == "Sacha's Team"
-          sleep 0.25
-        end
+      Timeout.timeout(10) do
+        sleep 0.25 until Team.find(vanilla.id).name == "Sacha's Team"
       end
     rescue Timeout::Error
       raise Timeout::Error, "Should update team name after second inline edit"
@@ -119,10 +119,8 @@ class TeamsTest < AcceptanceTest
     assert Team.exists?(gl.id), "Should not have merged Gentle Lovers"
 
     begin
-      Timeout::timeout(10) do
-        while Team.exists?(vanilla.id)
-          sleep 0.25
-        end
+      Timeout.timeout(10) do
+        sleep 0.25 while Team.exists?(vanilla.id)
       end
     rescue Timeout::Error
       raise Timeout::Error, "Should have merged Vanilla"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Competitions
@@ -65,14 +67,14 @@ module Competitions
 
       Competitions::Bar.calculate!(2004)
       bar = Bar.year(2004).where(discipline: "Road").first
-      result = bar.races.detect {|r| r.name == 'Senior Women'}.results.first
-      assert_not_nil(result, 'result')
-      assert_not_nil(result.person, 'result.person')
+      result = bar.races.detect { |r| r.name == "Senior Women" }.results.first
+      assert_not_nil(result, "result")
+      assert_not_nil(result.person, "result.person")
 
       Competitions::OverallBar.calculate!(2004)
       overall_bar = Competitions::OverallBar.find_for_year(2004)
-      result = overall_bar.races.detect {|r| r.name == 'Senior Women'}.results.first
-      assert_not_nil(result, 'result')
+      result = overall_bar.races.detect { |r| r.name == "Senior Women" }.results.first
+      assert_not_nil(result, "result")
 
       get(:person_event, event_id: overall_bar.to_param, person_id: result.person.to_param)
       assert_response(:success)
@@ -115,7 +117,7 @@ module Competitions
 
     test "empty competition" do
       bar = Competitions::Bar.create!
-      person = Person.create!(name: 'JP Morgen')
+      person = Person.create!(name: "JP Morgen")
 
       get(:person_event, event_id: bar.to_param, person_id: person.to_param)
       assert_response(:success)
@@ -134,7 +136,7 @@ module Competitions
       TeamBar.calculate!(2004)
       bar = TeamBar.first
       result = bar.races.first.results.first
-      assert_not_nil(result, 'result')
+      assert_not_nil(result, "result")
       assert_not_nil result.team, "result.team"
 
       get :team_event, event_id: bar.to_param, team_id: result.team.to_param

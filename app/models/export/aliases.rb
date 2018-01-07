@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Export
   module Aliases
     include Export::Base
@@ -24,7 +26,7 @@ module Export
     end
 
     def Alias.export_data_sql
-      "SELECT #{Alias.export_columns.join(",")}
+      "SELECT #{Alias.export_columns.join(',')}
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"'
        LINES TERMINATED BY '\\n'
@@ -32,10 +34,9 @@ module Export
     end
 
     def Alias.export_columns
-      [
-        "id", "alias", "name", "person_id", "team_id"
+      %w[
+        id alias name person_id team_id
       ]
     end
-
   end
 end

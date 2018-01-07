@@ -1,11 +1,9 @@
+# frozen_string_literal: true
+
 # Build navigational tabs as HTML table
 module TabsHelper
   def tabs(active_text = nil)
-    if mobile_request?
-      window = 3
-    else
-      window = nil
-    end
+    window = (3 if mobile_request?)
 
     tabs = Tabs.new(active_text, window)
     yield tabs
@@ -35,7 +33,7 @@ module TabsHelper
           @tabs[0, window]
         else
           index = @tabs.index(&:active?)
-          if index == 0 || index == nil
+          if index == 0 || index.nil?
             @tabs[0, window]
           elsif (index + 1) == @tabs.size
             @tabs[-window, window]
@@ -60,9 +58,7 @@ module TabsHelper
       @text = text.to_s
       @path = path
 
-      if text && active_text && (text == active_text)
-        @active = true
-      end
+      @active = true if text && active_text && (text == active_text)
     end
 
     def active?

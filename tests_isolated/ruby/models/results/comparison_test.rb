@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../test_case", __FILE__)
 require File.expand_path("../../../../../app/models/results/comparison", __FILE__)
 
 # :stopdoc:
 module Results
   class ComparisonTest < Ruby::TestCase
-
     class TestResult
       include Results::Comparison
 
@@ -16,7 +17,7 @@ module Results
         end
       end
     end
-  
+
     def test_competition_result_hash
       result_1 = TestResult.new
       result_2 = TestResult.new
@@ -62,13 +63,13 @@ module Results
       result_2 = TestResult.new(person_id: 2, person_name: "Chris", place: "3", points: 4, team_id: 5, team_name: "Postal")
       assert result_1.competition_result_hash != result_2.competition_result_hash, "team_name different"
     end
-    
+
     def test_nils
       result_1 = TestResult.new(place: "3")
       result_2 = TestResult.new(person_id: 2, person_name: "Chris", place: "3", points: 4, team_id: 5, team_name: "Mercury")
       assert result_1.competition_result_hash != result_2.competition_result_hash, "some fields nil"
     end
-    
+
     def test_same_values_different_fields
       result_1 = TestResult.new(person_id: 2, team_id: 5)
       result_2 = TestResult.new(person_id: 5, team_id: 2)

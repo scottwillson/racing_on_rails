@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Competitions
@@ -7,7 +9,7 @@ module Competitions
       OregonWomensPrestigeSeries.calculate!
       competition = OregonWomensPrestigeSeries.find_for_year
       assert_equal 3, competition.races.count, "races"
-      assert_same_elements [ "Women 1/2", "Women 3", "Women 4/5"], competition.races.map(&:name), "category names"
+      assert_same_elements ["Women 1/2", "Women 3", "Women 4/5"], competition.races.map(&:name), "category names"
       assert competition.races.first.results.empty?, "should have no results"
     end
 
@@ -57,13 +59,13 @@ module Competitions
       OregonWomensPrestigeSeries.calculate!
 
       race = competition.races.find { |r| r.category == women_12 }
-      assert_equal [ 25, 1.5 ], race.results.sort.map(&:points), "points for Women 1/2"
+      assert_equal [25, 1.5], race.results.sort.map(&:points), "points for Women 1/2"
 
       race = competition.races.find { |r| r.category == women_3 }
-      assert_equal [ 18 ], race.results.sort.map(&:points), "points for Women 3"
+      assert_equal [18], race.results.sort.map(&:points), "points for Women 3"
 
       race = competition.races.find { |r| r.category == women_4_5 }
-      assert_equal [ 14 ], race.results.sort.map(&:points), "points for Women 4/5"
+      assert_equal [14], race.results.sort.map(&:points), "points for Women 4/5"
     end
   end
 end

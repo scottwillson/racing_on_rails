@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EventTeamMembershipsController < ApplicationController
   force_https
   before_action :require_current_person, except: :new
@@ -33,7 +35,6 @@ class EventTeamMembershipsController < ApplicationController
     redirect_to event_event_teams_path(@event_team_membership.event)
   end
 
-
   private
 
   def create_for_other_person
@@ -65,15 +66,15 @@ class EventTeamMembershipsController < ApplicationController
   end
 
   def person_or_editor?
-    @event_team_membership.event && @event_team_membership.event.editable_by?(current_person) ||
-    @event_team_membership && @event_team_membership.person == current_person
+    @event_team_membership.event&.editable_by?(current_person) ||
+      @event_team_membership && @event_team_membership.person == current_person
   end
 
   def event_team_membership_params
-    params_without_mobile.
-      require(:event_team_membership).permit(
+    params_without_mobile
+      .require(:event_team_membership).permit(
         :person_id,
-        { person_attributes: :name }
+        person_attributes: :name
       )
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -10,12 +12,12 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     login_as event_team.event.promoter
 
     post :create,
-      event_team_id: event_team,
-      event_team_membership: {
-        person_attributes: {
-          name: "Jane Racer"
-        }
-      }
+         event_team_id: event_team,
+         event_team_membership: {
+           person_attributes: {
+             name: "Jane Racer"
+           }
+         }
 
     event_team_membership = assigns(:event_team_membership)
     assert_not_nil event_team_membership
@@ -29,13 +31,13 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     login_as event_team.event.promoter
 
     post :create,
-      event_team_id: event_team,
-      event_team_membership: {
-        person_id: person,
-        person_attributes: {
-          name: person.name
-        }
-      }
+         event_team_id: event_team,
+         event_team_membership: {
+           person_id: person,
+           person_attributes: {
+             name: person.name
+           }
+         }
 
     event_team_membership = assigns(:event_team_membership)
     assert_not_nil event_team_membership
@@ -50,13 +52,13 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     login_as event_team.event.promoter
 
     post :create,
-      event_team_id: event_team,
-      event_team_membership: {
-        person_id: person,
-        person_attributes: {
-          name: person.name
-        }
-      }
+         event_team_id: event_team,
+         event_team_membership: {
+           person_id: person,
+           person_attributes: {
+             name: person.name
+           }
+         }
 
     event_team_membership = assigns(:event_team_membership)
     assert_not_nil event_team_membership
@@ -110,10 +112,10 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     event_team = FactoryBot.create(:event_team)
 
     post :create,
-      event_team_id: event_team,
-      event_team_membership: {
-        person_id: different_person,
-      }
+         event_team_id: event_team,
+         event_team_membership: {
+           person_id: different_person
+         }
 
     assert_redirected_to unauthorized_path
   end
@@ -142,9 +144,9 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     assert_redirected_to event_event_teams_path(event_team_membership.event)
   end
 
-    test "#destroy current_person required" do
-      event_team_membership = FactoryBot.create(:event_team_membership)
-      delete :destroy, id: event_team_membership
-      assert_redirected_to new_person_session_path
-    end
+  test "#destroy current_person required" do
+    event_team_membership = FactoryBot.create(:event_team_membership)
+    delete :destroy, id: event_team_membership
+    assert_redirected_to new_person_session_path
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Events
   module Previous
     extend ActiveSupport::Concern
@@ -20,7 +22,7 @@ module Events
     # return diff (0 = perfect match, > 0 partial match), event
     def previous_best_match
       match = previous_year_events_with_similar_names.first
-      [ match.try(:first), match.try(:last).try(:first) ]
+      [match.try(:first), match.try(:last).try(:first)]
     end
 
     def previous_year_events_with_similar_names
@@ -31,8 +33,8 @@ module Events
       categories = races.map(&:category)
 
       previous.races
-        .reject { |r| r.category.in? categories }
-        .each { |r| add_race_from_previous_year(r) }
+              .reject { |r| r.category.in? categories }
+              .each { |r| add_race_from_previous_year(r) }
     end
 
     def add_race_from_previous_year(race)
@@ -42,7 +44,7 @@ module Events
     def similar_promoter_name?(event)
       event.promoter_name &&
         promoter_name &&
-        DamerauLevenshtein.distance(event.promoter_name, promoter_name)  <= 3
+        DamerauLevenshtein.distance(event.promoter_name, promoter_name) <= 3
     end
 
     def similar_dates?(event)

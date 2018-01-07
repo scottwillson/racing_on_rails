@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module People
   module Names
     extend ActiveSupport::Concern
@@ -12,7 +13,7 @@ module People
       # "Jane Doe" or "Jane", "Doe" or name: "Jane Doe" or first_name: "Jane", last_name: "Doe"
       def self.find_all_by_name_or_alias(*args)
         options = args.extract_options!
-        options.keys.each { |key| raise(ArgumentError, "'#{key}' is not a valid key") unless [:name, :first_name, :last_name].include?(key) }
+        options.keys.each { |key| raise(ArgumentError, "'#{key}' is not a valid key") unless %i[name first_name last_name].include?(key) }
 
         name = args.join(" ") if options.empty?
 
@@ -69,11 +70,11 @@ module People
 
       case parts.size
       when 0
-        [ "", "" ]
+        ["", ""]
       when 1
-        [ parts.first, "" ]
+        [parts.first, ""]
       else
-        [ parts.first, parts[ 1..(parts.size - 1) ].join(" ") ]
+        [parts.first, parts[1..(parts.size - 1)].join(" ")]
       end
     end
 
@@ -118,32 +119,16 @@ module People
     end
 
     def name_or_login
-      if name.present?
-        name
-      elsif login.present?
-        login
-      else
-        email
-      end
+      name.presence || login.presence || email
     end
 
     def last_name_or_login
-      if last_name.present?
-        last_name
-      elsif login.present?
-        login
-      else
-        email
-      end
+      last_name.presence || login.presence || email
     end
 
     # Name. If +name+ is blank, returns email and phone
     def name_or_contact_info
-      if name.blank?
-        [email, home_phone].join(", ")
-      else
-        name
-      end
+      name.presence || [email, home_phone].join(", ")
     end
 
     # Tries to split +name+ into +first_name+ and +last_name+

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameDupeIndex < ActiveRecord::Migration
   def change
     remove_foreign_key :categories, name: :categories_categories_id_fk

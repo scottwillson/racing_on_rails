@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Results
   module Cleanup
     extend ActiveSupport::Concern
@@ -15,15 +17,11 @@ module Results
     end
 
     def cleanup_age
-      if age && age.to_i == 0
-        self.age = nil
-      end
+      self.age = nil if age && age.to_i == 0
     end
 
     def cleanup_city
-      if city == "(blank)"
-        self.city = nil
-      end
+      self.city = nil if city == "(blank)"
     end
 
     # Drops the 'st' from 1st, among other things
@@ -35,10 +33,10 @@ module Results
         normalized_place.gsub!("ND", "")
         normalized_place.gsub!("RD", "")
         normalized_place.gsub!("TH", "")
-        normalized_place.gsub!(")", "")
+        normalized_place.delete!(")")
         normalized_place = normalized_place.to_i.to_s if normalized_place[/^\d+\.0$/]
         normalized_place.strip!
-        normalized_place.gsub!(".", "")
+        normalized_place.delete!(".")
         self.place = normalized_place
       else
         self.place = ""
@@ -50,9 +48,7 @@ module Results
 
       _number = number.to_s.strip.truncate(8)
 
-      if _number[/^\d+\.0$/]
-        _number = number.to_i.to_s
-      end
+      _number = number.to_i.to_s if _number[/^\d+\.0$/]
 
       self.number = _number
     end
@@ -67,12 +63,12 @@ module Results
     def cleanup_name(name)
       return name if name.nil?
       name = name.to_s.strip
-      return '' if name == '0.0'
-      return '' if name == '0'
-      return '' if name == '.'
-      return '' if name.include?('N/A')
-      name = name.gsub(';', '\'')
-      name.gsub(/ *\/ */, '/')
+      return "" if name == "0.0"
+      return "" if name == "0"
+      return "" if name == "."
+      return "" if name.include?("N/A")
+      name = name.tr(";", "'")
+      name.gsub(/ *\/ */, "/")
     end
   end
 end

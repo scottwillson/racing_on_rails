@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   module Calculations
     module Place
@@ -55,7 +57,7 @@ module Competitions
         x_places = places(x.scores)
         y_places = places(y.scores)
 
-        while any?(x_places, y_places) do
+        while any?(x_places, y_places)
           x_place = x_places.pop
           y_place = y_places.pop
 
@@ -71,10 +73,10 @@ module Competitions
 
         # Sort scores by most recent date, lowest place
         # "Best" scores last because #pop returns the last item
-        x_scores = x.scores.sort_by { |s| [ s.date, -s.numeric_place ] }
-        y_scores = y.scores.sort_by { |s| [ s.date, -s.numeric_place ] }
+        x_scores = x.scores.sort_by { |s| [s.date, -s.numeric_place] }
+        y_scores = y.scores.sort_by { |s| [s.date, -s.numeric_place] }
 
-        while any?(x_scores, y_scores) do
+        while any?(x_scores, y_scores)
           x_score = x_scores.pop
           y_score = y_scores.pop
 
@@ -109,7 +111,7 @@ module Competitions
 
       def any?(x, y)
         # Nil-check
-        (x && x.size > 0) || (y && y.size > 0)
+        x.present? || y.present?
       end
 
       def compare(x, y)

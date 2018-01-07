@@ -1,7 +1,8 @@
-class WeeklySeries < Series
+# frozen_string_literal: true
 
-  # TODO Is this duplicated from Ruby core and standard lib?
-  DAYS_OF_WEEK = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'] unless defined?(DAYS_OF_WEEK)
+class WeeklySeries < Series
+  # TODO: Is this duplicated from Ruby core and standard lib?
+  DAYS_OF_WEEK = %w[Su M Tu W Th F Sa].freeze unless defined?(DAYS_OF_WEEK)
 
   # 0-based. Doesn't handle multiple days of the week. Method names here are confusing.
   def day_of_week
@@ -22,11 +23,11 @@ class WeeklySeries < Series
   def days_of_week_as_string(date_range, reload = false)
     case days_of_week(date_range, reload).size
     when 0
-      ''
+      ""
     when 1
       Time::RFC2822_DAY_NAME[days_of_week(false).first]
     else
-      days_of_week(false).collect { |day| DAYS_OF_WEEK[day] }.join('/')
+      days_of_week(false).collect { |day| DAYS_OF_WEEK[day] }.join("/")
     end
   end
 
@@ -34,13 +35,12 @@ class WeeklySeries < Series
   # Caches result, even if date_range changes, and doesn't notice database changes.
   def days_of_week(date_range, reload = false)
     if reload || @days_of_week.nil?
-      @days_of_week = WeeklySeries.connection.select_values(%Q{
+      @days_of_week = WeeklySeries.connection.select_values(%{
           select distinct (DAYOFWEEK(date) - 1) as day_of_week
           from events
-          where parent_id=#{self.id} and date between '#{date_range.begin.to_s(:db)}' and '#{date_range.end.to_s(:db)}'
-          order by day_of_week}
-      )
-      @days_of_week.map! { |day| day.to_i }
+          where parent_id=#{id} and date between '#{date_range.begin.to_s(:db)}' and '#{date_range.end.to_s(:db)}'
+          order by day_of_week})
+      @days_of_week.map!(&:to_i)
     end
     @days_of_week
   end

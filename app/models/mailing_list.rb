@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 # Mailman archives
 class MailingList < ActiveRecord::Base
-
   has_many :posts
 
   scope :is_public, -> { where(public: true) }
@@ -18,7 +19,7 @@ class MailingList < ActiveRecord::Base
         @dates = first_post..last_post
       end
     end
-    return @dates
+    @dates
   end
 
   def reload

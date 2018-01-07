@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Competitions
@@ -7,16 +9,16 @@ module Competitions
       Timecop.travel(2014) do
         series = Series.create_for_every!(
           "Wednesday",
-          start_date: Date.new(2014, 9, 10), 
-          end_date: Date.new(2014, 10, 8), 
+          start_date: Date.new(2014, 9, 10),
+          end_date: Date.new(2014, 10, 8),
           name: "Blind Date at the Dairy"
         )
-        
+
         series.children.each do |event|
           race = FactoryBot.create(:race, event: event)
           FactoryBot.create(:result, event: event, race: race, place: "1")
         end
-      
+
         BlindDateAtTheDairyOverall.calculate!
       end
     end

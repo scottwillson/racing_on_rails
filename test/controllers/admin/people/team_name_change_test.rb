@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -13,7 +15,7 @@ module Admin
       end
 
       test "update team name to new team" do
-        assert_nil(Team.find_by_name('Velo Slop'), 'New team Velo Slop should not be in database')
+        assert_nil(Team.find_by(name: "Velo Slop"), "New team Velo Slop should not be in database")
         molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         xhr :put, :update_attribute,
             id: molly.to_param,
@@ -21,36 +23,36 @@ module Admin
             value: "Velo Slop"
         assert_response :success
         molly.reload
-        assert_equal('Velo Slop', molly.team_name, 'Person team name after update')
-        assert_not_nil(Team.find_by_name('Velo Slop'), 'New team Velo Slop should be in database')
+        assert_equal("Velo Slop", molly.team_name, "Person team name after update")
+        assert_not_nil(Team.find_by(name: "Velo Slop"), "New team Velo Slop should be in database")
       end
 
       test "update team name to existing team" do
         vanilla = Team.create!(name: "Vanilla")
         molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron", team: vanilla)
-        assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
+        assert_equal(Team.find_by(name: "Vanilla"), molly.team, "Molly should be on Vanilla")
         xhr :put, :update_attribute,
             id: molly.to_param,
             name: "team_name",
             value: "Gentle Lovers"
         assert_response :success
         molly.reload
-        assert_equal('Gentle Lovers', molly.team_name, 'Person team name after update')
-        assert_equal(Team.find_by_name('Gentle Lovers'), molly.team, 'Molly should be on Gentle Lovers')
+        assert_equal("Gentle Lovers", molly.team_name, "Person team name after update")
+        assert_equal(Team.find_by(name: "Gentle Lovers"), molly.team, "Molly should be on Gentle Lovers")
       end
 
       test "update team name to blank" do
         vanilla = Team.create!(name: "Vanilla")
         molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron", team: vanilla)
-        assert_equal(vanilla, molly.team, 'Molly should be on Vanilla')
+        assert_equal(vanilla, molly.team, "Molly should be on Vanilla")
         xhr :put, :update_attribute,
             id: molly.to_param,
             name: "team_name",
             value: ""
         assert_response :success
         molly.reload
-        assert_equal('', molly.team_name, 'Person team name after update')
-        assert_nil(molly.team, 'Molly should have no team')
+        assert_equal("", molly.team_name, "Person team name after update")
+        assert_nil(molly.team, "Molly should have no team")
       end
     end
   end

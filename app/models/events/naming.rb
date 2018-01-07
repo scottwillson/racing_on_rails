@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Events
   module Naming
     extend ActiveSupport::Concern
@@ -31,7 +33,7 @@ module Events
         name
       elsif parent.full_name == name
         name
-      elsif name[ parent.full_name ]
+      elsif name[parent.full_name]
         name
       else
         "#{parent.full_name}: #{name}"

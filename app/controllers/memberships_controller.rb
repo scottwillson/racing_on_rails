@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MembershipsController < ApplicationController
   force_https
   before_action :require_current_person

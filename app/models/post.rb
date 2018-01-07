@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 # Archived mailing list post
 class Post < ActiveRecord::Base
   include Posts::Migration
   include Posts::Search
 
-  validates_presence_of :date
-  validates_presence_of :from_email, on: :create
-  validates_presence_of :from_name, on: :create
-  validates_presence_of :mailing_list
-  validates_presence_of :subject
+  validates :date, presence: true
+  validates :from_email, presence: { on: :create }
+  validates :from_name, presence: { on: :create }
+  validates :mailing_list, presence: true
+  validates :subject, presence: true
 
-  validates_format_of :from_email, with: /@/
+  validates :from_email, format: { with: /@/ }
 
   belongs_to :mailing_list
   belongs_to :original, class_name: "Post", inverse_of: :replies, counter_cache: :replies_count
@@ -34,16 +36,14 @@ class Post < ActiveRecord::Base
       original = find_original(post)
       if original
         original.replies << post
-        if original.last_reply_at.nil? || post.date > original.last_reply_at
-          original.last_reply_at = post.date
-        end
+        original.last_reply_at = post.date if original.last_reply_at.nil? || post.date > original.last_reply_at
         original.save!
       end
 
       post.last_reply_at = post.date
-      return false if !post.save
+      return false unless post.save
 
-      original.reposition! if original
+      original&.reposition!
       ApplicationController.expire_cache
     end
 
@@ -56,18 +56,18 @@ class Post < ActiveRecord::Base
       if original
         original.replies_count = original.replies_count - 1
 
-        if original.replies_count == 0
-          original.last_reply_at = original.date
-        else
-          original.last_reply_at = original.replies.select { |r| r != post }.sort_by(&:date).last.date
-        end
+        original.last_reply_at = if original.replies_count == 0
+                                   original.date
+                                 else
+                                   original.replies.reject { |r| r == post }.sort_by(&:date).last.date
+                                 end
 
         original.save
       end
 
-      return false if !post.destroy
+      return false unless post.destroy
 
-      original.reposition! if original
+      original&.reposition!
       ApplicationController.expire_cache
     end
 
@@ -78,9 +78,7 @@ class Post < ActiveRecord::Base
   def self.find_original(post)
     subject = normalize_subject(post.subject, post.mailing_list.subject_line_prefix)
     posts = post.mailing_list.posts.where(subject: subject).original.order(:position)
-    if !post.new_record?
-      posts = posts.where("id != ?", post.id)
-    end
+    posts = posts.where("id != ?", post.id) unless post.new_record?
     posts.first
   end
 
@@ -98,11 +96,11 @@ class Post < ActiveRecord::Base
   def self.strip_subject(subject)
     return "" unless subject
 
-    subject.
-      gsub(/\A(\s*)Re:(\s*)/i, "").
-      gsub(/\A(\s*)Fw(d):(\s*)/i, "").
-      gsub(/\s+/, " ").
-      strip
+    subject
+      .gsub(/\A(\s*)Re:(\s*)/i, "")
+      .gsub(/\A(\s*)Fw(d):(\s*)/i, "")
+      .gsub(/\s+/, " ")
+      .strip
   end
 
   # Last few Posts from all public MailingLists
@@ -116,9 +114,7 @@ class Post < ActiveRecord::Base
   # move to the top of the list (highest position).
   def reposition!
     new_position = Post.where("last_reply_at <= ?", last_reply_at).order("position desc").pluck(:position).first
-    if new_position && new_position != position
-      insert_at new_position
-    end
+    insert_at new_position if new_position && new_position != position
   end
 
   # Next most-recent original Post

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   module OregonJuniorCyclocrossSeries
     class Team < Competition
@@ -36,23 +38,23 @@ module Competitions
         ]
       end
 
-      def maximum_events(race)
+      def maximum_events(_race)
         4
       end
 
       def source_results_query(race)
-        super.
-        select("event_teams.team_id as participant_id").
-        joins("inner join event_team_memberships on event_team_memberships.person_id = results.person_id").
-        joins("inner join event_teams on event_teams.id = event_team_memberships.event_team_id").
-        where("member_from is not null").
-        where("year(member_from) <= ?", year).
-        where("member_to is not null").
-        where("year(member_to) >= ?", year).
-        where("event_teams.id" => event_teams_with_at_least_members)
+        super
+          .select("event_teams.team_id as participant_id")
+          .joins("inner join event_team_memberships on event_team_memberships.person_id = results.person_id")
+          .joins("inner join event_teams on event_teams.id = event_team_memberships.event_team_id")
+          .where("member_from is not null")
+          .where("year(member_from) <= ?", year)
+          .where("member_to is not null")
+          .where("year(member_to) >= ?", year)
+          .where("event_teams.id" => event_teams_with_at_least_members)
       end
 
-      def categories_for(race)
+      def categories_for(_race)
         source_result_categories
       end
 

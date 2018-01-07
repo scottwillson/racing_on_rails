@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Competitions
@@ -39,10 +41,10 @@ module Competitions
       event.races.create!(category: @cat_3)
       event.races.create!(category: @cat_4)
 
-      assert_best_match_in [ @cat_1, @cat_1_2, @cat_1_2_3  ], @cat_1, event
-      assert_best_match_in [ @cat_2 ], @cat_2, event
-      assert_best_match_in [ @cat_3, @cat_3_4, @junior_men_3_4_5 ], @cat_3, event
-      assert_best_match_in [ @cat_4, @cat_4_women, @cat_4_5_women, @masters_men_4_5 ], @cat_4, event
+      assert_best_match_in [@cat_1, @cat_1_2, @cat_1_2_3], @cat_1, event
+      assert_best_match_in [@cat_2], @cat_2, event
+      assert_best_match_in [@cat_3, @cat_3_4, @junior_men_3_4_5], @cat_3, event
+      assert_best_match_in [@cat_4, @cat_4_women, @cat_4_5_women, @masters_men_4_5], @cat_4, event
     end
 
     test "cyclocross categories" do
@@ -55,10 +57,10 @@ module Competitions
       event.races.create!(category: @cat_3_4)
       event.races.create!(category: cat_5)
 
-      assert_best_match_in [ @cat_1, @cat_1_2, @cat_1_2_3, @cat_2  ], @cat_1_2, event
-      assert_best_match_in [ cat_2_3, @cat_3, @junior_men_3_4_5 ], cat_2_3, event
-      assert_best_match_in [ @cat_3_4, @cat_4, @cat_4_women, @cat_4_5_women, @masters_men_4_5 ], @cat_3_4, event
-      assert_best_match_in [ @masters_novice, cat_5 ], cat_5, event
+      assert_best_match_in [@cat_1, @cat_1_2, @cat_1_2_3, @cat_2], @cat_1_2, event
+      assert_best_match_in [cat_2_3, @cat_3, @junior_men_3_4_5], cat_2_3, event
+      assert_best_match_in [@cat_3_4, @cat_4, @cat_4_women, @cat_4_5_women, @masters_men_4_5], @cat_3_4, event
+      assert_best_match_in [@masters_novice, cat_5], cat_5, event
     end
 
     test "ability + gender" do
@@ -69,10 +71,10 @@ module Competitions
       event.races.create!(category: @cat_4)
       event.races.create!(category: @cat_4_5_women)
 
-      assert_best_match_in [ @cat_1, @cat_1_2, @cat_1_2_3 ], @cat_1, event
-      assert_best_match_in [ @cat_2 ], @cat_2, event
-      assert_best_match_in [ @cat_4, @masters_men_4_5 ], @cat_4, event
-      assert_best_match_in [ @cat_4_women, @cat_4_5_women ], @cat_4_5_women, event
+      assert_best_match_in [@cat_1, @cat_1_2, @cat_1_2_3], @cat_1, event
+      assert_best_match_in [@cat_2], @cat_2, event
+      assert_best_match_in [@cat_4, @masters_men_4_5], @cat_4, event
+      assert_best_match_in [@cat_4_women, @cat_4_5_women], @cat_4_5_women, event
     end
 
     test "ages" do
@@ -87,21 +89,21 @@ module Competitions
       event.races.create!(category: @junior_men)
       event.races.create!(category: @junior_women)
 
-      assert_best_match_in [ @senior_men, @cat_1, @cat_1_2, @cat_1_2_3, @pro_1_2, @cat_2, @pro_cat_1, @elite_men, @pro_elite_men ], @senior_men, event
-      assert_best_match_in [ @senior_women ], @senior_women, event
-      assert_best_match_in [ @cat_3, @cat_3_4 ], @cat_3, event
-      assert_best_match_in [ @cat_4 ], @cat_4, event
-      assert_best_match_in [ @cat_4_women, @cat_4_5_women ], @cat_4_women, event
-      assert_best_match_in [ @masters_men ], @masters_men, event
-      assert_best_match_in [ @masters_men_4_5, @masters_novice ], @masters_men_4_5, event
-      assert_best_match_in [ @junior_men, @junior_men_10_14, @junior_men_15_plus, @junior_men_3_4_5 ], @junior_men, event
-      assert_best_match_in [ @junior_women ], @junior_women, event
+      assert_best_match_in [@senior_men, @cat_1, @cat_1_2, @cat_1_2_3, @pro_1_2, @cat_2, @pro_cat_1, @elite_men, @pro_elite_men], @senior_men, event
+      assert_best_match_in [@senior_women], @senior_women, event
+      assert_best_match_in [@cat_3, @cat_3_4], @cat_3, event
+      assert_best_match_in [@cat_4], @cat_4, event
+      assert_best_match_in [@cat_4_women, @cat_4_5_women], @cat_4_women, event
+      assert_best_match_in [@masters_men], @masters_men, event
+      assert_best_match_in [@masters_men_4_5, @masters_novice], @masters_men_4_5, event
+      assert_best_match_in [@junior_men, @junior_men_10_14, @junior_men_15_plus, @junior_men_3_4_5], @junior_men, event
+      assert_best_match_in [@junior_women], @junior_women, event
     end
 
     test "equipment" do
       event = FactoryBot.create(:event)
       event.races.create!(category: @singlespeed)
-      assert_best_match_in [ @singlespeed, @singlespeed_men, @singlespeed_women ], @singlespeed, event
+      assert_best_match_in [@singlespeed, @singlespeed_men, @singlespeed_women], @singlespeed, event
     end
 
     test "equipment + gender" do
@@ -109,8 +111,8 @@ module Competitions
       event.races.create!(category: @singlespeed_men)
       event.races.create!(category: @singlespeed_women)
 
-      assert_best_match_in [ @singlespeed_men, @singlespeed ], @singlespeed_men, event
-      assert_best_match_in [ @singlespeed_women ], @singlespeed_women, event
+      assert_best_match_in [@singlespeed_men, @singlespeed], @singlespeed_men, event
+      assert_best_match_in [@singlespeed_women], @singlespeed_women, event
     end
 
     def assert_best_match_in(categories, race_category, event)

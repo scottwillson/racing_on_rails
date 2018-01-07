@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module Competitions
   # Common superclass for Omniums and Series standings.
   class Overall < Competition
-    validates_presence_of :parent
+    validates :parent, presence: true
     after_create :add_source_events
 
     def self.parent_event_name
@@ -14,7 +16,7 @@ module Competitions
           parent = ::MultiDayEvent.year(year).where(name: parent_event_name).first
 
           overall = parent.try(:overall)
-          if parent && parent.any_results_including_children?
+          if parent&.any_results_including_children?
             unless overall
               # parent.create_overall will create an instance of Overall, which is probably not what we want
               overall = create!(parent_id: parent.id, date: parent.date)

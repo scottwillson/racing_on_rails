@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PostsHelper
   def last_reply_at(post)
     date = post.last_reply_at || post.date

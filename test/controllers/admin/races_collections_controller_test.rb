@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Admin
@@ -30,7 +32,7 @@ module Admin
       xhr :put, :update, event_id: race.event, races_collection: { text: "Senior Men\r\nCat 3" }
       assert_response :success
       assert_not_nil assigns[:races_collection], "@races_collection"
-      assert_equal [ "Category 3", "Senior Men" ], race.event.races(true).map(&:name).sort
+      assert_equal ["Category 3", "Senior Men"], race.event.races(true).map(&:name).sort
     end
 
     test "create" do
@@ -44,7 +46,7 @@ module Admin
       xhr :post, :create, event_id: event
       assert_response :success
 
-      assert_same_elements [ "Senior Men", "Women 3" ], event.reload.categories.map(&:name)
+      assert_same_elements ["Senior Men", "Women 3"], event.reload.categories.map(&:name)
     end
   end
 end

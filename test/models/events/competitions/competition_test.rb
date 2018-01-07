@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 require_relative "../../../../app/models/competitions/calculations/structs"
 
@@ -76,18 +78,18 @@ module Competitions
 
     test "races creation" do
       competition = TestCompetition.create!
-      category = Category.find_by_name("KOM")
+      category = Category.find_by(name: "KOM")
       assert_equal category, competition.races.first.category, "category"
     end
 
     test "events" do
       competition = TestCompetition.find_or_create_for_year
-      assert_equal(0, competition.source_events.count, 'Events')
+      assert_equal(0, competition.source_events.count, "Events")
 
       competition.source_events << FactoryBot.create(:event)
-      assert_equal(1, competition.source_events.count, 'Events')
+      assert_equal(1, competition.source_events.count, "Events")
       competition.source_events << FactoryBot.create(:event)
-      assert_equal(2, competition.source_events.count, 'Events')
+      assert_equal(2, competition.source_events.count, "Events")
     end
 
     test "source event ids" do
@@ -117,11 +119,11 @@ module Competitions
       existing_calculated_result = ::Struct::CalculatorResult.new
       existing_calculated_result.participant_id = result_2.person_id
 
-      new_results, existing_results, obselete_results = competition.partition_results([ new_calculated_result, existing_calculated_result ], race)
+      new_results, existing_results, obselete_results = competition.partition_results([new_calculated_result, existing_calculated_result], race)
 
-      assert_equal [ 9999 ], new_results.map(&:participant_id), "new_results"
-      assert_equal [ result_2.person_id ], existing_results.map(&:participant_id), "existing_results"
-      assert_equal [ result_1 ], obselete_results, "obselete_results"
+      assert_equal [9999], new_results.map(&:participant_id), "new_results"
+      assert_equal [result_2.person_id], existing_results.map(&:participant_id), "existing_results"
+      assert_equal [result_1], obselete_results, "obselete_results"
     end
   end
 end

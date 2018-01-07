@@ -42,7 +42,7 @@ module Competitions
     end
 
     def point_schedule
-      [ 20, 17, 15, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+      [20, 17, 15, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     end
 
     def source_events?
@@ -60,27 +60,27 @@ module Competitions
     end
 
     def categories_for(race)
-      ids = [ race.category ] + race.category.descendants
+      ids = [race.category] + race.category.descendants
 
       case race.category.name
       when "Senior Men Pro/1/2"
-        [ "Men Category 1/2" ]
+        ["Men Category 1/2"]
       when "Category 4/5 Men"
-        [ "Category 4 Men", "Category 5 Men", "Category 4/5 Men", "Men Category 4/5" ]
+        ["Category 4 Men", "Category 5 Men", "Category 4/5 Men", "Men Category 4/5"]
       when "Senior Women 1/2"
-        [ "Senior Women", "Women Category 1/2" ]
+        ["Senior Women", "Women Category 1/2"]
       when "Category 4/5 Women"
-        [ "Women Category 4", "Women Category 4/5" ]
+        ["Women Category 4", "Women Category 4/5"]
       when "Category 3 Women"
-        [ "Women Category 3" ]
+        ["Women Category 3"]
       when "Masters Men 40-49"
-        [ "Masters Men 40-49", "Men 160-199" ]
+        ["Masters Men 40-49", "Men 160-199"]
       when "Masters Men 50-59"
-        [ "Masters Men 50-59", "Men 200-239" ]
+        ["Masters Men 50-59", "Men 200-239"]
       when "Masters Men 60-69"
-        [ "Masters Men 60-69", "Men 240+" ]
+        ["Masters Men 60-69", "Men 240+"]
       when "Masters Women 50-59"
-        [ "Masters Women 50-59", "Women 200-239" ]
+        ["Masters Women 50-59", "Women 200-239"]
       else
         []
       end.each do |name|
@@ -156,7 +156,7 @@ module Competitions
 
     def split_races(event, competition_category)
       races_to_split = select_races_to_split(event, competition_category)
-      return unless races_to_split.present?
+      return if races_to_split.blank?
 
       existing_race = event.races.detect { |r| r.category == competition_category }
       race = existing_race || event.races.create!(category: competition_category, bar_points: 0, updated_by: self, visible: false)
@@ -219,12 +219,12 @@ module Competitions
     def combine_race(race_to_combine, race, competition_category)
       race_to_combine.results.select do |result|
         result.time &&
-        result.time > 0 &&
-        (result.person&.racing_age.nil? ||
-          (result.person.racing_age >= competition_category.ages_begin && result.person.racing_age <= competition_category.ages_end)
-        )
+          result.time > 0 &&
+          (result.person&.racing_age.nil? ||
+            (result.person.racing_age >= competition_category.ages_begin && result.person.racing_age <= competition_category.ages_end)
+          )
       end
-      .each { |result| create_result(race, result) }
+                     .each { |result| create_result(race, result) }
     end
 
     def split?(competition_category, result)
@@ -237,16 +237,15 @@ module Competitions
     def adjust_times
       races_created_for_competition.each do |race|
         distances = race.results.map(&:distance).compact.select(&:positive?)
-        if distances.size > 0
-          max_distance = distances.max
-          race.results.each do |result|
-            if result.distance.nil? || result.distance == 0
-              raise StandardError, "#{result.id} for #{result.race_full_name} #{result.event_full_name} does not have a distance"
-            end
-
-            new_time = result.time * (max_distance / result.distance) * 1.1
-            result.update!(time: new_time)
+        next if distances.empty?
+        max_distance = distances.max
+        race.results.each do |result|
+          if result.distance.nil? || result.distance == 0
+            raise StandardError, "#{result.id} for #{result.race_full_name} #{result.event_full_name} does not have a distance"
           end
+
+          new_time = result.time * (max_distance / result.distance) * 1.1
+          result.update!(time: new_time)
         end
       end
     end

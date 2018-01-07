@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditorRequestMailer < ActionMailer::Base
   def notification(editor_request)
     @editor_request = editor_request

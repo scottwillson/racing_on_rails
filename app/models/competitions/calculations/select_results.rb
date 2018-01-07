@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   module Calculations
     module SelectResults
@@ -6,7 +8,7 @@ module Competitions
       # the calling Competition when it selected results from the database.
       # Only keep best +results_per_event+ results for participant (person or team).
       def select_results(results, rules)
-        results = results.select { |r| r.participant_id && ![ nil, "", "DQ", "DNS" ].include?(r.place) }
+        results = results.select { |r| r.participant_id && ![nil, "", "DQ", "DNS"].include?(r.place) }
         results = reject_dnfs(results, rules)
         results = select_members(results, rules)
         results = select_in_source_events(results, rules)
@@ -44,29 +46,29 @@ module Competitions
       # remove their results
       def reject_upgrade_only(results)
         results.group_by(&:participant_id)
-          .map do |participant_id, participant_results|
-            if participant_results.all? { |r| r.upgrade }
-              []
-            else
-              participant_results
-            end
+               .map do |_participant_id, participant_results|
+          if participant_results.all?(&:upgrade)
+            []
+          else
+            participant_results
           end
-          .flatten
+        end
+               .flatten
       end
 
       def select_results_for(field, results, limit, use_source_result_points)
         if limit == UNLIMITED
           results
         else
-          results.group_by { |r| [ r.participant_id, r[field] ] }.
-          map do |key, r|
+          results.group_by { |r| [r.participant_id, r[field]] }
+                 .map do |_key, r|
             if use_source_result_points
-              r.sort_by { |r2| r2.points }.reverse.take(limit)
+              r.sort_by(&:points).reverse.take(limit)
             else
               r.sort_by { |r2| numeric_place(r2) }.take(limit)
             end
-          end.
-          flatten
+          end
+                 .flatten
         end
       end
 
@@ -77,24 +79,22 @@ module Competitions
           result.team_member
         else
           result.member_from &&
-          result.member_to &&
-          result.member_from.year <= result.year &&
-          result.member_to.year >= result.year
+            result.member_to &&
+            result.member_from.year <= result.year &&
+            result.member_to.year >= result.year
         end
       end
 
       def select_results_for_minimum_events(results, rules)
-        if rules[:minimum_events].nil? || !event_complete?(rules)
-          return results
-        end
+        return results if rules[:minimum_events].nil? || !event_complete?(rules)
 
-        results.
-        group_by(&:participant_id).
-        select do |_, participant_results|
+        results
+          .group_by(&:participant_id)
+          .select do |_, participant_results|
           participant_results.size >= rules[:minimum_events]
-        end.
-        values.
-        flatten
+        end
+          .values
+          .flatten
       end
     end
   end

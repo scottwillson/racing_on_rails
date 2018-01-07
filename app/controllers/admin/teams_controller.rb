@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 module Admin
   # Edit teams. All succcessful edit expire cache.
   class TeamsController < Admin::AdminController
     # Params
     # * team_name
     def index
-      @name = params['name'] || session['team_name'] || cookies[:team_name] || ''
+      @name = params["name"] || session["team_name"] || cookies[:team_name] || ""
       if @name.blank?
         @teams = Team.none
       else
-        session['team_name'] = @name
+        session["team_name"] = @name
         cookies[:team_name] = { value: @name, expires: Time.zone.now + 36_000 }
         @teams = Team.name_like(@name)
       end

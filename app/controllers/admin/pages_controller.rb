@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
 module Admin
   # Admin editing for Pages in built-in CMS. All editing actions expire the cache.
   class PagesController < Admin::AdminController
-    before_action :require_administrator, except: [ :show ]
+    before_action :require_administrator, except: [:show]
 
     def index
       @pages = Page.roots
     end
 
     def new
-      if params[:page]
-        @page = Page.new(page_params)
-      else
-        @page = Page.new
-      end
+      @page = if params[:page]
+                Page.new(page_params)
+              else
+                Page.new
+              end
       render :edit
     end
 

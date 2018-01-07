@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -27,7 +29,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal(12, schedule.months.size, "Number of months")
     jan = schedule.months[0]
     assert_equal("January", jan.name)
-    assert_equal(5, jan.weeks.size, 'January 2007 weeks')
+    assert_equal(5, jan.weeks.size, "January 2007 weeks")
     march = schedule.months[2]
     assert_equal("March", march.name)
 
@@ -55,13 +57,13 @@ class ScheduleTest < ActiveSupport::TestCase
     FactoryBot.create(:discipline, name: "Track")
     FactoryBot.create(:discipline, name: "Time Trial").discipline_aliases.create(alias: "tt")
 
-    event_before = SingleDayEvent.create(name: 'Before Schedule Start', date: Date.new(2006, 1, 19))
-    event_on = SingleDayEvent.create(name: 'On Schedule Start', date: Date.new(2006, 1, 20))
-    event_after = SingleDayEvent.create(name: 'After Schedule Start', date: Date.new(2006, 1, 21))
+    event_before = SingleDayEvent.create(name: "Before Schedule Start", date: Date.new(2006, 1, 19))
+    event_on = SingleDayEvent.create(name: "On Schedule Start", date: Date.new(2006, 1, 20))
+    event_after = SingleDayEvent.create(name: "After Schedule Start", date: Date.new(2006, 1, 21))
 
     FactoryBot.create_list(:event, 4)
 
-    before_import_after_schedule_start_date = Event.where("date >= ?", '2006-01-20').count
+    before_import_after_schedule_start_date = Event.where("date >= ?", "2006-01-20").count
     assert_equal(6, before_import_after_schedule_start_date, "events after 2006 count before import")
     before_import_all = Event.count
     assert_equal(7, before_import_all, "All events count before import")
@@ -105,9 +107,9 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal(76, after_import_after_schedule_start_date, "2006 events count after import")
     assert_equal(77, Event.count, "All events count after import")
 
-    assert(SingleDayEvent.exists?(event_before.id), 'Event before schedule start')
-    assert(!SingleDayEvent.exists?(event_on.id), 'Event on schedule start')
-    assert(!SingleDayEvent.exists?(event_after.id), 'Event after schedule start')
+    assert(SingleDayEvent.exists?(event_before.id), "Event before schedule start")
+    assert(!SingleDayEvent.exists?(event_on.id), "Event on schedule start")
+    assert(!SingleDayEvent.exists?(event_after.id), "Event after schedule start")
 
     cream_puff = nil
     la_world_cup = nil
@@ -119,14 +121,14 @@ class ScheduleTest < ActiveSupport::TestCase
         cream_puff = event
       elsif event.name == "Jack Frost Time Trial"
         jack_frost = event
-      elsif event.name =~ /^LA World Cup/
+      elsif event.name.match?(/^LA World Cup/)
         la_world_cup = event
-      elsif event.name =~ /^Collegiate Track Nationals/
+      elsif event.name.match?(/^Collegiate Track Nationals/)
         road_nationals = event
       end
     end
 
-    fast_twitch_series = WeeklySeries.find_by_name("Fast Twitch Fridays")
+    fast_twitch_series = WeeklySeries.find_by(name: "Fast Twitch Fridays")
     assert(fast_twitch_series.instance_of?(WeeklySeries), "Fast Twitch Fridays should be WeeklySeries")
     assert_not_nil(fast_twitch_series, "Should have imported Fast Twitch Fridays series")
     assert_equal(15, fast_twitch_series.children.size, "Number of Fast Twitch Fridays events")
@@ -168,7 +170,7 @@ class ScheduleTest < ActiveSupport::TestCase
       assert_equal(fast_twitch_series, event.parent, "Fast Twitch Fridays parent")
       assert_nil(event.flyer, "Fast Twitch flyer")
     end
-    assert_equal(1, Person.where(first_name: 'Jen', last_name: 'Featheringill').count, "Jen Featheringill should only be listed once in promoters")
+    assert_equal(1, Person.where(first_name: "Jen", last_name: "Featheringill").count, "Jen Featheringill should only be listed once in promoters")
 
     assert_not_nil(jack_frost, "Should have imported Jack Frost")
     assert_equal("Vancouver", jack_frost.city, "Jack Frost city")
@@ -182,159 +184,159 @@ class ScheduleTest < ActiveSupport::TestCase
     assert(!la_world_cup.parent.instance_of?(Series), "Fast LA World Cup should not be Series")
     assert(!la_world_cup.parent.instance_of?(WeeklySeries), "LA World Cup should not be WeeklySeries")
 
-    banana_belt_series = Series.find_by_name("Banana Belt Road Race Series")
+    banana_belt_series = Series.find_by(name: "Banana Belt Road Race Series")
     assert(banana_belt_series.instance_of?(Series), "Banana Belt Series should be Series, but was #{banana_belt_series.class}")
     assert(!banana_belt_series.instance_of?(MultiDayEvent), "Fast Banana Belt Series should not be MultiDayEvent")
     assert(!banana_belt_series.instance_of?(WeeklySeries), "Banana Belt Series should not be WeeklySeries")
 
-    event = Event.find_by_name("12 Mile Endurance DH")
+    event = Event.find_by(name: "12 Mile Endurance DH")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Tita Soriano", promoter.name, "promoter name")
     assert_equal("541-840-6580", promoter.home_phone, "promoter home_phone")
     assert_equal("tita@3amevents.net", promoter.email, "promoter email")
 
-    event = Event.find_by_name("12/24 Hr MTN")
+    event = Event.find_by(name: "12/24 Hr MTN")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Randy Dreiling", promoter.name, "promoter name")
     assert_equal("541-968-5397", promoter.home_phone, "promoter home_phone")
     assert_equal("raggy23@yahoo.com", promoter.email, "promoter email")
 
-    event = Event.find_by_name("Banana Belt Road Race Series")
+    event = Event.find_by(name: "Banana Belt Road Race Series")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Jeff Mitchem", promoter.name, "promoter name")
     assert_equal("503-233-3636", promoter.home_phone, "promoter home_phone")
     assert_equal("JMitchem@ffadesign.com", promoter.email, "promoter email")
 
-    event = Event.find_by_name("Beaverton Grand Prix")
+    event = Event.find_by(name: "Beaverton Grand Prix")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Dave Levy", promoter.name, "promoter name")
     assert_equal("503-621-9670", promoter.home_phone, "promoter home_phone")
     assert_equal("titaniumdave@msn.com", promoter.email, "promoter email")
 
-    event = Event.find_by_name("Cascade Cream Puff MTB")
+    event = Event.find_by(name: "Cascade Cream Puff MTB")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Don Person", promoter.name, "promoter name")
     assert_equal("541-935-4996", promoter.home_phone, "promoter home_phone")
     assert_equal("don@mtbtires.com", promoter.email, "promoter email")
 
-    event = Event.find_by_name("CCX Race")
+    event = Event.find_by(name: "CCX Race")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Kris Schamp", promoter.name, "promoter name")
     assert_equal("503-446-9007", promoter.home_phone, "promoter home_phone")
     assert_equal("kris@portlandracing.com", promoter.email, "promoter email")
 
-    event = Event.find_by_name("Cherry Pie Road Race")
+    event = Event.find_by(name: "Cherry Pie Road Race")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Norman Babcock", promoter.name, "promoter name")
     assert_equal("541 520-3717", promoter.home_phone, "promoter home_phone")
     assert_equal("2dogracing@comcast.net", promoter.email, "promoter email")
 
-    event = Event.find_by_name("Collegiate Track Nationals")
+    event = Event.find_by(name: "Collegiate Track Nationals")
     promoter = event.promoter
     assert_nil(promoter, "Promoter should be nil")
 
-    event = Event.find_by_name("Columbia Plateau Stage Race")
+    event = Event.find_by(name: "Columbia Plateau Stage Race")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Mark Schwyhart", promoter.name, "promoter name")
     assert_equal("503-231-0236", promoter.home_phone, "promoter home_phone")
     assert_equal("columbiaplateau@comcast.net", promoter.email, "promoter email")
 
-    event = Event.find_by_name("CoMotion Criterium")
+    event = Event.find_by(name: "CoMotion Criterium")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Sal Collura", promoter.name, "promoter name")
     assert_equal("541-747-3336", promoter.home_phone, "promoter home_phone")
     assert_equal("salcollura@hotmail.com", promoter.email, "promoter email")
 
-    event = Event.find_by_name("CoMotion Tandem Stage Race")
+    event = Event.find_by(name: "CoMotion Tandem Stage Race")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Sal Collura", promoter.name, "promoter name")
     assert_equal("541-747-3336", promoter.home_phone, "promoter home_phone")
     assert_equal("salcollura@hotmail.com", promoter.email, "promoter email")
 
-    event = Event.find_by_name("Crawfish Criterium")
+    event = Event.find_by(name: "Crawfish Criterium")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Shari Matyus", promoter.name, "promoter name")
     assert_equal("503-223-4984", promoter.home_phone, "promoter home_phone")
     assert_equal("sharim@premier-press.com", promoter.email, "promoter email")
 
-    event = Event.find_by_name("Criterium Championships")
+    event = Event.find_by(name: "Criterium Championships")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Jay Martineau", promoter.name, "promoter name")
     assert_equal("360-281-0085", promoter.home_phone, "promoter home_phone")
     assert_equal("jaymartineau@covad.net", promoter.email, "promoter email")
 
-    event = Event.find_by_name("Cross Crusade")
+    event = Event.find_by(name: "Cross Crusade")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Brad Ross", promoter.name, "promoter name")
     assert_equal("bradross@prodigy.net", promoter.email, "promoter email")
 
-    event = Event.find_by_name("Fast Twitch Fridays")
+    event = Event.find_by(name: "Fast Twitch Fridays")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Jen Featheringill", promoter.name, "promoter name")
     assert_equal("503-227-4439", promoter.home_phone, "promoter home_phone")
     assert_equal("bike-central@bike-central.com", promoter.email, "promoter email")
 
-    event = Event.find_by_name("Healthnet Criterium")
+    event = Event.find_by(name: "Healthnet Criterium")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Porter Childs", promoter.name, "promoter name")
     assert_equal("(503) 222-5868", promoter.home_phone, "promoter home_phone")
     assert_equal("Porter@ORbike.com", promoter.email, "promoter email")
 
-    event = Event.find_by_name("High Desert Omnium")
+    event = Event.find_by(name: "High Desert Omnium")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Tim Plummer", promoter.name, "promoter name")
     assert_equal("541-330-8758", promoter.home_phone, "promoter home_phone")
     assert_equal("tplummer@bendcycling.org", promoter.email, "promoter email")
 
-    event = Event.find_by_name("Hood River CCX")
+    event = Event.find_by(name: "Hood River CCX")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Jeff Lorenzon", promoter.name, "promoter name")
     assert_equal("541-490-6837", promoter.home_phone, "promoter home_phone")
     assert_equal("obra369@yahoo.com", promoter.email, "promoter email")
 
-    event = Event.find_by_name("Jack Frost Time Trial")
+    event = Event.find_by(name: "Jack Frost Time Trial")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Phil Sanders", promoter.name, "promoter name")
     assert_equal("503-649-4632", promoter.home_phone, "promoter home_phone")
     assert_equal("philipsanders2@comcast.net", promoter.email, "promoter email")
 
-    event = Event.find_by_name("LA World Cup")
+    event = Event.find_by(name: "LA World Cup")
     promoter = event.promoter
     assert_nil(promoter, "Promoter should not nil")
 
-    event = Event.find_by_name("Track Development Class")
+    event = Event.find_by(name: "Track Development Class")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Bill Cass", promoter.name, "promoter name")
     assert_equal("503-246-6480", promoter.home_phone, "promoter home_phone")
     assert_equal("Bill.Cass@nike.com", promoter.email, "promoter email")
 
-    event = Event.find_by_name("Vancouver Courthouse Criterium")
+    event = Event.find_by(name: "Vancouver Courthouse Criterium")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Carl Anton", promoter.name, "promoter name")
     assert_equal("360-695-7088", promoter.home_phone, "promoter home_phone")
     assert_equal("canton@innventures.com", promoter.email, "promoter email")
 
-    event = Event.find_by_name("Veloshop CCX")
+    event = Event.find_by(name: "Veloshop CCX")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Molly Cameron", promoter.name, "promoter name")
@@ -345,11 +347,11 @@ class ScheduleTest < ActiveSupport::TestCase
   test "import mbra tabbed" do
     FactoryBot.create(:discipline)
     FactoryBot.create(:discipline, name: "Criterium")
-    Team.create!(id: 1200000, name: "Bike Team")
+    Team.create!(id: 1_200_000, name: "Bike Team")
     filename = File.expand_path(File.dirname(__FILE__) + "/../../fixtures/schedule/tab-delimited.txt")
     Schedule::Schedule.import(filename)
 
-    butte_hc = Event.find_by_name("Butte Hillclimb")
+    butte_hc = Event.find_by(name: "Butte Hillclimb")
     assert_not_nil(butte_hc, "Should have imported Butte Hillclimb")
     assert(butte_hc.instance_of?(SingleDayEvent), "Butte Hillclimb should be SingleDayEvent")
     assert_equal(5, butte_hc.date.wday, "Butte Hillclimb day of week")
@@ -362,7 +364,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal(RacingAssociation.current.default_sanctioned_by, butte_hc.sanctioned_by, "Butte Hillclimb sanctioned_by")
     assert !butte_hc.flyer_approved?, "flyer_approved?"
 
-    valentine_ct = Event.find_by_name("Valentine Criterium")
+    valentine_ct = Event.find_by(name: "Valentine Criterium")
     assert_not_nil(valentine_ct, "Should have imported Valentine Criterium")
     assert(valentine_ct.instance_of?(SingleDayEvent), "Valentine Criterium should be SingleDayEvent")
     assert_equal("Missoula", valentine_ct.city, "Valentine Criterium city")
@@ -380,11 +382,11 @@ class ScheduleTest < ActiveSupport::TestCase
   test "import mbra csv" do
     FactoryBot.create(:discipline)
     FactoryBot.create(:discipline, name: "Criterium")
-    Team.create!(id: 1200000, name: "Bike Team")
+    Team.create!(id: 1_200_000, name: "Bike Team")
     filename = File.expand_path(File.dirname(__FILE__) + "/../../fixtures/schedule/comma-delimited.csv")
     Schedule::Schedule.import(filename)
 
-    butte_hc = Event.find_by_name("Butte Hillclimb")
+    butte_hc = Event.find_by(name: "Butte Hillclimb")
     assert_not_nil(butte_hc, "Should have imported Butte Hillclimb")
     assert(butte_hc.instance_of?(SingleDayEvent), "Butte Hillclimb should be SingleDayEvent")
     assert_equal(5, butte_hc.date.wday, "Butte Hillclimb day of week")
@@ -397,7 +399,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal(RacingAssociation.current.default_sanctioned_by, butte_hc.sanctioned_by, "Butte Hillclimb sanctioned_by")
     assert !butte_hc.flyer_approved?, "flyer_approved?"
 
-    valentine_ct = Event.find_by_name("Valentine Criterium")
+    valentine_ct = Event.find_by(name: "Valentine Criterium")
     assert_not_nil(valentine_ct, "Should have imported Valentine Criterium")
     assert(valentine_ct.instance_of?(SingleDayEvent), "Valentine Criterium should be SingleDayEvent")
     assert_equal("Missoula", valentine_ct.city, "Valentine Criterium city")

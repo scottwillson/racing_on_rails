@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # BAR = Best All-around Rider
 # FIXME Add test for overall and make logic cleaner
 module Competitions
@@ -8,7 +10,7 @@ module Competitions
 
     # Default to Overall BAR with links to disciplines
     def show
-      discipline = Discipline[params['discipline']]
+      discipline = Discipline[params["discipline"]]
       if discipline.nil?
         flash.now[:warn] = "Could not find discipline \'#{params['discipline']}\'"
         return render(:show)

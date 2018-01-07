@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 # :stopdoc:
@@ -31,7 +33,7 @@ class EventTeamMembershipsTest < ActiveSupport::TestCase
       person: event_team_membership.person.reload
     )
     assert new_membership.create_or_replace
-    assert !new_membership.errors.present?
+    assert new_membership.errors.blank?
     assert_equal 1, EventTeamMembership.count
   end
 end

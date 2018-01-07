@@ -1,4 +1,6 @@
-# FIXME Add promoter contact info
+# frozen_string_literal: true
+
+# FIXME: Add promoter contact info
 atom_feed do |feed|
   feed.title "#{RacingAssociation.current.name} #{@year} Schedule"
   now = Time.zone.now.beginning_of_day.to_date
@@ -7,11 +9,9 @@ atom_feed do |feed|
 
   events.each do |event|
     url = nil
-    if event.flyer.present? && event.flyer_approved?
-      url = event.flyer
-    end
+    url = event.flyer if event.flyer.present? && event.flyer_approved?
 
-    feed.entry(event, :url => url) do |entry|
+    feed.entry(event, url: url) do |entry|
       entry.title event.full_name
       entry.content "#{event.discipline} #{event.city_state}"
     end

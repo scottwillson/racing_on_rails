@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -24,7 +26,7 @@ class RaceTest < ActiveSupport::TestCase
     race.reload
     assert_equal(Race::DEFAULT_RESULT_COLUMNS, race.result_columns_or_default, "race result_columns after save")
 
-    result_columns = ["place", "first_name", "last_name", "category"]
+    result_columns = %w[place first_name last_name category]
     race.result_columns = result_columns
     race.save!
     race.reload
@@ -42,59 +44,59 @@ class RaceTest < ActiveSupport::TestCase
     event = SingleDayEvent.create!
     race = Race.create!(category_name: "Masters Women", event: event)
 
-    race.result_columns = [ "place", "name", "hometown", "category" ]
+    race.result_columns = %w[place name hometown category]
     race.save
     assert race.valid?, "Race with custom result column should be valid"
   end
 
   test "bar points" do
     race = FactoryBot.create(:race)
-    assert_nil(race[:bar_points], 'BAR points column value')
-    assert_equal(1, race.bar_points, 'BAR points')
+    assert_nil(race[:bar_points], "BAR points column value")
+    assert_equal(1, race.bar_points, "BAR points")
 
     race.bar_points = 1
     race.save!
-    assert_nil(race[:bar_points], 'BAR points column value')
-    assert_equal(1, race.bar_points, 'BAR points')
+    assert_nil(race[:bar_points], "BAR points column value")
+    assert_equal(1, race.bar_points, "BAR points")
 
     race.bar_points = 0
     race.save!
-    assert_equal(0, race[:bar_points], 'BAR points column value')
-    assert_equal(0, race.bar_points, 'BAR points')
+    assert_equal(0, race[:bar_points], "BAR points column value")
+    assert_equal(0, race.bar_points, "BAR points")
 
     race.event.bar_points = 2
     race.event.save!
-    assert_equal(0, race[:bar_points], 'BAR points column value')
-    assert_equal(0, race.bar_points, 'BAR points')
+    assert_equal(0, race[:bar_points], "BAR points column value")
+    assert_equal(0, race.bar_points, "BAR points")
 
     race.bar_points = nil
     race.save!
-    assert_nil(race[:bar_points], 'BAR points column value')
-    assert_equal(2, race.bar_points, 'BAR points')
+    assert_nil(race[:bar_points], "BAR points column value")
+    assert_equal(2, race.bar_points, "BAR points")
   end
 
   test "bar valid points" do
     event = SingleDayEvent.create!
     race = Race.create!(category_name: "Masters Women", event: event)
-    assert_equal(1, race.bar_points, 'BAR points')
+    assert_equal(1, race.bar_points, "BAR points")
 
-    assert_raise(ArgumentError, 'Fractional BAR points') {race.bar_points = 0.3333}
-    assert_equal(1, race.bar_points, 'BAR points')
+    assert_raise(ArgumentError, "Fractional BAR points") { race.bar_points = 0.3333 }
+    assert_equal(1, race.bar_points, "BAR points")
     race.save!
-    assert_equal(1, race.bar_points, 'BAR points')
+    assert_equal(1, race.bar_points, "BAR points")
   end
 
   # Return value from field_size column. If column is blank, count results
   test "field size" do
     race = FactoryBot.create(:race)
-    assert_equal(0, race.field_size, 'New race field size')
+    assert_equal(0, race.field_size, "New race field size")
 
     4.times { FactoryBot.create(:result, race: race) }
     race.results(true)
-    assert_equal(4, race.field_size, 'Race field size with empty field_size column')
+    assert_equal(4, race.field_size, "Race field size with empty field_size column")
 
     race.field_size = 120
-    assert_equal(120, race.field_size, 'Race field size from field_size column')
+    assert_equal(120, race.field_size, "Race field size from field_size column")
   end
 
   test "place results by points" do
@@ -107,17 +109,17 @@ class RaceTest < ActiveSupport::TestCase
     race.results(true)
     race.place_results_by_points
     race.results(true)
-    assert_equal(first_result, race.results.first, 'First result')
-    assert_equal('1', race.results.first.place, 'First result place')
-    assert_equal(second_result, race.results.last, 'Last result')
-    assert_equal('1', race.results.last.place, 'Last result place')
+    assert_equal(first_result, race.results.first, "First result")
+    assert_equal("1", race.results.first.place, "First result place")
+    assert_equal(second_result, race.results.last, "Last result")
+    assert_equal("1", race.results.last.place, "Last result place")
 
     race = FactoryBot.create(:race)
     [
       race.results.create!(points: 90, place: 4),
       race.results.create!(points: 0, place: 5),
       race.results.create!(points: 89, place: 4),
-      race.results.create!(points: 89, place: ''),
+      race.results.create!(points: 89, place: ""),
       race.results.create!(points: 100, place: 1),
       race.results.create!(points: 89)
     ]
@@ -126,23 +128,23 @@ class RaceTest < ActiveSupport::TestCase
     race.place_results_by_points
     results = race.results(true).to_a.sort
 
-    assert_equal('1', results[0].place, 'Result 0 place')
-    assert_equal(100, results[0].points, 'Result 0 points')
+    assert_equal("1", results[0].place, "Result 0 place")
+    assert_equal(100, results[0].points, "Result 0 points")
 
-    assert_equal('2', results[1].place, 'Result 1 place')
-    assert_equal(90, results[1].points, 'Result 1 points')
+    assert_equal("2", results[1].place, "Result 1 place")
+    assert_equal(90, results[1].points, "Result 1 points")
 
-    assert_equal('3', results[2].place, 'Result 2 place')
-    assert_equal(89, results[2].points, 'Result 2 points')
+    assert_equal("3", results[2].place, "Result 2 place")
+    assert_equal(89, results[2].points, "Result 2 points")
 
-    assert_equal('3', results[3].place, 'Result 3 place')
-    assert_equal(89, results[3].points, 'Result 3 points')
+    assert_equal("3", results[3].place, "Result 3 place")
+    assert_equal(89, results[3].points, "Result 3 points")
 
-    assert_equal('3', results[4].place, 'Result 4 place')
-    assert_equal(89, results[4].points, 'Result 4 points')
+    assert_equal("3", results[4].place, "Result 4 place")
+    assert_equal(89, results[4].points, "Result 4 points")
 
-    assert_equal('6', results[5].place, 'Result 5 place')
-    assert_equal(0, results[5].points, 'Result 5 points')
+    assert_equal("6", results[5].place, "Result 5 place")
+    assert_equal(0, results[5].points, "Result 5 points")
   end
 
   # Look at source results for tie-breaking
@@ -155,7 +157,7 @@ class RaceTest < ActiveSupport::TestCase
     end
 
     ironman = Competitions::Ironman.create!
-    ironman_race = ironman.races.create!(category: Category.new(name: 'Ironman'))
+    ironman_race = ironman.races.create!(category: Category.new(name: "Ironman"))
 
     first_competition_result = ironman_race.results.create!
     first_competition_result.scores.create!(source_result: race.results[0], competition_result: first_competition_result, points: 45)
@@ -209,14 +211,14 @@ class RaceTest < ActiveSupport::TestCase
     ironman_race.results(true)
     ironman_race.place_results_by_points(false)
     results = ironman_race.results(true).sort
-    assert_equal('1', results.first.place, 'First result place')
-    assert_equal('1', results[1].place, 'Second result place')
-    assert_equal('3', results[2].place, 'Third result place')
-    assert_equal('3', results[3].place, 'Fourth result place')
-    assert_equal('5', results[4].place, 'Fifth result place')
-    assert_equal('5', results[5].place, 'Sixth result place')
-    assert_equal('7', results[6].place, '7th result place')
-    assert_equal('7', results[7].place, '8th result place')
+    assert_equal("1", results.first.place, "First result place")
+    assert_equal("1", results[1].place, "Second result place")
+    assert_equal("3", results[2].place, "Third result place")
+    assert_equal("3", results[3].place, "Fourth result place")
+    assert_equal("5", results[4].place, "Fifth result place")
+    assert_equal("5", results[5].place, "Sixth result place")
+    assert_equal("7", results[6].place, "7th result place")
+    assert_equal("7", results[7].place, "8th result place")
   end
 
   test "most recent placing should break tie" do
@@ -227,7 +229,7 @@ class RaceTest < ActiveSupport::TestCase
     races << SingleDayEvent.create!(date: Date.new(2006, 4)).races.create!(category_name: "Masters Men 50+")
 
     ironman = Competitions::Ironman.create!
-    ironman_race = ironman.races.create!(category: Category.new(name: 'Ironman'))
+    ironman_race = ironman.races.create!(category: Category.new(name: "Ironman"))
 
     first_competition_result = ironman_race.results.create!
     first_competition_result.scores.create!(source_result: races[3].results.create!(place: 15), competition_result: first_competition_result, points: 2)
@@ -267,7 +269,7 @@ class RaceTest < ActiveSupport::TestCase
     second_race = SingleDayEvent.create!(date: Date.new(2006, 11)).races.create!(category_name: "Masters Men 50+")
 
     ironman = Competitions::Ironman.create!
-    ironman_race = ironman.races.create!(category: Category.new(name: 'Ironman'))
+    ironman_race = ironman.races.create!(category: Category.new(name: "Ironman"))
 
     first_competition_result = ironman_race.results.create!
     first_competition_result.scores.create!(source_result: race.results.create!(place: 3), competition_result: first_competition_result, points: 30)
@@ -296,7 +298,7 @@ class RaceTest < ActiveSupport::TestCase
     third_race = SingleDayEvent.create!(date: Date.new(2006, 12)).races.create!(category_name: "Masters Men 50+")
 
     ironman = Competitions::Ironman.create!
-    ironman_race = ironman.races.create!(category: Category.new(name: 'Ironman'))
+    ironman_race = ironman.races.create!(category: Category.new(name: "Ironman"))
 
     first_competition_result = ironman_race.results.create!
     first_competition_result.scores.create!(source_result: race.results.create!(place: 4), competition_result: first_competition_result, points: 20)
@@ -339,39 +341,39 @@ class RaceTest < ActiveSupport::TestCase
     non_members = []
     for i in 0..2
       non_members << Person.create!(name: "Non member #{i}", member: false)
-      assert(!non_members[i].member?, 'Should not be a member')
+      assert(!non_members[i].member?, "Should not be a member")
     end
 
     weaver = FactoryBot.create(:person)
     molly = FactoryBot.create(:person)
 
-    race.results.create!(place: '1', person: non_members[0])
-    race.results.create!(place: '2', person: weaver)
-    race.results.create!(place: '3', person: non_members[1])
-    race.results.create!(place: '4', person: molly)
-    race.results.create!(place: '5', person: non_members[2])
+    race.results.create!(place: "1", person: non_members[0])
+    race.results.create!(place: "2", person: weaver)
+    race.results.create!(place: "3", person: non_members[1])
+    race.results.create!(place: "4", person: molly)
+    race.results.create!(place: "5", person: non_members[2])
 
     race.reload.results(true)
     race.calculate_members_only_places!
-    assert_equal('1', race.results[0].place, 'Result 0 place')
-    assert_equal('', race.results[0].members_only_place, 'Result 0 place')
-    assert_equal(non_members[0], race.results[0].person, 'Result 0 person')
+    assert_equal("1", race.results[0].place, "Result 0 place")
+    assert_equal("", race.results[0].members_only_place, "Result 0 place")
+    assert_equal(non_members[0], race.results[0].person, "Result 0 person")
 
-    assert_equal('2', race.results[1].place, 'Result 1 place')
-    assert_equal('1', race.results[1].members_only_place, 'Result 1 place')
-    assert_equal(weaver, race.results[1].person, 'Result 1 person')
+    assert_equal("2", race.results[1].place, "Result 1 place")
+    assert_equal("1", race.results[1].members_only_place, "Result 1 place")
+    assert_equal(weaver, race.results[1].person, "Result 1 person")
 
-    assert_equal('3', race.results[2].place, 'Result 2 place')
-    assert_equal('', race.results[2].members_only_place, 'Result 2 place')
-    assert_equal(non_members[1], race.results[2].person, 'Result 2 person')
+    assert_equal("3", race.results[2].place, "Result 2 place")
+    assert_equal("", race.results[2].members_only_place, "Result 2 place")
+    assert_equal(non_members[1], race.results[2].person, "Result 2 person")
 
-    assert_equal('4', race.results[3].place, 'Result 3 place')
-    assert_equal('2', race.results[3].members_only_place, 'Result 3 place')
-    assert_equal(molly, race.results[3].person, 'Result 3 person')
+    assert_equal("4", race.results[3].place, "Result 3 place")
+    assert_equal("2", race.results[3].members_only_place, "Result 3 place")
+    assert_equal(molly, race.results[3].person, "Result 3 person")
 
-    assert_equal('5', race.results[4].place, 'Result 4 place')
-    assert_equal('', race.results[4].members_only_place, 'Result 4 place')
-    assert_equal(non_members[2], race.results[4].person, 'Result 4 person')
+    assert_equal("5", race.results[4].place, "Result 4 place")
+    assert_equal("", race.results[4].members_only_place, "Result 4 place")
+    assert_equal(non_members[2], race.results[4].person, "Result 4 person")
   end
 
   test "calculate members only places should not trigger combined results calculation" do
@@ -403,13 +405,13 @@ class RaceTest < ActiveSupport::TestCase
     event = SingleDayEvent.create!(date: Time.zone.today)
     senior_men = FactoryBot.create(:category)
     race = event.races.create!(category: senior_men)
-    assert_equal_dates(Date.new(Time.zone.today.year - 999, 1, 1), race.dates_of_birth.begin, 'race.dates_of_birth.begin')
-    assert_equal_dates(Date.new(Time.zone.today.year, 12, 31), race.dates_of_birth.end, 'race.dates_of_birth.end')
+    assert_equal_dates(Date.new(Time.zone.today.year - 999, 1, 1), race.dates_of_birth.begin, "race.dates_of_birth.begin")
+    assert_equal_dates(Date.new(Time.zone.today.year, 12, 31), race.dates_of_birth.end, "race.dates_of_birth.end")
 
     event = SingleDayEvent.create!(date: Date.new(2000, 9, 8))
-    race = event.races.create!(category: Category.new(name:'Espoirs', ages: 18..23))
-    assert_equal_dates(Date.new(1977, 1, 1), race.dates_of_birth.begin, 'race.dates_of_birth.begin')
-    assert_equal_dates(Date.new(1982, 12, 31), race.dates_of_birth.end, 'race.dates_of_birth.end')
+    race = event.races.create!(category: Category.new(name: "Espoirs", ages: 18..23))
+    assert_equal_dates(Date.new(1977, 1, 1), race.dates_of_birth.begin, "race.dates_of_birth.begin")
+    assert_equal_dates(Date.new(1982, 12, 31), race.dates_of_birth.end, "race.dates_of_birth.end")
   end
 
   test "create result before" do
@@ -467,7 +469,7 @@ class RaceTest < ActiveSupport::TestCase
     assert  Person.exists?(weaver.id), "Existing person Ryan Weaver should not be deleted"
     assert  Person.exists?(mathew_braun.id), "Existing person with no results Mathew Braun should not be deleted"
 
-    # TODO Manually-created people that only have this result
+    # TODO: Manually-created people that only have this result
     # TODO Teams
   end
 
@@ -478,6 +480,6 @@ class RaceTest < ActiveSupport::TestCase
     FactoryBot.create(:result, place: "3", race: race, event: race.event, person: result_1.person)
 
     race.destroy_duplicate_results!
-    assert_equal [ result_1, result_2 ], race.results.reload
+    assert_equal [result_1, result_2], race.results.reload
   end
 end

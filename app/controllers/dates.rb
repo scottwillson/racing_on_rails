@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dates
   extend ActiveSupport::Concern
 
@@ -6,13 +8,9 @@ module Dates
   end
 
   def assign_year
-    if params[:year] && params[:year][/^\d\d\d\d$/]
-      @year = params[:year].to_i
-    end
+    @year = params[:year].to_i if params[:year] && params[:year][/^\d\d\d\d$/]
 
-    if @year.nil? || @year < 1900 || @year > 2100
-      @year = RacingAssociation.current.effective_year
-    end
+    @year = RacingAssociation.current.effective_year if @year.nil? || @year < 1900 || @year > 2100
   end
 
   def assign_today

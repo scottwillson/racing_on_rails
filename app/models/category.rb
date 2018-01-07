@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "categories"
 
 # Senior Men, Pro/1/2, Novice Masters 45+
@@ -30,8 +32,8 @@ class Category < ActiveRecord::Base
 
   before_validation :set_friendly_param
 
-  validates_presence_of :name
-  validates_presence_of :friendly_param
+  validates :name, presence: true
+  validates :friendly_param, presence: true
 
   scope :equivalent, lambda { |category|
     where(
@@ -53,13 +55,13 @@ class Category < ActiveRecord::Base
 
   # All categories with no parent (except root 'association' category)
   def self.find_all_unknowns
-   Category.includes(:children).where(parent_id: nil).where("name != ?", RacingAssociation.current.short_name)
+    Category.includes(:children).where(parent_id: nil).where("name != ?", RacingAssociation.current.short_name)
   end
 
   # Update ability, age, equipment, etc. from names
   def self.update_all_from_names!
     ::Category.transaction do
-      Category.all.each do |category|
+      Category.all.find_each do |category|
         category.set_abilities_from_name
         category.set_ages_from_name!
         category.set_equipment_from_name
@@ -74,7 +76,7 @@ class Category < ActiveRecord::Base
   # Sr, Mst, Jr, Cat, Beg, Exp
   def self.short_name(name)
     return name if name.blank?
-    name.gsub('Senior', 'Sr').gsub('Masters', 'Mst').gsub('Junior', 'Jr').gsub('Category', 'Cat').gsub('Beginner', 'Beg').gsub('Expert', 'Exp').gsub("Clydesdale", "Clyd")
+    name.gsub("Senior", "Sr").gsub("Masters", "Mst").gsub("Junior", "Jr").gsub("Category", "Cat").gsub("Beginner", "Beg").gsub("Expert", "Exp").gsub("Clydesdale", "Clyd")
   end
 
   def name=(value)
@@ -98,20 +100,20 @@ class Category < ActiveRecord::Base
     return false unless other && other.is_a?(Category)
 
     abilities.in?(other.abilities) &&
-    ages.in?(other.ages) &&
-    equipment == other.equipment &&
-    (other.gender == "M" || gender == "F") &&
-    weight == other.weight
+      ages.in?(other.ages) &&
+      equipment == other.equipment &&
+      (other.gender == "M" || gender == "F") &&
+      weight == other.weight
   end
 
   def equivalent?(other)
     return false unless other && other.is_a?(Category)
 
     abilities == other.abilities &&
-    ages == other.ages &&
-    equipment == other.equipment &&
-    gender == other.gender &&
-    weight == other.weight
+      ages == other.ages &&
+      equipment == other.equipment &&
+      gender == other.gender &&
+      weight == other.weight
   end
 
   # Find best matching competition race for category. Iterate through traits (weight, equipment, ages, gender, abilities) until there is a
@@ -143,26 +145,22 @@ class Category < ActiveRecord::Base
     return nil if candidate_categories.empty?
 
     if junior?
-      junior_categories = candidate_categories.select { |category| category.junior? }
+      junior_categories = candidate_categories.select(&:junior?)
       logger.debug "junior: #{junior_categories.map(&:name).join(', ')}"
       return junior_categories.first if junior_categories.one?
-      if junior_categories.present?
-        candidate_categories = junior_categories
-      end
+      candidate_categories = junior_categories if junior_categories.present?
     end
 
     if masters?
-      masters_categories = candidate_categories.select { |category| category.masters? }
+      masters_categories = candidate_categories.select(&:masters?)
       logger.debug "masters?: #{masters_categories.map(&:name).join(', ')}"
       return masters_categories.first if masters_categories.one?
-      if masters_categories.present?
-        candidate_categories = masters_categories
-      end
+      candidate_categories = masters_categories if masters_categories.present?
     end
 
     # E.g., if Cat 3 matches Senior Men and Cat 3, use Cat 3
     # Could check size of range and use narrowest if there is a single one more narrow than the others
-    candidate_categories = candidate_categories.reject { |category| category.all_abilities? }
+    candidate_categories = candidate_categories.reject(&:all_abilities?)
     logger.debug "reject wildcards: #{candidate_categories.map(&:name).join(', ')}"
     return candidate_categories.first if candidate_categories.one?
     return nil if candidate_categories.empty?

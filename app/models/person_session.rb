@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Login session
 class PersonSession < Authlogic::Session::Base
   remember_me true

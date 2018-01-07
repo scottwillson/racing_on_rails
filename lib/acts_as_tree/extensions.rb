@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ActsAsTree
   module Extensions
     extend ActiveSupport::Concern
@@ -6,16 +8,17 @@ module ActsAsTree
     #
     #   subchild1.ancestors # => [child1, root]
     def ancestors
-      node, nodes = self, []
+      node = self
+      nodes = []
       nodes << node = node.parent while node.parent
       nodes
     end
 
     # Dupe from acts_as_tree gem so Event can use it.
     def descendants
-      children.each_with_object(children.to_a) {|child, arr|
+      children.each_with_object(children.to_a) do |child, arr|
         arr.concat child.descendants
-      }.uniq
+      end.uniq
     end
 
     # Returns the root node of the tree.

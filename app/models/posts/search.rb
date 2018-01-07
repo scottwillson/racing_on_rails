@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Posts
   module Search
     extend ActiveSupport::Concern
@@ -8,7 +10,7 @@ module Posts
 
       settings do
         mappings dynamic: "false" do
-          indexes [ :subject, :body, :from_email, :from_name, :date ], analyzer: "english", index_options: "offsets"
+          indexes %i[subject body from_email from_name date], analyzer: "english", index_options: "offsets"
         end
       end
 
@@ -20,7 +22,7 @@ module Posts
             query: {
               multi_match: {
                 query: subject[0, 32],
-                fields: [ "subject^3", "body" ]
+                fields: ["subject^3", "body"]
               }
             },
             filter: {

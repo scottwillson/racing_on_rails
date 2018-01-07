@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -17,9 +19,9 @@ class TeamsControllerTest < ActionController::TestCase
 
   test "find json" do
     vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
-    get :index, name: 'van', format: "json"
+    get :index, name: "van", format: "json"
     assert_response :success
-    assert_equal [vanilla], assigns['teams'], "Search for 'van' should find Vanilla"
+    assert_equal [vanilla], assigns["teams"], "Search for 'van' should find Vanilla"
     assert_equal "van", assigns["name"], "'name' assigns"
   end
 end

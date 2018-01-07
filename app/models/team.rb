@@ -14,8 +14,8 @@ class Team < ActiveRecord::Base
   after_save :add_alias_for_old_name
   before_destroy :ensure_no_results
 
-  validates_presence_of :name
-  validates_uniqueness_of :name
+  validates :name, presence: true
+  validates :name, uniqueness: true
 
   has_many :aliases, as: :aliasable, dependent: :destroy
   has_many :events
@@ -24,7 +24,7 @@ class Team < ActiveRecord::Base
   has_many :results
 
   def self.find_by_name_or_alias(name)
-    Team.find_by_name(name) || Alias.where(name: name, aliasable_type: "Team").first&.team
+    Team.find_by(name: name) || Alias.where(name: name, aliasable_type: "Team").first&.team
   end
 
   def self.find_by_name_or_alias_or_create(name)
@@ -74,9 +74,7 @@ class Team < ActiveRecord::Base
        !Team.exists?(name: name_was)
 
       new_alias = Alias.create!(name: name_was, team: self)
-      unless new_alias.save
-        logger.error("Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(', ')}")
-      end
+      logger.error("Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(', ')}") unless new_alias.save
       new_alias
     end
   end

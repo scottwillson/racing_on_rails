@@ -1,4 +1,4 @@
-# coding: utf-8
+# frozen_string_literal: true
 
 require File.expand_path("../../../../test_helper", __FILE__)
 
@@ -47,10 +47,10 @@ module Admin
           get :index, format: "xls", include: "all"
 
           assert_response :success
-          assert_equal("filename=\"people_2012_11_1.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-          assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers["Content-Type"], 'Should set content to Excel')
-          # FIXME use send_data
-          assert_equal(11, assigns['people'].to_a.size, "People export size")
+          assert_equal("filename=\"people_2012_11_1.xls\"", @response.headers["Content-Disposition"], "Should set disposition")
+          assert_equal("application/vnd.ms-excel; charset=utf-8", @response.headers["Content-Type"], "Should set content to Excel")
+          # FIXME: use send_data
+          assert_equal(11, assigns["people"].to_a.size, "People export size")
 
           expected_body = [
             "license	first_name	last_name	team_name	member_from	member_to	ccx_only	print_card	card_printed_at	membership_card	date_of_birth	occupation	street	city	state	zip	wants_mail	email	wants_email	home_phone	work_phone	cell_fax	gender	road_category	track_category	ccx_category	mtb_category	dh_category	ccx_number	dh_number	road_number	singlespeed_number	track_number	xc_number	notes	volunteer_interest	official_interest	race_promotion_interest	team_interest	created_at	updated_at\n",
@@ -65,7 +65,7 @@ module Admin
             "	Brad	Ross				0	0		0							0		0																\"Hey,  I’ve got some \\\"bad\\\" characters\"	0	0	0	0	11/1/2012	11/1/2012\n",
             "7123811	Erik	Tonkin	Kona	1/1/1999	12/31/2012	0	0		0	9/10/1982		127 SE Lambert	Portland	OR	19990	0		0	415 221-3773			M	1	5						102	409				0	0	0	0	11/1/2012	11/1/2012\n",
             "	Ryan	Weaver	Gentle Lovers	1/1/2000	12/31/2012	0	0		0							0	hotwheels@yahoo.com	0				M								341			437		0	0	0	0	11/1/2012	11/1/2012\n"
-            ].reverse
+          ].reverse
 
           unless File.exist?("local/app/views/admin/people/index.xls.erb")
             @response.body.lines.each do |line|
@@ -76,24 +76,24 @@ module Admin
       end
 
       test "export to excel with date" do
-        get(:index, format: 'xls', include: 'all', date: "2008-12-31")
+        get(:index, format: "xls", include: "all", date: "2008-12-31")
 
         assert_response :success
-        assert_equal("filename=\"people_2008_12_31.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-        assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers["Content-Type"], 'Should set content to Excel')
-        # FIXME use send_data
+        assert_equal("filename=\"people_2008_12_31.xls\"", @response.headers["Content-Disposition"], "Should set disposition")
+        assert_equal("application/vnd.ms-excel; charset=utf-8", @response.headers["Content-Type"], "Should set content to Excel")
+        # FIXME: use send_data
         # assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
-        assert_equal(1, assigns['people'].count, "People export size")
+        assert_equal(1, assigns["people"].count, "People export size")
       end
 
       test "export members only to excel" do
-        get(:index, format: 'xls', include: 'members_only')
+        get(:index, format: "xls", include: "members_only")
 
         assert_response :success
         today = RacingAssociation.current.effective_today
-        assert_equal("filename=\"people_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-        assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
-        # FIXME use send_data
+        assert_equal("filename=\"people_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers["Content-Disposition"], "Should set disposition")
+        assert_equal("application/vnd.ms-excel; charset=utf-8", @response.headers["Content-Type"], "Should set content to Excel")
+        # FIXME: use send_data
         # assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
       end
 
@@ -101,22 +101,22 @@ module Admin
         destroy_person_session
         PersonSession.create(FactoryBot.create(:promoter))
 
-        get :index, format: 'xls', include: 'members_only', excel_layout: "scoring_sheet"
+        get :index, format: "xls", include: "members_only", excel_layout: "scoring_sheet"
 
         assert_response :success
-        assert_equal("filename=\"scoring_sheet.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-        assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
-        # FIXME use send_data
+        assert_equal("filename=\"scoring_sheet.xls\"", @response.headers["Content-Disposition"], "Should set disposition")
+        assert_equal("application/vnd.ms-excel; charset=utf-8", @response.headers["Content-Type"], "Should set content to Excel")
+        # FIXME: use send_data
         # assert_not_nil(@response.headers['Content-Length'], "Should set content length in headers:\n#{@response.headers.join("\n")}")
       end
 
       test "export members only to scoring sheet" do
-        get(:index, format: 'xls', include: 'members_only', excel_layout: 'scoring_sheet')
+        get(:index, format: "xls", include: "members_only", excel_layout: "scoring_sheet")
 
         assert_response :success
-        assert_equal("filename=\"scoring_sheet.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-        assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
-        # FIXME use send_data
+        assert_equal("filename=\"scoring_sheet.xls\"", @response.headers["Content-Disposition"], "Should set disposition")
+        assert_equal("application/vnd.ms-excel; charset=utf-8", @response.headers["Content-Type"], "Should set content to Excel")
+        # FIXME: use send_data
         # assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
       end
 
@@ -124,9 +124,9 @@ module Admin
         get(:index, format: "xls", include: "print_cards", excel_layout: "endicia")
 
         assert_response :success
-        assert_equal("filename=\"print_cards.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-        assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
-        # FIXME use send_data
+        assert_equal("filename=\"print_cards.xls\"", @response.headers["Content-Disposition"], "Should set disposition")
+        assert_equal("application/vnd.ms-excel; charset=utf-8", @response.headers["Content-Type"], "Should set content to Excel")
+        # FIXME: use send_data
         # assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
       end
     end

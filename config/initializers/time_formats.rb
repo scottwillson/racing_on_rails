@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Date::DATE_FORMATS[:long_with_week_day]              = "%A, %B %-d, %Y"
 Time::DATE_FORMATS[:long_with_week_day]              = "%A, %B %-d, %Y"
 Date::DATE_FORMATS[:mdY]                             = "%-m/%-d/%Y"

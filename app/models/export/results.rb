@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Export
   module Results
     include Export::Base
@@ -24,7 +26,7 @@ module Export
     end
 
     def Result.export_data_sql
-      "SELECT #{Result.export_columns(true).join(",")}
+      "SELECT #{Result.export_columns(true).join(',')}
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"'
        LINES TERMINATED BY '\\n'
@@ -48,19 +50,19 @@ module Export
     end
 
     def Result.export_columns_for_results
-      [
-        "id", "category_id", "person_id", "race_id", "team_id", "age",
-        "age_group", "date_of_birth", "gender", "license", "number", "city",
-        "state", "category_class", "place", "place_in_category", "points",
-        "points_from_place", "points_bonus", "points_penalty",
-        "points_bonus_penalty", "points_total", "time", "time_bonus_penalty",
-        "time_gap_to_leader", "time_gap_to_previous", "time_gap_to_winner",
-        "time_total", "laps", "is_series", "preliminary"
+      %w[
+        id category_id person_id race_id team_id age
+        age_group date_of_birth gender license number city
+        state category_class place place_in_category points
+        points_from_place points_bonus points_penalty
+        points_bonus_penalty points_total time time_bonus_penalty
+        time_gap_to_leader time_gap_to_previous time_gap_to_winner
+        time_total laps is_series preliminary
       ]
     end
 
     def Result.export_columns_for_people
-      [ "first_name", "last_name" ]
+      %w[first_name last_name]
     end
   end
 end

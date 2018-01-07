@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ArticleCategoriesController < ApplicationController
   def show
     @article_category = ArticleCategory.where(id: params[:id]).first

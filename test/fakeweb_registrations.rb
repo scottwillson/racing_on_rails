@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FakeWeb.register_uri(
   :delete,
   %r{http://localhost:9200/*},
@@ -26,4 +28,4 @@ FakeWeb.register_uri(
   content_type: "application/json; charset=UTF-8"
 )
 
-FakeWeb.allow_net_connect = %r[\Ahttp(s?)://(localhost|127.0.0.1|0.0.0.0|codeclimate.com)]
+FakeWeb.allow_net_connect = %r{\Ahttp(s?)://(localhost|127.0.0.1|0.0.0.0|codeclimate.com)}

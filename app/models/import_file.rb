@@ -1,4 +1,6 @@
+# frozen_string_literal: true
+
 # audit of source file for results and membership uploads
 class ImportFile < ActiveRecord::Base
-  validates_presence_of :name
+  validates :name, presence: true
 end

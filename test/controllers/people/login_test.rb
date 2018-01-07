@@ -1,4 +1,4 @@
-# coding: utf-8
+# frozen_string_literal: true
 
 require File.expand_path("../../../test_helper", __FILE__)
 
@@ -17,7 +17,7 @@ class LoginTest < ActionController::TestCase
            password_confirmation: "secret",
            email: "racer@example.com",
            license: ""
-          },
+         },
          return_to: root_path
     assert_redirected_to root_path
 
@@ -39,7 +39,7 @@ class LoginTest < ActionController::TestCase
            password: "secret",
            password_confirmation: "secret",
            email: "racer@example.com"
-          },
+         },
          id: person.perishable_token
     assert_redirected_to edit_person_path(person)
 
@@ -58,7 +58,7 @@ class LoginTest < ActionController::TestCase
            password_confirmation: "secret",
            email: "racer@example.com",
            license: ""
-          },
+         },
          return_to: root_path
     assert_redirected_to root_path
 
@@ -72,12 +72,11 @@ class LoginTest < ActionController::TestCase
     use_ssl
     post :create_login,
          person: { login: "racer@example.com",
-                      password: "secret",
-                      password_confirmation: "secret",
-                      email: "racer@example.com",
-                      license: "123   ",
-                      name: "    Speed Racer"
-                    },
+                   password: "secret",
+                   password_confirmation: "secret",
+                   email: "racer@example.com",
+                   license: "123   ",
+                   name: "    Speed Racer" },
          return_to: root_path
 
     assert assigns(:person).errors.empty?, "Should not have errors, but had: #{assigns(:person).errors.full_messages}"
@@ -94,12 +93,11 @@ class LoginTest < ActionController::TestCase
     use_ssl
     post :create_login,
          person: { login: "racer@example.com",
-                      password: "secret",
-                      password_confirmation: "secret",
-                      email: "racer@example.com",
-                      license: "Speed Racer",
-                      name: ""
-                    },
+                   password: "secret",
+                   password_confirmation: "secret",
+                   email: "racer@example.com",
+                   license: "Speed Racer",
+                   name: "" },
          return_to: root_path
 
     assert_response :success
@@ -114,12 +112,11 @@ class LoginTest < ActionController::TestCase
     use_ssl
     post :create_login,
          person: { login: "racer@example.com",
-                      password: "secret",
-                      password_confirmation: "secret",
-                      email: "racer@example.com",
-                      license: "Speed Racer",
-                      name: "123"
-                    },
+                   password: "secret",
+                   password_confirmation: "secret",
+                   email: "racer@example.com",
+                   license: "Speed Racer",
+                   name: "123" },
          return_to: root_path
 
     assert_response :success
@@ -134,7 +131,7 @@ class LoginTest < ActionController::TestCase
     use_ssl
     post :create_login,
          person: { login: "racer@example.com", email: "racer@example.com", password: "secret",
-                      password_confirmation: "secret", license: "" },
+                   password_confirmation: "secret", license: "" },
          return_to: root_path
     assert_redirected_to root_path
 
@@ -150,10 +147,9 @@ class LoginTest < ActionController::TestCase
     use_ssl
     post :create_login,
          person: { login: "racer@example.com",
-                      password: "secret",
-                      password_confirmation: "secret",
-                      email: ""
-                    },
+                   password: "secret",
+                   password_confirmation: "secret",
+                   email: "" },
          return_to: root_path
 
     assert_response :success
@@ -167,9 +163,8 @@ class LoginTest < ActionController::TestCase
     use_ssl
     post :create_login,
          person: { login: "bob.jones",
-                      password: "secret",
-                      password_confirmation: "secret"
-                    },
+                   password: "secret",
+                   password_confirmation: "secret" },
          return_to: root_path
 
     assert_response :success
@@ -190,7 +185,7 @@ class LoginTest < ActionController::TestCase
            password: "secret",
            password_confirmation: "secret",
            license: "111"
-          },
+         },
          return_to: root_path
     assert_response :success
 
@@ -242,7 +237,7 @@ class LoginTest < ActionController::TestCase
            password_confirmation: "secret",
            license: "",
            name: ""
-          },
+         },
          return_to: root_path
     assert_response :success
     assert assigns(:person).errors[:login].present?, "Should have error on :email"
@@ -263,7 +258,7 @@ class LoginTest < ActionController::TestCase
            email: "racer@example.com",
            password: "secret",
            password_confirmation: "secret"
-          },
+         },
          return_to: root_path
     assert_response :success
     assert assigns(:person).errors[:login].present?, "Should have error on :email"
@@ -286,7 +281,7 @@ class LoginTest < ActionController::TestCase
            password_confirmation: "secret",
            license: "",
            name: ""
-          },
+         },
          return_to: root_path
     assert_response :success
     assert assigns(:person).errors[:login].present?, "Should have error on :email"
@@ -310,7 +305,7 @@ class LoginTest < ActionController::TestCase
            password_confirmation: "secret",
            license: "",
            name: ""
-          },
+         },
          return_to: root_path
     assert_redirected_to root_path
 
@@ -324,18 +319,17 @@ class LoginTest < ActionController::TestCase
 
     use_ssl
     post :create_login,
-         person: { login: "!@#$&*()_+?><",
-                      password: "secret",
-                      password_confirmation: "secret",
-                      email: "racer@example.com",
-                      license: "123",
-                      name: "Speed Racer"
-                    },
+         person: { login: "!@#{$&}*()_+?><",
+                   password: "secret",
+                   password_confirmation: "secret",
+                   email: "racer@example.com",
+                   license: "123",
+                   name: "Speed Racer" },
          return_to: root_path
 
-   assert_response :success
-   assert assigns(:person).errors[:login].present?, "Should have error on :email"
-   assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
+    assert_response :success
+    assert assigns(:person).errors[:login].present?, "Should have error on :email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
   test "create login unmatched license" do
@@ -346,19 +340,18 @@ class LoginTest < ActionController::TestCase
     use_ssl
     post :create_login,
          person: { login: "speed_racer",
-                      password: "secret",
-                      password_confirmation: "secret",
-                      email: "racer@example.com",
-                      license: "1727",
-                      name: "Speed Racer"
-                    },
+                   password: "secret",
+                   password_confirmation: "secret",
+                   email: "racer@example.com",
+                   license: "1727",
+                   name: "Speed Racer" },
          return_to: root_path
 
-   assert assigns(:person).errors.any?, "Should errors"
-   assert_equal 1, assigns(:person).errors.size, "errors"
-   assert_response :success
-   assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
-   assert_equal people_count, Person.count, "People count"
+    assert assigns(:person).errors.any?, "Should errors"
+    assert_equal 1, assigns(:person).errors.size, "errors"
+    assert_response :success
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
+    assert_equal people_count, Person.count, "People count"
   end
 
   test "create login unmatched name" do
@@ -369,12 +362,11 @@ class LoginTest < ActionController::TestCase
     use_ssl
     post :create_login,
          person: { login: "speed_racer",
-                      password: "secret",
-                      password_confirmation: "secret",
-                      email: "racer@example.com",
-                      license: "123",
-                      name: "Vitesse"
-                    },
+                   password: "secret",
+                   password_confirmation: "secret",
+                   email: "racer@example.com",
+                   license: "123",
+                   name: "Vitesse" },
          return_to: root_path
 
     assert assigns(:person).errors.any?, "Should errors"
@@ -394,12 +386,11 @@ class LoginTest < ActionController::TestCase
     use_ssl
     post :create_login,
          person: { login: "racer@example.com",
-                      password: "secret",
-                      password_confirmation: "secret",
-                      email: "racer@example.com",
-                      license: "9871",
-                      name: "Speed Racer"
-                    },
+                   password: "secret",
+                   password_confirmation: "secret",
+                   email: "racer@example.com",
+                   license: "9871",
+                   name: "Speed Racer" },
          return_to: root_path
 
     assert assigns(:person).errors.empty?, "Should not have errors, but had: #{assigns(:person).errors.full_messages}"
@@ -412,11 +403,11 @@ class LoginTest < ActionController::TestCase
   test "create login with return to with params" do
     use_ssl
     post :create_login,
-        person: {
-          login: "racer@example.com",
-          password: "secret",
-          password_confirmation: "secret",
-          email: "racer@example.com"
+         person: {
+           login: "racer@example.com",
+           password: "secret",
+           password_confirmation: "secret",
+           email: "racer@example.com"
          },
          return_to: "/line_items/create?type=membership"
 

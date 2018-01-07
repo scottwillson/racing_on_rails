@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UpdateCategoryAbilities < ActiveRecord::Migration
   def change
     ::Category.transaction do

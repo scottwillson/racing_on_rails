@@ -24,16 +24,16 @@ module Competitions
     end
 
     def point_schedule
-      _points_schedule = Hash.new
+      _points_schedule = {}
       source_events.each do |event|
-        if event.discipline == "Time Trial"
-          _points_schedule[event.id] = Array.new(1000, 10)
-        else
-          _points_schedule[event.id] = [ 100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
-        end
+        _points_schedule[event.id] = if event.discipline == "Time Trial"
+                                       Array.new(1000, 10)
+                                     else
+                                       [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+                                     end
       end
       hot_spots.each do |event|
-        _points_schedule[event.id] = [ 18, 16, 14, 12, 10 ]
+        _points_schedule[event.id] = [18, 16, 14, 12, 10]
       end
       _points_schedule
     end

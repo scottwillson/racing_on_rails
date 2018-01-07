@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Password reset instructions email
 class Notifier < ActionMailer::Base
   def password_reset_instructions(people)

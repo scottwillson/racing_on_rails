@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 module Admin
   class PostsController < Admin::AdminController
     before_action :assign_mailing_list
 
     def index
       @posts = Post
-        .where(mailing_list_id: @mailing_list.id)
-        .order("date desc")
-        .page(params[:page])
+               .where(mailing_list_id: @mailing_list.id)
+               .order("date desc")
+               .page(params[:page])
     end
 
     def new
@@ -51,9 +53,7 @@ module Admin
 
     def destroy
       @post = Post.find(params[:id])
-      unless Post.destroy(@post)
-        flash[:notice] = "Could not delete #{@post.subject}"
-      end
+      flash[:notice] = "Could not delete #{@post.subject}" unless Post.destroy(@post)
       redirect_to admin_mailing_list_posts_path(@mailing_list)
     end
 

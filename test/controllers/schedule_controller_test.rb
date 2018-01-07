@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 # :stopdoc:
@@ -28,7 +30,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     )
 
     SingleDayEvent.create!(postponed: true)
-    get(:index, {year: year})
+    get(:index, year: year)
 
     html = @response.body
     assert(html["Banana Belt I"], "'Banana Belt I' should be in HTML")
@@ -110,7 +112,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:index, {year: year, discipline: "Road"})
+    get(:index, year: year, discipline: "Road")
 
     html = @response.body
     assert(!html["Mudslinger"], "Road events should not include MTB")
@@ -141,7 +143,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:index, {year: year, discipline: "Mountain Bike"})
+    get(:index, year: year, discipline: "Mountain Bike")
 
     html = @response.body
     assert(html["Mudslinger"], "Road events should include MTB")
@@ -265,7 +267,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:list, {year: year, discipline: "Mountain Bike"})
+    get(:list, year: year, discipline: "Mountain Bike")
 
     html = @response.body
     assert(html["Mudslinger"], "Road events should include MTB")
@@ -311,7 +313,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:index, {year: 2006, discipline: "Mountain Bike", format: "json"})
+    get(:index, year: 2006, discipline: "Mountain Bike", format: "json")
 
     json = @response.body
     assert(json["Mudslinger"], "Calendar should include MTB event")
@@ -339,7 +341,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:calendar, {year: 2006, discipline: "Mountain Bike", format: "json"})
+    get(:calendar, year: 2006, discipline: "Mountain Bike", format: "json")
 
     json = @response.body
     assert(json["Mudslinger"], "Calendar should include MTB event")

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Categories
   module Gender
     extend ActiveSupport::Concern

@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 class EventTeamMembership < ActiveRecord::Base
   belongs_to :event_team
   belongs_to :person
 
-  validates_presence_of :event_team
-  validates_presence_of :person
+  validates :event_team, presence: true
+  validates :person, presence: true
 
-  validates_uniqueness_of :person, scope: :event_team
+  validates :person, uniqueness: { scope: :event_team }
   validate :uniqueness_of_event
 
   accepts_nested_attributes_for :event_team
@@ -51,8 +53,6 @@ class EventTeamMembership < ActiveRecord::Base
   end
 
   def uniqueness_of_event
-    if person && person.event_team_memberships.reject { |m| m == self }.map(&:event).include?(event)
-      errors.add :event_team, "Already on a team for #{event.name}"
-    end
+    errors.add :event_team, "Already on a team for #{event.name}" if person&.event_team_memberships&.reject { |m| m == self }.map(&:event).include?(event)
   end
 end

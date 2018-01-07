@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # MultiDayEvent with events on several, non-contiguous days
 #
 # This class doesn't add any special behavior to MultiDayEvent, but it is

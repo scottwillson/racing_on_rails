@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   module Calculations
     module Points
@@ -20,7 +22,7 @@ module Competitions
       end
 
       def upgrade_points(result, rules)
-        [ result.points * rules[:upgrade_points_multiplier], rules[:maximum_upgrade_points] ].min
+        [result.points * rules[:upgrade_points_multiplier], rules[:maximum_upgrade_points]].min
       end
 
       def numeric_place?(result)
@@ -28,22 +30,18 @@ module Competitions
       end
 
       def points_from_point_schedule(result, rules)
-        if !point_schedule?(rules)
-          return 1
-        end
+        return 1 unless point_schedule?(rules)
 
-        if rules[:missing_result_penalty] && numeric_place(result) > rules[:missing_result_penalty]
-          return rules[:missing_result_penalty]
-        end
+        return rules[:missing_result_penalty] if rules[:missing_result_penalty] && numeric_place(result) > rules[:missing_result_penalty]
 
         points = points_from_place(result, rules) || 0
         bonus = place_bonus_points(result, rules)
         team_size = (result.team_size || 1.0).to_f
 
         ((points + bonus) / team_size) *
-        multiplier(result) *
-        last_event_multiplier(result, rules) *
-        field_size_multiplier(result, rules)
+          multiplier(result) *
+          last_event_multiplier(result, rules) *
+          field_size_multiplier(result, rules)
       end
 
       def point_schedule?(rules)
@@ -76,7 +74,7 @@ module Competitions
       end
 
       def multiplier(result)
-        (result.multiplier || 1 ).to_f
+        (result.multiplier || 1).to_f
       end
 
       def last_event_multiplier(result, rules)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   # Homepage articles. Includes XML format.
   class ArticlesController < Admin::AdminController
@@ -15,7 +17,7 @@ module Admin
 
       respond_to do |format|
         format.html
-        format.xml  { render xml: @article }
+        format.xml { render xml: @article }
       end
     end
 
@@ -35,7 +37,7 @@ module Admin
 
       if @article.save
         expire_cache
-        flash[:notice] = 'Article was successfully created.'
+        flash[:notice] = "Article was successfully created."
         redirect_to admin_articles_url
       else
         render :edit
@@ -47,7 +49,7 @@ module Admin
 
       if @article.update(article_params)
         expire_cache
-        flash[:notice] = 'Article was successfully updated.'
+        flash[:notice] = "Article was successfully updated."
         redirect_to admin_articles_url
       else
         render :edit

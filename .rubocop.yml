@@ -1,5 +1,6 @@
 AllCops:
   TargetRubyVersion: 2.5
+  TargetRailsVersion: 4.2
 
 Rails:
   Enabled: true

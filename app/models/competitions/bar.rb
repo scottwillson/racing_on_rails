@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   # Best All-around Rider Competition. Assigns points for each top-15 placing in major Disciplines: road, track, etc.
   # Calculates a BAR for each Discipline, and an Overall BAR that combines all the discipline BARs.
@@ -21,21 +23,20 @@ module Competitions
           overall_bar.set_date
 
           # Age Graded BAR, Team BAR and Overall BAR do their own calculations
-          ::Discipline.find_all_bar.reject { |discipline|
-            [ ::Discipline[:age_graded], ::Discipline[:overall], ::Discipline[:team] ].include?(discipline)
-          }.each do |discipline|
+          ::Discipline.find_all_bar.reject do |discipline|
+            [::Discipline[:age_graded], ::Discipline[:overall], ::Discipline[:team]].include?(discipline)
+          end.each do |discipline|
             bar = Bar.where(date: date, discipline: discipline.name).first
-            unless bar
-              Bar.create!(
-                parent: overall_bar,
-                name: "#{year} #{discipline.name} BAR",
-                date: date,
-                discipline: discipline.name
-              )
-            end
+            next if bar
+            Bar.create!(
+              parent: overall_bar,
+              name: "#{year} #{discipline.name} BAR",
+              date: date,
+              discipline: discipline.name
+            )
           end
 
-          Bar.where(date: date).each do |bar|
+          Bar.where(date: date).find_each do |bar|
             bar.set_date
             bar.delete_races
             bar.create_races
@@ -53,29 +54,28 @@ module Competitions
     end
 
     def source_event_types
-      [ Event,
-        SingleDayEvent,
-        MultiDayEvent,
-        Series,
-        WeeklySeries,
-        Competitions::BlindDateAtTheDairyMonthlyStandings,
-        Competitions::PortlandShortTrackSeries::MonthlyStandings,
-        Competitions::PortlandShortTrackSeries::Overall,
-        Competitions::TaborOverall
-      ]
+      [Event,
+       SingleDayEvent,
+       MultiDayEvent,
+       Series,
+       WeeklySeries,
+       Competitions::BlindDateAtTheDairyMonthlyStandings,
+       Competitions::PortlandShortTrackSeries::MonthlyStandings,
+       Competitions::PortlandShortTrackSeries::Overall,
+       Competitions::TaborOverall]
     end
 
     def source_results_query(race)
-      super.
-      where(bar: true).
-      where("events.sanctioned_by" => RacingAssociation.current.default_sanctioned_by).
-      where("events.discipline in (:disciplines)
+      super
+        .where(bar: true)
+        .where("events.sanctioned_by" => RacingAssociation.current.default_sanctioned_by)
+        .where("events.discipline in (:disciplines)
             or (events.discipline is null and parents_events.discipline in (:disciplines))
             or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (:disciplines))",
-            disciplines: disciplines_for(race))
+               disciplines: disciplines_for(race))
     end
 
-    def after_source_results(results, race)
+    def after_source_results(results, _race)
       results.each do |result|
         result["multiplier"] = result["race_bar_points"] || result["event_bar_points"] || result["parent_bar_points"] || result["parent_parent_bar_points"]
       end
@@ -86,7 +86,7 @@ module Competitions
     end
 
     def friendly_name
-      'BAR'
+      "BAR"
     end
   end
 end

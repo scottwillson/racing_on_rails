@@ -1,6 +1,7 @@
 #! /usr/bin/env ruby
+# frozen_string_literal: true
 
-%w{ firefox chrome poltergeist webkit }.shuffle.each do |javascript_driver|
+%w[ firefox chrome poltergeist webkit ].shuffle.each do |javascript_driver|
   puts "=" * javascript_driver.size
   puts javascript_driver
   puts "=" * javascript_driver.size

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RacingOnRails::Application.configure do
   require "syslog/logger"
 

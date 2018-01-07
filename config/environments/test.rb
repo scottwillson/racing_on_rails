@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RacingOnRails::Application.configure do
   config.action_controller.action_on_unpermitted_parameters = :raise
   config.action_controller.allow_forgery_protection         = false
@@ -6,9 +8,9 @@ RacingOnRails::Application.configure do
   config.action_mailer.delivery_method                      = :test
   config.active_support.deprecation                         = :stderr
   config.active_support.test_order                          = :random
-  config.autoload_paths                                    += %W(
+  config.autoload_paths                                    += %W[
     #{config.root}/lib/test
-  )
+  ]
   config.cache_classes                                      = true
   config.consider_all_requests_local                        = true
   config.eager_load                                         = false

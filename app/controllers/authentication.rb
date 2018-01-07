@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Authentication
   extend ActiveSupport::Concern
 
@@ -19,12 +21,12 @@ module Authentication
 
   def current_person
     return @current_person if defined?(@current_person)
-    @current_person = current_person_session && current_person_session.person
+    @current_person = current_person_session&.person
   end
 
   def store_location_and_redirect_to_login
     if request.format == "text/javascript"
-      session[:return_to] = request.referrer
+      session[:return_to] = request.referer
       @redirect_to = new_person_session_url(secure_redirect_options)
       render template: "redirect"
     else

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../../test_case"
 require_relative "../../../../app/models/categories"
 require_relative "../../../../app/models/categories/ability"
@@ -91,7 +93,7 @@ module Categories
         "Women 1/2/3 Sprint" => 1..3,
         "Women 1-3" => 1..3,
         "Women 4/5" => 4..5,
-        "Women A" => 1..1,
+        "Women A" => 1..1
       }.each do |name, ability|
         category = Stub.new
         category.name = name

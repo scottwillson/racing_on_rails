@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Archive of Mailman mailing lists
 class PostsController < ApplicationController
   # List all posts for :mailing_list_id
@@ -13,11 +15,11 @@ class PostsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        if @subject.present?
-          @posts = Post.matching(@mailing_list, @subject).page(page)
-        else
-          @posts = @mailing_list.posts.original.order("position desc").page(page)
-        end
+        @posts = if @subject.present?
+                   Post.matching(@mailing_list, @subject).page(page)
+                 else
+                   @mailing_list.posts.original.order("position desc").page(page)
+                 end
       end
 
       format.rss do

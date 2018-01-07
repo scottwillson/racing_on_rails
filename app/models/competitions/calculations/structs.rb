@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   module Calculations
     module Structs

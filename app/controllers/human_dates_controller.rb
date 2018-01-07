@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Nicely-formatted version of parsed dates. Expects :date param. Echo param if date cannot be parsed.
 class HumanDatesController < ApplicationController
   def show

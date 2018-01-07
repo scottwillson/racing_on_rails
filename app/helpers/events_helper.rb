@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module EventsHelper
   # Display email link to promoter. Uses event email if there is one.
   # Displays promoter email in promoter's name is blank.
@@ -5,7 +7,7 @@ module EventsHelper
   def link_to_event_email(event)
     email = event_email(event)
 
-    name = event.promoter.name if event.promoter && event.promoter.name.present?
+    name = event.promoter.name if event.promoter&.name.present?
     name = email if name.nil?
 
     if email.present?
@@ -21,23 +23,22 @@ module EventsHelper
     email
   end
 
-  # FIXME Move to Event?
+  # FIXME: Move to Event?
   # TODO rename to event_phone
   def link_to_event_phone(event)
     return event.phone if event.phone.present?
-    event.promoter.home_phone if event.promoter && event.promoter.home_phone.present?
+    event.promoter.home_phone if event.promoter&.home_phone.present?
   end
 
-  # FIXME move to event?
+  # FIXME: move to event?
   # Only show link if flyer approved
   def public_link_to_flyer(event, text = nil)
     return unless event && event.respond_to?(:flyer)
+    
     if event.flyer_approved?
       link_to_flyer event, text
-    elsif text.present?
-      text
     else
-      event.full_name
+      text.presence || event.full_name
     end
   end
 
@@ -53,7 +54,7 @@ module EventsHelper
   def link_to_flyer(event, text = nil)
     return unless event
 
-    text = text || event.full_name
+    text ||= event.full_name
 
     if event.flyer.blank?
       text

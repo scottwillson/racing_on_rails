@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module Pages
   module Paths
     extend ActiveSupport::Concern
 
     module ClassMethods
       def find_by_normalized_path!(path)
-        self.find_by_path! normalize_path(path)
+        find_by! path: normalize_path(path)
       end
 
       def normalize_path(path)
@@ -21,13 +23,12 @@ module Pages
       end
     end
 
-
     # Parent +slug+ paths + +slug+
     def set_path
       # Ouch
       _ancestors = ancestors.reverse
-      _ancestors.delete(self.parent)
-      _ancestors << ::Page.find(self.parent_id) if self.parent_id
+      _ancestors.delete(parent)
+      _ancestors << ::Page.find(parent_id) if parent_id
 
       self.path = (_ancestors << self).map(&:slug).join("/").gsub(/^\//, "")
     end

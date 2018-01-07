@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 module Competitions
   module PortlandShortTrackSeries
     class MonthlyStandings < Competition
       include PortlandShortTrackSeries::Common
 
-      MONTHS = [ 6, 7 ]
+      MONTHS = [6, 7].freeze
 
       def self.calculate!(year = Time.zone.today.year)
         ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
           transaction do
             parent = ::WeeklySeries.year(year).where(name: parent_event_name).first
 
-            if parent && parent.any_results_including_children?
+            if parent&.any_results_including_children?
               MONTHS.each do |month|
                 month_name = Date::MONTHNAMES[month]
                 standings = MonthlyStandings.find_or_create_by!(
@@ -32,7 +34,7 @@ module Competitions
         true
       end
 
-      def after_source_results(results, race)
+      def after_source_results(results, _race)
         results.each do |result|
           result["multiplier"] = result["points_factor"] || 1
         end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Categories
   module FriendlyParam
     extend ActiveSupport::Concern
@@ -27,13 +29,13 @@ module Categories
     # Lowercase underscore
     def to_friendly_param
       if name
-        name.underscore.gsub('+', '_plus').gsub(/[^\w]+/, '_').gsub(/^_/, '').gsub(/_$/, '').gsub(/_+/, '_')
+        name.underscore.gsub("+", "_plus").gsub(/[^\w]+/, "_").gsub(/^_/, "").gsub(/_$/, "").gsub(/_+/, "_")
       else
         ""
       end
     end
   end
 
-  class AmbiguousParamException < Exception
+  class AmbiguousParamException < RuntimeError
   end
 end

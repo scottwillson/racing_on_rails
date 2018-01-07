@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module People
   module Membership
     extend ActiveSupport::Concern
@@ -70,21 +71,13 @@ module People
 
     # Validates member_from and member_to
     def membership_dates
-      if member_to && !member_from
-        errors.add("member_from", "cannot be nil if member_to is not nil (#{member_to})")
-      end
+      errors.add("member_from", "cannot be nil if member_to is not nil (#{member_to})") if member_to && !member_from
 
-      if member_from && !member_to
-        errors.add("member_to", "cannot be nil if member_from is not nil (#{member_from})")
-      end
+      errors.add("member_to", "cannot be nil if member_from is not nil (#{member_from})") if member_from && !member_to
 
-      if member_from && member_to && member_from.to_date > member_to.to_date
-        errors.add("member_to", "cannot be greater than member_from: #{member_from}")
-      end
+      errors.add("member_to", "cannot be greater than member_from: #{member_from}") if member_from && member_to && member_from.to_date > member_to.to_date
 
-      if member_from && member_from < YEAR_1900
-        self.member_from = member_from_was
-      end
+      self.member_from = member_from_was if member_from && member_from < YEAR_1900
 
       self.member_to = member_to_was if member_to && member_to < YEAR_1900
     end

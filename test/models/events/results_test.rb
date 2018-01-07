@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Events
@@ -5,7 +7,7 @@ module Events
   class ResultsTest < ActiveSupport::TestCase
     test "find all with results" do
       event = FactoryBot.create(:result).event
-      assert_equal([ event ], Event.find_all_with_results, "events")
+      assert_equal([event], Event.find_all_with_results, "events")
     end
 
     test "find all with results with year" do
@@ -17,7 +19,7 @@ module Events
       FactoryBot.create(:event, date: Date.new(2003))
       FactoryBot.create(:race)
 
-      assert_equal([ event_with_results ], Event.find_all_with_results(2003), "events")
+      assert_equal([event_with_results], Event.find_all_with_results(2003), "events")
 
       event_with_results = FactoryBot.create(:event, date: Date.new(2004))
       race = FactoryBot.create(:race, event: event_with_results)
@@ -29,7 +31,7 @@ module Events
       FactoryBot.create(:result, race: race)
 
       events = Event.find_all_with_results(2004)
-      assert_equal_events([ event_with_results, weekly_series_with_results].sort, events.sort, "events")
+      assert_equal_events([event_with_results, weekly_series_with_results].sort, events.sort, "events")
 
       assert_equal([], Event.find_all_with_results(2005), "events")
     end
@@ -44,7 +46,7 @@ module Events
       race = FactoryBot.create(:race, event: event_with_results)
       FactoryBot.create(:result, race: race)
 
-      assert_equal([ event_with_results ], Event.find_all_with_results(2003, Discipline["Road"]), "events")
+      assert_equal([event_with_results], Event.find_all_with_results(2003, Discipline["Road"]), "events")
 
       assert_equal([], Event.find_all_with_results(2003, Discipline["Criterium"]), "events")
 
@@ -90,22 +92,22 @@ module Events
 
     test "races with results" do
       bb3 = FactoryBot.create(:event)
-      assert(bb3.races_with_results.empty?, 'No races')
+      assert(bb3.races_with_results.empty?, "No races")
 
       sr_p_1_2 = FactoryBot.create(:category)
       bb3.races.create!(category: sr_p_1_2)
-      assert(bb3.races_with_results.empty?, 'No results')
+      assert(bb3.races_with_results.empty?, "No results")
 
       senior_women = FactoryBot.create(:category)
       race_1 = bb3.races.create!(category: senior_women)
       race_1.results.create!
-      assert_equal([race_1], bb3.races_with_results, 'One results')
+      assert_equal([race_1], bb3.races_with_results, "One results")
 
       race_2 = bb3.races.create!(category: sr_p_1_2)
       race_2.results.create!
       women_4 = FactoryBot.create(:category)
       bb3.races.create!(category: women_4)
-      assert_same_elements [ race_2, race_1 ], bb3.races_with_results, 'Two races with results'
+      assert_same_elements [race_2, race_1], bb3.races_with_results, "Two races with results"
     end
 
     test "children with results" do

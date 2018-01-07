@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 module Competitions
   module Calculations
     module Teams
       def team_races(results)
-        results.group_by(&:race_id).select do |race_id, race_results|
+        results.group_by(&:race_id).select do |_race_id, race_results|
           team_race? race_results
-        end.
-        keys
+        end
+               .keys
       end
 
       def team_race?(results)

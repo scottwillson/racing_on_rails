@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../test_helper", __FILE__)
 
 module Admin
@@ -11,7 +13,7 @@ module Admin
 
     test "destroy" do
       race_number = FactoryBot.create(:race_number)
-      assert_not_nil(RaceNumber.find(race_number.id), 'RaceNumber should exist')
+      assert_not_nil(RaceNumber.find(race_number.id), "RaceNumber should exist")
 
       xhr :delete, :destroy, id: race_number.to_param
       assert_response :success

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditorRequestsController < ApplicationController
   before_action :assign_person, except: :show
   before_action :require_current_person, except: :show
@@ -6,16 +8,14 @@ class EditorRequestsController < ApplicationController
 
   def create
     @editor = Person.find(params[:editor_id])
-    unless @editor.administrator? || (@editor && current_person == @editor)
-      return redirect_to(unauthorized_path)
-    end
+    return redirect_to(unauthorized_path) unless @editor.administrator? || (@editor && current_person == @editor)
 
     if @person.editors.include?(@editor)
-      if @editor == current_person
-        flash[:notice] = "You can already access #{@person.name}'s account"
-      else
-        flash[:notice] = "#{@editor.name} can already access #{@person.name}'s account"
-      end
+      flash[:notice] = if @editor == current_person
+                         "You can already access #{@person.name}'s account"
+                       else
+                         "#{@editor.name} can already access #{@person.name}'s account"
+                       end
     else
       if @person.email.present?
         @person.editor_requests.create!(editor: @editor)
@@ -33,7 +33,7 @@ class EditorRequestsController < ApplicationController
   end
 
   def show
-    @editor_request = EditorRequest.find_by_token!(params[:id])
+    @editor_request = EditorRequest.find_by!(token: params[:id])
     @editor_request.grant!
   end
 end

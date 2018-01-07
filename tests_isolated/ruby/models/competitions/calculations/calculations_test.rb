@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require_relative "../../../test_case"
 
 module Competitions
   module Calculations
     class CalculationsTest < Ruby::TestCase
       def assert_equal_results(expected, actual)
-        [ expected, actual ].each do |results|
+        [expected, actual].each do |results|
           results.each { |result| result.scores.sort_by!(&:numeric_place); result.scores.sort_by!(&:date) }
           results.sort_by!(&:place)
           results.sort_by!(&:participant_id)
@@ -18,8 +20,8 @@ module Competitions
       end
 
       def assert_equal_scores(expected, actual)
-        [ expected, actual ].each do |scores|
-          scores.sort_by! { |s| [ s.numeric_place, s.date, s.event_id, s.participant_id ] }
+        [expected, actual].each do |scores|
+          scores.sort_by! { |s| [s.numeric_place, s.date, s.event_id, s.participant_id] }
         end
 
         unless expected == actual
@@ -38,7 +40,7 @@ module Competitions
             message << "    Score place: #{s.numeric_place} points: #{s.points} date: #{s.date} event_id: #{s.event_id}"
             message << "\n"
           end
-          message << "\n" if r.scores.size > 0
+          message << "\n" unless r.scores.empty?
         end
         message
       end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   module People
     module Cards
@@ -27,7 +29,7 @@ module Admin
       # Single membership card
       def card
         @person = Person.find(params[:id])
-        @people = [ @person ]
+        @people = [@person]
         @person.print_card!
 
         ActiveSupport::Notifications.instrument "card.people.admin.racing_on_rails", person_id: @person.id

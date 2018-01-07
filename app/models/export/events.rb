@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Export
   module Events
     include Export::Base
@@ -24,7 +26,7 @@ module Export
     end
 
     def Event.export_data_sql
-      "SELECT #{Event.export_columns.join(",")}
+      "SELECT #{Event.export_columns.join(',')}
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"'
        LINES TERMINATED BY '\\n'
@@ -32,10 +34,10 @@ module Export
     end
 
     def Event.export_columns
-      [
-        "id", "parent_id", "name", "discipline", "date", "time",
-        "sanctioned_by", "type", "city", "state", "instructional", "practice",
-        "postponed", "beginner_friendly", "cancelled"
+      %w[
+        id parent_id name discipline date time
+        sanctioned_by type city state instructional practice
+        postponed beginner_friendly cancelled
       ]
     end
   end

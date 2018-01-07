@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Authorization
   extend ActiveSupport::Concern
 
@@ -13,9 +15,7 @@ module Authorization
   end
 
   def require_administrator
-    unless require_current_person
-      return false
-    end
+    return false unless require_current_person
 
     unless current_person.administrator?
       session[:return_to] = request.fullpath
@@ -27,9 +27,7 @@ module Authorization
   end
 
   def require_administrator_or_promoter
-    unless require_current_person
-      return false
-    end
+    return false unless require_current_person
 
     unless administrator? ||
            (@event && (current_person == @event.promoter || @event.editors.include?(current_person))) ||
@@ -42,9 +40,7 @@ module Authorization
   end
 
   def require_administrator_or_official
-    unless require_current_person
-      return false
-    end
+    return false unless require_current_person
 
     unless administrator? || official?
       session[:return_to] = request.fullpath
@@ -56,9 +52,7 @@ module Authorization
   end
 
   def require_same_person_or_administrator
-    unless require_current_person
-      return false
-    end
+    return false unless require_current_person
 
     unless administrator? || (@person && current_person == @person)
       redirect_to unauthorized_path
@@ -68,11 +62,9 @@ module Authorization
   end
 
   def require_same_person_or_administrator_or_editor
-    unless require_current_person
-      return false
-    end
+    return false unless require_current_person
 
-    unless administrator? || (@person && current_person == @person) || (@person && @person.editors.include?(current_person))
+    unless administrator? || (@person && current_person == @person) || @person&.editors&.include?(current_person)
       redirect_to unauthorized_path
       return false
     end
@@ -80,9 +72,7 @@ module Authorization
   end
 
   def require_administrator_or_promoter_or_official
-    unless require_current_person
-      return false
-    end
+    return false unless require_current_person
 
     unless administrator? || promoter? || official?
       redirect_to unauthorized_path
@@ -92,9 +82,7 @@ module Authorization
   end
 
   def require_administrator_or_same_person
-    unless current_person.administrator? || (current_person == @person)
-      redirect_to unauthorized_path
-    end
+    redirect_to unauthorized_path unless current_person.administrator? || (current_person == @person)
   end
 
   def administrator?

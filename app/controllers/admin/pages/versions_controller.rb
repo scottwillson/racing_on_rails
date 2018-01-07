@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   module Pages
     # Show old versions of Pages

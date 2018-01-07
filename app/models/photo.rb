@@ -1,15 +1,15 @@
+# frozen_string_literal: true
+
 class Photo < ActiveRecord::Base
   include Photos::Dimensions
 
   mount_uploader :image, ImageUploader
 
-  validates_presence_of :caption, :image, :height, :width
+  validates :caption, :image, :height, :width, presence: true
 
   before_validation :set_title, on: :create
 
   def set_title
-    if title.blank?
-      self.title = caption
-    end
+    self.title = caption if title.blank?
   end
 end

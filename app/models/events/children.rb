@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Events
   module Children
     extend ActiveSupport::Concern
@@ -14,9 +16,9 @@ module Events
                after_add: :children_changed,
                after_remove: :children_changed
 
-      scope :child, lambda { where("parent_id is not null") }
+      scope :child, -> { where("parent_id is not null") }
       # :root?
-      scope :not_child, lambda { where("parent_id is null") }
+      scope :not_child, -> { where("parent_id is null") }
 
       scope :not_single_day_event, lambda {
         where "type is null or type != 'SingleDayEvent'"
@@ -35,7 +37,7 @@ module Events
     end
 
     def changes_for_propogation
-      changes.select { |key, value| propogated_attributes.include?(key) }
+      changes.select { |key, _value| propogated_attributes.include?(key) }
     end
 
     def update_child_attribute(change)
@@ -55,7 +57,7 @@ module Events
       # Do nothing in superclass
     end
 
-    def children_changed(child)
+    def children_changed(_child)
       # Don't trigger callbacks
       Event.where(id: id).update_all(updated_at: Time.zone.now)
       true
@@ -83,13 +85,12 @@ module Events
       return [] unless name && date
 
       @multi_day_event_children_with_no_parent ||= SingleDayEvent.where(
-          "parent_id is null and name = ? and extract(year from date) = ?
-           and ((select count(*) from events where name = ? and extract(year from date) = ? and type in ('MultiDayEvent', 'Series', 'WeeklySeries')) = 0)",
-           self.name, self.date.year, self.name, self.date.year)
+        "parent_id is null and name = ? and extract(year from date) = ?
+         and ((select count(*) from events where name = ? and extract(year from date) = ? and type in ('MultiDayEvent', 'Series', 'WeeklySeries')) = 0)",
+        name, date.year, name, date.year
+      )
       # Could do this in SQL
-      if @multi_day_event_children_with_no_parent.size == 1
-        @multi_day_event_children_with_no_parent = []
-      end
+      @multi_day_event_children_with_no_parent = [] if @multi_day_event_children_with_no_parent.size == 1
       @multi_day_event_children_with_no_parent
     end
 
@@ -98,9 +99,7 @@ module Events
     end
 
     def parent_is_not_self
-      if parent_id && parent_id == id
-        errors.add("parent", "Event cannot be its own parent")
-      end
+      errors.add("parent", "Event cannot be its own parent") if parent_id && parent_id == id
     end
 
     def root_id

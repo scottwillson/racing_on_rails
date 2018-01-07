@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MenuHelper
   def build_menu
     article_categories = ArticleCategory.where(parent_id: "0").order("position")

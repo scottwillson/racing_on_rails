@@ -1,4 +1,4 @@
-# coding: utf-8
+# frozen_string_literal: true
 
 require File.expand_path("../../test_helper", __FILE__)
 
@@ -78,7 +78,7 @@ class PeopleControllerTest < ActionController::TestCase
     change = changes["team_id"]
     assert_not_nil change, "Should have change for team ID"
     assert_nil change.first, "Team ID before"
-    assert_equal Team.find_by_name("Gentle Lovers").id, change.last, "Team ID after"
+    assert_equal Team.find_by(name: "Gentle Lovers").id, change.last, "Team ID after"
     assert_equal person, person.updated_by_person, "updated_by_person"
   end
 
@@ -102,7 +102,7 @@ class PeopleControllerTest < ActionController::TestCase
     change = changes["team_id"]
     assert_not_nil change, "Should have change for team ID"
     assert_nil change.first, "Team ID before"
-    assert_equal Team.find_by_name("Gentle Lovers").id, change.last, "Team ID after"
+    assert_equal Team.find_by(name: "Gentle Lovers").id, change.last, "Team ID after"
     assert_equal editor, person.updated_by_person, "updated_by_person"
   end
 

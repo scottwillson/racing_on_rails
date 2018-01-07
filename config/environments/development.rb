@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RacingOnRails::Application.configure do
   config.action_controller.action_on_unpermitted_parameters = :raise
   config.action_controller.perform_caching                  = ENV["PERFORM_CACHING"] || false
@@ -18,6 +20,6 @@ RacingOnRails::Application.configure do
     Bullet.bullet_logger = true
     Bullet.console = true
     Bullet.rails_logger = true
-    Bullet.stacktrace_includes = [ 'registration' ]
+    Bullet.stacktrace_includes = ["registration"]
   end
 end

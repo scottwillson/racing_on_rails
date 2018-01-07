@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Results
   module People
     extend ActiveSupport::Concern
@@ -9,19 +11,19 @@ module Results
       belongs_to :person
 
       scope :person, lambda { |person|
-        if person.is_a? Person
-          person_id = person.id
-        else
-          person_id = person
-        end
+        person_id = if person.is_a? Person
+                      person.id
+                    else
+                      person
+                    end
 
-        includes(:team, :person, :scores, :category, { race: [ :event, :category ] }).
-        where(person_id: person_id)
+        includes(:team, :person, :scores, :category, race: %i[event category])
+          .where(person_id: person_id)
       }
     end
 
     def set_person
-      if person && person.new_record?
+      if person&.new_record?
         person.updated_by = event
         if person.name.blank?
           self.person = nil
@@ -70,9 +72,7 @@ module Results
     def eager_find_person_by_license(matches)
       if RacingAssociation.current.eager_match_on_license? && license.present?
         person = Person.where(license: license).first
-        if person
-          matches << person
-        end
+        matches << person if person
       end
 
       matches
@@ -87,9 +87,7 @@ module Results
         if matches.size > 1
           # use number to choose between same names
           RaceNumber.find_all_by_value_and_event(number, event).each do |race_number|
-            if matches.include?(race_number.person)
-              matches = Set.new ([ race_number.person ])
-            end
+            matches = Set.new [race_number.person] if matches.include?(race_number.person)
           end
         elsif name.blank?
           # no name, so try to match by number
@@ -108,7 +106,7 @@ module Results
 
       team_name_matches = matches.select { |m| m.team_id == team.id }
 
-      if team_name_matches.size == 0
+      if team_name_matches.empty?
         # None of the potential matches are on the result's team:
         # don't reject anyone
         matches
@@ -123,7 +121,7 @@ module Results
 
       license_matches = matches.select { |m| m.license == license }
 
-      if license_matches.size == 0
+      if license_matches.empty?
         matches
       else
         license_matches
@@ -139,13 +137,13 @@ module Results
 
     def update_membership?
       person &&
-      RacingAssociation.current.add_members_from_results? &&
-      person.new_record? &&
-      person.first_name.present? &&
-      person.last_name.present? &&
-      person[:member_from].blank? &&
-      event.association? &&
-      !rental_number?
+        RacingAssociation.current.add_members_from_results? &&
+        person.new_record? &&
+        person.first_name.present? &&
+        person.last_name.present? &&
+        person[:member_from].blank? &&
+        event.association? &&
+        !rental_number?
     end
 
     # Set +person#number+ to +number+ if this isn't a rental number
@@ -165,36 +163,32 @@ module Results
 
     # Destroy People that only exist because they were created by importing results
     def destroy_people
-      if person && person.results.count == 0 && person.created_from_result? && !person.updated_after_created?
-        person.destroy
-      end
+      person.destroy if person&.results&.count == 0 && person.created_from_result? && !person.updated_after_created?
     end
 
     # Only used for manual entry of Cat 4 Womens Series Results
     def validate_person_name
-      if first_name.blank? && last_name.blank?
-        errors.add(:first_name, "and last name cannot both be blank")
-      end
+      errors.add(:first_name, "and last name cannot both be blank") if first_name.blank? && last_name.blank?
     end
 
     def first_name=(value)
-      if self.person
-        self.person.first_name = value
+      if person
+        person.first_name = value
       else
         self.person = Person.new(first_name: value)
       end
       self[:first_name] = value
-      self[:name] = self.person.try(:name, date)
+      self[:name] = person.try(:name, date)
     end
 
     def last_name=(value)
-      if self.person
-        self.person.last_name = value
+      if person
+        person.last_name = value
       else
         self.person = Person.new(last_name: value)
       end
       self[:last_name] = value
-      self[:name] = self.person.try(:name, date)
+      self[:name] = person.try(:name, date)
     end
 
     def person_name
@@ -204,9 +198,7 @@ module Results
     # person.name
     def name=(value)
       if value.present?
-        if person.try(:name) != value
-          self.person = Person.new(name: value)
-        end
+        self.person = Person.new(name: value) if person.try(:name) != value
         self[:first_name] = person.first_name
         self[:last_name] = person.last_name
       else

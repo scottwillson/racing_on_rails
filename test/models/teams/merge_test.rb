@@ -1,4 +1,4 @@
-# coding: utf-8
+# frozen_string_literal: true
 
 require File.expand_path("../../../test_helper", __FILE__)
 
@@ -26,29 +26,29 @@ module Teams
 
       CombinedTimeTrialResults.calculate!
 
-      assert_not_nil(Team.find_by_name(team_to_keep.name), "#{team_to_keep.name} should be in DB")
+      assert_not_nil(Team.find_by(name: team_to_keep.name), "#{team_to_keep.name} should be in DB")
       assert_equal(3, Result.where(team_id: team_to_keep.id).count, "Vanilla's results")
       assert_equal(1, Person.where(team_id: team_to_keep.id).count, "Vanilla's people")
       assert_equal(1, Alias.where(aliasable_id: team_to_keep.id).count, "Vanilla's aliases")
 
-      assert_not_nil(Team.find_by_name(team_to_merge.name), "#{team_to_merge.name} should be in DB")
+      assert_not_nil(Team.find_by(name: team_to_merge.name), "#{team_to_merge.name} should be in DB")
       assert_equal(2, Result.where(team_id: team_to_merge.id).count, "Gentle Lovers's results")
       assert_equal(3, Person.where(team_id: team_to_merge.id).count, "Gentle Lovers's people")
       assert_equal(1, Alias.where(aliasable_id: team_to_merge.id).count, "Gentle Lovers's aliases")
 
-      promoter_events = [ Event.create!(team: team_to_keep), Event.create!(team: team_to_merge) ]
+      promoter_events = [Event.create!(team: team_to_keep), Event.create!(team: team_to_merge)]
 
       team_to_keep.merge(team_to_merge)
 
-      assert_not_nil(Team.find_by_name(team_to_keep.name), "#{team_to_keep.name} should be in DB")
+      assert_not_nil(Team.find_by(name: team_to_keep.name), "#{team_to_keep.name} should be in DB")
       assert_equal(5, Result.where(team_id: team_to_keep.id).count, "Vanilla's results")
       assert_equal(4, Person.where(team_id: team_to_keep.id).count, "Vanilla's people")
       aliases = Alias.where(aliasable_id: team_to_keep.id)
-      lovers_alias = aliases.detect{|a| a.name == 'Gentle Lovers'}
-      assert_not_nil(lovers_alias, 'Vanilla should have Gentle Lovers alias')
+      lovers_alias = aliases.detect { |a| a.name == "Gentle Lovers" }
+      assert_not_nil(lovers_alias, "Vanilla should have Gentle Lovers alias")
       assert_equal(3, aliases.size, "Vanilla's aliases")
 
-      assert_nil(Team.find_by_name(team_to_merge.name), "#{team_to_merge.name} should not be in DB")
+      assert_nil(Team.find_by(name: team_to_merge.name), "#{team_to_merge.name} should not be in DB")
       assert_equal(0, Result.where(team_id: team_to_merge.id).count, "Gentle Lovers's results")
       assert_equal(0, Person.where(team_id: team_to_merge.id).count, "Gentle Lovers's people")
       assert_equal(0, Alias.where(aliasable_id: team_to_merge.id).count, "Gentle Lovers's aliases")
@@ -90,7 +90,7 @@ module Teams
       assert_equal(team_to_keep_last_year, team_to_keep.names.first, "Target team historical name")
 
       # If the merged team has historical names, those need to become teams with results from those years
-      team_to_merge_last_year = Team.find_by_name("Team o IRCB")
+      team_to_merge_last_year = Team.find_by(name: "Team o IRCB")
       assert_not_nil(team_to_merge_last_year, "Merged team's historical name should become a new team")
       assert_equal(1, team_to_merge_last_year.results.count, "Merged team's historical name results")
       assert_equal(team_to_merge_last_year_result, team_to_merge_last_year.results.first, "Merged team's historical name results")

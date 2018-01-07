@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Results
   module Renderers
     class ScoreEventFullNameRenderer < Results::Renderers::DefaultResultRenderer

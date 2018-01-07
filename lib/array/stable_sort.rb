@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class Array
   # Sort by +method+ and preserve existing order. Ruby 1.8 sort_by does not preserve order.
   def stable_sort_by(method, order = :asc)
     if order == :asc
-      merge_sort { |x, y|
+      merge_sort do |x, y|
         if x.send(method).nil?
           true
         elsif !x.send(method).nil? && y.send(method).nil?
@@ -10,9 +12,9 @@ class Array
         else
           x.send(method) >= y.send(method)
         end
-      }
+      end
     elsif order == :desc
-      merge_sort { |x, y|
+      merge_sort do |x, y|
         if y.send(method).nil?
           true
         elsif !y.send(method).nil? && x.send(method).nil?
@@ -20,7 +22,7 @@ class Array
         else
           x.send(method) <= y.send(method)
         end
-      }
+      end
     else
       raise ArgumentError, "order must be :asc or :desc"
     end
@@ -28,7 +30,7 @@ class Array
 
   # Sort is stable only if predicate includes an equal comparison. Example: x.name <= y.name
   def merge_sort(&predicate)
-    return self.dup if size <= 1
+    return dup if size <= 1
     mid = size / 2
     left  = self[0, mid].dup
     right = self[mid, size].dup
@@ -39,20 +41,20 @@ class Array
 
   def _stable_merge(left, right, &predicate)
     sorted = []
-    until left.empty? or right.empty?
-      if predicate
-        if predicate.call(right.first, left.first)
-          sorted << left.shift
-        else
-          sorted << right.shift
-        end
-      else
-        if left.first <= right.first
-          sorted << left.shift
-        else
-          sorted << right.shift
-        end
-      end
+    until left.empty? || right.empty?
+      sorted << if predicate
+                  if yield(right.first, left.first)
+                    left.shift
+                  else
+                    right.shift
+                            end
+                else
+                  if left.first <= right.first
+                    left.shift
+                  else
+                    right.shift
+                            end
+                end
     end
     sorted.concat(left).concat(right)
   end

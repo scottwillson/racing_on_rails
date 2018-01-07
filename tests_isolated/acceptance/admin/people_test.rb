@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
@@ -18,7 +20,7 @@ class PeopleTest < AcceptanceTest
     brad = FactoryBot.create(:person, first_name: "Brad", last_name: "Ross")
     weaver = FactoryBot.create(:person, first_name: "Ryan", last_name: "Weaver", team_name: "Gentle Lovers", license: "341")
 
-    visit '/admin/people'
+    visit "/admin/people"
     fill_in "name", with: "a\n"
 
     assert_table("people_table", 1, 2, "Molly Cameron")
@@ -75,7 +77,7 @@ class PeopleTest < AcceptanceTest
 
     first("a[href='/people/#{matson.id}/versions']").click
 
-    visit '/admin/people'
+    visit "/admin/people"
     click_link "new_person"
 
     matson.race_numbers.create!(value: "878", year: 2009)
@@ -98,11 +100,11 @@ class PeopleTest < AcceptanceTest
     assert page.has_css?("input.number[value='878']")
 
     visit "/admin/people/#{brad.id}/edit"
-    assert_page_has_content 'Ross'
+    assert_page_has_content "Ross"
     click_link "delete"
-    assert_no_text 'error'
-    assert_no_text 'Unknown action'
-    assert_no_text 'has no parent'
+    assert_no_text "error"
+    assert_no_text "Unknown action"
+    assert_no_text "has no parent"
 
     fill_in "name", with: "Brad\n"
     assert_no_text "Ross"
@@ -129,8 +131,8 @@ class PeopleTest < AcceptanceTest
     assert_table("people_table", 1, 2, "Molly Cameron")
     assert_table("people_table", 2, 2, "Mark Matson")
 
-    molly = Person.find_by_name("Molly Cameron")
-    matson = Person.find_by_name("Mark Matson")
+    molly = Person.find_by(name: "Molly Cameron")
+    matson = Person.find_by(name: "Mark Matson")
 
     fill_in_inline "#person_#{matson.id}_name", with: "Molly Cameron", assert_edit: false
 
@@ -175,48 +177,44 @@ class PeopleTest < AcceptanceTest
 
     login_as FactoryBot.create(:administrator)
 
-    visit '/admin/people'
-    assert page.has_selector? '#export_button'
-    assert page.has_selector? '#include'
-    assert page.has_field? 'include', with: 'members_only'
-    assert page.has_field? 'format', with: 'xls'
+    visit "/admin/people"
+    assert page.has_selector? "#export_button"
+    assert page.has_selector? "#include"
+    assert page.has_field? "include", with: "members_only"
+    assert page.has_field? "format", with: "xls"
 
     today = RacingAssociation.current.effective_today
     assert_download "export_button", "people_#{Time.zone.now.year}_#{today.month}_#{today.day}.xls"
 
-    visit '/admin/teams'
+    visit "/admin/teams"
 
-    visit '/admin/people'
+    visit "/admin/people"
 
     fill_in "name", with: "tonkin\n"
-    assert_page_has_content 'Erik Tonkin'
-    assert_page_has_content 'Kona'
-    if Time.zone.today.month < 12
-      assert_page_has_content '102'
-    end
-    assert page.has_field? 'name', with: 'tonkin'
+    assert_page_has_content "Erik Tonkin"
+    assert_page_has_content "Kona"
+    assert_page_has_content "102" if Time.zone.today.month < 12
+    assert page.has_field? "name", with: "tonkin"
 
     select "All", from: "include"
     select "FinishLynx", from: "format"
     assert_download "export_button", "lynx.ppl"
 
-    visit '/admin/people'
+    visit "/admin/people"
     select "Current members only", from: "include"
     select "Scoring sheet", from: "format"
     assert_download "export_button", "scoring_sheet.xls"
 
-    fill_in 'name', with: "tonkin\n"
-    assert_page_has_content 'Erik Tonkin'
-    assert_page_has_content 'Kona'
-    if Time.zone.today.month < 12
-      assert_page_has_content '102'
-    end
-    assert page.has_field? 'name', with: 'tonkin'
+    fill_in "name", with: "tonkin\n"
+    assert_page_has_content "Erik Tonkin"
+    assert_page_has_content "Kona"
+    assert_page_has_content "102" if Time.zone.today.month < 12
+    assert page.has_field? "name", with: "tonkin"
   end
 
   test "import" do
     login_as FactoryBot.create(:administrator)
-    visit '/admin/people'
-    attach_file 'people_file', "#{Rails.root}/test/fixtures/membership/upload.xlsx"
+    visit "/admin/people"
+    attach_file "people_file", "#{Rails.root}/test/fixtures/membership/upload.xlsx"
   end
 end

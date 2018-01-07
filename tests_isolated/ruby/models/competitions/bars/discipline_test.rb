@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../../test_case", __FILE__)
 require File.expand_path("../../../../../../app/models/competitions/bars/discipline", __FILE__)
 
@@ -13,22 +15,22 @@ module Competitions
 
       def test_discipline_for_road_race
         race = stub("race", discipline: "Road")
-        assert_equal [ "Road", "Circuit", "Road/Gravel" ].sort, @bar.disciplines_for(race).sort, "disciplines"
+        assert_equal ["Road", "Circuit", "Road/Gravel"].sort, @bar.disciplines_for(race).sort, "disciplines"
       end
 
       def test_discipline_for_track
         race = stub("race", discipline: "Track")
-        assert_equal_enumerables [ "Track" ], @bar.disciplines_for(race), "disciplines"
+        assert_equal_enumerables ["Track"], @bar.disciplines_for(race), "disciplines"
       end
 
       def test_discipline_for_mtb
         race = stub("race", discipline: "Mountain Bike")
-        assert_equal_enumerables [ "Mountain Bike", "Downhill", "Super D" ], @bar.disciplines_for(race), "disciplines"
+        assert_equal_enumerables ["Mountain Bike", "Downhill", "Super D"], @bar.disciplines_for(race), "disciplines"
       end
 
       def test_discipline_for_dh
         race = stub("race", discipline: "Downhill")
-        assert_equal_enumerables [ "Downhill" ], @bar.disciplines_for(race), "disciplines"
+        assert_equal_enumerables ["Downhill"], @bar.disciplines_for(race), "disciplines"
       end
     end
   end

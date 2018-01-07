@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Results
   class Mapper
     def initialize(columns, custom_columns = [], columns_after_custom_columns = [])

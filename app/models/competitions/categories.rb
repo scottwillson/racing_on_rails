@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   module Categories
     # Competition's races. Default to +category_names+ (e.g., Men A, Men B, …)
@@ -20,7 +22,7 @@ module Competitions
     end
 
     def category_names
-      [ friendly_name ]
+      [friendly_name]
     end
 
     # Only consider results from categories. Default to true.
@@ -31,7 +33,7 @@ module Competitions
     # Array of ids (integers)
     # +race+ category, +race+ category's siblings, and any competition categories
     def categories_for(race)
-      [ race.category ] + race.category.descendants
+      [race.category] + race.category.descendants
     end
 
     def result_categories_by_race
@@ -42,15 +44,13 @@ module Competitions
       result_categories_by_race = Hash.new { |hash, race_category| hash[race_category] = [] }
 
       result_categories.each do |category|
-         best_match = category.best_match_in(self)
-         if best_match
-           result_categories_by_race[best_match] << category
-         end
-       end
+        best_match = category.best_match_in(self)
+        result_categories_by_race[best_match] << category if best_match
+      end
 
-       debug_result_categories_by_race(result_categories_by_race) if logger.debug?
+      debug_result_categories_by_race(result_categories_by_race) if logger.debug?
 
-       result_categories_by_race
+      result_categories_by_race
     end
 
     def result_categories

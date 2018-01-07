@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Competitions
@@ -9,7 +11,7 @@ module Competitions
 
       junior_men        = FactoryBot.create(:category, name: "Junior Men")
       expert_junior_men = FactoryBot.create(:category, name: "Expert Junior Men", parent: junior_men)
-      novice_junior_men  = FactoryBot.create(:category, name: "Novice (Category 3) Junior Men 10-13", parent: junior_men)
+      novice_junior_men = FactoryBot.create(:category, name: "Novice (Category 3) Junior Men 10-13", parent: junior_men)
       mtb.bar_categories << expert_junior_men
       mtb.bar_categories << junior_men
       mtb.bar_categories << novice_junior_men
@@ -28,7 +30,7 @@ module Competitions
       Bar.calculate!(2001)
       mtb_bar = Bar.year(2001).where(discipline: "Mountain Bike").first
       assert_not_nil(mtb_bar, "2001 MTB BAR after calculate!")
-      junior_men_mtb_bar = mtb_bar.races.detect {|b| b.name == "Junior Men" }
+      junior_men_mtb_bar = mtb_bar.races.detect { |b| b.name == "Junior Men" }
 
       assert_equal(2, junior_men_mtb_bar.results.size, "Junior Men BAR results")
       results = junior_men_mtb_bar.results.sort_by(&:person)
@@ -45,7 +47,7 @@ module Competitions
       road        = FactoryBot.create(:discipline, name: "Road")
       overall     = FactoryBot.create(:discipline, name: "Overall")
       short_track = FactoryBot.create(:discipline, name: "Short Track")
-                    FactoryBot.create(:discipline, name: "Downhill")
+      FactoryBot.create(:discipline, name: "Downhill")
 
       elite_men = Category.find_or_create_by(name: "Elite Men")
       senior_men = Category.find_or_create_by(name: "Senior Men")
@@ -113,7 +115,7 @@ module Competitions
       overall.bar_categories << category_3_women
       overall.bar_categories << category_4_women
 
-      short_track.bar_categories << Category.find_by_name("Category 3 Men")
+      short_track.bar_categories << Category.find_by(name: "Category 3 Men")
 
       # Create road and MTB/DH result for each category
       tonkin = FactoryBot.create(:person, name: "Tonkin")
@@ -174,7 +176,7 @@ module Competitions
       original_results_count = Result.count
       Bar.calculate!
       year = Time.zone.today.year
-      Bar.find_by_date(Date.new(year))
+      Bar.find_by(date: Date.new(year))
 
       OverallBar.calculate!
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 CelluloidBenchmark::Session.define do
   benchmark :mailing_list_posts
   page = get("http://staging.obra.org/mailing_lists/1/posts")

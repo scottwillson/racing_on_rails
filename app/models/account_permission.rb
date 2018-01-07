@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Summarize account editing permissions
 class AccountPermission
   attr_accessor :person, :can_edit_person, :person_can_edit

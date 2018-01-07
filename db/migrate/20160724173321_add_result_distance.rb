@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddResultDistance < ActiveRecord::Migration
   def change
     Race.where(distance: "").update_all distance: nil

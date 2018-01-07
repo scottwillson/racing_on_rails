@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 # :stopdoc:
@@ -5,7 +7,7 @@ module Events
   class SlugTest < ActiveSupport::TestCase
     test "create and find events by slugs" do
       date_in_year = Time.zone.local(RacingAssociation.current.effective_year)
-      old_event = SingleDayEvent.create!(name: "Banana Belt", date: 1.year.ago(date_in_year))
+      SingleDayEvent.create!(name: "Banana Belt", date: 1.year.ago(date_in_year))
       event = SingleDayEvent.create!(name: "Banana Belt", date: date_in_year)
 
       assert_equal event, Event.find_by_slug("banana_belt")

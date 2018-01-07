@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../test_case", __FILE__)
 require File.expand_path("../../../../../app/models/events/comparison", __FILE__)
 
 # :stopdoc:
 class Events::ComparisonTest < Ruby::TestCase
-
   class TestEvent
     include Events::Comparison
 
@@ -25,14 +26,14 @@ class Events::ComparisonTest < Ruby::TestCase
     nov_event = TestEvent.new(date: Date.new(1998, 11, 20))
     events = [jan_event, march_event, nov_event]
 
-    assert_equal_enumerables([jan_event, march_event, nov_event], events.sort, 'Unsaved events should be sorted by date')
+    assert_equal_enumerables([jan_event, march_event, nov_event], events.sort, "Unsaved events should be sorted by date")
     march_event.date = Date.new(1999)
-    assert_equal_enumerables([jan_event, nov_event, march_event], events.sort, 'Unsaved events should be sorted by date')
+    assert_equal_enumerables([jan_event, nov_event, march_event], events.sort, "Unsaved events should be sorted by date")
 
     events.each_with_index { |e, index| e.id = index }
-    assert_equal_enumerables([jan_event, nov_event, march_event], events.sort, 'Saved events should be sorted by date')
+    assert_equal_enumerables([jan_event, nov_event, march_event], events.sort, "Saved events should be sorted by date")
     march_event.date = Date.new(1998, 3, 2)
-    assert_equal_enumerables([jan_event, march_event, nov_event], events.sort, 'Saved events should be sorted by date')
+    assert_equal_enumerables([jan_event, march_event, nov_event], events.sort, "Saved events should be sorted by date")
   end
 
   def test_equality
@@ -60,6 +61,6 @@ class Events::ComparisonTest < Ruby::TestCase
     set << event_1
     set << event_2
 
-    assert_same_elements [ event_1, event_2 ], set.to_a, "Set equality"
+    assert_same_elements [event_1, event_2], set.to_a, "Set equality"
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   module People
     module Import
@@ -30,11 +32,11 @@ module Admin
 
       # See http://racingonrails.rocketsurgeryllc.com/sample_import_files/ for format details and examples.
       def import
-        if params[:commit] == 'Cancel'
+        if params[:commit] == "Cancel"
           session[:people_file_path] = nil
-          redirect_to(action: 'index')
+          redirect_to(action: "index")
 
-        elsif params[:commit] == 'Import'
+        elsif params[:commit] == "Import"
           ActiveSupport::Notifications.instrument "import.people.admin.racing_on_rails", people_file_path: session[:people_file_path]
 
           Duplicate.delete_all
@@ -51,13 +53,13 @@ module Admin
           if people_file.duplicates.empty?
             redirect_to admin_people_path
           else
-            flash[:warn] = 'Some names in the import file already exist more than once. Match with an existing person or create a new person with the same name.'
+            flash[:warn] = "Some names in the import file already exist more than once. Match with an existing person or create a new person with the same name."
             redirect_to duplicates_admin_people_path
           end
           expire_cache
 
         else
-          fail "Expected 'Import' or 'Cancel'"
+          raise "Expected 'Import' or 'Cancel'"
         end
       end
 
@@ -77,39 +79,37 @@ module Admin
         @duplicates = Duplicate.all
         @duplicates.each do |duplicate|
           id = params[duplicate.to_param]
-          if id == 'new'
+          if id == "new"
             ActiveSupport::Notifications.instrument "resolve_duplicates.people.admin.racing_on_rails", resolution: :new, person_name: duplicate.person.name, person_id: duplicate.person.id
             duplicate.person.save!
           elsif id.present?
             ActiveSupport::Notifications.instrument "resolve_duplicates.people.admin.racing_on_rails", resolution: :update, person_name: duplicate.person.name, person_id: id, new_attributes: duplicate.new_attributes
             person = Person.update(id, duplicate.new_attributes)
-            unless person.valid?
-              fail ActiveRecord::RecordNotSaved.new(person.errors.full_messages.join(', '))
-            end
+            raise ActiveRecord::RecordNotSaved, person.errors.full_messages.join(", ") unless person.valid?
           end
         end
 
         Duplicate.delete_all
-        redirect_to(action: 'index')
+        redirect_to(action: "index")
       end
 
       private
 
       def assign_years_for_people_file
         date = current_date
-        if date.month == 12
-          @year = date.year + 1
-        else
-          @year = date.year
-        end
-        @years = [ date.year, date.year + 1 ]
+        @year = if date.month == 12
+                  date.year + 1
+                else
+                  date.year
+                end
+        @years = [date.year, date.year + 1]
       end
 
       def sort_duplicates(duplicates)
         duplicates.sort do |x, y|
-          diff = (x.person.last_name || '') <=> y.person.last_name
+          diff = (x.person.last_name || "") <=> y.person.last_name
           if diff == 0
-            (x.person.first_name || '') <=> y.person.first_name
+            (x.person.first_name || "") <=> y.person.first_name
           else
             diff
           end

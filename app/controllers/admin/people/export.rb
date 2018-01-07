@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   module People
     module Export
@@ -8,9 +10,9 @@ module Admin
       # * include: "print_cards"
       # * format: "ppl" for FinishLynx scoring
       def export
-        headers['Content-Disposition'] = "filename=\"#{download_file_name(current_date)}\""
+        headers["Content-Disposition"] = "filename=\"#{download_file_name(current_date)}\""
 
-        @people = Person.find_all_for_export(current_date, params['include'])
+        @people = Person.find_all_for_export(current_date, params["include"])
 
         ActiveSupport::Notifications.instrument(
           "export.people.admin.racing_on_rails",
@@ -24,10 +26,10 @@ module Admin
           format.html
           format.ppl
           format.xls do
-            if params['excel_layout'] == 'scoring_sheet'
-              render 'admin/people/scoring_sheet'
-            elsif params['excel_layout'] == 'endicia'
-              render 'admin/people/endicia'
+            if params["excel_layout"] == "scoring_sheet"
+              render "admin/people/scoring_sheet"
+            elsif params["excel_layout"] == "endicia"
+              render "admin/people/endicia"
             end
           end
         end

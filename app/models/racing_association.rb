@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # OBRA, WSBA, USA Cycling, etc …
 # Many defaults. Override in environment.rb. Stored in RacingAssociation.current constant.
 # bar_point_schedule should be stored in the database with the BAR?
@@ -5,7 +7,7 @@
 # cx_memberships? Offers cyclocross memberships
 # eager_match_on_license? Trust license number in results? Use it to match People instead of name.
 class RacingAssociation < ActiveRecord::Base
-  # TODO bmx_numbers? Shouldn"t this be in disciplines?
+  # TODO: bmx_numbers? Shouldn"t this be in disciplines?
 
   belongs_to :cat4_womens_race_series_category, class_name: "Category"
   belongs_to :default_region, class_name: "Region"
@@ -19,7 +21,7 @@ class RacingAssociation < ActiveRecord::Base
   serialize :sanctioning_organizations
 
   default_value_for :administrator_tabs do
-    Set.new([ :schedule, :first_aid, :people, :teams, :velodromes, :categories, :cat4_womens_race_series, :article_categories, :articles, :pages ])
+    Set.new(%i[schedule first_aid people teams velodromes categories cat4_womens_race_series article_categories articles pages])
   end
 
   default_value_for :cat4_womens_race_series_category_id do
@@ -27,28 +29,24 @@ class RacingAssociation < ActiveRecord::Base
   end
 
   default_value_for :competitions do
-    Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
+    Set.new(%i[age_graded_bar bar ironman overall_bar team_bar])
   end
 
   # String
-  default_value_for :default_sanctioned_by do |r|
-    r.short_name
-  end
+  default_value_for :default_sanctioned_by, &:short_name
 
-  default_value_for :membership_email do |r|
-    r.email
-  end
+  default_value_for :membership_email, &:email
 
   default_value_for :sanctioning_organizations do
-    [ "FIAC", "CBRA", "UCI", "USA Cycling" ]
+    ["FIAC", "CBRA", "UCI", "USA Cycling"]
   end
 
   def self.current
     @current ||= RacingAssociation.first || RacingAssociation.create
   end
 
-  def self.current=(value)
-    @current = value
+  class << self
+    attr_writer :current
   end
 
   # Person record for RacingAssociation
@@ -84,9 +82,7 @@ class RacingAssociation < ActiveRecord::Base
         end
       end
     else
-      if Time.zone.now.month == 12 && Time.zone.now.day >= 16
-        return Time.zone.now.year + 1
-      end
+      return Time.zone.now.year + 1 if Time.zone.now.month == 12 && Time.zone.now.day >= 16
     end
 
     Time.zone.now.year
@@ -126,9 +122,7 @@ class RacingAssociation < ActiveRecord::Base
   end
 
   def rental_numbers
-    if rental_numbers_start && rental_numbers_end
-      rental_numbers_start..rental_numbers_end
-    end
+    rental_numbers_start..rental_numbers_end if rental_numbers_start && rental_numbers_end
   end
 
   def rental_numbers=(value)
@@ -147,9 +141,9 @@ class RacingAssociation < ActiveRecord::Base
 
   def priority_country_options
     if country_code == "US"
-      [ [ "United States", "US" ], [ "Canada", "CA" ] ]
+      [["United States", "US"], %w[Canada CA]]
     else
-      [ [ "Canada", "CA" ], [ "United States", "US" ] ]
+      [%w[Canada CA], ["United States", "US"]]
     end
   end
 

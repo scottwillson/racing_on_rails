@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ENV["RAILS_ENV"] = "test"
 
 require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
@@ -53,15 +55,11 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def assert_page_has_content(text)
-    unless page.has_content?(text)
-      fail "Expected '#{text}' in page source"
-    end
+    raise "Expected '#{text}' in page source" unless page.has_content?(text)
   end
 
   def assert_page_has_no_content(text)
-    unless page.has_no_content?(text)
-      fail "Did not expect '#{text}' in html"
-    end
+    raise "Did not expect '#{text}' in html" unless page.has_no_content?(text)
   end
 
   def assert_table(table_id, row, column, expected)
@@ -113,10 +111,8 @@ class AcceptanceTest < ActiveSupport::TestCase
   def wait_for_download_in_download_directory(link_id, filename)
     click_on link_id
     begin
-      Timeout::timeout(10) do
-        while Dir.glob("#{AcceptanceTest.download_directory}/#{filename}").empty?
-          sleep 0.25
-        end
+      Timeout.timeout(10) do
+        sleep 0.25 while Dir.glob("#{AcceptanceTest.download_directory}/#{filename}").empty?
       end
     rescue Timeout::Error
       raise Timeout::Error, "Did not find '#{filename}' in #{AcceptanceTest.download_directory} within seconds 10 seconds. Found: #{Dir.entries(AcceptanceTest.download_directory).join(', ')}"
@@ -127,13 +123,11 @@ class AcceptanceTest < ActiveSupport::TestCase
     raise ArgumentError if text.blank?
 
     begin
-      Timeout::timeout(10) do
-        until page.has_content?(text)
-          sleep 0.25
-        end
+      Timeout.timeout(10) do
+        sleep 0.25 until page.has_content?(text)
       end
     rescue Timeout::Error
-      fail "'#{text}' did not appear in page source within 10 seconds"
+      raise "'#{text}' did not appear in page source within 10 seconds"
     end
   end
 
@@ -141,13 +135,11 @@ class AcceptanceTest < ActiveSupport::TestCase
     raise ArgumentError if text.blank?
 
     begin
-      Timeout::timeout(10) do
-        while page.has_content?(text)
-          sleep 0.25
-        end
+      Timeout.timeout(10) do
+        sleep 0.25 while page.has_content?(text)
       end
     rescue Timeout::Error
-      fail "'#{text}' in page source after 10 seconds"
+      raise "'#{text}' in page source after 10 seconds"
     end
   end
 
@@ -155,10 +147,8 @@ class AcceptanceTest < ActiveSupport::TestCase
     raise ArgumentError if id.blank?
 
     begin
-      Timeout::timeout(10) do
-        until page.has_select?(id, selected: options[:selected])
-          sleep 0.25
-        end
+      Timeout.timeout(10) do
+        sleep 0.25 until page.has_select?(id, selected: options[:selected])
       end
     rescue Timeout::Error
       raise Timeout::Error, "'#{options[:selected]}' not selected on #{id} within 10 seconds"
@@ -169,13 +159,11 @@ class AcceptanceTest < ActiveSupport::TestCase
     raise ArgumentError if locator.blank?
 
     begin
-      Timeout::timeout(10) do
-        until page.has_selector?(*locator)
-          sleep 0.25
-        end
+      Timeout.timeout(10) do
+        sleep 0.25 until page.has_selector?(*locator)
       end
     rescue Timeout::Error
-      fail "'#{locator}' did not appear within 10 seconds"
+      raise "'#{locator}' did not appear within 10 seconds"
     end
   end
 
@@ -183,13 +171,11 @@ class AcceptanceTest < ActiveSupport::TestCase
     raise ArgumentError if locator.blank?
 
     begin
-      Timeout::timeout(10) do
-        while page.has_selector?(*locator)
-          sleep 0.25
-        end
+      Timeout.timeout(10) do
+        sleep 0.25 while page.has_selector?(*locator)
       end
     rescue Timeout::Error
-      fail "'#{locator}' still present after 10 seconds"
+      raise "'#{locator}' still present after 10 seconds"
     end
   end
 
@@ -208,14 +194,14 @@ class AcceptanceTest < ActiveSupport::TestCase
     raise ArgumentError if link_css.blank? || block.nil?
 
     begin
-      Timeout::timeout(10) do
-        until block.call
+      Timeout.timeout(10) do
+        until yield
           find(link_css).click
           sleep 0.1
         end
       end
     rescue Timeout::Error
-      fail "'#{link_css}' did not appear in page source within 10 seconds"
+      raise "'#{link_css}' did not appear in page source within 10 seconds"
     end
   end
 
@@ -238,29 +224,27 @@ class AcceptanceTest < ActiveSupport::TestCase
   def fill_in_editor_field(options)
     retries = 0
     3.times do
-      begin
-        wait_for "form.editor_field"
-        within "form.editor_field" do
-          wait_for "input[name='value']"
-          fill_in "value", options
-        end
-        return true
-      rescue Capybara::ElementNotFound, RuntimeError, Capybara::Poltergeist::ObsoleteNode
-        if retries < 3
-          retries =+ 1
-          sleep 0.1
-          retry
-        else
-          raise "#{$1} for fill_in_editor_field(#{options}) after #{retries} tries"
-        end
+      wait_for "form.editor_field"
+      within "form.editor_field" do
+        wait_for "input[name='value']"
+        fill_in "value", options
+      end
+      return true
+    rescue Capybara::ElementNotFound, RuntimeError, Capybara::Poltergeist::ObsoleteNode
+      if retries < 3
+        retries = + 1
+        sleep 0.1
+        retry
+      else
+        raise "#{Regexp.last_match(1)} for fill_in_editor_field(#{options}) after #{retries} tries"
       end
     end
   end
 
   def fill_in(locator, options)
     if Capybara.current_driver == :poltergeist &&
-      options[:with] &&
-      options[:with]["\n"]
+       options[:with] &&
+       options[:with]["\n"]
 
       options[:with] = options[:with].delete("\n")
       super locator, options
@@ -279,10 +263,8 @@ class AcceptanceTest < ActiveSupport::TestCase
     begin
       press_once key, field
     rescue Capybara::Poltergeist::ObsoleteNode
-      errors = errors + 1
-      if errors < 4
-        retry
-      end
+      errors += 1
+      retry if errors < 4
     end
   end
 
@@ -355,9 +337,7 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   # Go to login page and login
   def login_as(person)
-    unless current_path == "/person_session/new"
-      visit "/person_session/new"
-    end
+    visit "/person_session/new" unless current_path == "/person_session/new"
     wait_for "#person_session_login"
     fill_in "person_session_login", with: person.login
     fill_in "person_session_password", with: "secret"
@@ -383,9 +363,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def make_download_directory
-    unless Dir.exist?(AcceptanceTest.download_directory)
-      FileUtils.mkdir_p AcceptanceTest.download_directory
-    end
+    FileUtils.mkdir_p AcceptanceTest.download_directory unless Dir.exist?(AcceptanceTest.download_directory)
   end
 
   def remove_download(filename)
@@ -401,18 +379,15 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def reset_session
-    begin
-      Capybara.reset_sessions!
-    rescue StandardError => e
-      Rails.logger.debug "Timeout resetting Capybara session: #{e}."
-    end
+    Capybara.reset_sessions!
+  rescue StandardError => e
+    Rails.logger.debug "Timeout resetting Capybara session: #{e}."
   end
 
   def before_teardown
     unless passed?
       begin
         save_page
-
       rescue StandardError => e
         Rails.logger.error "Test did not pass. Could not save page: #{e}."
       end
@@ -420,9 +395,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def say_if_verbose(text)
-    if ENV["VERBOSE"].present?
-      puts text
-    end
+    puts text if ENV["VERBOSE"].present?
   end
 
   Capybara.register_driver :chrome do |app|
@@ -438,9 +411,9 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   Capybara.register_driver :firefox do |app|
     profile = Selenium::WebDriver::Firefox::Profile.new
-    profile['browser.download.folderList']            = 2
-    profile['browser.download.dir']                   = AcceptanceTest.download_directory
-    profile['browser.helperApps.neverAsk.saveToDisk'] = "application/vnd.ms-excel,application/vnd.ms-excel; charset=utf-8"
+    profile["browser.download.folderList"]            = 2
+    profile["browser.download.dir"]                   = AcceptanceTest.download_directory
+    profile["browser.helperApps.neverAsk.saveToDisk"] = "application/vnd.ms-excel,application/vnd.ms-excel; charset=utf-8"
 
     Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
   end

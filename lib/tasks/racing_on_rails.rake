@@ -1,6 +1,7 @@
-namespace :racing_on_rails do
+# frozen_string_literal: true
 
-  desc 'Cold setup'
+namespace :racing_on_rails do
+  desc "Cold setup"
   task :bootstrap do
     puts "Bootstrap task will delete your Racing on Rails development database."
     db_password = ask("MySQL root password (press return for no password): ")
@@ -26,7 +27,7 @@ namespace :racing_on_rails do
     desc "Save COMPETITION results as JSON for comparison"
     task :snapshot do
       competition_class = "Competitions::#{ENV['COMPETITION']}".safe_constantize
-      discipline = ENV['DISCIPLINE'] || "Road"
+      discipline = ENV["DISCIPLINE"] || "Road"
       competition = competition_class.where(discipline: discipline).current_year.first
       FileUtils.mkdir_p "#{Rails.root}/tmp/competitions"
       file_path = "#{Rails.root}/tmp/#{competition_class.name.underscore}-#{discipline.underscore}.json"
@@ -38,7 +39,7 @@ namespace :racing_on_rails do
     task :diff do
       competition_class = "Competitions::#{ENV['COMPETITION']}".safe_constantize
       competition_class.calculate!
-      discipline = ENV['DISCIPLINE'] || "Road"
+      discipline = ENV["DISCIPLINE"] || "Road"
       competition = competition_class.where(discipline: discipline).current_year.first
       file_path = "#{Rails.root}/tmp/#{competition_class.name.underscore}-#{discipline.underscore}.json"
       snapshot_results = JSON.parse(File.read(file_path))
@@ -75,7 +76,7 @@ namespace :racing_on_rails do
         ::Competitions::AgeGradedBar
       ]
 
-      existing_results = Hash.new
+      existing_results = {}
       ::Competitions::Competition.current_year.each do |competition|
         results = Result.where(event: competition).map(&:competition_result_hash)
         puts "Found #{results.size} results for #{competition}"
@@ -86,7 +87,7 @@ namespace :racing_on_rails do
         puts competition_class
         start_time = Time.zone.now
         competition_class.calculate!
-        puts "#{(Time.zone.now - start_time).to_i}"
+        puts (Time.zone.now - start_time).to_i.to_s
       end
 
       ::Competitions::Competition.current_year.each do |competition|
@@ -117,7 +118,7 @@ end
 
 namespace :doc do
   desc "Upload RDoc to WWW server"
-  task upload: [:clobber_app, :app] do
+  task upload: %i[clobber_app app] do
     `scp -r doc/app/ butlerpress.com:/usr/local/www/www.butlerpress.com/racing_on_rails/rdoc`
   end
 end

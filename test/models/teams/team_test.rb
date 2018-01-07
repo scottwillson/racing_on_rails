@@ -1,4 +1,4 @@
-# coding: utf-8
+# frozen_string_literal: true
 
 require File.expand_path("../../../test_helper", __FILE__)
 
@@ -13,37 +13,37 @@ module Teams
 
       gentle_lovers = FactoryBot.create(:team, name: "Gentle Lovers")
       gentle_lovers.aliases.create!(name: "Gentile Lovers")
-      assert_equal(gentle_lovers, Team.find_by_name_or_alias_or_create('Gentle Lovers'), 'Gentle Lovers')
-      assert_equal(gentle_lovers, Team.find_by_name_or_alias_or_create('Gentile Lovers'), 'Gentle Lovers alias')
-      assert_nil(Team.find_by_name_or_alias('Health Net'), 'Health Net should not exist')
-      team = Team.find_by_name_or_alias_or_create('Health Net')
-      assert_not_nil(team, 'Health Net')
-      assert_equal('Health Net', team.name, 'New team')
+      assert_equal(gentle_lovers, Team.find_by_name_or_alias_or_create("Gentle Lovers"), "Gentle Lovers")
+      assert_equal(gentle_lovers, Team.find_by_name_or_alias_or_create("Gentile Lovers"), "Gentle Lovers alias")
+      assert_nil(Team.find_by_name_or_alias("Health Net"), "Health Net should not exist")
+      team = Team.find_by_name_or_alias_or_create("Health Net")
+      assert_not_nil(team, "Health Net")
+      assert_equal("Health Net", team.name, "New team")
     end
 
     test "find by name or alias" do
       # new
-      name = 'Brooklyn Cycling Force'
-      assert_nil(Team.find_by_name(name), "#{name} should not exist")
+      name = "Brooklyn Cycling Force"
+      assert_nil(Team.find_by(name: name), "#{name} should not exist")
       team = Team.find_by_name_or_alias(name)
-      assert_nil(Team.find_by_name(name), "#{name} should not exist")
+      assert_nil(Team.find_by(name: name), "#{name} should not exist")
       assert_nil(team, "#{name} should not exist")
 
       # exists
       Team.create(name: name)
       team = Team.find_by_name_or_alias(name)
       assert_not_nil(team, "#{name} should exist")
-      assert_equal(name, team.name, 'name')
+      assert_equal(name, team.name, "name")
 
       # alias
-      Alias.create(name: 'BCF', team: team)
-      team = Team.find_by_name_or_alias('BCF')
+      Alias.create(name: "BCF", team: team)
+      team = Team.find_by_name_or_alias("BCF")
       assert_not_nil(team, "#{name} should exist")
-      assert_equal(name, team.name, 'name')
+      assert_equal(name, team.name, "name")
 
       team = Team.find_by_name_or_alias(name)
       assert_not_nil(team, "#{name} should exist")
-      assert_equal(name, team.name, 'name')
+      assert_equal(name, team.name, "name")
     end
 
     test "find all by name like" do
@@ -60,29 +60,29 @@ module Teams
 
     test "create dupe" do
       FactoryBot.create(:team, name: "Vanilla")
-      dupe = Team.new(name: 'Vanilla')
-      assert(!dupe.valid?, 'Dupe Vanilla should not be valid')
+      dupe = Team.new(name: "Vanilla")
+      assert(!dupe.valid?, "Dupe Vanilla should not be valid")
     end
 
     test "member" do
-      team = Team.new(name: 'Team Spine')
-      assert_equal(false, team.member, 'member')
+      team = Team.new(name: "Team Spine")
+      assert_equal(false, team.member, "member")
       team.save!
       team.reload
-      assert_equal(false, team.member, 'member')
+      assert_equal(false, team.member, "member")
 
-      team = Team.new(name: 'California Road Club')
-      assert_equal(false, team.member, 'member')
+      team = Team.new(name: "California Road Club")
+      assert_equal(false, team.member, "member")
       team.member = true
-      assert_equal(true, team.member, 'member')
+      assert_equal(true, team.member, "member")
       team.save!
       team.reload
-      assert_equal(true, team.member, 'member')
+      assert_equal(true, team.member, "member")
 
       team.member = true
       team.save!
       team.reload
-      assert_equal(true, team.member, 'member')
+      assert_equal(true, team.member, "member")
     end
 
     test "delete updated by" do

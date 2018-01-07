@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../../../../../app/models/competitions/calculations/calculator"
 require_relative "calculations_test"
 
@@ -24,7 +26,7 @@ module Competitions
           result(id: 9, event_id: 1, race_id: 1, participant_id: 1, place: "1", member_from: Date.new(2010), member_to: Date.new(2011), "year" => Date.today.year),
           result(id: 10, event_id: 1, race_id: 1, participant_id: 1, place: "1", member_from: Date.new(Date.today.year + 1), member_to: Date.new(Date.today.year + 2), "year" => Date.today.year)
         ]
-        expected = [ result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2", member_from: Date.new(2012), member_to: end_of_year, year: Date.today.year)]
+        expected = [result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2", member_from: Date.new(2012), member_to: end_of_year, year: Date.today.year)]
         actual = Calculator.select_results(
           source_results,
           results_per_event: UNLIMITED,
@@ -98,10 +100,9 @@ module Competitions
           result(id: 11, event_id: 1, race_id: 1, participant_id: 2, place: "3")
         ]
         actual = Calculator.select_results(
-          source_results, {
-            results_per_event: UNLIMITED,
-            results_per_race: 2
-          }
+          source_results,
+          results_per_event: UNLIMITED,
+          results_per_race: 2
         )
         assert_equal_results expected, actual
       end
@@ -112,7 +113,7 @@ module Competitions
           result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6"),
           result(id: 3, event_id: 1, race_id: 1, participant_id: 1, place: "2"),
           result(id: 4, event_id: 1, race_id: 1, participant_id: 1, place: "13"),
-          result(id: 5, event_id: 1, race_id: 1, participant_id: 1, place: "101"),
+          result(id: 5, event_id: 1, race_id: 1, participant_id: 1, place: "101")
         ]
         expected = [
           result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6"),
@@ -160,7 +161,7 @@ module Competitions
           members_only: false,
           results_per_event: 1,
           results_per_race: UNLIMITED,
-          source_event_ids: [ 1, 2, 3, 4, 5, 6, 7, 8 ]
+          source_event_ids: [1, 2, 3, 4, 5, 6, 7, 8]
         )
         assert_equal_results expected, actual
       end
@@ -177,7 +178,7 @@ module Competitions
         expected = [
           result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "1", date: Date.new(2014, 10, 1)),
           result(id: 2, event_id: 2, race_id: 2, participant_id: 1, place: "6", date: Date.new(2014, 10, 1)),
-          result(id: 5, event_id: 3, race_id: 3, participant_id: 1, place: "101", date: Date.new(2014, 10, 15)),
+          result(id: 5, event_id: 3, race_id: 3, participant_id: 1, place: "101", date: Date.new(2014, 10, 15))
         ]
 
         actual = Calculator.select_results(
@@ -187,7 +188,7 @@ module Competitions
           members_only: false,
           results_per_event: 1,
           results_per_race: UNLIMITED,
-          source_event_ids: [ 1, 2, 3, 4 ]
+          source_event_ids: [1, 2, 3, 4]
         )
         assert_equal_results expected, actual
       end
@@ -195,29 +196,29 @@ module Competitions
       def test_team_membership
         source_results = [
           result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200",
-            member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: false),
+                 member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: false),
 
           result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6",
-            member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: true)
+                 member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: true)
         ]
-        actual = Calculator.select_results(source_results, { results_per_event: 1, results_per_race: 1 })
-        assert_equal [ 2 ], actual.map(&:id)
+        actual = Calculator.select_results(source_results, results_per_event: 1, results_per_race: 1)
+        assert_equal [2], actual.map(&:id)
       end
 
       def test_no_team_membership
         source_results = [
           result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200",
-            member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: false),
+                 member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: false),
 
           result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6",
-            member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: true)
+                 member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: true)
         ]
         actual = Calculator.select_results(
-          source_results, {
-            results_per_event: UNLIMITED,
-            results_per_race: UNLIMITED
-        })
-        assert_equal [ 1, 2 ], actual.map(&:id).sort
+          source_results,
+          results_per_event: UNLIMITED,
+          results_per_race: UNLIMITED
+        )
+        assert_equal [1, 2], actual.map(&:id).sort
       end
     end
   end

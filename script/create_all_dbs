@@ -1,4 +1,5 @@
 #! /usr/bin/env ruby
+# frozen_string_literal: true
 
 `./script/local`
 puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists racing_on_rails_development; drop database if exists racing_on_rails_test'`
@@ -12,7 +13,7 @@ end
 puts `DISABLE_SPRING=1 rake parallel:create`
 puts `DISABLE_SPRING=1 rake parallel:prepare`
 
-[ "aba", "mbra", "obra", "wsba" ].each do |association|
+%w[aba mbra obra wsba].each do |association|
   puts association
   `./script/local #{association}`
   puts "Create databases"
@@ -26,8 +27,8 @@ puts `DISABLE_SPRING=1 rake parallel:prepare`
   (1..7).each do |index|
     puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_test#{index}'`
   end
-  puts %x{mysql -u root -e 'grant all privileges on `#{association}_test`.* to #{association}_test@localhost'}
-  puts %x{mysql -u root -e 'grant all privileges on `#{association}_test%`.* to #{association}_test@localhost'}
+  puts %x(mysql -u root -e 'grant all privileges on `#{association}_test`.* to #{association}_test@localhost')
+  puts %x(mysql -u root -e 'grant all privileges on `#{association}_test%`.* to #{association}_test@localhost')
   puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_development'`
   puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_test'`
   puts `DISABLE_SPRING=1 rake db:setup RAILS_ENV=test`

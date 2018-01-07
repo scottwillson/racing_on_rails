@@ -1,11 +1,11 @@
+# frozen_string_literal: true
+
 module Regions
   module FriendlyParam
     extend ActiveSupport::Concern
 
     def to_param
-      if name
-        name.downcase.gsub(/\W/, " ").strip.gsub(/  +/, " ").gsub(" ", "-")
-      end
+      name&.downcase&.gsub(/\W/, " ")&.strip&.gsub(/  +/, " ")&.tr(" ", "-")
     end
   end
 end

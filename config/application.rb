@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../boot", __FILE__)
 
 require "rails/all"
@@ -6,10 +8,10 @@ Bundler.require(*Rails.groups)
 
 module RacingOnRails
   class Application < Rails::Application
-    config.autoload_paths += %W(
+    config.autoload_paths += %W[
       #{config.root}/app/models/observers
       #{config.root}/app/pdfs
-    )
+    ]
 
     config.encoding = "utf-8"
 
@@ -20,9 +22,7 @@ module RacingOnRails
 
     I18n.config.enforce_available_locales = true
 
-    unless ENV["SKIP_OBSERVERS"]
-      config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :team_observer
-    end
+    config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :team_observer unless ENV["SKIP_OBSERVERS"]
 
     config.active_record.raise_in_transactional_callbacks = true
 
@@ -34,16 +34,14 @@ module RacingOnRails
 
     # Production database config handled by Ansible
     if !Rails.env.production? && !Rails.env.staging? && File.exist?("#{config.root}/local/config/database.yml")
-      Rails.configuration.paths["config/database"] = [ "local/config/database.yml", "config/database.yml" ]
+      Rails.configuration.paths["config/database"] = ["local/config/database.yml", "config/database.yml"]
     end
 
     config.action_mailer.default_url_options = { mobile: nil }
 
-    config.exceptions_app = self.routes
+    config.exceptions_app = routes
 
-    if Dir.exists?("#{config.root}/lib/registration_engine")
-      require "#{config.root}/lib/registration_engine/lib/registration_engine/engine"
-    end
+    require "#{config.root}/lib/registration_engine/lib/registration_engine/engine" if Dir.exist?("#{config.root}/lib/registration_engine")
 
     require_dependency "acts_as_tree/extensions"
     require_dependency "acts_as_tree/validation"

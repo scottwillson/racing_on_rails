@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   class RacesCollectionsController < Admin::AdminController
     before_action :assign_event
@@ -44,9 +46,7 @@ module Admin
     def assign_previous
       @previous = nil
 
-      if @event.races.empty?
-        @previous = @event.previous
-      end
+      @previous = @event.previous if @event.races.empty?
     end
 
     def races_collection_params

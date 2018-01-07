@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   # Just redirect to admin events index
   class HomeController < Admin::AdminController

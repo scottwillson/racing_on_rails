@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require "simplecov"
 SimpleCov.start
 
 ENV["RAILS_ENV"] = "test"
 
-require File.expand_path('../../config/environment', __FILE__)
+require File.expand_path("../../config/environment", __FILE__)
 require "rails/test_help"
 require "mocha/setup"
 require "action_view/test_case"
@@ -17,7 +19,7 @@ class ActiveSupport::TestCase
 
   self.use_transactional_fixtures = false
   self.use_instantiated_fixtures  = false
-  self.pre_loaded_fixtures  = false
+  self.pre_loaded_fixtures = false
 
   include Authlogic::TestCase
   include Test::EnumerableAssertions
@@ -63,12 +65,12 @@ class ActiveSupport::TestCase
   # person = fixture symbol or Person
   def goto_login_page_and_login_as(person, password = "secret")
     person = case person
-    when Symbol
-      people(person)
-    when Person
-      person
-    else
-      raise "Don't recognize #{person}"
+             when Symbol
+               people(person)
+             when Person
+               person
+             else
+               raise "Don't recognize #{person}"
     end
 
     https! if RacingAssociation.current.ssl?
@@ -83,26 +85,22 @@ class ActiveSupport::TestCase
   # Assert Arrays of Results are the same. Only considers place, Person, and time
   def assert_results(expected, actual, message = nil)
     assert_equal(expected.size, actual.size, "Size of results. #{message}")
-    expected.each_with_index {|result, index|
+    expected.each_with_index do |result, index|
       assert_equal((index + 1).to_s, actual[index].place.to_s, "place for #{result}. #{message}")
       assert_equal(result.person, actual[index].person, "person for #{result}. #{message}")
       assert_equal(result.time, actual[index].time, "time for #{result}. #{message}")
-    }
+    end
   end
 
   # Expected = date in yyyy-mm-dd format
   def assert_equal_dates(expected, actual, message = nil, format = "%Y-%m-%d")
-    if expected != nil && (expected.is_a?(Date) || expected.is_a?(DateTime) || expected.is_a?(Time))
-      expected = expected.strftime(format)
-    end
+    expected = expected.strftime(format) if !expected.nil? && (expected.is_a?(Date) || expected.is_a?(DateTime) || expected.is_a?(Time))
     formatted_actual = actual
-    if !actual.nil? and (actual.is_a?(Date) || actual.is_a?(DateTime) || actual.is_a?(Time))
-      formatted_actual = actual.strftime(format)
-    end
+    formatted_actual = actual.strftime(format) if !actual.nil? && (actual.is_a?(Date) || actual.is_a?(DateTime) || actual.is_a?(Time))
     flunk("#{message} \nExpected #{expected} \nbut was #{formatted_actual}") unless expected == formatted_actual
   end
 
-  def assert_equal_events(expected, actual, message = 'Events not equal')
+  def assert_equal_events(expected, actual, message = "Events not equal")
     expected_sorted = expected.sort_by(&:name)
     actual_sorted = actual ? actual.sort_by(&:name) : []
     unless expected_sorted == actual_sorted
@@ -114,16 +112,16 @@ class ActiveSupport::TestCase
   end
 
   def create_administrator_session
-    @administrator = Person.find_by_login("admin@example.com") || FactoryBot.create(:administrator)
+    @administrator = Person.find_by(login: "admin@example.com") || FactoryBot.create(:administrator)
     PersonSession.create(@administrator)
   end
 
   def use_ssl
-    (@request.env['HTTPS'] = 'on') if RacingAssociation.current.ssl?
+    (@request.env["HTTPS"] = "on") if RacingAssociation.current.ssl?
   end
 
   def use_http
-    @request.env.delete('HTTPS')
+    @request.env.delete("HTTPS")
   end
 
   def destroy_person_session
@@ -131,34 +129,34 @@ class ActiveSupport::TestCase
   end
 
   def print_all_events
-    Event.order(:date).each {|event|
+    Event.order(:date).each do |event|
       p "#{event.date} #{event.name} id: #{event.id} parent: #{event.parent_id} #{event.class} #{event.sanctioned_by} #{event.discipline}"
-    }.size
+    end.size
   end
 
   def print_all_results
-    Result.order(:person_id).each {|result|
+    Result.order(:person_id).each do |result|
       p "#{result.place} (#{result.members_only_place}) #{result.name} #{result.team} #{result.event.name} #{result.race.name} #{result.date} BAR: #{result.bar}"
-    }.size
+    end.size
   end
 
   def print_all_categories
-    Category.order('parent_id, name').each {|category|
+    Category.order("parent_id, name").each do |category|
       p "#{category.id} #{category.parent_id} #{category.name}"
-    }.size
+    end.size
   end
 
   # helps with place_members_only calculation, so there are no gaps
   def fill_in_missing_results
     Result.all.group_by(&:race).each do |race, results|
-       all_results = results.collect(&:place)
-       # important to get last place in last
-       (1..results.sort.last.numeric_place).reverse_each { |res|
-         unless all_results.include?(res.to_s)
-           # we need a result, there is a gap here
-           race.results.create!(place: res)
-         end
-       }
+      all_results = results.collect(&:place)
+      # important to get last place in last
+      (1..results.sort.last.numeric_place).reverse_each do |res|
+        unless all_results.include?(res.to_s)
+          # we need a result, there is a gap here
+          race.results.create!(place: res)
+        end
+      end
     end
   end
 

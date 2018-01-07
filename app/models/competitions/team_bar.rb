@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   # Sum all of Team's discipline BAR's results
   # team = source_result.team
@@ -12,18 +14,18 @@ module Competitions
     end
 
     def source_results_query(race)
-      super.
-      select("competition_events.type").
-      select("scores.points as points").
-      joins("join scores on scores.source_result_id = results.id").
-      joins("join results as competition_results on competition_results.id = scores.competition_result_id").
-      joins("join events as competition_events on competition_events.id = competition_results.event_id").
-      where("competition_events.type" => "Competitions::Bar").
-      where("competition_results.year" => year).
-      where("results.id = scores.source_result_id")
+      super
+        .select("competition_events.type")
+        .select("scores.points as points")
+        .joins("join scores on scores.source_result_id = results.id")
+        .joins("join results as competition_results on competition_results.id = scores.competition_result_id")
+        .joins("join events as competition_events on competition_events.id = competition_results.event_id")
+        .where("competition_events.type" => "Competitions::Bar")
+        .where("competition_results.year" => year)
+        .where("results.id = scores.source_result_id")
     end
 
-    def after_source_results(results, race)
+    def after_source_results(results, _race)
       results_with_tandem_teams_split = []
       results.each do |result|
         category_name = result.delete("category_name")

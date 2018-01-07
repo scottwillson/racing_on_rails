@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   module GrandPrixBradRoss
     class Overall < Competitions::Overall
@@ -9,7 +11,7 @@ module Competitions
         5
       end
 
-      def maximum_events(race)
+      def maximum_events(_race)
         6
       end
 

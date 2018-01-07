@@ -59,19 +59,19 @@ module Competitions
           ::Category.find_or_create_by(name: "Category 1 Women")
         ]
       when "Category 3 Men"
-        [ ::Category.find_or_create_by(name: "Category 2 Men") ]
+        [::Category.find_or_create_by(name: "Category 2 Men")]
       when "Category 3 Women"
-        [ ::Category.find_or_create_by(name: "Category 2 Women") ]
+        [::Category.find_or_create_by(name: "Category 2 Women")]
       when "Category 4 Men"
-        [ ::Category.find_or_create_by(name: "Category 3 Men") ]
+        [::Category.find_or_create_by(name: "Category 3 Men")]
       when "Category 5 Men"
-        [ ::Category.find_or_create_by(name: "Category 4 Men"), ::Category.find_or_create_by(name: "Category 5 Men") ]
+        [::Category.find_or_create_by(name: "Category 4 Men"), ::Category.find_or_create_by(name: "Category 5 Men")]
       when "Category 4 Women"
-        [ ::Category.find_or_create_by(name: "Category 3 Women") ]
+        [::Category.find_or_create_by(name: "Category 3 Women")]
       when "Category 5 Women"
-        [ ::Category.find_or_create_by(name: "Category 4 Women"), ::Category.find_or_create_by(name: "Category 5 Women") ]
+        [::Category.find_or_create_by(name: "Category 4 Women"), ::Category.find_or_create_by(name: "Category 5 Women")]
       else
-        [ race.category ]
+        [race.category]
       end
     end
 
@@ -99,7 +99,7 @@ module Competitions
     end
 
     def source_event_types
-      [ Competitions::Bar ]
+      [Competitions::Bar]
     end
 
     def after_source_results(results, _)

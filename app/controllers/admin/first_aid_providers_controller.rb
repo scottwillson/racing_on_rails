@@ -1,24 +1,22 @@
+# frozen_string_literal: true
+
 module Admin
   # Work assignments for Event. First aid provider and chief official.
   # Officials can view, but not edit, this page.
   class FirstAidProvidersController < Admin::AdminController
-    skip_filter :require_administrator
+    skip_action_callback :require_administrator
     before_action :require_administrator_or_official
     helper :table
 
     def index
       @past_events = (params[:past_events] == "true") || false
-      if @past_events
-        @events = SingleDayEvent.current_year
-      else
-        @events = SingleDayEvent.today_and_future
-      end
+      @events = if @past_events
+                  SingleDayEvent.current_year
+                else
+                  SingleDayEvent.today_and_future
+                end
 
-      if params[:sort_by].present?
-        @sort_by = params[:sort_by]
-      else
-        @sort_by = "date"
-      end
+      @sort_by = params[:sort_by].presence || "date"
 
       @events = @events.where(practice: false).where(cancelled: false).where(postponed: false)
 
@@ -31,13 +29,13 @@ module Admin
     # Formatted for "who would like to work this race email"
     def email
       rows = @events.collect do |event|
-        [ event.first_aid_provider, event.date, event.name, event.city_state ]
+        [event.first_aid_provider, event.date, event.name, event.city_state]
       end
-      columns = [ %w( provider date name location ) ]
+      columns = [%w[ provider date name location ]]
       table = Tabular::Table.new(columns + rows)
       table.renderers[:date] = DateRenderer
 
-      headers['Content-Type'] = 'text/plain'
+      headers["Content-Type"] = "text/plain"
       render plain: table.to_space_delimited
     end
 

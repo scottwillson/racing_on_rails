@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "default_result_renderer"
 
 module Results
@@ -12,8 +14,8 @@ module Results
           "<a href=\"#{path_prefix(row)}/events/#{result.event_id}/teams/#{result.team_id}/results##{result.race_id}\">#{text}</a>"
 
         elsif racing_association.unregistered_teams_in_results? ||
-          result.team_member? ||
-          result.year < racing_association.year
+              result.team_member? ||
+              result.year < racing_association.year
 
           "<a href=\"#{path_prefix(row)}/teams/#{result.team_id}/#{result.year}\">#{text}</a>"
         end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CleanupResultAgesCities < ActiveRecord::Migration
   def change
     Result.where(city: "(blank)").update_all city: nil

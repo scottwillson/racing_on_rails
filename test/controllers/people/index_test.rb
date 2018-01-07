@@ -1,4 +1,4 @@
-# coding: utf-8
+# frozen_string_literal: true
 
 require File.expand_path("../../../test_helper", __FILE__)
 
@@ -19,7 +19,7 @@ class IndexTest < ActionController::TestCase
 
   test "list" do
     FactoryBot.create(:person, first_name: "Bob", last_name: "Jones")
-    get(:list, name: 'jone')
+    get(:list, name: "jone")
     assert_response(:success)
     assert_not_nil(@response.body.index("Jones"), "Search for jone should find Jones #{@response}")
   end
@@ -41,26 +41,26 @@ class IndexTest < ActionController::TestCase
     get(:index, name: "weav")
     assert_response(:success)
     assert_not_nil(assigns["people"], "Should assign people")
-    assert_equal([weaver], assigns['people'], 'Search for weav should find Weaver')
+    assert_equal([weaver], assigns["people"], "Search for weav should find Weaver")
     assert_not_nil(assigns["name"], "Should assign name")
-    assert_equal('weav', assigns['name'], "'name' assigns")
+    assert_equal("weav", assigns["name"], "'name' assigns")
   end
 
   test "find nothing" do
-    get(:index, name: 's7dfnacs89danfx')
+    get(:index, name: "s7dfnacs89danfx")
     assert_response(:success)
     assert_not_nil(assigns["people"], "Should assign people")
-    assert_equal(0, assigns['people'].size, "Should find no people")
+    assert_equal(0, assigns["people"].size, "Should find no people")
   end
 
   test "find empty name" do
     FactoryBot.create(:person)
-    get(:index, name: '')
+    get(:index, name: "")
     assert_response(:success)
     assert_not_nil(assigns["people"], "Should assign people")
     assert(assigns["people"].empty?, "Should find no one")
     assert_not_nil(assigns["name"], "Should assign name")
-    assert_equal('', assigns['name'], "'name' assigns")
+    assert_equal("", assigns["name"], "'name' assigns")
   end
 
   test "ajax ssl find" do
@@ -72,5 +72,4 @@ class IndexTest < ActionController::TestCase
     assert_template nil
     assert_template layout: nil
   end
-
 end

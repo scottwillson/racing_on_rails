@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddEventRegistrationPublic < ActiveRecord::Migration
   def up
     if RacingAssociation.current.short_name == "OBRA" || RacingAssociation.current.short_name == "NABRA"
@@ -6,6 +8,8 @@ class AddEventRegistrationPublic < ActiveRecord::Migration
   end
 
   def down
-    remove_column(:events, :registration_public) rescue nil
+    remove_column(:events, :registration_public)
+  rescue StandardError
+    nil
   end
 end

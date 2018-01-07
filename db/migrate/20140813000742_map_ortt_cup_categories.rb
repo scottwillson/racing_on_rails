@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MapOrttCupCategories < ActiveRecord::Migration
   def change
     Category.transaction do
@@ -11,22 +13,20 @@ class MapOrttCupCategories < ActiveRecord::Migration
         end
       end
 
-      [ "Eddy", "Eddy Men", "Men Eddy", "Men Eddy Merckx" ].each do |category_name|
+      ["Eddy", "Eddy Men", "Men Eddy", "Men Eddy Merckx"].each do |category_name|
         category = Category.where(name: category_name).first
-        if category
-          parent = Category.where(name: "Eddy Senior Men").first
-          category.parent = parent
-          category.save!
-        end
+        next unless category
+        parent = Category.where(name: "Eddy Senior Men").first
+        category.parent = parent
+        category.save!
       end
 
-      [ "Eddy Women", "Women Eddy", "Women Eddy Merckx" ].each do |category_name|
+      ["Eddy Women", "Women Eddy", "Women Eddy Merckx"].each do |category_name|
         category = Category.where(name: category_name).first
-        if category
-          parent = Category.where(name: "Eddy Senior Women").first
-          category.parent = parent
-          category.save!
-        end
+        next unless category
+        parent = Category.where(name: "Eddy Senior Women").first
+        category.parent = parent
+        category.save!
       end
     end
   end

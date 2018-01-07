@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "default_result_renderer"
 
 module Results
@@ -8,13 +10,9 @@ module Results
         text = row[column.key]
         return text unless result.person_id
 
-        if result.preliminary?
-          html_options = ' class="preliminary"'
-        end
+        html_options = ' class="preliminary"' if result.preliminary?
 
-        if result.person_id == 93483
-          html_options = ' class="riera"'
-        end
+        html_options = ' class="riera"' if result.person_id == 93_483
 
         if result.competition_result?
           "<a href=\"#{path_prefix(row)}/events/#{result.event_id}/people/#{result.person_id}/results##{result.race_id}\"#{html_options}>#{text}</a>"

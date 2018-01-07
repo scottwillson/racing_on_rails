@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Competitions
@@ -47,6 +49,5 @@ module Competitions
       get :show, discipline: "overall", year: "2003", category: "masters_men_30_34"
       assert_redirected_to "http://#{RacingAssociation.current.static_host}/bar/2003"
     end
-
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Controller for schedule/calendar in different formats. Default to current year if not provided.
 #
 # Caches all of its pages
@@ -23,23 +25,23 @@ class ScheduleController < ApplicationController
         redirect_to schedule_path(format: :atom), status: :moved_permanently
       end
       format.atom
-      format.json {
+      format.json do
         events = []
         @events.each do |event|
           events << {
             id: event.id,
             title: event.full_name,
             description: event.full_name,
-            start: "#{event.date}",
-            end: "#{event.end_date}",
+            start: event.date.to_s,
+            end: event.end_date.to_s,
             allDay: true,
-            url: "#{event.flyer}"
+            url: event.flyer.to_s
           }
         end
         render json: events.to_json
-      }
+      end
       format.ics { render_ics }
-      format.xlsx { headers['Content-Disposition'] = 'filename="schedule.xlsx"' }
+      format.xlsx { headers["Content-Disposition"] = 'filename="schedule.xlsx"' }
     end
   end
 
@@ -63,7 +65,7 @@ class ScheduleController < ApplicationController
       format.atom
       format.ics { render_ics }
       format.xlsx do
-        headers['Content-Disposition'] = 'filename="schedule.xlsx"'
+        headers["Content-Disposition"] = 'filename="schedule.xlsx"'
         render :index
       end
     end
@@ -91,11 +93,10 @@ class ScheduleController < ApplicationController
     end
   end
 
-
   private
 
   def render_ics
-    headers['Content-Disposition'] = "filename=\"schedule.ics\""
+    headers["Content-Disposition"] = "filename=\"schedule.ics\""
     send_data(
       RiCal.Calendar do |cal|
         parent_ids = @events.map(&:parent_id).compact.uniq
@@ -104,13 +105,11 @@ class ScheduleController < ApplicationController
         events.each do |e|
           cal.event do |event|
             event.summary = e.full_name
-            event.dtstart =  e.start_date
+            event.dtstart = e.start_date
             event.dtend = e.end_date
             event.location = e.city_state
             event.description = e.discipline
-            if e.flyer_approved?
-              event.url = e.flyer
-            end
+            event.url = e.flyer if e.flyer_approved?
           end
         end
       end,
@@ -156,10 +155,10 @@ class ScheduleController < ApplicationController
   end
 
   def assign_sanctioning_organizations
-    if RacingAssociation.current.filter_schedule_by_sanctioning_organization?
-      @sanctioning_organizations = RacingAssociation.current.sanctioning_organizations
-    else
-      @sanctioning_organizations = []
-    end
+    @sanctioning_organizations = if RacingAssociation.current.filter_schedule_by_sanctioning_organization?
+                                   RacingAssociation.current.sanctioning_organizations
+                                 else
+                                   []
+                                 end
   end
 end

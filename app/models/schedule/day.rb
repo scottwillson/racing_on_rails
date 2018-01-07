@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module Schedule
   # Day on a year's Schedule::Schedule
   class Day
-
     # Array of SingleDayEvents
     attr_accessor :events
 
@@ -24,11 +25,11 @@ module Schedule
 
     # Sunday, Monday, ... Saturday
     def day_of_week
-    	Date::DAYNAMES[@date.wday]
+      Date::DAYNAMES[@date.wday]
     end
 
     def to_s
-      "#<Schedule::Day #{@date.strftime('%x') if @date}>"
+      "#<Schedule::Day #{@date&.strftime('%x')}>"
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   # MBRA Best All-around Rider Competition.
   # Calculates a BAR for each Discipline
@@ -14,19 +16,18 @@ module Competitions
           year = year.to_i if year.is_a?(String)
           date = Date.new(year, 1, 1)
 
-          # TODO switch to #create_children
+          # TODO: switch to #create_children
           ::Discipline.find_all_bar.each do |discipline|
             bar = MbraBar.where(date: date, discipline: discipline.name).first
-            unless bar
-              MbraBar.create!(
-                name: "#{year} #{discipline.name} BAR",
-                date: date,
-                discipline: discipline.name
-              )
-            end
+            next if bar
+            MbraBar.create!(
+              name: "#{year} #{discipline.name} BAR",
+              date: date,
+              discipline: discipline.name
+            )
           end
 
-          MbraBar.where(date: date).each do |bar|
+          MbraBar.where(date: date).find_each do |bar|
             bar.set_date
             bar.delete_races
             bar.create_races
@@ -39,22 +40,22 @@ module Competitions
       true
     end
 
-    def after_source_results(results, race)
+    def after_source_results(results, _race)
       results.each do |result|
         result["multiplier"] = result["race_bar_points"] || result["event_bar_points"] || result["parent_bar_points"] || result["parent_parent_bar_points"]
       end
     end
 
     def source_results_query(race)
-      super.
-      where(bar: true).
-      where("events.discipline in (:disciplines)
+      super
+        .where(bar: true)
+        .where("events.discipline in (:disciplines)
             or (events.discipline is null and parents_events.discipline in (:disciplines))
             or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (:disciplines))",
-            disciplines: disciplines_for(race))
+               disciplines: disciplines_for(race))
     end
 
-    def maximum_events(race)
+    def maximum_events(_race)
       (Event.find_all_bar_for_discipline(discipline, year).size * 0.7).round.to_i
     end
 
@@ -80,7 +81,7 @@ module Competitions
     end
 
     def place_bonus
-      [ 6, 3, 1 ]
+      [6, 3, 1]
     end
 
     def dnf_points
@@ -92,7 +93,7 @@ module Competitions
     end
 
     def friendly_name
-      'MBRA BAR'
+      "MBRA BAR"
     end
   end
 end

@@ -27,9 +27,7 @@ module People
                    else
                      value
                    end
-        if new_date.year == self[:date_of_birth].year && new_date.month == 1 && new_date.day == 1
-          return
-        end
+        return if new_date.year == self[:date_of_birth].year && new_date.month == 1 && new_date.day == 1
       end
       super
     end
@@ -44,9 +42,7 @@ module People
 
     # 30 years old or older
     def master?
-      if date_of_birth
-        date_of_birth <= Date.new(RacingAssociation.current.masters_age.years.ago.year, 12, 31)
-      end
+      date_of_birth <= Date.new(RacingAssociation.current.masters_age.years.ago.year, 12, 31) if date_of_birth
     end
 
     # Under 18 years old
@@ -92,9 +88,7 @@ module People
 
     # Oldest age person will be at any point in year
     def racing_age
-      if date_of_birth
-        (RacingAssociation.current.year - date_of_birth.year).ceil
-      end
+      (RacingAssociation.current.year - date_of_birth.year).ceil if date_of_birth
     end
 
     def cyclocross_racing_age

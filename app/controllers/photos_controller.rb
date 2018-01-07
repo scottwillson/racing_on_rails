@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PhotosController < Admin::AdminController
   before_action :assign_current_admin_tab
 
@@ -36,14 +38,12 @@ class PhotosController < Admin::AdminController
     render :edit
   end
 
-
   protected
 
   def assign_current_admin_tab
     @current_admin_tab = "Photos"
     @show_tabs = true
   end
-
 
   private
 

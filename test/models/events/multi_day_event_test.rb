@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -113,10 +115,9 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
   test "create for every!" do
     event = MultiDayEvent.create_for_every!("Monday",
-      start_date: Date.new(2009, 4), end_date: Date.new(2009, 9), time: "5:30 PM till dusk"
-    )
+                                            start_date: Date.new(2009, 4), end_date: Date.new(2009, 9), time: "5:30 PM till dusk")
     Date.new(2009, 4, 6).step(Date.new(2009, 8, 31), 7) do |date|
-      assert(event.children(true).any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map { |e| e.date }.join(', ')}")
+      assert(event.children(true).any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map(&:date).join(', ')}")
     end
     assert_equal(22, event.children.count, "Should create child events")
     assert_equal(22, event.children.size, "Should create child events")
@@ -124,26 +125,26 @@ class MultiDayEventTest < ActiveSupport::TestCase
     event = MultiDayEvent.create_for_every!("Sunday", start_date: Date.new(2009, 5), end_date: Date.new(2009, 10))
     assert_equal(22, event.children(true).size, "Should create child events")
     Date.new(2009, 5, 3).step(Date.new(2009, 9, 30), 7) do |date|
-      assert(event.children.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map { |e| e.date }.join(', ')}")
+      assert(event.children.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map(&:date).join(', ')}")
     end
 
     event = MultiDayEvent.create_for_every!("Tuesday", start_date: Date.new(2009, 5), end_date: Date.new(2009, 10))
     assert_equal(22, event.children(true).size, "Should create child events")
     Date.new(2009, 5, 5).step(Date.new(2009, 10, 1), 7) do |date|
-      assert(event.children.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map { |e| e.date }.join(', ')}")
+      assert(event.children.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map(&:date).join(', ')}")
     end
   end
 
   test "create children on multiple days of week" do
-    event = MultiDayEvent.create_for_every!(["Saturday", "Sunday"], start_date: Date.new(2009), end_date: Date.new(2009, 12, 31))
+    event = MultiDayEvent.create_for_every!(%w[Saturday Sunday], start_date: Date.new(2009), end_date: Date.new(2009, 12, 31))
     assert_equal(104, event.children(true).size, "Should create child events")
 
     Date.new(2009, 1, 3).step(Date.new(2009, 12, 26), 7) do |date|
-      assert(event.children.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map { |e| e.date }.join(', ')}")
+      assert(event.children.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map(&:date).join(', ')}")
     end
 
     Date.new(2009, 1, 4).step(Date.new(2009, 12, 27), 7) do |date|
-      assert(event.children.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map { |e| e.date }.join(', ')}")
+      assert(event.children.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map(&:date).join(', ')}")
     end
   end
 
@@ -157,14 +158,13 @@ class MultiDayEventTest < ActiveSupport::TestCase
     mt_hood = MultiDayEvent.create!
     mt_hood.children.create!(date: Date.new(2005, 7, 11))
     mt_hood.children.create!(date: Date.new(2005, 7, 12))
-    assert_equal('7/11-12', mt_hood.date_range_s, 'Date range')
+    assert_equal("7/11-12", mt_hood.date_range_s, "Date range")
     last_day = mt_hood.children.last
     last_day.date = Date.new(2005, 8, 1)
     last_day.save!
     mt_hood = Event.find(mt_hood.id)
-    assert_equal('7/11-8/1', mt_hood.date_range_s, 'Date range')
+    assert_equal("7/11-8/1", mt_hood.date_range_s, "Date range")
   end
-
 
   test "date range s long" do
     mt_hood = FactoryBot.create(:stage_race)
@@ -459,14 +459,14 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
   test "full name" do
     stage_race = FactoryBot.create(:stage_race, name: "Mt. Hood Classic")
-    assert_equal('Mt. Hood Classic', stage_race.name, 'stage_race full_name')
+    assert_equal("Mt. Hood Classic", stage_race.name, "stage_race full_name")
   end
 
   test "custom create" do
-    event = MultiDayEvent.create!(name: 'MultiDayEvent', date: Date.new(2002, 6, 12))
+    event = MultiDayEvent.create!(name: "MultiDayEvent", date: Date.new(2002, 6, 12))
     child = event.children.create
-    assert_equal_dates(Date.new(2002, 6, 12), event.date, 'event date')
-    assert_equal_dates(Date.new(2002, 6, 12), child.date, 'child event date')
+    assert_equal_dates(Date.new(2002, 6, 12), event.date, "event date")
+    assert_equal_dates(Date.new(2002, 6, 12), child.date, "child event date")
   end
 
   test "create defaults" do
@@ -608,27 +608,27 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
   test "missing parent" do
     series_parent = Series.create!
-    assert(!series_parent.missing_parent?, 'missing_parent?')
-    assert_nil(series_parent.missing_parent, 'missing_parent')
+    assert(!series_parent.missing_parent?, "missing_parent?")
+    assert_nil(series_parent.missing_parent, "missing_parent")
 
     stage_race = FactoryBot.create(:stage_race)
-    assert(!stage_race.missing_parent?, 'missing_parent?')
-    assert_nil(stage_race.missing_parent, 'missing_parent')
+    assert(!stage_race.missing_parent?, "missing_parent?")
+    assert_nil(stage_race.missing_parent, "missing_parent")
   end
 
   test "guess type" do
     mt_hood_1 = FactoryBot.build(:event, date: Date.new(2007, 7, 11))
     mt_hood_2 = FactoryBot.build(:event, date: Date.new(2007, 7, 12))
-    assert_equal(MultiDayEvent, MultiDayEvent.guess_type([ mt_hood_1, mt_hood_2 ]), 'MultiDayEvent')
+    assert_equal(MultiDayEvent, MultiDayEvent.guess_type([mt_hood_1, mt_hood_2]), "MultiDayEvent")
 
     banana_belt_1 = FactoryBot.build(:event, date: Date.new(2004, 1, 4))
     banana_belt_2 = FactoryBot.build(:event, date: Date.new(2004, 1, 11))
     banana_belt_3 = FactoryBot.build(:event, date: Date.new(2004, 1, 18))
-    assert_equal(Series, MultiDayEvent.guess_type([ banana_belt_1, banana_belt_2, banana_belt_3 ]), 'Series')
+    assert_equal(Series, MultiDayEvent.guess_type([banana_belt_1, banana_belt_2, banana_belt_3]), "Series")
 
     pir = FactoryBot.build(:event, date: Date.new(2005, 7, 5))
     pir_2 = FactoryBot.build(:event, date: Date.new(2005, 7, 12))
-    assert_equal(WeeklySeries, MultiDayEvent.guess_type([ pir, pir_2 ]), 'WeeklySeries')
+    assert_equal(WeeklySeries, MultiDayEvent.guess_type([pir, pir_2]), "WeeklySeries")
   end
 
   test "children_with_results" do

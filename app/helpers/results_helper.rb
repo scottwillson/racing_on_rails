@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 require "array/each_row"
 require "array/stable_sort"
 
 module ResultsHelper
-  # TODO Move to module in Race?
+  # TODO: Move to module in Race?
   # Order is significant
-  RESULT_COLUMNS = %W{
+  RESULT_COLUMNS = %w[
     place number name team_name age city age_group category_class category_name points_bonus points_bonus_penalty
     points_from_place points_penalty points_total time_bonus_penalty time_gap_to_leader time_gap_to_previous
     time_gap_to_winner points laps time time_total notes
-  }.freeze
+  ].freeze
 
   # results for pagination
   def results_table(event, race, results = nil)
@@ -17,28 +19,28 @@ module ResultsHelper
     table = Tabular::Table.new
     table.metadata[:mobile_request] = mobile_request?
 
-    if mobile_request?
-      if event.respond_to?(:team?) && event.team?
-        table.row_mapper = Results::Mapper.new(%w{ place team_name points})
-      else
-        table.row_mapper = Results::Mapper.new(%w{ place name points time})
-      end
-    else
-      table.row_mapper = Results::Mapper.new(
-                           %W{ place number name team_name },
+    table.row_mapper = if mobile_request?
+                         if event.respond_to?(:team?) && event.team?
+                           Results::Mapper.new(%w[ place team_name points])
+                         else
+                           Results::Mapper.new(%w[ place name points time])
+                                            end
+                       else
+                         Results::Mapper.new(
+                           %w[ place number name team_name ],
                            race.try(:custom_columns),
-                           RESULT_COLUMNS - %W{ place name team_name }
+                           RESULT_COLUMNS - %w[ place name team_name ]
                          )
-    end
+                       end
 
-    if results
-      table.rows = results.sort
-    else
-      table.rows = race.results.sort
-    end
+    table.rows = if results
+                   results.sort
+                 else
+                   race.results.sort
+                 end
 
     table.delete_blank_columns!
-    table.delete_homogenous_columns!(except: [ :place, :number, :team_name, :time, :laps, :points ])
+    table.delete_homogenous_columns!(except: %i[place number team_name time laps points])
 
     table.renderer = Results::Renderers::DefaultResultRenderer
     table.renderers[:name] = Results::Renderers::NameRenderer
@@ -63,17 +65,17 @@ module ResultsHelper
 
     case participant
     when Person
-      if mobile_request?
-        table.row_mapper = Results::Mapper.new(%w{ place event_full_name })
-      else
-        table.row_mapper = Results::Mapper.new(%w{ place event_full_name race_name event_date_range_s })
-      end
+      table.row_mapper = if mobile_request?
+                           Results::Mapper.new(%w[ place event_full_name ])
+                         else
+                           Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s ])
+                         end
     when Team
-      if mobile_request?
-        table.row_mapper = Results::Mapper.new(%w{ place event_full_name name })
-      else
-        table.row_mapper = Results::Mapper.new(%w{ place event_full_name race_name name event_date_range_s })
-      end
+      table.row_mapper = if mobile_request?
+                           Results::Mapper.new(%w[ place event_full_name name ])
+                         else
+                           Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s ])
+                         end
     else
       raise ArgumentError, "participant must be a Person or Team but was #{participant.class}"
     end
@@ -88,19 +90,19 @@ module ResultsHelper
   def scores_table(result)
     table = Tabular::Table.new
 
-    if result.team_competition_result?
-      if mobile_request?
-        table.row_mapper = Results::Mapper.new(%w{ place event_full_name name })
-      else
-        table.row_mapper = Results::Mapper.new(%w{ place event_full_name race_name name event_date_range_s notes points })
-      end
-    else
-      if mobile_request?
-        table.row_mapper = Results::Mapper.new(%w{ place event_full_name })
-      else
-        table.row_mapper = Results::Mapper.new(%w{ place event_full_name race_name event_date_range_s points })
-      end
-    end
+    table.row_mapper = if result.team_competition_result?
+                         if mobile_request?
+                           Results::Mapper.new(%w[ place event_full_name name ])
+                         else
+                           Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s notes points ])
+                                            end
+                       else
+                         if mobile_request?
+                           Results::Mapper.new(%w[ place event_full_name ])
+                         else
+                           Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s points ])
+                                            end
+                       end
 
     table.rows = result.scores.sort_by { |score| [score.source_result.date, -score.points] }.map do |score|
       source_result = score.source_result
@@ -122,8 +124,8 @@ module ResultsHelper
 
     table.rows = race.results.sort
 
-    table.delete_blank_columns! except: [ :place, :number, :name, :team_name, :time, :points, :laps ]
-    table.delete_homogenous_columns! except: [ :place, :number, :name, :team_name, :time, :points, :laps ]
+    table.delete_blank_columns! except: %i[place number name team_name time points laps]
+    table.delete_homogenous_columns! except: %i[place number name team_name time points laps]
 
     table.renderer = Results::Renderers::DefaultResultRenderer
     table.renderers[:time] = Results::Renderers::TimeRenderer

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   module GrandPrixBradRoss
     module Common
@@ -10,14 +12,14 @@ module Competitions
       end
 
       # Remove Junior age-group categories
-      def after_source_results(results, race)
+      def after_source_results(results, _race)
         results.reject do |result|
           result["category_name"]["Junior"] &&
-          result["category_ages_begin"] &&
-          (
-            result["category_ages_begin"] > ::Categories::Ages::JUNIORS.begin ||
-            result["category_ages_end"] < ::Categories::Ages::JUNIORS.end
-          )
+            result["category_ages_begin"] &&
+            (
+              result["category_ages_begin"] > ::Categories::Ages::JUNIORS.begin ||
+              result["category_ages_end"] < ::Categories::Ages::JUNIORS.end
+            )
         end
       end
 
@@ -51,7 +53,7 @@ module Competitions
       end
 
       def point_schedule
-        [ 100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+        [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
       end
     end
   end

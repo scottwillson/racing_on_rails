@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../test_case", __FILE__)
 require File.expand_path("../../../../lib/array/each_row", __FILE__)
 require File.expand_path("../../../../lib/array/stable_sort", __FILE__)
@@ -5,12 +7,12 @@ require File.expand_path("../../../../lib/array/stable_sort", __FILE__)
 # :stopdoc:
 class ArrayTest < Ruby::TestCase
   def test_each_row
-    assert_equal([nil, nil], [].each_row {|row|})
-    assert_equal([[1]], [1].each_row {|row|})
-    assert_equal([[1, 2]], [1, 2].each_row {|row|})
-    assert_equal([[1, 3], [2]], [1, 2, 3].each_row {|row|})
-    assert_equal([[1, 3], [2, 4]], [1, 2, 3, 4].each_row {|row|})
-    assert_equal([[1, 4], [2, 5], [3, 6]], [1, 2, 3, 4, 5, 6].each_row {|row|})
+    assert_equal([nil, nil], [].each_row { |row| })
+    assert_equal([[1]], [1].each_row { |row| })
+    assert_equal([[1, 2]], [1, 2].each_row { |row| })
+    assert_equal([[1, 3], [2]], [1, 2, 3].each_row { |row| })
+    assert_equal([[1, 3], [2, 4]], [1, 2, 3, 4].each_row { |row| })
+    assert_equal([[1, 4], [2, 5], [3, 6]], [1, 2, 3, 4, 5, 6].each_row { |row| })
   end
 
   def test_merge_sort
@@ -22,11 +24,11 @@ class ArrayTest < Ruby::TestCase
 
     assert_equal_enumerables([-20, 0, 0, 0, 1, 2, 7],
                              [0, 0, 7, 1, 2, 0, -20].merge_sort { |x, y| x > y },
-                            "[0, 0, 7, 1, 2, 0, -20].merge_sort { |x, y| x > y }")
+                             "[0, 0, 7, 1, 2, 0, -20].merge_sort { |x, y| x > y }")
 
     assert_equal_enumerables([7, 2, 1, 0, 0, 0, -20],
                              [0, 0, 7, 1, 2, 0, -20].merge_sort { |x, y| x < y },
-                            "[0, 0, 7, 1, 2, 0, -20].merge_sort { |x, y| x < y }")
+                             "[0, 0, 7, 1, 2, 0, -20].merge_sort { |x, y| x < y }")
   end
 
   def test_merge_sort_preserves_order
@@ -36,35 +38,40 @@ class ArrayTest < Ruby::TestCase
     king_clubs    = Card.new("king", "clubs")
 
     assert_equal_enumerables(
-                [king_hearts, king_diamonds, king_spades, king_clubs],
-                [king_hearts, king_diamonds, king_spades, king_clubs].merge_sort,
-                "merge_sort of equal elements should preserve order")
+      [king_hearts, king_diamonds, king_spades, king_clubs],
+      [king_hearts, king_diamonds, king_spades, king_clubs].merge_sort,
+      "merge_sort of equal elements should preserve order"
+    )
 
     assert_equal_enumerables(
-                [king_hearts, king_diamonds, king_spades, king_clubs],
-                [king_hearts, king_diamonds, king_spades, king_clubs].merge_sort { |x, y| x.value > y.value },
-                "merge_sort of equal elements should preserve order")
+      [king_hearts, king_diamonds, king_spades, king_clubs],
+      [king_hearts, king_diamonds, king_spades, king_clubs].merge_sort { |x, y| x.value > y.value },
+      "merge_sort of equal elements should preserve order"
+    )
 
     assert_equal_enumerables(
-                [king_hearts, king_diamonds, king_spades, king_clubs],
-                [king_hearts, king_diamonds, king_spades, king_clubs].merge_sort { |x, y| x.value < y.value },
-                "merge_sort of equal elements should preserve order")
+      [king_hearts, king_diamonds, king_spades, king_clubs],
+      [king_hearts, king_diamonds, king_spades, king_clubs].merge_sort { |x, y| x.value < y.value },
+      "merge_sort of equal elements should preserve order"
+    )
 
     assert_equal_enumerables(
-                [king_clubs, king_diamonds, king_hearts, king_spades],
-                [king_hearts, king_diamonds, king_spades, king_clubs].merge_sort { |x, y| x.suit > y.suit },
-                "merge_sort of equal elements should preserve order")
+      [king_clubs, king_diamonds, king_hearts, king_spades],
+      [king_hearts, king_diamonds, king_spades, king_clubs].merge_sort { |x, y| x.suit > y.suit },
+      "merge_sort of equal elements should preserve order"
+    )
 
     assert_equal_enumerables(
-                [king_spades, king_hearts, king_diamonds, king_clubs],
-                [king_hearts, king_diamonds, king_spades, king_clubs].merge_sort { |x, y| x.suit < y.suit },
-                "merge_sort of equal elements should preserve order")
+      [king_spades, king_hearts, king_diamonds, king_clubs],
+      [king_hearts, king_diamonds, king_spades, king_clubs].merge_sort { |x, y| x.suit < y.suit },
+      "merge_sort of equal elements should preserve order"
+    )
   end
 
   def test_multiple_sorts_preserve_order
     king_hearts   = Card.new(14, "hearts")
     diamonds_10   = Card.new(10, "diamonds")
-    diamonds_8    = Card.new( 8, "diamonds")
+    diamonds_8    = Card.new(8, "diamonds")
     hearts_queen  = Card.new(13, "hearts")
 
     list = [king_hearts, diamonds_10, diamonds_8, hearts_queen]
@@ -88,7 +95,7 @@ class ArrayTest < Ruby::TestCase
   def test_stable_sort_by
     king_hearts   = Card.new(14, "hearts")
     diamonds_10   = Card.new(10, "diamonds")
-    diamonds_8    = Card.new( 8, "diamonds")
+    diamonds_8    = Card.new(8, "diamonds")
     hearts_queen  = Card.new(13, "hearts")
 
     list = [king_hearts, diamonds_10, diamonds_8, hearts_queen]

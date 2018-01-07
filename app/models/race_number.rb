@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Number used to identify a Person during a Race: bib number. RaceNumbers are issued from a NumberIssuer,
 # which is usually a racing Association, but sometimes an Event.
 #
@@ -12,10 +14,10 @@
 class RaceNumber < ActiveRecord::Base
   include RacingOnRails::VestalVersions::Versioned
 
-  validates_presence_of :discipline
-  validates_presence_of :number_issuer
-  validates_presence_of :person
-  validates_presence_of :value
+  validates :discipline, presence: true
+  validates :number_issuer, presence: true
+  validates :person, presence: true
+  validates :value, presence: true
   validate :unique_number
 
   before_save :validate_year
@@ -28,19 +30,18 @@ class RaceNumber < ActiveRecord::Base
   default_value_for(:number_issuer_id) { RacingAssociation.current.number_issuer.try(:id) }
   default_value_for(:year)             { RacingAssociation.current.effective_year }
 
-
   def self.find_all_by_value_and_event(value, _event)
     return [] if _event.nil? || value.blank? || _event.number_issuer.nil?
 
     discipline_id = RaceNumber.discipline_id(_event.discipline)
     return [] unless discipline_id
 
-    RaceNumber.
-      includes(:person).
-      where(value: value).
-      where(discipline_id: discipline_id).
-      where(number_issuer_id: _event.number_issuer_id).
-      where(year: _event.date.year)
+    RaceNumber
+      .includes(:person)
+      .where(value: value)
+      .where(discipline_id: discipline_id)
+      .where(number_issuer_id: _event.number_issuer_id)
+      .where(year: _event.date.year)
   end
 
   # Dupe of lousy code from Discipline
@@ -63,44 +64,32 @@ class RaceNumber < ActiveRecord::Base
 
   # Different disciplines have different rules about what is a rental number
   def self.rental?(number, discipline = Discipline[:road])
-    if RacingAssociation.current.rental_numbers.nil?
-      return false
-    end
+    return false if RacingAssociation.current.rental_numbers.nil?
 
-    if number.blank?
-      return true
-    end
+    return true if number.blank?
 
-    if discipline == Discipline[:mountain_bike] || discipline == Discipline[:downhill]
-      return false
-    end
+    return false if discipline == Discipline[:mountain_bike] || discipline == Discipline[:downhill]
 
-    if number.strip[/^\d+$/].nil?
-      return false
-    end
+    return false if number.strip[/^\d+$/].nil?
 
     numeric_value = number.to_i
-    if RacingAssociation.current.rental_numbers.include?(numeric_value)
-      return true
-    end
+    return true if RacingAssociation.current.rental_numbers.include?(numeric_value)
 
     false
   end
 
   def value=(value)
-    if value
-      self[:value] = value.to_s
-    else
-      self[:value] = value
-    end
+    self[:value] = if value
+                     value.to_s
+                   else
+                     value
+                   end
 
     self[:value]
   end
 
   def year=(value)
-    if value && value.to_i > 1800
-      self[:year] = value
-    end
+    self[:year] = value if value && value.to_i > 1800
     year
   end
 
@@ -119,28 +108,28 @@ class RaceNumber < ActiveRecord::Base
   def unique_number
     _discipline = Discipline.find(discipline_id)
     if number_issuer.association? && RaceNumber.rental?(value, _discipline)
-      errors.add('value', "#{value} is a rental number. #{RacingAssociation.current.short_name} rental numbers: #{RacingAssociation.current.rental_numbers}")
-      person.errors.add('value', "#{value} is a rental number. #{RacingAssociation.current.short_name} rental numbers: #{RacingAssociation.current.rental_numbers}")
+      errors.add("value", "#{value} is a rental number. #{RacingAssociation.current.short_name} rental numbers: #{RacingAssociation.current.rental_numbers}")
+      person.errors.add("value", "#{value} is a rental number. #{RacingAssociation.current.short_name} rental numbers: #{RacingAssociation.current.rental_numbers}")
       return false
     end
 
     return true if person.nil?
 
     if new_record?
-      existing_numbers = RaceNumber.
-        where(value: value, discipline_id: discipline_id, number_issuer_id: number_issuer_id, year: year, person_id: person_id).
-        count
+      existing_numbers = RaceNumber
+                         .where(value: value, discipline_id: discipline_id, number_issuer_id: number_issuer_id, year: year, person_id: person_id)
+                         .count
     else
-      existing_numbers = RaceNumber.
-        where(value: value, discipline_id: discipline_id, number_issuer_id: number_issuer_id, year: year, person_id: person_id).
-        where.not(id: id).
-        count
+      existing_numbers = RaceNumber
+                         .where(value: value, discipline_id: discipline_id, number_issuer_id: number_issuer_id, year: year, person_id: person_id)
+                         .where.not(id: id)
+                         .count
     end
 
     unless existing_numbers == 0
       person_id = person.id
-      errors.add('value', "Number '#{value}' can't be used for #{person.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number.")
-      person.errors.add('value', "Number '#{value}' can't be used for #{person.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number.")
+      errors.add("value", "Number '#{value}' can't be used for #{person.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number.")
+      person.errors.add("value", "Number '#{value}' can't be used for #{person.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number.")
       if existing_numbers.size > 1
         logger.warn("Race number '#{value}' found #{existing_numbers} times for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, person #{person_id}")
       end

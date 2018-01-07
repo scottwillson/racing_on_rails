@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 namespace :db do
   desc "Refreshes your local development environment from {stage}"
-  task data_refresh: [ :database_dump, :remote_db_download, :data_load, :remote_db_cleanup ]
+  task data_refresh: %i[database_dump remote_db_download data_load remote_db_cleanup]
 
   # Dump the current database to a MySQL file
   task :database_dump do
@@ -40,7 +42,7 @@ namespace :db do
     end
   end
 
-   # Cleans up data dump file
+  # Cleans up data dump file
   task :remote_db_cleanup do
     on roles(:db) do
       execute :rm, "-f db/#{fetch(:stage)}.sql.bz2"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Competitions
@@ -7,7 +9,7 @@ module Competitions
       OregonWomensPrestigeTeamSeries.calculate!
       competition = OregonWomensPrestigeTeamSeries.find_for_year
       assert_equal 1, competition.races.count, "races"
-      assert_same_elements [ "Team"], competition.races.map(&:name), "category names"
+      assert_same_elements ["Team"], competition.races.map(&:name), "category names"
       assert competition.races.first.results.empty?, "should have no results"
     end
 
@@ -54,7 +56,7 @@ module Competitions
       OregonWomensPrestigeTeamSeries.calculate!
 
       race = competition.races.find { |r| r.category.name == "Team" }
-      assert_equal [ 90, 5, 1 ], race.results.sort.map(&:points), "points for Team race"
+      assert_equal [90, 5, 1], race.results.sort.map(&:points), "points for Team race"
     end
 
     test "only count best team TTT result" do
@@ -81,7 +83,7 @@ module Competitions
       OregonWomensPrestigeTeamSeries.calculate!
 
       race = competition.races.find { |r| r.category.name == "Team" }
-      assert_equal [ 21, 18.75 ], race.results.sort.map(&:points), "points for Team race"
+      assert_equal [21, 18.75], race.results.sort.map(&:points), "points for Team race"
     end
   end
 end

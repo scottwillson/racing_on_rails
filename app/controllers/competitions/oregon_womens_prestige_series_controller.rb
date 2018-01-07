@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   class OregonWomensPrestigeSeriesController < ApplicationController
     def show
@@ -5,17 +7,17 @@ module Competitions
       @team_event = OregonWomensPrestigeTeamSeries.find_for_year(@year) || OregonWomensPrestigeTeamSeries.new
 
       request.session_options[:skip] = true
-      if !@event.new_record?
-        @event = OregonWomensPrestigeSeries.
-                  includes(competition_event_memberships: :event).
-                  includes(races: [ :category, :results ]).
-                  find(@event.id)
+      unless @event.new_record?
+        @event = OregonWomensPrestigeSeries
+                 .includes(competition_event_memberships: :event)
+                 .includes(races: %i[category results])
+                 .find(@event.id)
       end
 
-      if !@team_event.new_record?
+      unless @team_event.new_record?
         @team_event = OregonWomensPrestigeTeamSeries
-          .includes(races: [ :category, :results ])
-          .find(@team_event.id)
+                      .includes(races: %i[category results])
+                      .find(@team_event.id)
       end
     end
   end

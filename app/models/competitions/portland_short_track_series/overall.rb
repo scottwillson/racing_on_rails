@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Competitions
   module PortlandShortTrackSeries
     class Overall < Competitions::Overall
       include PortlandShortTrackSeries::Common
 
-      def maximum_events(race)
+      def maximum_events(_race)
         7
       end
 

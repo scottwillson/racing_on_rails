@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DuplicatePerson
   include ActiveModel::Model
 
@@ -14,33 +16,33 @@ class DuplicatePerson
 
   def self.all_grouped_by_name(limit)
     names = new_names(duplicate_names, limit)
-    Person.includes(:team, {versions: :user}).where(name: names).group_by { |p| p.name.downcase }
+    Person.includes(:team, versions: :user).where(name: names).group_by { |p| p.name.downcase }
   end
 
   def self.duplicate_names
-    Person.
-      where(other_people_with_same_name: false).
-      where("name is not null").
-      where("name !=''").
-      where("name !='?'").
-      group(:name).
-      having("count(name) > 1").
-      pluck(:name).
-      map(&:downcase).
-      uniq
+    Person
+      .where(other_people_with_same_name: false)
+      .where("name is not null")
+      .where("name !=''")
+      .where("name !='?'")
+      .group(:name)
+      .having("count(name) > 1")
+      .pluck(:name)
+      .map(&:downcase)
+      .uniq
   end
 
   def self.new_names(names, limit)
-    Person.
-      where(name: names).
-      order("created_at desc").
-      pluck(:name).
-      map(&:downcase).
-      first(limit)
+    Person
+      .where(name: names)
+      .order("created_at desc")
+      .pluck(:name)
+      .map(&:downcase)
+      .first(limit)
   end
 
   def self.sort_people_by_created_at(people)
-    _people = Hash.new
+    _people = {}
     people.each do |name, people_for_name|
       _people[name] = people_for_name.sort_by(&:created_at).reverse
     end
@@ -48,7 +50,7 @@ class DuplicatePerson
   end
 
   def self.sort_names_by_created_at(people)
-    people.sort_by { |name, people_for_name| people_for_name.first.created_at }
+    people.sort_by { |_name, people_for_name| people_for_name.first.created_at }
   end
 
   def self.flatten_people_groups(people)

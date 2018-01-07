@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../test_helper", __FILE__)
 
 module Events
@@ -15,9 +17,9 @@ module Events
       editor = FactoryBot.create(:person)
       event_1.editors << editor
 
-      assert_equal [ event_1 ], Event.editable_by(event_1.promoter), "Promoter can edit own events"
-      assert_equal [ event_2 ], Event.editable_by(event_2.promoter), "Promoter can edit own events"
-      assert_equal [ event_1 ], Event.editable_by(editor), "Editor can edit own events"
+      assert_equal [event_1], Event.editable_by(event_1.promoter), "Promoter can edit own events"
+      assert_equal [event_2], Event.editable_by(event_2.promoter), "Promoter can edit own events"
+      assert_equal [event_1], Event.editable_by(editor), "Editor can edit own events"
 
       assert event_1.editable_by?(event_1.promoter)
       assert !event_1.editable_by?(event_2.promoter)

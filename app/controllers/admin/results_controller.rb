@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   # Allowed in-place editing added manually for each Result field. Dynamic Results columns will not work.
   # All succcessful edit expire cache.
@@ -55,11 +57,11 @@ module Admin
           @result.update! params[:name] => params[:value]
           expire_cache
 
-          if @result.respond_to?("#{params[:name]}_s")
-            text = @result.send("#{params[:name]}_s")
-          else
-            text = @result.send(params[:name])
-          end
+          text = if @result.respond_to?("#{params[:name]}_s")
+                   @result.send("#{params[:name]}_s")
+                 else
+                   @result.send(params[:name])
+                 end
 
           render plain: text
         end

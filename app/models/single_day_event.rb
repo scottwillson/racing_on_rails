@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Event that takes place on one day only
 #
 # Notifies parent event on save or destroy
@@ -20,15 +22,11 @@ class SingleDayEvent < Event
   end
 
   def missing_parent
-    if parent_id.nil?
-      MultiDayEvent.same_name_and_year(self)
-    else
-      nil
-    end
+    MultiDayEvent.same_name_and_year(self) if parent_id.nil?
   end
 
   def friendly_class_name
-    'Single Day Event'
+    "Single Day Event"
   end
 
   def parent_not_single_day_event

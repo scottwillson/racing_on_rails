@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../../test_case"
 require_relative "../../../../lib/human_date/parser"
 require_relative "../../../../app/models/events/dates"
@@ -5,8 +7,7 @@ require_relative "../../../../app/models/events/dates"
 # :stopdoc:
 class Events::DatesTest < Ruby::TestCase
   class TestEvent
-    def self.before_save(symbol)
-    end
+    def self.before_save(symbol); end
 
     include ::Events::Dates
 
@@ -18,15 +19,15 @@ class Events::DatesTest < Ruby::TestCase
     event = TestEvent.new
 
     event.date = Date.new(2006, 9, 9)
-    assert_equal(' 9/9 ', event.short_date, 'Short date')
+    assert_equal(" 9/9 ", event.short_date, "Short date")
 
     event.date = Date.new(2006, 9, 10)
-    assert_equal(' 9/10', event.short_date, 'Short date')
+    assert_equal(" 9/10", event.short_date, "Short date")
 
     event.date = Date.new(2006, 10, 9)
-    assert_equal('10/9 ', event.short_date, 'Short date')
+    assert_equal("10/9 ", event.short_date, "Short date")
 
     event.date = Date.new(2006, 10, 10)
-    assert_equal('10/10', event.short_date, 'Short date')
+    assert_equal("10/10", event.short_date, "Short date")
   end
 end

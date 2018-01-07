@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   module BlindDateAtTheDairy
     module Common
@@ -52,13 +54,13 @@ module Competitions
             "Women 1/2",
             "Women 3",
             "Women 4",
-            "Women 5",
+            "Women 5"
           ]
         end
       end
 
       def point_schedule
-        [ 15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+        [15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
       end
 
       # Only members can score points?

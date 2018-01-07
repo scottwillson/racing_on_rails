@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../../../test_case"
 require "active_support/core_ext/string/inflections"
 require "tabular"
@@ -5,7 +7,7 @@ require_relative "../../../../../app/helpers/results/renderers/default_result_re
 
 module Results
   module Renderers
-  # :stopdoc:
+    # :stopdoc:
     class DefaultColumnRendererTest < Ruby::TestCase
       class ColumnStub
         attr_reader :key

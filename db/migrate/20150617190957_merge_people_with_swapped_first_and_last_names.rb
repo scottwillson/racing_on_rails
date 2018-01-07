@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MergePeopleWithSwappedFirstAndLastNames < ActiveRecord::Migration
   def change
     Person.current = RacingAssociation.current.person
@@ -5,7 +7,7 @@ class MergePeopleWithSwappedFirstAndLastNames < ActiveRecord::Migration
     Person.transaction do
       Person.where.not(first_name: nil).where.not(last_name: nil).where.not(license: nil).find_each do |person|
         if (person.first_name.size > 3 || person.last_name.size > 3) &&
-          Person.where(first_name: person.last_name).where(last_name: person.first_name).exists?
+           Person.where(first_name: person.last_name).where(last_name: person.first_name).exists?
 
           Person.where(first_name: person.last_name).where(last_name: person.first_name).each do |to_merge|
             if to_merge.license.blank? &&

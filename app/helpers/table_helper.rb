@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Build HTML table with standard structure. Wrap caption div + table in div container for consistent captions across browsers.
 # Show "None" if empty content. Add sortable headers.
 #
@@ -10,7 +12,7 @@ module TableHelper
   # * columns. Default 1. If insert_header is true, insert +columns+ <th />
   # * insert_header. Insert <th/> for "bar" on top of tables
   def table(options = {}, &block)
-    # TODO Use merge or something
+    # TODO: Use merge or something
     options[:caption] = nil unless options[:caption]
     options[:new_action] = nil unless options[:new_action]
     options[:id] = nil unless options[:id]
@@ -19,7 +21,7 @@ module TableHelper
     options.delete(:class)
     options[:collection] = options[:collection]
     options[:columns] = options[:columns] || 1
-    options[:insert_header] = nil unless (options[:insert_header] && RacingAssociation.current.always_insert_table_headers?)
+    options[:insert_header] = nil unless options[:insert_header] && RacingAssociation.current.always_insert_table_headers?
     block_to_partial "table/base", options, &block
   end
 
@@ -35,20 +37,20 @@ module TableHelper
 
     locals = { attribute: _attribute }
     options = options.extract_options!
-    if options.has_key?(:sort_by)
-      locals[:sort_by] = [options[:sort_by]].flatten.compact
-    else
-      locals[:sort_by] = [_attribute].flatten
-    end
+    locals[:sort_by] = if options.key?(:sort_by)
+                         [options[:sort_by]].flatten.compact
+                       else
+                         [_attribute].flatten
+                       end
     locals[:style_class] = options[:class] || _attribute
-    locals[:title] = options[:title] || (_attribute.titlecase  if _attribute)
+    locals[:title] = options[:title] || (_attribute&.titlecase)
     locals[:sort_params] = options[:sort_params] || {}
 
-    if params[:sort_by] == _attribute && params[:sort_direction] == "asc"
-      locals[:sort_direction] = "desc"
-    else
-      locals[:sort_direction] = "asc"
-    end
+    locals[:sort_direction] = if params[:sort_by] == _attribute && params[:sort_direction] == "asc"
+                                "desc"
+                              else
+                                "asc"
+                              end
 
     render "table/th", locals
   end

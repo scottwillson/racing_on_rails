@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../test_helper"
 
 # :stopdoc:
@@ -8,7 +10,8 @@ class PeopleHelperTest < ActionView::TestCase
     current_person = person
     assert_equal(
       edit_person_path(person, mobile: nil),
-      account_permission_return_to(person, current_person))
+      account_permission_return_to(person, current_person)
+    )
   end
 
   test "edit different person" do
@@ -16,7 +19,8 @@ class PeopleHelperTest < ActionView::TestCase
     current_person = FactoryBot.create(:person)
     assert_equal(
       edit_person_path(person, mobile: nil),
-      account_permission_return_to(person, current_person))
+      account_permission_return_to(person, current_person)
+    )
   end
 
   test "administrator editing other's account" do
@@ -24,7 +28,8 @@ class PeopleHelperTest < ActionView::TestCase
     current_person = FactoryBot.create(:administrator)
     assert_equal(
       edit_admin_person_path(person, mobile: nil),
-      account_permission_return_to(person, current_person))
+      account_permission_return_to(person, current_person)
+    )
   end
 
   test "administrator editing own account" do
@@ -32,7 +37,8 @@ class PeopleHelperTest < ActionView::TestCase
     current_person = person
     assert_equal(
       edit_admin_person_path(person, mobile: nil),
-      account_permission_return_to(person, current_person))
+      account_permission_return_to(person, current_person)
+    )
   end
 
   test "new person" do

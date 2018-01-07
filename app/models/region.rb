@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Region < ActiveRecord::Base
   include Regions::FriendlyParam
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 load "deploy"
 load "config/deploy"
 load "config/db"

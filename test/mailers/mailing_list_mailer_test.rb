@@ -1,4 +1,3 @@
-# coding: utf-8
 # frozen_string_literal: true
 
 require_relative "../test_helper"
@@ -138,15 +137,15 @@ class MailingListMailerTest < ActionMailer::TestCase
   test "receive html" do
     mailing_list = FactoryBot.create(:mailing_list, name: "obra", friendly_name: "OBRA Chat", subject_line_prefix: "OBRA Chat")
     assert_difference "Post.count", 1 do
-          MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/html.eml"))
+      MailingListMailer.receive(File.read("#{Rails.root}/test/fixtures/email/html.eml"))
 
-          post_from_db = Post.order(:date).last
-          assert_equal("Thunderbird HTML", post_from_db.subject, "Subject")
-          assert_equal("Scott Willson", post_from_db.from_name, "from")
-          assert_equal("scott.willson@gmail.com", post_from_db.from_email, "from_email")
-          assert_equal("Sat Jan 28 10:19:04 PST 2006", post_from_db.date.strftime("%a %b %d %I:%M:%S PST %Y"), "date")
-          assert_equal(mailing_list, post_from_db.mailing_list, "mailing_list")
-          expected_body = %Q{<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+      post_from_db = Post.order(:date).last
+      assert_equal("Thunderbird HTML", post_from_db.subject, "Subject")
+      assert_equal("Scott Willson", post_from_db.from_name, "from")
+      assert_equal("scott.willson@gmail.com", post_from_db.from_email, "from_email")
+      assert_equal("Sat Jan 28 10:19:04 PST 2006", post_from_db.date.strftime("%a %b %d %I:%M:%S PST %Y"), "date")
+      assert_equal(mailing_list, post_from_db.mailing_list, "mailing_list")
+      expected_body = %(<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
   <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
@@ -177,8 +176,8 @@ class MailingListMailerTest < ActionMailer::TestCase
 </table>
 <br>
 </body>
-</html>}
-          assert_equal(expected_body, post_from_db.body, "body")
+</html>)
+      assert_equal(expected_body, post_from_db.body, "body")
     end
   end
 end

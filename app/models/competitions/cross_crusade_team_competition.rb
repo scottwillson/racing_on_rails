@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module Competitions
   # Team's top ten results for each Event. Last-place points penalty if team has fewer than ten finishers.
   class CrossCrusadeTeamCompetition < Competition
-    validates_presence_of :parent
+    validates :parent, presence: true
     after_create :add_source_events
     before_create :set_notes, :set_name
 
@@ -10,7 +12,7 @@ module Competitions
         transaction do
           series = Series.where(name: "River City Bicycles Cyclocross Crusade").year(year).first
 
-          if series && series.any_results_including_children?
+          if series&.any_results_including_children?
             team_competition = series.child_competitions.detect { |c| c.is_a? CrossCrusadeTeamCompetition }
             unless team_competition
               team_competition = new(parent_id: series.id)
@@ -27,7 +29,7 @@ module Competitions
     end
 
     def race_category_names
-      [ "Team" ]
+      ["Team"]
     end
 
     def category_names
@@ -93,7 +95,7 @@ module Competitions
       result_categories_by_race[race.category]
     end
 
-    def categories_clause(race)
+    def categories_clause(_race)
       Category.where.not("categories.name like ? or (ability_begin = 3 and ability_end = 5)", "%elite%")
     end
 

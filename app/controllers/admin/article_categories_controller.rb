@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   # Edit categories for articles for homepage. Unrelated to Event Categories.
   class ArticleCategoriesController < Admin::AdminController
@@ -22,7 +24,7 @@ module Admin
       @article_category = ArticleCategory.new(article_category_params)
 
       if @article_category.save
-        flash[:notice] = 'ArticleCategory was successfully created.'
+        flash[:notice] = "ArticleCategory was successfully created."
         redirect_to admin_article_categories_url
       else
         render :edit
@@ -33,7 +35,7 @@ module Admin
       @article_category = ArticleCategory.find(params[:id])
 
       if @article_category.update(article_category_params)
-        flash[:notice] = 'ArticleCategory was successfully updated.'
+        flash[:notice] = "ArticleCategory was successfully updated."
         redirect_to(admin_article_categories_url)
       else
         render :edit
@@ -47,13 +49,11 @@ module Admin
       redirect_to admin_article_categories_url
     end
 
-
     protected
 
     def assign_current_admin_tab
       @current_admin_tab = "Article Categories"
     end
-
 
     private
 

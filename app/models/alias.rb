@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Alternate name for a Person or Team. Example: Erik Tonkin might have aliases of 'Eric Tonkin,' and 'E. Tonkin'
 # Must belong to either a Person or Team, but not both. Used by Result when importing results from Excel.
 # Aliases cannot be the same ("shadow") as Person#name or Team#name.
@@ -6,7 +8,7 @@ class Alias < ActiveRecord::Base
   include Export::Aliases
   belongs_to :aliasable, polymorphic: true
 
-  validates_presence_of :name
+  validates :name, presence: true
   validate :cannot_shadow
 
   def self.find_all_people_by_name(name)
@@ -18,7 +20,7 @@ class Alias < ActiveRecord::Base
   end
 
   def person
-    self.aliasable
+    aliasable
   end
 
   def person=(person)
@@ -26,7 +28,7 @@ class Alias < ActiveRecord::Base
   end
 
   def team
-    self.aliasable
+    aliasable
   end
 
   def team=(team)
@@ -36,7 +38,6 @@ class Alias < ActiveRecord::Base
   def to_s
     "<#{self.class.name} #{self[:id]} #{self[:name]} #{self[:person_id]} #{self[:team_id]}>"
   end
-
 
   private
 

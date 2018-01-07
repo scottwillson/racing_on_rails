@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   # MBRA BAT scoring rules: http://www.montanacycling.net/documents/racers/MBRA%20BAR-BAT.pdf
   class MbraTeamBar < Competition
@@ -11,16 +13,15 @@ module Competitions
 
           ::Discipline.find_all_bar.each do |discipline|
             bar = MbraTeamBar.where(date: date, discipline: discipline.name).first
-            unless bar
-              MbraTeamBar.create!(
-                name: "#{year} #{discipline.name} BAT",
-                date: date,
-                discipline: discipline.name
-              )
-            end
+            next if bar
+            MbraTeamBar.create!(
+              name: "#{year} #{discipline.name} BAT",
+              date: date,
+              discipline: discipline.name
+            )
           end
 
-          MbraTeamBar.where(date: date).each do |bar|
+          MbraTeamBar.where(date: date).find_each do |bar|
             bar.set_date
             bar.delete_races
             bar.create_races
@@ -34,30 +35,29 @@ module Competitions
     end
 
     # Event with bar points of zero aren't counted. But no bonus/multiplier even if event BAR points are set to 2 or 3.
-    def after_source_results(results, race)
+    def after_source_results(results, _race)
       results.each do |result|
         bar_points = result["race_bar_points"] || result["event_bar_points"] || result["parent_bar_points"] || result["parent_parent_bar_points"]
-        if bar_points.nil? || bar_points >= 1
-          result["multiplier"] = 1
-        else
-          result["multiplier"] = 0
-        end
+        result["multiplier"] = if bar_points.nil? || bar_points >= 1
+                                 1
+                               else
+                                 0
+                               end
       end
 
       teams_who_promote_events = Event.year(year).select(:team_id).where.not(team_id: nil).uniq.pluck(:team_id)
       results.select do |result|
-        result["participant_id"] &&
-        result["participant_id"].in?(teams_who_promote_events)
+        result["participant_id"]&.in?(teams_who_promote_events)
       end
     end
 
     def source_results_query(race)
-      super.
-      where(bar: true).
-      where("events.discipline in (:disciplines)
+      super
+        .where(bar: true)
+        .where("events.discipline in (:disciplines)
             or (events.discipline is null and parents_events.discipline in (:disciplines))
             or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (:disciplines))",
-            disciplines: disciplines_for(race))
+               disciplines: disciplines_for(race))
     end
 
     def category_names
@@ -73,7 +73,7 @@ module Competitions
     end
 
     def place_bonus
-      [ 6, 3, 1 ]
+      [6, 3, 1]
     end
 
     def points_schedule_from_field_size?
@@ -93,7 +93,7 @@ module Competitions
     end
 
     def place_bonus
-      [ 6, 3, 1 ]
+      [6, 3, 1]
     end
 
     def points_schedule_from_field_size?
@@ -101,7 +101,7 @@ module Competitions
     end
 
     def friendly_name
-      'MBRA BAT'
+      "MBRA BAT"
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Homepage Article Category
 class ArticleCategory < ActiveRecord::Base
   acts_as_tree order: "position"

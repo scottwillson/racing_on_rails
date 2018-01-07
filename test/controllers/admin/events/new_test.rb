@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -13,9 +15,9 @@ module Admin
       end
 
       test "new single day event" do
-        get(:new, event: { date: '2008-01-01' })
+        get(:new, event: { date: "2008-01-01" })
         assert_response(:success)
-        assert_template('admin/events/edit')
+        assert_template("admin/events/edit")
         assert_not_nil(assigns["event"], "Should assign event")
         assert_not_nil(assigns["disciplines"], "Should assign disciplines")
         assert(assigns["event"].is_a?(Event), "Should default to SingleDayEvent")
@@ -27,7 +29,7 @@ module Admin
         Timecop.freeze Time.zone.local(2009, 12, 28) do
           get(:new)
           assert_response(:success)
-          assert_template('admin/events/edit')
+          assert_template("admin/events/edit")
           assert_not_nil(assigns["event"], "Should assign event")
           assert_not_nil(assigns["disciplines"], "Should assign disciplines")
           assert(assigns["event"].is_a?(Event), "Should default to SingleDayEvent")
@@ -40,7 +42,7 @@ module Admin
         parent = SingleDayEvent.create!
         get(:new, event: { parent_id: parent.to_param, type: "Event" })
         assert_response(:success)
-        assert_template('admin/events/edit')
+        assert_template("admin/events/edit")
         assert_not_nil(assigns["event"], "Should assign event")
         assert(assigns["event"].is_a?(Event), "Should default to generic Event")
         assert(!assigns["event"].is_a?(SingleDayEvent), "Should default to generic Event")

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Events
   module Comparison
     extend ActiveSupport::Concern
@@ -5,33 +7,21 @@ module Events
     include Comparable
 
     def ==(other)
-      if self.equal?(other)
-        return true
-      end
+      return true if equal?(other)
 
-      if !other.respond_to?(:id) || !other.respond_to?(:new_record?)
-        return false
-      end
+      return false if !other.respond_to?(:id) || !other.respond_to?(:new_record?)
 
-      if new_record? || other.new_record?
-        return false
-      end
+      return false if new_record? || other.new_record?
 
       id == other.id
     end
 
     def eql?(other)
-      if self.equal?(other)
-        return true
-      end
+      return true if equal?(other)
 
-      if !other.respond_to?(:id) || !other.respond_to?(:new_record?)
-        return false
-      end
+      return false if !other.respond_to?(:id) || !other.respond_to?(:new_record?)
 
-      if new_record? || other.new_record?
-        return false
-      end
+      return false if new_record? || other.new_record?
 
       id == other.id
     end
@@ -49,9 +39,7 @@ module Events
         return 1
       end
 
-      unless new_record? || other.new_record?
-        return id <=> other.id
-      end
+      return id <=> other.id unless new_record? || other.new_record?
 
       0
     end

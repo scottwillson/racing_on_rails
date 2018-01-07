@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   class OregonWomensPrestigeTeamSeries < Competition
     include Competitions::OregonWomensPrestigeSeriesModules::Common
@@ -7,7 +9,7 @@ module Competitions
     end
 
     def category_names
-      [ "Team" ]
+      ["Team"]
     end
 
     def source_events?
@@ -26,11 +28,11 @@ module Competitions
       true
     end
 
-    def maximum_events(race)
+    def maximum_events(_race)
       5
     end
 
-    def after_source_results(results, race)
+    def after_source_results(results, _race)
       results = results.reject do |result|
         result["category_id"].in?(cat_4_category_ids) && result["event_id"].in?(cat_123_only_event_ids)
       end
@@ -40,10 +42,10 @@ module Competitions
       results
     end
 
-    def categories_for(race)
+    def categories_for(_race)
       if OregonWomensPrestigeSeries.find_for_year
         categories = Category.where(name: OregonWomensPrestigeSeries.find_for_year.category_names)
-        categories = categories + categories.map(&:descendants).to_a.flatten
+        categories += categories.map(&:descendants).to_a.flatten
       else
         []
       end

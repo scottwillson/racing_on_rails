@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   class OregonCupController < ApplicationController
     def index

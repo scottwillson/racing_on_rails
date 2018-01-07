@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "place"
 require_relative "points"
 require_relative "rules"
@@ -74,7 +76,7 @@ module Competitions
         scores  = map_to_scores    results, rules
         scores  = select_scores    scores,  rules
         results = map_to_results   scores,  rules
-                  apply_place      results, rules
+        apply_place      results, rules
       end
 
       # Create Struct::CalculatorResults from Hashes
@@ -90,14 +92,12 @@ module Competitions
 
       def self.apply_team_sizes(results, rules)
         # No point in figuring team size if just reusing points
-        if rules[:use_source_result_points]
-          return results
-        end
+        return results if rules[:use_source_result_points]
 
         # Use race and place as a key: Array of race_id and place_id
-        results_by_race_and_place = Hash.new
-        results.group_by { |r| [ r.race_id, r.place ] }.
-        each { |key, results_with_same_place| results_by_race_and_place[key] = results_with_same_place.size }
+        results_by_race_and_place = {}
+        results.group_by { |r| [r.race_id, r.place] }
+               .each { |key, results_with_same_place| results_by_race_and_place[key] = results_with_same_place.size }
 
         # For efficiency, calculate which races are team races outside of loop
         team_races = team_races(results)
@@ -112,7 +112,7 @@ module Competitions
             merge_struct result, team_size: 1
 
           else
-            merge_struct result, team_size: results_by_race_and_place[[ result.race_id, result.place ]]
+            merge_struct result, team_size: results_by_race_and_place[[result.race_id, result.place]]
           end
         end
       end
@@ -131,12 +131,12 @@ module Competitions
             new_score.upgrade          = result.upgrade
           end
         end +
-        add_missing_result_penalty_scores(results, rules)
+          add_missing_result_penalty_scores(results, rules)
       end
 
       # Create competion results as Array of Struct::CalculatorResults from Struct::CalculatorScores.
-      def self.map_to_results(scores, rules)
-        scores.group_by { |r| r.participant_id }.map do |participant_id, person_scores|
+      def self.map_to_results(scores, _rules)
+        scores.group_by(&:participant_id).map do |participant_id, person_scores|
           Struct::CalculatorResult.new.tap do |new_result|
             new_result.participant_id = participant_id
             new_result.points         = person_scores.map(&:points).inject(:+)
@@ -165,14 +165,12 @@ module Competitions
       def self.add_missing_result_penalty_scores(results, rules)
         return [] if rules[:missing_result_penalty].nil?
 
-        results.
-        group_by(&:participant_id).
-        map do |participant_id, participant_results|
-          if missing_results?(participant_results, rules)
-            new_missing_score(participant_results, participant_id, rules)
-          end
-        end.
-        compact
+        results
+          .group_by(&:participant_id)
+          .map do |participant_id, participant_results|
+          new_missing_score(participant_results, participant_id, rules) if missing_results?(participant_results, rules)
+        end
+          .compact
       end
 
       def self.new_missing_score(results, participant_id, rules)

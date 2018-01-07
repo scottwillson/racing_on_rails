@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
 module RacingOnRails
   module VestalVersions
     module Versioned
       extend ActiveSupport::Concern
 
       included do
-        versioned except: [ :current_login_at,
-                            :current_login_ip,
-                            :last_login_at,
-                            :last_login_ip,
-                            :login_count,
-                            :password_salt,
-                            :perishable_token,
-                            :persistence_token,
-                            :single_access_token ],
+        versioned except: %i[current_login_at
+                             current_login_ip
+                             last_login_at
+                             last_login_ip
+                             login_count
+                             password_salt
+                             perishable_token
+                             persistence_token
+                             single_access_token],
                   initial_version: true
         before_save :set_updated_by
       end
@@ -42,13 +44,13 @@ module RacingOnRails
       end
 
       def created_from_result?
-        created_by.present? && created_by.kind_of?(::Event)
+        created_by.present? && created_by.is_a?(::Event)
       end
 
       def updated_after_created?
         created_at && updated_at && ((updated_at - created_at) > 1.hour)
       end
-      
+
       def never_updated?
         !updated_after_created?
       end

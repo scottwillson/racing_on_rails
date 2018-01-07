@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -22,6 +24,6 @@ class MailingListsControllerTest < ActionController::TestCase
     get(:confirm_private_reply, mailing_list_id: obra_race.id)
     assert_response(:success)
     assert_template("mailing_lists/confirm_private_reply")
-    assert_equal(obra_race, assigns["mailing_list"], 'Should assign mailing list')
+    assert_equal(obra_race, assigns["mailing_list"], "Should assign mailing list")
   end
 end

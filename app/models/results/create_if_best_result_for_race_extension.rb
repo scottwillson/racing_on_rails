@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Results
   module CreateIfBestResultForRaceExtension
     def create_if_best_result_for_race(attributes)
@@ -19,7 +21,7 @@ module Results
 
     def same_race?(score, result)
       score.source_result.person &&
-      score.source_result.race_id  == result.race_id
+        score.source_result.race_id == result.race_id
     end
 
     def same_person?(score, result)

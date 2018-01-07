@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module Admin::EventsHelper
-  LONG_DAYS_OF_WEEK = %w{ Sunday Monday Tuesday Wednesday Thursday Friday Saturday } unless defined?(LONG_DAYS_OF_WEEK)
+  LONG_DAYS_OF_WEEK = %w[ Sunday Monday Tuesday Wednesday Thursday Friday Saturday ].freeze unless defined?(LONG_DAYS_OF_WEEK)
 
   # Sunday, Monday, …
   def long_day_of_week(index)
@@ -19,7 +21,7 @@ module Admin::EventsHelper
 
   # Build links like Cascade Classic: Mt. Bachelor Stage
   def link_to_parents(event)
-    html = ""
+    html = "".dup
     event.ancestors.reverse.each do |e|
       if e.parent
         html << link_to(truncate(e.name, length: 40), edit_admin_event_path(e), class: "obvious")

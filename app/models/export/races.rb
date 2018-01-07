@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Export
   module Races
     include Export::Base
@@ -24,7 +26,7 @@ module Export
     end
 
     def Race.export_data_sql
-      "SELECT #{Race.export_columns.join(",")}
+      "SELECT #{Race.export_columns.join(',')}
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"'
        LINES TERMINATED BY '\\n'
@@ -32,9 +34,9 @@ module Export
     end
 
     def Race.export_columns
-      [
-        "id", "event_id", "category_id", "city", "state", "distance",
-        "field_size", "laps", "time", "finishers"
+      %w[
+        id event_id category_id city state distance
+        field_size laps time finishers
       ]
     end
   end

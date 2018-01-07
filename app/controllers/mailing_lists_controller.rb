@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MailingListsController < ApplicationController
   def index
     @mailing_lists = MailingList.is_public

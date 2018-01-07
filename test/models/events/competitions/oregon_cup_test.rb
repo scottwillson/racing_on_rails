@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../../test_helper", __FILE__)
 
 module Competitions
@@ -64,7 +66,7 @@ module Competitions
         OregonCup.calculate!(2004)
       end
       or_cup = OregonCup.find_for_year(2004)
-      assert_not_nil(or_cup, 'Should have Oregon Cup for 2004')
+      assert_not_nil(or_cup, "Should have Oregon Cup for 2004")
       assert_equal(1, OregonCup.count, "Oregon Cup events after calculate!")
 
       or_cup.races.sort_by(&:name)

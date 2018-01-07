@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -33,7 +35,7 @@ class PostsControllerTest < ActionController::TestCase
     post = assigns["post"]
     assert_not_nil post, "Should assign post"
     assert_equal original_post, assigns["reply_to"], "Should assign reply_to"
-    assert_equal "Re: Only OBRA Race Message", post.subject, 'Prepopulated subject'
+    assert_equal "Re: Only OBRA Race Message", post.subject, "Prepopulated subject"
     assert_equal obra_race, post.mailing_list, "Post's mailing list"
     assert_select "input[type='text'][name='post[subject]']"
     assert_select "input[type='text'][name='post[from_email]']"
@@ -124,15 +126,15 @@ class PostsControllerTest < ActionController::TestCase
     body = "Barely used"
 
     post(:create,
-        mailing_list_id: obra_chat.to_param,
-        reply_to_id: '',
-        post: {
-          subject: subject,
-          from_name: from_name,
-          from_email: from_email,
-          body: body},
-        commit: "Post"
-    )
+         mailing_list_id: obra_chat.to_param,
+         reply_to_id: "",
+         post: {
+           subject: subject,
+           from_name: from_name,
+           from_email: from_email,
+           body: body
+         },
+         commit: "Post")
 
     assert_not_nil flash[:notice]
     assert_redirected_to mailing_list_confirm_path(obra_chat)
@@ -155,7 +157,7 @@ class PostsControllerTest < ActionController::TestCase
     reply_to_post = Post.create!(
       mailing_list: obra_chat,
       subject: "Schedule Changes",
-      date: Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
+      date: Time.zone.local(2004, 12, 31, 23, 59, 59, 999_999),
       from_name: "Scout",
       from_email: "scout@obra.org",
       body: "This is a test message."
@@ -163,15 +165,15 @@ class PostsControllerTest < ActionController::TestCase
 
     assert_no_difference "Post.count" do
       post(:create,
-          mailing_list_id: obra_chat.id,
-          post: {
-            subject: subject,
-            from_name: from_name,
-            from_email: from_email,
-            body: body},
-          reply_to_id: reply_to_post.id,
-          commit: "Post"
-      )
+           mailing_list_id: obra_chat.id,
+           post: {
+             subject: subject,
+             from_name: from_name,
+             from_email: from_email,
+             body: body
+           },
+           reply_to_id: reply_to_post.id,
+           commit: "Post")
     end
 
     assert_not_nil flash[:notice]
@@ -183,7 +185,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal([from_email], delivered_mail.from, "From email")
     assert_equal(from_name, delivered_mail[:from].display_names.first, "From Name")
     assert_equal_dates(Time.zone.now.utc, delivered_mail.date.utc, "Date")
-    assert_equal(['scout@obra.org'], delivered_mail.to, "Recipient")
+    assert_equal(["scout@obra.org"], delivered_mail.to, "Recipient")
   end
 
   test "post invalid reply" do
@@ -192,29 +194,29 @@ class PostsControllerTest < ActionController::TestCase
     reply_to_post = Post.create!(
       mailing_list: obra_chat,
       subject: "Schedule Changes",
-      date: Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
+      date: Time.zone.local(2004, 12, 31, 23, 59, 59, 999_999),
       from_name: "Scout",
       from_email: "scout@obra.org",
       body: "This is a test message."
     )
 
     post(:create,
-        mailing_list_id: obra_chat.to_param,
-        post: {
-          subject: "Re: #{subject}",
-          from_name: "",
-          from_email: "",
-          body: ""},
-        reply_to_id: reply_to_post.id,
-        commit: "Send"
-    )
+         mailing_list_id: obra_chat.to_param,
+         post: {
+           subject: "Re: #{subject}",
+           from_name: "",
+           from_email: "",
+           body: ""
+         },
+         reply_to_id: reply_to_post.id,
+         commit: "Send")
 
     assert_template("posts/new")
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
     post = assigns["post"]
     assert_not_nil(post, "Should assign post")
     assert_equal(reply_to_post, assigns["reply_to"], "Should assign reply_to")
-    assert_equal("Re: #{subject}", post.subject, 'Prepopulated subject')
+    assert_equal("Re: #{subject}", post.subject, "Prepopulated subject")
     assert_equal(obra_chat, post.mailing_list, "Post's mailing list")
   end
 
@@ -229,15 +231,15 @@ class PostsControllerTest < ActionController::TestCase
 
     Mail::Message.any_instance.expects(:deliver).raises(Net::SMTPFatalError, "502 5.5.2 Error: command not recognized")
     post(:create,
-        mailing_list_id: obra_chat.to_param,
-        reply_to_id: '',
-        post: {
-          subject: subject,
-          from_name: from_name,
-          from_email: from_email,
-          body: body},
-        commit: "Post"
-    )
+         mailing_list_id: obra_chat.to_param,
+         reply_to_id: "",
+         post: {
+           subject: subject,
+           from_name: from_name,
+           from_email: from_email,
+           body: body
+         },
+         commit: "Post")
 
     assert_not_nil flash[:warn]
     assert_response :success
@@ -256,15 +258,15 @@ class PostsControllerTest < ActionController::TestCase
 
     Mail::Message.any_instance.expects(:deliver).raises(Net::SMTPServerBusy, "450 4.1.8 <wksryz@rxrzdj.com>: Sender address rejected: Domain not found")
     post(:create,
-        mailing_list_id: obra_chat.to_param,
-        reply_to_id: '',
-        post: {
-          subject: subject,
-          from_name: from_name,
-          from_email: from_email,
-          body: body},
-        commit: "Post"
-    )
+         mailing_list_id: obra_chat.to_param,
+         reply_to_id: "",
+         post: {
+           subject: subject,
+           from_name: from_name,
+           from_email: from_email,
+           body: body
+         },
+         commit: "Post")
 
     assert_not_nil flash[:warn]
     assert_response :success
@@ -304,12 +306,11 @@ class PostsControllerTest < ActionController::TestCase
 
   test "spam post should not cause error" do
     obra_chat = FactoryBot.create(:mailing_list)
-    post(:create, { "commit" => "Post", "mailing_list_id" => obra_chat.to_param,
+    post(:create, "commit" => "Post", "mailing_list_id" => obra_chat.to_param,
                   "post" => { "from_name" => "strap",
-                               "body" => "<a href= http://www.blogextremo.com/elroybrito >strap on gallery</a> <a href= http://emmittmcclaine.blogownia.pl >lesbian strap on</a> <a href= http://www.cherryade.com/margenemohabeer >strap on sex</a> ",
-                               "subject" => "onstrapdildo@mail.com",
-                               "from_email" => "onstrapdildo@mail.com"}
-    })
+                              "body" => "<a href= http://www.blogextremo.com/elroybrito >strap on gallery</a> <a href= http://emmittmcclaine.blogownia.pl >lesbian strap on</a> <a href= http://www.cherryade.com/margenemohabeer >strap on sex</a> ",
+                              "subject" => "onstrapdildo@mail.com",
+                              "from_email" => "onstrapdildo@mail.com" })
     assert_response(:redirect)
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Results
   class USACResultsFile < ResultsFile
     def import_row(row, race, columns)
@@ -18,10 +20,10 @@ module Results
 
       # Won't correctly detect races that only have DQs or DNSs
       category_name_from_row(row).present? &&
-      category_name_from_row(row) != category_name_from_row(row.previous) &&
-      !row[:place].to_s.upcase.in?(%w{ DNS DQ DNF}) &&
-      row[:place] &&
-      row[:place].to_i == 1
+        category_name_from_row(row) != category_name_from_row(row.previous) &&
+        !row[:place].to_s.upcase.in?(%w[ DNS DQ DNF]) &&
+        row[:place] &&
+        row[:place].to_i == 1
     end
 
     # category_name and gender should always be populated.
@@ -32,9 +34,7 @@ module Results
     # e.g. "Master B Men" or "Cat4 Female"
     def category_name_from_row(row)
       category = "#{row[:category_name]} #{row[:category_class]} #{row[:gender]}"
-      if row[:age].present? && /\d+-\d+/ =~ row[:age].to_s
-        category = "#{category} #{row[:age]}"
-      end
+      category = "#{category} #{row[:age]}" if row[:age].present? && /\d+-\d+/ =~ row[:age].to_s
       category.squeeze(" ").strip
     end
 
@@ -49,13 +49,12 @@ module Results
 
     # We want to pick up the info in the first 5 columns: org, year, event #, date, discipline
     def notes(row)
-      [ :organization, :event_year, :"event_#", :race_date, :discipline ].
-      map { |column| row[column] }.
-      select(&:present?).
-      map { |x| to_integer(x) }.
-      join(", ")
+      %i[organization event_year event_# race_date discipline]
+        .map { |column| row[column] }
+        .select(&:present?)
+        .map { |x| to_integer(x) }
+        .join(", ")
     end
-
 
     private
 

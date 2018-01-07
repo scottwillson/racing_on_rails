@@ -1,19 +1,19 @@
+# frozen_string_literal: true
+
 class EventTeam < ActiveRecord::Base
   belongs_to :event
   belongs_to :team
 
   has_many :event_team_memberships, dependent: :restrict_with_error
 
-  validates_presence_of :event
-  validates_presence_of :team
+  validates :event, presence: true
+  validates :team, presence: true
 
   accepts_nested_attributes_for :team
 
   def create_and_join(person)
     if save
-      if !event.editable_by?(person) && person.event_team_memberships.none? { |m| m.event == event }
-        event_team_memberships.create person: person
-      end
+      event_team_memberships.create person: person if !event.editable_by?(person) && person.event_team_memberships.none? { |m| m.event == event }
       true
     else
       false

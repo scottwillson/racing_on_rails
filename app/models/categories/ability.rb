@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Categories
   module Ability
     extend ActiveSupport::Concern
@@ -13,7 +15,7 @@ module Categories
       "C" => 3,
       "Amateur" => 3,
       "Beginner" => 4,
-      "Novice" => 5,
+      "Novice" => 5
     }.freeze
 
     included do
@@ -59,7 +61,7 @@ module Categories
 
     # Pro/1/2 => [ 0, 1, 2 ]
     def values_from_names(name_token)
-      values = NAME_ABILITIES.select do |ability_name, value|
+      values = NAME_ABILITIES.select do |ability_name, _value|
         name_token[/\b#{ability_name}\b/]
       end.values
       values << single_ability(name_token) if single_ability(name_token)
@@ -79,14 +81,12 @@ module Categories
     def strip_descriptive_tokens
       stripped_name = name.dup
       # Novice is Category 3 in MTB but 5 everywhere else
-      if stripped_name["Novice"] && stripped_name["Category"]
-        stripped_name = stripped_name.gsub("Novice", "")
-      end
+      stripped_name = stripped_name.gsub("Novice", "") if stripped_name["Novice"] && stripped_name["Category"]
 
       stripped_name
-        .gsub(%r{Race \d+}, "")
-        .gsub(%r{Party of \d+}, "")
-        .gsub(%r{Novice Men \w}, "Novice")
+        .gsub(/Race \d+/, "")
+        .gsub(/Party of \d+/, "")
+        .gsub(/Novice Men \w/, "Novice")
         .gsub(%r{\d\d+[/-]\d\d+}, "")
         .gsub(/\w group/i, "")
         .gsub(/\d-person/i, "")

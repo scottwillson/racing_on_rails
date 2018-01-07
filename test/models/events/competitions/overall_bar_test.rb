@@ -203,7 +203,7 @@ module Competitions
 
       assert_equal(tonkin, results[0].person, "Senior Men Overall BAR results person")
       assert_equal("1", results[0].place, "Senior Men Overall BAR results place")
-      assert_equal [ 300, 300, 300, 299, 299 ], results[0].scores.map(&:points).sort.reverse, "Tonkin points"
+      assert_equal [300, 300, 300, 299, 299], results[0].scores.map(&:points).sort.reverse, "Tonkin points"
       assert_equal(5, results[0].scores.size, "Tonkin Overall BAR results scores")
       assert_equal(1498, results[0].points, "Tonkin Senior Men Overall BAR results points")
 
@@ -234,7 +234,7 @@ module Competitions
     end
 
     test "drop cat 5 discipline results" do
-               FactoryBot.create(:person, name: "Alice Pennington")
+      FactoryBot.create(:person, name: "Alice Pennington")
       matson = FactoryBot.create(:person, name: "Mark Matson")
       molly  = FactoryBot.create(:person, name: "Molly Cameron")
       tonkin = FactoryBot.create(:person, name: "Erik Tonkin")
@@ -243,9 +243,9 @@ module Competitions
       association_category = FactoryBot.create(:category, name: "CBRA")
       senior_men           = FactoryBot.create(:category, name: "Senior Men", parent: association_category)
       men_a                = FactoryBot.create(:category, name: "Men A", parent: senior_men)
-                             FactoryBot.create(:category, name: "Senior Men Pro/1/2", parent: senior_men)
-      senior_women         = FactoryBot.create(:category, name: "Senior Women", parent: association_category)
-                             FactoryBot.create(:category, name: "Senior Women 1/2/3", parent: senior_women)
+      FactoryBot.create(:category, name: "Senior Men Pro/1/2", parent: senior_men)
+      senior_women = FactoryBot.create(:category, name: "Senior Women", parent: association_category)
+      FactoryBot.create(:category, name: "Senior Women 1/2/3", parent: senior_women)
       category_3_men       = FactoryBot.create(:category, name: "Category 3 Men", parent: association_category)
       category_4_5_men     = FactoryBot.create(:category, name: "Category 4/5 Men", parent: association_category)
       category_4_men       = FactoryBot.create(:category, name: "Category 4 Men", parent: category_4_5_men)
@@ -293,18 +293,18 @@ module Competitions
       discipline.bar_categories << category_3_men
       discipline.bar_categories << category_4_5_men
 
-      event = SingleDayEvent.create!(discipline: 'Road')
+      event = SingleDayEvent.create!(discipline: "Road")
       cat_4_race = event.races.create!(category: category_4_men)
-      cat_4_race.results.create!(place: '4', person: weaver)
-      cat_4_race.results.create!(place: '5', person: matson)
+      cat_4_race.results.create!(place: "4", person: weaver)
+      cat_4_race.results.create!(place: "5", person: matson)
 
       cat_5_race = event.races.create!(category: category_5_men)
-      cat_5_race.results.create!(place: '6', person: matson)
-      cat_5_race.results.create!(place: '15', person: tonkin)
+      cat_5_race.results.create!(place: "6", person: matson)
+      cat_5_race.results.create!(place: "15", person: tonkin)
 
-      event = SingleDayEvent.create!(discipline: 'Road')
+      event = SingleDayEvent.create!(discipline: "Road")
       cat_5_race = event.races.create!(category: category_5_men)
-      cat_5_race.results.create!(place: '15', person: tonkin)
+      cat_5_race.results.create!(place: "15", person: tonkin)
 
       # Add several different discipline results to expose ordering bug
       event = SingleDayEvent.create!(discipline: "Criterium")
@@ -338,7 +338,7 @@ module Competitions
       cat_5_road_bar = road_bar.races.detect { |race| race.category == category_5_men }
       assert_equal(2, cat_5_road_bar.results.size, "Cat 5 Overall BAR results")
 
-      overall_bar = OverallBar.find_by_date(Date.new(current_year, 1, 1))
+      overall_bar = OverallBar.find_by(date: Date.new(current_year, 1, 1))
       cat_4_overall_bar = overall_bar.races.detect { |race| race.category == category_4_men }
       assert_equal(4, cat_4_overall_bar.results.size, "Cat 4 Overall BAR results")
 

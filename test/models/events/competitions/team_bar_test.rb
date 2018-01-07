@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../../test_helper", __FILE__)
 
 module Competitions
@@ -77,7 +79,7 @@ module Competitions
       swan_island = SingleDayEvent.create!(
         name: "Swan Island",
         discipline: "Criterium",
-        date: Date.new(2004, 5, 17),
+        date: Date.new(2004, 5, 17)
       )
       swan_island_senior_men = swan_island.races.create(category: senior_men)
       swan_island_senior_men.results.create!(
@@ -189,7 +191,7 @@ module Competitions
       assert_equal("2004 Team BAR", bar.name, "2004 Team Bar name")
       assert_equal_dates(Time.zone.today, bar.updated_at, "BAR last updated")
 
-      assert_equal(1, bar.races.size, 'Should have only one Team BAR race')
+      assert_equal(1, bar.races.size, "Should have only one Team BAR race")
       team_race = bar.races.first
 
       assert_equal(3, team_race.results.size, "Team BAR results")

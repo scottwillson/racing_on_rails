@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -23,9 +25,7 @@ class EventsControllerTest < ActionController::TestCase
       use_ssl
       get :index, person_id: promoter
       assert_response :success
-      if css_select(".nav.tabs").present?
-        assert_select "a[href*='/events']"
-      end
+      assert_select "a[href*='/events']" if css_select(".nav.tabs").present?
     end
   end
 

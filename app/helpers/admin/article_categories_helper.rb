@@ -1,20 +1,22 @@
+# frozen_string_literal: true
+
 # HTML chunks for ArticleCategories UL tree
 module Admin::ArticleCategoriesHelper
   def display_categories(categories, parent_id)
-    ret = "<ul>"
-      for category in categories
-        if category.parent_id == nil
-      	  category.parent_id = 0
-        elsif category.parent_id == parent_id
-          ret << display_category(category)
-        end
+    ret = "<ul>".dup
+    for category in categories
+      if category.parent_id.nil?
+        category.parent_id = 0
+      elsif category.parent_id == parent_id
+        ret << display_category(category)
       end
+    end
     ret << "</ul>"
     ret.html_safe
   end
 
   def display_category(category)
-    ret = "<li>"
+    ret = "<li>".dup
     ret << link_to(h(category.name), action: "edit", id: category)
     ret << " - " << h(category.description)
     ret << display_categories(category.children, category.id) if category.children.any?
@@ -22,8 +24,8 @@ module Admin::ArticleCategoriesHelper
     ret.html_safe
   end
 
-  def tree_select(categories, model, name, selected=0, allow_root = true, level = 0, init = true)
-    html = ""
+  def tree_select(categories, model, name, selected = 0, allow_root = true, level = 0, init = true)
+    html = "".dup
     if init
       html << "<select class=\"form-control\" name=\"#{model}[#{name}]\" id=\"#{model}_#{name}\">\n"
       if allow_root
@@ -35,7 +37,7 @@ module Admin::ArticleCategoriesHelper
       end
     end
 
-    if categories.length > 0
+    unless categories.empty?
       level += 1 # keep position
       categories.collect do |cat|
         html << "\t<option value=\"#{cat.id}\" style=\"padding-left:#{level * 10}px\""

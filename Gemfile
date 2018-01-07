@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 
 gem "rails", "~> 4.2"
@@ -69,8 +71,8 @@ group :development do
   gem "bullet"
   gem "bundler-audit"
   gem "capistrano-rails"
-  gem "capistrano3-puma"
   gem "capistrano-rvm"
+  gem "capistrano3-puma"
   gem "celluloid-benchmark"
   gem "rubocop", require: false
   gem "spring"

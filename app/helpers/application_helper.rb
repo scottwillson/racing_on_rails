@@ -1,16 +1,16 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   # Wrap +text+ in div tags, unless +text+ is blank
   def div(text)
-    "<div>#{text}</div>" unless text.blank?
+    "<div>#{text}</div>" if text.present?
   end
 
   # RacingAssociation.current.short_name: page title
   def page_title
     return "#{RacingAssociation.current.short_name}: #{@page_title}" if @page_title
 
-    if @page && !@page.title.blank?
-      return "#{RacingAssociation.current.short_name}: #{@page.title}"
-    end
+    return "#{RacingAssociation.current.short_name}: #{@page.title}" if @page&.title.present?
 
     "#{RacingAssociation.current.short_name}: #{controller.controller_name.titleize}: #{controller.action_name.titleize}"
   end
@@ -37,10 +37,8 @@ module ApplicationHelper
     when Date, Time, DateTime
       value.to_s(:mdY)
     else
-      _value = value
-      if _value.mb_chars.length > 250
-        _value = _value[0, 250]
-      end
+      _value = value.dup
+      _value = _value[0, 250] if _value.mb_chars.length > 250
 
       if _value.try(:respond_to?, :gsub)
         _value.gsub!(/[\t\n\r]/, " ")
@@ -51,9 +49,8 @@ module ApplicationHelper
         end
       end
 
-      if _value.try(:respond_to?, :html_safe)
-        _value = _value.html_safe
-      end
+      return _value.html_safe if _value.try(:respond_to?, :html_safe)
+
       _value
     end
   end
@@ -78,12 +75,11 @@ module ApplicationHelper
   # Always use the Twitter Bootstrap pagination renderer
   def will_paginate(collection_or_options = nil, options = {})
     if collection_or_options.is_a? Hash
-      options, collection_or_options = collection_or_options, nil
+      options = collection_or_options
+      collection_or_options = nil
     end
     options = options.merge(renderer: BootstrapPagination::Rails)
-    unless options.has_key?(:page_links)
-      options = options.merge(page_links: !mobile_request?)
-    end
+    options = options.merge(page_links: !mobile_request?) unless options.key?(:page_links)
     content_tag(:div, class: "pagination") { super(*[collection_or_options, options].compact) }
   end
 
@@ -92,7 +88,7 @@ module ApplicationHelper
   # 2. Merge the 'body' variable into our options hash
   # 3. Render the partial with the given options hash. Just like calling the partial directly.
   def block_to_partial(partial_name, options = {}, &block)
-    options.merge!(body: capture(&block))
+    options[:body] = capture(&block)
     render partial_name, options
   end
 
@@ -105,6 +101,6 @@ module ApplicationHelper
   end
 
   def cache_key_prefix
-    [ RacingAssociation.current.short_name, RacingAssociation.current.updated_at.try(:to_s, :number), mobile_request? ]
+    [RacingAssociation.current.short_name, RacingAssociation.current.updated_at.try(:to_s, :number), mobile_request?]
   end
 end

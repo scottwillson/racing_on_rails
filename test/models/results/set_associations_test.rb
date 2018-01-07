@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 # :stopdoc:
@@ -27,70 +29,70 @@ class SetAssociationsTest < ActiveSupport::TestCase
   test "find by alias" do
     kona = FactoryBot.create(:team, name: "Kona")
     tonkin = FactoryBot.create(:person, name: "Erik Tonkin")
-    Alias.create!(team: kona, name: 'Kona Les Gets')
-    Alias.create!(person: tonkin, name: 'Erin Tonkin')
+    Alias.create!(team: kona, name: "Kona Les Gets")
+    Alias.create!(person: tonkin, name: "Erin Tonkin")
 
     # new, no aliases
     race = FactoryBot.create(:race)
-    result = race.results.create!(place: 1, first_name: 'Fausto', last_name: 'Coppi', team_name: 'Bianchi', number: '')
-    assert_equal('Fausto Coppi', result.name, 'person name')
-    assert_equal('Bianchi', result.team_name, 'team name')
+    result = race.results.create!(place: 1, first_name: "Fausto", last_name: "Coppi", team_name: "Bianchi", number: "")
+    assert_equal("Fausto Coppi", result.name, "person name")
+    assert_equal("Bianchi", result.team_name, "team name")
 
     # existing person, new team
-    result = race.results.create!(place: 1, first_name: 'Erik', last_name: 'Tonkin', team_name: 'Bianchi', number: '')
+    result = race.results.create!(place: 1, first_name: "Erik", last_name: "Tonkin", team_name: "Bianchi", number: "")
     result.save!
-    assert_equal(tonkin.id, result.person.id, 'person id')
-    assert_equal('Erik Tonkin', result.name, 'person name')
-    assert_equal('Bianchi', result.team_name, 'team name')
+    assert_equal(tonkin.id, result.person.id, "person id")
+    assert_equal("Erik Tonkin", result.name, "person name")
+    assert_equal("Bianchi", result.team_name, "team name")
 
     # new person, existing team
-    result = race.results.create!(place: 1, first_name: 'Fausto', last_name: 'Coppi', team_name: 'Kona', number: '')
+    result = race.results.create!(place: 1, first_name: "Fausto", last_name: "Coppi", team_name: "Kona", number: "")
     result.save!
-    assert_equal(kona.id, result.team.id, 'team id')
-    assert_equal('Fausto Coppi', result.name, 'person name')
-    assert_equal('Kona', result.team_name, 'team name')
+    assert_equal(kona.id, result.team.id, "team id")
+    assert_equal("Fausto Coppi", result.name, "person name")
+    assert_equal("Kona", result.team_name, "team name")
 
     # existing person, existing team
-    result = race.results.create!(place: 1, first_name: 'Erik', last_name: 'Tonkin', team_name: 'Kona', number: '')
+    result = race.results.create!(place: 1, first_name: "Erik", last_name: "Tonkin", team_name: "Kona", number: "")
     result.save!
-    assert_equal('Erik Tonkin', result.name, 'person name')
-    assert_equal('Kona', result.team_name, 'team name')
+    assert_equal("Erik Tonkin", result.name, "person name")
+    assert_equal("Kona", result.team_name, "team name")
 
     # new person, aliased team
-    result = race.results.create!(place: 1, first_name: 'Fausto', last_name: 'Coppi', team_name: 'Kona Les Gets', number: '')
+    result = race.results.create!(place: 1, first_name: "Fausto", last_name: "Coppi", team_name: "Kona Les Gets", number: "")
     result.save!
-    assert_equal('Fausto Coppi', result.name, 'person name')
-    assert_equal('Kona', result.team_name, 'team name')
+    assert_equal("Fausto Coppi", result.name, "person name")
+    assert_equal("Kona", result.team_name, "team name")
 
     # aliased person, new team
-    result = race.results.create!(place: 1, first_name: 'Erin', last_name: 'Tonkin', team_name: 'Bianchi', number: '')
+    result = race.results.create!(place: 1, first_name: "Erin", last_name: "Tonkin", team_name: "Bianchi", number: "")
     result.save!
-    assert_equal('Erik Tonkin', result.name, 'person name')
-    assert_equal('Bianchi', result.team_name, 'team name')
+    assert_equal("Erik Tonkin", result.name, "person name")
+    assert_equal("Bianchi", result.team_name, "team name")
 
     # aliased person, aliased team
-    result = race.results.create!(place: 1, first_name: 'Erin', last_name: 'Tonkin', team_name: 'Kona Les Gets', number: '')
+    result = race.results.create!(place: 1, first_name: "Erin", last_name: "Tonkin", team_name: "Kona Les Gets", number: "")
     result.save!
-    assert_equal('Erik Tonkin', result.name, 'person name')
-    assert_equal('Kona', result.team_name, 'team name')
+    assert_equal("Erik Tonkin", result.name, "person name")
+    assert_equal("Kona", result.team_name, "team name")
 
     # aliased person, existing team
-    result = race.results.create!(place: 1, first_name: 'Erin', last_name: 'Tonkin', team_name: 'Kona', number: '')
+    result = race.results.create!(place: 1, first_name: "Erin", last_name: "Tonkin", team_name: "Kona", number: "")
     result.save!
-    assert_equal('Erik Tonkin', result.name, 'person name')
-    assert_equal('Kona', result.team_name, 'team name')
+    assert_equal("Erik Tonkin", result.name, "person name")
+    assert_equal("Kona", result.team_name, "team name")
 
     # existing person, aliased team
-    result = race.results.create!(place: 1, first_name: 'Erik', last_name: 'Tonkin', team_name: 'Kona Les Gets', number: '')
+    result = race.results.create!(place: 1, first_name: "Erik", last_name: "Tonkin", team_name: "Kona Les Gets", number: "")
     result.save!
-    assert_equal('Erik Tonkin', result.name, 'person name')
-    assert_equal('Kona', result.team_name, 'team name')
+    assert_equal("Erik Tonkin", result.name, "person name")
+    assert_equal("Kona", result.team_name, "team name")
 
     # no person, no team
-    result = race.results.create!(place: 1, number: '')
+    result = race.results.create!(place: 1, number: "")
     result.save!
-    assert_nil(result.name, 'person name')
-    assert_nil(result.team_name, 'team name')
+    assert_nil(result.name, "person name")
+    assert_nil(result.team_name, "team name")
   end
 
   test "set associated records" do
@@ -101,35 +103,35 @@ class SetAssociationsTest < ActiveSupport::TestCase
     # Same name, number as existing person
     kings_valley_pro_1_2_2004 = FactoryBot.create(:race)
     results = kings_valley_pro_1_2_2004.results
-    result_1 = results.create!(place: 1, first_name: 'Erik', last_name: 'Tonkin', number: '104')
-    assert_equal(tonkin, result_1.person, 'Person')
+    result_1 = results.create!(place: 1, first_name: "Erik", last_name: "Tonkin", number: "104")
+    assert_equal(tonkin, result_1.person, "Person")
 
     # Same name, different number as existing person
     results = kings_valley_pro_1_2_2004.results
-    result_2 = results.create!(place: 1, first_name: 'Erik', last_name: 'Tonkin', number: '4100')
-    assert_equal(tonkin, result_2.person, 'Person')
-    # TODO assert warning
+    result_2 = results.create!(place: 1, first_name: "Erik", last_name: "Tonkin", number: "4100")
+    assert_equal(tonkin, result_2.person, "Person")
+    # TODO: assert warning
 
     # Different name, same number as existing person
     # TODO Should be warning with possibility to create! alias
-    result_3 = kings_valley_pro_1_2_2004.results.create!(place: 1, first_name: 'Ron', last_name: 'Tonkin', number: '104')
-    assert_not_equal(tonkin, result_3.person, 'Person')
-    assert_equal("Ron", result_3.person.first_name, 'Person')
+    result_3 = kings_valley_pro_1_2_2004.results.create!(place: 1, first_name: "Ron", last_name: "Tonkin", number: "104")
+    assert_not_equal(tonkin, result_3.person, "Person")
+    assert_equal("Ron", result_3.person.first_name, "Person")
   end
 
   test "set associated records non road" do
     FactoryBot.create(:cyclocross_discipline)
     FactoryBot.create(:mtb_discipline)
 
-    tonkin = FactoryBot.create(:person, name: "Erik Tonkin", ccx_number: '555A')
+    tonkin = FactoryBot.create(:person, name: "Erik Tonkin", ccx_number: "555A")
 
     kings_valley_2004 = FactoryBot.create(:event, discipline: "Cyclocross")
     kings_valley_pro_1_2_2004 = FactoryBot.create(:race, event: kings_valley_2004)
 
     # CX: Same name, different number as existing person
     results = kings_valley_pro_1_2_2004.results
-    result = results.create!(place: 1, first_name: 'Erik', last_name: 'Tonkin', number: '999')
-    assert_equal(tonkin, result.person, 'Person')
+    result = results.create!(place: 1, first_name: "Erik", last_name: "Tonkin", number: "999")
+    assert_equal(tonkin, result.person, "Person")
   end
 
   test "differentiate people by license" do
@@ -141,11 +143,11 @@ class SetAssociationsTest < ActiveSupport::TestCase
 
     kings_valley_pro_1_2_2004 = FactoryBot.create(:race)
     results = kings_valley_pro_1_2_2004.results
-    result = results.create!(place: 1, first_name: 'Erik', last_name: 'Tonkin', license: '12345')
-    assert_equal(tonkin, result.person, 'Person')
+    result = results.create!(place: 1, first_name: "Erik", last_name: "Tonkin", license: "12345")
+    assert_equal(tonkin, result.person, "Person")
 
-    result = results.create!(place: 2, first_name: 'Erik', last_name: 'Tonkin', license: '999999')
-    assert_equal(tonkin_clone, result.person, 'Person')
+    result = results.create!(place: 2, first_name: "Erik", last_name: "Tonkin", license: "999999")
+    assert_equal(tonkin_clone, result.person, "Person")
   end
 
   test "differentiate people by number" do
@@ -156,17 +158,17 @@ class SetAssociationsTest < ActiveSupport::TestCase
 
     senior_men = FactoryBot.create(:category)
     results = SingleDayEvent.create!.races.create!(category: senior_men).results
-    result = results.create!(place: 1, first_name: 'Joe', last_name: 'Racer', number: "550")
-    assert_equal(person_clone, result.person, 'Person')
+    result = results.create!(place: 1, first_name: "Joe", last_name: "Racer", number: "550")
+    assert_equal(person_clone, result.person, "Person")
 
     result = results.create!(place: 2, first_name: "Joe", last_name: "Racer", number: "600")
-    assert_equal(person, result.person, 'Person')
+    assert_equal(person, result.person, "Person")
   end
 
   test "differentiate people by number ignore different names" do
     RacingAssociation.current.expects(:eager_match_on_license?).at_least_once.returns(false)
 
-    person = Person.create!(name: "Joe Racer", updated_at: '2008-10-01')
+    person = Person.create!(name: "Joe Racer", updated_at: "2008-10-01")
     person.reload
     person.update(updated_at: "2008-10-01")
     person.reload
@@ -181,13 +183,13 @@ class SetAssociationsTest < ActiveSupport::TestCase
     SingleDayEvent.create!.races.create!(category: senior_men).results.create!(person: person_with_same_number)
 
     results = SingleDayEvent.create!.races.create!(category: senior_men).results
-    result = results.create!(place: 1, first_name: 'Joe', last_name: 'Racer', number: "550")
-    assert_equal(person_clone, result.person, 'Person')
+    result = results.create!(place: 1, first_name: "Joe", last_name: "Racer", number: "550")
+    assert_equal(person_clone, result.person, "Person")
 
     result = results.create!(place: 2, first_name: "Joe", last_name: "Racer", number: "600")
 
     assert_equal 2, Person.name_like("Joe Racer").size, "Joe Racers"
-    assert_equal(person_clone, result.person, 'Person')
+    assert_equal(person_clone, result.person, "Person")
 
     person.reload
     assert_equal_dates "2008-10-01", person.updated_at, "updated_at"
@@ -210,144 +212,144 @@ class SetAssociationsTest < ActiveSupport::TestCase
     SingleDayEvent.create!.races.create!(category: senior_men).results.create!(person: person_with_same_number)
 
     results = SingleDayEvent.create!.races.create!(category: senior_men).results
-    result = results.create!(place: 1, first_name: 'Joe', last_name: 'Racer', number: "550")
-    assert_equal(person_clone, result.person, 'Person')
+    result = results.create!(place: 1, first_name: "Joe", last_name: "Racer", number: "550")
+    assert_equal(person_clone, result.person, "Person")
 
     result = results.create!(place: 2, first_name: "Joe", last_name: "Racer", number: "600")
-    assert_equal(person_clone, result.person, 'Person')
+    assert_equal(person_clone, result.person, "Person")
   end
 
   test "find people" do
-    # TODO Add warning that numbers don't match
-    tonkin = FactoryBot.create(:person, name: 'Erik Tonkin', team: FactoryBot.create(:team, name: "Kona"))
+    # TODO: Add warning that numbers don't match
+    tonkin = FactoryBot.create(:person, name: "Erik Tonkin", team: FactoryBot.create(:team, name: "Kona"))
     tonkin.race_numbers.create(value: "104", year: 2004)
     event = FactoryBot.create(:event, date: Time.zone.local(2004, 3))
     race = FactoryBot.create(:race, event: event)
 
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin')
-    assert_equal([tonkin], result.find_people.to_a, 'first_name + last_name')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin")
+    assert_equal([tonkin], result.find_people.to_a, "first_name + last_name")
 
-    result = race.results.build(name: 'Erik Tonkin')
-    assert_equal([tonkin], result.find_people.to_a, 'name')
+    result = race.results.build(name: "Erik Tonkin")
+    assert_equal([tonkin], result.find_people.to_a, "name")
 
-    result = race.results.build(name: 'ERIK TONKIN')
-    assert_equal([tonkin], result.find_people.to_a, 'name')
+    result = race.results.build(name: "ERIK TONKIN")
+    assert_equal([tonkin], result.find_people.to_a, "name")
 
-    result = race.results.build(last_name: 'Tonkin')
-    assert_equal([tonkin], result.find_people.to_a, 'last_name')
+    result = race.results.build(last_name: "Tonkin")
+    assert_equal([tonkin], result.find_people.to_a, "last_name")
 
-    result = race.results.build(first_name: 'Erik')
-    assert_equal([tonkin], result.find_people.to_a, 'first_name')
+    result = race.results.build(first_name: "Erik")
+    assert_equal([tonkin], result.find_people.to_a, "first_name")
 
-    result = race.results.build(first_name: 'Erika', last_name: 'Tonkin')
-    assert_equal([], result.find_people.to_a, 'first_name + last_name should not match')
+    result = race.results.build(first_name: "Erika", last_name: "Tonkin")
+    assert_equal([], result.find_people.to_a, "first_name + last_name should not match")
 
-    result = race.results.build(name: 'Erika Tonkin')
-    assert_equal([], result.find_people.to_a, 'name should not match')
+    result = race.results.build(name: "Erika Tonkin")
+    assert_equal([], result.find_people.to_a, "name should not match")
 
-    result = race.results.build(last_name: 'onkin')
-    assert_equal([], result.find_people.to_a, 'last_name should not match')
+    result = race.results.build(last_name: "onkin")
+    assert_equal([], result.find_people.to_a, "last_name should not match")
 
-    result = race.results.build(first_name: 'Erika')
-    assert_equal([], result.find_people.to_a, 'first_name should not match')
+    result = race.results.build(first_name: "Erika")
+    assert_equal([], result.find_people.to_a, "first_name should not match")
 
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '104')
-    assert_equal([tonkin], result.find_people.to_a, 'road number, first_name, last_name')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin", number: "104")
+    assert_equal([tonkin], result.find_people.to_a, "road number, first_name, last_name")
 
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '340')
-    assert_equal([tonkin], result.find_people.to_a, 'Matson road number, first_name, last_name')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin", number: "340")
+    assert_equal([tonkin], result.find_people.to_a, "Matson road number, first_name, last_name")
 
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '6')
-    assert_equal([tonkin], result.find_people.to_a, 'cross number (not in DB), first_name, last_name')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin", number: "6")
+    assert_equal([tonkin], result.find_people.to_a, "cross number (not in DB), first_name, last_name")
 
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '100')
-    assert_equal([tonkin], result.find_people.to_a, 'Different number')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin", number: "100")
+    assert_equal([tonkin], result.find_people.to_a, "Different number")
 
-    # TODO make null person and list this match as a possibility
-    result = race.results.build(first_name: 'Rhonda', last_name: 'Tonkin', number: '104')
-    assert_equal([], result.find_people.to_a, 'Tonkin\'s number, different first name')
+    # TODO: make null person and list this match as a possibility
+    result = race.results.build(first_name: "Rhonda", last_name: "Tonkin", number: "104")
+    assert_equal([], result.find_people.to_a, "Tonkin's number, different first name")
 
-    # TODO make null person and list this match as a possibility
-    result = race.results.build(first_name: 'Erik', last_name: 'Viking', number: '104')
-    assert_equal([], result.find_people.to_a, 'Tonkin\'s number, different last name')
+    # TODO: make null person and list this match as a possibility
+    result = race.results.build(first_name: "Erik", last_name: "Viking", number: "104")
+    assert_equal([], result.find_people.to_a, "Tonkin's number, different last name")
 
-    tonkin_clone = Person.create!(first_name: 'Erik', last_name: 'Tonkin')
-    RaceNumber.create!(person: tonkin_clone, number_issuer: NumberIssuer.first, discipline: Discipline[:road], year: 2004, value: '100')
+    tonkin_clone = Person.create!(first_name: "Erik", last_name: "Tonkin")
+    RaceNumber.create!(person: tonkin_clone, number_issuer: NumberIssuer.first, discipline: Discipline[:road], year: 2004, value: "100")
 
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin')
-    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, 'Same names, no numbers')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin")
+    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, "Same names, no numbers")
 
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '6')
-    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, 'Same names, bogus numbers')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin", number: "6")
+    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, "Same names, bogus numbers")
 
-    result = race.results.build(last_name: 'Tonkin')
-    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, 'Same last name')
+    result = race.results.build(last_name: "Tonkin")
+    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, "Same last name")
 
-    result = race.results.build(first_name: 'Erik')
-    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, 'Same names, bogus numbers')
+    result = race.results.build(first_name: "Erik")
+    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, "Same names, bogus numbers")
 
-    result = race.results.build(number: '6')
-    assert_equal([], result.find_people.to_a, 'ccx number (not in DB)')
+    result = race.results.build(number: "6")
+    assert_equal([], result.find_people.to_a, "ccx number (not in DB)")
 
-    result = race.results.build(number: '104')
-    assert_equal([tonkin], result.find_people.to_a, 'road number, first_name, last_name')
+    result = race.results.build(number: "104")
+    assert_equal([tonkin], result.find_people.to_a, "road number, first_name, last_name")
 
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '104')
-    assert_equal([tonkin], result.find_people.to_a, 'road number, first_name, last_name')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin", number: "104")
+    assert_equal([tonkin], result.find_people.to_a, "road number, first_name, last_name")
 
-    result = race.results.build(number: '100')
-    assert_equal([tonkin_clone], result.find_people.to_a, 'road number')
+    result = race.results.build(number: "100")
+    assert_equal([tonkin_clone], result.find_people.to_a, "road number")
 
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '100')
-    assert_equal([tonkin_clone], result.find_people.to_a, 'road number, first_name, last_name')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin", number: "100")
+    assert_equal([tonkin_clone], result.find_people.to_a, "road number, first_name, last_name")
 
     # team_name -- consider last
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: 'Kona')
-    assert_equal([tonkin], result.find_people.to_a, 'first_name, last_name, team')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin", team_name: "Kona")
+    assert_equal([tonkin], result.find_people.to_a, "first_name, last_name, team")
 
     # TODO: change to possible match
-    result = race.results.build(first_name: 'Erika', last_name: 'Tonkin', team_name: 'Kona')
-    assert_equal([], result.find_people.to_a, 'wrong first_name, last_name, team')
+    result = race.results.build(first_name: "Erika", last_name: "Tonkin", team_name: "Kona")
+    assert_equal([], result.find_people.to_a, "wrong first_name, last_name, team")
 
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: 'Kona', number: '104')
-    assert_equal([tonkin], result.find_people.to_a, 'first_name, last_name, team, number')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin", team_name: "Kona", number: "104")
+    assert_equal([tonkin], result.find_people.to_a, "first_name, last_name, team, number")
 
-    result = race.results.build(last_name: 'Tonkin', team_name: 'Kona')
-    assert_equal([tonkin], result.find_people.to_a, 'last_name, team')
+    result = race.results.build(last_name: "Tonkin", team_name: "Kona")
+    assert_equal([tonkin], result.find_people.to_a, "last_name, team")
 
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: '')
-    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, 'first_name, last_name, blank team')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin", team_name: "")
+    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, "first_name, last_name, blank team")
 
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: 'Camerati')
-    assert_equal([tonkin, tonkin_clone], result.find_people.to_a, 'first_name, last_name, wrong team')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin", team_name: "Camerati")
+    assert_equal([tonkin, tonkin_clone], result.find_people.to_a, "first_name, last_name, wrong team")
 
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: 'Camerati', number: '987')
-    assert_equal([tonkin, tonkin_clone], result.find_people.to_a, 'first_name, last_name, wrong team, wrong number')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin", team_name: "Camerati", number: "987")
+    assert_equal([tonkin, tonkin_clone], result.find_people.to_a, "first_name, last_name, wrong team, wrong number")
 
     vanilla = FactoryBot.create(:team, name: "Vanilla")
     vanilla.aliases.create!(name: "Vanilla Bicycles")
     tonkin_clone.team = vanilla
     tonkin_clone.save!
 
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', team_name: 'Vanilla Bicycles')
-    assert_equal([tonkin_clone], result.find_people.to_a, 'first_name, last_name + team alias should match')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin", team_name: "Vanilla Bicycles")
+    assert_equal([tonkin_clone], result.find_people.to_a, "first_name, last_name + team alias should match")
 
     result = race.results.build
-    assert_equal([], result.find_people.to_a, 'no person, team, nor number')
+    assert_equal([], result.find_people.to_a, "no person, team, nor number")
 
-    result = race.results.build(team_name: 'Astana Wurth')
-    assert_equal([], result.find_people.to_a, 'wrong team only')
+    result = race.results.build(team_name: "Astana Wurth")
+    assert_equal([], result.find_people.to_a, "wrong team only")
 
     # rental numbers
-    result = race.results.build(first_name: 'Erik', last_name: 'Tonkin', number: '60')
-    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, 'rental number')
+    result = race.results.build(first_name: "Erik", last_name: "Tonkin", number: "60")
+    assert_same_elements([tonkin, tonkin_clone], result.find_people.to_a, "rental number")
 
-    result = race.results.build(first_name: '', last_name: '')
-    assert_same_elements([], result.find_people.to_a, 'blank name with no blank names')
+    result = race.results.build(first_name: "", last_name: "")
+    assert_same_elements([], result.find_people.to_a, "blank name with no blank names")
 
-    blank_name_person = Person.create!(name: '', dh_number: '100')
-    result = race.results.build(first_name: '', last_name: '')
-    assert_same_elements([blank_name_person], result.find_people.to_a, 'blank names')
+    blank_name_person = Person.create!(name: "", dh_number: "100")
+    result = race.results.build(first_name: "", last_name: "")
+    assert_same_elements([blank_name_person], result.find_people.to_a, "blank names")
 
     # Add exact dupes with same numbers
     # Test numbers from different years or disciplines
@@ -365,7 +367,7 @@ class SetAssociationsTest < ActiveSupport::TestCase
     SingleDayEvent.create!(date: Date.new(1980)).races.create!(category: category).results.create!(person: new_tonkin)
 
     race = FactoryBot.create(:race)
-    result = race.results.create!(place: 1, first_name: 'Erik', last_name: 'Tonkin')
+    result = race.results.create!(place: 1, first_name: "Erik", last_name: "Tonkin")
 
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should not create! new Tonkin")
     assert_equal(tonkin, result.person, "Should use person with most recent result")
@@ -384,7 +386,7 @@ class SetAssociationsTest < ActiveSupport::TestCase
     new_tonkin.save!
 
     race = FactoryBot.create(:race)
-    result = race.results.create!(place: 1, first_name: 'Erik', last_name: 'Tonkin')
+    result = race.results.create!(place: 1, first_name: "Erik", last_name: "Tonkin")
 
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should not create! new Tonkin")
     assert_equal(new_tonkin, result.person, "Should use most recently-updated person if can't decide otherwise")
@@ -403,13 +405,13 @@ class SetAssociationsTest < ActiveSupport::TestCase
       # Bad discipline name—should cause name to not match
       senior_men = FactoryBot.create(:category)
       cx_race = SingleDayEvent.create!(discipline: "Cyclocross").races.create!(category: senior_men)
-      result = cx_race.results.create!(place: 1, first_name: 'John', last_name: 'Thompson', number: "157")
+      result = cx_race.results.create!(place: 1, first_name: "John", last_name: "Thompson", number: "157")
       assert_equal jt_2, result.person, "Should assign person based on correct discipline number"
     end
   end
 
   test "multiple scores for same race" do
-    competition = Competitions::Competition.create!(name: 'KOM')
+    competition = Competitions::Competition.create!(name: "KOM")
     cx_a = FactoryBot.create(:category)
     competition_race = competition.races.create!(category: cx_a)
     tonkin = FactoryBot.create(:person)
@@ -444,10 +446,10 @@ class SetAssociationsTest < ActiveSupport::TestCase
   end
 
   test "do not match blank licenses" do
-    Person.create!(name: 'Rocket, The', license: "")
-    weaver = FactoryBot.create(:person, name: "Ryan Weaver", first_name: 'Ryan', last_name: 'Weaver')
+    Person.create!(name: "Rocket, The", license: "")
+    weaver = FactoryBot.create(:person, name: "Ryan Weaver", first_name: "Ryan", last_name: "Weaver")
     race = FactoryBot.create(:race)
-    result = race.results.create!(first_name: 'Ryan', last_name: 'Weaver', event: race.event)
+    result = race.results.create!(first_name: "Ryan", last_name: "Weaver", event: race.event)
     assert_same_elements([weaver], result.find_people.to_a, "blank license shouldn't match anything")
   end
 end

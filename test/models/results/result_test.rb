@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -23,27 +25,27 @@ class ResultTest < ActiveSupport::TestCase
     result = FactoryBot.create(:result, person: FactoryBot.create(:person, name: "Ryan Weaver"))
     assert_equal("Ryan Weaver", result.name, "Person name")
 
-    person = Person.new(last_name: 'Willson')
+    person = Person.new(last_name: "Willson")
     result = FactoryBot.create(:result, person: person)
     assert_equal("Willson", result.person.name, "Person name")
     assert_equal("Willson", result.name, "Person name")
     result.save!
     assert_equal("Willson", result.reload.name, "Person name")
 
-    person = Person.new(first_name: 'Clara')
+    person = Person.new(first_name: "Clara")
     result = Result.new(person: person)
     assert_equal("Clara", result.person.name, "Person name")
 
     result = Result.new
     assert_nil(result.name, "Person name")
-    result.name = 'Clara Hughes'
+    result.name = "Clara Hughes"
     assert_equal("Clara Hughes", result.name, "Person name")
     assert_equal("Clara", result.first_name, "Person first_name")
     assert_equal("Hughes", result.last_name, "Person last_name")
 
     race = FactoryBot.create(:race)
     result = race.results.build
-    result.name = 'Walrod, Marjon'
+    result.name = "Walrod, Marjon"
     assert_equal("Walrod, Marjon", result.name, "Person name")
     assert_equal("Marjon", result.first_name, "Person first_name")
     assert_equal("Walrod", result.last_name, "Person last_name")
@@ -58,13 +60,13 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   test "save" do
-    event = SingleDayEvent.create!(name: "Tabor CR", discipline: 'Road')
+    event = SingleDayEvent.create!(name: "Tabor CR", discipline: "Road")
     category = Category.find_or_create_by(name: "Senior Men Pro/1/2")
     race = event.races.create!(category: category)
     race.save!
     assert_equal(0, race.results.size, "Results before save")
-    assert_nil(Person.find_by_last_name("Hampsten"), "Hampsten should not be in DB")
-    assert_nil(Team.find_by_name("7-11"), "7-11 should not be in DB")
+    assert_nil(Person.find_by(last_name: "Hampsten"), "Hampsten should not be in DB")
+    assert_nil(Team.find_by(name: "7-11"), "7-11 should not be in DB")
 
     person = Person.new(last_name: "Hampsten")
     result = race.results.build
@@ -78,10 +80,10 @@ class ResultTest < ActiveSupport::TestCase
 
     assert_equal(1, race.results.size, "Results after save")
     result_from_db = race.results.first
-    person_from_db = Person.find_by_last_name("Hampsten")
+    person_from_db = Person.find_by(last_name: "Hampsten")
     assert_not_nil(person_from_db, "Hampsten should  be  DB")
     assert_equal(result.person, result_from_db.person, "result.person")
-    assert_not_nil(Team.find_by_name("7-11"), "7-11 should be in DB")
+    assert_not_nil(Team.find_by(name: "7-11"), "7-11 should be in DB")
     assert_equal(result.team, result_from_db.team, "result.team")
     assert_equal("17", result_from_db.place, "result.place")
     assert_equal("H67", result_from_db.number, "result.number")
@@ -92,7 +94,7 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   test "first name" do
-    attributes = {place: "22", first_name: "Jan"}
+    attributes = { place: "22", first_name: "Jan" }
     result = Result.new(attributes)
     assert_equal("Jan", result.first_name, "person.first_name")
     assert_equal("Jan", result.person.first_name, "person.first_name")
@@ -127,7 +129,7 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   test "team name" do
-    attributes = {place: "22", team_name: "T-Mobile"}
+    attributes = { place: "22", team_name: "T-Mobile" }
     result = FactoryBot.create(:race).results.build(attributes)
     assert_equal("T-Mobile", result.team_name, "person.team_name")
     assert_equal("T-Mobile", result.team.name, "person.team")
@@ -166,110 +168,110 @@ class ResultTest < ActiveSupport::TestCase
   test "person team" do
     event = FactoryBot.create(:event)
     race = FactoryBot.create(:race, event: event)
-    result = race.results.build(place: '3', number: '932')
-    person = Person.new(last_name: 'Kovach', first_name: 'Barry')
-    team = Team.new(name: 'Sorella Forte ')
+    result = race.results.build(place: "3", number: "932")
+    person = Person.new(last_name: "Kovach", first_name: "Barry")
+    team = Team.new(name: "Sorella Forte ")
     result.person = person
     result.team = team
 
     result.save!
-    assert(!person.new_record?, 'person new record')
-    assert(!team.new_record?, 'team new record')
-    assert_equal(team, result.team, 'result team')
-    assert_nil(person.team, 'result team')
-    sorella_forte = Team.find_by_name('Sorella Forte')
-    assert_equal(sorella_forte, result.team, 'result team')
-    assert_nil(person.team, 'result team')
+    assert(!person.new_record?, "person new record")
+    assert(!team.new_record?, "team new record")
+    assert_equal(team, result.team, "result team")
+    assert_nil(person.team, "result team")
+    sorella_forte = Team.find_by(name: "Sorella Forte")
+    assert_equal(sorella_forte, result.team, "result team")
+    assert_nil(person.team, "result team")
 
     race = FactoryBot.create(:race)
-    result = race.results.build(place: '3', number: '932')
+    result = race.results.build(place: "3", number: "932")
     result.person = person
-    new_team = Team.new(name: 'Bike Gallery')
+    new_team = Team.new(name: "Bike Gallery")
     result.person = person
     result.team = new_team
 
     result.save!
-    bike_gallery_from_db = Team.find_by_name('Bike Gallery')
-    assert_equal(bike_gallery_from_db, result.team, 'result team')
-    assert_nil(person.team, 'result team')
-    assert_not_equal(bike_gallery_from_db, person.team, 'result team')
+    bike_gallery_from_db = Team.find_by(name: "Bike Gallery")
+    assert_equal(bike_gallery_from_db, result.team, "result team")
+    assert_nil(person.team, "result team")
+    assert_not_equal(bike_gallery_from_db, person.team, "result team")
 
-    person_with_no_team = Person.create!(last_name: 'Ollerenshaw', first_name: 'Doug')
-    result = race.results.build(place: '3', number: '932')
+    person_with_no_team = Person.create!(last_name: "Ollerenshaw", first_name: "Doug")
+    result = race.results.build(place: "3", number: "932")
     result.person = person_with_no_team
     vanilla = FactoryBot.create(:team)
     result.team = vanilla
 
     result.save!
-    assert_equal(vanilla, result.team, 'result team')
-    assert_nil(person_with_no_team.team, 'result team')
+    assert_equal(vanilla, result.team, "result team")
+    assert_nil(person_with_no_team.team, "result team")
   end
 
   test "event" do
     event = FactoryBot.create(:event)
     result = event.races.create!(category: FactoryBot.create(:category)).results.create!
     result.reload
-    assert_equal(event, result.event, 'Result event')
+    assert_equal(event, result.event, "Result event")
   end
 
   test "sort" do
     results = [
-     Result.new(place: '1'),
-     Result.new(place: ''),
-     Result.new(place: nil),
-     Result.new(place: '11'),
-     Result.new(place: 'DNS'),
-     Result.new(place: '3'),
-     Result.new(place: 'DNF'),
-     Result.new(place: '')
+      Result.new(place: "1"),
+      Result.new(place: ""),
+      Result.new(place: nil),
+      Result.new(place: "11"),
+      Result.new(place: "DNS"),
+      Result.new(place: "3"),
+      Result.new(place: "DNF"),
+      Result.new(place: "")
     ]
 
     results = results.sort
-    assert_equal('1', results[0].place, 'result 0 place')
-    assert_equal('3', results[1].place, 'result 1 place')
-    assert_equal('11', results[2].place, 'result 2 place')
-    assert(results[3].place.blank?, 'result 3 place blank')
-    assert(results[4].place.blank?, 'result 4 place blank')
-    assert(results[5].place.blank?, 'result 5 place blank')
-    assert_equal('DNF', results[6].place, 'result 6 place')
-    assert_equal('DNS', results[7].place, 'result 7 place')
+    assert_equal("1", results[0].place, "result 0 place")
+    assert_equal("3", results[1].place, "result 1 place")
+    assert_equal("11", results[2].place, "result 2 place")
+    assert(results[3].place.blank?, "result 3 place blank")
+    assert(results[4].place.blank?, "result 4 place blank")
+    assert(results[5].place.blank?, "result 5 place blank")
+    assert_equal("DNF", results[6].place, "result 6 place")
+    assert_equal("DNS", results[7].place, "result 7 place")
 
     results = [
-     Result.new(place: '1'),
-     Result.new(place: '2'),
-     Result.new(place: '11'),
-     Result.new(place: 'DNF'),
-     Result.new(place: ''),
-     Result.new(place: nil)
+      Result.new(place: "1"),
+      Result.new(place: "2"),
+      Result.new(place: "11"),
+      Result.new(place: "DNF"),
+      Result.new(place: ""),
+      Result.new(place: nil)
     ]
 
     results = results.sort
-    assert_equal('1', results[0].place, 'result 0 place')
-    assert_equal('2', results[1].place, 'result 1 place')
-    assert_equal('11', results[2].place, 'result 2 place')
-    assert(results[3].place.blank?, 'result 3 place blank')
-    assert(results[4].place.blank?, 'result 4 place blank')
-    assert_equal('DNF', results[5].place, 'result 5 place')
+    assert_equal("1", results[0].place, "result 0 place")
+    assert_equal("2", results[1].place, "result 1 place")
+    assert_equal("11", results[2].place, "result 2 place")
+    assert(results[3].place.blank?, "result 3 place blank")
+    assert(results[4].place.blank?, "result 4 place blank")
+    assert_equal("DNF", results[5].place, "result 5 place")
 
     results = [
-     Result.new(place: '1'),
-     Result.new(place: '2'),
-     Result.new(place: '11'),
-     Result.new(place: 'DQ'),
-     Result.new(place: 'DNF'),
-     Result.new(place: nil)
+      Result.new(place: "1"),
+      Result.new(place: "2"),
+      Result.new(place: "11"),
+      Result.new(place: "DQ"),
+      Result.new(place: "DNF"),
+      Result.new(place: nil)
     ]
 
     results = results.sort
-    assert_equal('1', results[0].place, 'result 0 place')
-    assert_equal('2', results[1].place, 'result 1 place')
-    assert_equal('11', results[2].place, 'result 2 place')
-    assert(results[3].place.blank?, 'result 3 place blank')
-    assert_equal('DNF', results[4].place, 'result 4 place')
-    assert_equal('DQ', results[5].place, 'result 5 place')
+    assert_equal("1", results[0].place, "result 0 place")
+    assert_equal("2", results[1].place, "result 1 place")
+    assert_equal("11", results[2].place, "result 2 place")
+    assert(results[3].place.blank?, "result 3 place blank")
+    assert_equal("DNF", results[4].place, "result 4 place")
+    assert_equal("DQ", results[5].place, "result 5 place")
 
-    result_5 = Result.new(place: '5')
-    result_dnf = Result.new(place: 'DNF')
+    result_5 = Result.new(place: "5")
+    result_dnf = Result.new(place: "DNF")
     assert_equal(-1, result_5 <=> result_dnf)
     assert_equal(1, result_dnf <=> result_5)
 
@@ -285,60 +287,60 @@ class ResultTest < ActiveSupport::TestCase
 
     kings_valley_pro_1_2_2004 = FactoryBot.create(:race)
     results = kings_valley_pro_1_2_2004.results
-    result = results.create!(place: 1, first_name: 'Clara', last_name: 'Willson', number: '300')
+    result = results.create!(place: 1, first_name: "Clara", last_name: "Willson", number: "300")
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    assert_nil(result.person(true).road_number(true), 'Current road number')
-    road_number_2004 = result.person.race_numbers.detect{|number| number.year == 2004}
+    assert_nil(result.person(true).road_number(true), "Current road number")
+    road_number_2004 = result.person.race_numbers.detect { |number| number.year == 2004 }
     assert_nil road_number_2004, "Should not create official race number from result"
-    assert(result.person.ccx_number.blank?, 'Cyclocross number')
-    assert(result.person.xc_number.blank?, 'MTB number')
+    assert(result.person.ccx_number.blank?, "Cyclocross number")
+    assert(result.person.xc_number.blank?, "MTB number")
 
     event = SingleDayEvent.create!(discipline: "Road")
     senior_women = FactoryBot.create(:category)
     race = event.races.create!(category: senior_women)
-    result = race.results.create!(place: 2, first_name: 'Eddy', last_name: 'Merckx', number: '200')
+    result = race.results.create!(place: 2, first_name: "Eddy", last_name: "Merckx", number: "200")
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    road_number = result.person(true).race_numbers(true).detect{|number| number.year == Time.zone.today.year}
-    assert_nil(road_number, 'Current road number should not be set from result')
-    assert(result.person.ccx_number.blank?, 'Cyclocross number')
-    assert(result.person.xc_number.blank?, 'MTB number')
+    road_number = result.person(true).race_numbers(true).detect { |number| number.year == Time.zone.today.year }
+    assert_nil(road_number, "Current road number should not be set from result")
+    assert(result.person.ccx_number.blank?, "Cyclocross number")
+    assert(result.person.xc_number.blank?, "MTB number")
     assert_equal(RacingAssociation.current.add_members_from_results?, result.person.member?, "Person should be member")
 
     # Rental
-    result = race.results.create!(place: 2, first_name: 'Benji', last_name: 'Whalen', number: '51')
+    result = race.results.create!(place: 2, first_name: "Benji", last_name: "Whalen", number: "51")
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    road_number = result.person(true).race_numbers(true).detect{|number| number.year == Time.zone.today.year}
-    assert_nil(road_number, 'Current road number')
+    road_number = result.person(true).race_numbers(true).detect { |number| number.year == Time.zone.today.year }
+    assert_nil(road_number, "Current road number")
     assert(!result.person.member?, "Person with rental number should not be member")
   end
 
   test "save number alt" do
     kings_valley_pro_1_2_2004 = FactoryBot.create(:race)
     results = kings_valley_pro_1_2_2004.results
-    result = results.create!(place: 1, first_name: 'Clara', last_name: 'Willson', number: '300')
+    result = results.create!(place: 1, first_name: "Clara", last_name: "Willson", number: "300")
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    assert_nil(result.person(true).road_number(true), 'Current road number')
-    road_number_2004 = result.person.race_numbers.detect{|number| number.year == 2004}
+    assert_nil(result.person(true).road_number(true), "Current road number")
+    road_number_2004 = result.person.race_numbers.detect { |number| number.year == 2004 }
     assert_nil road_number_2004, "Should not create official race number from result"
-    assert(result.person.ccx_number.blank?, 'Cyclocross number')
-    assert(result.person.xc_number.blank?, 'MTB number')
+    assert(result.person.ccx_number.blank?, "Cyclocross number")
+    assert(result.person.xc_number.blank?, "MTB number")
 
     event = SingleDayEvent.create!(discipline: "Road")
     senior_women = FactoryBot.create(:category)
     race = event.races.create!(category: senior_women)
-    result = race.results.create!(place: 2, first_name: 'Eddy', last_name: 'Merckx', number: '200')
+    result = race.results.create!(place: 2, first_name: "Eddy", last_name: "Merckx", number: "200")
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    road_number = result.person(true).race_numbers(true).detect{|number| number.year == Time.zone.today.year}
-    assert_nil(road_number, 'Current road number should not be set from result')
-    assert(result.person.ccx_number.blank?, 'Cyclocross number')
-    assert(result.person.xc_number.blank?, 'MTB number')
+    road_number = result.person(true).race_numbers(true).detect { |number| number.year == Time.zone.today.year }
+    assert_nil(road_number, "Current road number should not be set from result")
+    assert(result.person.ccx_number.blank?, "Cyclocross number")
+    assert(result.person.xc_number.blank?, "MTB number")
     assert_equal(RacingAssociation.current.add_members_from_results?, result.person.member?, "Person should be member")
 
     RacingAssociation.current.rental_numbers = 0..99
-    result = race.results.create!(place: 2, first_name: 'Benji', last_name: 'Whalen', number: '51')
+    result = race.results.create!(place: 2, first_name: "Benji", last_name: "Whalen", number: "51")
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    road_number = result.person(true).race_numbers(true).detect{|number| number.year == Time.zone.today.year}
-    assert_nil(road_number, 'Current road number')
+    road_number = result.person(true).race_numbers(true).detect { |number| number.year == Time.zone.today.year }
+    assert_nil(road_number, "Current road number")
     assert(!result.person.member?, "Person with rental number should not be member")
   end
 
@@ -350,11 +352,11 @@ class ResultTest < ActiveSupport::TestCase
 
     results = Result.person(molly)
     assert_not_nil(results)
-    assert_equal(3, results.size, 'Results')
+    assert_equal(3, results.size, "Results")
 
     results = Result.person(molly.id)
     assert_not_nil(results)
-    assert_equal(3, results.size, 'Results')
+    assert_equal(3, results.size, "Results")
   end
 
   test "last event?" do
@@ -504,12 +506,12 @@ class ResultTest < ActiveSupport::TestCase
       first_name: "Tom", last_name: "Blow", team_name: "QuickStep"
     )
 
-    Person.create!(name: "Phil Anderson", team: Team.find_by_name("QuickStep"))
+    Person.create!(name: "Phil Anderson", team: Team.find_by(name: "QuickStep"))
     assert(race.destroy, "Should destroy race")
 
-    assert_nil(Person.find_by_name("Tom Blow"), "Should delete person that just came from results")
-    assert_not_nil(Person.find_by_name("Phil Anderson"), "Should keep person that was manually entered")
-    assert_not_nil(Team.find_by_name("QuickStep"), "Should keep team that is used by person, even though it was created by a result")
+    assert_nil(Person.find_by(name: "Tom Blow"), "Should delete person that just came from results")
+    assert_not_nil(Person.find_by(name: "Phil Anderson"), "Should keep person that was manually entered")
+    assert_not_nil(Team.find_by(name: "QuickStep"), "Should keep team that is used by person, even though it was created by a result")
   end
 
   test "competition result" do
@@ -541,7 +543,7 @@ class ResultTest < ActiveSupport::TestCase
   test "custom attributes" do
     banana_belt_1 = FactoryBot.create(:event)
     senior_men = FactoryBot.create(:category)
-    race = banana_belt_1.races.create!(category: senior_men, result_columns: [ "place" ], custom_columns: [ "run", 20100929 ])
+    race = banana_belt_1.races.create!(category: senior_men, result_columns: ["place"], custom_columns: ["run", 20_100_929])
 
     result = race.reload.results.create!(place: "1", custom_attributes: { run: "9:00" })
     assert_equal "9:00", result.custom_attribute(:run), "run custom_attribute"

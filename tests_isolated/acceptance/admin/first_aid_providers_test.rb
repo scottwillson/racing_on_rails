@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
@@ -5,7 +7,7 @@ class FirstAidProvidersTest < AcceptanceTest
   setup :javascript!
 
   test "first aid providers" do
-    # FIXME Punt!
+    # FIXME: Punt!
     if Time.zone.today.month < 12
       login_as FactoryBot.create(:administrator)
       promoter = FactoryBot.create(:person, name: "Brad Ross")

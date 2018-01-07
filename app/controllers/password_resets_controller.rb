@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class PasswordResetsController < ApplicationController
   force_https
-  before_action :load_person_using_perishable_token, only: [:edit, :update]
+  before_action :load_person_using_perishable_token, only: %i[edit update]
 
   def create
     if params[:email].blank?
@@ -49,10 +51,10 @@ class PasswordResetsController < ApplicationController
   def load_person_using_perishable_token
     @person = Person.find_using_perishable_token(params[:id], 1.day)
     unless @person
-      flash[:notice] = "We're sorry, but we could not locate your account. " +
-        "Please try copying and pasting the URL " +
-        "from your email into your browser or restarting the " +
-        "reset password process."
+      flash[:notice] = "We're sorry, but we could not locate your account. " \
+                       "Please try copying and pasting the URL " \
+                       "from your email into your browser or restarting the " \
+                       "reset password process."
       redirect_to new_password_reset_path
     end
   end

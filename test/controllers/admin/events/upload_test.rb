@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 # :stopdoc:
@@ -22,15 +24,15 @@ module Admin
 
       test "upload" do
         mt_hood_1 = FactoryBot.create(:stage_race)
-        assert(mt_hood_1.races.empty?, 'Should have no races before import')
+        assert(mt_hood_1.races.empty?, "Should have no races before import")
 
         post :upload, id: mt_hood_1.to_param,
                       results_file: fixture_file_upload("results/pir_2006_format.xlsx", "application/vnd.ms-excel", :binary)
 
-        assert(!flash[:warn].present?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
+        assert(flash[:warn].blank?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
         assert_redirected_to edit_admin_event_path(mt_hood_1)
         assert_not_nil flash[:notice]
-        assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
+        assert(!mt_hood_1.races(true).empty?, "Should have races after upload attempt")
       end
 
       test "upload usac" do
@@ -43,12 +45,12 @@ module Admin
         assert flash[:warn].blank?, "flash[:warn] should be empty, but was: #{flash[:warn]}"
         assert_redirected_to edit_admin_event_path(mt_hood_1)
         assert_not_nil flash[:notice]
-        assert mt_hood_1.races(true).present?, 'Should have races after upload'
+        assert mt_hood_1.races(true).present?, "Should have races after upload"
       end
 
       test "upload custom columns" do
         mt_hood_1 = FactoryBot.create(:stage_race)
-        assert(mt_hood_1.races.empty?, 'Should have no races before import')
+        assert(mt_hood_1.races.empty?, "Should have no races before import")
 
         post :upload, id: mt_hood_1.to_param,
                       results_file: fixture_file_upload("results/custom_columns.xls", "application/vnd.ms-excel", :binary)
@@ -56,8 +58,8 @@ module Admin
 
         assert_response :redirect
         assert_not_nil flash[:notice]
-        assert(!flash[:warn].present?)
-        assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
+        assert(flash[:warn].blank?)
+        assert(!mt_hood_1.races(true).empty?, "Should have races after upload attempt")
       end
 
       test "upload with many warnings" do
@@ -73,11 +75,11 @@ module Admin
       test "upload dupe people" do
         # Two people with different name, same numbers
         # Excel file has Greg Rodgers with no number
-        Person.create(name: 'Greg Rodgers', road_number: '404')
-        Person.create(name: 'Greg Rodgers', road_number: '500')
+        Person.create(name: "Greg Rodgers", road_number: "404")
+        Person.create(name: "Greg Rodgers", road_number: "500")
 
         mt_hood_1 = FactoryBot.create(:stage_race)
-        assert(mt_hood_1.races(true).empty?, 'Should have no races before import')
+        assert(mt_hood_1.races(true).empty?, "Should have no races before import")
 
         file = fixture_file_upload("results/dupe_people.xls", "application/vnd.ms-excel", :binary)
         post :upload, id: mt_hood_1.to_param, results_file: file
@@ -85,14 +87,14 @@ module Admin
         assert_response :redirect
 
         # Dupe people used to be allowed, and this would have been an error
-        assert(!mt_hood_1.races(true).empty?, 'Should have races after importing dupe people')
-        assert(!flash[:warn].present?)
+        assert(!mt_hood_1.races(true).empty?, "Should have races after importing dupe people")
+        assert(flash[:warn].blank?)
       end
 
       test "upload schedule" do
         post(:upload_schedule, schedule_file: fixture_file_upload("schedule/excel.xls", "application/vnd.ms-excel", :binary))
 
-        assert(!flash[:warn].present?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
+        assert(flash[:warn].blank?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
         assert_response :redirect
         assert_redirected_to(admin_events_path)
         assert_not_nil flash[:notice]
@@ -113,7 +115,7 @@ module Admin
 
         assert(flash[:warn].present?, "should have flash[:warn]")
         assert_response :success
-        assert(mt_hood_1.races(true).empty?, 'Should have no races after failed upload attempt')
+        assert(mt_hood_1.races(true).empty?, "Should have no races after failed upload attempt")
       end
     end
   end

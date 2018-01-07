@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "will_paginate/array"
 require "test_helper"
 
@@ -14,7 +16,7 @@ class CategoriesControllerTest < ActionController::TestCase
     FactoryBot.create(:category, name: "Senior Men")
     juniors = FactoryBot.create(:category, name: "Juniors")
     get :index, name: "Jun"
-    assert_equal [ juniors ], assigns(:categories), "Should assign categories matching 'Jun'"
+    assert_equal [juniors], assigns(:categories), "Should assign categories matching 'Jun'"
   end
 
   test "index search calls categories" do

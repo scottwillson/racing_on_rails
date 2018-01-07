@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddRacesSplitFrom < ActiveRecord::Migration
   def change
     change_table :races do |t|

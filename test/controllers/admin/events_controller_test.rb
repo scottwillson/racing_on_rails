@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../test_helper", __FILE__)
 
 module Admin
   # :stopdoc:
   class EventsControllerTest < ActionController::TestCase
-
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::UrlHelper
     include ActionView::Helpers::TextHelper
@@ -17,7 +18,7 @@ module Admin
 
     test "destroy event" do
       jack_frost = FactoryBot.create(:event)
-      delete(:destroy, id: jack_frost.to_param, commit: 'Delete')
+      delete(:destroy, id: jack_frost.to_param, commit: "Delete")
       assert_redirected_to(admin_events_path(year: jack_frost.date.year))
       assert(!Event.exists?(jack_frost.id), "Jack Frost should have been destroyed")
     end
@@ -25,23 +26,22 @@ module Admin
     test "destroy event ajax" do
       event = FactoryBot.create(:event)
       event.destroy_races
-      xhr(:delete, :destroy, id: event.to_param, commit: 'Delete')
+      xhr(:delete, :destroy, id: event.to_param, commit: "Delete")
       assert_response(:success)
       assert(!Event.exists?(event.id), "Event should have been destroyed")
     end
 
     test "save no promoter" do
-      assert_nil(SingleDayEvent.find_by_name('Silverton'), 'Silverton should not be in database')
+      assert_nil(SingleDayEvent.find_by(name: "Silverton"), "Silverton should not be in database")
       # New event, no changes, single day, no promoter
       post(:create,
            "commit" => "Save",
-           'same_promoter' => 'true',
-           "event" => {"name" => "Silverton",
-                    'type' => 'SingleDayEvent',
-                    'promoter_id' => ""}
-      )
-      silverton = SingleDayEvent.find_by_name('Silverton')
-      assert_not_nil(silverton, 'Silverton should be in database')
+           "same_promoter" => "true",
+           "event" => { "name" => "Silverton",
+                        "type" => "SingleDayEvent",
+                        "promoter_id" => "" })
+      silverton = SingleDayEvent.find_by(name: "Silverton")
+      assert_not_nil(silverton, "Silverton should be in database")
       assert_nil(silverton.promoter, "Silverton Promoter")
       assert_redirected_to edit_admin_event_path(assigns(:event))
     end
@@ -53,16 +53,15 @@ module Admin
       post(:update,
            "commit" => "Save",
            id: banana_belt.to_param,
-           "event" => {"city" => "Forest Grove", "name" => "Banana Belt One","date" => "2006-03-12",
-                     "flyer" => "../../flyers/2006/banana_belt.html", "sanctioned_by" => "UCI", "flyer_approved" => "1",
-                     "discipline" => "Track", "cancelled" => "1", "state" => "OR", 'type' => 'SingleDayEvent',
-                    "promoter_id"  => promoter.to_param}
-      )
-      assert_nil(flash[:warn], 'flash[:warn]')
+           "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
+                        "flyer" => "../../flyers/2006/banana_belt.html", "sanctioned_by" => "UCI", "flyer_approved" => "1",
+                        "discipline" => "Track", "cancelled" => "1", "state" => "OR", "type" => "SingleDayEvent",
+                        "promoter_id" => promoter.to_param })
+      assert_nil(flash[:warn], "flash[:warn]")
       assert_redirected_to edit_admin_event_path(banana_belt)
 
       banana_belt.reload
-      assert_equal(promoter, banana_belt.promoter(true), 'Promoter after save')
+      assert_equal(promoter, banana_belt.promoter(true), "Promoter after save")
     end
 
     test "set parent" do
@@ -104,7 +103,7 @@ module Admin
 
       assert(event.multi_day_event_children_with_no_parent?, "multi_day_event_children_with_no_parent?")
       assert_not_nil(event.multi_day_event_children_with_no_parent, "multi_day_event_children_with_no_parent")
-      assert(!(event.multi_day_event_children_with_no_parent).empty?, "multi_day_event_children_with_no_parent")
+      assert(!event.multi_day_event_children_with_no_parent.empty?, "multi_day_event_children_with_no_parent")
       get(:edit, id: event.to_param)
       assert_response(:success)
       assert_template("admin/events/edit")
@@ -162,8 +161,8 @@ module Admin
 
     # Really only happens to developers switching environments, and more of a test of LoginSystem
     test "gracefully handle bad person id" do
-      @request.session[:person_id] = 31289371283
-      @request.session[:person_credentials] = 31289371283
+      @request.session[:person_id] = 31_289_371_283
+      @request.session[:person_credentials] = 31_289_371_283
       get(:index)
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
@@ -171,7 +170,7 @@ module Admin
     test "destroy child event" do
       event = FactoryBot.create(:series_event)
       event.destroy_races
-      delete(:destroy, id: event.to_param, commit: 'Delete')
+      delete(:destroy, id: event.to_param, commit: "Delete")
       assert(!Event.exists?(event.id), "Should have deleted Event")
     end
 
@@ -181,11 +180,11 @@ module Admin
       CombinedTimeTrialResults.calculate!
       assert_not_nil(jack_frost.combined_results, "Event should have combined results before destroying races")
       assert_equal(1, jack_frost.races.count, "Races before destroy")
-      xhr :delete, :destroy_races, id: jack_frost.id, commit: 'Delete'
+      xhr :delete, :destroy_races, id: jack_frost.id, commit: "Delete"
       assert_not_nil(assigns(:races), "@races")
       assert_not_nil(assigns(:combined_results), "@combined_results")
       assert_response(:success)
-      assert_equal(0, jack_frost.races(true).count  , "Races after destroy")
+      assert_equal(0, jack_frost.races(true).count, "Races after destroy")
       assert_nil(jack_frost.combined_results(true), "Event should have not combined results after destroying races")
     end
 
@@ -195,7 +194,7 @@ module Admin
         multi_day_event_with_children = FactoryBot.create(:stage_race, name: "Stage Race")
         multi_day_event = MultiDayEvent.create!(date: 1.week.ago, name: "Childless MultiDayEvent")
 
-        expected_events = [ single_day_event, multi_day_event ] + multi_day_event_with_children.children
+        expected_events = [single_day_event, multi_day_event] + multi_day_event_with_children.children
         assert_same_elements expected_events, @controller.send(:events_for_year, 2005), "events_for_year should include childless MultiDayEvents"
       end
     end

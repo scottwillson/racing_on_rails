@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Caching
   extend ActiveSupport::Concern
 
@@ -10,7 +12,6 @@ module Caching
       true
     end
   end
-
 
   protected
 

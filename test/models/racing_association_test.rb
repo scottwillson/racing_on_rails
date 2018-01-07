@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 # Check we can call these methods with errors.
 # Actual values are going to differ between sites.
 class RacingAssociationTest < ActiveSupport::TestCase
- test "show events velodrome" do
-   RacingAssociation.current.show_events_velodrome?
- end
+  test "show events velodrome" do
+    RacingAssociation.current.show_events_velodrome?
+  end
 
   test "competitions" do
     default_competitions = RacingAssociation.current.competitions

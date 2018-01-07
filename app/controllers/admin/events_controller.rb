@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 module Admin
   # Show Schedule, add and edit Events, edit Results for Events. Promoters can view and edit their own events. Promoters can edit
   # fewer fields than administrators.
   class EventsController < Admin::AdminController
-    before_action :assign_event, only: [ :edit, :update ]
-    before_action :require_administrator_or_promoter, only: [ :edit, :update ]
-    before_action :require_administrator, except: [ :edit, :update ]
-    before_action :assign_disciplines, only: [ :new, :create, :edit, :update ]
+    before_action :assign_event, only: %i[edit update]
+    before_action :require_administrator_or_promoter, only: %i[edit update]
+    before_action :require_administrator, except: %i[edit update]
+    before_action :assign_disciplines, only: %i[new create edit update]
 
     # schedule calendar  with links to admin Event pages
     # === Params
@@ -26,9 +28,7 @@ module Admin
     # * disciplines: List of all Disciplines + blank
     def edit
       assign_previous
-      if params['promoter_id'].present? && current_person.administrator?
-        @event.promoter = Person.find(params['promoter_id'])
-      end
+      @event.promoter = Person.find(params["promoter_id"]) if params["promoter_id"].present? && current_person.administrator?
     end
 
     # Show page to create new Event
@@ -136,11 +136,11 @@ module Admin
       temp_file = File.new(path)
       @event = Event.find(params[:id])
 
-      if RacingAssociation.current.usac_results_format?
-        results_file = Results::USACResultsFile.new(temp_file, @event)
-      else
-        results_file = Results::ResultsFile.new(temp_file, @event)
-      end
+      results_file = if RacingAssociation.current.usac_results_format?
+                       Results::USACResultsFile.new(temp_file, @event)
+                     else
+                       Results::ResultsFile.new(temp_file, @event)
+                     end
 
       begin
         results_file.import
@@ -151,7 +151,11 @@ module Admin
       end
 
       expire_cache
-      FileUtils.rm temp_file rescue nil
+      begin
+        FileUtils.rm temp_file
+      rescue StandardError
+        nil
+      end
 
       flash[:notice] = "Imported #{uploaded_file.original_filename}. "
       if results_file.custom_columns.present?
@@ -234,7 +238,7 @@ module Admin
           @races = @event.races.to_a.dup
           @combined_results = @event.combined_results
           @event.destroy_races
-          @races = @races.select { |race| !Race.exists?(race.id) }
+          @races = @races.reject { |race| Race.exists?(race.id) }
           expire_cache
         end
       end
@@ -277,16 +281,14 @@ module Admin
       _params = event_params.dup
       event_type = params[:event][:type]
       if event_type.blank?
-        if _params[:parent_id].present?
-          event_type = "Event"
-        else
-          event_type = "SingleDayEvent"
-        end
+        event_type = if _params[:parent_id].present?
+                       "Event"
+                     else
+                       "SingleDayEvent"
+                     end
       end
 
-      unless Event::TYPES.include?(event_type)
-        fail "Unknown event type: #{event_type}"
-      end
+      raise "Unknown event type: #{event_type}" unless Event::TYPES.include?(event_type)
 
       @event = Object.const_get(event_type).new(_params)
     end
@@ -306,9 +308,7 @@ module Admin
     def assign_previous
       @previous = nil
 
-      if @event.races.empty?
-        @previous = @event.previous
-      end
+      @previous = @event.previous if @event.races.empty?
     end
 
     def event_params

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   class AliasesController < Admin::AdminController
     def destroy

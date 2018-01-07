@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 # :stopdoc:
@@ -9,7 +11,7 @@ module Events
         FactoryBot.create(:event, date: Date.new(2008))
         FactoryBot.create(:event, date: Date.new(2009))
         years = Event.find_all_years
-        assert_equal_enumerables [ 2012, 2011, 2010, 2009, 2008, 2007 ], years, "Should find all years with events"
+        assert_equal_enumerables [2012, 2011, 2010, 2009, 2008, 2007], years, "Should find all years with events"
       end
     end
 
@@ -30,13 +32,13 @@ module Events
 
     test "set human date" do
       [
-        [ [ 2014, 5, 20 ], "7/25/2014",              [ 2014, 7, 25 ] ],
-        [ [ 2014, 5, 20 ], "7-25-2014",              [ 2014, 7, 25 ] ],
-        [ [ 2014, 5, 20 ], "7/25/14",                [ 2014, 7, 25 ] ],
-        [ [ 2014, 5, 20 ], "7-25-14",                [ 2014, 7, 25 ] ],
-        [ [ 2014, 5, 20 ], "Saturday, May 17, 2014", [ 2014, 5, 17 ] ],
-        [ [ 2014, 5, 20 ], nil,                      :error ],
-        [ [ 2014, 5, 20 ], "never!!",                :error ],
+        [[2014, 5, 20], "7/25/2014",              [2014, 7, 25]],
+        [[2014, 5, 20], "7-25-2014",              [2014, 7, 25]],
+        [[2014, 5, 20], "7/25/14",                [2014, 7, 25]],
+        [[2014, 5, 20], "7-25-14",                [2014, 7, 25]],
+        [[2014, 5, 20], "Saturday, May 17, 2014", [2014, 5, 17]],
+        [[2014, 5, 20], nil,                      :error],
+        [[2014, 5, 20], "never!!",                :error]
       ].each do |date, human_date, expected|
         event = SingleDayEvent.new(date: Time.zone.local(*date).to_date)
 

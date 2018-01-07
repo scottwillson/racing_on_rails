@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module People
   module Aliases
     extend ActiveSupport::Concern
@@ -24,9 +25,7 @@ module People
          !Person.exists?(["name = ?", name_was])
 
         new_alias = Alias.new(name: name_was, person: self)
-        unless new_alias.save
-          logger.error "Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(', ')}"
-        end
+        logger.error "Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(', ')}" unless new_alias.save
         new_alias
       end
     end

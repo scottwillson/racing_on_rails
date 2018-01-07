@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ActsAsTree
   module Validation
     extend ActiveSupport::Concern

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   module Calculations
     module SelectScores
@@ -25,23 +27,23 @@ module Competitions
       end
 
       def reject_scores_greater_than_maximum_events(scores, rules)
-        scores.group_by(&:participant_id).
-        map do |participant_id, participant_scores|
+        scores.group_by(&:participant_id)
+              .map do |_participant_id, participant_scores|
           slice_of participant_scores, rules[:maximum_events]
-        end.
-        flatten
+        end
+              .flatten
       end
 
       def slice_of(scores, maximum)
-        scores.
-        group_by(&:event_id).
-        sort_by { |_, event_scores| date_and_points(event_scores) }.
-        reverse[ 0, maximum ].
-        map(&:last)
+        scores
+          .group_by(&:event_id)
+          .sort_by { |_, event_scores| date_and_points(event_scores) }
+          .reverse[ 0, maximum ]
+          .map(&:last)
       end
 
       def date_and_points(scores)
-        [ scores.map(&:points).reduce(&:+), scores.first.date ]
+        [scores.map(&:points).reduce(&:+), scores.first.date]
       end
     end
   end

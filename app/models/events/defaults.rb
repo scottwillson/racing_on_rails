@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Events
   module Defaults
     extend ActiveSupport::Concern
@@ -29,18 +31,16 @@ module Events
     def set_propogated_attributes
       if parent
         propogated_attributes.each do |attr|
-          if self[attr].blank?
-            self[attr] = parent[attr]
-          end
+          self[attr] = parent[attr] if self[attr].blank?
         end
       end
     end
 
     def propogated_attributes
-      @propogated_attributes ||= %w{
+      @propogated_attributes ||= %w[
         city discipline flyer name number_issuer_id promoter_id prize_list sanctioned_by state time velodrome_id time
         postponed cancelled flyer_approved instructional practice sanctioned_by email phone team_id beginner_friendly
-      }
+      ]
     end
 
     def attributes_for_duplication
@@ -82,7 +82,7 @@ module Events
     end
 
     def default_number_issuer
-      NumberIssuer.find_by_name(RacingAssociation.current.short_name)
+      NumberIssuer.find_by(name: RacingAssociation.current.short_name)
     end
   end
 end

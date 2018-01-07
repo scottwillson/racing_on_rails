@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../test_helper", __FILE__)
 
 module Admin
@@ -33,7 +35,7 @@ module Admin
 
     test "create" do
       post(:create, velodrome: { name: "Hellyer", website: "www.hellyer.org" })
-      velodrome = Velodrome.find_by_name("Hellyer")
+      velodrome = Velodrome.find_by(name: "Hellyer")
       assert_not_nil(velodrome, "Should create new Velodrome")
       assert_equal("www.hellyer.org", velodrome.website, "website")
       assert_redirected_to(new_admin_velodrome_path)
@@ -70,8 +72,7 @@ module Admin
           :update_attribute,
           id: velodrome.to_param,
           value: "Paul Allen Velodrome",
-          name: "name"
-      )
+          name: "name")
       assert_response(:success)
       velodrome.reload
       assert_equal("Paul Allen Velodrome", velodrome.name, "Velodrome name should change after update")
@@ -83,8 +84,7 @@ module Admin
           :update_attribute,
           id: velodrome.to_param,
           value: "www.raceatra.com",
-          name: "website"
-      )
+          name: "website")
       assert_response(:success)
       velodrome.reload
       assert_equal("www.raceatra.com", velodrome.website, "Velodrome website should change after update")

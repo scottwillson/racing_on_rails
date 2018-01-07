@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Old versions of Person. Only goes back since we started using Vestal Versions.
 class VersionsController < ApplicationController
   force_https

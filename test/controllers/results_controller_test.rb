@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 # :stopdoc:
@@ -35,7 +37,7 @@ class ResultsControllerTest < ActionController::TestCase
     banana_belt_1 = FactoryBot.create(:result).event
     big_team = Team.create!(name: "T" * 60)
     big_person = Person.create!(first_name: "f" * 60, last_name: "L" * 60, team: big_team)
-    banana_belt_1.races.first.results.create!(place: 20, person: big_person, team: big_team, number: '')
+    banana_belt_1.races.first.results.create!(place: 20, person: big_person, team: big_team, number: "")
 
     get :event, event_id: banana_belt_1.to_param
     assert_response(:success)
@@ -82,7 +84,7 @@ class ResultsControllerTest < ActionController::TestCase
 
   test "index road" do
     FactoryBot.create(:event, date: Date.new(2004)).races.create!(category: @senior_women).results.create!(place: "1", person: Person.create!, team: Team.create!(name: "dfl"))
-    get(:index, year: "2004", discipline: 'road')
+    get(:index, year: "2004", discipline: "road")
     assert_response(:success)
     assert_template("results/index")
     assert_not_nil(assigns["events"], "Should assign events")
@@ -91,7 +93,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
 
   test "index road with discipline" do
-    get(:index, year: "2004", discipline: 'time_trial')
+    get(:index, year: "2004", discipline: "time_trial")
     assert_response(:success)
     assert_template("results/index")
     assert_not_nil(assigns["events"], "Should assign events")
@@ -101,62 +103,62 @@ class ResultsControllerTest < ActionController::TestCase
 
   test "index all subclasses" do
     Timecop.freeze(Time.zone.local(2007, 5)) do
-      SingleDayEvent.create!(name: 'In past', date: Date.new(2006, 12, 31)).races.create!(category: @senior_men).results.create!
-      SingleDayEvent.create!(name: 'In future', date: Date.new(2008, 1, 1)).races.create!(category: @senior_men).results.create!
-      SingleDayEvent.create!(name: 'SingleDayEvent no races', date: Date.new(2007, 4, 12))
-      single_day_event = SingleDayEvent.create!(name: 'SingleDayEvent', date: Date.new(2007, 4, 15))
+      SingleDayEvent.create!(name: "In past", date: Date.new(2006, 12, 31)).races.create!(category: @senior_men).results.create!
+      SingleDayEvent.create!(name: "In future", date: Date.new(2008, 1, 1)).races.create!(category: @senior_men).results.create!
+      SingleDayEvent.create!(name: "SingleDayEvent no races", date: Date.new(2007, 4, 12))
+      single_day_event = SingleDayEvent.create!(name: "SingleDayEvent", date: Date.new(2007, 4, 15))
       single_day_event.races.create!(category: @senior_men).results.create!
 
-      MultiDayEvent.create!(name: 'In past', date: Date.new(2006, 12, 31)).races.create!(category: @senior_men).results.create!
-      MultiDayEvent.create!(name: 'In future', date: Date.new(2008, 1, 1)).races.create!(category: @senior_men).results.create!
-      MultiDayEvent.create!(name: 'MultiDayEvent no races', date: Date.new(2007, 1, 12))
+      MultiDayEvent.create!(name: "In past", date: Date.new(2006, 12, 31)).races.create!(category: @senior_men).results.create!
+      MultiDayEvent.create!(name: "In future", date: Date.new(2008, 1, 1)).races.create!(category: @senior_men).results.create!
+      MultiDayEvent.create!(name: "MultiDayEvent no races", date: Date.new(2007, 1, 12))
 
-      multi_day_event_with_children = MultiDayEvent.create!(name: 'MultiDayEvent with children, no races', date: Date.new(2007, 5, 15))
+      multi_day_event_with_children = MultiDayEvent.create!(name: "MultiDayEvent with children, no races", date: Date.new(2007, 5, 15))
       multi_day_event_with_children.children.create!(date: Date.new(2007, 5, 15))
 
-      multi_day_event_with_races = MultiDayEvent.create!(name: 'MultiDayEvent with races, no children', date: Date.new(2007, 6, 12))
+      multi_day_event_with_races = MultiDayEvent.create!(name: "MultiDayEvent with races, no children", date: Date.new(2007, 6, 12))
       multi_day_event_with_races.races.create!(category: @senior_men).results.create!
 
-      multi_day_event_with_child_races = MultiDayEvent.create!(name: 'MultiDayEvent with children races', date: Date.new(2007, 6, 17))
+      multi_day_event_with_child_races = MultiDayEvent.create!(name: "MultiDayEvent with children races", date: Date.new(2007, 6, 17))
       multi_day_event_with_child_races_child = multi_day_event_with_child_races.children.create!(date: Date.new(2007, 6, 17))
       multi_day_event_with_child_races_child.races.create!(category: @senior_men).results.create!
 
-      Series.create!(name: 'In past', date: Date.new(2006, 12, 31)).races.create!(category: @senior_men).results.create!
-      Series.create!(name: 'In future', date: Date.new(2008, 1, 1)).races.create!(category: @senior_men).results.create!
-      Series.create!(name: 'Series no races', date: Date.new(2007, 1, 12))
+      Series.create!(name: "In past", date: Date.new(2006, 12, 31)).races.create!(category: @senior_men).results.create!
+      Series.create!(name: "In future", date: Date.new(2008, 1, 1)).races.create!(category: @senior_men).results.create!
+      Series.create!(name: "Series no races", date: Date.new(2007, 1, 12))
 
-      series_with_children = Series.create!(name: 'Series with children, no races', date: Date.new(2007, 2, 15))
+      series_with_children = Series.create!(name: "Series with children, no races", date: Date.new(2007, 2, 15))
       series_with_children.children.create!(date: Date.new(2007, 2, 15))
 
-      series_with_races = Series.create!(name: 'Series with races, no children', date: Date.new(2007, 3, 12))
+      series_with_races = Series.create!(name: "Series with races, no children", date: Date.new(2007, 3, 12))
       series_with_races.races.create!(category: @senior_men).results.create!
 
-      series_with_child_races = Series.create!(name: 'Series with children races', date: Date.new(2007, 4, 17))
+      series_with_child_races = Series.create!(name: "Series with children races", date: Date.new(2007, 4, 17))
       series_with_child_races_child = series_with_child_races.children.create!(date: Date.new(2007, 4, 17))
       series_with_child_races_child.races.create!(category: @senior_men).results.create!
       series_with_child_races_child.races.create!(category: @senior_men).results.create!
 
-      series_with_races_and_child_races = Series.create!(name: 'Series with races and  with children races', date: Date.new(2007, 11, 1))
+      series_with_races_and_child_races = Series.create!(name: "Series with races and  with children races", date: Date.new(2007, 11, 1))
       series_with_races_and_child_races.races.create!(category: @senior_men).results.create!
       series_with_races_and_child_races_child = series_with_child_races.children.create!(date: Date.new(2007, 11, 11))
       series_with_races_and_child_races_child.races.create!(category: @senior_men).results.create!
       series_with_races_and_child_races_child.races.create!(category: @senior_men).results.create!
 
-      WeeklySeries.create!(name: 'In past', date: Date.new(2006, 12, 31)).races.create!(category: @senior_men).results.create!
-      WeeklySeries.create!(name: 'In future', date: Date.new(2008, 1, 1)).races.create!(category: @senior_men).results.create!
-      WeeklySeries.create!(name: 'WeeklySeries no races', date: Date.new(2007, 1, 12))
+      WeeklySeries.create!(name: "In past", date: Date.new(2006, 12, 31)).races.create!(category: @senior_men).results.create!
+      WeeklySeries.create!(name: "In future", date: Date.new(2008, 1, 1)).races.create!(category: @senior_men).results.create!
+      WeeklySeries.create!(name: "WeeklySeries no races", date: Date.new(2007, 1, 12))
 
-      weekly_series_with_children = WeeklySeries.create!(name: 'WeeklySeries with children, no races', date: Date.new(2007, 8, 2))
+      weekly_series_with_children = WeeklySeries.create!(name: "WeeklySeries with children, no races", date: Date.new(2007, 8, 2))
       weekly_series_with_children.children.create!(date: Date.new(2007, 8, 2))
 
-      weekly_series_with_races = WeeklySeries.create!(name: 'WeeklySeries with races, no children', date: Date.new(2007, 9, 22))
+      weekly_series_with_races = WeeklySeries.create!(name: "WeeklySeries with races, no children", date: Date.new(2007, 9, 22))
       weekly_series_with_races.races.create!(category: @senior_men).results.create!
 
-      weekly_series_with_child_races = WeeklySeries.create!(name: 'WeeklySeries with children races', date: Date.new(2007, 3, 5))
+      weekly_series_with_child_races = WeeklySeries.create!(name: "WeeklySeries with children races", date: Date.new(2007, 3, 5))
       weekly_series_with_child_races_child = weekly_series_with_child_races.children.create!(date: Date.new(2007, 3, 5))
       weekly_series_with_child_races_child.races.create!(category: @senior_men).results.create!
 
-      weekly_series_with_races_and_child_races = WeeklySeries.create!(name: 'WeeklySeries with races and children races', date: Date.new(2007, 12, 2))
+      weekly_series_with_races_and_child_races = WeeklySeries.create!(name: "WeeklySeries with races and children races", date: Date.new(2007, 12, 2))
       weekly_series_with_races_and_child_races.races.create!(category: @senior_men).results.create!
       weekly_series_with_races_and_child_races_child = weekly_series_with_child_races.children.create!(date: Date.new(2007, 12, 2))
       weekly_series_with_races_and_child_races_child.races.create!(category: @senior_men).results.create!
@@ -167,14 +169,14 @@ class ResultsControllerTest < ActionController::TestCase
       get(:index, year: "2007")
       assert_response(:success)
 
-      assert_not_nil(assigns['events'], "Should assign 'events'")
+      assert_not_nil(assigns["events"], "Should assign 'events'")
 
       if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
         [series_with_races, single_day_event, series_with_child_races, multi_day_event_with_races,
-                  multi_day_event_with_child_races, series_with_races_and_child_races]
+         multi_day_event_with_child_races, series_with_races_and_child_races]
       else
         [series_with_races, single_day_event, series_with_child_races, usa_cycling_event_with_results, multi_day_event_with_races,
-                  multi_day_event_with_child_races, series_with_races_and_child_races]
+         multi_day_event_with_child_races, series_with_races_and_child_races]
       end
     end
   end
@@ -188,13 +190,13 @@ class ResultsControllerTest < ActionController::TestCase
     assert_template("results/person")
     assert_not_nil(assigns["person"], "Should assign person")
     assert_equal(assigns["person"], weaver, "Weaver!")
-    assert_equal [ result ], assigns(:event_results), "@event_results for 2008"
+    assert_equal [result], assigns(:event_results), "@event_results for 2008"
   end
 
   test "person long name" do
     big_team = Team.create!(name: "T" * 60)
     big_person = Person.create!(first_name: "f" * 60, last_name: "L" * 60, team: big_team)
-    FactoryBot.create(:result, person: big_person, team: big_team, place: 2, number: '99')
+    FactoryBot.create(:result, person: big_person, team: big_team, place: 2, number: "99")
 
     get :person, person_id: big_person.to_param
     assert_response(:success)

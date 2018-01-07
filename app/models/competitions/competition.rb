@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   # Results that derive their results from other Events. Se TYPES.
   # Year-long: BAR, Ironman, WSBA Rider Rankings, Oregon Cup.
@@ -15,7 +17,7 @@ module Competitions
     include Competitions::Naming
     include Competitions::Points
 
-    TYPES = %w(
+    TYPES = %w[
       Competitions::AgeGradedBar
       Competitions::Bar
       Competitions::Cat4WomensRaceSeries
@@ -32,7 +34,7 @@ module Competitions
       Competitions::OverallBar
       Competitions::TaborOverall
       Competitions::TeamBar
-    ).freeze
+    ].freeze
 
     UNLIMITED = Float::INFINITY
 
@@ -46,15 +48,15 @@ module Competitions
              class_name: "::Event"
 
     def self.find_for_year(year = RacingAssociation.current.year)
-      self.where("date between ? and ?", Time.zone.local(year).beginning_of_year.to_date, Time.zone.local(year).end_of_year.to_date).first
+      where("date between ? and ?", Time.zone.local(year).beginning_of_year.to_date, Time.zone.local(year).end_of_year.to_date).first
     end
 
     def self.find_for_year!(year = RacingAssociation.current.year)
-      self.find_for_year(year) || raise(ActiveRecord::RecordNotFound)
+      find_for_year(year) || raise(ActiveRecord::RecordNotFound)
     end
 
     def self.find_or_create_for_year(year = RacingAssociation.current.year)
-      self.find_for_year(year) || self.create(date: (Time.zone.local(year).beginning_of_year))
+      find_for_year(year) || create(date: Time.zone.local(year).beginning_of_year)
     end
 
     # Update results based on source event results.
@@ -63,7 +65,7 @@ module Competitions
       ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
         transaction do
           year = year.to_i if year.is_a?(String)
-          competition = self.find_or_create_for_year(year)
+          competition = find_or_create_for_year(year)
           competition.set_date
           raise(ActiveRecord::ActiveRecordError, competition.errors.full_messages) unless competition.errors.empty?
           competition.delete_races
@@ -87,9 +89,9 @@ module Competitions
     def create_races
       race_category_names.each do |name|
         category = Category.where(name: name).first || Category.create!(raw_name: name)
-        if !races.where(category: category).exists?
+        unless races.where(category: category).exists?
           if team?
-            races.create! category: category, result_columns: %W{ place team_name points }
+            races.create! category: category, result_columns: %w[ place team_name points ]
           else
             races.create! category: category
           end
@@ -157,12 +159,11 @@ module Competitions
     end
 
     # Callback
-    def before_calculate
-    end
+    def before_calculate; end
 
     # Callback
     def after_calculate
-      # TODO ensure subclasses call super
+      # TODO: ensure subclasses call super
       self.updated_at = Time.zone.now
     end
 
@@ -183,51 +184,51 @@ module Competitions
     end
 
     def source_results_query(race)
-      query = Result.
-        select(
-          "distinct results.id as id",
-          "1 as multiplier",
-          "age",
-          "categories.ability_begin as category_ability",
-          "categories.ages_begin as category_ages_begin",
-          "categories.ages_end as category_ages_end",
-          "categories.equipment as category_equipment",
-          "categories.gender as category_gender",
-          "events.bar_points as event_bar_points",
-          "events.date",
-          "events.discipline",
-          "events.type",
-          "gender",
-          "member_from",
-          "member_to",
-          "parents_events.bar_points as parent_bar_points",
-          "parents_events_2.bar_points as parent_parent_bar_points",
-          "people.gender as person_gender",
-          "people.name as person_name",
-          "points_factor",
-          "races.bar_points as race_bar_points",
-          "results.#{participant_id_attribute} as participant_id",
-          "results.event_id",
-          "place",
-          "results.points",
-          "results.race_id",
-          "results.race_name as category_name",
-          "results.year",
-          "team_member",
-          "team_name"
-        ).
-        joins(:race, :event, :person).
-        joins("left outer join events parents_events on parents_events.id = events.parent_id").
-        joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
-        joins("left outer join categories on categories.id = races.category_id").
-        joins("left outer join competition_event_memberships on results.event_id = competition_event_memberships.event_id and competition_event_memberships.competition_id = #{id}").
-        where("results.year = ?", year)
+      query = Result
+              .select(
+                "distinct results.id as id",
+                "1 as multiplier",
+                "age",
+                "categories.ability_begin as category_ability",
+                "categories.ages_begin as category_ages_begin",
+                "categories.ages_end as category_ages_end",
+                "categories.equipment as category_equipment",
+                "categories.gender as category_gender",
+                "events.bar_points as event_bar_points",
+                "events.date",
+                "events.discipline",
+                "events.type",
+                "gender",
+                "member_from",
+                "member_to",
+                "parents_events.bar_points as parent_bar_points",
+                "parents_events_2.bar_points as parent_parent_bar_points",
+                "people.gender as person_gender",
+                "people.name as person_name",
+                "points_factor",
+                "races.bar_points as race_bar_points",
+                "results.#{participant_id_attribute} as participant_id",
+                "results.event_id",
+                "place",
+                "results.points",
+                "results.race_id",
+                "results.race_name as category_name",
+                "results.year",
+                "team_member",
+                "team_name"
+              )
+              .joins(:race, :event, :person)
+              .joins("left outer join events parents_events on parents_events.id = events.parent_id")
+              .joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id")
+              .joins("left outer join categories on categories.id = races.category_id")
+              .joins("left outer join competition_event_memberships on results.event_id = competition_event_memberships.event_id and competition_event_memberships.competition_id = #{id}")
+              .where("results.year = ?", year)
 
-      if source_event_types.include?(Event)
-        query = query.where("(events.type in (?) or events.type is NULL)", source_event_types)
-      else
-        query = query.where("events.type in (?)", source_event_types)
-      end
+      query = if source_event_types.include?(Event)
+                query.where("(events.type in (?) or events.type is NULL)", source_event_types)
+              else
+                query.where("events.type in (?)", source_event_types)
+              end
 
       query = query.merge(categories_clause(race))
 
@@ -236,22 +237,20 @@ module Competitions
 
     # Only consider results with categories that match +race+'s category
     def categories_clause(race)
-      if categories?
-        Category.where("races.category_id" => categories_for(race))
-      end
+      Category.where("races.category_id" => categories_for(race)) if categories?
     end
 
-    def after_source_results(results, race)
+    def after_source_results(results, _race)
       results
     end
 
-    # TODO just do this in source_results with join
+    # TODO: just do this in source_results with join
     def add_upgrade_results(results, race)
       if race.name.in?(upgrades.keys)
         upgrade_categories = Array.wrap(upgrades[race.name])
         upgrade_races = races.select { |r| r.name.in?(upgrade_categories) }
-        results.to_a + Result.connection.select_all(Result.
-          select(
+        results.to_a + Result.connection.select_all(Result
+          .select(
             "distinct results.id as id",
             "1 as multiplier",
             "events.bar_points as event_bar_points",
@@ -273,18 +272,17 @@ module Competitions
             "team_member",
             "team_name",
             "true as upgrade"
-          ).
-          joins(:race, :event, :person).
-          joins("left outer join events parents_events on parents_events.id = events.parent_id").
-          joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
-          joins("left outer join competition_event_memberships on results.event_id = competition_event_memberships.event_id and competition_event_memberships.competition_id = #{id}").
-          where("results.race_id" => upgrade_races).
+          )
+          .joins(:race, :event, :person)
+          .joins("left outer join events parents_events on parents_events.id = events.parent_id")
+          .joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id")
+          .joins("left outer join competition_event_memberships on results.event_id = competition_event_memberships.event_id and competition_event_memberships.competition_id = #{id}")
+          .where("results.race_id" => upgrade_races).
           # Only include upgrade results for people with category results
           where(
             "results.#{participant_id_attribute}" =>
             results.map { |r| r["participant_id"] }.uniq
-          )
-        ).to_a
+          )).to_a
       else
         results
       end
@@ -293,36 +291,34 @@ module Competitions
     # Some competitions are only open to RacingAssociation members, and non-members are dropped from the results.
     def calculate_members_only_places
       if place_members_only?
-        Race.
-          includes(:event).
-          where("events.type != ?", self.class.name.demodulize).
-          year(year).
-          where("events.updated_at > ? || races.updated_at > ?", 1.week.ago, 1.week.ago).
-          references(:events).
-          find_each do |r|
-            r.calculate_members_only_places!
-          end
+        Race
+          .includes(:event)
+          .where("events.type != ?", self.class.name.demodulize)
+          .year(year)
+          .where("events.updated_at > ? || races.updated_at > ?", 1.week.ago, 1.week.ago)
+          .references(:events)
+          .find_each(&:calculate_members_only_places!)
       end
     end
 
     def delete_non_calculation_attributes(results)
-      non_calculation_attributes = %w{
-          age
-          category_ability
-          category_ages_begin
-          category_ages_end
-          category_equipment
-          category_gender
-          discipline
-          event_bar_points
-          gender
-          parent_bar_points
-          parent_parent_bar_points
-          person_gender
-          person_name
-          points_factor
-          race_bar_points
-      }
+      non_calculation_attributes = %w[
+        age
+        category_ability
+        category_ages_begin
+        category_ages_end
+        category_equipment
+        category_gender
+        discipline
+        event_bar_points
+        gender
+        parent_bar_points
+        parent_parent_bar_points
+        person_gender
+        person_name
+        points_factor
+        race_bar_points
+      ]
       results.map do |result|
         result.except(*non_calculation_attributes)
       end
@@ -346,19 +342,13 @@ module Competitions
     end
 
     def completed_events
-      if source_events?
-        source_events.select(&:any_results?).size
-      end
+      source_events.select(&:any_results?).size if source_events?
     end
 
     def map_team_member_to_boolean(results)
       if team?
         results.each do |result|
-          if result["team_member"] == 1
-            result["team_member"] = true
-          else
-            result["team_member"] = false
-          end
+          result["team_member"] = result["team_member"] == 1
         end
       else
         results
@@ -367,7 +357,7 @@ module Competitions
 
     # Only delete obselete races
     def delete_races
-      obselete_races = races.select { |race| !race.name.in?(race_category_names) }
+      obselete_races = races.reject { |race| race.name.in?(race_category_names) }
       if obselete_races.any?
         race_ids = obselete_races.map(&:id)
         Competitions::Score.delete_all("competition_result_id in (select id from results where race_id in (#{race_ids.join(',')}))")
@@ -382,7 +372,7 @@ module Competitions
 
       new_participant_ids      = calculated_participant_ids - participant_ids
       existing_participant_ids = calculated_participant_ids & participant_ids
-      obsolete_participant_ids = participant_ids            - calculated_participant_ids
+      obsolete_participant_ids = participant_ids - calculated_participant_ids
 
       [
         calculated_results.select { |r| r.participant_id.in?            new_participant_ids },
@@ -455,7 +445,7 @@ module Competitions
       existing_result.points        = result.points
       existing_result.team_id       = team_ids[result.participant_id]
 
-      # TODO Why do we need explicit dirty check?
+      # TODO: Why do we need explicit dirty check?
       if existing_result.place_changed? || existing_result.team_id_changed? || existing_result.points_changed? || existing_result.preliminary_changed?
         existing_result.save!
       end
@@ -464,16 +454,14 @@ module Competitions
     end
 
     def update_scores_for(result, existing_result)
-      existing_scores = existing_result.scores.map { |s| [ s.source_result_id, s.points.to_f, s.notes ] }
-      new_scores = result.scores.map { |s| [ s.source_result_id || existing_result.id, s.points.to_f, s.notes ] }
+      existing_scores = existing_result.scores.map { |s| [s.source_result_id, s.points.to_f, s.notes] }
+      new_scores = result.scores.map { |s| [s.source_result_id || existing_result.id, s.points.to_f, s.notes] }
 
       scores_to_create = new_scores - existing_scores
       scores_to_delete = existing_scores - new_scores
 
       # Delete first because new scores might have same key
-      if scores_to_delete.present?
-        Score.where(competition_result_id: existing_result.id).where(source_result_id: scores_to_delete.map(&:first)).delete_all
-      end
+      Score.where(competition_result_id: existing_result.id).where(source_result_id: scores_to_delete.map(&:first)).delete_all if scores_to_delete.present?
 
       scores_to_create.each do |score|
         create_score existing_result, score.first, score.second, score.last
@@ -491,12 +479,12 @@ module Competitions
     # Competition results could know they need to lookup their team
     # Can move to Result?
     def team_ids_by_participant_id_hash(results)
-      team_ids_by_participant_id_hash = Hash.new
+      team_ids_by_participant_id_hash = {}
       results.map(&:participant_id).uniq.each do |participant_id|
         team_ids_by_participant_id_hash[participant_id] = participant_id
       end
 
-      if !team?
+      unless team?
         ::Person.select("id, team_id").where("id in (?)", results.map(&:participant_id).uniq).map do |person|
           team_ids_by_participant_id_hash[person.id] = person.team_id
         end
@@ -516,13 +504,11 @@ module Competitions
     end
 
     def source_event_types
-      [ SingleDayEvent, Event ]
+      [SingleDayEvent, Event]
     end
 
-    def source_event_ids(race)
-      if source_events?
-        source_events.map(&:id)
-      end
+    def source_event_ids(_race)
+      source_events.map(&:id) if source_events?
     end
 
     def minimum_events
@@ -533,7 +519,7 @@ module Competitions
       nil
     end
 
-    def maximum_events(race)
+    def maximum_events(_race)
       nil
     end
 

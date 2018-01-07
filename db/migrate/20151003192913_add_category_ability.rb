@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCategoryAbility < ActiveRecord::Migration
   def change
     add_column :categories, :ability_begin, :integer, null: false, default: 0

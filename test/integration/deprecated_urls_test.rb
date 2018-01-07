@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "racing_on_rails/integration_test"
 
 # :stopdoc:

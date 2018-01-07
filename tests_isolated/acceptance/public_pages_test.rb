@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
 
 # :stopdoc:
@@ -19,14 +21,10 @@ class PublicPagesTest < AcceptanceTest
     assert_page_has_content("(503) 555-1212")
 
     visit "/schedule/cyclocross"
-    unless page.has_content?("Calendar")
-      assert_page_has_content("Schedule")
-    end
+    assert_page_has_content("Schedule") unless page.has_content?("Calendar")
 
     visit "/schedule/list/cyclocross"
-    unless page.has_content?("Calendar")
-      assert_page_has_content("Schedule")
-    end
+    assert_page_has_content("Schedule") unless page.has_content?("Calendar")
 
     visit "/results"
     assert_page_has_content RacingAssociation.current.effective_year.to_s
@@ -35,15 +33,13 @@ class PublicPagesTest < AcceptanceTest
     visit "/people"
 
     visit "/teams"
-    unless page.has_content?("Member Teams") || page.has_content?("teams in Oregon")
-      flunk "Expected Member Teams or teams in Oregon"
-    end
+    flunk "Expected Member Teams or teams in Oregon" unless page.has_content?("Member Teams") || page.has_content?("teams in Oregon")
     assert_page_has_content "Vanilla"
 
-    visit "/teams/#{Team.find_by_name('Vanilla').id}"
+    visit "/teams/#{Team.find_by(name: 'Vanilla').id}"
     assert_page_has_content "Vanilla"
 
-    visit "/teams/#{Team.find_by_name('Vanilla').id}/2004"
+    visit "/teams/#{Team.find_by(name: 'Vanilla').id}/2004"
   end
 
   test "results page" do
@@ -98,7 +94,6 @@ class PublicPagesTest < AcceptanceTest
     end
   end
 
-
   private
 
   def create_results
@@ -115,9 +110,9 @@ class PublicPagesTest < AcceptanceTest
       FactoryBot.create(:result, event: @new_event)
     end
 
-    FactoryBot.create(:event, name: "Kings Valley Road Race", date: Time.zone.local(2004).end_of_year.to_date).
-      races.create!(category: FactoryBot.create(:category, name: "Senior Women 1/2/3")).
-      results.create!(place: "2", person: @alice)
+    FactoryBot.create(:event, name: "Kings Valley Road Race", date: Time.zone.local(2004).end_of_year.to_date)
+              .races.create!(category: FactoryBot.create(:category, name: "Senior Women 1/2/3"))
+              .results.create!(place: "2", person: @alice)
 
     event = FactoryBot.create(:event, name: "Jack Frost", date: Time.zone.local(2002, 1, 17), discipline: "Time Trial")
     event.races.create!(category: FactoryBot.create(:category, name: "Senior Women")).results.create!(place: "1", person: @alice)

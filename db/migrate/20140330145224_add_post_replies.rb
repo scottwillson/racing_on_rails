@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddPostReplies < ActiveRecord::Migration
   def up
     change_table :posts do |t|
@@ -10,7 +12,7 @@ class AddPostReplies < ActiveRecord::Migration
     end
 
     Post.reset_column_information
-    Post.select([:id, :sender]).each do |post|
+    Post.select(%i[id sender]).each do |post|
       Post.where(id: post["id"]).update_all(
         from_email: post["sender"][/<(.*)>/, 1].try(:strip),
         from_name: post["sender"][/^([^<]+)/].try(:strip)

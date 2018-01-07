@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Events
   module Competitions
     extend ActiveSupport::Concern
@@ -16,12 +18,12 @@ module Events
       has_many :competitions, through: :competition_event_memberships, source: :competition, class_name: "Competitions::Competition"
       has_many :competition_event_memberships, class_name: "Competitions::CompetitionEventMembership"
 
-      scope :competition, -> { where("type is not null").where.not(type: %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries CombinedTimeTrialResults }) }
+      scope :competition, -> { where("type is not null").where.not(type: %w[ Event SingleDayEvent MultiDayEvent Series WeeklySeries CombinedTimeTrialResults ]) }
 
       def self.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
         discipline_names = [discipline]
-        discipline_names << 'Circuit' if discipline.downcase == 'road'
-        discipline_names << 'Road/Gravel' if discipline.downcase == 'road'
+        discipline_names << "Circuit" if discipline.casecmp("road").zero?
+        discipline_names << "Road/Gravel" if discipline.casecmp("road").zero?
         Event.distinct.year(year).where(discipline: discipline_names).where("bar_points > 0")
       end
     end

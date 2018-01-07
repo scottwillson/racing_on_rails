@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../../test_helper", __FILE__)
 
 module Competitions
@@ -25,7 +27,7 @@ module Competitions
       cat_1_2_race.results.create! place: 5, person: weaver, team: gentle_lovers
       cat_1_2_race.results.create! place: 7, person: tonkin, team: kona
       cat_1_2_race.results.create! place: 8, person: alice, team: kona
-      cat_1_2_race.results.create! place: "", person:Person.create!, team: gentle_lovers
+      cat_1_2_race.results.create! place: "", person: Person.create!, team: gentle_lovers
 
       cat_3 = Category.find_or_create_by(name: "Category 3")
       cat_3_race = event.races.create!(category: cat_3)
@@ -65,7 +67,7 @@ module Competitions
 
       assert_equal "Team Competition", team_competition.name, "name"
       assert_equal "River City Bicycles Cyclocross Crusade: Team Competition", team_competition.full_name, "full name"
-      assert !team_competition.notes.blank?, "Should have notes about rules"
+      assert team_competition.notes.present?, "Should have notes about rules"
 
       assert_equal_dates Date.new(2017, 10, 7), team_competition.date, "team_competition series date"
       assert_equal_dates Date.new(2017, 10, 7), team_competition.start_date, "team_competition series start date"
@@ -74,7 +76,7 @@ module Competitions
       race = team_competition.races.detect { |r| r.category == Category.find_or_create_by(name: "Team") }
       assert_not_nil(race, "Should have team race")
       assert_equal(3, race.results.size, "race results")
-      assert_equal %W{ place team_name points }, race.result_columns, "result_columns"
+      assert_equal %w[ place team_name points ], race.result_columns, "result_columns"
 
       results = race.results(true).sort
       result = results.first

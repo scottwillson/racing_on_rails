@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Results
   module Renderers
     class DefaultResultRenderer < Tabular::Renderer
@@ -44,7 +46,7 @@ module Results
         end
       end
 
-      def self.css_class(column, row = nil)
+      def self.css_class(column, _row = nil)
         case column.key
         when :event_full_name
           "event"
@@ -76,9 +78,7 @@ module Results
       end
 
       def self.path_prefix(row)
-        if row.metadata[:mobile_request]
-          "/m"
-        end
+        "/m" if row.metadata[:mobile_request]
       end
     end
   end

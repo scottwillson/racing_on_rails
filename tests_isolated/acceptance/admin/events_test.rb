@@ -31,13 +31,13 @@ class EventsTest < AcceptanceTest
     type_in "promoter_autocomplete", with: "Tom Brown"
 
     click_button "Save"
-    assert_match %r{\d+}, find("#event_promoter_id", visible: false).value
+    assert_match /\d+/, find("#event_promoter_id", visible: false).value
     assert page.has_field?("promoter_autocomplete", with: "Tom Brown")
 
     visit "/admin/events"
     assert_page_has_content "Sausalito Criterium"
     click_link "Sausalito Criterium"
-    assert_match %r{\d+}, find("#event_promoter_id", visible: false).value
+    assert_match /\d+/, find("#event_promoter_id", visible: false).value
     assert page.has_field?("promoter_autocomplete", with: "Tom Brown")
 
     click_link "edit_promoter_link"
@@ -49,7 +49,7 @@ class EventsTest < AcceptanceTest
 
     click_link "back_to_event"
 
-    assert_match %r{\d+}, find("#event_promoter_id", visible: false).value
+    assert_match /\d+/, find("#event_promoter_id", visible: false).value
     assert page.has_field?("promoter_autocomplete", with: "Tim Brown")
 
     type_in "promoter_autocomplete", with: "candi m"

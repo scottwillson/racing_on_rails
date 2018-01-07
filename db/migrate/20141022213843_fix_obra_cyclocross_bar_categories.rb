@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Beginner Men
 # Beginner Women
 # Clydesdale
@@ -18,8 +20,8 @@ class FixObraCyclocrossBarCategories < ActiveRecord::Migration
     if RacingAssociation.current.short_name == "OBRA"
       Category.transaction do
         # Blind Date overall
-        Event.where(id: [ 22296, 23699 ]).update_all(bar_points: 0)
-        
+        Event.where(id: [22_296, 23_699]).update_all(bar_points: 0)
+
         {
           "Junior Men" => [
             "Junior - Boys 10-14",
@@ -58,7 +60,7 @@ class FixObraCyclocrossBarCategories < ActiveRecord::Migration
             "Masters Men B/C 35-49",
             "Masters Men B/C 50+",
             "Masters Men C 35+",
-            "Masters Men C 50+", 
+            "Masters Men C 50+",
             "Category A/B - Men 40+",
             "Category B/C - Men 40+",
             "Category C - Men 40+"
@@ -127,11 +129,10 @@ class FixObraCyclocrossBarCategories < ActiveRecord::Migration
           parent = Category.where(name: parent).first
           children.each do |child|
             child = Category.where(name: child).first
-            if child && !child.ancestors.include?(parent)
-              puts "#{child.name} not a child of #{parent.name}: #{child.ancestors.map(&:name).join(', ')}"
-              child.parent = parent
-              child.save!
-            end
+            next unless child && !child.ancestors.include?(parent)
+            puts "#{child.name} not a child of #{parent.name}: #{child.ancestors.map(&:name).join(', ')}"
+            child.parent = parent
+            child.save!
           end
         end
       end

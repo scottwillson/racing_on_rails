@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   module Calculations
     module Rules
@@ -30,12 +32,12 @@ module Competitions
       def default_rules_merge(rules)
         assert_valid_rules rules
         default_rules.merge(
-          rules.reject { |key, value| value == nil }
+          rules.reject { |_key, value| value.nil? }
         )
       end
 
       def assert_valid_rules(rules)
-        return true if !rules || rules.size == 0
+        return true if rules.blank?
 
         raise_if_any_invalid rules, default_rules
         raise_if_inconsistent rules
@@ -43,9 +45,7 @@ module Competitions
 
       def raise_if_any_invalid(rules, default_rules)
         invalid_rules = rules.keys - default_rules.keys
-        if invalid_rules.size > 0
-          raise ArgumentError, "Invalid rules: #{invalid_rules.join(", ")}. Valid: #{default_rules.keys}."
-        end
+        raise ArgumentError, "Invalid rules: #{invalid_rules.join(', ')}. Valid: #{default_rules.keys}." unless invalid_rules.empty?
       end
 
       def raise_if_inconsistent(rules)

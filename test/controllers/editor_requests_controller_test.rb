@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -51,7 +53,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
   test "not found" do
     promoter = FactoryBot.create(:person_with_login)
     login_as promoter
-    assert_raise(ActiveRecord::RecordNotFound) { post(:create, id: 1231232213133, editor_id: promoter.to_param) }
+    assert_raise(ActiveRecord::RecordNotFound) { post(:create, id: 1_231_232_213_133, editor_id: promoter.to_param) }
   end
 
   test "must login" do

@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Competitions
   module GrandPrixBradRoss
     class TeamStandings < Competition
       include GrandPrixBradRoss::Common
 
-      validates_presence_of :parent
+      validates :parent, presence: true
       after_create :add_source_events
       before_create :set_name
 
@@ -12,10 +14,10 @@ module Competitions
           transaction do
             series = Series.where(name: parent_event_name).year(year).first
 
-            if series && series.any_results_including_children?
+            if series&.any_results_including_children?
               team_competition = series.child_competitions.detect { |c| c.is_a? TeamStandings }
               unless team_competition
-                team_competition = self.new(parent_id: series.id)
+                team_competition = new(parent_id: series.id)
                 team_competition.save!
               end
               team_competition.set_date
@@ -37,7 +39,7 @@ module Competitions
       end
 
       def race_category_names
-        [ "Team" ]
+        ["Team"]
       end
 
       def team?
@@ -86,8 +88,8 @@ module Competitions
           end
 
           _results.values.flatten
-        end.
-        flatten
+        end
+                              .flatten
       end
 
       def group_results_by_team_standings_categories(results)
@@ -102,9 +104,7 @@ module Competitions
 
       def team_standings_category_for(result)
         ages_begin = result["category_ages_begin"]
-        if ages_begin == 0
-          ages_begin = ::Categories::Ages::SENIOR.begin
-        end
+        ages_begin = ::Categories::Ages::SENIOR.begin if ages_begin == 0
 
         ages_end = result["category_ages_end"]
         if result["category_ages_begin"] == 35 && ages_end == ::Categories::MAXIMUM
@@ -127,14 +127,14 @@ module Competitions
 
         team_standings_categories.detect do |category|
           (category.equipment? && result["category_equipment"] == category.equipment && category.gender == result["category_gender"]) ||
-          (category.weight? && result["category_weight"] == category.weight && category.gender == result["category_gender"]) ||
-          (
-            !category.equipment? &&
-            !category.weight? &&
-            category.ages_begin <= ages_begin &&
-            category.ages_end   >= ages_end &&
-            category.gender     == result["category_gender"]
-          )
+            (category.weight? && result["category_weight"] == category.weight && category.gender == result["category_gender"]) ||
+            (
+              !category.equipment? &&
+              !category.weight? &&
+              category.ages_begin <= ages_begin &&
+              category.ages_end   >= ages_end &&
+              category.gender     == result["category_gender"]
+            )
         end
       end
 
@@ -149,11 +149,11 @@ module Competitions
           Category.find_or_create_by_normalized_name("Singlespeed Men"),
           Category.find_or_create_by_normalized_name("Singlespeed Women")
         ] +
-        %w{ Men Women }.map do |gender|
-          [ "9-18", "19-34", "35-49", "50+" ].map do |ages|
-            Category.find_or_create_by_normalized_name("#{gender} #{ages}")
+          %w[ Men Women ].map do |gender|
+            ["9-18", "19-34", "35-49", "50+"].map do |ages|
+              Category.find_or_create_by_normalized_name("#{gender} #{ages}")
+            end.flatten
           end.flatten
-        end.flatten
       end
 
       def sort_by_ability_and_place(results)
@@ -178,16 +178,16 @@ module Competitions
       end
 
       def reject_worst_results(results)
-        results.
-        group_by { |r| r["category_ability"] }.
-        map do |category_ability, category_results|
+        results
+          .group_by { |r| r["category_ability"] }
+          .map do |category_ability, category_results|
           if category_ability < 3
-            category_results[ 0, (category_results.size * 0.9).ceil ]
+            category_results[0, (category_results.size * 0.9).ceil]
           else
             category_results
           end
-        end.
-        flatten
+        end
+          .flatten
       end
 
       def add_points(category, results)

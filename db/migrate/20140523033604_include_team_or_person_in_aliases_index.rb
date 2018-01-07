@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IncludeTeamOrPersonInAliasesIndex < ActiveRecord::Migration
   def up
     remove_index :aliases, name: "idx_name"
@@ -7,7 +9,7 @@ class IncludeTeamOrPersonInAliasesIndex < ActiveRecord::Migration
 
     add_column :aliases, :aliasable_type, :string, default: nil
     add_index :aliases, :aliasable_type
-    add_index :aliases, [ :name, :aliasable_type ], unique: true
+    add_index :aliases, %i[name aliasable_type], unique: true
 
     add_column :aliases, :aliasable_id, :integer, default: nil
     add_index :aliases, :aliasable_id

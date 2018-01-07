@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 CSV.open("schedule.csv", "wb") do |csv|
-  csv << %w( name date location promoter_name promoter_email discipline first_aid_provider )
+  csv << %w[ name date location promoter_name promoter_email discipline first_aid_provider ]
   RiCal.parse_string(File.read("obra.ics"))
        .first
        .events
@@ -11,9 +11,7 @@ CSV.open("schedule.csv", "wb") do |csv|
     # puts ics_event.to_s
 
     end_date = ics_event.dtstart
-    if (ics_event.dtend - ics_event.dtstart) > 1
-      end_date = ics_event.dtend
-    end
+    end_date = ics_event.dtend if (ics_event.dtend - ics_event.dtstart) > 1
 
     original_description = ics_event.description.split("-::~")[0]
     description = original_description.split("\n")
@@ -29,16 +27,14 @@ CSV.open("schedule.csv", "wb") do |csv|
       begin
         promoter_name = promoter[/\A([^<]+)/, 1].strip
         promoter_email = promoter[/<([^>]+)/, 1].strip
-      rescue => e
+      rescue StandardError => e
         puts "#{e}: Could not parse promoter name and email from #{promoter}"
       end
     end
 
     first_aid = "no"
     first_aid_line = description.detect { |l| l[/First Aid/] }
-    if first_aid_line && first_aid_line["Yes"].present?
-      first_aid = "Needed"
-    end
+    first_aid = "Needed" if first_aid_line && first_aid_line["Yes"].present?
 
     discipline_line = description.detect { |l| l[/Discipline/] }
     discipline = discipline_line && discipline_line[/Discipline: (.*)/, 1]

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Superclass for anything that can have results:
 # * Event (Superclass only used to organizes multiple sets of results on a single day.
 #          Examples: Alpenrose Challenge Morning Session, Alpenrose Challenge Afternoon Session)
@@ -30,7 +32,7 @@
 #
 # It's debatable whether we need STI subclasses or not.
 class Event < ActiveRecord::Base
-  TYPES = %w( Event SingleDayEvent MultiDayEvent Series WeeklySeries )
+  TYPES = %w[ Event SingleDayEvent MultiDayEvent Series WeeklySeries ].freeze
 
   include Events::Children
   include Events::Comparison
@@ -78,7 +80,8 @@ class Event < ActiveRecord::Base
     where(
       "(date between :today and :later) || (end_date between :today and :later)",
       today: Time.zone.today,
-      later: number_of_weeks.weeks.from_now.to_date)
+      later: number_of_weeks.weeks.from_now.to_date
+    )
   }
 
   def self.upcoming(weeks = 2)
@@ -92,7 +95,7 @@ class Event < ActiveRecord::Base
       series_child_events = series_child_events.default_sanctioned_by
     end
 
-    # TODO Need to make this lazy-load again
+    # TODO: Need to make this lazy-load again
     single_day_events + multi_day_events + series_child_events
   end
 
@@ -130,13 +133,13 @@ class Event < ActiveRecord::Base
     first_of_year = date.beginning_of_year
     last_of_year = date.end_of_year
     discipline_names = [discipline]
-    discipline_names << 'Circuit' if discipline.downcase == 'road'
-    discipline_names << 'Road/Gravel' if discipline.downcase == 'road'
+    discipline_names << "Circuit" if discipline.casecmp("road").zero?
+    discipline_names << "Road/Gravel" if discipline.casecmp("road").zero?
     Event.select("distinct events.id, events.*")
-      .where("events.date" => first_of_year..last_of_year)
-      .where("events.discipline" => discipline_names)
-      .where("bar_points > 0")
-      .where("events.team_id" => team)
+         .where("events.date" => first_of_year..last_of_year)
+         .where("events.discipline" => discipline_names)
+         .where("bar_points > 0")
+         .where("events.team_id" => team)
   end
 
   def self.year_range(year)
@@ -170,11 +173,7 @@ class Event < ActiveRecord::Base
         city
       end
     else
-      if state.present?
-        state
-      else
-        ''
-      end
+      state.presence || ""
     end
   end
 
@@ -195,9 +194,7 @@ class Event < ActiveRecord::Base
   end
 
   def velodrome_name=(value)
-    if value.present?
-      self.velodrome = Velodrome.find_or_create_by(name: value.strip)
-    end
+    self.velodrome = Velodrome.find_or_create_by(name: value.strip) if value.present?
   end
 
   def discipline_id
@@ -211,7 +208,7 @@ class Event < ActiveRecord::Base
   end
 
   def team_name
-    team.name if team
+    team&.name
   end
 
   def team_name=(value)
@@ -232,20 +229,20 @@ class Event < ActiveRecord::Base
   end
 
   def type_modifiable?
-    type.nil? || %w( Event SingleDayEvent MultiDayEvent Series WeeklySeries ).include?(type)
+    type.nil? || %w[ Event SingleDayEvent MultiDayEvent Series WeeklySeries ].include?(type)
   end
 
   def as_json(_)
     super(
-      only: [ :discipline, :name, :parent_id, :type ],
-      methods: [ :sorted_races ],
+      only: %i[discipline name parent_id type],
+      methods: [:sorted_races],
       include: {
         sorted_races: {
-          only: [ :name ],
-          methods: [ :name, :sorted_results ],
+          only: [:name],
+          methods: %i[name sorted_results],
           include: {
             sorted_results: {
-              only: [ :person_id, :place, :points, :team_id ]
+              only: %i[person_id place points team_id]
             }
           }
         }

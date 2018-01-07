@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Road, track, criterium, time trial ...
 # Cached. Call +reset+ to clear cache.
 class Discipline < ActiveRecord::Base
@@ -17,7 +19,7 @@ class Discipline < ActiveRecord::Base
       @@all_aliases[name]
     else
       return nil if name.blank?
-      @@all_aliases[name.underscore.gsub(' ', '_').to_sym]
+      @@all_aliases[name.underscore.tr(" ", "_").to_sym]
     end
   end
 
@@ -32,10 +34,10 @@ class Discipline < ActiveRecord::Base
   def self.load_aliases
     @@all_aliases = {}
     Discipline.connection.select_all("SELECT discipline_id, alias FROM discipline_aliases").each do |result|
-      @@all_aliases[result["alias"].underscore.gsub(' ', '_').to_sym] = Discipline.find(result["discipline_id"].to_i)
+      @@all_aliases[result["alias"].underscore.tr(" ", "_").to_sym] = Discipline.find(result["discipline_id"].to_i)
     end
-    Discipline.all.each do |discipline|
-      @@all_aliases[discipline.name.gsub(' ', '_').underscore.to_sym] = discipline
+    Discipline.all.find_each do |discipline|
+      @@all_aliases[discipline.name.tr(" ", "_").underscore.to_sym] = discipline
     end
   end
 
@@ -52,16 +54,16 @@ class Discipline < ActiveRecord::Base
   def names
     case name
     when "Road"
-      [ nil, "", 'Circuit', "Criterium", "Road", "Road/Gravel", "Time Trial", "Singlespeed", "Tour" ]
+      [nil, "", "Circuit", "Criterium", "Road", "Road/Gravel", "Time Trial", "Singlespeed", "Tour"]
     when "Mountain Bike"
-      [ 'Downhill', 'Mountain Bike', 'Super D', "Short Track" ]
+      ["Downhill", "Mountain Bike", "Super D", "Short Track"]
     else
-      [ name ]
+      [name]
     end
   end
 
   def to_param
-    @param || @param = name.underscore.gsub(' ', '_')
+    @param || @param = name.underscore.tr(" ", "_")
   end
 
   def <=>(other)

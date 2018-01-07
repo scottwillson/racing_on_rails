@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Results
   module Caching
     extend ActiveSupport::Concern

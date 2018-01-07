@@ -1,8 +1,8 @@
+# frozen_string_literal: true
+
 class WidenRefundsPolicy < ActiveRecord::Migration
   def up
-    if RacingAssociation.current.short_name == "OBRA" || RacingAssociation.current.short_name == "NABRA"
-      change_column :events, :refund_policy, :text, size: 512
-    end
+    change_column :events, :refund_policy, :text, size: 512 if RacingAssociation.current.short_name == "OBRA" || RacingAssociation.current.short_name == "NABRA"
   end
 
   def down

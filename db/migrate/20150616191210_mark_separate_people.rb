@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MarkSeparatePeople < ActiveRecord::Migration
   def change
     Person.current = RacingAssociation.current.person

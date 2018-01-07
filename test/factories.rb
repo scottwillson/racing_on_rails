@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryBot.define do
   factory :person_alias, class: Alias do
     sequence(:name) { |n| "Person Alias #{n}" }
@@ -24,10 +25,10 @@ FactoryBot.define do
 
     factory :cyclocross_discipline do
       name "Cyclocross"
-      after(:create) { |d|
+      after(:create) do |d|
         d.discipline_aliases.create!(alias: "ccx")
         d.discipline_aliases.create!(alias: "cx")
-      }
+      end
     end
 
     factory :mtb_discipline do
@@ -37,7 +38,7 @@ FactoryBot.define do
   end
 
   factory :discipline_alias do
-    sequence(:alias) { |n| "#{n}" }
+    sequence(:alias) { |n| n.to_s }
     discipline
   end
 
@@ -52,13 +53,14 @@ FactoryBot.define do
       parent factory: :series
     end
 
-    factory :stage_race, class: "MultiDayEvent" do |parent|
+    factory :stage_race, class: "MultiDayEvent" do |_parent|
       date Time.zone.local(2005, 7, 11)
-      children { |e| [
+      children do |e|
+        [
         e.association(:event, date: Time.zone.local(2005, 7, 11), parent_id: e.id),
         e.association(:event, date: Time.zone.local(2005, 7, 12), parent_id: e.id),
         e.association(:event, date: Time.zone.local(2005, 7, 13), parent_id: e.id)
-      ] }
+      ] end
     end
 
     factory :weekly_series_event do
@@ -114,7 +116,6 @@ FactoryBot.define do
       name "Kevin Condron"
     end
 
-
     factory :person_with_login do
       sequence(:login) { |n| "person#{n}@example.com" }
       sequence(:email) { |n| "person#{n}@example.com" }
@@ -134,7 +135,7 @@ FactoryBot.define do
       end
 
       factory :promoter do
-        events { |p| [ p.association(:event, promoter_id: p.id) ] }
+        events { |p| [p.association(:event, promoter_id: p.id)] }
       end
     end
   end

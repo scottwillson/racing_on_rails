@@ -1,12 +1,10 @@
+# frozen_string_literal: true
+
 class RemoveMbrabarNotes < ActiveRecord::Migration
   def change
     bar = Competitions::MbraBar.current_year.first
-    if bar
-      bar.races.map(&:results).flatten.each do |result|
-        if result.notes.present?
-          result.update_attributes! notes: nil
-        end
-      end
+    bar&.races&.map(&:results)&.flatten&.each do |result|
+      result.update_attributes! notes: nil if result.notes.present?
     end
   end
 end

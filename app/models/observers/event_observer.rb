@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Trigger changes to CombinedTimeTrialResults and update parent updated_at if child saved
 class EventObserver < ActiveRecord::Observer
   def after_save(event)

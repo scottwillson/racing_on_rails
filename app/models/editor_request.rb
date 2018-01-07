@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # +editor+ would like to become an editor for +person+. Sent in an email with link keyed by +token+.
 # Sends email with link after_create. See EditorRequestMailer.
 class EditorRequest < ActiveRecord::Base
@@ -7,15 +9,15 @@ class EditorRequest < ActiveRecord::Base
   before_validation :set_email, :set_expires_at, :set_token
   after_create :send_email
 
-  validates_presence_of :editor
-  validates_presence_of :email
-  validates_presence_of :expires_at
-  validates_presence_of :person
-  validates_presence_of :token
+  validates :editor, presence: true
+  validates :email, presence: true
+  validates :expires_at, presence: true
+  validates :person, presence: true
+  validates :token, presence: true
 
   before_save :destroy_duplicates
 
-  scope :expired, lambda { where("expires_at <= ?", Time.zone.now) }
+  scope :expired, -> { where("expires_at <= ?", Time.zone.now) }
 
   def set_email
     self.email = person.try(:email)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../test_helper"
 
 class NotifierTest < ActionMailer::TestCase
@@ -6,7 +8,7 @@ class NotifierTest < ActionMailer::TestCase
 
     email = Notifier.password_reset_instructions([person])
 
-    assert_equal [ person.email ], email.to
+    assert_equal [person.email], email.to
     assert_equal "Password Reset Instructions", email.subject
     assert_match(/reset/, email.encoded)
     assert_not_nil person.reload.perishable_token, "Should set perishable_token"
@@ -19,7 +21,7 @@ class NotifierTest < ActionMailer::TestCase
 
     email = Notifier.password_reset_instructions([person])
 
-    assert_equal [ person.email ], email.to
+    assert_equal [person.email], email.to
     assert_equal "Password Reset Instructions", email.subject
     assert_match(/reset/, email.encoded)
     assert_not_nil person.reload.perishable_token, "Should set perishable_token"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../../test_helper"
 
 # :stopdoc:
@@ -59,7 +61,7 @@ class PostTest < ActiveSupport::TestCase
     mailing_list = FactoryBot.create(:mailing_list)
     original = FactoryBot.create(:post, mailing_list: mailing_list, last_reply_at: 1.day.ago, position: 3)
     second_post = FactoryBot.create(:post, mailing_list: mailing_list, last_reply_at: 4.days.ago, position: 1)
-    reply_to_original = FactoryBot.create(:post, mailing_list: mailing_list, last_reply_at: 1.days.ago, original_id: original.id, position: 2)
+    reply_to_original = FactoryBot.create(:post, mailing_list: mailing_list, last_reply_at: 1.day.ago, original_id: original.id, position: 2)
 
     original.reload
     second_post.reload
@@ -90,7 +92,7 @@ class PostTest < ActiveSupport::TestCase
 
   test "save should update original and add reply" do
     mailing_list = FactoryBot.create(:mailing_list, subject_line_prefix: "Juniors")
-    original = FactoryBot.create(:post, mailing_list: mailing_list, last_reply_at: 3.days.ago, date: 3.day.ago, subject: "My bike")
+    original = FactoryBot.create(:post, mailing_list: mailing_list, last_reply_at: 3.days.ago, date: 3.days.ago, subject: "My bike")
     reply = FactoryBot.build(:post, mailing_list: mailing_list, subject: "Re: My bike", date: 10.minutes.ago)
 
     ApplicationController.expects :expire_cache
@@ -107,7 +109,7 @@ class PostTest < ActiveSupport::TestCase
     original.reload
     assert_equal reply.date, original.last_reply_at, "last_reply_at"
     assert_nil original.original, "no original"
-    assert_equal [ reply ], original.replies, "should add reply"
+    assert_equal [reply], original.replies, "should add reply"
     assert_equal 1, original.replies(true).size, "replies_count"
     assert_equal 1, original.replies_count, "replies_count"
     assert_equal 2, original.position, "original position"

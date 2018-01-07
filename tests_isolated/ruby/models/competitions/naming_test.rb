@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../test_case", __FILE__)
 require File.expand_path("../../../../../app/models/competitions/naming", __FILE__)
 
@@ -7,15 +9,13 @@ module Competitions
     class TestCompetition
       include Competitions::Naming
 
-      def name=(value)
-        @name = value
-      end
+      attr_writer :name
 
-      def [](value)
+      def [](_value)
         @name
       end
 
-      def []=(key, value)
+      def []=(_key, value)
         @name = value
       end
     end

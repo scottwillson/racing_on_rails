@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../../test_helper", __FILE__)
 
 module Competitions
@@ -89,7 +91,7 @@ module Competitions
       assert_equal(1, ironman.races.first.results.first.scores.count, "Should have one Ironman score for a child Event result, but no others")
     end
 
-    # TODO Move to superclass once superclass uses them
+    # TODO: Move to superclass once superclass uses them
     test "source results no results" do
       ironman = Ironman.create!
       assert_equal [], ironman.source_results(ironman.races.first).to_a, "source_results"
@@ -118,7 +120,7 @@ module Competitions
         "parent_bar_points" => nil,
         "parent_parent_bar_points" => nil,
         "person_gender" => nil,
-        "person_name"=>"Greg Lemond",
+        "person_name" => "Greg Lemond",
         "points_factor" => nil,
         "race_bar_points" => nil,
         "participant_id" => 1,
@@ -131,7 +133,7 @@ module Competitions
         "team_member" => 1,
         "team_name" => source_result.team.name
       }
-      assert_equal [ expected ], ironman.source_results(ironman.races.first).to_a, "source_results"
+      assert_equal [expected], ironman.source_results(ironman.races.first).to_a, "source_results"
     end
 
     test "create competition results for" do
@@ -141,8 +143,8 @@ module Competitions
 
       Struct.new("TestResult", :place, :participant_id, :preliminary, :points, :scores)
       Struct.new("TestScore", :points, :source_result_id, :notes)
-      scores = [ Struct::TestScore.new(1, result1.id), Struct::TestScore.new(1, result2.id) ]
-      calculated_results = [ Struct::TestResult.new(1, person.id, false, 2, scores) ]
+      scores = [Struct::TestScore.new(1, result1.id), Struct::TestScore.new(1, result2.id)]
+      calculated_results = [Struct::TestResult.new(1, person.id, false, 2, scores)]
 
       ironman = Ironman.create!
       ironman.create_competition_results_for(calculated_results, ironman.races.first)
@@ -176,7 +178,7 @@ module Competitions
       person = FactoryBot.create(:person, team: team)
       ironman = Ironman.create!
       Struct.new("TestResult2", :participant_id)
-      assert_equal({ person.id => team.id }, ironman.team_ids_by_participant_id_hash([ Struct::TestResult2.new(person.id) ]))
+      assert_equal({ person.id => team.id }, ironman.team_ids_by_participant_id_hash([Struct::TestResult2.new(person.id)]))
     end
 
     test "create score" do

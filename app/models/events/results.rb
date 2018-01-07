@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Events
   module Results
     extend ActiveSupport::Concern
@@ -6,36 +8,36 @@ module Events
       before_destroy :validate_no_results
 
       scope :include_results, lambda {
-        includes races: [ :category, { results: :team } ]
+        includes races: [:category, { results: :team }]
       }
 
       scope :include_child_results, lambda {
-        includes children: { races: [ :category, { results: :team } ] }
+        includes children: { races: [:category, { results: :team }] }
       }
 
       scope :most_recent_with_recent_result, lambda { |weeks|
-        includes(races: [ :category, :results ]).
-        includes(:parent).
-        where("type != ?", "Event").
-        where("type is not null").
-        where("events.date >= ?", weeks).
-        where("id in (select event_id from results where competition_result = false and team_competition_result = false)").
-        order("updated_at desc")
+        includes(races: %i[category results])
+          .includes(:parent)
+          .where("type != ?", "Event")
+          .where("type is not null")
+          .where("events.date >= ?", weeks)
+          .where("id in (select event_id from results where competition_result = false and team_competition_result = false)")
+          .order("updated_at desc")
       }
 
       scope :with_recent_results, lambda { |weeks|
-        includes(parent: :parent).
-        where("type != ?", "Event").
-        where("type is not null").
-        where("events.date >= ?", weeks).
-        where("id in (select event_id from results where competition_result = false and team_competition_result = false)").
-        order("updated_at desc")
+        includes(parent: :parent)
+          .where("type != ?", "Event")
+          .where("type is not null")
+          .where("events.date >= ?", weeks)
+          .where("id in (select event_id from results where competition_result = false and team_competition_result = false)")
+          .order("updated_at desc")
       }
 
       scope :discipline, lambda { |discipline|
         if discipline
-          if discipline == Discipline['road']
-            where discipline: [ discipline.name, "Circuit", "Road/Gravel" ]
+          if discipline == Discipline["road"]
+            where discipline: [discipline.name, "Circuit", "Road/Gravel"]
           else
             where discipline: discipline.name
           end
@@ -48,15 +50,15 @@ module Events
 
         # Faster to load IDs and pass to second query than to use join or subselect
         event_ids = Result.where(year: year).pluck(:event_id).uniq
-        events = Event.
-                  includes(parent: :parent).
-                  where(id: event_ids).
-                  uniq
+        events = Event
+                 .includes(parent: :parent)
+                 .where(id: event_ids)
+                 .uniq
 
         events = events.discipline(discipline)
 
         ids = events.map(&:root_id).uniq
-        Event.includes(children: [ :races, { children: :races } ]).where(id: ids)
+        Event.includes(children: [:races, { children: :races }]).where(id: ids)
       end
     end
 

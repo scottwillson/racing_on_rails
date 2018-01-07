@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RegeneratePhotos < ActiveRecord::Migration
   def change
     Photo.find_each do |photo|

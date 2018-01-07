@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RacingAssociationsController < Admin::AdminController
   def edit
     @racing_association = RacingAssociation.find(params[:id])

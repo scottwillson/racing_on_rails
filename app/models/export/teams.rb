@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Export
   module Teams
     include Export::Base
@@ -24,7 +26,7 @@ module Export
     end
 
     def Team.export_data_sql
-      "SELECT #{Team.export_columns.join(",")}
+      "SELECT #{Team.export_columns.join(',')}
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"'
        LINES TERMINATED BY '\\n'
@@ -32,10 +34,9 @@ module Export
     end
 
     def Team.export_columns
-      [
-        "id", "name", "city", "state", "website", "contact_name", "contact_email", "contact_phone"
+      %w[
+        id name city state website contact_name contact_email contact_phone
       ]
     end
-
   end
 end

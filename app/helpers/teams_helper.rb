@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TeamsHelper
   # Show team contact with email, if we have one
   def link_to_contact(team)

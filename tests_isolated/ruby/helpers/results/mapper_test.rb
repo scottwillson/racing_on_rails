@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../../test_case"
 require_relative "../../../../app/helpers/results/mapper"
 
@@ -5,7 +7,7 @@ require_relative "../../../../app/helpers/results/mapper"
 module Results
   class MapperTest < Ruby::TestCase
     def test_numeric_custom_columns
-      mapper = Results::Mapper.new([], [ 20130501 ])
+      mapper = Results::Mapper.new([], [20_130_501])
       result = mock("result", custom_attribute: 3)
       mapper.map result
     end

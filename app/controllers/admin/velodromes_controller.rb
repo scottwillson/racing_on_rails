@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   # All succcessful edit expire cache.
   class VelodromesController < Admin::AdminController
@@ -18,7 +20,7 @@ module Admin
         expire_cache
         return redirect_to(new_admin_velodrome_path)
       end
-      render(template: 'admin/velodromes/edit')
+      render(template: "admin/velodromes/edit")
     end
 
     def edit
@@ -33,7 +35,7 @@ module Admin
         expire_cache
         return redirect_to(edit_admin_velodrome_path(@velodrome))
       end
-      render(template: 'admin/velodromes/edit')
+      render(template: "admin/velodromes/edit")
     end
 
     def update_attribute

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MapBlindDateCategories < ActiveRecord::Migration
   def up
     if Competitions::BlindDateAtTheDairyTeamCompetition.count > 0
@@ -26,7 +28,7 @@ class MapBlindDateCategories < ActiveRecord::Migration
       child.parent = parent
       child.save!
 
-      blind_date_1 = Event.find(22301)
+      blind_date_1 = Event.find(22_301)
 
       race = blind_date_1.races.detect { |r| r.name == "Junior Men U14" }
       if race

@@ -1,4 +1,5 @@
 #! /usr/bin/env ruby
+# frozen_string_literal: true
 
 # Simple script to switch local directories for dev
 
@@ -6,33 +7,27 @@ require "fileutils"
 
 `spring stop`
 
-`rm -rf public/local/public` rescue nil
-
-[ "local", "public/local" ].each do |dir_name|
-  if File.symlink?(dir_name)
-    FileUtils.rm dir_name
-  end
+begin
+  `rm -rf public/local/public`
+rescue StandardError
+  nil
 end
 
-if Dir.exist?("tmp/cache/assets")
-  FileUtils.rm_rf "tmp/cache/assets"
+["local", "public/local"].each do |dir_name|
+  FileUtils.rm dir_name if File.symlink?(dir_name)
 end
+
+FileUtils.rm_rf "tmp/cache/assets" if Dir.exist?("tmp/cache/assets")
 
 association = ARGV[0]
 
-if !association.nil?
+unless association.nil?
   `ln -s ../racing_on_rails_local/#{association} local`
-  if Dir.exist?("../../racing_on_rails_local/#{association}/public")
-    `ln -s ../../racing_on_rails_local/#{association}/public public/local`
-  end
+  `ln -s ../../racing_on_rails_local/#{association}/public public/local` if Dir.exist?("../../racing_on_rails_local/#{association}/public")
 end
 
 if association == "obra" || association == "nabra"
-  if !File.exist?("lib/registration_engine")
-    `ln -s ../../registration_engine lib/registration_engine`
-  end
+  `ln -s ../../registration_engine lib/registration_engine` unless File.exist?("lib/registration_engine")
 else
-  if File.exist?("lib/registration_engine")
-    FileUtils.rm "lib/registration_engine"
-  end
+  FileUtils.rm "lib/registration_engine" if File.exist?("lib/registration_engine")
 end

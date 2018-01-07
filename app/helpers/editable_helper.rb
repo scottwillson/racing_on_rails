@@ -1,22 +1,22 @@
+# frozen_string_literal: true
+
 module EditableHelper
   def editable(object, attribute, options = {})
     object_name = ActiveModel::Naming.singular(object)
 
-    if !options[:value].nil?
-      value = options[:value]
-    else
-      value = object.send(attribute)
-    end
+    value = if !options[:value].nil?
+              options[:value]
+            else
+              object.send(attribute)
+            end
 
-    if options[:length].present?
-      value = truncate(value, length: options[:length])
-    end
+    value = truncate(value, length: options[:length]) if options[:length].present?
 
-    if options[:as].present?
-      _object_name = options[:as].to_s
-    else
-      _object_name = object_name
-    end
+    _object_name = if options[:as].present?
+                     options[:as].to_s
+                   else
+                     object_name
+                   end
 
     content_tag(
       :div,
@@ -26,8 +26,9 @@ module EditableHelper
       "data-url" => url_for(controller: _object_name.pluralize, action: "update_attribute", id: object.to_param),
       "data-model" => _object_name,
       "data-attribute" => attribute,
-      "data-original" => value) do
-        value.to_s
+      "data-original" => value
+    ) do
+      value.to_s
     end
   end
 end

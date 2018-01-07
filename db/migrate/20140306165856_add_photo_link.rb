@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddPhotoLink < ActiveRecord::Migration
   def up
     add_column :photos, :link, :string

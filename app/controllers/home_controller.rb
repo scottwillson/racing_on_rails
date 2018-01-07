@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 # Homepage
 class HomeController < ApplicationController
-  before_action :require_administrator, except: [ :index, :show ]
+  before_action :require_administrator, except: %i[index show]
 
   # Show homepage
   # === Assigns
@@ -17,9 +19,7 @@ class HomeController < ApplicationController
     @most_recent_event_with_recent_result = Event.most_recent_with_recent_result(@home.weeks_of_recent_results.weeks.ago)
 
     @news_category = ArticleCategory.where(name: "news")
-    if @news_category
-      @recent_news = Article.recent_news(@home.weeks_of_upcoming_events.weeks.ago, @news_category)
-    end
+    @recent_news = Article.recent_news(@home.weeks_of_upcoming_events.weeks.ago, @news_category) if @news_category
 
     respond_to do |format|
       format.html { render_page }
@@ -41,7 +41,7 @@ class HomeController < ApplicationController
   end
 
   def show
-    return redirect_to(root_path)
+    redirect_to(root_path)
   end
 
   private

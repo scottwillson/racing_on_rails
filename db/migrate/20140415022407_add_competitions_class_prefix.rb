@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class AddCompetitionsClassPrefix < ActiveRecord::Migration
   def change
-    %w{
+    %w[
       AgeGradedBar
       Bar
       BlindDateAtTheDairyOverall
@@ -24,7 +26,7 @@ class AddCompetitionsClassPrefix < ActiveRecord::Migration
       TeamBar
       WsbaBarr
       WsbaMastersBarr
-    }.each do |class_name|
+    ].each do |class_name|
       execute "update events set type='Competitions::#{class_name}' where type='#{class_name}'"
     end
   end

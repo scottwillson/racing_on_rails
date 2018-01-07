@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -9,16 +11,16 @@ class AccountPermissionTest < ActiveSupport::TestCase
 
     another_person = Person.create!
     person.editors << another_person
-    assert_equal [ another_person ], person.editors, "editors"
+    assert_equal [another_person], person.editors, "editors"
     assert another_person.editors.empty?, "editors should be empty"
     assert person.editable_people.empty?, "editable_people should be empty"
-    assert_equal [ person ], another_person.editable_people, "editable_people"
+    assert_equal [person], another_person.editable_people, "editable_people"
 
     another_person.editors << person
-    assert_equal [ another_person ], person.editors, "editors"
-    assert_equal [ person ], another_person.editors, "editors"
-    assert_equal [ another_person ], person.editable_people(true), "editable_people"
-    assert_equal [ person ], another_person.editable_people, "editable_people"
+    assert_equal [another_person], person.editors, "editors"
+    assert_equal [person], another_person.editors, "editors"
+    assert_equal [another_person], person.editable_people(true), "editable_people"
+    assert_equal [person], another_person.editable_people, "editable_people"
 
     assert_raise(ActiveRecord::ActiveRecordError, "should not allow duplicates") { person.editors << another_person }
     assert_raise(ActiveRecord::ActiveRecordError, "should not allow duplicates") { another_person.editors << person }

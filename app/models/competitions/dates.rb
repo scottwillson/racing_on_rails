@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Competitions
   module Dates
     extend ActiveSupport::Concern
@@ -12,7 +14,7 @@ module Competitions
     end
 
     def set_date
-      if !all_year?
+      unless all_year?
         if source_events.any?
           self.date = source_events.minimum(:date)
         elsif parent
@@ -30,9 +32,7 @@ module Competitions
 
     # Last day of year for +date+
     def end_date
-      if all_year?
-        return Time.zone.local(year).end_of_year
-      end
+      return Time.zone.local(year).end_of_year if all_year?
 
       if source_events.present?
         source_events.sort.last.date
@@ -49,20 +49,18 @@ module Competitions
     def date_range_s(format = :short)
       if format == :long
         if start_date == end_date
-          date.strftime('%-m/%-d/%Y')
+          date.strftime("%-m/%-d/%Y")
         else
           "#{start_date.strftime('%-m/%-d/%Y')}-#{end_date.strftime('%-m/%-d/%Y')}"
         end
       else
-        if all_year?
-          return start_date.year.to_s
-        end
+        return start_date.year.to_s if all_year?
 
         start_date_s = "#{start_date.month}/#{start_date.day}"
         if start_date == end_date
           start_date_s
         elsif start_date.month == end_date.month
-            "#{start_date_s}-#{end_date.day}"
+          "#{start_date_s}-#{end_date.day}"
         else
           "#{start_date_s}-#{end_date.month}/#{end_date.day}"
         end
@@ -73,7 +71,7 @@ module Competitions
       if multiple_days?
         "#{start_date.strftime('%a, %B %-d')} to #{end_date.strftime('%a, %B %-d, %Y')}"
       else
-        start_date.strftime('%a, %B %-d')
+        start_date.strftime("%a, %B %-d")
       end
     end
 
@@ -88,12 +86,8 @@ module Competitions
     # Assert start and end dates are first and last days of the year
     def valid_dates
       if all_year?
-        if start_date.nil? || start_date != start_date.beginning_of_year
-          errors.add "start_date", "must be January 1st, but was: '#{start_date}'"
-        end
-        if end_date.nil? || end_date != end_date.end_of_year
-          errors.add "end_date", "must be December 31st, but was: '#{end_date}'"
-        end
+        errors.add "start_date", "must be January 1st, but was: '#{start_date}'" if start_date.nil? || start_date != start_date.beginning_of_year
+        errors.add "end_date", "must be December 31st, but was: '#{end_date}'" if end_date.nil? || end_date != end_date.end_of_year
       end
 
       if start_date && end_date && start_date.to_date.year != end_date.to_date.year

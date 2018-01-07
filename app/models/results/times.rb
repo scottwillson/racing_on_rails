@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Results
   module Times
     extend ActiveSupport::Concern
@@ -33,11 +35,11 @@ module Results
     def set_time_value(attribute, value)
       case value
       when DateTime
-        if value.year == 1899 && value.month == 12 && value.day == 31
-          self[attribute] = (24 + value.hour) * 3600 + value.min * 60 + value.sec
-        else
-          self[attribute] = value.hour * 3600 + value.min * 60 + value.sec
-        end
+        self[attribute] = if value.year == 1899 && value.month == 12 && value.day == 31
+                            (24 + value.hour) * 3600 + value.min * 60 + value.sec
+                          else
+                            value.hour * 3600 + value.min * 60 + value.sec
+                          end
       when ::Time
         self[attribute] = value.hour * 3600 + value.min * 60 + value.sec + (value.usec / 100.0)
       when Numeric, NilClass
@@ -46,16 +48,14 @@ module Results
         self[attribute] = s_to_time(value)
       end
 
-      if self[attribute]
-        self[attribute] = self[attribute].round(3)
-      end
+      self[attribute] = self[attribute].round(3) if self[attribute]
 
       self[attribute]
     end
 
     # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
     def time_s
-      time_to_s(self.time)
+      time_to_s(time)
     end
 
     # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
@@ -65,7 +65,7 @@ module Results
 
     # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
     def time_total_s
-      time_to_s(self.time_total)
+      time_to_s(time_total)
     end
 
     # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
@@ -75,7 +75,7 @@ module Results
 
     # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
     def time_bonus_penalty_s
-      time_to_s(self.time_bonus_penalty)
+      time_to_s(time_bonus_penalty)
     end
 
     # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
@@ -85,7 +85,7 @@ module Results
 
     # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
     def time_gap_to_leader_s
-      time_to_s(self.time_gap_to_leader)
+      time_to_s(time_gap_to_leader)
     end
 
     # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
@@ -101,21 +101,17 @@ module Results
     # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
     # This method doesn't handle some typical edge cases very well
     def time_to_s(time)
-      return '' if time == 0.0 || time.blank?
+      return "" if time == 0.0 || time.blank?
       positive = time >= 0
 
-      if !positive
-        time = -time
-      end
+      time = -time unless positive
 
       hours = (time / 3600).to_i
       minutes = ((time - (hours * 3600)) / 60).floor
       seconds = (time - (hours * 3600).floor - (minutes * 60).floor)
-      seconds = sprintf('%0.2f', seconds)
-      if hours > 0
-        hour_prefix = "#{hours.to_s.rjust(2, '0')}:"
-      end
-      "#{"-" unless positive}#{hour_prefix}#{minutes.to_s.rjust(2, '0')}:#{seconds.rjust(5, '0')}"
+      seconds = format("%0.2f", seconds)
+      hour_prefix = "#{hours.to_s.rjust(2, '0')}:" if hours > 0
+      "#{'-' unless positive}#{hour_prefix}#{minutes.to_s.rjust(2, '0')}:#{seconds.rjust(5, '0')}"
     end
 
     # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
@@ -124,14 +120,13 @@ module Results
       if string.to_s.blank? || !string.to_s[/\d/]
         nil
       else
-        string.gsub!(',', '.')
-        parts = string.to_s.split(':')
-        parts.reverse!
+        string = string.tr(",", ".")
+        parts = string.to_s.split(":").reverse
         t = 0.0
         parts.each_with_index do |part, index|
-          t = t + (part.to_f) * (60.0 ** index)
+          t += part.to_f * (60.0**index)
         end
-        if parts.last && parts.last.starts_with?("-")
+        if parts.last&.starts_with?("-")
           -t
         else
           t

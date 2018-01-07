@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Competitions
@@ -24,7 +26,7 @@ module Competitions
       race = competition.races_with_results.first
       assert_equal 3, race.results.size
 
-      expected = [ short_result_1, long_result, short_result_2 ].map(&:person_name)
+      expected = [short_result_1, long_result, short_result_2].map(&:person_name)
       actual = race.results.map(&:scores).flatten.map(&:source_result).flatten.map(&:person_name)
       assert_equal expected, actual, "source results should be sorted by distance-adjusted time"
     end
@@ -49,27 +51,27 @@ module Competitions
       competition.reload
       assert_equal 2, competition.races_with_results.size
 
-      race_13_14 = competition.races_with_results.detect { |r| r.name == "Junior Men 13-14"}
+      race_13_14 = competition.races_with_results.detect { |r| r.name == "Junior Men 13-14" }
       assert_equal 2, race_13_14.results.size
 
-      expected = [ racer_13, racer_14 ].map(&:name)
+      expected = [racer_13, racer_14].map(&:name)
       actual = race_13_14.results.map(&:scores).flatten.map(&:source_result).flatten.map(&:person_name)
       assert_equal expected, actual, "people"
 
-      race_10_12 = competition.races_with_results.detect { |r| r.name == "Junior Men 10-12"}
+      race_10_12 = competition.races_with_results.detect { |r| r.name == "Junior Men 10-12" }
       assert_equal 1, race_10_12.results.size
 
       actual = race_10_12.results.map(&:scores).flatten.map(&:source_result).flatten.map(&:person_name)
-      assert_equal [ "Racer 10" ], actual, "people"
+      assert_equal ["Racer 10"], actual, "people"
 
-      source_race_10_12 = event.races.reload.detect { |r| r.name == "Junior Men 10-12"}
+      source_race_10_12 = event.races.reload.detect { |r| r.name == "Junior Men 10-12" }
       assert_equal race_10_14, source_race_10_12.split_from
 
-      source_race_13_14 = event.races.detect { |r| r.name == "Junior Men 13-14"}
+      source_race_13_14 = event.races.detect { |r| r.name == "Junior Men 13-14" }
       assert_equal race_10_14, source_race_13_14.split_from
 
       assert_equal race_10_14, source_race_13_14.split_from
-      (event.races.reload - [ source_race_10_12, source_race_13_14 ]).each do |race|
+      (event.races.reload - [source_race_10_12, source_race_13_14]).each do |race|
         assert_nil race.split_from, "#{race.name} split_from"
       end
     end

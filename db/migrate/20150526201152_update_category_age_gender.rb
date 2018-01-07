@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UpdateCategoryAgeGender < ActiveRecord::Migration
   def change
     Category.reset_column_information

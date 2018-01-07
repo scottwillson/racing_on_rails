@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -17,10 +19,10 @@ class EventTest < ActiveSupport::TestCase
     assert_equal(RacingAssociation.current.state, event.state, "event.state")
     assert_equal("Road", event.discipline, "event.discipline")
     assert_equal(RacingAssociation.current.default_sanctioned_by, event.sanctioned_by, "New event sanctioned_by default")
-    number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name)
+    number_issuer = NumberIssuer.find_by(name: RacingAssociation.current.short_name)
     assert_equal(number_issuer, event.number_issuer, "New event number_issuer default")
-    assert_equal(RacingAssociation.current.default_sanctioned_by, event.sanctioned_by, 'sanctioned_by')
-    assert_equal(number_issuer, event.number_issuer(true), 'number_issuer')
+    assert_equal(RacingAssociation.current.default_sanctioned_by, event.sanctioned_by, "sanctioned_by")
+    assert_equal(number_issuer, event.number_issuer(true), "number_issuer")
 
     event.save!
     event.reload
@@ -68,14 +70,14 @@ class EventTest < ActiveSupport::TestCase
 
   test "new promoter wrong id" do
     event = SingleDayEvent.create!(promoter_name: "Marie Le Blanc", promoter_id: FactoryBot.create(:person).id)
-    new_promoter = Person.find_by_name("Marie Le Blanc")
+    new_promoter = Person.find_by(name: "Marie Le Blanc")
     assert_not_nil new_promoter, "Should create new promoter"
     assert_equal new_promoter, event.promoter, "Should use create new promoter and ignore bad promoter_id"
   end
 
   test "new promoter no id" do
     event = SingleDayEvent.create!(promoter_name: "Marie Le Blanc")
-    new_promoter = Person.find_by_name("Marie Le Blanc")
+    new_promoter = Person.find_by(name: "Marie Le Blanc")
     assert_not_nil new_promoter, "Should create new promoter"
     assert_equal new_promoter, event.promoter, "Should use create new promoter"
   end
@@ -122,14 +124,14 @@ class EventTest < ActiveSupport::TestCase
   test "new team wrong id" do
     team = FactoryBot.create(:team, name: "Vanilla")
     event = SingleDayEvent.create!(team_name: "Katusha", team_id: team.id)
-    new_team = Team.find_by_name("Katusha")
+    new_team = Team.find_by(name: "Katusha")
     assert_not_nil new_team, "Should create new team"
     assert_equal new_team, event.team, "Should use create new team and ignore bad team_id"
   end
 
   test "new team no id" do
     event = SingleDayEvent.create!(team_name: "Katusha")
-    new_team = Team.find_by_name("Katusha")
+    new_team = Team.find_by(name: "Katusha")
     assert_not_nil new_team, "Should create new team"
     assert_equal new_team, event.team, "Should use create new team"
   end
@@ -167,13 +169,13 @@ class EventTest < ActiveSupport::TestCase
   test "no delete with results" do
     event = FactoryBot.create(:result).event
     event = Event.find(event.id)
-    assert(!event.destroy, 'Should not be destroyed')
-    assert(!event.errors.empty?, 'Should have errors')
+    assert(!event.destroy, "Should not be destroyed")
+    assert(!event.errors.empty?, "Should have errors")
     assert(Event.exists?(event.id), "Kings Valley should not be deleted")
   end
 
   test "multi day event children with no parent" do
-    event = SingleDayEvent.create!(name: 'PIR')
+    event = SingleDayEvent.create!(name: "PIR")
     assert(!event.multi_day_event_children_with_no_parent?)
     assert(event.multi_day_event_children_with_no_parent.empty?)
 
@@ -181,9 +183,9 @@ class EventTest < ActiveSupport::TestCase
     assert(!event.multi_day_event_children_with_no_parent?)
     assert(event.multi_day_event_children_with_no_parent.empty?)
 
-    MultiDayEvent.create!(name: 'PIR', date: Date.new(RacingAssociation.current.year, 9, 12))
-    event = SingleDayEvent.create!(name: 'PIR', date: Date.new(RacingAssociation.current.year, 9, 12))
-    assert(!(event.multi_day_event_children_with_no_parent?))
+    MultiDayEvent.create!(name: "PIR", date: Date.new(RacingAssociation.current.year, 9, 12))
+    event = SingleDayEvent.create!(name: "PIR", date: Date.new(RacingAssociation.current.year, 9, 12))
+    assert(!event.multi_day_event_children_with_no_parent?)
     assert(event.multi_day_event_children_with_no_parent.empty?)
 
     series = FactoryBot.create(:series)
@@ -193,16 +195,16 @@ class EventTest < ActiveSupport::TestCase
     assert(!series.children[1].multi_day_event_children_with_no_parent?)
     assert(!series.children[2].multi_day_event_children_with_no_parent?)
 
-    pir_1 = SingleDayEvent.create!(name: 'PIR', date: Date.new(RacingAssociation.current.year + 1, 9, 5))
+    pir_1 = SingleDayEvent.create!(name: "PIR", date: Date.new(RacingAssociation.current.year + 1, 9, 5))
     assert(!pir_1.multi_day_event_children_with_no_parent?)
     assert(pir_1.multi_day_event_children_with_no_parent.empty?)
-    pir_2 = SingleDayEvent.create!(name: 'PIR', date: Date.new(RacingAssociation.current.year + 2, 9, 12))
+    pir_2 = SingleDayEvent.create!(name: "PIR", date: Date.new(RacingAssociation.current.year + 2, 9, 12))
     assert(!pir_1.multi_day_event_children_with_no_parent?)
     assert(!pir_2.multi_day_event_children_with_no_parent?)
     assert(pir_1.multi_day_event_children_with_no_parent.empty?)
     assert(pir_2.multi_day_event_children_with_no_parent.empty?)
 
-    pir_3 = SingleDayEvent.create!(name: 'PIR', date: Date.new(RacingAssociation.current.year + 2, 9, 17))
+    pir_3 = SingleDayEvent.create!(name: "PIR", date: Date.new(RacingAssociation.current.year + 2, 9, 17))
     # Need to completely reset state
     pir_1 = SingleDayEvent.find(pir_1.id)
     pir_2 = SingleDayEvent.find(pir_2.id)
@@ -210,29 +212,29 @@ class EventTest < ActiveSupport::TestCase
     assert(pir_2.multi_day_event_children_with_no_parent?)
     assert(pir_3.multi_day_event_children_with_no_parent?)
     assert(pir_1.multi_day_event_children_with_no_parent.empty?)
-    assert(!(pir_2.multi_day_event_children_with_no_parent.empty?))
-    assert(!(pir_3.multi_day_event_children_with_no_parent.empty?))
+    assert(!pir_2.multi_day_event_children_with_no_parent.empty?)
+    assert(!pir_3.multi_day_event_children_with_no_parent.empty?)
 
     mt_hood = FactoryBot.create(:stage_race, name: "Mt. Hood Classic")
     assert(!mt_hood.multi_day_event_children_with_no_parent?)
     assert(!mt_hood.children[0].multi_day_event_children_with_no_parent?)
     assert(!mt_hood.children[1].multi_day_event_children_with_no_parent?)
 
-    mt_hood_3 = SingleDayEvent.create(name: 'Mt. Hood Classic')
+    mt_hood_3 = SingleDayEvent.create(name: "Mt. Hood Classic")
     assert(!mt_hood.multi_day_event_children_with_no_parent?)
     assert(!mt_hood.children[0].multi_day_event_children_with_no_parent?)
     assert(!mt_hood.children[1].multi_day_event_children_with_no_parent?)
 
     assert(!mt_hood_3.multi_day_event_children_with_no_parent?)
-    assert !mt_hood_3.multi_day_event_children_with_no_parent.present?
+    assert mt_hood_3.multi_day_event_children_with_no_parent.blank?
   end
 
   test "missing children" do
-    event = SingleDayEvent.create!(name: 'PIR')
+    event = SingleDayEvent.create!(name: "PIR")
     assert_no_orphans(event)
 
-    SingleDayEvent.create!(name: 'PIR', date: Date.new(Time.zone.today.year, 9, 12))
-    event = MultiDayEvent.create!(name: 'PIR')
+    SingleDayEvent.create!(name: "PIR", date: Date.new(Time.zone.today.year, 9, 12))
+    event = MultiDayEvent.create!(name: "PIR")
     assert_orphans(2, event)
 
     banana_belt_series = FactoryBot.create(:series)
@@ -240,9 +242,9 @@ class EventTest < ActiveSupport::TestCase
     assert_no_orphans(banana_belt_series)
     assert_no_orphans(banana_belt_series.children.first)
 
-    pir_1 = SingleDayEvent.create!(name: 'PIR', date: Date.new(2009, 9, 5))
+    pir_1 = SingleDayEvent.create!(name: "PIR", date: Date.new(2009, 9, 5))
     assert_no_orphans(pir_1)
-    pir_2 = SingleDayEvent.create!(name: 'PIR', date: Date.new(2010, 9, 12))
+    pir_2 = SingleDayEvent.create!(name: "PIR", date: Date.new(2010, 9, 12))
     assert_no_orphans(pir_1)
     assert_no_orphans(pir_2)
 
@@ -342,11 +344,11 @@ class EventTest < ActiveSupport::TestCase
 
     category_1 = FactoryBot.create(:category)
     event.races.create!(category: category_1)
-    assert_same_elements [ category_1 ], event.categories, "categories for event with one race"
+    assert_same_elements [category_1], event.categories, "categories for event with one race"
 
     category_2 = FactoryBot.create(:category)
     event.races.create!(category: category_2)
-    assert_same_elements [ category_1, category_2 ], event.categories, "categories for event with two races"
+    assert_same_elements [category_1, category_2], event.categories, "categories for event with two races"
   end
 
   test "multiday event categories" do
@@ -356,7 +358,7 @@ class EventTest < ActiveSupport::TestCase
     event = parent.children.create!(name: "child")
     category_1 = FactoryBot.create(:category)
     event.races.create!(category: category_1)
-    assert_same_elements [ category_1 ], parent.categories, "categories from child"
+    assert_same_elements [category_1], parent.categories, "categories from child"
 
     category_2 = FactoryBot.create(:category)
     category_3 = FactoryBot.create(:category)
@@ -365,7 +367,7 @@ class EventTest < ActiveSupport::TestCase
     parent.races.create!(category: category_3)
     parent.races.create!(category: category_4)
     assert_same_elements(
-      [ category_1, category_2, category_3, category_4 ],
+      [category_1, category_2, category_3, category_4],
       parent.categories,
       "categories for event with two races"
     )

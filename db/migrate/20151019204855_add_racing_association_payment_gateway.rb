@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddRacingAssociationPaymentGateway < ActiveRecord::Migration
   def change
     add_column :racing_associations, :default_payment_gateway_name, :string, null: true, default: "elavon"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../../test_case"
 require_relative "../../../../app/models/pages/constraint"
 require_relative "../../../../app/models/pages/paths"

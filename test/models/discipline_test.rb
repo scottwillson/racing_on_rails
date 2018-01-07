@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -21,7 +23,7 @@ class DisciplineTest < ActiveSupport::TestCase
   end
 
   test "instance names" do
-    assert_equal(%w{ Circuit }, Discipline.new(name: "Circuit").names, "Circuit names")
+    assert_equal(%w[ Circuit ], Discipline.new(name: "Circuit").names, "Circuit names")
     assert_equal(["Downhill", "Mountain Bike", "Super D", "Short Track"], Discipline.new(name: "Mountain Bike").names, "Mountain Bike names")
     assert_equal(["Downhill"], Discipline.new(name: "Downhill").names, "Downhill names")
   end
@@ -29,6 +31,6 @@ class DisciplineTest < ActiveSupport::TestCase
   test "class names" do
     FactoryBot.create(:discipline, name: "Road")
     FactoryBot.create(:discipline, name: "Track")
-    assert_equal [ "Road", "Track" ], Discipline.names.sort, "name"
+    assert_equal %w[Road Track], Discipline.names.sort, "name"
   end
 end

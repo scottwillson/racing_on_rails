@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 CelluloidBenchmark::Session.define do
   benchmark :results_index, 1.2
   page = get("http://staging.obra.org/results")

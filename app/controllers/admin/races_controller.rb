@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Admin
   class RacesController < Admin::AdminController
-    before_action :assign_event, only: [ :new, :create, :propagate ]
-    before_action :assign_race, only: [ :create, :destroy, :edit, :new, :update, :update_attribute ]
-    before_action :require_administrator_or_promoter, only: [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
-    before_action :require_administrator, except: [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
+    before_action :assign_event, only: %i[new create propagate]
+    before_action :assign_race, only: %i[create destroy edit new update update_attribute]
+    before_action :require_administrator_or_promoter, only: %i[create destroy edit new propagate update update_attribute]
+    before_action :require_administrator, except: %i[create destroy edit new propagate update update_attribute]
 
     def new
       render :edit
@@ -27,7 +29,7 @@ module Admin
     end
 
     def edit
-      @disciplines = [''] + Discipline.all.collect(&:name)
+      @disciplines = [""] + Discipline.all.collect(&:name)
       @disciplines = @disciplines.sort
     end
 
@@ -51,12 +53,12 @@ module Admin
 
     def update_attribute
       respond_to do |format|
-        format.js {
+        format.js do
           expire_cache
           @race.update! params[:name] => params[:value]
           expire_cache
           render plain: @race.send(params[:name])
-        }
+        end
       end
     end
 
@@ -90,7 +92,7 @@ module Admin
     def assign_race
       if params[:id].present?
         @race = Race.find(params[:id])
-        @event = @race.event unless @event
+        @event ||= @race.event
       elsif params[:race]
         @race = @event.races.build race_params
       else

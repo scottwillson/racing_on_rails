@@ -1,8 +1,8 @@
+# frozen_string_literal: true
+
 class AddGranFondoDiscipline < ActiveRecord::Migration
   def up
-    if RacingAssociation.current.short_name == "OBRA"
-      Discipline.create!(name: "Gran Fondo")
-    end
+    Discipline.create!(name: "Gran Fondo") if RacingAssociation.current.short_name == "OBRA"
   end
 
   def down

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MergePeopleWithSameNameAndBirthdates < ActiveRecord::Migration
   def change
     Person.current = RacingAssociation.current.person
@@ -7,10 +9,10 @@ class MergePeopleWithSameNameAndBirthdates < ActiveRecord::Migration
       people.each do |person|
         original = Person.find(original.id)
         if person != original &&
-          person.date_of_birth &&
-          original.date_of_birth &&
-          person.date_of_birth.year == original.date_of_birth.year &&
-          person.date_of_birth.month == original.date_of_birth.month
+           person.date_of_birth &&
+           original.date_of_birth &&
+           person.date_of_birth.year == original.date_of_birth.year &&
+           person.date_of_birth.month == original.date_of_birth.month
 
           say "Merge #{name}"
           original.merge(Person.find(person.id))

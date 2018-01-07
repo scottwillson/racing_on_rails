@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PeopleHelper
   # Is current Person an administrator?
   def administrator?
@@ -17,15 +19,13 @@ module PeopleHelper
   # Can current_person edit +person+?
   def editor_for?(person, *attributes, &block)
     subject = case person
-    when Person
-      person
-    else
-      person.try :person
+              when Person
+                person
+              else
+                person.try :person
     end
 
-    if ((attributes && (attributes.any? { |a| person[a].blank? || subject[a].blank? })) || (current_person && current_person.can_edit?(subject))) && block
-      capture(&block)
-    end
+    capture(&block) if ((attributes && (attributes.any? { |a| person[a].blank? || subject[a].blank? })) || (current_person&.can_edit?(subject))) && block
   end
 
   def account_permission_return_to(person, current_person)

@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 module Results
   module Comparison
     extend ActiveSupport::Concern
-    
+
     # For competition result equivalence. Don't want to override hash and eql? for all Results.
     def competition_result_hash
       (
-        person_id.hash ^ 
-        (person_name.hash * 2) ^ 
-        (place.hash * 3) ^ 
-        (points.hash * 5) ^ 
-        (team_id.hash * 7) ^ 
+        person_id.hash ^
+        (person_name.hash * 2) ^
+        (place.hash * 3) ^
+        (points.hash * 5) ^
+        (team_id.hash * 7) ^
         (team_name.hash * 11)
       ).hash
     end
@@ -47,13 +49,9 @@ module Results
     end
 
     def compare_by_highest_place(other)
-      scores_by_place = scores.sort do |x, y|
-        x.source_result <=> y.source_result
-      end
-      other_scores_by_place = other.scores.sort do |x, y|
-        x.source_result <=> y.source_result
-      end
-      max_results = [ scores_by_place.size, other_scores_by_place.size ].max
+      scores_by_place = scores.sort_by(&:source_result)
+      other_scores_by_place = other.scores.sort_by(&:source_result)
+      max_results = [scores_by_place.size, other_scores_by_place.size].max
       return 0 if max_results == 0
       for index in 0..(max_results - 1)
         if scores_by_place.size == index
@@ -92,11 +90,11 @@ module Results
         0
       elsif place.blank? || place == 0
         1
-      elsif place.upcase == 'DNF'
+      elsif place.casecmp("DNF").zero?
         2
-      elsif place.upcase == 'DQ'
+      elsif place.casecmp("DQ").zero?
         3
-      elsif place.upcase == 'DNS'
+      elsif place.casecmp("DNS").zero?
         4
       else
         5
@@ -106,9 +104,7 @@ module Results
     # All numbered places first, then blanks, followed by DNF, DQ, and DNS
     def <=>(other)
       # Respect eql?
-      if id.present? && (id == other.try(:id))
-        return 0
-      end
+      return 0 if id.present? && (id == other.try(:id))
 
       # Figure out the major position by place first, then break it down further if
       begin

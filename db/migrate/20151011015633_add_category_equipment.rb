@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCategoryEquipment < ActiveRecord::Migration
   def change
     add_column :categories, :equipment, :string, null: true, default: nil

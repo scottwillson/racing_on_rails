@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Any way to not require render_page?
 # Should provide sensible default if page is missing? Or just a 404?
 

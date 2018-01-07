@@ -1,19 +1,21 @@
+# frozen_string_literal: true
+
 module Competitions
   # OBRA OverallBar organized by Masters and Juniors age categories
   class AgeGradedBar < Competition
     after_create :set_parent
 
     def source_results_query(race)
-      super.
-      where("people.date_of_birth between ? and ?", race.dates_of_birth.begin, race.dates_of_birth.end)
+      super
+        .where("people.date_of_birth between ? and ?", race.dates_of_birth.begin, race.dates_of_birth.end)
     end
 
     def categories_for(race)
-      [ race.category.parent_id ]
+      [race.category.parent_id]
     end
 
     def source_event_types
-      [ Competitions::OverallBar ]
+      [Competitions::OverallBar]
     end
 
     def category_names
@@ -23,9 +25,7 @@ module Competitions
     def categories!
       categories = []
       template_categories.each do |template_category|
-        unless Category.where(name: template_category.name).exists?
-          template_category.save!
-        end
+        template_category.save! unless Category.where(name: template_category.name).exists?
         categories << template_category
       end
 
@@ -41,14 +41,14 @@ module Competitions
       template_categories = []
       position = 0
       30.step(65, 5) do |age|
-        template_categories << Category.new(name: "Masters Men #{age}-#{age + 4}", ages: (age)..(age + 4), position: position = position.next, parent: masters_men)
+        template_categories << Category.new(name: "Masters Men #{age}-#{age + 4}", ages: age..(age + 4), position: position = position.next, parent: masters_men)
       end
-      template_categories << Category.new(name: 'Masters Men 70+', ages: 70..::Categories::MAXIMUM, position: position = position.next, parent: masters_men)
+      template_categories << Category.new(name: "Masters Men 70+", ages: 70..::Categories::MAXIMUM, position: position = position.next, parent: masters_men)
 
       30.step(55, 5) do |age|
-        template_categories << Category.new(name: "Masters Women #{age}-#{age + 4}", ages: (age)..(age + 4), position: position = position.next, parent: masters_women)
+        template_categories << Category.new(name: "Masters Women #{age}-#{age + 4}", ages: age..(age + 4), position: position = position.next, parent: masters_women)
       end
-      template_categories << Category.new(name: 'Masters Women 60+', ages: 60..::Categories::MAXIMUM, position: position = position.next, parent: masters_women)
+      template_categories << Category.new(name: "Masters Women 60+", ages: 60..::Categories::MAXIMUM, position: position = position.next, parent: masters_women)
 
       template_categories << Category.new(name: "Junior Men 10-12", ages: 10..12, position: position = position.next, parent: junior_men)
       template_categories << Category.new(name: "Junior Men 13-14", ages: 13..14, position: position = position.next, parent: junior_men)
@@ -69,7 +69,7 @@ module Competitions
       end
     end
 
-    def after_source_results(results, race)
+    def after_source_results(results, _race)
       # BAR Results with the same place are always ties, and never team results
       set_team_size_to_one results
     end

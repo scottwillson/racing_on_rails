@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUpdatedIndexes < ActiveRecord::Migration
   def change
     add_index :articles, :updated_at

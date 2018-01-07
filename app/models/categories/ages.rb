@@ -44,17 +44,15 @@ module Categories
         self.ages_begin = value.begin
         self.ages_end = value.end
       else
-        age_split = value.strip.split('-')
+        age_split = value.strip.split("-")
         self.ages_begin = age_split[0].to_i unless age_split[0].nil?
         self.ages_end = age_split[1].to_i unless age_split[1].nil?
       end
-      self.ages
+      ages
     end
 
     def set_ages_from_name
-      if ages_begin.nil? || ages_begin == 0
-        self.ages = ages_from_name(name)
-      end
+      self.ages = ages_from_name(name) if ages_begin.nil? || ages_begin == 0
       ages
     end
 
@@ -77,11 +75,11 @@ module Categories
         else
           (name[/(\d{2})\+/].to_i)..::Categories::MAXIMUM
         end
-      elsif /(9|\d{2})-(9|\d{2})/.match(name)
+      elsif /(9|\d{2})-(9|\d{2})/.match?(name)
         age_range_match = /(9|\d{2})-(9|\d{2})/.match(name)
         age_range_match[1].to_i..age_range_match[2].to_i
       elsif name["Junior"]
-        if /[^\d](9|1\d)/.match(name)
+        if /[^\d](9|1\d)/.match?(name)
           age = /[^\d](9|\d{2})/.match(name)[1].to_i
           age..age
         else

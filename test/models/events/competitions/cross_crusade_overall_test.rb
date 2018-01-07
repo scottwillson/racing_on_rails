@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 module Competitions
@@ -44,7 +46,7 @@ module Competitions
 
       assert_equal "Series Overall", overall.name, "Overall name"
       assert_equal "River City Bicycles Cyclocross Crusade: Series Overall", overall.full_name, "Overall full name"
-      assert(!overall.notes.blank?, "Should have notes about rules")
+      assert(overall.notes.present?, "Should have notes about rules")
       assert_equal_dates Date.new(2017, 10, 7), overall.date, "Overall series date"
       assert_equal_dates Date.new(2017, 10, 7), overall.start_date, "Overall series start date"
       assert_equal_dates Date.new(2017, 11, 5), overall.end_date, "Overall series end date"

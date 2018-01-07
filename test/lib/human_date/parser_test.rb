@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../../test_helper"
 
 # :stopdoc:
@@ -14,7 +16,7 @@ module HumanDate
 
     test "parse ISO date time" do
       assert_equal Time.utc(2013, 11, 28, 8, 0, 0), HumanDate::Parser.new.parse("2013-11-28T08:00:00.000Z").utc
-      assert_equal Time.utc(2010, 12, 27, 19, 28, 18, 157000), HumanDate::Parser.new.parse("2010-12-27T19:28:18.157Z.json").utc
+      assert_equal Time.utc(2010, 12, 27, 19, 28, 18, 157_000), HumanDate::Parser.new.parse("2010-12-27T19:28:18.157Z.json").utc
     end
 
     test "parse bogus date should return nil" do

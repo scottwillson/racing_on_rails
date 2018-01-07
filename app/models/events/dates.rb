@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "human_date/parser"
 
 module Events
@@ -12,10 +14,10 @@ module Events
     module ClassMethods
       # Return list of every year that has at least one event
       def find_all_years
-        years = [ ::RacingAssociation.current.effective_year ] +
-        connection.select_values(
-          "select distinct extract(year from date) from events"
-        ).map(&:to_i)
+        years = [::RacingAssociation.current.effective_year] +
+                connection.select_values(
+                  "select distinct extract(year from date) from events"
+                ).map(&:to_i)
         years = years.uniq.sort
 
         if years.size == 1
@@ -36,15 +38,15 @@ module Events
 
     # Format for schedule page primarily
     def short_date
-      return '' unless date
-      prefix = ' ' if date.month < 10
-      suffix = ' ' if date.day < 10
+      return "" unless date
+      prefix = " " if date.month < 10
+      suffix = " " if date.day < 10
       "#{prefix}#{date.month}/#{date.day}#{suffix}"
     end
 
     def date_range_s(format = :short)
       if format == :long
-        date.strftime('%-m/%-d/%Y')
+        date.strftime("%-m/%-d/%Y")
       else
         "#{date.month}/#{date.day}"
       end
@@ -63,8 +65,6 @@ module Events
         @human_date
       elsif date
         date.to_s(:long_with_week_day)
-      else
-        nil
       end
     end
 
@@ -108,14 +108,11 @@ module Events
     end
 
     def set_end_date
-      if self[:end_date].nil? || date != self[:end_date]
-        self.end_date = date
-      end
+      self.end_date = date if self[:end_date].nil? || date != self[:end_date]
     end
 
     # Does nothing. Allows us to treat Events and MultiDayEvents the same.
-    def update_date
-    end
+    def update_date; end
 
     def set_year
       self.year = date.year

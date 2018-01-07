@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../test_helper", __FILE__)
 
 module Admin
@@ -42,9 +44,9 @@ module Admin
 
     test "destroy" do
       kings_valley_women_2003 = FactoryBot.create(:race)
-      xhr :delete, :destroy, id: kings_valley_women_2003.id, commit: 'Delete'
+      xhr :delete, :destroy, id: kings_valley_women_2003.id, commit: "Delete"
       assert_response(:success)
-      assert_raise(ActiveRecord::RecordNotFound, 'kings_valley_women_2003 should have been destroyed') { Race.find(kings_valley_women_2003.id) }
+      assert_raise(ActiveRecord::RecordNotFound, "kings_valley_women_2003 should have been destroyed") { Race.find(kings_valley_women_2003.id) }
     end
 
     test "new" do

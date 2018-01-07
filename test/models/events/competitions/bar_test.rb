@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # There is duplication between BAR tests, but refactoring the tests should wait until the Competition refactoring is complete
 # FIXME Assert correct team names on BAR results
 
@@ -184,7 +186,7 @@ module Competitions
         assert_equal_dates(Time.zone.today, bar.updated_at, "BAR last updated")
       end
 
-      cx_bar = Bar.find_by_name("2004 Cyclocross BAR")
+      cx_bar = Bar.find_by(name: "2004 Cyclocross BAR")
       men_cx_bar = cx_bar.races.detect { |b| b.category == men_a }
       assert_equal(2, men_cx_bar.results.size, "Men A Cyclocross BAR results")
 
@@ -199,7 +201,7 @@ module Competitions
       assert_equal(1, results[1].points, "Men A Cyclocross BAR results points")
       assert_equal(1, results[1].scores.size, "Weaver Men A Cyclocross BAR results scores")
 
-      track_bar = Bar.find_by_name("2004 Track BAR")
+      track_bar = Bar.find_by(name: "2004 Track BAR")
       assert_not_nil(track_bar, "Track BAR")
       sr_men_track = track_bar.races.detect { |r| r.category == senior_men }
       assert_not_nil(sr_men_track, "Senior Men Track BAR")
@@ -239,7 +241,7 @@ module Competitions
 
       Bar.calculate! 2004
 
-      track_bar = Bar.find_by_name("2004 Track BAR")
+      track_bar = Bar.find_by(name: "2004 Track BAR")
       sr_men_track = track_bar.races.detect { |r| r.category == senior_men }
       result = sr_men_track.results.detect { |r| r.person == person }
       assert_equal(10, result.points, "points")
@@ -248,22 +250,22 @@ module Competitions
     test "masters 4 5" do
       masters_men             = FactoryBot.create(:category, name: "Masters Men")
       masters_men_4_5         = FactoryBot.create(:category, name: "Masters Men 4/5", parent: masters_men)
-                                FactoryBot.create(:category, name: "Masters Men 4/5 40+", parent: masters_men_4_5)
-                                FactoryBot.create(:category, name: "Masters Men 4/5 50+", parent: masters_men_4_5)
-      masters_men_40_plus     = FactoryBot.create(:category, name: "Masters Men 40+", parent: masters_men)
+      FactoryBot.create(:category, name: "Masters Men 4/5 40+", parent: masters_men_4_5)
+      FactoryBot.create(:category, name: "Masters Men 4/5 50+", parent: masters_men_4_5)
+      masters_men_40_plus = FactoryBot.create(:category, name: "Masters Men 40+", parent: masters_men)
 
       cats = Bar.new.categories_for(Race.new(category: masters_men))
-      assert_same_elements [ masters_men, masters_men_40_plus ], cats, "Should include all Masters children except 4/5"
+      assert_same_elements [masters_men, masters_men_40_plus], cats, "Should include all Masters children except 4/5"
     end
 
     test "masters women" do
       masters_women           = FactoryBot.create(:category, name: "Masters Women")
       masters_women_4         = FactoryBot.create(:category, name: "Masters Women 4", parent: masters_women)
-                                FactoryBot.create(:category, name: "Masters Women 4 40+", parent: masters_women_4)
-      masters_women_40_plus   = FactoryBot.create(:category, name: "Masters Women 40+", parent: masters_women)
+      FactoryBot.create(:category, name: "Masters Women 4 40+", parent: masters_women_4)
+      masters_women_40_plus = FactoryBot.create(:category, name: "Masters Women 40+", parent: masters_women)
 
       cats = Bar.new.categories_for(Race.new(category: masters_women))
-      assert_same_elements [ masters_women, masters_women_40_plus ], cats, "Should include all Masters women children except 4"
+      assert_same_elements [masters_women, masters_women_40_plus], cats, "Should include all Masters women children except 4"
     end
 
     test "#categories_for should not modify association" do

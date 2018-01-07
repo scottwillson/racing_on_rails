@@ -1,51 +1,52 @@
 # frozen_string_literal: true
+
 module People
   module Merge
     extend ActiveSupport::Concern
 
-    MERGE_ATTRIBUTES = [
-      :billing_city,
-      :billing_country_code,
-      :billing_first_name,
-      :billing_last_name,
-      :billing_state,
-      :billing_street,
-      :billing_zip,
-      :bmx_category,
-      :card_expires_on,
-      :card_printed_at,
-      :ccx_category,
-      :ccx_only,
-      :cell_fax,
-      :city,
-      :club_name,
-      :country_code,
-      :date_of_birth,
-      :dh_category,
-      :email,
-      :emergency_contact,
-      :emergency_contact_phone,
-      :gender,
-      :home_phone,
-      :license,
-      :license_expiration_date,
-      :license_type,
-      :membership_card,
-      :member_usac_to,
-      :mtb_category,
-      :ncca_club_name,
-      :non_member_result_id,
-      :notes,
-      :occupation,
-      :official,
-      :road_category,
-      :status,
-      :state,
-      :street,
-      :team_id,
-      :track_category,
-      :work_phone,
-      :zip
+    MERGE_ATTRIBUTES = %i[
+      billing_city
+      billing_country_code
+      billing_first_name
+      billing_last_name
+      billing_state
+      billing_street
+      billing_zip
+      bmx_category
+      card_expires_on
+      card_printed_at
+      ccx_category
+      ccx_only
+      cell_fax
+      city
+      club_name
+      country_code
+      date_of_birth
+      dh_category
+      email
+      emergency_contact
+      emergency_contact_phone
+      gender
+      home_phone
+      license
+      license_expiration_date
+      license_type
+      membership_card
+      member_usac_to
+      mtb_category
+      ncca_club_name
+      non_member_result_id
+      notes
+      occupation
+      official
+      road_category
+      status
+      state
+      street
+      team_id
+      track_category
+      work_phone
+      zip
     ].freeze
 
     # Moves another people' aliases, results, and race numbers to this person,
@@ -86,18 +87,12 @@ module People
                 other_person.update login: nil
               end
             end
-            if member_from.nil? || (other_person.member_from && other_person.member_from < member_from)
-              self.member_from = other_person.member_from
-            end
-            if member_to.nil? || (other_person.member_to && other_person.member_to > member_to)
-              self.member_to = other_person.member_to
-            end
+            self.member_from = other_person.member_from if member_from.nil? || (other_person.member_from && other_person.member_from < member_from)
+            self.member_to = other_person.member_to if member_to.nil? || (other_person.member_to && other_person.member_to > member_to)
 
             other_person_is_newer = other_person.created_at > created_at
             MERGE_ATTRIBUTES.each do |attribute|
-              if other_person.send(attribute).present? && (send(attribute).blank? || other_person_is_newer)
-                send("#{attribute}=", other_person.send(attribute))
-              end
+              send("#{attribute}=", other_person.send(attribute)) if other_person.send(attribute).present? && (send(attribute).blank? || other_person_is_newer)
             end
 
             if date_of_birth && other_person.date_of_birth && date_of_birth.day == 1
@@ -137,9 +132,7 @@ module People
             other_person.event_team_memberships.reload.clear
             Person.delete other_person.id
             existing_alias = aliases.detect { |a| a.name.casecmp(other_person.name) == 0 }
-            if existing_alias.nil? && Person.find_all_by_name(other_person.name).empty?
-              aliases.create(name: other_person.name)
-            end
+            aliases.create(name: other_person.name) if existing_alias.nil? && Person.find_all_by_name(other_person.name).empty?
           end
         end
 

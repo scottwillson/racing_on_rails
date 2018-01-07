@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReplaceAdminRoleWithFlag < ActiveRecord::Migration
   class Person < ActiveRecord::Base
     has_and_belongs_to_many :roles
@@ -7,7 +9,11 @@ class ReplaceAdminRoleWithFlag < ActiveRecord::Migration
   end
 
   def up
-    add_column(:people, :administrator, :boolean, default: false, null: false) rescue nil
+    begin
+      add_column(:people, :administrator, :boolean, default: false, null: false)
+    rescue StandardError
+      nil
+    end
 
     Person.reset_column_information
     transaction do

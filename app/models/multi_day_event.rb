@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Event that spans more than one day: stage races, six days, omniums
 # MultiDayEvents represent events that occur on concurrent days, and Series and
 # WeeklySeries subclasses represent events that do not occur on concurrent days, though
@@ -10,7 +12,7 @@
 #
 # New child event should populate child event with parent data, but they don't
 class MultiDayEvent < Event
-  validates_presence_of :name, :date
+  validates :name, :date, presence: true
   validate on: :create do |event|
     event.parent.nil?
   end
@@ -20,17 +22,17 @@ class MultiDayEvent < Event
 
   before_save :update_children
 
-  # TODO Default first child event date to start date, next child to first child date + 1, additional children to next day if adjacent,
+  # TODO: Default first child event date to start date, next child to first child date + 1, additional children to next day if adjacent,
   # same day of next week if not adjacent (Series/WeeklySeries)
   has_many :children,
            -> {
-             where("type is null or type = 'SingleDayEvent'").
-             order(:date)
+             where("type is null or type = 'SingleDayEvent'")
+               .order(:date)
            },
            class_name: "Event",
            foreign_key: "parent_id",
-           after_add: [ :children_changed, :update_date ],
-           after_remove: [ :children_changed, :update_date ] do
+           after_add: %i[children_changed update_date],
+           after_remove: %i[children_changed update_date] do
              def create!(attributes = {})
                owner = proxy_association.owner
                attributes[:parent_id] = owner.id
@@ -60,7 +62,7 @@ class MultiDayEvent < Event
   # Use first SingleDayEvent to populate date, name, promoter, etc.
   # Guess subclass (MultiDayEvent, Series, WeeklySeries) from SingleDayEvent dates
   def self.create_from_children(children)
-    raise ArgumentError.new("children cannot be empty") if children.empty?
+    raise ArgumentError, "children cannot be empty" if children.empty?
 
     first_event = children.first
     new_event_attributes = {
@@ -97,13 +99,11 @@ class MultiDayEvent < Event
       raise ArgumentError, "'#{day}' must be in #{Date::DAYNAMES.join(', ')}" unless Date::DAYNAMES.index(day)
     end
 
-    event = self.create!(params)
+    event = create!(params)
 
     days_of_week_indexes = days_of_week.map { |day| Date::DAYNAMES.index(day) }
     start_date = event.date
-    until days_of_week_indexes.include?(start_date.wday)
-      start_date = start_date.next
-    end
+    start_date = start_date.next until days_of_week_indexes.include?(start_date.wday)
 
     start_date.step(event.end_date, 1) do |date|
       event.children.create!(date: date) if days_of_week_indexes.include?(date.wday)
@@ -122,9 +122,9 @@ class MultiDayEvent < Event
   def self.guess_type(events)
     length = events.last.date - events.first.date
     if events.size - 1 == length
-     MultiDayEvent
+      MultiDayEvent
     else
-      if events.first.date.wday == 0 or events.first.date.wday == 6
+      if (events.first.date.wday == 0) || (events.first.date.wday == 6)
         Series
       else
         WeeklySeries
@@ -138,7 +138,7 @@ class MultiDayEvent < Event
   end
 
   # Uses SQL query to set +date+ from child events. Callbacks pass in unsued child parameter.
-  def update_date(child = nil)
+  def update_date(_child = nil)
     return true if new_record?
 
     child_dates = Event.where(parent_id: id).where(cancelled: false).where(postponed: false).pluck(:date)
@@ -154,9 +154,7 @@ class MultiDayEvent < Event
   end
 
   def set_end_date
-    if self[:end_date].nil?
-      self.end_date = children.map(&:date).max || date
-    end
+    self.end_date = children.map(&:date).max || date if self[:end_date].nil?
   end
 
   def end_date_s
@@ -169,7 +167,7 @@ class MultiDayEvent < Event
   def date_range_s(format = :short)
     if format == :long
       if start_date == end_date
-        date.strftime('%-m/%-d/%Y')
+        date.strftime("%-m/%-d/%Y")
       else
         "#{start_date.strftime('%-m/%-d/%Y')}-#{end_date.strftime('%-m/%-d/%Y')}"
       end
@@ -178,7 +176,7 @@ class MultiDayEvent < Event
       if start_date == end_date
         start_date_s
       elsif start_date.month == end_date.month
-          "#{start_date_s}-#{end_date.day}"
+        "#{start_date_s}-#{end_date.day}"
       else
         "#{start_date_s}-#{end_date.month}/#{end_date.day}"
       end
@@ -186,7 +184,7 @@ class MultiDayEvent < Event
   end
 
   def date_range_long_s
-    start_date_s = start_date.strftime('%a, %B %-d')
+    start_date_s = start_date.strftime("%a, %B %-d")
     if start_date == end_date
       start_date_s
     else
@@ -198,7 +196,7 @@ class MultiDayEvent < Event
   def missing_children
     return [] unless name && date
 
-    @missing_children ||= SingleDayEvent.where(parent_id:nil).where(name: name).year(date.year)
+    @missing_children ||= SingleDayEvent.where(parent_id: nil).where(name: name).year(date.year)
   end
 
   # All children have results?
@@ -210,9 +208,7 @@ class MultiDayEvent < Event
   def propagate_races
     children.each do |event|
       races.map(&:category).each do |category|
-        unless event.races.map(&:category).include?(category)
-          event.races.create!(category: category)
-        end
+        event.races.create!(category: category) unless event.races.map(&:category).include?(category)
       end
     end
   end

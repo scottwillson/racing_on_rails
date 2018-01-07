@@ -1,6 +1,7 @@
 #! /usr/bin/env ruby
+# frozen_string_literal: true
 
-%w{ aba mbra obra wsba }.each do |association|
+%w[ aba mbra obra wsba ].each do |association|
   puts "Restart #{association}"
   `script/local #{association}`
   puts `cap production puma:stop`

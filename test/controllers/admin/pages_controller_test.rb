@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../../test_helper", __FILE__)
 
 module Admin
@@ -23,8 +25,7 @@ module Admin
       xhr(:patch, :update_attribute,
           id: page.to_param,
           value: "OBRA Banquet",
-          name: "title"
-      )
+          name: "title")
       assert_response(:success)
       assert_template(nil)
       assert_equal(page, assigns("page"), "@page")
@@ -46,8 +47,7 @@ module Admin
             title: "My Awesome Bike Racing Page",
             body: "<blink>Race</blink>",
             parent_id: nil
-          }
-      )
+          })
       assert_redirected_to(edit_admin_page_path(page))
       page = Page.find(page.id)
       assert_equal("My Awesome Bike Racing Page", page.title, "title")
@@ -64,8 +64,7 @@ module Admin
             title: "My Awesome Bike Racing Page",
             body: "<blink>Race</blink>",
             parent_id: parent_page.to_param
-          }
-      )
+          })
       page.reload
       assert_equal("My Awesome Bike Racing Page", page.title, "title")
       assert_equal("<blink>Race</blink>", page.body, "body")
@@ -92,9 +91,8 @@ module Admin
           page: {
             title: "My Awesome Bike Racing Page",
             body: "<blink>Race</blink>"
-          }
-      )
-      page = Page.find_by_title("My Awesome Bike Racing Page")
+          })
+      page = Page.find_by(title: "My Awesome Bike Racing Page")
       assert_redirected_to(edit_admin_page_path(page))
       page.reload
       assert_equal("My Awesome Bike Racing Page", page.title, "title")
@@ -105,13 +103,12 @@ module Admin
     test "create child page" do
       parent_page = FactoryBot.create(:page)
       post(:create,
-          page: {
-            title: "My Awesome Bike Racing Page",
-            body: "<blink>Race</blink>",
-            parent_id: parent_page.to_param
-          }
-      )
-      page = Page.find_by_title("My Awesome Bike Racing Page")
+           page: {
+             title: "My Awesome Bike Racing Page",
+             body: "<blink>Race</blink>",
+             parent_id: parent_page.to_param
+           })
+      page = Page.find_by(title: "My Awesome Bike Racing Page")
       assert_redirected_to(edit_admin_page_path(page))
       page.reload
       assert_equal("My Awesome Bike Racing Page", page.title, "title")
