@@ -86,7 +86,7 @@ group :test do
   gem "capybara"
   gem "database_cleaner"
   gem "factory_bot_rails"
-  gem "fakeweb", git: "https://github.com/SamMolokanov/fakeweb.git", branch: "ruby-2-4-1-support"
+  gem "fakeweb", git: "https://github.com/chrisk/fakeweb.git"
   gem "minitest", "~> 5.4"
   gem "mocha", require: false
   gem "poltergeist"
