@@ -19,12 +19,14 @@ class UsacFile
     "West" => "we",
     "Wisconsin" => "wisc",
     "Complete" => "all"
-  }.freeze
+  }
 
   # prefix each file with common filename hooey
   REGION_FILES.each_pair do |key, value|
     REGION_FILES[key] = "/promoters/wp_p_uscf_" + value + ".csv"
   end
+
+  REGION_FILES.freeze
 
   def initialize(person = "promo", pword = "races")
     Net::HTTP.start(USAC_SITE) do |http|
