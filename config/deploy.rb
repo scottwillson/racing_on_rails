@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-lock "3.10.0"
+lock "3.10.1"
 
 set :linked_dirs, %w[ log public/assets public/system public/uploads tmp/pids tmp/cache tmp/sockets vendor/bundle ]
 set :linked_files, %w[ config/database.yml config/newrelic.yml config/secrets.yml ]
