@@ -75,5 +75,26 @@ module Competitions
         assert_nil race.split_from, "#{race.name} split_from"
       end
     end
+
+    test "2017 results" do
+      competition = OregonTTCup.create!
+
+      cat_4_5_men = Category.where(name: "Category 4/5 Men").first
+      event = FactoryBot.create(:event)
+      competition.source_events << event
+      race = event.races.create!(category: cat_4_5_men)
+      person = FactoryBot.create(:person)
+      race.results.create!(person: person, place: 5)
+
+      OregonTTCup.calculate!
+
+      competition.reload
+      assert_equal 1, competition.races_with_results.size
+
+      race = competition.races_with_results.detect { |r| r.name == "Category 4/5 Men" }
+      assert_equal 1, race.results.size
+      result = race.results.first
+      assert_equal 11, result.points, "points"
+    end
   end
 end
