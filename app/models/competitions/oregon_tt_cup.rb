@@ -108,8 +108,8 @@ module Competitions
       end
 
       if race.name == "Tandem"
-        beginning_of_year = Time.zone.now.beginning_of_year
-        end_of_year = Time.zone.now.end_of_year
+        beginning_of_year = Time.zone.local(year).beginning_of_year
+        end_of_year = Time.zone.local(year).end_of_year
 
         results.each do |result|
           result["member_from"] = beginning_of_year
@@ -232,7 +232,7 @@ module Competitions
         result.time &&
           result.time > 0 &&
           (result.person&.racing_age.nil? ||
-            (result.person.racing_age >= competition_category.ages_begin && result.person.racing_age <= competition_category.ages_end)
+            (result.person.racing_age(year) >= competition_category.ages_begin && result.person.racing_age(year) <= competition_category.ages_end)
           )
       end
                      .each { |result| create_result(race, result) }
@@ -240,7 +240,7 @@ module Competitions
 
     def split?(competition_category, result)
       result.person&.racing_age &&
-        competition_category.ages.include?(result.person.racing_age) &&
+        competition_category.ages.include?(result.person.racing_age(year)) &&
         result.time &&
         result.time > 0
     end
