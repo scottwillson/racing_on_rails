@@ -66,7 +66,7 @@ module Competitions
       when "Senior Men Pro/1/2"
         ["Men Category 1/2"]
       when "Category 4/5 Men"
-        ["Category 4 Men", "Category 5 Men", "Category 4/5 Men", "Men Category 4/5"]
+        category_4_5_men_categories
       when "Senior Women 1/2"
         ["Senior Women", "Women Category 1/2"]
       when "Category 4/5 Women"
@@ -85,10 +85,21 @@ module Competitions
         []
       end.each do |name|
         category = Category.find_by(name: name)
-        ids << category.id if category
+        ids << category if category
       end
 
       ids
+    end
+
+    def category_4_5_men_categories
+      [
+        "Category 4 Men",
+        "Category 4/5",
+        "Category 5 Men",
+        "Men 4/5",
+        "Men Category 4",
+        "Men Category 4/5"
+      ]
     end
 
     def after_source_results(results, race)
