@@ -87,8 +87,8 @@ module People
     end
 
     # Oldest age person will be at any point in year
-    def racing_age
-      (RacingAssociation.current.year - date_of_birth.year).ceil if date_of_birth
+    def racing_age(year = RacingAssociation.current.year)
+      (year - date_of_birth.year).ceil if date_of_birth
     end
 
     def cyclocross_racing_age
