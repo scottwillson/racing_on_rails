@@ -78,13 +78,59 @@ module Competitions
 
     test "2017 results" do
       competition = OregonTTCup.create!
-
       cat_4_5_men = Category.where(name: "Category 4/5 Men").first
-      event = FactoryBot.create(:event)
+      person = FactoryBot.create(:person)
+
+      # 5	Jack Frost Time Trial	Category 4/5 Men	3/5	11.0
+      # 2	Revenge Of The Disc	Men Category 4/5	4/9	14.0
+      # 2	Revenge Of The Disc	Men Category 4/5	4/29	14.0
+      # 1	OBRA TTT Championships	Men 4/5	5/7	7.5
+      # 4	Rally the Valley Omnium: Time Trial	Category 4/5	5/20	12.0
+      # 6	OBRA TT Championships	Men Category 4/5	6/11	20.0
+      # 13	Thump Coffee High Desert Omnium: Time Trial	Men Category 4/5 TT	7/1	3.0
+      # 5	Larch Mt. Hill Climb	Category 4 Men	7/9	11.0
+      # 6	2017 OBRA Hillclimb Time Trial Championship - Presented by Sam Barlow Track & Field	Men Category 4	7/16	20.0
+
+      event = FactoryBot.create(:event, name: "Jack Frost Time Trial")
       competition.source_events << event
       race = event.races.create!(category: cat_4_5_men)
-      person = FactoryBot.create(:person)
       race.results.create!(person: person, place: 5)
+
+      event = FactoryBot.create(:event, name: "Revenge Of The Disc")
+      competition.source_events << event
+      men_category_4_5 = Category.where(name: "Men Category 4/5").first_or_create!
+      race = event.races.create!(category: men_category_4_5)
+      race.results.create!(person: person, place: 2)
+
+      event = FactoryBot.create(:event, name: "OBRA TTT Championships", bar_points: 2)
+      competition.source_events << event
+      men_4_5 = Category.where(name: "Category 4/5").first_or_create!
+      race = event.races.create!(category: men_4_5)
+      race.results.create!(person: person, place: 1)
+      race.results.create!(person: FactoryBot.create(:person), place: 1)
+      race.results.create!(person: FactoryBot.create(:person), place: 1)
+      race.results.create!(person: FactoryBot.create(:person), place: 1)
+      race.results.create!(person: FactoryBot.create(:person), place: 2)
+      race.results.create!(person: FactoryBot.create(:person), place: 2)
+      race.results.create!(person: FactoryBot.create(:person), place: 2)
+      race.results.create!(person: FactoryBot.create(:person), place: 2)
+
+      event = FactoryBot.create(:event, name: "Rally the Valley Omnium: Time Trial")
+      competition.source_events << event
+      men_4_5 = Category.where(name: "Men 4/5").first_or_create!
+      race = event.races.create!(category: men_4_5)
+      race.results.create!(person: person, place: 4)
+
+      event = FactoryBot.create(:event, name: "OBRA TT Championships", bar_points: 2)
+      competition.source_events << event
+      race = event.races.create!(category: men_category_4_5)
+      race.results.create!(person: person, place: 6)
+
+      event = FactoryBot.create(:event, name: "OBRA Hillclimb Time Trial Championship", bar_points: 2)
+      competition.source_events << event
+      men_category_4 = Category.where(name: "Men Category 4").first_or_create!
+      race = event.races.create!(category: men_category_4)
+      race.results.create!(person: person, place: 6)
 
       OregonTTCup.calculate!
 
@@ -92,9 +138,8 @@ module Competitions
       assert_equal 1, competition.races_with_results.size
 
       race = competition.races_with_results.detect { |r| r.name == "Category 4/5 Men" }
-      assert_equal 1, race.results.size
-      result = race.results.first
-      assert_equal 11, result.points, "points"
+      result = race.results.detect { |r| r.person == person }
+      assert_equal [10, 10, 11, 13, 17, 20], result.scores.map(&:points).sort
     end
   end
 end
