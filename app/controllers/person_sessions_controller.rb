@@ -13,7 +13,7 @@ class PersonSessionsController < ApplicationController
   end
 
   def create
-    @person_session = PersonSession.new(person_session_params)
+    @person_session = PersonSession.new(person_session_params.to_h)
     @person_session.remember_me = true
     if @person_session.save
       flash.discard
