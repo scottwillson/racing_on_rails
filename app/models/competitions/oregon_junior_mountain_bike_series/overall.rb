@@ -39,7 +39,7 @@ module Competitions
       end
 
       def maximum_events(_)
-        4
+        3
       end
 
       def source_events?
