@@ -47,7 +47,7 @@ module Competitions
       end
 
       def create_slug
-        "ojcs"
+        "ojmtbs"
       end
     end
   end
