@@ -1,6 +1,4 @@
-
-# frozen_string_literal: true
-
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -13,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_170_701_201_331) do
+ActiveRecord::Schema.define(version: 20180306163607) do
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
     t.integer  "person_id",   limit: 4
     t.datetime "date"
-    t.decimal  "amount", precision: 10, scale: 2
+    t.decimal  "amount",                  precision: 10, scale: 2
     t.string   "description", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -34,7 +32,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
 
   add_index "aliases", ["aliasable_id"], name: "index_aliases_on_aliasable_id", using: :btree
   add_index "aliases", ["aliasable_type"], name: "index_aliases_on_aliasable_type", using: :btree
-  add_index "aliases", %w[name aliasable_type], name: "index_aliases_on_name_and_aliasable_type", unique: true, using: :btree
+  add_index "aliases", ["name", "aliasable_type"], name: "index_aliases_on_name_and_aliasable_type", unique: true, using: :btree
   add_index "aliases", ["name"], name: "index_aliases_on_name", using: :btree
 
   create_table "article_categories", force: :cascade do |t|
@@ -53,8 +51,8 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.string   "heading",             limit: 255
     t.string   "description",         limit: 255
     t.boolean  "display"
-    t.text     "body",                limit: 65_535
-    t.integer  "position",            limit: 4, default: 0
+    t.text     "body",                limit: 65535
+    t.integer  "position",            limit: 4,     default: 0
     t.integer  "article_category_id", limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -101,7 +99,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
   create_table "competition_event_memberships", force: :cascade do |t|
     t.integer "competition_id", limit: 4,                 null: false
     t.integer "event_id",       limit: 4,                 null: false
-    t.float   "points_factor",  limit: 24, default: 1.0
+    t.float   "points_factor",  limit: 24,  default: 1.0
     t.string  "notes",          limit: 255
   end
 
@@ -123,28 +121,28 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.integer "discipline_id", limit: 4, default: 0, null: false
   end
 
-  add_index "discipline_bar_categories", %w[category_id discipline_id], name: "discipline_bar_categories_category_id_index", unique: true, using: :btree
+  add_index "discipline_bar_categories", ["category_id", "discipline_id"], name: "discipline_bar_categories_category_id_index", unique: true, using: :btree
   add_index "discipline_bar_categories", ["discipline_id"], name: "index_discipline_bar_categories_on_discipline_id", using: :btree
 
   create_table "disciplines", force: :cascade do |t|
-    t.string   "name", limit: 64, default: "", null: false
+    t.string   "name",       limit: 64, default: "",    null: false
     t.boolean  "bar"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "numbers", default: false
+    t.boolean  "numbers",               default: false
   end
 
   add_index "disciplines", ["name"], name: "index_disciplines_on_name", unique: true, using: :btree
 
   create_table "discount_codes", force: :cascade do |t|
-    t.integer  "event_id",        limit: 4, null: false
+    t.integer  "event_id",        limit: 4,                                        null: false
     t.string   "name",            limit: 255
-    t.string   "code",            limit: 255, null: false
+    t.string   "code",            limit: 255,                                      null: false
     t.integer  "created_by_id",   limit: 4
     t.string   "created_by_type", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "amount", precision: 10, scale: 2
+    t.decimal  "amount",                      precision: 10, scale: 2
     t.integer  "quantity",        limit: 4,                            default: 1, null: false
     t.integer  "used_count",      limit: 4,                            default: 0, null: false
   end
@@ -152,7 +150,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
   add_index "discount_codes", ["event_id"], name: "event_id", using: :btree
 
   create_table "duplicates", force: :cascade do |t|
-    t.text "new_attributes", limit: 65_535
+    t.text "new_attributes", limit: 65535
   end
 
   create_table "duplicates_people", id: false, force: :cascade do |t|
@@ -161,7 +159,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
   end
 
   add_index "duplicates_people", ["duplicate_id"], name: "index_duplicates_racers_on_duplicate_id", using: :btree
-  add_index "duplicates_people", %w[person_id duplicate_id], name: "index_duplicates_racers_on_racer_id_and_duplicate_id", unique: true, using: :btree
+  add_index "duplicates_people", ["person_id", "duplicate_id"], name: "index_duplicates_racers_on_racer_id_and_duplicate_id", unique: true, using: :btree
   add_index "duplicates_people", ["person_id"], name: "index_duplicates_racers_on_racer_id", using: :btree
 
   create_table "editor_requests", force: :cascade do |t|
@@ -174,7 +172,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.datetime "updated_at"
   end
 
-  add_index "editor_requests", %w[editor_id person_id], name: "index_editor_requests_on_editor_id_and_person_id", unique: true, using: :btree
+  add_index "editor_requests", ["editor_id", "person_id"], name: "index_editor_requests_on_editor_id_and_person_id", unique: true, using: :btree
   add_index "editor_requests", ["editor_id"], name: "index_editor_requests_on_editor_id", using: :btree
   add_index "editor_requests", ["expires_at"], name: "index_editor_requests_on_expires_at", using: :btree
   add_index "editor_requests", ["person_id"], name: "index_editor_requests_on_person_id", using: :btree
@@ -195,7 +193,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.datetime "updated_at"
   end
 
-  add_index "event_team_memberships", %w[event_team_id person_id], name: "index_event_team_memberships_on_event_team_id_and_person_id", unique: true, using: :btree
+  add_index "event_team_memberships", ["event_team_id", "person_id"], name: "index_event_team_memberships_on_event_team_id_and_person_id", unique: true, using: :btree
   add_index "event_team_memberships", ["event_team_id"], name: "index_event_team_memberships_on_event_team_id", using: :btree
   add_index "event_team_memberships", ["person_id"], name: "index_event_team_memberships_on_person_id", using: :btree
 
@@ -206,7 +204,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.datetime "updated_at"
   end
 
-  add_index "event_teams", %w[event_id team_id], name: "index_event_teams_on_event_id_and_team_id", unique: true, using: :btree
+  add_index "event_teams", ["event_id", "team_id"], name: "index_event_teams_on_event_id_and_team_id", unique: true, using: :btree
   add_index "event_teams", ["event_id"], name: "index_event_teams_on_event_id", using: :btree
   add_index "event_teams", ["team_id"], name: "index_event_teams_on_team_id", using: :btree
 
@@ -217,7 +215,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.string   "discipline",                     limit: 32
     t.string   "flyer",                          limit: 255
     t.string   "name",                           limit: 255
-    t.text     "notes",                          limit: 65_535
+    t.text     "notes",                          limit: 65535
     t.string   "sanctioned_by",                  limit: 255
     t.string   "state",                          limit: 64
     t.string   "type",                           limit: 255
@@ -236,38 +234,38 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.boolean  "instructional",                                                         default: false
     t.boolean  "practice",                                                              default: false
     t.boolean  "atra_points_series",                                                    default: false, null: false
-    t.integer  "bar_points", limit: 4, null: false
-    t.boolean  "ironman", null: false
-    t.boolean  "auto_combined_results", default: true,  null: false
+    t.integer  "bar_points",                     limit: 4,                                              null: false
+    t.boolean  "ironman",                                                                               null: false
+    t.boolean  "auto_combined_results",                                                 default: true,  null: false
     t.integer  "team_id",                        limit: 4
     t.string   "sanctioning_org_event_id",       limit: 16
     t.integer  "promoter_id",                    limit: 4
     t.string   "phone",                          limit: 255
     t.string   "email",                          limit: 255
-    t.decimal  "price", precision: 10, scale: 2
-    t.boolean  "postponed", default: false, null: false
-    t.string   "chief_referee", limit: 255
+    t.decimal  "price",                                        precision: 10, scale: 2
+    t.boolean  "postponed",                                                             default: false, null: false
+    t.string   "chief_referee",                  limit: 255
     t.boolean  "registration",                                                          default: false, null: false
     t.boolean  "beginner_friendly",                                                     default: false, null: false
     t.boolean  "promoter_pays_registration_fee",                                        default: false, null: false
     t.boolean  "membership_required",                                                   default: false, null: false
     t.datetime "registration_ends_at"
-    t.boolean  "override_registration_ends_at", default: false, null: false
+    t.boolean  "override_registration_ends_at",                                         default: false, null: false
     t.decimal  "all_events_discount",                          precision: 10, scale: 2
     t.decimal  "additional_race_price",                        precision: 10, scale: 2
     t.string   "website",                        limit: 255
     t.string   "registration_link",              limit: 255
     t.string   "custom_suggestion",              limit: 255
     t.integer  "field_limit",                    limit: 4
-    t.text     "refund_policy",                  limit: 65_535
-    t.boolean  "refunds", default: true, null: false
-    t.integer  "region_id", limit: 4
-    t.date     "end_date", null: false
-    t.boolean  "registration_public", default: true, null: false
-    t.decimal  "junior_price", precision: 10, scale: 2
-    t.boolean  "suggest_membership", default: true, null: false
+    t.text     "refund_policy",                  limit: 65535
+    t.boolean  "refunds",                                                               default: true,  null: false
+    t.integer  "region_id",                      limit: 4
+    t.date     "end_date",                                                                              null: false
+    t.boolean  "registration_public",                                                   default: true,  null: false
+    t.decimal  "junior_price",                                 precision: 10, scale: 2
+    t.boolean  "suggest_membership",                                                    default: true,  null: false
     t.string   "slug",                           limit: 255
-    t.integer  "year",                           limit: 4, null: false
+    t.integer  "year",                           limit: 4,                                              null: false
   end
 
   add_index "events", ["bar_points"], name: "index_events_on_bar_points", using: :btree
@@ -283,7 +281,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
   add_index "events", ["type"], name: "index_events_on_type", using: :btree
   add_index "events", ["updated_at"], name: "index_events_on_updated_at", using: :btree
   add_index "events", ["velodrome_id"], name: "velodrome_id", using: :btree
-  add_index "events", %w[year slug], name: "index_events_on_year_and_slug", using: :btree
+  add_index "events", ["year", "slug"], name: "index_events_on_year_and_slug", using: :btree
   add_index "events", ["year"], name: "index_events_on_year", using: :btree
 
   create_table "homes", force: :cascade do |t|
@@ -297,34 +295,34 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
   add_index "homes", ["updated_at"], name: "index_homes_on_updated_at", using: :btree
 
   create_table "import_files", force: :cascade do |t|
-    t.string   "name", limit: 255, null: false
+    t.string   "name",       limit: 255, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "line_items", force: :cascade do |t|
-    t.integer  "order_id", limit: 4
+    t.integer  "order_id",                       limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "event_id",                       limit: 4
     t.integer  "race_id",                        limit: 4
-    t.decimal  "amount", precision: 10, scale: 2
-    t.string   "string_value", limit: 255
+    t.decimal  "amount",                                     precision: 10, scale: 2
+    t.string   "string_value",                   limit: 255
     t.boolean  "boolean_value"
-    t.string   "type", limit: 255, default: "LineItem", null: false
-    t.boolean  "promoter_pays_registration_fee", default: false, null: false
-    t.decimal  "purchase_price", precision: 10, scale: 2
+    t.string   "type",                           limit: 255,                          default: "LineItem", null: false
+    t.boolean  "promoter_pays_registration_fee",                                      default: false,      null: false
+    t.decimal  "purchase_price",                             precision: 10, scale: 2
     t.integer  "person_id",                      limit: 4
     t.integer  "year",                           limit: 4
     t.integer  "discount_code_id",               limit: 4
     t.integer  "line_item_id",                   limit: 4
     t.integer  "product_id",                     limit: 4
     t.integer  "product_variant_id",             limit: 4
-    t.string   "status",                         limit: 255, default: "new", null: false
+    t.string   "status",                         limit: 255,                          default: "new",      null: false
     t.datetime "effective_purchased_at"
     t.integer  "additional_product_variant_id",  limit: 4
     t.integer  "purchased_discount_code_id",     limit: 4
-    t.integer  "quantity",                       limit: 4, default: 1, null: false
+    t.integer  "quantity",                       limit: 4,                            default: 1,          null: false
   end
 
   add_index "line_items", ["additional_product_variant_id"], name: "index_line_items_on_additional_product_variant_id", using: :btree
@@ -344,8 +342,8 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.string   "subject_line_prefix", limit: 255,   default: "",   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "description", limit: 65_535
-    t.boolean  "public", default: true, null: false
+    t.text     "description",         limit: 65535
+    t.boolean  "public",                            default: true, null: false
   end
 
   add_index "mailing_lists", ["name"], name: "index_mailing_lists_on_name", using: :btree
@@ -368,7 +366,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
   add_index "names", ["year"], name: "index_names_on_year", using: :btree
 
   create_table "non_member_results", force: :cascade do |t|
-    t.boolean  "visible", default: true
+    t.boolean  "visible",                    default: true
     t.integer  "person_id",        limit: 4
     t.integer  "size",             limit: 4, default: 0
     t.date     "recent_result_on"
@@ -382,7 +380,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
   end
 
   create_table "number_issuers", force: :cascade do |t|
-    t.string   "name", limit: 255, default: "", null: false
+    t.string   "name",       limit: 255, default: "", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -407,14 +405,14 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.string   "state",                                 limit: 255
     t.string   "zip",                                   limit: 255
     t.string   "country_code",                          limit: 2,   default: "US"
-    t.boolean  "membership_address_is_billing_address",             default: true, null: false
+    t.boolean  "membership_address_is_billing_address",             default: true,  null: false
     t.string   "billing_first_name",                    limit: 255
     t.string   "billing_last_name",                     limit: 255
     t.string   "billing_street",                        limit: 255
     t.string   "billing_city",                          limit: 255
     t.string   "billing_state",                         limit: 255
     t.string   "billing_zip",                           limit: 255
-    t.string   "billing_country_code",                  limit: 2, default: "US"
+    t.string   "billing_country_code",                  limit: 2,   default: "US"
     t.date     "card_expires_on"
     t.string   "card_brand",                            limit: 255
     t.string   "ccx_category",                          limit: 255
@@ -441,24 +439,25 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.datetime "updated_at"
     t.string   "work_phone",                            limit: 255
     t.string   "cell_fax",                              limit: 255
+    t.boolean  "velodrome_committee_interest"
   end
 
   add_index "order_people", ["order_id"], name: "index_order_people_on_order_id", using: :btree
   add_index "order_people", ["person_id"], name: "index_order_people_on_person_id", using: :btree
 
   create_table "orders", force: :cascade do |t|
-    t.decimal  "purchase_price", precision: 10, scale: 2
-    t.string   "notes", limit: 2000
+    t.decimal  "purchase_price",                 precision: 10, scale: 2
+    t.string   "notes",             limit: 2000
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "status", limit: 255, default: "new", null: false
+    t.string   "status",            limit: 255,                           default: "new", null: false
     t.datetime "purchase_time"
-    t.string   "ip_address", limit: 255
+    t.string   "ip_address",        limit: 255
     t.boolean  "waiver_accepted"
     t.string   "error_message",     limit: 2048
     t.string   "previous_status",   limit: 255
-    t.boolean  "suggest", default: true
-    t.decimal  "old_purchase_fees", precision: 10, scale: 2
+    t.boolean  "suggest",                                                 default: true
+    t.decimal  "old_purchase_fees",              precision: 10, scale: 2
     t.string   "gateway",           limit: 255
   end
 
@@ -469,7 +468,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
 
   create_table "pages", force: :cascade do |t|
     t.integer  "parent_id",  limit: 4
-    t.text     "body",       limit: 65_535, null: false
+    t.text     "body",       limit: 65535,              null: false
     t.string   "path",       limit: 255,   default: "", null: false
     t.string   "slug",       limit: 255,   default: "", null: false
     t.string   "title",      limit: 255,   default: "", null: false
@@ -482,17 +481,28 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
   add_index "pages", ["slug"], name: "index_pages_on_slug", using: :btree
   add_index "pages", ["updated_at"], name: "index_pages_on_updated_at", using: :btree
 
+  create_table "paper_trail_versions", force: :cascade do |t|
+    t.string   "item_type",  limit: 191,        null: false
+    t.integer  "item_id",    limit: 4,          null: false
+    t.string   "event",      limit: 255,        null: false
+    t.string   "whodunnit",  limit: 255
+    t.text     "object",     limit: 4294967295
+    t.datetime "created_at"
+  end
+
+  add_index "paper_trail_versions", ["item_type", "item_id"], name: "index_paper_trail_versions_on_item_type_and_item_id", using: :btree
+
   create_table "payment_gateway_transactions", force: :cascade do |t|
     t.integer  "order_id",      limit: 4
     t.string   "action",        limit: 255
     t.integer  "amount",        limit: 4
     t.boolean  "success"
     t.string   "authorization", limit: 255
-    t.text     "message",       limit: 65_535
-    t.text     "params",        limit: 65_535
+    t.text     "message",       limit: 65535
+    t.text     "params",        limit: 65535
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "line_item_id", limit: 4
+    t.integer  "line_item_id",  limit: 4
   end
 
   add_index "payment_gateway_transactions", ["created_at"], name: "index_order_transactions_on_created_at", using: :btree
@@ -505,7 +515,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.string   "city",                                  limit: 128
     t.date     "date_of_birth"
     t.string   "license",                               limit: 255
-    t.text     "notes",                                 limit: 65_535
+    t.text     "notes",                                 limit: 65535
     t.string   "state",                                 limit: 64
     t.integer  "team_id",                               limit: 4
     t.datetime "created_at"
@@ -527,7 +537,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.date     "member_to"
     t.boolean  "print_card",                                          default: false
     t.boolean  "ccx_only",                                            default: false, null: false
-    t.string   "bmx_category", limit: 255
+    t.string   "bmx_category",                          limit: 255
     t.boolean  "wants_email",                                         default: false, null: false
     t.boolean  "wants_mail",                                          default: false, null: false
     t.boolean  "volunteer_interest",                                  default: false, null: false
@@ -557,12 +567,12 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.string   "billing_city",                          limit: 255
     t.string   "billing_state",                         limit: 255
     t.string   "billing_zip",                           limit: 255
-    t.string   "billing_country_code",                  limit: 2, default: "US"
+    t.string   "billing_country_code",                  limit: 2,     default: "US"
     t.string   "card_brand",                            limit: 255
     t.date     "card_expires_on"
-    t.boolean  "membership_address_is_billing_address", default: true, null: false
+    t.boolean  "membership_address_is_billing_address",               default: true,  null: false
     t.string   "license_type",                          limit: 255
-    t.string   "country_code",                          limit: 2, default: "US"
+    t.string   "country_code",                          limit: 2,     default: "US"
     t.string   "emergency_contact",                     limit: 255
     t.string   "emergency_contact_phone",               limit: 255
     t.datetime "card_printed_at"
@@ -572,6 +582,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.string   "name",                                  limit: 255,   default: "",    null: false
     t.boolean  "other_people_with_same_name",                         default: false, null: false
     t.boolean  "administrator",                                       default: false, null: false
+    t.boolean  "velodrome_committee_interest"
   end
 
   add_index "people", ["crypted_password"], name: "index_people_on_crypted_password", using: :btree
@@ -595,41 +606,41 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.integer "editor_id", limit: 4, null: false
   end
 
-  add_index "people_people", %w[editor_id person_id], name: "index_people_people_on_editor_id_and_person_id", unique: true, using: :btree
+  add_index "people_people", ["editor_id", "person_id"], name: "index_people_people_on_editor_id_and_person_id", unique: true, using: :btree
   add_index "people_people", ["editor_id"], name: "index_people_people_on_editor_id", using: :btree
   add_index "people_people", ["person_id"], name: "index_people_people_on_person_id", using: :btree
 
   create_table "photos", force: :cascade do |t|
-    t.text     "caption",    limit: 65_535
+    t.text     "caption",    limit: 65535
     t.string   "title",      limit: 255
     t.string   "image",      limit: 255
     t.integer  "height",     limit: 4
     t.integer  "width",      limit: 4
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
-    t.string   "link", limit: 255
+    t.string   "link",       limit: 255
   end
 
   add_index "photos", ["updated_at"], name: "index_photos_on_updated_at", using: :btree
 
   create_table "posts", force: :cascade do |t|
-    t.text     "body", limit: 65_535, null: false
-    t.datetime "date", null: false
-    t.string   "subject",              limit: 255, default: "", null: false
+    t.text     "body",                 limit: 65535,              null: false
+    t.datetime "date",                                            null: false
+    t.string   "subject",              limit: 255,   default: "", null: false
     t.string   "topica_message_id",    limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "mailing_list_id",      limit: 4, default: 0, null: false
+    t.integer  "mailing_list_id",      limit: 4,     default: 0,  null: false
     t.integer  "position",             limit: 4
     t.string   "from_name",            limit: 255
     t.string   "from_email",           limit: 255
     t.datetime "last_reply_at"
     t.string   "last_reply_from_name", limit: 255
     t.integer  "original_id",          limit: 4
-    t.integer  "replies_count",        limit: 4, default: 0, null: false
+    t.integer  "replies_count",        limit: 4,     default: 0,  null: false
   end
 
-  add_index "posts", %w[date mailing_list_id], name: "idx_date_list", using: :btree
+  add_index "posts", ["date", "mailing_list_id"], name: "idx_date_list", using: :btree
   add_index "posts", ["date"], name: "index_posts_on_date", using: :btree
   add_index "posts", ["last_reply_at"], name: "index_posts_on_last_reply_at", using: :btree
   add_index "posts", ["mailing_list_id"], name: "idx_mailing_list_id", using: :btree
@@ -640,16 +651,16 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
   add_index "posts", ["updated_at"], name: "index_posts_on_updated_at", using: :btree
 
   create_table "product_variants", force: :cascade do |t|
-    t.integer  "product_id", limit: 4, null: false
+    t.integer  "product_id", limit: 4,                                            null: false
     t.string   "name",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "price", precision: 10, scale: 2
-    t.integer  "position",   limit: 4, default: 0, null: false
+    t.decimal  "price",                  precision: 10, scale: 2
+    t.integer  "position",   limit: 4,                            default: 0,     null: false
     t.integer  "inventory",  limit: 4
     t.boolean  "default",                                         default: false, null: false
     t.boolean  "additional",                                      default: false, null: false
-    t.integer  "quantity", limit: 4, default: 1, null: false
+    t.integer  "quantity",   limit: 4,                            default: 1,     null: false
   end
 
   add_index "product_variants", ["product_id"], name: "index_product_variants_on_product_id", using: :btree
@@ -657,26 +668,26 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
   create_table "products", force: :cascade do |t|
     t.string   "name",                      limit: 255
     t.string   "description",               limit: 255
-    t.decimal  "price", precision: 10
+    t.decimal  "price",                                 precision: 10
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "event_id", limit: 4
-    t.boolean  "notify_racing_association", default: false, null: false
-    t.integer  "inventory", limit: 4
-    t.boolean  "seller_pays_fee", default: false, null: false
-    t.string   "type", limit: 255
-    t.boolean  "suggest", default: false, null: false
-    t.string   "image_url", limit: 255
-    t.boolean  "dependent", default: false, null: false
-    t.integer  "seller_id", limit: 4
+    t.integer  "event_id",                  limit: 4
+    t.boolean  "notify_racing_association",                            default: false, null: false
+    t.integer  "inventory",                 limit: 4
+    t.boolean  "seller_pays_fee",                                      default: false, null: false
+    t.string   "type",                      limit: 255
+    t.boolean  "suggest",                                              default: false, null: false
+    t.string   "image_url",                 limit: 255
+    t.boolean  "dependent",                                            default: false, null: false
+    t.integer  "seller_id",                 limit: 4
     t.boolean  "has_amount",                                           default: false
     t.boolean  "donation",                                             default: false
     t.boolean  "unique",                                               default: false, null: false
-    t.string   "email", limit: 255
+    t.string   "email",                     limit: 255
     t.boolean  "concussion_waver_required",                            default: false
     t.boolean  "quantity",                                             default: false, null: false
-    t.integer  "default_quantity", limit: 4, default: 1, null: false
-    t.boolean  "team_name", default: false, null: false
+    t.integer  "default_quantity",          limit: 4,                  default: 1,     null: false
+    t.boolean  "team_name",                                            default: false, null: false
   end
 
   add_index "products", ["event_id"], name: "index_products_on_event_id", using: :btree
@@ -700,28 +711,28 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
   add_index "race_numbers", ["year"], name: "index_race_numbers_on_year", using: :btree
 
   create_table "races", force: :cascade do |t|
-    t.integer  "category_id",          limit: 4, null: false
+    t.integer  "category_id",          limit: 4,                                              null: false
     t.string   "city",                 limit: 128
-    t.decimal  "distance", precision: 10, scale: 2
+    t.decimal  "distance",                           precision: 10, scale: 2
     t.string   "state",                limit: 64
     t.integer  "field_size",           limit: 4
     t.integer  "laps",                 limit: 4
     t.float    "time",                 limit: 24
     t.integer  "finishers",            limit: 4
-    t.string   "notes",                limit: 255, default: ""
+    t.string   "notes",                limit: 255,                            default: ""
     t.string   "sanctioned_by",        limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "result_columns",       limit: 255
     t.integer  "bar_points",           limit: 4
-    t.integer  "event_id",             limit: 4, null: false
-    t.decimal  "custom_price", precision: 10, scale: 2
-    t.text     "custom_columns", limit: 65_535
-    t.boolean  "full", default: false, null: false
-    t.integer  "field_limit", limit: 4
+    t.integer  "event_id",             limit: 4,                                              null: false
+    t.decimal  "custom_price",                       precision: 10, scale: 2
+    t.text     "custom_columns",       limit: 65535
+    t.boolean  "full",                                                        default: false, null: false
+    t.integer  "field_limit",          limit: 4
     t.boolean  "additional_race_only",                                        default: false, null: false
     t.boolean  "visible",                                                     default: true
-    t.integer  "split_from_id", limit: 4
+    t.integer  "split_from_id",        limit: 4
   end
 
   add_index "races", ["bar_points"], name: "index_races_on_bar_points", using: :btree
@@ -748,7 +759,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.boolean  "ssl",                                                            default: false,                                 null: false
     t.boolean  "usac_results_format",                                            default: false,                                 null: false
     t.integer  "cat4_womens_race_series_category_id",                limit: 4
-    t.integer  "masters_age",                                        limit: 4, default: 35, null: false
+    t.integer  "masters_age",                                        limit: 4,   default: 35,                                    null: false
     t.integer  "rental_numbers_end",                                 limit: 4
     t.integer  "rental_numbers_start",                               limit: 4
     t.string   "cat4_womens_race_series_points",                     limit: 255
@@ -771,23 +782,23 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "cat4_womens_race_series_end_date"
-    t.boolean  "unregistered_teams_in_results", default: true, null: false
+    t.boolean  "unregistered_teams_in_results",                                  default: true,                                  null: false
     t.date     "next_year_start_at"
-    t.boolean  "mobile_site", default: false, null: false
+    t.boolean  "mobile_site",                                                    default: false,                                 null: false
     t.date     "cat4_womens_race_series_start_date"
-    t.boolean  "filter_schedule_by_sanctioning_organization", default: false, null: false
-    t.string   "result_questions_url", limit: 255
-    t.boolean  "filter_schedule_by_region", default: false, null: false
-    t.string   "default_region_id", limit: 255
-    t.boolean  "allow_iframes", default: false
-    t.string   "payment_gateway_name", limit: 255, default: "elavon"
+    t.boolean  "filter_schedule_by_sanctioning_organization",                    default: false,                                 null: false
+    t.string   "result_questions_url",                               limit: 255
+    t.boolean  "filter_schedule_by_region",                                      default: false,                                 null: false
+    t.string   "default_region_id",                                  limit: 255
+    t.boolean  "allow_iframes",                                                  default: false
+    t.string   "payment_gateway_name",                               limit: 255, default: "elavon"
   end
 
   create_table "refunds", force: :cascade do |t|
-    t.decimal  "amount", precision: 10, scale: 2
+    t.decimal  "amount",                 precision: 10, scale: 2
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "line_item_id", limit: 4, null: false
+    t.integer  "line_item_id", limit: 4,                          null: false
   end
 
   add_index "refunds", ["line_item_id"], name: "index_refunds_on_line_item_id", using: :btree
@@ -805,13 +816,13 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
   create_table "results", force: :cascade do |t|
     t.integer  "category_id",             limit: 4
     t.integer  "person_id",               limit: 4
-    t.integer  "race_id",                 limit: 4, null: false
+    t.integer  "race_id",                 limit: 4,                                              null: false
     t.integer  "team_id",                 limit: 4
     t.integer  "age",                     limit: 4
     t.string   "city",                    limit: 128
     t.datetime "date_of_birth"
     t.boolean  "is_series"
-    t.string   "license",                 limit: 64, default: ""
+    t.string   "license",                 limit: 64,                             default: ""
     t.string   "notes",                   limit: 255
     t.string   "number",                  limit: 16,                             default: ""
     t.string   "place",                   limit: 8,                              default: ""
@@ -835,11 +846,11 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.integer  "points_bonus",            limit: 4,                              default: 0,     null: false
     t.integer  "points_penalty",          limit: 4,                              default: 0,     null: false
     t.boolean  "preliminary"
-    t.boolean  "bar", default: true
+    t.boolean  "bar",                                                            default: true
     t.string   "gender",                  limit: 8
     t.string   "category_class",          limit: 16
     t.string   "age_group",               limit: 16
-    t.text     "custom_attributes",       limit: 65_535
+    t.text     "custom_attributes",       limit: 65535
     t.boolean  "competition_result",                                                             null: false
     t.boolean  "team_competition_result",                                                        null: false
     t.string   "category_name",           limit: 255
@@ -854,11 +865,11 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.string   "race_name",               limit: 255,                                            null: false
     t.string   "race_full_name",          limit: 255,                                            null: false
     t.string   "team_name",               limit: 255
-    t.integer  "year",                    limit: 4, null: false
+    t.integer  "year",                    limit: 4,                                              null: false
     t.integer  "non_member_result_id",    limit: 4
     t.boolean  "single_event_license",                                           default: false
     t.boolean  "team_member",                                                    default: false, null: false
-    t.decimal  "distance", precision: 10, scale: 2
+    t.decimal  "distance",                              precision: 10, scale: 2
   end
 
   add_index "results", ["category_id"], name: "index_results_on_category_id", using: :btree
@@ -888,19 +899,19 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
   add_index "scores", ["source_result_id"], name: "scores_source_result_id_index", using: :btree
 
   create_table "teams", force: :cascade do |t|
-    t.string   "name",                limit: 255, default: "", null: false
+    t.string   "name",                limit: 255,  default: "",    null: false
     t.string   "city",                limit: 128
     t.string   "state",               limit: 64
     t.string   "notes",               limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "member", default: false
+    t.boolean  "member",                           default: false
     t.string   "website",             limit: 255
     t.string   "sponsors",            limit: 1000
     t.string   "contact_name",        limit: 255
     t.string   "contact_email",       limit: 255
     t.string   "contact_phone",       limit: 255
-    t.boolean  "show_on_public_page", default: true
+    t.boolean  "show_on_public_page",              default: true
   end
 
   add_index "teams", ["name"], name: "index_teams_on_name", using: :btree
@@ -909,7 +920,7 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
   create_table "update_requests", force: :cascade do |t|
     t.integer  "order_person_id", limit: 4,   null: false
     t.datetime "expires_at",                  null: false
-    t.string   "token", limit: 255, null: false
+    t.string   "token",           limit: 255, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -933,20 +944,21 @@ ActiveRecord::Schema.define(version: 20_170_701_201_331) do
     t.integer  "user_id",        limit: 4
     t.string   "user_type",      limit: 255
     t.string   "user_name",      limit: 255
-    t.text     "modifications",  limit: 65_535
+    t.text     "modifications",  limit: 65535
     t.integer  "number",         limit: 4
     t.string   "tag",            limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "reverted_from", limit: 4
+    t.integer  "reverted_from",  limit: 4
+    t.text     "object_changes", limit: 4294967295
   end
 
   add_index "versions", ["created_at"], name: "index_versions_on_created_at", using: :btree
   add_index "versions", ["number"], name: "index_versions_on_number", using: :btree
   add_index "versions", ["tag"], name: "index_versions_on_tag", using: :btree
-  add_index "versions", %w[user_id user_type], name: "index_versions_on_user_id_and_user_type", using: :btree
+  add_index "versions", ["user_id", "user_type"], name: "index_versions_on_user_id_and_user_type", using: :btree
   add_index "versions", ["user_name"], name: "index_versions_on_user_name", using: :btree
-  add_index "versions", %w[versioned_id versioned_type], name: "index_versions_on_versioned_id_and_versioned_type", using: :btree
+  add_index "versions", ["versioned_id", "versioned_type"], name: "index_versions_on_versioned_id_and_versioned_type", using: :btree
 
   add_foreign_key "categories", "categories", column: "parent_id", on_delete: :cascade
   add_foreign_key "competition_event_memberships", "events", column: "competition_id", name: "competition_event_memberships_competitions_id_fk", on_delete: :cascade
