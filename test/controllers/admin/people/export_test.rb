@@ -53,18 +53,18 @@ module Admin
           assert_equal(11, assigns["people"].to_a.size, "People export size")
 
           expected_body = [
-            "license	first_name	last_name	team_name	member_from	member_to	ccx_only	print_card	card_printed_at	membership_card	date_of_birth	occupation	street	city	state	zip	wants_mail	email	wants_email	home_phone	work_phone	cell_fax	gender	road_category	track_category	ccx_category	mtb_category	dh_category	ccx_number	dh_number	road_number	singlespeed_number	track_number	xc_number	notes	volunteer_interest	official_interest	race_promotion_interest	team_interest	created_at	updated_at\n",
-            "						0	0		0							0	sixhobsons@comcast.net	0	(503) 223-3343																0	0	0	0	11/1/2012	11/1/2012\n",
-            "	Molly	Cameron	Vanilla	1/1/1999	12/31/2012	0	0		0							0		0				F								202					0	0	0	0	11/1/2012	11/1/2012\n",
-            "576	Kevin	Con'Condron	Gentle Lovers	1/1/2000	12/31/2011	0	0		0							0	kc@example.com	0																	0	0	0	0	11/1/2012	11/1/2012\n",
-            "	Bob	Jones		1/1/2009	12/31/2009	0	0		0							0	member@example.com	0																	0	0	0	0	11/1/2012	11/1/2012\n",
-            "578	Mark	Matson	Kona	1/1/1999	12/31/2012	0	0		0							0	mcfatson@gentlelovers.com	0				M								340					0	0	0	0	11/1/2012	11/1/2012\n",
-            "	Candi	Murray				0	0		0							0	admin@example.com	0	(503) 555-1212																0	0	0	0	11/1/2012	11/1/2012\n",
-            "	Alice	Pennington	Gentle Lovers	1/1/1999	12/31/2012	0	0		0							0		0				F								230					0	0	0	0	11/1/2012	11/1/2012\n",
-            "	Non	Results				0	0		0							0		0																	0	0	0	0	11/1/2012	11/1/2012\n",
-            "	Brad	Ross				0	0		0							0		0																\"Hey,  I’ve got some \\\"bad\\\" characters\"	0	0	0	0	11/1/2012	11/1/2012\n",
-            "7123811	Erik	Tonkin	Kona	1/1/1999	12/31/2012	0	0		0	9/10/1982		127 SE Lambert	Portland	OR	19990	0		0	415 221-3773			M	1	5						102	409				0	0	0	0	11/1/2012	11/1/2012\n",
-            "	Ryan	Weaver	Gentle Lovers	1/1/2000	12/31/2012	0	0		0							0	hotwheels@yahoo.com	0				M								341			437		0	0	0	0	11/1/2012	11/1/2012\n"
+            "license	first_name	last_name	team_name	member_from	member_to	ccx_only	print_card	card_printed_at	membership_card	date_of_birth	occupation	street	city	state	zip	wants_mail	email	wants_email	home_phone	work_phone	cell_fax	gender	road_category	track_category	ccx_category	mtb_category	dh_category	ccx_number	dh_number	road_number	singlespeed_number	track_number	xc_number	notes	volunteer_interest	official_interest	race_promotion_interest	team_interest	velodrome_committee_interest	created_at	updated_at\n",
+            "						0	0		0							0	sixhobsons@comcast.net	0	(503) 223-3343																0	0	0	0	0	11/1/2012	11/1/2012\n",
+            "	Molly	Cameron	Vanilla	1/1/1999	12/31/2012	0	0		0							0		0				F								202					0	0	0	0	0	11/1/2012	11/1/2012\n",
+            "576	Kevin	Con'Condron	Gentle Lovers	1/1/2000	12/31/2011	0	0		0							0	kc@example.com	0																	0	0	0	0	0	11/1/2012	11/1/2012\n",
+            "	Bob	Jones		1/1/2009	12/31/2009	0	0		0							0	member@example.com	0																	0	0	0	0	0	11/1/2012	11/1/2012\n",
+            "578	Mark	Matson	Kona	1/1/1999	12/31/2012	0	0		0							0	mcfatson@gentlelovers.com	0				M								340					0	0	0	0	0	11/1/2012	11/1/2012\n",
+            "	Candi	Murray				0	0		0							0	admin@example.com	0	(503) 555-1212																0	0	0	0	0	11/1/2012	11/1/2012\n",
+            "	Alice	Pennington	Gentle Lovers	1/1/1999	12/31/2012	0	0		0							0		0				F								230					0	0	0	0	0	11/1/2012	11/1/2012\n",
+            "	Non	Results				0	0		0							0		0																	0	0	0	0	0	11/1/2012	11/1/2012\n",
+            "	Brad	Ross				0	0		0							0		0																\"Hey,  I’ve got some \\\"bad\\\" characters\"	0	0	0	0	0	11/1/2012	11/1/2012\n",
+            "7123811	Erik	Tonkin	Kona	1/1/1999	12/31/2012	0	0		0	9/10/1982		127 SE Lambert	Portland	OR	19990	0		0	415 221-3773			M	1	5						102	409				0	0	0	0	0	11/1/2012	11/1/2012\n",
+            "	Ryan	Weaver	Gentle Lovers	1/1/2000	12/31/2012	0	0		0							0	hotwheels@yahoo.com	0				M								341			437		0	0	0	0	0	11/1/2012	11/1/2012\n"
           ].reverse
 
           unless File.exist?("local/app/views/admin/people/index.xls.erb")

@@ -21,7 +21,7 @@ module People
                  print_card, card_printed_at, membership_card, ccx_only, date_of_birth, occupation,
                  street, people.city, people.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender,
                  ccx_category, road_category, track_category, mtb_category, dh_category,
-                 volunteer_interest, official_interest, race_promotion_interest, team_interest,
+                 volunteer_interest, official_interest, race_promotion_interest, team_interest, velodrome_committee_interest,
                  CEILING(#{date.year} - YEAR(date_of_birth)) as racing_age,
                  ccx_numbers.value as ccx_number, dh_numbers.value as dh_number, road_numbers.value as road_number,
                  singlespeed_numbers.value as singlespeed_number, xc_numbers.value as xc_number,

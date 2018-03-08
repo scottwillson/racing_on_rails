@@ -1,4 +1,4 @@
-license	first_name	last_name	team_name	member_from	member_to	ccx_only	print_card	card_printed_at	membership_card	date_of_birth	occupation	street	city	state	zip	wants_mail	email	wants_email	home_phone	work_phone	cell_fax	gender	road_category	track_category	ccx_category	mtb_category	dh_category	ccx_number	dh_number	road_number	singlespeed_number	track_number	xc_number	notes	volunteer_interest	official_interest	race_promotion_interest	team_interest	created_at	updated_at
+license	first_name	last_name	team_name	member_from	member_to	ccx_only	print_card	card_printed_at	membership_card	date_of_birth	occupation	street	city	state	zip	wants_mail	email	wants_email	home_phone	work_phone	cell_fax	gender	road_category	track_category	ccx_category	mtb_category	dh_category	ccx_number	dh_number	road_number	singlespeed_number	track_number	xc_number	notes	volunteer_interest	official_interest	race_promotion_interest	team_interest	velodrome_committee_interest	created_at	updated_at
 <%- @people.each do |person| -%>
 <%= to_excel person["license"] -%>
 	<%= to_excel person["first_name"] -%>
@@ -39,6 +39,7 @@ license	first_name	last_name	team_name	member_from	member_to	ccx_only	print_card
 	<%= person["official_interest"] -%>
 	<%= person["race_promotion_interest"] -%>
 	<%= person["team_interest"] -%>
+	<%= person["velodrome_committee_interest"] -%>
 	<%= to_excel person["created_at"] -%>
   <%# Last column is slightly different to ensure a line break -%>
 	<%= to_excel person["updated_at"] %>
