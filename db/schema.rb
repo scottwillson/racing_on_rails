@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180306163607) do
+ActiveRecord::Schema.define(version: 20180308160323) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -255,7 +255,7 @@ ActiveRecord::Schema.define(version: 20180306163607) do
     t.decimal  "all_events_discount",                          precision: 10, scale: 2
     t.decimal  "additional_race_price",                        precision: 10, scale: 2
     t.string   "website",                        limit: 255
-    t.string   "registration_link",              limit: 255
+    t.string   "registration_link",              limit: 1024
     t.string   "custom_suggestion",              limit: 255
     t.integer  "field_limit",                    limit: 4
     t.text     "refund_policy",                  limit: 65535
