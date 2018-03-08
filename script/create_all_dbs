@@ -17,12 +17,8 @@ puts `DISABLE_SPRING=1 rake parallel:prepare`
   puts association
   `./script/local #{association}`
   puts "Create databases"
-  if association == "nabra"
-    puts `mysql -u root -e 'grant all privileges on nabra_development.* to 'ror_development'@'localhost';'`
-  else
-    puts `mysql -u root -e 'create user if not exists '#{association}_development'@'localhost';'`
-    puts `mysql -u root -e 'grant all privileges on #{association}_development.* to '#{association}_development'@'localhost';'`
-  end
+  puts `mysql -u root -e 'create user if not exists '#{association}_development'@'localhost';'`
+  puts `mysql -u root -e 'grant all privileges on #{association}_development.* to '#{association}_development'@'localhost';'`
   puts `mysql -u root -e 'create user if not exists '#{association}_test'@'localhost';'`
   (1..7).each do |index|
     puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_test#{index}'`
