@@ -64,7 +64,7 @@ module Competitions
 
       case race.category.name
       when "Senior Men Pro/1/2"
-        ["Men Category 1/2"]
+        ["Men Category 1/2", "Senior Men 1/2"]
       when "Category 4/5 Men"
         category_4_5_men_categories
       when "Senior Women 1/2"
