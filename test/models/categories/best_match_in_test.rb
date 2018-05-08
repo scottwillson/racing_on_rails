@@ -115,9 +115,28 @@ module Competitions
       assert_best_match_in [@singlespeed_women], @singlespeed_women, event
     end
 
+    test "gender over ability" do
+      women_1_2_3 = Category.find_or_create_by_normalized_name("Women 1/2/3")
+
+      event = FactoryBot.create(:event)
+      event.races.create!(category: @pro_1_2)
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Pro/1/2 40+"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Pro/1/2 50+"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 3 Men"))
+      event.races.create!(category: women_1_2_3)
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Women 4/5"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Masters Men 40-49 (Category 3/4/5)"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Masters Women 40+ (Category 3/4/5)"))
+      event.races.create!(category: @junior_men)
+      event.races.create!(category: @junior_women)
+
+      women_1_2 = Category.find_or_create_by_normalized_name("Women 1/2")
+      assert_best_match_in [women_1_2], Category.find_or_create_by_normalized_name("Women 1/2/3"), event
+    end
+
     def assert_best_match_in(categories, race_category, event)
       categories.each do |category|
-        assert_equal race_category, category.best_match_in(event), "#{race_category.name} should be best_match_in for #{category.name} in event with categories #{event.races.map(&:name).join(', ')}"
+        assert race_category == category.best_match_in(event), "#{race_category.name} should be best_match_in for #{category.name} in event with categories #{event.races.map(&:name).join(', ')}"
       end
 
       ::Category.where.not(id: categories).each do |category|
