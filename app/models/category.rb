@@ -166,6 +166,15 @@ class Category < ActiveRecord::Base
     return nil if candidate_categories.empty?
 
     # "Highest" is lowest ability number
+    # Choose exact ability category begin if women
+    # Common edge case where the two highest categories are Pro/1/2 and Women 1/2
+    if candidate_categories.one? { |category| category.ability_begin == ability_begin && category.women? && women? }
+      ability_category = candidate_categories.detect { |category| category.ability_begin == ability_begin && category.women? && women? }
+      logger.debug "ability begin: #{ability_category.name}"
+      return ability_category
+    end
+
+    # Choose highest ability category
     highest_ability = candidate_categories.map(&:ability_begin).min
     if candidate_categories.one? { |category| category.ability_begin == highest_ability }
       highest_ability_category = candidate_categories.detect { |category| category.ability_begin == highest_ability }

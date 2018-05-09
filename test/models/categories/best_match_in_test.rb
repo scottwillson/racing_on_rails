@@ -131,7 +131,7 @@ module Competitions
       event.races.create!(category: @junior_women)
 
       women_1_2 = Category.find_or_create_by_normalized_name("Women 1/2")
-      assert_best_match_in [women_1_2], Category.find_or_create_by_normalized_name("Women 1/2/3"), event
+      assert_best_match_in [women_1_2, women_1_2_3], women_1_2_3, event
     end
 
     def assert_best_match_in(categories, race_category, event)
