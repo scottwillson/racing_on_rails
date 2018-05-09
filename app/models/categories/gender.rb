@@ -20,5 +20,13 @@ module Categories
         "M"
       end
     end
+
+    def men?
+      gender == "M"
+    end
+
+    def women?
+      gender == "F"
+    end
   end
 end
