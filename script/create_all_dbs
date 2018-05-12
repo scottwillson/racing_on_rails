@@ -2,12 +2,12 @@
 # frozen_string_literal: true
 
 `./script/local`
-puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists racing_on_rails_development; drop database if exists racing_on_rails_test'`
+puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists racing_on_rails_development_pt; drop database if exists racing_on_rails_test_pt'`
 puts `mysql -u root < db/grants.sql`
 puts `DISABLE_SPRING=1 rake db:setup RAILS_ENV=test`
 puts `DISABLE_SPRING=1 rake db:setup`
 (1..7).each do |index|
-  puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists racing_on_rails_test#{index}'`
+  puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists racing_on_rails_test_pt#{index}'`
 end
 
 puts `DISABLE_SPRING=1 rake parallel:create`
@@ -18,15 +18,15 @@ puts `DISABLE_SPRING=1 rake parallel:prepare`
   `./script/local #{association}`
   puts "Create databases"
   puts `mysql -u root -e 'create user if not exists '#{association}_development'@'localhost';'`
-  puts `mysql -u root -e 'grant all privileges on #{association}_development.* to '#{association}_development'@'localhost';'`
+  puts `mysql -u root -e 'grant all privileges on #{association}_development_pt.* to '#{association}_development'@'localhost';'`
   puts `mysql -u root -e 'create user if not exists '#{association}_test'@'localhost';'`
   (1..7).each do |index|
-    puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_test#{index}'`
+    puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_test_pt#{index}'`
   end
-  puts %x(mysql -u root -e 'grant all privileges on `#{association}_test`.* to #{association}_test@localhost')
-  puts %x(mysql -u root -e 'grant all privileges on `#{association}_test%`.* to #{association}_test@localhost')
-  puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_development'`
-  puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_test'`
+  puts %x(mysql -u root -e 'grant all privileges on `#{association}_test_pt`.* to #{association}_test@localhost')
+  puts %x(mysql -u root -e 'grant all privileges on `#{association}_test_pt%`.* to #{association}_test@localhost')
+  puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_development_pt'`
+  puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_test_pt'`
   puts `DISABLE_SPRING=1 rake db:setup RAILS_ENV=test`
   puts `DISABLE_SPRING=1 rake db:setup`
   puts `DISABLE_SPRING=1 rake parallel:create`
