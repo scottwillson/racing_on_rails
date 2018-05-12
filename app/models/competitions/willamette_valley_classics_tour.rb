@@ -20,7 +20,8 @@ module Competitions
           "Pro/1/2",
           "Pro/1/2 40+",
           "Pro/1/2 50+",
-          "Women 1/2/3",
+          "Women 1/2",
+          "Women 3",
           "Women 4/5"
         ]
       end
