@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180308160323) do
+ActiveRecord::Schema.define(version: 20180512191015) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -267,6 +267,10 @@ ActiveRecord::Schema.define(version: 20180308160323) do
     t.boolean  "suggest_membership",                                                    default: true,  null: false
     t.string   "slug",                           limit: 255
     t.integer  "year",                           limit: 4,                                              null: false
+    t.integer  "created_by_paper_trail_id",      limit: 4
+    t.string   "created_by_paper_trail_type",    limit: 255
+    t.integer  "updated_by_paper_trail_id",      limit: 4
+    t.string   "updated_by_paper_trail_type",    limit: 255
   end
 
   add_index "events", ["bar_points"], name: "index_events_on_bar_points", using: :btree
@@ -468,30 +472,23 @@ ActiveRecord::Schema.define(version: 20180308160323) do
   add_index "orders", ["updated_at"], name: "index_orders_on_updated_at", using: :btree
 
   create_table "pages", force: :cascade do |t|
-    t.integer  "parent_id",  limit: 4
-    t.text     "body",       limit: 65535,              null: false
-    t.string   "path",       limit: 255,   default: "", null: false
-    t.string   "slug",       limit: 255,   default: "", null: false
-    t.string   "title",      limit: 255,   default: "", null: false
+    t.integer  "parent_id",                   limit: 4
+    t.text     "body",                        limit: 65535,              null: false
+    t.string   "path",                        limit: 255,   default: "", null: false
+    t.string   "slug",                        limit: 255,   default: "", null: false
+    t.string   "title",                       limit: 255,   default: "", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "created_by_paper_trail_id",   limit: 4
+    t.string   "created_by_paper_trail_type", limit: 255
+    t.integer  "updated_by_paper_trail_id",   limit: 4
+    t.string   "updated_by_paper_trail_type", limit: 255
   end
 
   add_index "pages", ["parent_id"], name: "parent_id", using: :btree
   add_index "pages", ["path"], name: "index_pages_on_path", unique: true, using: :btree
   add_index "pages", ["slug"], name: "index_pages_on_slug", using: :btree
   add_index "pages", ["updated_at"], name: "index_pages_on_updated_at", using: :btree
-
-  create_table "paper_trail_versions", force: :cascade do |t|
-    t.string   "item_type",  limit: 191,        null: false
-    t.integer  "item_id",    limit: 4,          null: false
-    t.string   "event",      limit: 255,        null: false
-    t.string   "whodunnit",  limit: 255
-    t.text     "object",     limit: 4294967295
-    t.datetime "created_at"
-  end
-
-  add_index "paper_trail_versions", ["item_type", "item_id"], name: "index_paper_trail_versions_on_item_type_and_item_id", using: :btree
 
   create_table "payment_gateway_transactions", force: :cascade do |t|
     t.integer  "order_id",      limit: 4
@@ -584,6 +581,10 @@ ActiveRecord::Schema.define(version: 20180308160323) do
     t.boolean  "other_people_with_same_name",                         default: false, null: false
     t.boolean  "administrator",                                       default: false, null: false
     t.boolean  "velodrome_committee_interest",                        default: false, null: false
+    t.integer  "created_by_paper_trail_id",             limit: 4
+    t.string   "created_by_paper_trail_type",           limit: 255
+    t.integer  "updated_by_paper_trail_id",             limit: 4
+    t.string   "updated_by_paper_trail_type",           limit: 255
   end
 
   add_index "people", ["crypted_password"], name: "index_people_on_crypted_password", using: :btree
@@ -712,28 +713,32 @@ ActiveRecord::Schema.define(version: 20180308160323) do
   add_index "race_numbers", ["year"], name: "index_race_numbers_on_year", using: :btree
 
   create_table "races", force: :cascade do |t|
-    t.integer  "category_id",          limit: 4,                                              null: false
-    t.string   "city",                 limit: 128
-    t.decimal  "distance",                           precision: 10, scale: 2
-    t.string   "state",                limit: 64
-    t.integer  "field_size",           limit: 4
-    t.integer  "laps",                 limit: 4
-    t.float    "time",                 limit: 24
-    t.integer  "finishers",            limit: 4
-    t.string   "notes",                limit: 255,                            default: ""
-    t.string   "sanctioned_by",        limit: 255
+    t.integer  "category_id",                 limit: 4,                                              null: false
+    t.string   "city",                        limit: 128
+    t.decimal  "distance",                                  precision: 10, scale: 2
+    t.string   "state",                       limit: 64
+    t.integer  "field_size",                  limit: 4
+    t.integer  "laps",                        limit: 4
+    t.float    "time",                        limit: 24
+    t.integer  "finishers",                   limit: 4
+    t.string   "notes",                       limit: 255,                            default: ""
+    t.string   "sanctioned_by",               limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "result_columns",       limit: 255
-    t.integer  "bar_points",           limit: 4
-    t.integer  "event_id",             limit: 4,                                              null: false
-    t.decimal  "custom_price",                       precision: 10, scale: 2
-    t.text     "custom_columns",       limit: 65535
-    t.boolean  "full",                                                        default: false, null: false
-    t.integer  "field_limit",          limit: 4
-    t.boolean  "additional_race_only",                                        default: false, null: false
-    t.boolean  "visible",                                                     default: true
-    t.integer  "split_from_id",        limit: 4
+    t.string   "result_columns",              limit: 255
+    t.integer  "bar_points",                  limit: 4
+    t.integer  "event_id",                    limit: 4,                                              null: false
+    t.decimal  "custom_price",                              precision: 10, scale: 2
+    t.text     "custom_columns",              limit: 65535
+    t.boolean  "full",                                                               default: false, null: false
+    t.integer  "field_limit",                 limit: 4
+    t.boolean  "additional_race_only",                                               default: false, null: false
+    t.boolean  "visible",                                                            default: true
+    t.integer  "split_from_id",               limit: 4
+    t.integer  "created_by_paper_trail_id",   limit: 4
+    t.string   "created_by_paper_trail_type", limit: 255
+    t.integer  "updated_by_paper_trail_id",   limit: 4
+    t.string   "updated_by_paper_trail_type", limit: 255
   end
 
   add_index "races", ["bar_points"], name: "index_races_on_bar_points", using: :btree
@@ -900,19 +905,23 @@ ActiveRecord::Schema.define(version: 20180308160323) do
   add_index "scores", ["source_result_id"], name: "scores_source_result_id_index", using: :btree
 
   create_table "teams", force: :cascade do |t|
-    t.string   "name",                limit: 255,  default: "",    null: false
-    t.string   "city",                limit: 128
-    t.string   "state",               limit: 64
-    t.string   "notes",               limit: 255
+    t.string   "name",                        limit: 255,  default: "",    null: false
+    t.string   "city",                        limit: 128
+    t.string   "state",                       limit: 64
+    t.string   "notes",                       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "member",                           default: false
-    t.string   "website",             limit: 255
-    t.string   "sponsors",            limit: 1000
-    t.string   "contact_name",        limit: 255
-    t.string   "contact_email",       limit: 255
-    t.string   "contact_phone",       limit: 255
-    t.boolean  "show_on_public_page",              default: true
+    t.boolean  "member",                                   default: false
+    t.string   "website",                     limit: 255
+    t.string   "sponsors",                    limit: 1000
+    t.string   "contact_name",                limit: 255
+    t.string   "contact_email",               limit: 255
+    t.string   "contact_phone",               limit: 255
+    t.boolean  "show_on_public_page",                      default: true
+    t.integer  "created_by_paper_trail_id",   limit: 4
+    t.string   "created_by_paper_trail_type", limit: 255
+    t.integer  "updated_by_paper_trail_id",   limit: 4
+    t.string   "updated_by_paper_trail_type", limit: 255
   end
 
   add_index "teams", ["name"], name: "index_teams_on_name", using: :btree
@@ -951,7 +960,6 @@ ActiveRecord::Schema.define(version: 20180308160323) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "reverted_from",  limit: 4
-    t.text     "object_changes", limit: 4294967295
   end
 
   add_index "versions", ["created_at"], name: "index_versions_on_created_at", using: :btree

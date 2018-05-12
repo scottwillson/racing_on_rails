@@ -6,6 +6,9 @@ module RacingOnRails
       extend ActiveSupport::Concern
 
       included do
+        belongs_to :created_by_paper_trail, polymorphic: true
+        belongs_to :updated_by_paper_trail, polymorphic: true
+
         versioned except: %i[current_login_at
                              current_login_ip
                              last_login_at
@@ -44,7 +47,7 @@ module RacingOnRails
       end
 
       def created_from_result?
-        created_by.present? && created_by.is_a?(::Event)
+        created_by&.is_a? ::Event
       end
 
       def updated_after_created?
