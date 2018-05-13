@@ -116,30 +116,7 @@ module Competitions
         results = add_field_size(results)
         results = map_team_member_to_boolean(results)
 
-        calculated_results = Calculations::Calculator.calculate(
-          results,
-          break_ties: break_ties?,
-          completed_events: completed_events,
-          dnf_points: dnf_points,
-          double_points_for_last_event: double_points_for_last_event?,
-          end_date: end_date,
-          field_size_bonus: field_size_bonus?,
-          maximum_events: maximum_events(race),
-          maximum_upgrade_points: maximum_upgrade_points,
-          members_only: members_only?,
-          minimum_events: minimum_events,
-          missing_result_penalty: missing_result_penalty,
-          most_points_win: most_points_win?,
-          place_bonus: place_bonus,
-          points_schedule_from_field_size: points_schedule_from_field_size?,
-          point_schedule: point_schedule,
-          results_per_event: results_per_event,
-          results_per_race: results_per_race,
-          source_event_ids: source_event_ids(race),
-          team: team?,
-          use_source_result_points: use_source_result_points?,
-          upgrade_points_multiplier: upgrade_points_multiplier
-        )
+        calculated_results = Calculations::Calculator.calculate(results, rules)
 
         race.destroy_duplicate_results!
         race.results.reload
@@ -286,6 +263,32 @@ module Competitions
       else
         results
       end
+    end
+
+    def rules
+      {
+        break_ties: break_ties?,
+        completed_events: completed_events,
+        dnf_points: dnf_points,
+        double_points_for_last_event: double_points_for_last_event?,
+        end_date: end_date,
+        field_size_bonus: field_size_bonus?,
+        maximum_events: maximum_events(race),
+        maximum_upgrade_points: maximum_upgrade_points,
+        members_only: members_only?,
+        minimum_events: minimum_events,
+        missing_result_penalty: missing_result_penalty,
+        most_points_win: most_points_win?,
+        place_bonus: place_bonus,
+        points_schedule_from_field_size: points_schedule_from_field_size?,
+        point_schedule: point_schedule,
+        results_per_event: results_per_event,
+        results_per_race: results_per_race,
+        source_event_ids: source_event_ids(race),
+        team: team?,
+        use_source_result_points: use_source_result_points?,
+        upgrade_points_multiplier: upgrade_points_multiplier
+      }
     end
 
     # Some competitions are only open to RacingAssociation members, and non-members are dropped from the results.
