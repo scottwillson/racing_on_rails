@@ -20,6 +20,7 @@ module RacingOnRails
                              single_access_token],
                   initial_version: true
         before_save :set_updated_by
+        before_save :set_created_by_and_updated_by_paper_trail
       end
 
       def created_by
@@ -32,6 +33,12 @@ module RacingOnRails
 
       def set_updated_by
         self.updated_by ||= ::Person.current
+        true
+      end
+
+      def set_created_by_and_updated_by_paper_trail
+        self.created_by_paper_trail ||= (created_by || ::Person.current)
+        self.updated_by_paper_trail ||= (updated_by || ::Person.current)
         true
       end
 
