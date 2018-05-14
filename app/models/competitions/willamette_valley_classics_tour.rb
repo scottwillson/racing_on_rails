@@ -32,6 +32,10 @@ module Competitions
         ]
       end
 
+      def minimum_events
+        3
+      end
+
       def point_schedule
         [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
       end
