@@ -27,6 +27,20 @@ module Competitions
       end
     end
 
+    class OverallWithCombined < Overall
+      def self.parent_event_name
+        "Test Series"
+      end
+
+      def category_names
+        ["Women 1/2", "Women 3"]
+      end
+
+      def point_schedule
+        [13, 8, 5, 3, 2, 1]
+      end
+    end
+
     test "calculate with no series" do
       assert_no_difference "Competition.count" do
         TestOverall.calculate!
@@ -174,6 +188,43 @@ module Competitions
 
       men_a_overall_race = overall_results.races.detect { |race| race.category == men_a }
       assert_equal(0, men_a_overall_race.bar_points, "Race BAR points")
+    end
+
+    test "reject duplicate races" do
+      women_1_2_3 = Category.find_or_create_by_normalized_name("Women 1/2/3")
+      women_1_2 = Category.find_or_create_by_normalized_name("Women 1/2")
+      women_3 = Category.find_or_create_by_normalized_name("Women 3")
+
+      series = Series.create!(name: "Test Series")
+      event = series.children.create!
+      race = event.races.create!(category: women_1_2)
+      woman_1_2_1 = Person.create!
+      woman_1_2_2 = Person.create!
+      race.results.create!(person: woman_1_2_1, place: 1)
+      race.results.create!(person: woman_1_2_2, place: 2)
+
+      race = event.races.create!(category: women_3)
+      woman_3_1 = Person.create!
+      race.results.create!(person: woman_3_1, place: 1)
+
+      race = event.races.create!(category: women_1_2_3)
+      race.results.create!(person: woman_1_2_1, place: 1)
+      race.results.create!(person: woman_3_1, place: 2)
+      race.results.create!(person: woman_1_2_2, place: 3)
+
+      OverallWithCombined.calculate!
+      races = series.reload.overall.races
+
+      race = races.find { |r| r.name == "Women 1/2" }
+      results = race.results.sort
+      assert_equal 2, results.size
+      assert_equal 13, results.first.points
+      assert_equal 8, results.second.points
+
+      race = races.find { |r| r.name == "Women 3" }
+      results = race.results.sort
+      assert_equal 1, results.size
+      assert_equal 13, results.first.points
     end
   end
 end
