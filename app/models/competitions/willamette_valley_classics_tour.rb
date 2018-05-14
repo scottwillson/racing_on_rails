@@ -7,16 +7,22 @@ module Competitions
         "Willamette Valley Classics Tour"
       end
 
+      def after_source_results(results, race)
+        super
+
+        results.select { |result| result["category_name"].in? category_names }
+      end
+
       def category_names
         [
           "Category 3 Men",
           "Category 4/5 Men",
           "Junior Men",
           "Junior Women",
-          "Masters Men 40-49 (Category 3/4/5)",
-          "Masters Men 50+/60+ (Category 3/4/5)",
-          "Masters Men 60+ (Category 3/4/5)",
-          "Masters Women 40+ (Category 3/4/5)",
+          "Masters Men 40-49 3/4/5",
+          "Masters Men 50-59 3/4/5",
+          "Masters Men 60+ 3/4/5",
+          "Masters Women 40+ 3/4/5",
           "Pro/1/2",
           "Pro/1/2 40+",
           "Pro/1/2 50+",
