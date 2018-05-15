@@ -9,7 +9,10 @@ module RacingOnRails
         belongs_to :created_by_paper_trail, polymorphic: true
         belongs_to :updated_by_paper_trail, polymorphic: true
 
-        versioned except: %i[current_login_at
+        versioned except: %i[
+                             created_by_paper_trail_id
+                             created_by_paper_trail_type
+                             current_login_at
                              current_login_ip
                              last_login_at
                              last_login_ip
@@ -17,7 +20,9 @@ module RacingOnRails
                              password_salt
                              perishable_token
                              persistence_token
-                             single_access_token],
+                             single_access_token
+                             updated_by_paper_trail_id
+                             updated_by_paper_trail_type],
                   initial_version: true
         before_save :set_updated_by
         before_save :set_created_by_and_updated_by_paper_trail
