@@ -6,7 +6,13 @@ module RacingOnRails
       extend ActiveSupport::Concern
 
       included do
-        versioned except: %i[current_login_at
+        belongs_to :created_by_paper_trail, polymorphic: true
+        belongs_to :updated_by_paper_trail, polymorphic: true
+
+        versioned except: %i[
+                             created_by_paper_trail_id
+                             created_by_paper_trail_type
+                             current_login_at
                              current_login_ip
                              last_login_at
                              last_login_ip
@@ -14,9 +20,12 @@ module RacingOnRails
                              password_salt
                              perishable_token
                              persistence_token
-                             single_access_token],
+                             single_access_token
+                             updated_by_paper_trail_id
+                             updated_by_paper_trail_type],
                   initial_version: true
         before_save :set_updated_by
+        before_save :set_created_by_and_updated_by_paper_trail
       end
 
       def created_by
@@ -32,6 +41,14 @@ module RacingOnRails
         true
       end
 
+      def set_created_by_and_updated_by_paper_trail
+        self.created_by_paper_trail ||= (created_by || ::Person.current)
+
+        updated_by_record = updated_by.instance_of?(ActiveRecord) ? updated_by : nil
+        self.updated_by_paper_trail ||= (updated_by_record || ::Person.current)
+        true
+      end
+
       def updated_by_person_name
         case updated_by_person
         when nil
@@ -44,7 +61,7 @@ module RacingOnRails
       end
 
       def created_from_result?
-        created_by.present? && created_by.is_a?(::Event)
+        created_by&.is_a? ::Event
       end
 
       def updated_after_created?
