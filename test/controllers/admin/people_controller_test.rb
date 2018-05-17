@@ -84,6 +84,7 @@ module Admin
       assert_nil(knowlsons.first.member_to, "member_to after update")
       assert_equal(@administrator, knowlsons.first.created_by, "created by")
       assert_equal("Candi Murray", knowlsons.first.created_by.name, "created by")
+      assert_equal(@administrator, knowlsons.first.created_by_paper_trail, "created_by_paper_trail")
     end
 
     test "update new number" do

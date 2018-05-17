@@ -34,12 +34,15 @@ class PersonTest < ActiveSupport::TestCase
     person.save!
     assert_equal 2, person.versions.size, "Should create second version after update"
     assert_equal admin, person.created_by, "created_by"
+    assert_equal admin, person.created_by_paper_trail, "created_by_paper_trail"
     assert_equal another_admin, person.updated_by_person, "updated_by_person"
 
     file = ImportFile.new(name: "/tmp/import.xls")
     assert person.update(name: "Andrew Hampsten", updated_by: file), "update"
     assert_equal admin, person.created_by, "created_by"
+    assert_equal admin, person.created_by_paper_trail, "created_by"
     assert_equal file, person.updated_by_person, "updated_by_person"
+    assert_equal file, person.updated_by_paper_trail, "updated_by_paper_trail"
   end
 
   test "save existing team" do
@@ -921,6 +924,7 @@ class PersonTest < ActiveSupport::TestCase
     person.add_number "7890", nil
     assert_equal "7890", person.road_number, "Road number after add with nil discipline"
     assert_equal event, person.race_numbers.first.created_by, "Number created_by"
+    assert_equal event, person.race_numbers.first.created_by_paper_trail, "Number created_by_paper_trail"
   end
 
   test "add number from non number discipline" do

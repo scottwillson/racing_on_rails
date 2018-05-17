@@ -238,6 +238,10 @@ module Results
       assert_equal(event, browning.created_by, "created_by")
       assert_equal(event, browning.team.created_by, "team created_by")
       assert_equal(event.name, browning.created_by.name, "created_by name")
+      assert_equal(event, browning.created_by_paper_trail, "created_by_paper_trail")
+      assert_equal(event, browning.team.created_by_paper_trail, "team created_by_paper_trail")
+      assert_equal(event, browning.updated_by_paper_trail, "updated_by_paper_trail")
+      assert_equal(event, browning.team.updated_by_paper_trail, "team updated_by_paper_trail")
     end
 
     test "import and reuse races" do

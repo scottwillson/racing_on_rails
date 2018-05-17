@@ -25,6 +25,7 @@ class LoginTest < ActionController::TestCase
     person = Person.last
     assert_equal 1, person.versions(true).size
     assert_equal person, person.created_by, "created_by not set for #{person.versions.first.inspect}"
+    assert_equal person, person.created_by_paper_trail, "created_by_paper_trail"
   end
 
   test "create login with token" do
