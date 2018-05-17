@@ -1,13 +1,13 @@
 development:
   adapter: mysql2
-  database: racing_on_rails_development_pt
+  database: racing_on_rails_development
   username: ror_development
   host: localhost
   encoding: utf8
 
 test:
   adapter: mysql2
-  database: racing_on_rails_test_pt<%= ENV["TEST_ENV_NUMBER"] %>
+  database: racing_on_rails_test<%= ENV["TEST_ENV_NUMBER"] %>
   username: ror_test
   host: localhost
   encoding: utf8
