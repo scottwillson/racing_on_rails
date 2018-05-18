@@ -42,11 +42,13 @@ module RacingOnRails
       end
 
       def set_created_by_and_updated_by_paper_trail
-        self.created_by_paper_trail ||= (created_by || updated_by || ::Person.current)
-
-        updated_by_record = updated_by.is_a?(ActiveRecord::Base) ? updated_by : nil
+        self.created_by_paper_trail ||= (created_by || updated_by_record || ::Person.current)
         self.updated_by_paper_trail ||= (updated_by_record || ::Person.current)
         true
+      end
+
+      def updated_by_record
+        updated_by if updated_by.is_a?(ActiveRecord::Base)
       end
 
       def updated_by_person_name
