@@ -37,8 +37,8 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal admin, person.created_by_paper_trail, "created_by_paper_trail"
     assert_equal another_admin, person.updated_by_person, "updated_by_person"
 
-    file = ImportFile.new(name: "/tmp/import.xls")
-    assert person.update(name: "Andrew Hampsten", updated_by: file), "update"
+    file = ImportFile.create!(name: "/tmp/import.xls")
+    person.update!(name: "Andrew Hampsten", updated_by: file)
     assert_equal admin, person.created_by, "created_by"
     assert_equal admin, person.created_by_paper_trail, "created_by"
     assert_equal file, person.updated_by_person, "updated_by_person"
