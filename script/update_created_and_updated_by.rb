@@ -15,40 +15,38 @@ def versions_query
          ])
 end
 
-VestalVersions::Version.transaction do
+puts
+puts "Copy versions to PaperTrail"
+[
+  DiscountCode,
+  Event,
+  Page,
+  Person,
+  Race,
+  RaceNumber,
+  Refund,
+  Team
+].each do |record_class|
+  count = record_class.count
+  index = 0
   puts
-  puts "Copy versions to PaperTrail"
-  [
-    DiscountCode,
-    Event,
-    Page,
-    Person,
-    Race,
-    RaceNumber,
-    Refund,
-    Team
-  ].each do |record_class|
-    count = record_class.count
-    index = 0
-    puts
-    puts record_class
-    record_class
-      .where(id: VestalVersions::Version.pluck(:versioned_id).uniq)
-      .includes(:versions)
-      .find_each do |record|
+  puts record_class
+  record_class
+    .where(id: VestalVersions::Version.pluck(:versioned_id).uniq)
+    .includes(:versions)
+    .find_each do |record|
 
-      index += 1
-      puts("#{index}/#{count}") if index % 1000 == 0
+    index += 1
+    puts("#{index}/#{count}") if index % 1000 == 0
 
-      versions = record.versions.sort_by(&:created_at).select(&:user_id)
-      next if versions.empty?
+    versions = record.versions.sort_by(&:created_at).select(&:user_id)
+    next if versions.empty?
 
-      record.update_columns(
-        created_by_paper_trail_id: versions.first.user_id,
-        created_by_paper_trail_type: versions.first.user_type,
-        updated_by_paper_trail_id: versions.last.user_id,
-        updated_by_paper_trail_type: versions.last.user_type
-      )
-    end
+    record.update_columns(
+      created_by_paper_trail_id: versions.first.user_id,
+      created_by_paper_trail_type: versions.first.user_type,
+      updated_by_paper_trail_id: versions.last.user_id,
+      updated_by_paper_trail_type: versions.last.user_type
+    )
   end
 end
