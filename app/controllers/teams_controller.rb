@@ -4,12 +4,13 @@
 class TeamsController < ApplicationController
   def index
     respond_to do |format|
+      format.xlsx do
+        assign_teams
+        headers["Content-Disposition"] = 'filename="teams.xlsx"'
+      end
+
       format.html do
-        @teams = if RacingAssociation.current.show_all_teams_on_public_page?
-                   Team.all
-                 else
-                   Team.where(member: true).where(show_on_public_page: true)
-                 end
+        assign_teams
         @discipline_names = Discipline.names
       end
 
@@ -24,5 +25,13 @@ class TeamsController < ApplicationController
         render json: @teams.limit(100)
       end
     end
+  end
+
+  def assign_teams
+    @teams = if RacingAssociation.current.show_all_teams_on_public_page?
+               Team.all
+             else
+               Team.where(member: true).where(show_on_public_page: true)
+             end
   end
 end

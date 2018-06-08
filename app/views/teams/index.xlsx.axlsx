@@ -1,0 +1,27 @@
+workbook = xlsx_package.workbook
+workbook.add_worksheet(name: "Member Teams") do |sheet|
+  sheet.add_row [
+    "id",
+    "name",
+    "city",
+    "state",
+    "contact_name",
+    "contact_email",
+    "contact_phone",
+    "sponsors",
+    "website"
+  ]
+  @teams.sort_by(&:downcased_name).each do |team|
+    sheet.add_row [
+      team.id,
+      team.name,
+      team.city,
+      team.state,
+      team.contact_name,
+      team.contact_email,
+      team.contact_phone,
+      team.sponsors,
+      team.website
+    ]
+  end
+end

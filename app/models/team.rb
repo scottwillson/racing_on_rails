@@ -45,6 +45,11 @@ class Team < ActiveRecord::Base
     teams.reject { |team| team == self }
   end
 
+  # For sorting
+  def downcased_name
+    name.downcase
+  end
+
   def ensure_no_results
     return true if no_results?
 

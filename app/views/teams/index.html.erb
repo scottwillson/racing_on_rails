@@ -15,6 +15,10 @@
       <% end %>
       <th>Results</th>
     </tr>
-    <%= render partial: "team", collection: @teams.sort { |x, y| x.name.downcase <=> y.name.downcase } %>
+    <%= render partial: "team", collection: @teams.sort_by(&:downcased_name) %>
   <% end -%>
 <% end -%>
+
+<ul class="page-links">
+  <li><%= link_to "Excel", { format: :xlsx }, download: "teams.xlsx" %></li>
+</ul>
