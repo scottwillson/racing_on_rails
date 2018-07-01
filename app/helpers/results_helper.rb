@@ -24,7 +24,7 @@ module ResultsHelper
                            Results::Mapper.new(%w[ place team_name points])
                          else
                            Results::Mapper.new(%w[ place name points time])
-                                            end
+                         end
                        else
                          Results::Mapper.new(
                            %w[ place number name team_name ],
