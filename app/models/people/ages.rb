@@ -60,14 +60,6 @@ module People
       date_of_birth < Date.new(18.years.ago.year, 1, 1) if date_of_birth
     end
 
-    def female?
-      gender == "F"
-    end
-
-    def male?
-      gender == "M"
-    end
-
     def age_category
       if female?
         if junior?

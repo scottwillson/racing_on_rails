@@ -13,6 +13,7 @@ class Person < ActiveRecord::Base
   include People::Ages
   include People::Authorization
   include People::Export
+  include People::Gender
   include People::Membership
   include People::Merge
   include People::Names
