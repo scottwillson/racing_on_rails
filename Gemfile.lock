@@ -110,7 +110,7 @@ GEM
       activesupport (>= 3.2, < 5.3)
       request_store (~> 1.0)
       scrypt (>= 1.2, < 4.0)
-    autoprefixer-rails (8.6.4)
+    autoprefixer-rails (8.6.5)
       execjs
     axlsx_rails (0.5.2)
       actionpack (>= 3.1)
@@ -216,11 +216,11 @@ GEM
       elasticsearch-transport (= 5.0.5)
     elasticsearch-api (5.0.5)
       multi_json
-    elasticsearch-model (5.0.2)
+    elasticsearch-model (5.1.0)
       activesupport (> 3)
       elasticsearch (~> 5)
       hashie
-    elasticsearch-rails (5.0.2)
+    elasticsearch-rails (5.1.0)
     elasticsearch-transport (5.0.5)
       faraday
       multi_json
@@ -301,15 +301,15 @@ GEM
     net-ssh (5.0.2)
     netrc (0.11.0)
     newrelic_rpm (5.2.0.345)
-    nokogiri (1.8.3)
+    nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
     ntlm-http (0.1.1)
-    oj (3.6.3)
+    oj (3.6.4)
     orm_adapter (0.5.0)
     parallel (1.12.1)
     parallel_tests (2.21.3)
       parallel
-    parser (2.5.1.0)
+    parser (2.5.1.2)
       ast (~> 2.4.0)
     pdf-reader (2.1.0)
       Ascii85 (~> 1.0.0)
@@ -379,10 +379,10 @@ GEM
       nokogiri
       roo (>= 2.0.0, < 3)
       spreadsheet (> 0.9.0)
-    rubocop (0.57.2)
+    rubocop (0.58.1)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
-      parser (>= 2.5)
+      parser (>= 2.5, != 2.5.1.1)
       powerpack (~> 0.1)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
@@ -424,7 +424,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    sshkit (1.16.1)
+    sshkit (1.17.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     stripe (3.17.0)
@@ -446,7 +446,7 @@ GEM
     ttfunk (1.0.3)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    uglifier (4.1.13)
+    uglifier (4.1.14)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
