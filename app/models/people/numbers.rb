@@ -33,8 +33,8 @@ module People
     end
 
     # Look for RaceNumber +year+ in +attributes+. Not sure if there's a simple and better way to do that.
-    # Need to set +updated_by+ before setting numbers to ensure updated_by is passed to number. Setting all via a
-    # parameter hash may add number before updated_by is set.
+    # Need to set +updater+ before setting numbers to ensure updater is passed to number. Setting all via a
+    # parameter hash may add number before updater is set.
     def add_number(value, discipline, issuer = nil, _year = year)
       return false if discipline.blank? && value.blank?
 
@@ -48,35 +48,35 @@ module People
 
       if value.present?
         if new_record?
-          build_number value, mapped_discipline, issuer, updated_by, _year
+          build_number value, mapped_discipline, issuer, updater, _year
         else
-          create_number value, mapped_discipline, issuer, updated_by, _year
+          create_number value, mapped_discipline, issuer, updater, _year
         end
       else
         destroy_number discipline, issuer, _year unless new_record?
       end
     end
 
-    def build_number(value, discipline, issuer, updated_by, year)
+    def build_number(value, discipline, issuer, updater, year)
       unless race_number?(value, discipline, issuer, year)
         race_numbers.build(
           discipline: discipline,
           number_issuer: issuer,
           person: self,
-          updated_by: updated_by,
+          updater: updater,
           value: value,
           year: year
         )
       end
     end
 
-    def create_number(value, discipline, issuer, updated_by, year)
+    def create_number(value, discipline, issuer, updater, year)
       unless race_number?(value, discipline, issuer, year)
         race_numbers.create(
           discipline: discipline,
           number_issuer: issuer,
           person: self,
-          updated_by: updated_by,
+          updater: updater,
           value: value,
           year: year
         )

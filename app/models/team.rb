@@ -6,9 +6,10 @@
 #
 # Team names must be unique
 class Team < ActiveRecord::Base
-  include RacingOnRails::VestalVersions::Versioned
   include Export::Teams
   include Names::Nameable
+  include RacingOnRails::VestalVersions::Versioned
+  include RacingOnRails::PaperTrail::Versions
 
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name

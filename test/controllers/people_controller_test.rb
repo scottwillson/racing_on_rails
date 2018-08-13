@@ -68,18 +68,18 @@ class PeopleControllerTest < ActionController::TestCase
     login_as person
     put :update, id: person.to_param, person: { team_name: "Gentle Lovers" }
     assert_redirected_to edit_person_path(person)
-    person = Person.find(person.id)
-    assert_equal gentle_lovers, person.reload.team, "Team should be updated"
-    assert_equal 2, person.versions.size, "versions"
-    version = person.versions.last
-    assert_equal person, version.user, "version user"
-    changes = version.changes
+    person.reload
+    assert_equal gentle_lovers, person.team, "Team should be updated"
+    assert_equal 2, person.paper_trail_versions.size, "versions"
+    version = person.paper_trail_versions.last
+    assert_equal "Bob Jones", version.terminator, "terminator"
+    changes = version.changeset
     assert_equal 1, changes.size, "changes"
     change = changes["team_id"]
     assert_not_nil change, "Should have change for team ID"
     assert_nil change.first, "Team ID before"
     assert_equal Team.find_by(name: "Gentle Lovers").id, change.last, "Team ID after"
-    assert_equal person, person.updated_by_person, "updated_by_person"
+    assert_equal "Bob Jones", person.updated_by_paper_trail_name, "updated_by_paper_trail_name"
   end
 
   test "update no name" do
@@ -94,16 +94,16 @@ class PeopleControllerTest < ActionController::TestCase
     assert_redirected_to edit_person_path(person)
     person = Person.find(person.id)
     assert_equal gentle_lovers, person.reload.team, "Team should be updated"
-    assert_equal 2, person.versions.size, "versions"
-    version = person.versions.last
-    assert_equal "my_login", version.user.name_or_login, "version user"
-    changes = version.changes
+    assert_equal 2, person.paper_trail_versions.size, "versions"
+    version = person.paper_trail_versions.last
+    assert_equal "my_login", version.terminator, "terminator"
+    changes = version.changeset
     assert_equal 1, changes.size, "changes"
     change = changes["team_id"]
     assert_not_nil change, "Should have change for team ID"
     assert_nil change.first, "Team ID before"
     assert_equal Team.find_by(name: "Gentle Lovers").id, change.last, "Team ID after"
-    assert_equal editor, person.updated_by_person, "updated_by_person"
+    assert_equal "my_login", person.updated_by_paper_trail_name, "updated_by_paper_trail_name"
   end
 
   test "update by editor" do

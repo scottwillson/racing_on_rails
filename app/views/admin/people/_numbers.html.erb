@@ -48,7 +48,7 @@
         <%= link_to(
               "#",
               rel: "tooltip",
-              title: "Updated #{time_ago_in_words(race_number.updated_at, include_seconds: true)} ago #{"by #{race_number.updated_by_person_name}"}",
+              title: "Updated #{time_ago_in_words(race_number.updated_at, include_seconds: true)} ago #{"by #{race_number.updated_by_paper_trail_name}"}",
               class: "icon"
             ) do %><span class="glyphicon glyphicon-info-sign"></span><% end %>
         <%= link_to(

@@ -1,10 +1,13 @@
+# frozen_string_literal: true
+
 def versions_query
+  VestalVersions::Version.where(versioned_type: "Page").destroy_all
+
   VestalVersions::Version
     .where(versioned_type: %w[
             DiscountCode
             Event
             MultidayEvent
-            Page
             Person
             RaceNumber
             Refund
@@ -16,11 +19,10 @@ def versions_query
 end
 
 puts
-puts "Copy versions to PaperTrail"
+puts "Update created_by and updated_by PaperTrail"
 [
   DiscountCode,
   Event,
-  Page,
   Person,
   Race,
   RaceNumber,

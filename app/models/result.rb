@@ -40,7 +40,7 @@ class Result < ActiveRecord::Base
       .where(team_id: team.id)
   }
 
-  attr_accessor :updated_by
+  attr_accessor :updater
 
   # Replace any new +person+, or +team+ with one that already exists if name matches
   # TODO rationalize names
@@ -56,7 +56,7 @@ class Result < ActiveRecord::Base
 
   def set_team
     if team&.new_record?
-      team.updated_by = event
+      team.updater = event
       if team.name.blank?
         self.team = nil
       else

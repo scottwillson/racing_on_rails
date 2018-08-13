@@ -11,7 +11,7 @@ class CleanUpOldVersions < ActiveRecord::Migration
       modifications.delete("notification")
       modifications.delete("lock_version")
       version.update! modifications: modifications
-    when "Page", "RaceNumber", "Team"
+    when "RaceNumber", "Team"
       modifications.delete("lock_version")
       version.update! modifications: modifications
     when "Person"
@@ -29,6 +29,8 @@ class CleanUpOldVersions < ActiveRecord::Migration
 
   def change
     VestalVersions::Version.transaction do
+      VestalVersions::Version.where(versioned_type: "Page").destroy_all
+
       count = VestalVersions::Version.count
       index = 0
       VestalVersions::Version.find_each do |version|

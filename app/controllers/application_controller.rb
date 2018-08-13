@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   include Mobile
   include SentientController
 
-  before_action :clear_racing_association, :toggle_tabs, :allow_iframes
+  before_action :clear_racing_association, :toggle_tabs, :allow_iframes, :set_paper_trail_whodunnit
 
   protected
 
@@ -57,6 +57,11 @@ class ApplicationController < ActionController::Base
   rescue StandardError
     nil
   end
+
+  def user_for_paper_trail
+    current_person&.name_or_login
+  end
+
 
   private
 

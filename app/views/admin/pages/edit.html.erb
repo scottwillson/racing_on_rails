@@ -12,10 +12,6 @@
       <%= f.labelled_select :parent_id,
                             @page.valid_parents.sort_by(&:path).collect { |p| [ "#{p.title} (#{p.path})", p.id ] },
                             { include_blank: true } %>
-      <h3>Versions</h3>
-      <%= table class: "versions", id: :versions, insert_header: true, columns: 2 do %>
-        <%= render partial: "version", collection: @page.versions.sort_by(&:number).reverse, locals: { selected: @page.versions.last } %>
-      <% end -%>
     </div>
 
     <div class="col-sm-8">

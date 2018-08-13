@@ -6,11 +6,13 @@ module RacingOnRails
       extend ActiveSupport::Concern
 
       included do
-        belongs_to :created_by_paper_trail, polymorphic: true
-        belongs_to :updated_by_paper_trail, polymorphic: true
+        # Record (usually Person but can be ImportFile, Event, etc.) about to make this update.
+        # Need separate attribute from updated_by to differentiate from previous, stored updated_by and new updated_by.
+        attr_accessor :updater
 
         versioned except: %i[
                              created_by_paper_trail_id
+                             created_by_paper_trail_name
                              created_by_paper_trail_type
                              current_login_at
                              current_login_ip
@@ -22,10 +24,12 @@ module RacingOnRails
                              persistence_token
                              single_access_token
                              updated_by_paper_trail_id
-                             updated_by_paper_trail_type],
+                             updated_by_paper_trail_name
+                             updated_by_paper_trail_type
+                           ],
                   initial_version: true
+
         before_save :set_updated_by
-        before_save :set_created_by_and_updated_by_paper_trail
       end
 
       def created_by
@@ -37,13 +41,12 @@ module RacingOnRails
       end
 
       def set_updated_by
-        self.updated_by ||= ::Person.current
-        true
-      end
+        if updater
+          self.updated_by = updater
+        elsif ::Person.current
+          self.updated_by = ::Person.current
+        end
 
-      def set_created_by_and_updated_by_paper_trail
-        self.created_by_paper_trail ||= (created_by || updated_by_record || ::Person.current)
-        self.updated_by_paper_trail = updated_by_record || created_by_paper_trail
         true
       end
 

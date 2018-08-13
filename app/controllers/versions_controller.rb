@@ -10,5 +10,6 @@ class VersionsController < ApplicationController
 
   def assign_person
     @person = Person.find(params[:person_id])
+    @paper_trail_versions = RacingOnRails::PaperTrail::Version.where(item_id: @person.id, item_type: "Person")
   end
 end

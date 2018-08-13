@@ -46,6 +46,7 @@ class Event < ActiveRecord::Base
   include Events::Results
   include ActsAsTree::Extensions
   include RacingOnRails::VestalVersions::Versioned
+  include RacingOnRails::PaperTrail::Versions
   include Export::Events
   include Sanctioned
 

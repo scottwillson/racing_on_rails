@@ -1,16 +1,13 @@
 # frozen_string_literal: true
 
-# CMS web page. Tree structure. Versioned.
+# CMS web page. Tree structure. Deprected. Versioning removed.
 # User render_page helper to look for Page before falling back on Rails templates.
 # Pages uses ERb and can execute Ruby code just like a template, so admin users can
 # do things like <% Person.destroy_all %>!
 class Page < ActiveRecord::Base
   acts_as_tree
   include ActsAsTree::Validation
-
   include Pages::Paths
-  include RacingOnRails::VestalVersions::Versioned
-  include SentientUser
 
   before_validation :set_slug, :set_path, :set_body
   validates :path, uniqueness: { message: "'%{value}' has already been taken" }
@@ -32,9 +29,7 @@ class Page < ActiveRecord::Base
 
   def update_parent
     if parent(true)
-      parent.skip_version do
-        parent.touch
-      end
+      parent.touch
     end
     true
   end

@@ -47,7 +47,7 @@ class PeopleFile
 
       Person.transaction do
         table.rows.map(&:to_hash).each do |row|
-          row[:updated_by] = import_file
+          row[:updater] = import_file
           logger.debug(row.inspect) if logger.debug?
           next if blank_name?(row)
 
@@ -98,7 +98,7 @@ class PeopleFile
     ActiveSupport::Notifications.instrument "create.people_file.racing_on_rails", person_first_name: row[:first_name], person_last_name: row[:last_name]
     delete_unwanted_member_from row, nil
     add_print_card_and_label row
-    person = Person.new(updated_by: import_file)
+    person = Person.new(updater: import_file)
     person.year = year if year
     person.update_attributes! row
     @created += 1
@@ -116,7 +116,7 @@ class PeopleFile
     add_print_card_and_label row, person
 
     person.year = year if year
-    person.updated_by = import_file
+    person.updater = import_file
     person.update_attributes! row
 
     @updated += 1

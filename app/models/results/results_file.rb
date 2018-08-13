@@ -114,7 +114,7 @@ module Results
       end
 
       result = race.results.build(result_methods(row, race))
-      result.updated_by = @event.name
+      result.updater = @event.name
 
       result.time = race.results[race.results.size - 2].time if Results::ResultsFile.same_time?(row)
 

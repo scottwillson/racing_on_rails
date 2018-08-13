@@ -24,7 +24,7 @@ module Results
 
     def set_person
       if person&.new_record?
-        person.updated_by = event
+        person.updater = event
         if person.name.blank?
           self.person = nil
         else
@@ -130,7 +130,7 @@ module Results
 
     def update_membership
       if update_membership?
-        person.updated_by = event
+        person.updater = event
         person.member_from = race.date
       end
     end
@@ -156,7 +156,6 @@ module Results
          number.present? &&
          !rental_number?
 
-        person.updated_by = updated_by
         person.add_number number, Discipline[event.discipline], event.number_issuer, event.date.year
       end
     end

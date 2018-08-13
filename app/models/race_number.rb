@@ -13,6 +13,7 @@
 # to identify person results with misspelled names.
 class RaceNumber < ActiveRecord::Base
   include RacingOnRails::VestalVersions::Versioned
+  include RacingOnRails::PaperTrail::Versions
 
   validates :discipline, presence: true
   validates :number_issuer, presence: true

@@ -99,7 +99,6 @@ FactoryBot.define do
     title "Plain"
     updated_at Time.zone.local(2007)
     created_at Time.zone.local(2007)
-    updated_by factory: :person
   end
 
   factory :person do

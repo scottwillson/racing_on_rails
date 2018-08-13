@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180512191015) do
+ActiveRecord::Schema.define(version: 20180526165321) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -150,6 +150,8 @@ ActiveRecord::Schema.define(version: 20180512191015) do
     t.string   "created_by_paper_trail_type", limit: 255
     t.integer  "updated_by_paper_trail_id",   limit: 4
     t.string   "updated_by_paper_trail_type", limit: 255
+    t.string   "created_by_paper_trail_name", limit: 255
+    t.string   "updated_by_paper_trail_name", limit: 255
   end
 
   add_index "discount_codes", ["created_by_paper_trail_id"], name: "index_discount_codes_on_created_by_paper_trail_id", using: :btree
@@ -277,6 +279,8 @@ ActiveRecord::Schema.define(version: 20180512191015) do
     t.string   "created_by_paper_trail_type",    limit: 255
     t.integer  "updated_by_paper_trail_id",      limit: 4
     t.string   "updated_by_paper_trail_type",    limit: 255
+    t.string   "created_by_paper_trail_name",    limit: 255
+    t.string   "updated_by_paper_trail_name",    limit: 255
   end
 
   add_index "events", ["bar_points"], name: "index_events_on_bar_points", using: :btree
@@ -491,6 +495,8 @@ ActiveRecord::Schema.define(version: 20180512191015) do
     t.string   "created_by_paper_trail_type", limit: 255
     t.integer  "updated_by_paper_trail_id",   limit: 4
     t.string   "updated_by_paper_trail_type", limit: 255
+    t.string   "created_by_paper_trail_name", limit: 255
+    t.string   "updated_by_paper_trail_name", limit: 255
   end
 
   add_index "pages", ["created_by_paper_trail_id"], name: "index_pages_on_created_by_paper_trail_id", using: :btree
@@ -501,11 +507,12 @@ ActiveRecord::Schema.define(version: 20180512191015) do
   add_index "pages", ["updated_by_paper_trail_id"], name: "index_pages_on_updated_by_paper_trail_id", using: :btree
 
   create_table "paper_trail_versions", force: :cascade do |t|
-    t.string   "item_type",  limit: 191,        null: false
-    t.integer  "item_id",    limit: 4,          null: false
-    t.string   "event",      limit: 255,        null: false
-    t.string   "whodunnit",  limit: 255
-    t.text     "object",     limit: 4294967295
+    t.string   "item_type",      limit: 191,        null: false
+    t.integer  "item_id",        limit: 4,          null: false
+    t.string   "event",          limit: 255,        null: false
+    t.string   "whodunnit",      limit: 255
+    t.text     "object",         limit: 4294967295
+    t.text     "object_changes", limit: 4294967295
     t.datetime "created_at"
   end
 
@@ -606,6 +613,8 @@ ActiveRecord::Schema.define(version: 20180512191015) do
     t.string   "created_by_paper_trail_type",           limit: 255
     t.integer  "updated_by_paper_trail_id",             limit: 4
     t.string   "updated_by_paper_trail_type",           limit: 255
+    t.string   "created_by_paper_trail_name",           limit: 255
+    t.string   "updated_by_paper_trail_name",           limit: 255
   end
 
   add_index "people", ["created_by_paper_trail_id"], name: "index_people_on_created_by_paper_trail_id", using: :btree
@@ -731,6 +740,8 @@ ActiveRecord::Schema.define(version: 20180512191015) do
     t.string   "created_by_paper_trail_type", limit: 255
     t.integer  "updated_by_paper_trail_id",   limit: 4
     t.string   "updated_by_paper_trail_type", limit: 255
+    t.string   "created_by_paper_trail_name", limit: 255
+    t.string   "updated_by_paper_trail_name", limit: 255
   end
 
   add_index "race_numbers", ["created_by_paper_trail_id"], name: "index_race_numbers_on_created_by_paper_trail_id", using: :btree
@@ -768,6 +779,8 @@ ActiveRecord::Schema.define(version: 20180512191015) do
     t.string   "created_by_paper_trail_type", limit: 255
     t.integer  "updated_by_paper_trail_id",   limit: 4
     t.string   "updated_by_paper_trail_type", limit: 255
+    t.string   "created_by_paper_trail_name", limit: 255
+    t.string   "updated_by_paper_trail_name", limit: 255
   end
 
   add_index "races", ["bar_points"], name: "index_races_on_bar_points", using: :btree
@@ -840,6 +853,8 @@ ActiveRecord::Schema.define(version: 20180512191015) do
     t.string   "created_by_paper_trail_type", limit: 255
     t.integer  "updated_by_paper_trail_id",   limit: 4
     t.string   "updated_by_paper_trail_type", limit: 255
+    t.string   "created_by_paper_trail_name", limit: 255
+    t.string   "updated_by_paper_trail_name", limit: 255
   end
 
   add_index "refunds", ["created_by_paper_trail_id"], name: "index_refunds_on_created_by_paper_trail_id", using: :btree
@@ -959,6 +974,8 @@ ActiveRecord::Schema.define(version: 20180512191015) do
     t.string   "created_by_paper_trail_type", limit: 255
     t.integer  "updated_by_paper_trail_id",   limit: 4
     t.string   "updated_by_paper_trail_type", limit: 255
+    t.string   "created_by_paper_trail_name", limit: 255
+    t.string   "updated_by_paper_trail_name", limit: 255
   end
 
   add_index "teams", ["created_by_paper_trail_id"], name: "index_teams_on_created_by_paper_trail_id", using: :btree
@@ -999,7 +1016,6 @@ ActiveRecord::Schema.define(version: 20180512191015) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "reverted_from",  limit: 4
-    t.text     "object_changes", limit: 4294967295
   end
 
   add_index "versions", ["created_at"], name: "index_versions_on_created_at", using: :btree

@@ -87,18 +87,16 @@ module Teams
 
     test "delete updated by" do
       team = FactoryBot.create(:team)
-      person = FactoryBot.create(:person)
-      team.updated_by = person
+      person = FactoryBot.create(:person, name: "Admin")
+      team.updater = person
       team.name = "7-11"
       team.save!
-      assert_equal person, team.versions.last.user, " version user"
-      assert_equal person, team.updated_by_person, "updated_by_person"
+      assert_equal "Admin", team.updated_by_paper_trail_name, "updated_by_paper_trail_name"
 
       person.destroy
       assert !Person.exists?(person.id), "Updater Person should be destroyed"
 
-      assert_nil team.versions(true).last.user, " version user"
-      assert_nil team.updated_by_person, "updated_by_person"
+      assert_equal "Admin", team.updated_by_paper_trail_name, "updated_by_paper_trail_name"
     end
   end
 end

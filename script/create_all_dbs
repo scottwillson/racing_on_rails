@@ -11,9 +11,9 @@ puts `DISABLE_SPRING=1 rake db:setup`
 end
 
 puts `DISABLE_SPRING=1 rake parallel:create`
-puts `DISABLE_SPRING=1 rake parallel:prepare`
+puts `DISABLE_SPRING=1 rake parallel:setup`
 
-%w[aba mbra obra wsba].each do |association|
+%w[obra].each do |association|
   puts association
   `./script/local #{association}`
   puts "Create databases"
@@ -30,5 +30,5 @@ puts `DISABLE_SPRING=1 rake parallel:prepare`
   puts `DISABLE_SPRING=1 rake db:setup RAILS_ENV=test`
   puts `DISABLE_SPRING=1 rake db:setup`
   puts `DISABLE_SPRING=1 rake parallel:create`
-  puts `DISABLE_SPRING=1 rake parallel:prepare`
+  puts `DISABLE_SPRING=1 rake parallel:setup`
 end

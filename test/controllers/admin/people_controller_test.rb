@@ -50,7 +50,7 @@ module Admin
 
     test "edit created by import file" do
       alice = FactoryBot.create(:person)
-      alice.updated_by = ImportFile.create!(name: "some_very_long_import_file_name.xls")
+      alice.updater = ImportFile.create!(name: "some_very_long_import_file_name.xls")
       alice.save!
 
       get(:edit, id: alice.to_param)
@@ -84,7 +84,8 @@ module Admin
       assert_nil(knowlsons.first.member_to, "member_to after update")
       assert_equal(@administrator, knowlsons.first.created_by, "created by")
       assert_equal("Candi Murray", knowlsons.first.created_by.name, "created by")
-      assert_equal(@administrator, knowlsons.first.created_by_paper_trail, "created_by_paper_trail")
+      assert_equal(@administrator.id, knowlsons.first.created_by_paper_trail_id, "created_by_paper_trail_id")
+      assert_equal("Person", knowlsons.first.created_by_paper_trail_type, "created_by_paper_trail)_type")
     end
 
     test "update new number" do
@@ -124,8 +125,8 @@ module Admin
         assert_equal("AZY", molly.xc_number(true, 2008), "MTB number should be updated")
         assert_nil(molly.member_from, "member_from after update")
         assert_nil(molly.member_to, "member_to after update")
-        assert_nil(RaceNumber.find(molly_road_number.to_param).updated_by_person, "updated_by_person")
-        assert_equal(@administrator, RaceNumber.find_by(value: "AZY").updated_by_person, "updated_by_person")
+        assert_nil(RaceNumber.find(molly_road_number.to_param).updated_by_paper_trail_name, "updated_by_paper_trail_name")
+        assert_equal("Candi Murray", RaceNumber.find_by(value: "AZY").updated_by_paper_trail_name, "updated_by_paper_trail_name")
       end
     end
 
@@ -142,7 +143,7 @@ module Admin
       molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron", road_number: "2", team: vanilla)
       Alias.create!(name: "Mollie Cameron", person: molly)
       FactoryBot.create :result, person: molly, team: vanilla
-      assert_equal 1, molly.versions.size, "versions"
+      assert_equal 1, molly.paper_trail_versions.size, "versions"
       molly_road_number = RaceNumber.first
 
       put(:update, "commit" => "Save",
@@ -172,16 +173,16 @@ module Admin
       assert_equal_dates("2004-12-31", molly.member_to, "member_to after update")
       assert_equal(true, molly.ccx_only?, "ccx_only?")
 
-      assert_equal 2, molly.versions.size, "versions"
-      version = molly.versions.last
-      assert_equal @administrator, version.user, "version user"
-      changes = version.changes
+      assert_equal 2, molly.paper_trail_versions.size, "versions"
+      version = molly.paper_trail_versions.last
+      assert_equal @administrator.name, version.paper_trail_originator, "version user"
+      changes = version.changeset
       assert_equal 26, changes.size, "changes"
       change = changes["team_id"]
       assert_not_nil change, "Should have change for team ID"
       assert_equal vanilla.id, change.first, "Team ID before"
       assert_nil change.last, "Team ID after"
-      assert_equal @administrator, molly.updated_by_person, "updated_by_person"
+      assert_equal @administrator.name, molly.updated_by_paper_trail_name, "updated_by_paper_trail_name"
     end
 
     test "update bad member from date" do

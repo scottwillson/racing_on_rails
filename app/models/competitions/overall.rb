@@ -15,7 +15,7 @@ module Competitions
         transaction do
           parent = ::MultiDayEvent.year(year).where(name: parent_event_name).first
 
-          overall = parent.try(:overall)
+          overall = parent&.overall
           if parent&.any_results_including_children?
             unless overall
               # parent.create_overall will create an instance of Overall, which is probably not what we want

@@ -31,7 +31,7 @@ module Admin
     end
 
     def create
-      team_params[:updated_by] = current_person
+      team_params[:updater] = current_person
       @team = Team.new(team_params)
 
       if @team.save

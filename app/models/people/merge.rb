@@ -119,6 +119,7 @@ module People
             results << other_person.results
 
             begin
+              paper_trail_versions << other_person.paper_trail_versions
               versions << other_person.versions
             rescue ActiveRecord::SerializationTypeMismatch => e
               logger.error e
