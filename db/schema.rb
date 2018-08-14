@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180526165321) do
+ActiveRecord::Schema.define(version: 20180814145545) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -139,8 +139,6 @@ ActiveRecord::Schema.define(version: 20180526165321) do
     t.integer  "event_id",                    limit: 4,                                        null: false
     t.string   "name",                        limit: 255
     t.string   "code",                        limit: 255,                                      null: false
-    t.integer  "created_by_id",               limit: 4
-    t.string   "created_by_type",             limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.decimal  "amount",                                  precision: 10, scale: 2
@@ -495,8 +493,6 @@ ActiveRecord::Schema.define(version: 20180526165321) do
     t.string   "created_by_paper_trail_type", limit: 255
     t.integer  "updated_by_paper_trail_id",   limit: 4
     t.string   "updated_by_paper_trail_type", limit: 255
-    t.string   "created_by_paper_trail_name", limit: 255
-    t.string   "updated_by_paper_trail_name", limit: 255
   end
 
   add_index "pages", ["created_by_paper_trail_id"], name: "index_pages_on_created_by_paper_trail_id", using: :btree
