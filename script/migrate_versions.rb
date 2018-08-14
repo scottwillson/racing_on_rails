@@ -4,15 +4,27 @@ puts "Copy versions to PaperTrail"
 
 RacingOnRails::PaperTrail::Version.delete_all
 
-[
-  DiscountCode,
+types = [
   Event,
   Person,
   Race,
   RaceNumber,
-  Refund,
   Team
-].each do |record_class|
+]
+
+if RacingAssociation.current.short_name == "OBRA"
+  types = [
+    DiscountCode,
+    Event,
+    Person,
+    Race,
+    RaceNumber,
+    Refund,
+    Team
+  ]
+end
+
+types.each do |record_class|
 
   RacingOnRails::PaperTrail::Version.transaction do
     count = record_class.count
@@ -47,7 +59,15 @@ RacingOnRails::PaperTrail::Version.delete_all
           attributes.delete(:order_id)
           attributes.delete(:use_for)
 
-          attributes.delete(:status) if record.is_a?(DiscountCode)
+          if RacingAssociation.current.short_name == "OBRA"
+            attributes.delete(:status) if record.is_a?(DiscountCode)
+          end
+
+          name = version.user&.to_s
+          if version.user.respond_to?(:name)
+            name = version.user&.name
+          end
+
 
           RacingOnRails::PaperTrail::Version.create!(
             created_at: version.updated_at,
@@ -56,7 +76,7 @@ RacingOnRails::PaperTrail::Version.delete_all
             item_id: record.id,
             object: attributes.to_yaml,
             object_changes: version.modifications.to_yaml,
-            whodunnit: version.user&.name
+            whodunnit: name
           )
         rescue ActiveModel::MissingAttributeError => e
           puts "#{e} for #{record_class} ID #{record.id} version #{version_index} version ID #{version.id}"
