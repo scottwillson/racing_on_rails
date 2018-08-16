@@ -16,7 +16,7 @@ class DuplicatePerson
 
   def self.all_grouped_by_name(limit)
     names = new_names(duplicate_names, limit)
-    Person.includes(:team, versions: :user).where(name: names).group_by { |p| p.name.downcase }
+    Person.includes(:team).where(name: names).group_by { |p| p.name.downcase }
   end
 
   def self.duplicate_names

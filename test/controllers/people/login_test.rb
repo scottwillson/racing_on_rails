@@ -23,8 +23,8 @@ class LoginTest < ActionController::TestCase
 
     assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
     person = Person.last
-    assert_equal "racer@example.com", person.created_by_paper_trail_name, "created_by_paper_trail_name"
-    assert_equal "Person", person.created_by_paper_trail_type, "created_by_paper_trail_type"
+    assert_equal "racer@example.com", person.created_by_name, "created_by_name"
+    assert_equal "Person", person.created_by_type, "created_by_type"
   end
 
   test "create login with token" do

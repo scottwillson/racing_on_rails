@@ -8,7 +8,6 @@
 class Team < ActiveRecord::Base
   include Export::Teams
   include Names::Nameable
-  include RacingOnRails::VestalVersions::Versioned
   include RacingOnRails::PaperTrail::Versions
 
   before_save :destroy_shadowed_aliases

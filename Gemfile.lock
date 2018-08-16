@@ -45,14 +45,6 @@ GIT
       nokogiri (~> 1)
       rubyzip (~> 1.1, < 2.0.0)
 
-GIT
-  remote: https://github.com/scottwillson/vestal_versions.git
-  revision: 7bf136030e307ac42d9d6aceaf7719677080d9f6
-  specs:
-    vestal_versions (2.0.2)
-      activerecord (>= 4.2, < 5)
-      activesupport (>= 4.2, < 5)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -553,7 +545,6 @@ DEPENDENCIES
   timecop
   truncate_html
   uglifier
-  vestal_versions!
   will_paginate (~> 3.0)
   will_paginate-bootstrap!
   yui-compressor

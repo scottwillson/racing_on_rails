@@ -77,74 +77,66 @@ module People
         end
 
         Person.transaction do
-          merge_version do
-            before_merge other_person
+          before_merge other_person
 
-            if login.blank? && other_person.login.present?
-              self.login = other_person.login
-              self.crypted_password = other_person.crypted_password
-              other_person.skip_version do
-                other_person.update login: nil
-              end
+          if login.blank? && other_person.login.present?
+            self.login = other_person.login
+            self.crypted_password = other_person.crypted_password
+            PaperTrail.request(enabled: false) do
+              other_person.update login: nil
             end
-            self.member_from = other_person.member_from if member_from.nil? || (other_person.member_from && other_person.member_from < member_from)
-            self.member_to = other_person.member_to if member_to.nil? || (other_person.member_to && other_person.member_to > member_to)
-
-            other_person_is_newer = other_person.created_at > created_at
-            MERGE_ATTRIBUTES.each do |attribute|
-              send("#{attribute}=", other_person.send(attribute)) if other_person.send(attribute).present? && (send(attribute).blank? || other_person_is_newer)
-            end
-
-            if date_of_birth && other_person.date_of_birth && date_of_birth.day == 1
-              self.date_of_birth = Time.zone.local(date_of_birth.year, date_of_birth.month, other_person.date_of_birth.day)
-            end
-
-            # Prevent unique index collision
-            other_person.update_column :license, nil
-
-            save!
-
-            # save! can trigger automatic deletion for people created for old orders
-            # if that happens, don't try and merge associations
-            return true unless Person.exists?(id)
-
-            aliases << other_person.aliases
-            editor_requests << other_person.editor_requests
-            editors << (other_person.editors - editors).uniq.reject { |e| e == self }
-            events << other_person.events
-            event_teams = event_team_memberships.map(&:event_team_id)
-            event_team_memberships << other_person.event_team_memberships.reject { |e| event_teams.include?(e.event_team_id) }
-            names << other_person.names
-            race_numbers << other_person.race_numbers
-            results << other_person.results
-
-            begin
-              paper_trail_versions << other_person.paper_trail_versions
-              versions << other_person.versions
-            rescue ActiveRecord::SerializationTypeMismatch => e
-              logger.error e
-            end
-
-            versions.sort_by(&:created_at).each_with_index do |version, index|
-              version.number = index + 2
-              version.save!
-            end
-
-            other_person.event_team_memberships.reload.clear
-            Person.delete other_person.id
-            existing_alias = aliases.detect { |a| a.name.casecmp(other_person.name) == 0 }
-            aliases.create(name: other_person.name) if existing_alias.nil? && Person.find_all_by_name(other_person.name).empty?
           end
-        end
+          self.member_from = other_person.member_from if member_from.nil? || (other_person.member_from && other_person.member_from < member_from)
+          self.member_to = other_person.member_to if member_to.nil? || (other_person.member_to && other_person.member_to > member_to)
 
-        ActiveSupport::Notifications.instrument(
-          "success.merge.people.admin.racing_on_rails",
-          person_id: id,
-          person_name: name,
-          other_id: other_person.try(:id),
-          other_name: other_person.try(:name)
-        )
+          other_person_is_newer = other_person.created_at > created_at
+          MERGE_ATTRIBUTES.each do |attribute|
+            send("#{attribute}=", other_person.send(attribute)) if other_person.send(attribute).present? && (send(attribute).blank? || other_person_is_newer)
+          end
+
+          if date_of_birth && other_person.date_of_birth && date_of_birth.day == 1
+            self.date_of_birth = Time.zone.local(date_of_birth.year, date_of_birth.month, other_person.date_of_birth.day)
+          end
+
+          # Prevent unique index collision
+          other_person.update_column :license, nil
+
+          save!
+
+          # save! can trigger automatic deletion for people created for old orders
+          # if that happens, don't try and merge associations
+          return true unless Person.exists?(id)
+
+          aliases << other_person.aliases
+          editor_requests << other_person.editor_requests
+          editors << (other_person.editors - editors).uniq.reject { |e| e == self }
+          events << other_person.events
+          event_teams = event_team_memberships.map(&:event_team_id)
+          event_team_memberships << other_person.event_team_memberships.reject { |e| event_teams.include?(e.event_team_id) }
+          names << other_person.names
+          race_numbers << other_person.race_numbers
+          results << other_person.results
+
+          begin
+            versions << other_person.versions
+          rescue ActiveRecord::SerializationTypeMismatch => e
+            logger.error e
+          end
+
+          other_person.event_team_memberships.reload.clear
+          Person.delete other_person.id
+          existing_alias = aliases.detect { |a| a.name.casecmp(other_person.name) == 0 }
+          aliases.create(name: other_person.name) if existing_alias.nil? && Person.find_all_by_name(other_person.name).empty?
+        end
       end
+
+      ActiveSupport::Notifications.instrument(
+        "success.merge.people.admin.racing_on_rails",
+        person_id: id,
+        person_name: name,
+        other_id: other_person.try(:id),
+        other_name: other_person.try(:name)
+      )
 
       true
     end

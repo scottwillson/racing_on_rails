@@ -50,12 +50,12 @@ module Events
       _attributes.delete "slug"
       _attributes.delete "updated_at"
       _attributes.delete "year"
-      _attributes.delete "created_by_paper_trail_id"
-      _attributes.delete "created_by_paper_trail_name"
-      _attributes.delete "created_by_paper_trail_type"
-      _attributes.delete "updated_by_paper_trail_id"
-      _attributes.delete "updated_by_paper_trail_name"
-      _attributes.delete "updated_by_paper_trail_type"
+      _attributes.delete "created_by_id"
+      _attributes.delete "created_by_name"
+      _attributes.delete "created_by_type"
+      _attributes.delete "updated_by_id"
+      _attributes.delete "updated_by_name"
+      _attributes.delete "updated_by_type"
       _attributes
     end
 

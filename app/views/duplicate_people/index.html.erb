@@ -62,7 +62,7 @@
               <%= link_to person.created_at.to_s(:mdY), person_versions_path(person) %>
             </td>
             <td class="created_by">
-              <%= person.created_by.try(:name) %>
+              <%= person.created_by_name %>
             </td>
             <td class="orders numeric">
               <%= person.orders.count if person.respond_to?(:orders) && person.orders.count > 0 %>

@@ -11,7 +11,6 @@
 class Race < ActiveRecord::Base
   include Comparable
   include Export::Races
-  include RacingOnRails::VestalVersions::Versioned
   include RacingOnRails::PaperTrail::Versions
   include Sanctioned
 

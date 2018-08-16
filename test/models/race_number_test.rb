@@ -30,8 +30,8 @@ class RaceNumberTest < ActiveSupport::TestCase
     molly = FactoryBot.create(:person)
     elkhorn = NumberIssuer.create!(name: "Elkhorn Classic SR")
     race_number = RaceNumber.create!(person: alice, value: "A103", year: 2001, number_issuer: elkhorn, discipline: road, updater: molly)
-    assert_equal molly, race_number.created_by, "created_by"
-    assert_equal molly.name, race_number.updated_by_paper_trail_name, "update_by"
+    assert_equal molly.name, race_number.created_by_name, "created_by_name"
+    assert_equal molly.name, race_number.updated_by_name, "updated_by_name"
     assert_equal(alice, race_number.person, "New number person")
     assert_equal(2001, race_number.year, "New number year")
     assert_equal(elkhorn, race_number.number_issuer, "New number_issuer person")

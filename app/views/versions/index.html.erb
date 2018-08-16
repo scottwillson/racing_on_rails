@@ -3,11 +3,11 @@
 
 <h2><%= @person.name %></h2>
 
-<% if @paper_trail_versions.empty? %>
+<% if @versions.empty? %>
   <div class="alert alert-info">No other versions</div>
 <% end -%>
 
-<%= render partial: "version", collection: @paper_trail_versions.sort_by(&:created_at).reverse %>
+<%= render partial: "version", collection: @versions.sort_by(&:created_at).reverse %>
 
 <div class="row form-group">
   <div class="col-sm-12">

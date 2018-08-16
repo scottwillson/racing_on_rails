@@ -235,17 +235,15 @@ module Results
       assert_nil(chris_myers.team(true), "Chris Myers team should not be updated by results")
 
       browning = Person.find_by(name: "John Browning")
-      assert_equal(event, browning.created_by, "created_by")
-      assert_equal(event, browning.team.created_by, "team created_by")
-      assert_equal(event.name, browning.created_by.name, "created_by name")
-      assert_equal("SingleDayEvent", browning.created_by_paper_trail_type, "created_by_paper_trail")
-      assert_equal("SingleDayEvent", browning.updated_by_paper_trail_type, "updated_by_paper_trail")
-      assert_equal(event.id, browning.created_by_paper_trail_id, "team created_by_paper_trail")
-      assert_equal(event.id, browning.updated_by_paper_trail_id, "team updated_by_paper_trail")
-      assert_equal("SingleDayEvent", browning.team.created_by_paper_trail_type, "created_by_paper_trail")
-      assert_equal("SingleDayEvent", browning.team.updated_by_paper_trail_type, "updated_by_paper_trail")
-      assert_equal(event.id, browning.team.created_by_paper_trail_id, "team created_by_paper_trail")
-      assert_equal(event.id, browning.team.updated_by_paper_trail_id, "team updated_by_paper_trail")
+      assert_equal(event.name, browning.created_by_name, "created_by_name")
+      assert_equal("SingleDayEvent", browning.created_by_type, "created_by")
+      assert_equal("SingleDayEvent", browning.updated_by_type, "updated_by_paper_trail")
+      assert_equal(event.id, browning.created_by_id, "team created_by")
+      assert_equal(event.id, browning.updated_by_id, "team updated_by_paper_trail")
+      assert_equal("SingleDayEvent", browning.team.created_by_type, "created_by")
+      assert_equal("SingleDayEvent", browning.team.updated_by_type, "updated_by_paper_trail")
+      assert_equal(event.id, browning.team.created_by_id, "team created_by")
+      assert_equal(event.id, browning.team.updated_by_id, "team updated_by_paper_trail")
     end
 
     test "import and reuse races" do

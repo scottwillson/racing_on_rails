@@ -308,7 +308,7 @@ module Admin
     def assign_previous
       @previous = nil
 
-      @previous = @event.previous if @event.races.empty?
+      @previous = @event.previous_year if @event.races.empty?
     end
 
     def event_params
@@ -374,12 +374,12 @@ module Admin
         :website
       )
       _params.delete(:type)
-      _params.delete(:created_by_paper_trail_id)
-      _params.delete(:created_by_paper_trail_name)
-      _params.delete(:created_by_paper_trail_type)
-      _params.delete(:updated_by_paper_trail_id)
-      _params.delete(:updated_by_paper_trail_name)
-      _params.delete(:updated_by_paper_trail_type)
+      _params.delete(:created_by_id)
+      _params.delete(:created_by_name)
+      _params.delete(:created_by_type)
+      _params.delete(:updated_by_id)
+      _params.delete(:updated_by_name)
+      _params.delete(:updated_by_type)
       _params
     end
   end

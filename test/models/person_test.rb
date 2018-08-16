@@ -14,10 +14,10 @@ class PersonTest < ActiveSupport::TestCase
     person.team = team
     admin = FactoryBot.create(:administrator)
     Person.current = admin
-    assert_nil person.created_by_paper_trail_name, "created_by_paper_trail_name"
-    assert_nil person.updated_by_paper_trail_name, "updated_by_paper_trail_name"
-    assert_nil person.created_by_paper_trail_type, "created_by_paper_trail_type"
-    assert_nil person.updated_by_paper_trail_type, "updated_by_paper_trail_type"
+    assert_nil person.created_by_name, "created_by_name"
+    assert_nil person.updated_by_name, "updated_by_name"
+    assert_nil person.created_by_type, "created_by_type"
+    assert_nil person.updated_by_type, "updated_by_type"
 
     person.save!
     person.reload
@@ -25,38 +25,35 @@ class PersonTest < ActiveSupport::TestCase
     assert Team.exists?(name: "7-11"), "7-11 should be in DB"
     assert_equal person.team, person.team, "person.team"
 
-    assert_equal admin, person.created_by, "created_by"
-    assert_equal "Candi Murray", person.updated_by_paper_trail_name, "updated_by_paper_trail_name"
+    assert_equal "Candi Murray", person.created_by_name, "created_by_name"
+    assert_equal "Candi Murray", person.updated_by_name, "updated_by_name"
     assert_equal admin, person.updated_by, "updated_by"
     assert_nil person.updater, "updater"
 
-    assert_equal 1, person.paper_trail_versions.size, "Should create initial version"
-    assert_equal "Candi Murray", person.created_by_paper_trail_name, "created_by_paper_trail_name"
-    assert_equal "Candi Murray", person.updated_by_paper_trail_name, "updated_by_paper_trail_name"
-    assert_equal "Person", person.created_by_paper_trail_type, "created_by_paper_trail_type"
-    assert_equal "Person", person.updated_by_paper_trail_type, "updated_by_paper_trail_type"
+    assert_equal 1, person.versions.size, "Should create initial version"
+    assert_equal "Candi Murray", person.created_by_name, "created_by_name"
+    assert_equal "Candi Murray", person.updated_by_name, "updated_by_name"
+    assert_equal "Person", person.created_by_type, "created_by_type"
+    assert_equal "Person", person.updated_by_type, "updated_by_type"
 
     another_admin = FactoryBot.create(:person)
     Person.current = another_admin
     person.update! city: "Boulder"
     person.reload
 
-    assert_equal 2, person.paper_trail_versions.size, "Should create second version after update"
-    assert_equal admin, person.created_by, "created_by"
+    assert_equal 2, person.versions.size, "Should create second version after update"
     assert_equal another_admin, person.updated_by, "updated_by"
-    assert_equal "Candi Murray", person.created_by_paper_trail_name, "created_by_paper_trail_name"
-    assert_equal another_admin.name, person.updated_by_paper_trail_name, "updated_by_paper_trail_name"
-    assert_equal "Person", person.created_by_paper_trail_type, "created_by_paper_trail_type"
-    assert_equal "Person", person.updated_by_paper_trail_type, "updated_by_paper_trail_type"
+    assert_equal "Candi Murray", person.created_by_name, "created_by_name"
+    assert_equal another_admin.name, person.updated_by_name, "updated_by_name"
+    assert_equal "Person", person.created_by_type, "created_by_type"
+    assert_equal "Person", person.updated_by_type, "updated_by_type"
 
     file = ImportFile.create!(name: "/tmp/import.xls")
     person.update!(name: "Andrew Hampsten", updater: file)
-    assert_equal admin, person.created_by, "created_by"
-    assert_equal file, person.updated_by, "updated_by"
-    assert_equal "Candi Murray", person.created_by_paper_trail_name, "created_by_paper_trail_name"
-    assert_equal "/tmp/import.xls", person.updated_by_paper_trail_name, "updated_by_paper_trail_name"
-    assert_equal "Person", person.created_by_paper_trail_type, "created_by_paper_trail_type"
-    assert_equal "ImportFile", person.updated_by_paper_trail_type, "updated_by_paper_trail_type"
+    assert_equal "Candi Murray", person.created_by_name, "created_by_name"
+    assert_equal "/tmp/import.xls", person.updated_by_name, "updated_by_name"
+    assert_equal "Person", person.created_by_type, "created_by_type"
+    assert_equal "ImportFile", person.updated_by_type, "updated_by_type"
   end
 
   test "save existing team" do
@@ -212,7 +209,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal "Gentle Lovers", person_to_keep.team_name, "should set team from person to merge"
     assert_equal 1, EventTeamMembership.count, "event team memberships"
 
-    assert_equal 3, person_to_keep.paper_trail_versions.size, "versions in #{person_to_keep.paper_trail_versions}"
+    assert_equal 3, person_to_keep.versions.size, "versions in #{person_to_keep.versions}"
   end
 
   test "merge login" do
@@ -222,15 +219,15 @@ class PersonTest < ActiveSupport::TestCase
     Timecop.freeze(1.hour.from_now) do
       person_to_merge_old_password = person_to_merge.crypted_password
 
-      assert_equal 1, person_to_merge.paper_trail_versions.size, "versions"
-      assert_equal 1, person_to_keep.paper_trail_versions.size, "versions"
+      assert_equal 1, person_to_merge.versions.size, "versions"
+      assert_equal 1, person_to_keep.versions.size, "versions"
       person_to_keep.merge person_to_merge
-      assert_equal 4, person_to_keep.paper_trail_versions.size, "Merge should keep initial versions from both, but: #{person_to_keep.paper_trail_versions}"
+      assert_equal 3, person_to_keep.versions.size, "Merge should keep initial versions from both, but: #{person_to_keep.versions}"
 
       person_to_keep.reload
       assert_equal "tonkin", person_to_keep.login, "Should merge login"
       assert_equal person_to_merge_old_password, person_to_keep.crypted_password, "Should merge password"
-      changes = person_to_keep.paper_trail_versions.last.changeset
+      changes = person_to_keep.versions.last.changeset
       assert_equal [nil, "tonkin"], changes["login"], "login change should be recorded"
     end
   end
@@ -938,8 +935,8 @@ class PersonTest < ActiveSupport::TestCase
     person.reload
     assert_equal "7890", person.road_number, "Road number after add with nil discipline"
     assert_equal event, person.race_numbers.first.created_by, "Number created_by"
-    assert_equal "Bike Race", person.race_numbers.first.created_by_paper_trail_name, "Number created_by_paper_trail"
-    assert_equal "SingleDayEvent", person.race_numbers.first.created_by_paper_trail_type, "Number created_by_paper_trail"
+    assert_equal "Bike Race", person.race_numbers.first.created_by_name, "Number created_by"
+    assert_equal "SingleDayEvent", person.race_numbers.first.created_by_type, "Number created_by"
   end
 
   test "add number from non number discipline" do

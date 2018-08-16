@@ -5,10 +5,10 @@ module Events
     extend ActiveSupport::Concern
 
     def previous?
-      previous.present?
+      previous_year.present?
     end
 
-    def previous
+    def previous_year
       exact_match = Event.find_by(name: name, year: year - 1)
       return exact_match if exact_match
 
@@ -32,9 +32,9 @@ module Events
     def add_races_from_previous_year
       categories = races.map(&:category)
 
-      previous.races
-              .reject { |r| r.category.in? categories }
-              .each { |r| add_race_from_previous_year(r) }
+      previous_year.races
+                   .reject { |r| r.category.in? categories }
+                   .each { |r| add_race_from_previous_year(r) }
     end
 
     def add_race_from_previous_year(race)

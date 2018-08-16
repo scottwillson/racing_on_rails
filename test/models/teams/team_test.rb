@@ -91,12 +91,12 @@ module Teams
       team.updater = person
       team.name = "7-11"
       team.save!
-      assert_equal "Admin", team.updated_by_paper_trail_name, "updated_by_paper_trail_name"
+      assert_equal "Admin", team.updated_by_name, "updated_by_name"
 
       person.destroy
       assert !Person.exists?(person.id), "Updater Person should be destroyed"
 
-      assert_equal "Admin", team.updated_by_paper_trail_name, "updated_by_paper_trail_name"
+      assert_equal "Admin", team.updated_by_name, "updated_by_name"
     end
   end
 end

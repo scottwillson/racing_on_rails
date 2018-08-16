@@ -2,7 +2,7 @@
 
 puts "Copy versions to PaperTrail"
 
-RacingOnRails::PaperTrail::Version.delete_all
+PaperTrail::Version.delete_all
 
 types = [
   Event,
@@ -26,7 +26,7 @@ end
 
 types.each do |record_class|
 
-  RacingOnRails::PaperTrail::Version.transaction do
+  PaperTrail::Version.transaction do
     count = record_class.count
     index = 0
     puts
@@ -69,7 +69,7 @@ types.each do |record_class|
           end
 
 
-          RacingOnRails::PaperTrail::Version.create!(
+          PaperTrail::Version.create!(
             created_at: version.updated_at,
             event: version_index == 0 ? "create" : "update",
             item_type: version.versioned_type,

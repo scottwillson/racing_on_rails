@@ -19,7 +19,6 @@ class Person < ActiveRecord::Base
   include People::Names
   include People::Numbers
   include RacingOnRails::PaperTrail::Versions
-  include RacingOnRails::VestalVersions::Versioned
   include SentientUser
 
   acts_as_authentic do |config|
