@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180815163446) do
+ActiveRecord::Schema.define(version: 20180816022326) do
 
   create_table "adjustments", force: :cascade do |t|
     t.integer  "order_id",    limit: 4
@@ -706,6 +706,8 @@ ActiveRecord::Schema.define(version: 20180815163446) do
     t.boolean  "quantity",                                             default: false, null: false
     t.integer  "default_quantity",          limit: 4,                  default: 1,     null: false
     t.boolean  "team_name",                                            default: false, null: false
+    t.boolean  "string_value",                                         default: false
+    t.string   "string_value_placeholder",  limit: 255
   end
 
   add_index "products", ["event_id"], name: "index_products_on_event_id", using: :btree
