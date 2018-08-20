@@ -19,12 +19,12 @@ FactoryBot.define do
   end
 
   factory :discipline do
-    bar true
-    name "Road"
-    numbers true
+    bar { true }
+    name { "Road" }
+    numbers { true }
 
     factory :cyclocross_discipline do
-      name "Cyclocross"
+      name { "Cyclocross" }
       after(:create) do |d|
         d.discipline_aliases.create!(alias: "ccx")
         d.discipline_aliases.create!(alias: "cx")
@@ -32,7 +32,7 @@ FactoryBot.define do
     end
 
     factory :mtb_discipline do
-      name "Mountain Bike"
+      name { "Mountain Bike" }
       after(:create) { |d| d.discipline_aliases.create!(alias: "mtb") }
     end
   end
@@ -54,7 +54,7 @@ FactoryBot.define do
     end
 
     factory :stage_race, class: "MultiDayEvent" do |_parent|
-      date Time.zone.local(2005, 7, 11)
+      date { Time.zone.local(2005, 7, 11) }
       children do |e|
         [
         e.association(:event, date: Time.zone.local(2005, 7, 11), parent_id: e.id),
@@ -68,7 +68,7 @@ FactoryBot.define do
     end
 
     factory :time_trial_event do
-      discipline "Time Trial"
+      discipline { "Time Trial" }
     end
   end
 
@@ -89,30 +89,30 @@ FactoryBot.define do
   end
 
   factory :number_issuer do
-    name "CBRA"
+    name { "CBRA" }
   end
 
   factory :page do
-    body "<p>This is a plain page</p>"
-    path "plain"
-    slug "plain"
-    title "Plain"
-    updated_at Time.zone.local(2007)
-    created_at Time.zone.local(2007)
+    body { "<p>This is a plain page</p>" }
+    path { "plain" }
+    slug { "plain" }
+    title { "Plain" }
+    updated_at { Time.zone.local(2007) }
+    created_at { Time.zone.local(2007) }
   end
 
   factory :person do
-    first_name "Ryan"
+    first_name { "Ryan" }
     sequence(:last_name) { |n| "Weaver#{n}" }
     name { "#{first_name} #{last_name}".strip }
     member_from { Time.zone.local(2000).beginning_of_year.to_date }
     member_to   { Time.zone.now.end_of_year.to_date }
 
     factory :past_member do
-      first_name "Kevin"
-      last_name "Condron"
-      member_to Time.zone.local(2003).beginning_of_year
-      name "Kevin Condron"
+      first_name { "Kevin" }
+      last_name { "Condron" }
+      member_to { Time.zone.local(2003).beginning_of_year }
+      name { "Kevin Condron" }
     end
 
     factory :person_with_login do
@@ -125,12 +125,12 @@ FactoryBot.define do
       perishable_token { Authlogic::Random.friendly_token }
 
       factory :administrator do
-        first_name "Candi"
-        last_name "Murray"
-        administrator true
-        login "admin@example.com"
-        email "admin@example.com"
-        home_phone "(503) 555-1212"
+        first_name { "Candi" }
+        last_name { "Murray" }
+        administrator { true }
+        login { "admin@example.com" }
+        email { "admin@example.com" }
+        home_phone { "(503) 555-1212" }
       end
 
       factory :promoter do
@@ -140,19 +140,19 @@ FactoryBot.define do
   end
 
   factory :photo do
-    caption "Photo Caption"
+    caption { "Photo Caption" }
     image { File.new("#{Rails.root}/test/fixtures/photo.jpg") }
-    title "Photo title"
-    height 100
-    width 137
+    title { "Photo title" }
+    height { 100 }
+    width { 137 }
   end
 
   factory :post do
     mailing_list
-    subject "[OBRA Chat] Foo"
-    from_email "foo@bar.net"
-    from_name "Foo"
-    body "Test message"
+    subject { "[OBRA Chat] Foo" }
+    from_email { "foo@bar.net" }
+    from_name { "Foo" }
+    body { "Test message" }
     date { Time.zone.today }
   end
 
@@ -183,7 +183,7 @@ FactoryBot.define do
     team
 
     factory :time_trial_result do
-      time 1800
+      time { 1800 }
       association :race, factory: :time_trial_race
     end
 
@@ -193,7 +193,7 @@ FactoryBot.define do
   end
 
   factory :team do
-    member true
+    member { true }
     sequence(:name) { |n| "Team #{n}" }
   end
 
