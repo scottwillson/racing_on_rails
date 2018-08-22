@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rake/testtask.rb"
+
 Rake::TestTask.new("test:acceptance") do |t|
   t.libs << "test"
   t.pattern = "tests_isolated/acceptance/**/*_test.rb"

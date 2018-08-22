@@ -1,9 +1,5 @@
-# frozen_string_literal: true
+# This file is used by Rack-based servers to start the application.
 
-# Add your own tasks in files placed in lib/tasks ending in .rake,
-# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
+require_relative 'config/environment'
 
-require File.expand_path("../config/application", __FILE__)
-require "rake"
-
-RacingOnRails::Application.load_tasks
+run Rails.application
