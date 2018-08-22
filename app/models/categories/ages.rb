@@ -67,8 +67,12 @@ module Categories
         ages_end = ((age_range_match[2].to_i + 1) / team_size(name)) - 1
         ages_begin..ages_end
       elsif name[/\d{3}\+/]
-        ages_begin = name[/(\d{3})\+/]
-        (ages_begin.to_i / team_size(name))..::Categories::MAXIMUM
+        if name["Clyde"]
+          ALL
+        else
+          ages_begin = name[/(\d{3})\+/]
+          (ages_begin.to_i / team_size(name))..::Categories::MAXIMUM
+        end
       elsif name["+"]
         if name["Junior"]
           (name[/(9|1\d)\+/].to_i)..JUNIORS.end

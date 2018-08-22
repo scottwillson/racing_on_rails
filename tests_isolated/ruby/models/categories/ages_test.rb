@@ -62,6 +62,11 @@ module Categories
       assert category.age_group?, "10..18 age_group?"
     end
 
+    def test_clydesdales
+      category = Stub.new
+      assert_equal 0..999, category.ages_from_name("Clydesdale 200+")
+    end
+
     def test_junior
       category = Stub.new
       assert !category.junior?, "No ages junior?"
