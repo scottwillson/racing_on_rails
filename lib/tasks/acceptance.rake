@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require "rake/testtask.rb"
+require "rails/test_unit/runner"
 
-Rake::TestTask.new("test:acceptance") do |t|
-  t.libs << "test"
-  t.pattern = "tests_isolated/acceptance/**/*_test.rb"
-  t.verbose = true
-  t.warning = false
+namespace :test do
+  task :acceptance do
+    test_files = FileList["tests_isolated/acceptance/**/*_test.rb"]
+    Rails::TestUnit::Runner.run test_files
+  end
 end
 
 namespace :test do

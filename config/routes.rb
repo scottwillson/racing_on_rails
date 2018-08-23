@@ -125,7 +125,8 @@ Rails.application.routes.draw do
       resources :races
     end
 
-    get ":controller/:id/aliases/:alias_id/destroy" => :destroy_alias, constraints: { id: /\d+/ }
+    get "/people/:id/aliases/:alias_id/destroy" => :destroy_alias, controller: :people, constraints: { id: /\d+/ }
+    get "/teams/:id/aliases/:alias_id/destroy" => :destroy_alias, controller: :team, constraints: { id: /\d+/ }
 
     get "/admin/results/:id/scores" => "admin/results#scores"
     get "/admin/racers" => "admin/racers#index"

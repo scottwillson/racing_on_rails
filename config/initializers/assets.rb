@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-RacingOnRails::Application.configure do
+Rails.application.config.assets.paths << Rails.root.join("node_modules")
+Rails.application.config.assets.version = "3.0"
+
+Rails.application.configure do
   config.assets.precompile += %w[
     admin.js
     apple-touch-icon.png

@@ -1,19 +1,34 @@
 # frozen_string_literal: true
 
-RacingOnRails::Application.configure do
+Rails.application.configure do
   config.action_controller.action_on_unpermitted_parameters = :raise
   config.action_controller.perform_caching                  = ENV["PERFORM_CACHING"] || false
+  config.action_mailer.perform_caching                      = false
   config.action_mailer.raise_delivery_errors                = false
+  config.action_view.raise_on_missing_translations          = true
   config.active_record.migration_error                      = :page_load
-  config.active_support.deprecation                         = :log
-  config.assets.css_compressor                              = false
+  config.active_record.verbose_query_logs                   = true
+  config.active_storage.service                             = :local
+  config.active_support.deprecation                         = :raise
   config.assets.debug                                       = true
-  config.assets.js_compressor                               = false
-  config.assets.raise_runtime_errors                        = true
+  config.assets.quiet                                       = true
   config.cache_classes                                      = ENV["CACHE_CLASSES"] || false
   config.consider_all_requests_local                        = true
   config.eager_load                                         = false
-  config.action_view.raise_on_missing_translations          = true
+  config.file_watcher                                       = ActiveSupport::EventedFileUpdateChecker
+
+  if Rails.root.join('tmp', 'caching-dev.txt').exist?
+    config.action_controller.perform_caching = true
+
+    config.cache_store = :memory_store
+    config.public_file_server.headers = {
+      'Cache-Control' => "public, max-age=#{2.days.to_i}"
+    }
+  else
+    config.action_controller.perform_caching = false
+
+    config.cache_store = :null_store
+  end
 
   config.after_initialize do
     Bullet.enable = ENV["BULLET"] || false

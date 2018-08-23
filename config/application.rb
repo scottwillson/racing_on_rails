@@ -8,7 +8,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module Test5
+module RacingOnRails
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
@@ -37,8 +37,6 @@ module RacingOnRails
     I18n.config.enforce_available_locales = true
 
     config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :team_observer unless ENV["SKIP_OBSERVERS"]
-
-    config.active_record.raise_in_transactional_callbacks = true
 
     # HP's proxy, among others, gets this wrong
     config.action_dispatch.ip_spoofing_check = false
