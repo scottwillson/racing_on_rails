@@ -52,7 +52,7 @@ module Teams
       assert_equal(0, Result.where(team_id: team_to_merge.id).count, "Gentle Lovers's results")
       assert_equal(0, Person.where(team_id: team_to_merge.id).count, "Gentle Lovers's people")
       assert_equal(0, Alias.where(aliasable_id: team_to_merge.id).count, "Gentle Lovers's aliases")
-      assert_same_elements(promoter_events, team_to_keep.events(true), "Should merge sponsored events")
+      assert_same_elements(promoter_events, team_to_keep.events.reload, "Should merge sponsored events")
       assert_equal 1, EventTeam.count, "event teams"
       assert_equal 1, team_to_keep.event_teams.reload.count, "event teams"
       assert_equal 2, EventTeamMembership.count, "event team memberships"

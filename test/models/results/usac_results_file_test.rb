@@ -43,7 +43,7 @@ module Results
       event = SingleDayEvent.create!
       results_file = USACResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt_usac.xls", __FILE__)), event)
       results_file.import
-      assert_equal("USCF, 2008, 563, 2012-05-11, Stage Race", event.races(true).first.notes, "Race notes")
+      assert_equal("USCF, 2008, 563, 2012-05-11, Stage Race", event.race.reload.first.notes, "Race notes")
     end
 
     def get_expected_races

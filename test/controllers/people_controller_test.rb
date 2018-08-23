@@ -116,7 +116,7 @@ class PeopleControllerTest < ActionController::TestCase
     login_as molly
     put :update, id: person.to_param, person: { team_name: "Gentle Lovers" }
     assert_redirected_to edit_person_path(person)
-    assert_equal gentle_lovers, person.reload.team(true), "Team should be updated"
+    assert_equal gentle_lovers, person.reload.team.reload, "Team should be updated"
   end
 
   test "account" do

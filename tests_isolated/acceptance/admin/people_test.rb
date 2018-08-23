@@ -140,7 +140,7 @@ class PeopleTest < AcceptanceTest
 
     assert Person.exists?(molly.id), "Should not have merged Molly"
     assert Person.exists?(matson.id), "Should not have merged Matson"
-    assert !molly.aliases(true).map(&:name).include?("Mark Matson"), "Should not add Matson alias"
+    assert !molly.aliases.reload.map(&:name).include?("Mark Matson"), "Should not add Matson alias"
 
     visit "/admin/people"
     press_return "name"
@@ -161,7 +161,7 @@ class PeopleTest < AcceptanceTest
     assert_page_has_content "Merged Mark Matson into Molly Cameron"
     assert Person.exists?(molly.id), "Should not have merged Molly"
     assert !Person.exists?(matson.id), "Should have merged Matson"
-    assert molly.aliases(true).map(&:name).include?("Mark Matson"), "Should add Matson alias"
+    assert molly.aliases.reload.map(&:name).include?("Mark Matson"), "Should add Matson alias"
   end
 
   test "export" do

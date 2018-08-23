@@ -78,7 +78,7 @@ class PersonTest < ActiveSupport::TestCase
     event.races.create!(category: senior_men).results.create!(team: team)
     team.aliases.create!(name: "Sorella Forte")
     assert_equal(0, team.names.reload.size, "names")
-    assert_equal(1, team.aliases(true).size, "Aliases")
+    assert_equal(1, team.aliases.reload.size, "Aliases")
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
 
     person = Person.new(name: "New Person", team_name: "Sorella Forte")
@@ -87,7 +87,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(1, Team.where(name: "Sorella Forte Elite Team").count, "Should have one Sorella Forte in database")
     team = Team.find_by(name: "Sorella Forte Elite Team")
     assert_equal(0, team.names.reload.size, "names")
-    assert_equal(1, team.aliases(true).size, "Aliases")
+    assert_equal(1, team.aliases.reload.size, "Aliases")
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
   end
 
@@ -179,7 +179,7 @@ class PersonTest < ActiveSupport::TestCase
     erik_alias = aliases.detect { |a| a.name == person_to_merge.name }
     assert_not_nil(erik_alias, "Molly should have merged person's name as an alias")
     assert_equal(3, Alias.where(aliasable_id: person_to_keep.id).count, "Molly's aliases")
-    assert_equal(3, person_to_keep.race_numbers(true).size, "Target person's race numbers: #{person_to_keep.race_numbers.map(&:value)}")
+    assert_equal(3, person_to_keep.race_numbers.reload.size, "Target person's race numbers: #{person_to_keep.race_numbers.map(&:value)}")
     race_numbers = person_to_keep.race_numbers.sort
     assert_equal("102", race_numbers[0].value, "Person's race number value")
     assert_equal(association, race_numbers[0].number_issuer, "Person's race number issuer")
@@ -191,7 +191,7 @@ class PersonTest < ActiveSupport::TestCase
     assert !Person.where(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name).exists?, "#{person_to_merge.name} should not be in DB"
     assert_equal(0, Result.where(person_id: person_to_merge.id).count, "Tonkin's results")
     assert_equal(0, Alias.where(aliasable_id: person_to_merge.id).count, "Tonkin's aliases")
-    assert_same_elements(promoter_events, person_to_keep.events(true), "Should merge promoter events")
+    assert_same_elements(promoter_events, person_to_keep.events.reload, "Should merge promoter events")
 
     assert_equal "molly", person_to_keep.login, "Should preserve login"
     assert_equal person_to_keep_old_password, person_to_keep.crypted_password, "Should preserve password"

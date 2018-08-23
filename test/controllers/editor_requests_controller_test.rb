@@ -80,7 +80,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
     editor_request = member.editor_requests.create!(editor: promoter)
     get :show, person_id: member.to_param, id: editor_request.token
     assert_response :success
-    assert member.editors(true).include?(promoter), "Should add editor"
+    assert member.editors.reload.include?(promoter), "Should add editor"
   end
 
   test "show not found" do
@@ -89,6 +89,6 @@ class EditorRequestsControllerTest < ActionController::TestCase
 
     member.editor_requests.create!(editor: promoter)
     assert_raise(ActiveRecord::RecordNotFound) { get(:show, person_id: member.to_param, id: "12367127836shdgadasd") }
-    assert !member.editors(true).include?(promoter), "Should add editor"
+    assert !member.editors.reload.include?(promoter), "Should add editor"
   end
 end

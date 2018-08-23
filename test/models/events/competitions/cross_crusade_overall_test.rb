@@ -54,7 +54,7 @@ module Competitions
       cx_a_overall_race = overall.races.detect { |race| race.category == men_1_2 }
       assert_not_nil(cx_a_overall_race, "Should have Men 1/2 overall race")
       assert_equal(2, cx_a_overall_race.results.size, "Men 1/2 race results")
-      results = cx_a_overall_race.results(true).sort
+      results = cx_a_overall_race.results.reload.sort
       result = results.first
       assert_equal(false, result.preliminary?, "Preliminary?")
       assert_equal("1", result.place, "Men 1/2 first result place")
@@ -116,7 +116,7 @@ module Competitions
 
       masters_overall_race = CrossCrusadeOverall.last.races.detect { |race| race.category == masters }
       assert_not_nil(masters_overall_race, "Should have Masters overall race")
-      results = masters_overall_race.results(true).sort
+      results = masters_overall_race.results.reload.sort
       result = results.first
       assert_equal(false, result.preliminary?, "Preliminary?")
       assert_equal("1", result.place, "place")
@@ -126,7 +126,7 @@ module Competitions
 
       men_1_2_overall_race = CrossCrusadeOverall.last.races.detect { |race| race.category == men_1_2 }
       assert_not_nil(men_1_2_overall_race, "Should have Men 1/2 overall race")
-      results = men_1_2_overall_race.results(true).sort
+      results = men_1_2_overall_race.results.reload.sort
       result = results.first
       assert_equal(false, result.preliminary?, "Preliminary?")
       assert_equal("1", result.place, "place")

@@ -704,11 +704,11 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert banana_belt_1.races.any? { |r| r.category == sr_p_1_2 }, "banana_belt_1 race category"
     assert banana_belt_1.races.any? { |r| r.category == senior_women }, "banana_belt_1 race category"
 
-    assert_equal 2, banana_belt_2.races(true).size, "banana_belt_2 races"
+    assert_equal 2, banana_belt_2.race.reload.size, "banana_belt_2 races"
     assert banana_belt_2.races.any? { |r| r.category == sr_p_1_2 }, "banana_belt_2 race category"
     assert banana_belt_2.races.any? { |r| r.category == senior_women }, "banana_belt_2 race category"
 
-    assert_equal 2, banana_belt_3.races(true).size, "banana_belt_3 races"
+    assert_equal 2, banana_belt_3.race.reload.size, "banana_belt_3 races"
     assert banana_belt_3.races.any? { |r| r.category == sr_p_1_2 }, "banana_belt_3 race category"
     assert banana_belt_3.races.any? { |r| r.category == senior_women }, "banana_belt_3 race category"
   end

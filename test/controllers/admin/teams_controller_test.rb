@@ -247,7 +247,7 @@ module Admin
       assert_equal(landshark, assigns["team"], "Team")
       landshark.reload
       assert_equal("Land Shark", landshark.name, "Updated name")
-      assert_equal(2, landshark.aliases(true).size, "Aliases")
+      assert_equal(2, landshark.aliases.reload.size, "Aliases")
       assert(landshark.aliases.any? { |a| a.name == "Landshark" }, "Aliases should include Landshark")
       assert(landshark.aliases.none? { |a| a.name == "Land Shark" }, "Aliases should not include Land Shark")
       assert(landshark.aliases.none? { |a| a.name == "LandTeam Landshark" }, "Aliases should not include Team Landshark")

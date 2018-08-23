@@ -21,7 +21,7 @@ module Admin
       assert_response(:success)
 
       result.reload
-      assert_nil(result.team(true), "team")
+      assert_nil(result.team.reload, "team")
     end
 
     test "update no team to existing" do
@@ -37,7 +37,7 @@ module Admin
       assert_response(:success)
 
       result.reload
-      assert_equal("Vanilla", result.team(true).name, "team")
+      assert_equal("Vanilla", result.team.reload.name, "team")
     end
 
     test "update no team to new" do
@@ -51,7 +51,7 @@ module Admin
       assert_response(:success)
 
       result.reload
-      assert_equal("Team Vanilla", result.team(true).name, "team name")
+      assert_equal("Team Vanilla", result.team.reload.name, "team name")
     end
 
     test "update no team to alias" do
@@ -67,7 +67,7 @@ module Admin
       assert_response(:success)
 
       result.reload
-      assert_equal(gentle_lovers, result.team(true), "team")
+      assert_equal(gentle_lovers, result.team.reload, "team")
     end
 
     test "update to no team" do
@@ -81,7 +81,7 @@ module Admin
       assert_response(:success)
 
       result.reload
-      assert_nil(result.team(true), "team")
+      assert_nil(result.team.reload, "team")
     end
 
     test "update to existing team" do
@@ -96,7 +96,7 @@ module Admin
       assert_response(:success)
 
       result.reload
-      assert_equal(vanilla, result.team(true), "team")
+      assert_equal(vanilla, result.team.reload, "team")
     end
 
     test "update to new team" do
@@ -110,7 +110,7 @@ module Admin
       assert_response(:success)
 
       result.reload
-      assert_equal("Astana", result.team(true).name, "team name")
+      assert_equal("Astana", result.team.reload.name, "team name")
     end
 
     test "update to team alias" do
@@ -126,7 +126,7 @@ module Admin
       assert_response(:success)
 
       result.reload
-      assert_equal(gentle_lovers, result.team(true), "team")
+      assert_equal(gentle_lovers, result.team.reload, "team")
     end
 
     test "set result points" do
@@ -158,7 +158,7 @@ module Admin
       assert_nil(result.first_name, "first_name")
       assert_nil(result.last_name, "last_name")
       assert_equal(original_team_name, result.team_name, "team_name")
-      assert_nil(result.person(true), "person")
+      assert_nil(result.person.reload, "person")
     end
 
     test "update no person to existing" do
@@ -177,7 +177,7 @@ module Admin
       result.reload
       assert_equal("Erik Tonkin", result.name, "name")
       assert_equal(original_team_name, result.team_name, "team_name")
-      assert_equal(tonkin, result.person(true), "person")
+      assert_equal(tonkin, result.person.reload, "person")
       assert_equal(1, tonkin.aliases.size)
     end
 
@@ -198,7 +198,7 @@ module Admin
       result.reload
       assert_equal("Erik Tonkin", result.name, "name")
       assert_equal(original_team_name, result.team_name, "team_name")
-      assert_equal(tonkin, result.person(true), "person")
+      assert_equal(tonkin, result.person.reload, "person")
       assert_equal(1, tonkin.aliases.size)
     end
 
@@ -218,7 +218,7 @@ module Admin
       assert_nil(result.first_name, "first_name")
       assert_nil(result.last_name, "last_name")
       assert_equal(original_team_name, result.team_name, "team_name")
-      assert_nil(result.person(true), "person")
+      assert_nil(result.person.reload, "person")
     end
 
     test "update to different person" do
@@ -239,7 +239,7 @@ module Admin
       assert_equal("Erik", result.first_name, "first_name")
       assert_equal("Tonkin", result.last_name, "last_name")
       assert_equal(original_team_name, result.team_name, "team_name")
-      assert_equal(tonkin, result.person(true), "person")
+      assert_equal(tonkin, result.person.reload, "person")
       assert_equal(1, tonkin.aliases.size)
     end
 
@@ -261,7 +261,7 @@ module Admin
       assert_equal("Erik", result.first_name, "first_name")
       assert_equal("Tonkin", result.last_name, "last_name")
       assert_equal(original_team_name, result.team_name, "team_name")
-      assert_equal(tonkin, result.person(true), "person")
+      assert_equal(tonkin, result.person.reload, "person")
       assert_equal(1, tonkin.aliases.size)
     end
 
@@ -367,8 +367,8 @@ module Admin
 
       post :move, person_id: weaver.id, result_id: result.id, format: "js"
 
-      assert !tonkin.results(true).include?(result)
-      assert weaver.results(true).include?(result)
+      assert !tonkin.results.reload.include?(result)
+      assert weaver.results.reload.include?(result)
       assert_response :success
     end
 
@@ -418,7 +418,7 @@ module Admin
       dnf = race.results.create(place: "DNF")
       xhr(:post, :create, race_id: race.id, before_result_id: weaver_result.id)
       assert_response(:success)
-      assert_equal(9, race.results(true).size, "Results after insert")
+      assert_equal(9, race.results.reload.size, "Results after insert")
       tonkin_result.reload
       weaver_result.reload
       matson_result.reload
@@ -432,7 +432,7 @@ module Admin
 
       xhr(:post, :create, race_id: race.id, before_result_id: dnf.id)
       assert_response(:success)
-      assert_equal(10, race.results(true).size, "Results after insert")
+      assert_equal(10, race.results.reload.size, "Results after insert")
       tonkin_result.reload
       weaver_result.reload
       matson_result.reload
@@ -443,11 +443,11 @@ module Admin
       assert_equal("6", matson_result.place, "Matson place after insert")
       assert_equal("20", molly_result.place, "Molly place after insert")
       assert_equal("DNF", dnf.place, "DNF place after insert")
-      assert_equal("DNF", race.results(true).sort.last.place, "DNF place after insert")
+      assert_equal("DNF", race.results.reload.sort.last.place, "DNF place after insert")
 
       xhr :post, :create, race_id: race.id
       assert_response(:success)
-      assert_equal(11, race.results(true).size, "Results after insert")
+      assert_equal(11, race.results.reload.size, "Results after insert")
       tonkin_result.reload
       weaver_result.reload
       matson_result.reload
@@ -458,7 +458,7 @@ module Admin
       assert_equal("6", matson_result.place, "Matson place after insert")
       assert_equal("20", molly_result.place, "Molly place after insert")
       assert_equal("DNF", dnf.place, "DNF place after insert")
-      assert_equal("DNF", race.results(true).sort.last.place, "DNF place after insert")
+      assert_equal("DNF", race.results.reload.sort.last.place, "DNF place after insert")
     end
 
     test "destroy" do

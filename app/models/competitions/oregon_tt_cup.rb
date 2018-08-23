@@ -134,7 +134,7 @@ module Competitions
         race.destroy
       end
 
-      source_events(true).each do |source_event|
+      source_events.reload.each do |source_event|
         missing_categories(source_event).each do |competition_category|
           logger.debug "Missing category for #{source_event.full_name}: #{competition_category.name}"
           split_races source_event, competition_category

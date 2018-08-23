@@ -117,7 +117,7 @@ class Result < ActiveRecord::Base
   end
 
   def event_id
-    self[:event_id] || (race || race(true)).try(:event_id)
+    self[:event_id] || (race || race.reload).try(:event_id)
   end
 
   def event(reload = false)
@@ -215,7 +215,7 @@ class Result < ActiveRecord::Base
 
   def inspect_debug
     puts "    #{to_long_s}"
-    scores(true).sort.each do |score|
+    scores.reload.sort.each do |score|
       puts "      #{score.inspect_debug}"
     end
   end

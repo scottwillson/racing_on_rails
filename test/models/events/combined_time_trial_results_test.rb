@@ -32,7 +32,7 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     FactoryBot.create(:result, race: race_1, place: "DQ", time: 12)
 
     CombinedTimeTrialResults.calculate!
-    combined_results = event.combined_results(true)
+    combined_results = event.combined_results.reload
     combined = combined_results.races.first
     assert_equal(3, combined.results.size, "combined.results")
     _results = combined.results.sort
@@ -65,14 +65,14 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
 
     CombinedTimeTrialResults.calculate!
 
-    assert_not_nil(series.combined_results(true), "Series parent should have combined results")
-    assert_not_nil(event.combined_results(true), "Series child event parent should have combined results")
+    assert_not_nil(series.combined_results.reload, "Series parent should have combined results")
+    assert_not_nil(event.combined_results.reload, "Series child event parent should have combined results")
 
     series.reload
     event.reload
     event.destroy_races
     event.combined_results.destroy_races
-    assert_nil(event.combined_results(true), "Series child event parent should not have combined results")
+    assert_nil(event.combined_results.reload, "Series child event parent should not have combined results")
   end
 
   test "should not calculate combined results for combined results" do
@@ -82,13 +82,13 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
 
     CombinedTimeTrialResults.calculate!
 
-    assert_not_nil(event.combined_results(true), "TT event should have combined results")
+    assert_not_nil(event.combined_results.reload, "TT event should have combined results")
     result_id = event.combined_results.races.first.results.first.id
 
     race.reload
     race.calculate_members_only_places!
     event.reload
-    result_id_after_member_place = event.combined_results(true).races.first.results.first.id
+    result_id_after_member_place = event.combined_results.reload.races.first.results.first.id
     assert_equal(result_id, result_id_after_member_place, "calculate_members_only_places! should not trigger combined results recalc")
   end
 
@@ -134,7 +134,7 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     tt_1 = tt_result_1.event
     tt_1.races.first.results.create!(place: 2, time: 1000)
     CombinedTimeTrialResults.calculate!
-    assert tt_1.combined_results(true).updated_at > 1.hour.ago, "CombinedTimeTrialResults updated_at should be recent"
+    assert tt_1.combined_results.reload.updated_at > 1.hour.ago, "CombinedTimeTrialResults updated_at should be recent"
     assert_equal 2, tt_1.combined_results.races.first.results.count, "combined_results"
     assert tt_result_2.event.updated_at < 1.hour.ago, "CombinedTimeTrialResults updated_at should be in past"
   end

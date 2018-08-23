@@ -78,7 +78,7 @@ module Competitions
       assert_equal(3, race.results.size, "race results")
       assert_equal %w[ place team_name points ], race.result_columns, "result_columns"
 
-      results = race.results(true).sort
+      results = race.results.reload.sort
       result = results.first
       assert_equal(false, result.preliminary?, "Preliminary?")
       assert_equal("1", result.place, "first result place")
@@ -160,7 +160,7 @@ module Competitions
       assert_not_nil(race, "Should have team race")
       assert_equal(3, race.results.size, "race results: #{race.results.map(&:team_name)}")
 
-      results = race.results(true).to_a.sort
+      results = race.results.reload.to_a.sort
       result = results.first
       assert_equal "1", result.place, "first result place"
       assert_equal gentle_lovers, result.team, "first result team"

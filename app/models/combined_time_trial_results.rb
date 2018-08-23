@@ -43,7 +43,7 @@ class CombinedTimeTrialResults < Event
   def self.destroy_combined_results(event)
     if event.combined_results
       event.combined_results.destroy_races
-      event.combined_results(true).destroy
+      event.combined_results.reload.destroy
       event.combined_results = nil
     end
   end

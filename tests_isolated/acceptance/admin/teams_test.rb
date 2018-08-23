@@ -126,6 +126,6 @@ class TeamsTest < AcceptanceTest
       raise Timeout::Error, "Should have merged Vanilla"
     end
 
-    assert gl.aliases(true).map(&:name).include?("Vanilla"), "Should add Vanilla alias"
+    assert gl.aliases.reload.map(&:name).include?("Vanilla"), "Should add Vanilla alias"
   end
 end

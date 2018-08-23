@@ -92,7 +92,7 @@ module Admin
       Timecop.freeze(Date.new(2008, 6)) do
         molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron", road_number: "202")
         assert_equal("202", molly.road_number(true, 2008), "Road number")
-        assert_equal("202", molly.road_number(true), "Road number")
+        assert_equal("202", molly.road_number.reload, "Road number")
         molly_road_number = RaceNumber.last
         year = Time.zone.today.year.to_s
 

@@ -384,7 +384,7 @@ class Race < ActiveRecord::Base
 
   def inspect_debug
     puts "  #{self}"
-    results(true).sort.each(&:inspect_debug)
+    results.reload.sort.each(&:inspect_debug)
   end
 
   def to_s

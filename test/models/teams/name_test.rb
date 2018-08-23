@@ -77,17 +77,17 @@ module Teams
       team.name = "Tecate"
       team.save!
       assert_equal(1, team.names.reload.size, "names")
-      assert_equal(1, team.aliases(true).size, "aliases")
+      assert_equal(1, team.aliases.reload.size, "aliases")
 
       team.name = "Tecate Una Mas"
       team.save!
       assert_equal(1, team.names.reload.size, "names")
-      assert_equal(2, team.aliases(true).size, "aliases")
+      assert_equal(2, team.aliases.reload.size, "aliases")
 
       team.name = "Tecate-¡Una Mas!"
       team.save!
       assert_equal(1, team.names.reload.size, "names")
-      assert_equal(3, team.aliases(true).size, "aliases")
+      assert_equal(3, team.aliases.reload.size, "aliases")
 
       assert_equal("Tecate-¡Una Mas!", team.name, "New team name")
       assert_equal("Twin Peaks", team.names.first.name, "Old team name")
@@ -179,12 +179,12 @@ module Teams
       event.races.create!(category: senior_men).results.create!(team: team)
       team.aliases.create!(name: "Twin Peaks")
       assert_equal(0, team.names.reload.size, "names")
-      assert_equal(1, team.aliases(true).size, "Aliases")
+      assert_equal(1, team.aliases.reload.size, "Aliases")
 
       team.name = "Tecate"
       team.save!
       assert_equal(1, team.names.reload.size, "names")
-      assert_equal(2, team.aliases(true).size, "aliases")
+      assert_equal(2, team.aliases.reload.size, "aliases")
       assert_equal(["Twin Peaks", "Twin Peaks/The Bike Nook"], team.aliases.map(&:name).sort, "Should retain keep alias from old name")
     end
 

@@ -289,7 +289,7 @@ class ResultTest < ActiveSupport::TestCase
     results = kings_valley_pro_1_2_2004.results
     result = results.create!(place: 1, first_name: "Clara", last_name: "Willson", number: "300")
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    assert_nil(result.person(true).road_number(true), "Current road number")
+    assert_nil(result.person.reload.road_number.reload, "Current road number")
     road_number_2004 = result.person.race_numbers.detect { |number| number.year == 2004 }
     assert_nil road_number_2004, "Should not create official race number from result"
     assert(result.person.ccx_number.blank?, "Cyclocross number")
@@ -300,7 +300,7 @@ class ResultTest < ActiveSupport::TestCase
     race = event.races.create!(category: senior_women)
     result = race.results.create!(place: 2, first_name: "Eddy", last_name: "Merckx", number: "200")
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    road_number = result.person(true).race_numbers(true).detect { |number| number.year == Time.zone.today.year }
+    road_number = result.person.reload.race_numbers.reload.detect { |number| number.year == Time.zone.today.year }
     assert_nil(road_number, "Current road number should not be set from result")
     assert(result.person.ccx_number.blank?, "Cyclocross number")
     assert(result.person.xc_number.blank?, "MTB number")
@@ -309,7 +309,7 @@ class ResultTest < ActiveSupport::TestCase
     # Rental
     result = race.results.create!(place: 2, first_name: "Benji", last_name: "Whalen", number: "51")
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    road_number = result.person(true).race_numbers(true).detect { |number| number.year == Time.zone.today.year }
+    road_number = result.person.reload.race_numbers.reload.detect { |number| number.year == Time.zone.today.year }
     assert_nil(road_number, "Current road number")
     assert(!result.person.member?, "Person with rental number should not be member")
   end
@@ -319,7 +319,7 @@ class ResultTest < ActiveSupport::TestCase
     results = kings_valley_pro_1_2_2004.results
     result = results.create!(place: 1, first_name: "Clara", last_name: "Willson", number: "300")
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    assert_nil(result.person(true).road_number(true), "Current road number")
+    assert_nil(result.person.reload.road_number.reload, "Current road number")
     road_number_2004 = result.person.race_numbers.detect { |number| number.year == 2004 }
     assert_nil road_number_2004, "Should not create official race number from result"
     assert(result.person.ccx_number.blank?, "Cyclocross number")
@@ -330,7 +330,7 @@ class ResultTest < ActiveSupport::TestCase
     race = event.races.create!(category: senior_women)
     result = race.results.create!(place: 2, first_name: "Eddy", last_name: "Merckx", number: "200")
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    road_number = result.person(true).race_numbers(true).detect { |number| number.year == Time.zone.today.year }
+    road_number = result.person.reload.race_numbers.reload.detect { |number| number.year == Time.zone.today.year }
     assert_nil(road_number, "Current road number should not be set from result")
     assert(result.person.ccx_number.blank?, "Cyclocross number")
     assert(result.person.xc_number.blank?, "MTB number")
@@ -339,7 +339,7 @@ class ResultTest < ActiveSupport::TestCase
     RacingAssociation.current.rental_numbers = 0..99
     result = race.results.create!(place: 2, first_name: "Benji", last_name: "Whalen", number: "51")
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    road_number = result.person(true).race_numbers(true).detect { |number| number.year == Time.zone.today.year }
+    road_number = result.person.reload.race_numbers.reload.detect { |number| number.year == Time.zone.today.year }
     assert_nil(road_number, "Current road number")
     assert(!result.person.member?, "Person with rental number should not be member")
   end

@@ -184,8 +184,8 @@ module Admin
       assert_not_nil(assigns(:races), "@races")
       assert_not_nil(assigns(:combined_results), "@combined_results")
       assert_response(:success)
-      assert_equal(0, jack_frost.races(true).count, "Races after destroy")
-      assert_nil(jack_frost.combined_results(true), "Event should have not combined results after destroying races")
+      assert_equal(0, jack_frost.race.reload.count, "Races after destroy")
+      assert_nil(jack_frost.combined_results.reload, "Event should have not combined results after destroying races")
     end
 
     test "events for year" do

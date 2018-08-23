@@ -92,7 +92,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(0, race.field_size, "New race field size")
 
     4.times { FactoryBot.create(:result, race: race) }
-    race.results(true)
+    race.results.reload
     assert_equal(4, race.field_size, "Race field size with empty field_size column")
 
     race.field_size = 120
@@ -106,9 +106,9 @@ class RaceTest < ActiveSupport::TestCase
     first_result = race.results.create!
     second_result = race.results.create!
 
-    race.results(true)
+    race.results.reload
     race.place_results_by_points
-    race.results(true)
+    race.results.reload
     assert_equal(first_result, race.results.first, "First result")
     assert_equal("1", race.results.first.place, "First result place")
     assert_equal(second_result, race.results.last, "Last result")
@@ -124,9 +124,9 @@ class RaceTest < ActiveSupport::TestCase
       race.results.create!(points: 89)
     ]
 
-    race.results(true)
+    race.results.reload
     race.place_results_by_points
-    results = race.results(true).to_a.sort
+    results = race.results.reload.to_a.sort
 
     assert_equal("1", results[0].place, "Result 0 place")
     assert_equal(100, results[0].points, "Result 0 points")
@@ -208,9 +208,9 @@ class RaceTest < ActiveSupport::TestCase
     race.results[9].save!
 
     ironman_race.results.each(&:update_points!)
-    ironman_race.results(true)
+    ironman_race.results.reload
     ironman_race.place_results_by_points(false)
-    results = ironman_race.results(true).sort
+    results = ironman_race.results.reload.sort
     assert_equal("1", results.first.place, "First result place")
     assert_equal("1", results[1].place, "Second result place")
     assert_equal("3", results[2].place, "Third result place")
@@ -243,13 +243,13 @@ class RaceTest < ActiveSupport::TestCase
     fourth_competition_result = ironman_race.results.create!
     fourth_competition_result.scores.create!(source_result: races[2].results.create!(place: 15), competition_result: fourth_competition_result, points: 2)
 
-    ironman_race.results(true)
+    ironman_race.results.reload
     ironman_race.results.each do |result|
       result.calculate_points
       result.save!
     end
     ironman_race.place_results_by_points
-    results = ironman_race.results(true).to_a.sort
+    results = ironman_race.results.reload.to_a.sort
 
     assert_equal("1", results[0].place, "First result place")
     assert_equal(first_competition_result, results[0], "First result")
@@ -279,13 +279,13 @@ class RaceTest < ActiveSupport::TestCase
     second_competition_result.scores.create!(source_result: race.results.create!(place: 4), competition_result: second_competition_result, points: 20)
     second_competition_result.scores.create!(source_result: second_race.results.create!(place: 3), competition_result: second_competition_result, points: 30)
 
-    ironman_race.results(true)
+    ironman_race.results.reload
     ironman_race.results.each do |result|
       result.calculate_points
       result.save!
     end
     ironman_race.place_results_by_points
-    results = ironman_race.results(true).to_a.sort
+    results = ironman_race.results.reload.to_a.sort
 
     assert_equal("1", results[0].place, "First result place")
     assert_equal("2", results[1].place, "Second result place")
@@ -314,13 +314,13 @@ class RaceTest < ActiveSupport::TestCase
     third_competition_result.scores.create!(source_result: second_race.results.create!(place: 1), competition_result: third_competition_result, points: 50)
     third_competition_result.scores.create!(source_result: third_race.results.create!(place: 10), competition_result: third_competition_result, points: 1)
 
-    ironman_race.results(true)
+    ironman_race.results.reload
     ironman_race.results.each do |result|
       result.calculate_points
       result.save!
     end
     ironman_race.place_results_by_points
-    results = ironman_race.results(true).to_a.sort
+    results = ironman_race.results.reload.to_a.sort
 
     assert_equal("1", results[0].place, "First result place")
     assert_equal(third_competition_result, results[0], "First result")
@@ -353,7 +353,7 @@ class RaceTest < ActiveSupport::TestCase
     race.results.create!(place: "4", person: molly)
     race.results.create!(place: "5", person: non_members[2])
 
-    race.reload.results(true)
+    race.reload.results.reload
     race.calculate_members_only_places!
     assert_equal("1", race.results[0].place, "Result 0 place")
     assert_equal("", race.results[0].members_only_place, "Result 0 place")
@@ -391,13 +391,13 @@ class RaceTest < ActiveSupport::TestCase
 
     CombinedTimeTrialResults.calculate!
 
-    assert_not_nil(event.combined_results(true), "TT event should have combined results")
+    assert_not_nil(event.combined_results.reload, "TT event should have combined results")
     result_id = event.combined_results.races.first.results.first.id
 
     race.reload
     race.calculate_members_only_places!
     event.reload
-    result_id_after_member_place = event.combined_results(true).races.first.results.first.id
+    result_id_after_member_place = event.combined_results.reload.races.first.results.first.id
     assert_equal(result_id, result_id_after_member_place, "calculate_members_only_places! should not trigger combined results recalc")
   end
 
@@ -426,7 +426,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal("2", results[1].place, "Existing result place")
 
     another_new_result = race.create_result_before(new_result.id)
-    results = race.results(true).to_a.sort
+    results = race.results.reload.to_a.sort
     assert_equal(another_new_result, results[0], "New result should be first result")
     assert_equal("1", results[0].place, "New result place")
     assert_equal(new_result, results[1], "Existing result should be second result")

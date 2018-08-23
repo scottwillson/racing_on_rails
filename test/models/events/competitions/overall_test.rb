@@ -61,9 +61,9 @@ module Competitions
 
       TestOverall.calculate!(2007)
 
-      men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
+      men_a_overall_race = series.overall.reload.races.detect { |race| race.category == men_a }
       assert_not_nil(men_a_overall_race, "Should have Men A overall race")
-      results = men_a_overall_race.results(true).sort
+      results = men_a_overall_race.results.reload.sort
       result = results.first
       assert_equal(false, result.preliminary?, "Weaver did three races. His result should not be preliminary")
 
@@ -89,9 +89,9 @@ module Competitions
 
       TestOverall.calculate!(2008)
 
-      men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
+      men_a_overall_race = series.overall.reload.races.detect { |race| race.category == men_a }
       assert_not_nil(men_a_overall_race, "Should have Men A overall race")
-      results = men_a_overall_race.results(true).sort
+      results = men_a_overall_race.results.reload.sort
       result = results.first
       assert_equal(6, result.scores.size, "Scores")
       assert_equal(16 + 12 + 12 + 11 + 11 + 11, result.points, "points")
@@ -110,7 +110,7 @@ module Competitions
 
       TestOverall.calculate!(2008)
 
-      men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
+      men_a_overall_race = series.overall.reload.races.detect { |race| race.category == men_a }
       assert_not_nil(men_a_overall_race, "Should have Men A overall race")
       result = men_a_overall_race.results.sort.first
       assert_equal(6, result.scores.size, "Scores")
@@ -133,7 +133,7 @@ module Competitions
 
       TestOverall.calculate!(2008)
 
-      men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
+      men_a_overall_race = series.overall.reload.races.detect { |race| race.category == men_a }
       assert_not_nil(men_a_overall_race, "Should have Men A overall race")
       result = men_a_overall_race.results.sort.first
       assert_equal(6, result.scores.size, "Scores")
@@ -155,7 +155,7 @@ module Competitions
 
       TestOverall.calculate!(2007)
 
-      men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
+      men_a_overall_race = series.overall.reload.races.detect { |race| race.category == men_a }
       assert_equal(1, men_a_overall_race.results.size, "Cat A results")
       assert_equal(1, men_a_overall_race.results.first.scores.size, "Should ignore age-graded BAR")
     end
@@ -168,7 +168,7 @@ module Competitions
       TestOverall.calculate!(2008)
       series.reload
 
-      overall_results = series.overall(true)
+      overall_results = series.overall.reload
       assert_equal(false, overall_results.ironman, "Ironman")
       assert_equal(0, overall_results.bar_points, "BAR points")
 

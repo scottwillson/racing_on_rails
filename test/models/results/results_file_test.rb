@@ -61,7 +61,7 @@ module Results
           end
 
           assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
-          next unless result.person(true)
+          next unless result.person.reload
           if RaceNumber.rental?(result.number, Discipline[event.discipline])
             assert(!result.person.member?(race_date), "Person should not be a member because he has a rental number")
           else
@@ -101,7 +101,7 @@ module Results
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt.xlsx", __FILE__)), event)
       results_file.import
 
-      assert_equal(2, event.races(true).size, "event races")
+      assert_equal(2, event.race.reload.size, "event races")
       assert_equal(7, event.races[0].results.size, "Results")
       sorted_results = event.races[0].results.sort
       assert_equal("1", sorted_results.first.place, "First result place")
@@ -160,10 +160,10 @@ module Results
       paul_bourcier.save!
       assert(paul_bourcier.errors.empty?)
       assert(eweb.errors.empty?)
-      assert_equal(eweb, paul_bourcier.team(true), "Paul Bourcier team")
+      assert_equal(eweb, paul_bourcier.team.reload, "Paul Bourcier team")
 
       chris_myers = Person.create!(first_name: "Chris", last_name: "Myers", member: true)
-      assert_nil(chris_myers.team(true), "Chris Myers team")
+      assert_nil(chris_myers.team.reload, "Chris Myers team")
 
       race = Race.new(category: Category.new(name: "Pro/1/2"))
       race.results << Result.new(place: "1", first_name: "Paul", last_name: "Bourcier", number: "146", team_name: "Hutch's Eugene", points: "10.0")
@@ -230,9 +230,9 @@ module Results
       end
 
       paul_bourcier.reload
-      assert_equal(eweb, paul_bourcier.team(true), "Paul Bourcier team should not be overwritten by results")
+      assert_equal(eweb, paul_bourcier.team.reload, "Paul Bourcier team should not be overwritten by results")
       chris_myers.reload
-      assert_nil(chris_myers.team(true), "Chris Myers team should not be updated by results")
+      assert_nil(chris_myers.team.reload, "Chris Myers team should not be updated by results")
 
       browning = Person.find_by(name: "John Browning")
       assert_equal(event.name, browning.created_by_name, "created_by_name")
@@ -369,7 +369,7 @@ module Results
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/mtb.xls", __FILE__)), event)
       results_file.import
       assert_nil(event.combined_results, "Should not have combined results")
-      assert_equal(6, event.races(true).size, "Races after import")
+      assert_equal(6, event.race.reload.size, "Races after import")
     end
 
     test "custom columns" do
@@ -521,7 +521,7 @@ module Results
       event = SingleDayEvent.create!
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt.xlsx", __FILE__)), event)
       results_file.import
-      assert_equal("Field Size: 40 riders, 40 Laps, Sunny, cool, 40K", event.races(true).first.notes, "Race notes")
+      assert_equal("Field Size: 40 riders, 40 Laps, Sunny, cool, 40K", event.race.reload.first.notes, "Race notes")
     end
 
     test "race" do
