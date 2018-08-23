@@ -10,9 +10,9 @@ class RacingAssociation < ActiveRecord::Base
   # TODO: bmx_numbers? Shouldn"t this be in disciplines?
 
   belongs_to :cat4_womens_race_series_category, class_name: "Category"
-  belongs_to :default_region, class_name: "Region"
+  belongs_to :default_region, class_name: "Region", optional: true
 
-  attr_accessor :person
+  attr_writer :person
 
   serialize :administrator_tabs
   serialize :cat4_womens_race_series_points
