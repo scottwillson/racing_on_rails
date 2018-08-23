@@ -34,7 +34,7 @@ class DuplicatePeopleControllerTest < ActionController::TestCase
 
     use_ssl
     login_as :administrator
-    xhr :delete, :destroy, id: "Sam Willson"
+    delete :destroy, params: { id: "Sam Willson" }, xhr: true
     assert_response :success
 
     assert person_1.reload.other_people_with_same_name?

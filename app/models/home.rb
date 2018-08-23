@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Home < ActiveRecord::Base
-  belongs_to :photo
+  belongs_to :photo, optional: true
 
   def self.current
     Home.first || Home.create!
