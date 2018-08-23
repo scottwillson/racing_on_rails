@@ -90,6 +90,7 @@ group :test do
   gem "minitest"
   gem "mocha", require: false
   gem "poltergeist"
+  gem "rails-controller-testing"
   gem "selenium-webdriver"
   gem "simplecov"
   gem "timecop"
