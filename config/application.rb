@@ -52,6 +52,10 @@ module RacingOnRails
     end
 
     config.action_mailer.default_url_options = { mobile: nil }
+    config.action_mailer.smtp_settings = {
+      enable_starttls_auto: false,
+      openssl_verify_mode: :none
+    }
 
     config.exceptions_app = routes
 
