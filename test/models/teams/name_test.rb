@@ -34,7 +34,7 @@ module Teams
       team.name = "Tecate-Una Mas"
       team.save!
 
-      assert_equal(1, team.names(true).size, "names")
+      assert_equal(1, team.names.reload.size, "names")
 
       assert_equal("Twin Peaks", old_result.team_name, "Team name should stay the same on old result")
       assert_equal("Tecate-Una Mas", result.reload.team_name, "Team name should change on this year's result")
@@ -72,21 +72,21 @@ module Teams
       event = SingleDayEvent.create!(date: 3.years.ago)
       senior_men = FactoryBot.create(:category)
       event.races.create!(category: senior_men).results.create!(team: team)
-      assert_equal(0, team.names(true).size, "names")
+      assert_equal(0, team.names.reload.size, "names")
 
       team.name = "Tecate"
       team.save!
-      assert_equal(1, team.names(true).size, "names")
+      assert_equal(1, team.names.reload.size, "names")
       assert_equal(1, team.aliases(true).size, "aliases")
 
       team.name = "Tecate Una Mas"
       team.save!
-      assert_equal(1, team.names(true).size, "names")
+      assert_equal(1, team.names.reload.size, "names")
       assert_equal(2, team.aliases(true).size, "aliases")
 
       team.name = "Tecate-¡Una Mas!"
       team.save!
-      assert_equal(1, team.names(true).size, "names")
+      assert_equal(1, team.names.reload.size, "names")
       assert_equal(3, team.aliases(true).size, "aliases")
 
       assert_equal("Tecate-¡Una Mas!", team.name, "New team name")
@@ -178,12 +178,12 @@ module Teams
       senior_men = FactoryBot.create(:category)
       event.races.create!(category: senior_men).results.create!(team: team)
       team.aliases.create!(name: "Twin Peaks")
-      assert_equal(0, team.names(true).size, "names")
+      assert_equal(0, team.names.reload.size, "names")
       assert_equal(1, team.aliases(true).size, "Aliases")
 
       team.name = "Tecate"
       team.save!
-      assert_equal(1, team.names(true).size, "names")
+      assert_equal(1, team.names.reload.size, "names")
       assert_equal(2, team.aliases(true).size, "aliases")
       assert_equal(["Twin Peaks", "Twin Peaks/The Bike Nook"], team.aliases.map(&:name).sort, "Should retain keep alias from old name")
     end

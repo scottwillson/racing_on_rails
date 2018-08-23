@@ -333,7 +333,7 @@ module Admin
 
       xhr :post, :destroy_name, id: vanilla.to_param, name_id: name.to_param
       assert_response(:success)
-      assert_equal(0, vanilla.names(true).count, "Vanilla names after destruction")
+      assert_equal(0, vanilla.names.reload.count, "Vanilla names after destruction")
     end
 
     test "new" do

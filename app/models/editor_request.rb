@@ -32,7 +32,7 @@ class EditorRequest < ActiveRecord::Base
   end
 
   def destroy_duplicates
-    EditorRequest.destroy_all person_id: person_id, editor_id: editor_id
+    EditorRequest.where(person_id: person_id, editor_id: editor_id).destroy_all
   end
 
   def send_email

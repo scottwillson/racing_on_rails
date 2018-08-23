@@ -209,7 +209,8 @@ module Competitions
                 query.where("events.type in (?)", source_event_types)
               end
 
-      query = query.merge(categories_clause(race))
+      categories = categories_clause(race)
+      query = query.merge(categories) if categories
 
       query
     end

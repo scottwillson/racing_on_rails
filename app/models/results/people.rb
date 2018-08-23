@@ -8,7 +8,7 @@ module Results
       after_save :update_person_number
       after_destroy :destroy_people
 
-      belongs_to :person
+      belongs_to :person, optional: true
 
       scope :person, lambda { |person|
         person_id = if person.is_a? Person

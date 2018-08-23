@@ -19,7 +19,7 @@ class AccountPermissionTest < ActiveSupport::TestCase
     another_person.editors << person
     assert_equal [another_person], person.editors, "editors"
     assert_equal [person], another_person.editors, "editors"
-    assert_equal [another_person], person.editable_people(true), "editable_people"
+    assert_equal [another_person], person.editable_people.reload, "editable_people"
     assert_equal [person], another_person.editable_people, "editable_people"
 
     assert_raise(ActiveRecord::ActiveRecordError, "should not allow duplicates") { person.editors << another_person }
@@ -51,7 +51,7 @@ class AccountPermissionTest < ActiveSupport::TestCase
     assert_equal false, account_permission.person_can_edit?, "person_can_edit?"
 
     another_person.editors << person
-    person.editable_people(true)
+    person.editable_people.reload
     assert_equal 1, person.account_permissions.size, "account_permissions size"
     account_permission_editable_person = person.account_permissions.detect { |ap| ap.person == another_person }
     assert_not_nil account_permission_editable_person, "Should find editable Person"

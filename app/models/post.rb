@@ -14,7 +14,7 @@ class Post < ActiveRecord::Base
   validates :from_email, format: { with: /@/ }
 
   belongs_to :mailing_list
-  belongs_to :original, class_name: "Post", inverse_of: :replies, counter_cache: :replies_count
+  belongs_to :original, class_name: "Post", inverse_of: :replies, counter_cache: :replies_count, optional: true
   has_many :replies, class_name: "Post", inverse_of: :original, foreign_key: :original_id
 
   scope :original, -> { where(original_id: nil) }

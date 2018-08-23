@@ -116,7 +116,7 @@ module Admin
         event = FactoryBot.create(:series, name: "Event")
         get(:add_children, parent_id: event.to_param)
         assert_redirected_to edit_admin_event_path(event)
-        event.reload.children(true)
+        event.reload.children.reload
         assert_equal 1.month.from_now.to_date, event.start_date, "parent start_date"
         assert_equal 1.month.from_now.to_date, event.end_date, "parent end_date"
       end

@@ -92,7 +92,7 @@ class UpcomingTest < ActiveSupport::TestCase
     end
     six_day.save!
     assert(six_day.valid?, "Six Day valid?")
-    assert_equal(6, six_day.children(true).count, "Six Day events")
+    assert_equal(6, six_day.children.reload.count, "Six Day events")
     assert_equal_dates(Date.new(2006, 6, 12), six_day.date, "Six Day date")
     assert_equal_dates(Date.new(2006, 6, 12), six_day.start_date, "Six Day start date")
     assert_equal_dates(Date.new(2006, 6, 17), six_day.end_date, "Six Day end date")
@@ -130,7 +130,7 @@ class UpcomingTest < ActiveSupport::TestCase
     end
 
     series.reload
-    assert_equal(8, series.children(true).count, "Series events")
+    assert_equal(8, series.children.reload.count, "Series events")
     assert_equal_dates(Date.new(1999, 6, 8), series.date, "Series date")
     assert_equal_dates(Date.new(1999, 6, 8), series.start_date, "Series start date")
     assert_equal_dates(Date.new(1999, 7, 27), series.end_date, "Series end date")
@@ -172,7 +172,7 @@ class UpcomingTest < ActiveSupport::TestCase
     estacada_tt_2 = estacada_tt.children.create!(date: Date.new(1999, 6, 22), name: "Estacada 2")
     estacada_tt_3 = estacada_tt.children.create!(date: Date.new(1999, 6, 24), name: "Estacada 3")
 
-    assert_equal(3, estacada_tt.children(true).size, "estacada_tt events")
+    assert_equal(3, estacada_tt.children.reload.size, "estacada_tt events")
     assert_equal_dates(Date.new(1999, 6, 8), estacada_tt.date, "estacada_tt date")
     assert_equal_dates(Date.new(1999, 6, 8), estacada_tt.start_date, "estacada_tt start date")
     assert_equal_dates(Date.new(1999, 6, 24), estacada_tt.end_date, "estacada_tt end date")

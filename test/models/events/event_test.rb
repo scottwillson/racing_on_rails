@@ -7,12 +7,12 @@ class EventTest < ActiveSupport::TestCase
   test "validate discipline" do
     FactoryBot.create(:discipline, name: "Road")
     event = Event.new(discipline: "Foo")
-    assert !event.valid?, "Event with bogus Discipline should not be valid"
+    assert_not event.valid?, "Event with bogus Discipline should not be valid"
     assert event.errors[:discipline]
   end
 
   test "defaults" do
-    number_issuer = NumberIssuer.create!(name: RacingAssociation.current.short_name)
+    NumberIssuer.create!(name: RacingAssociation.current.short_name)
     event = SingleDayEvent.new
     assert_equal(Time.zone.today, event.date, "New event should have today's date")
     assert_equal("Untitled", event.name, "event name")
@@ -22,7 +22,7 @@ class EventTest < ActiveSupport::TestCase
     number_issuer = NumberIssuer.find_by(name: RacingAssociation.current.short_name)
     assert_equal(number_issuer, event.number_issuer, "New event number_issuer default")
     assert_equal(RacingAssociation.current.default_sanctioned_by, event.sanctioned_by, "sanctioned_by")
-    assert_equal(number_issuer, event.number_issuer(true), "number_issuer")
+    assert_equal(number_issuer, event.number_issuer.reload, "number_issuer")
 
     event.save!
     event.reload
@@ -320,13 +320,13 @@ class EventTest < ActiveSupport::TestCase
     assert(child_event.valid?, series.errors.full_messages.join(", "))
     assert(overall.valid?, series.errors.full_messages.join(", "))
 
-    assert_equal_events([child_event], series.children(true), "series.children should not include competitions")
+    assert_equal_events([child_event], series.children.reload, "series.children should not include competitions")
     assert_equal_events([overall], series.child_competitions(true), "series.child_competitions should only include competitions")
     assert_equal(overall, series.overall(true), "series.overall")
     assert_equal(0, series.competition_event_memberships.size, "series.competition_event_memberships")
     assert_equal_events([], series.competitions(true), "series.competitions")
 
-    assert_equal_events([], child_event.children(true), "child_event.children")
+    assert_equal_events([], child_event.children.reload, "child_event.children")
     assert_equal_events([], child_event.child_competitions(true), "child_event.child_competitions")
     assert_nil(child_event.overall(true), "child_event.overall")
     assert_equal(1, child_event.competition_event_memberships(true).size, "child_event.competition_event_memberships")

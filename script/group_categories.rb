@@ -44,7 +44,7 @@ Category.transaction do
     (1..2).each do |category|
       parent = Category.where(name: "Senior #{gender}").first
       age_parent = Category.where(name: "Category #{category} #{gender}").first
-      parent.children(true).select { |c| c.name[/\bCategory #{category}\b/] }.each do |child|
+      parent.children.reload.select { |c| c.name[/\bCategory #{category}\b/] }.each do |child|
         move_to_parent age_parent, child
       end
     end
@@ -53,7 +53,7 @@ Category.transaction do
   %w[Men Women].each do |gender|
     cat_4 = Category.where(name: "Category 4 #{gender}").first
     cat_3 = Category.where(name: "Category 3 #{gender}").first
-    cat_4.children(true).select { |c| c.name[/Category 3 /] }.each do |child|
+    cat_4.children.reload.select { |c| c.name[/Category 3 /] }.each do |child|
       move_to_parent cat_3, child
     end
   end
@@ -68,7 +68,7 @@ Category.transaction do
   parent = Category.where(name: "Category 4/5 Men").first
   [5, 4].each do |number|
     age_parent = Category.where(name: "Category #{number} Men").first
-    parent.children(true).select { |c| c.name[/\b#{number}\b/] }.each do |child|
+    parent.children.reload.select { |c| c.name[/\b#{number}\b/] }.each do |child|
       move_to_parent age_parent, child
     end
   end
@@ -77,7 +77,7 @@ Category.transaction do
   [30, 35, 40, 45, 50, 55, 60, 65].each do |age|
     age_parent = Category.where(name: "Masters Men #{age}-#{age + 4}").first
     (age..(age + 4)).each do |child_age|
-      parent.children(true).select { |c| c.name[/#{child_age}/] }.each do |child|
+      parent.children.reload.select { |c| c.name[/#{child_age}/] }.each do |child|
         move_to_parent age_parent, child
       end
     end
@@ -85,7 +85,7 @@ Category.transaction do
 
   age_parent = Category.where(name: "Masters Men 70+").first
   (70..99).each do |child_age|
-    parent.children(true).select { |c| c.name[/#{child_age}/] }.each do |child|
+    parent.children.reload.select { |c| c.name[/#{child_age}/] }.each do |child|
       move_to_parent age_parent, child
     end
   end
@@ -94,7 +94,7 @@ Category.transaction do
   [30, 35, 40, 45, 50, 55].each do |age|
     age_parent = Category.where(name: "Masters Women #{age}-#{age + 4}").first
     (age..(age + 4)).each do |child_age|
-      parent.children(true).select { |c| c.name[/#{child_age}/] }.each do |child|
+      parent.children.reload.select { |c| c.name[/#{child_age}/] }.each do |child|
         move_to_parent age_parent, child
       end
     end
@@ -102,7 +102,7 @@ Category.transaction do
 
   age_parent = Category.where(name: "Masters Women 60+").first
   (60..99).each do |child_age|
-    parent.children(true).select { |c| c.name[/#{child_age}/] }.each do |child|
+    parent.children.reload.select { |c| c.name[/#{child_age}/] }.each do |child|
       move_to_parent age_parent, child
     end
   end
@@ -112,7 +112,7 @@ Category.transaction do
     [[10, 12], [13, 14], [15, 16], [17, 18]].each do |start_age, end_age|
       age_parent = Category.where(name: "Junior #{gender} #{start_age}-#{end_age}").first
       (start_age..end_age).each do |child_age|
-        parent.children(true).select { |c| c.name[/#{child_age}/] }.each do |child|
+        parent.children.reload.select { |c| c.name[/#{child_age}/] }.each do |child|
           move_to_parent age_parent, child
         end
       end
@@ -122,7 +122,7 @@ Category.transaction do
   parent = Category.where(name: "Category 4/5 Men").first
   [["Beginner Men", "Beginner"]].each do |age_parent_name, child_name|
     age_parent = Category.where(name: age_parent_name).first
-    parent.children(true).select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
+    parent.children.reload.select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
       move_to_parent age_parent, child
     end
   end
@@ -132,7 +132,7 @@ Category.transaction do
    ["Category 4 Men", "C"],
    ["Category 4 Men", "Novice"]].each do |age_parent_name, child_name|
     age_parent = Category.where(name: age_parent_name).first
-    parent.children(true).select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
+    parent.children.reload.select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
       move_to_parent age_parent, child
     end
   end
@@ -140,7 +140,7 @@ Category.transaction do
   parent = Category.where(name: "Category 4 Women").first
   [["Beginner Women", "Beginner"]].each do |age_parent_name, child_name|
     age_parent = Category.where(name: age_parent_name).first
-    parent.children(true).select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
+    parent.children.reload.select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
       move_to_parent age_parent, child
     end
   end
@@ -150,7 +150,7 @@ Category.transaction do
    ["Category 4 Women", "C"],
    ["Category 4 Women", "Novice"]].each do |age_parent_name, child_name|
     age_parent = Category.where(name: age_parent_name).first
-    parent.children(true).select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
+    parent.children.reload.select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
       move_to_parent age_parent, child
     end
   end
@@ -158,7 +158,7 @@ Category.transaction do
   parent = Category.where(name: "Category 3 Men").first
   [["Sport Men 19-39", "Sport"]].each do |age_parent_name, child_name|
     age_parent = Category.where(name: age_parent_name).first
-    parent.children(true).select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
+    parent.children.reload.select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
       move_to_parent age_parent, child
     end
   end
@@ -166,7 +166,7 @@ Category.transaction do
   parent = Category.where(name: "Category 3 Women").first
   [["Sport Women 19-39", "Sport"]].each do |age_parent_name, child_name|
     age_parent = Category.where(name: age_parent_name).first
-    parent.children(true).select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
+    parent.children.reload.select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
       move_to_parent age_parent, child
     end
   end
@@ -174,7 +174,7 @@ Category.transaction do
   parent = Category.where(name: "Senior Men").first
   [["Expert Men 19-39", "Expert"], ["Elite Men", "Elite"], ["Elite Men", "Semi-Pro"]].each do |age_parent_name, child_name|
     age_parent = Category.where(name: age_parent_name).first
-    parent.children(true).select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
+    parent.children.reload.select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
       move_to_parent age_parent, child
     end
   end
@@ -182,7 +182,7 @@ Category.transaction do
   parent = Category.where(name: "Senior Women").first
   [["Expert Women 19-39", "Expert"], ["Elite Women", "Elite"], ["Elite Women", "Semi-Pro"]].each do |age_parent_name, child_name|
     age_parent = Category.where(name: age_parent_name).first
-    parent.children(true).select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
+    parent.children.reload.select { |c| c.name[/\b#{child_name}\b/] }.each do |child|
       move_to_parent age_parent, child
     end
   end
@@ -191,7 +191,7 @@ Category.transaction do
     parent = Category.where(name: "Category 3 #{gender}").first
     ["3/4/5", "3/4"].each do |categories|
       age_parent = Category.where(name: "Category #{categories} #{gender}").first
-      parent.children(true).select { |c| c.name[/\b#{categories}\b/] }.each do |child|
+      parent.children.reload.select { |c| c.name[/\b#{categories}\b/] }.each do |child|
         move_to_parent age_parent, child
       end
     end
@@ -201,7 +201,7 @@ Category.transaction do
     parent = Category.where(name: "Senior #{gender}").first
     ["1/2/3/4", "Pro/1/2/3", "2/3/4", "Pro/1/2", "1/2/3", "2/3", "1/2"].each do |categories|
       age_parent = Category.where(name: "Category #{categories} #{gender}").first
-      parent.children(true).select { |c| c.name[/\b#{categories}\b/] }.each do |child|
+      parent.children.reload.select { |c| c.name[/\b#{categories}\b/] }.each do |child|
         move_to_parent age_parent, child
       end
     end

@@ -48,9 +48,7 @@ class Category < ActiveRecord::Base
   }
 
   scope :results_in_year, lambda { |year|
-    joins(races: :results)
-      .where("results.year" => year)
-      .uniq
+    joins(races: :results).where("results.year" => year).distinct
   }
 
   # All categories with no parent (except root 'association' category)

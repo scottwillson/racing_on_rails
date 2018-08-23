@@ -77,7 +77,7 @@ class PersonTest < ActiveSupport::TestCase
     senior_men = FactoryBot.create(:category)
     event.races.create!(category: senior_men).results.create!(team: team)
     team.aliases.create!(name: "Sorella Forte")
-    assert_equal(0, team.names(true).size, "names")
+    assert_equal(0, team.names.reload.size, "names")
     assert_equal(1, team.aliases(true).size, "Aliases")
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
 
@@ -86,7 +86,7 @@ class PersonTest < ActiveSupport::TestCase
 
     assert_equal(1, Team.where(name: "Sorella Forte Elite Team").count, "Should have one Sorella Forte in database")
     team = Team.find_by(name: "Sorella Forte Elite Team")
-    assert_equal(0, team.names(true).size, "names")
+    assert_equal(0, team.names.reload.size, "names")
     assert_equal(1, team.aliases(true).size, "Aliases")
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
   end
@@ -1171,7 +1171,7 @@ class PersonTest < ActiveSupport::TestCase
     assert alice.editable_people.any?, "should be editor"
     person.destroy!
     assert !Person.exists?(person.id)
-    assert alice.editable_people(true).empty?, "should remove editors"
+    assert alice.editable_people.reload.empty?, "should remove editors"
   end
 
   test "multiple names" do
@@ -1221,7 +1221,7 @@ class PersonTest < ActiveSupport::TestCase
     person.name = "Rob Farris"
     person.save!
 
-    assert_equal(1, person.names(true).size, "names")
+    assert_equal(1, person.names.reload.size, "names")
 
     assert_equal("Ryan Weaver", old_result.reload.name, "name should stay the same on old result")
     assert_equal("Ryan", old_result.reload.first_name, "first_name on old result")
@@ -1316,7 +1316,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal [event], event.promoter.events, "Promoter should have event in events"
     assert_equal [], person.events, "Person should not have event in events"
     assert event.promoter.editable_events.empty?, "Promoter should have no editable_events"
-    assert_equal [event], person.editable_events(true), "Person should have editable_events"
+    assert_equal [event], person.editable_events.reload, "Person should have editable_events"
     assert person.promoter?, "Editors should be considered promoters"
   end
 

@@ -24,7 +24,8 @@ module People
 
       year ||= RacingAssociation.current.year
       discipline_param = discipline_param.to_param if discipline_param.is_a?(Discipline)
-      number = race_numbers(reload).detect do |race_number|
+      latest_race_numbers = reload ? race_numbers.reload : race_numbers
+      number = latest_race_numbers.detect do |race_number|
         race_number.year == year &&
           race_number.discipline_id == RaceNumber.discipline_id(discipline_param) &&
           race_number.number_issuer.name == RacingAssociation.current.short_name
