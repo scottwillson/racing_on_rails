@@ -51,7 +51,7 @@ class Person < ActiveRecord::Base
   has_many :event_teams, through: :event_team_memberships
   has_many :event_team_memberships, dependent: :destroy
   has_many :results
-  belongs_to :team
+  belongs_to :team, optional: true
 
   attr_accessor :year
 

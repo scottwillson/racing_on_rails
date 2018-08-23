@@ -21,10 +21,10 @@ class Result < ActiveRecord::Base
 
   after_destroy :destroy_teams
 
-  belongs_to :category
+  belongs_to :category, optional: true
   belongs_to :event
   belongs_to :race
-  belongs_to :team
+  belongs_to :team, optional: true
 
   validates :race, presence: true
 
@@ -121,7 +121,11 @@ class Result < ActiveRecord::Base
   end
 
   def event(reload = false)
-    race.event(reload) if race(reload)
+    if reload
+      return race.reload&.event&.reload
+    end
+
+    race&.event
   end
 
   def laps

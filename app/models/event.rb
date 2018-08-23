@@ -59,8 +59,8 @@ class Event < ActiveRecord::Base
 
   has_many :event_teams, dependent: :destroy
   has_many :event_team_memberships, through: :event_teams
-  belongs_to :number_issuer
-  belongs_to :team
+  belongs_to :number_issuer, optional: true
+  belongs_to :team, optional: true
 
   has_many :races,
            inverse_of: :event,
@@ -68,8 +68,8 @@ class Event < ActiveRecord::Base
            after_add: :children_changed,
            after_remove: :children_changed
 
-  belongs_to :velodrome
-  belongs_to :region
+  belongs_to :velodrome, optional: true
+  belongs_to :region, optional: true
 
   scope :today_and_future, -> { where("date >= :today || end_date >= :today", today: Time.zone.today) }
   scope :year, ->(year) { where(date: year_range(year)) }

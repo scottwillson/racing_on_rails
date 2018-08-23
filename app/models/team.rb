@@ -67,7 +67,7 @@ class Team < ActiveRecord::Base
 
   # If name changes to match existing alias, destroy the alias
   def destroy_shadowed_aliases
-    Alias.destroy_all name: name
+    Alias.where(name: name).destroy_all
   end
 
   def add_alias_for_old_name

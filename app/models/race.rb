@@ -29,7 +29,7 @@ class Race < ActiveRecord::Base
 
   belongs_to :category
   belongs_to :event, inverse_of: :races
-  belongs_to :split_from, class_name: "Race"
+  belongs_to :split_from, class_name: "Race", optional: true
   has_one :promoter, through: :event
   has_many :results, dependent: :destroy
 

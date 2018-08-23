@@ -22,40 +22,40 @@ module Competitions
         discipline: "Road",
         date: Date.new(2008, 5, 17)
       )
-      swan_island_senior_men = swan_island.races.create(category: senior_men, field_size: 5)
+      swan_island_senior_men = swan_island.races.create!(category: senior_men, field_size: 5)
 
       tonkin = FactoryBot.create(:person)
-      swan_island_senior_men.results.create(
+      swan_island_senior_men.results.create!(
         place: 1,
         person: tonkin
       )
 
       molly = FactoryBot.create(:person)
-      swan_island_senior_men.results.create(
+      swan_island_senior_men.results.create!(
         place: 2,
         person: molly
       )
 
       weaver = FactoryBot.create(:person)
-      swan_island_senior_men.results.create(
+      swan_island_senior_men.results.create!(
         place: 3,
         person: weaver
       )
 
       alice = FactoryBot.create(:person)
-      swan_island_senior_men.results.create(
+      swan_island_senior_men.results.create!(
         place: "DNF",
         person: alice
       )
 
       matson = FactoryBot.create(:person)
-      swan_island_senior_men.results.create(
+      swan_island_senior_men.results.create!(
         place: "DQ",
         person: matson
       )
 
       # single racer in category
-      senior_women_swan_island = swan_island.races.create(category: senior_women, field_size: 1)
+      senior_women_swan_island = swan_island.races.create!(category: senior_women, field_size: 1)
       senior_women_swan_island.results.create(
         place: 1,
         person: molly

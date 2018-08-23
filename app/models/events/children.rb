@@ -7,7 +7,7 @@ module Events
     included do
       validate :parent_is_not_self
 
-      belongs_to :parent, foreign_key: "parent_id", class_name: "Event"
+      belongs_to :parent, foreign_key: "parent_id", class_name: "Event", optional: true
       has_many :children,
                -> { order :date },
                class_name: "Event",

@@ -10,7 +10,7 @@ module Events
 
       before_save :set_promoter
 
-      belongs_to :promoter, class_name: "Person"
+      belongs_to :promoter, class_name: "Person", optional: true
       has_and_belongs_to_many :editors, class_name: "Person", association_foreign_key: "editor_id", join_table: "editors_events"
 
       scope :editable_by, lambda { |person|

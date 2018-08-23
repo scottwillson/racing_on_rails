@@ -13,7 +13,7 @@ module People
 
     # If name changes to match existing alias, destroy the alias
     def destroy_shadowed_aliases
-      Alias.destroy_all(["name = ?", name]) if first_name_changed? || last_name_changed?
+      Alias.where(name: name).destroy_all if first_name_changed? || last_name_changed?
     end
 
     def add_alias_for_old_name
