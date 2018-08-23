@@ -49,5 +49,8 @@ StringLiterals:
 Style/GuardClause:
   Enabled: false
 
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+
 Style/NumericPredicate:
   Enabled: false

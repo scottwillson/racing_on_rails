@@ -1,4 +1,4 @@
-class RenameCreatedBys < ActiveRecord::Migration
+class RenameCreatedBys < ActiveRecord::Migration[4.2]
   def change
     change_table :discount_codes do |t|
       t.rename :created_by_paper_trail_id, :created_by_id

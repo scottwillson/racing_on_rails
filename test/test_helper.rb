@@ -3,12 +3,12 @@
 require "simplecov"
 SimpleCov.start
 
-ENV["RAILS_ENV"] = "test"
+ENV["RAILS_ENV"] ||= "test"
 
-require File.expand_path("../../config/environment", __FILE__)
+require_relative "../config/environment"
 require "rails/test_help"
 require "mocha/setup"
-require "action_view/test_case"
+# require "action_view/test_case"
 require "authlogic/test_case"
 require "fakeweb_registrations"
 require "parallel_tests/test/runtime_logger" if ENV["RECORD_RUNTIME"]
@@ -17,8 +17,8 @@ require "test/enumerable_assertions"
 class ActiveSupport::TestCase
   make_my_diffs_pretty!
 
-  self.use_transactional_fixtures = false
-  self.use_instantiated_fixtures  = false
+  self.use_instantiated_fixtures = false
+  self.use_transactional_tests = false
   self.pre_loaded_fixtures = false
 
   include Authlogic::TestCase
