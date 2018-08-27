@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-source 'https://rubygems.org'
+source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "2.5.1"
@@ -78,8 +78,15 @@ group :development do
   gem "capistrano-rvm"
   gem "capistrano3-puma"
   gem "celluloid-benchmark"
+  gem "listen", ">= 3.0.5", "< 3.2"
   gem "rubocop", require: false
+  gem "spring-watcher-listen", "~> 2.0.0"
   gem "spring"
+  gem "web-console", ">= 3.3.0"
+end
+
+group :development, :test do
+  gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
 end
 
 group :test do
