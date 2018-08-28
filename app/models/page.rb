@@ -28,7 +28,7 @@ class Page < ActiveRecord::Base
   end
 
   def update_parent
-    if parent.reload
+    if parent&.reload
       parent.touch
     end
     true

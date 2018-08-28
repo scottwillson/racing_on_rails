@@ -319,7 +319,7 @@ class ResultTest < ActiveSupport::TestCase
     results = kings_valley_pro_1_2_2004.results
     result = results.create!(place: 1, first_name: "Clara", last_name: "Willson", number: "300")
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    assert_nil(result.person.reload.road_number.reload, "Current road number")
+    assert_nil(result.person&.reload.road_number&.reload, "Current road number")
     road_number_2004 = result.person.race_numbers.detect { |number| number.year == 2004 }
     assert_nil road_number_2004, "Should not create official race number from result"
     assert(result.person.ccx_number.blank?, "Cyclocross number")
