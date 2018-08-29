@@ -65,15 +65,13 @@ module Events
     def validate_no_results
       if any_results?
         errors.add :results, "Cannot destroy event with results"
-        return false
+        throw :abort
       end
 
       if any_results_including_children?
         errors.add :results, "Cannot destroy event with children with results"
-        return false
+        throw :abort
       end
-
-      true
     end
 
     # Result updated_at should propagate to Event updated_at but does not yet
