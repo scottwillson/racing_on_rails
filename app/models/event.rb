@@ -252,7 +252,7 @@ class Event < ActiveRecord::Base
 
   def inspect_debug
     puts to_s
-    race.reload.sort.each(&:inspect_debug)
+    races.reload.sort.each(&:inspect_debug)
     children.reload.sort.each(&:inspect_debug)
 
     ""

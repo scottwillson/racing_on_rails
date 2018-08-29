@@ -36,7 +36,7 @@ class PromotersTest < AcceptanceTest
     end
     assert_no_text "form.editor_field input"
     assert_page_has_content "Senior Women"
-    race = series.race.reload.first
+    race = series.races.reload.first
     assert_equal "Senior Women", race.category_name, "Should update category name"
 
     click_link "edit_race_#{race.id}"

@@ -32,7 +32,7 @@ module Admin
         assert(flash[:warn].blank?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
         assert_redirected_to edit_admin_event_path(mt_hood_1)
         assert_not_nil flash[:notice]
-        assert(!mt_hood_1.race.reload.empty?, "Should have races after upload attempt")
+        assert(!mt_hood_1.races.reload.empty?, "Should have races after upload attempt")
       end
 
       test "upload usac" do
@@ -45,7 +45,7 @@ module Admin
         assert flash[:warn].blank?, "flash[:warn] should be empty, but was: #{flash[:warn]}"
         assert_redirected_to edit_admin_event_path(mt_hood_1)
         assert_not_nil flash[:notice]
-        assert mt_hood_1.race.reload.present?, "Should have races after upload"
+        assert mt_hood_1.races.reload.present?, "Should have races after upload"
       end
 
       test "upload custom columns" do
@@ -59,7 +59,7 @@ module Admin
         assert_response :redirect
         assert_not_nil flash[:notice]
         assert(flash[:warn].blank?)
-        assert(!mt_hood_1.race.reload.empty?, "Should have races after upload attempt")
+        assert(!mt_hood_1.races.reload.empty?, "Should have races after upload attempt")
       end
 
       test "upload with many warnings" do
@@ -79,7 +79,7 @@ module Admin
         Person.create(name: "Greg Rodgers", road_number: "500")
 
         mt_hood_1 = FactoryBot.create(:stage_race)
-        assert(mt_hood_1.race.reload.empty?, "Should have no races before import")
+        assert(mt_hood_1.races.reload.empty?, "Should have no races before import")
 
         file = fixture_file_upload("results/dupe_people.xls", "application/vnd.ms-excel", :binary)
         post :upload, id: mt_hood_1.to_param, results_file: file
@@ -87,7 +87,7 @@ module Admin
         assert_response :redirect
 
         # Dupe people used to be allowed, and this would have been an error
-        assert(!mt_hood_1.race.reload.empty?, "Should have races after importing dupe people")
+        assert(!mt_hood_1.races.reload.empty?, "Should have races after importing dupe people")
         assert(flash[:warn].blank?)
       end
 
@@ -115,7 +115,7 @@ module Admin
 
         assert(flash[:warn].present?, "should have flash[:warn]")
         assert_response :success
-        assert(mt_hood_1.race.reload.empty?, "Should have no races after failed upload attempt")
+        assert(mt_hood_1.races.reload.empty?, "Should have no races after failed upload attempt")
       end
     end
   end
