@@ -328,7 +328,7 @@ class EventTest < ActiveSupport::TestCase
 
     assert_equal_events([], child_event.children.reload, "child_event.children")
     assert_equal_events([], child_event.child_competitions.reload, "child_event.child_competitions")
-    assert_nil(child_event.overall.reload, "child_event.overall")
+    assert_nil(child_event.overall, "child_event.overall")
     assert_equal(1, child_event.competition_event_memberships.reload.size, "child_event.competition_event_memberships")
     competition_event_membership = child_event.competition_event_memberships.first
     assert_equal(child_event, competition_event_membership.event, "competition_event_membership.event")

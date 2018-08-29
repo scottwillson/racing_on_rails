@@ -53,7 +53,7 @@ module Events
         events = Event
                  .includes(parent: :parent)
                  .where(id: event_ids)
-                 .uniq
+                 .distinct
 
         events = events.discipline(discipline)
 

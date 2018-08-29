@@ -72,7 +72,7 @@ module Admin
       post :create, race: { category_name: "Senior Women", event_id: event.to_param }
       assert_not_nil assigns(:race), "@race"
       assert_redirected_to edit_admin_race_path assigns(:race)
-      assert event.race.reload.any? { |race| race.category_name == "Senior Women" }
+      assert event.races.reload.any? { |race| race.category_name == "Senior Women" }
     end
 
     test "invalid create" do

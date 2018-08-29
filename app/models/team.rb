@@ -94,10 +94,10 @@ class Team < ActiveRecord::Base
     Team.transaction do
       reload
       team.reload
-      results true
-      team.results true
+      results.reload
+      team.results.reload
       team.create_team_for_historical_results!
-      team.results true
+      team.results.reload
 
       team.event_teams.each do |event_team|
         event_team.event_team_memberships.each do |event_team_membership|

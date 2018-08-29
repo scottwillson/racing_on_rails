@@ -32,7 +32,7 @@ module Admin
       xhr :put, :update, event_id: race.event, races_collection: { text: "Senior Men\r\nCat 3" }
       assert_response :success
       assert_not_nil assigns[:races_collection], "@races_collection"
-      assert_equal ["Category 3", "Senior Men"], race.event.race.reload.map(&:name).sort
+      assert_equal ["Category 3", "Senior Men"], race.event.races.reload.map(&:name).sort
     end
 
     test "create" do

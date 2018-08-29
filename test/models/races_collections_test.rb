@@ -33,7 +33,7 @@ class RacesCollectionTest < ActiveSupport::TestCase
     races_collection = RacesCollection.new(event)
     races_collection.update text: ""
 
-    event.races true
+    event.races.reload
     assert_equal "", races_collection.text
   end
 
@@ -43,7 +43,7 @@ class RacesCollectionTest < ActiveSupport::TestCase
     races_collection = RacesCollection.new(event)
     races_collection.update text: "\r\nMen A\r\n\r\nMen B\r\n\r\n"
 
-    event.races true
+    event.races.reload
     assert_equal "Men A\nMen B", races_collection.text
   end
 
@@ -55,7 +55,7 @@ class RacesCollectionTest < ActiveSupport::TestCase
     races_collection = RacesCollection.new(event)
     races_collection.update text: "Men A\r\nMen B"
 
-    event.races true
+    event.races.reload
     assert_equal "Men A\nMen B", races_collection.text
   end
 
