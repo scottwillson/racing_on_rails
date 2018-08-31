@@ -1219,6 +1219,8 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal("Weaver", old_result.last_name, "last_name on old result")
 
     person.name = "Rob Farris"
+    Rails.logger.debug ">> first_name_changed? #{person.first_name_changed?}"
+    Rails.logger.debug "save!"
     person.save!
 
     assert_equal(1, person.names.reload.size, "names")
