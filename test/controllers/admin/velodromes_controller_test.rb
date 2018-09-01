@@ -34,7 +34,7 @@ module Admin
     end
 
     test "create" do
-      post(:create, velodrome: { name: "Hellyer", website: "www.hellyer.org" })
+      post(:create, params: { velodrome: { name: "Hellyer", website: "www.hellyer.org" } })
       velodrome = Velodrome.find_by(name: "Hellyer")
       assert_not_nil(velodrome, "Should create new Velodrome")
       assert_equal("www.hellyer.org", velodrome.website, "website")
@@ -45,14 +45,14 @@ module Admin
 
     test "edit" do
       velodrome = FactoryBot.create(:velodrome)
-      get(:edit, id: velodrome.id)
+      get(:edit, params: { id: velodrome.id })
       assert_response(:success)
       assert_equal(velodrome, assigns["velodrome"], "Should assign velodrome")
     end
 
     test "update" do
       velodrome = FactoryBot.create(:velodrome)
-      put(:update, id: velodrome.id, velodrome: { name: "T Town", website: "www" })
+      put(:update, params: { id: velodrome.id, velodrome: { name: "T Town", website: "www" } })
       assert_redirected_to(edit_admin_velodrome_path(velodrome))
       velodrome.reload
       assert_equal("T Town", velodrome.name, "Name should be updated")
@@ -68,11 +68,13 @@ module Admin
 
     test "update name" do
       velodrome = FactoryBot.create(:velodrome)
-      xhr(:put,
-          :update_attribute,
+      put :update_attribute,
+        params: {
           id: velodrome.to_param,
           value: "Paul Allen Velodrome",
-          name: "name")
+          name: "name"
+        },
+        xhr: true
       assert_response(:success)
       velodrome.reload
       assert_equal("Paul Allen Velodrome", velodrome.name, "Velodrome name should change after update")
@@ -80,11 +82,13 @@ module Admin
 
     test "update website" do
       velodrome = FactoryBot.create(:velodrome)
-      xhr(:put,
-          :update_attribute,
+      put :update_attribute,
+        params: {
           id: velodrome.to_param,
           value: "www.raceatra.com",
-          name: "website")
+          name: "website"
+        },
+        xhr: true
       assert_response(:success)
       velodrome.reload
       assert_equal("www.raceatra.com", velodrome.website, "Velodrome website should change after update")
