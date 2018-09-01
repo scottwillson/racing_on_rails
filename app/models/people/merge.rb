@@ -116,12 +116,7 @@ module People
           names << other_person.names
           race_numbers << other_person.race_numbers
           results << other_person.results
-
-          begin
-            versions << other_person.versions
-          rescue ActiveRecord::SerializationTypeMismatch => e
-            logger.error e
-          end
+          versions << other_person.versions
 
           other_person.event_team_memberships.reload.clear
           Person.delete other_person.id
