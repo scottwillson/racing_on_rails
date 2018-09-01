@@ -222,14 +222,14 @@ module Teams
     end
 
     test "update name different case" do
-      vanilla = FactoryBot.create(:team, name: "Vanilla")
-      vanilla.aliases.create!(name: "Vanilla Bicycles")
-      assert_equal("Vanilla", vanilla.name, "Name before update")
-      vanilla.name = "vanilla"
-      vanilla.save
-      assert(vanilla.errors.empty?, "Should have no errors after save")
+      vanilla = FactoryBot.create :team, name: "Vanilla"
+      vanilla.aliases.create! name: "Vanilla Bicycles"
       vanilla.reload
-      assert_equal("vanilla", vanilla.name, "Name after update")
+      assert_equal "Vanilla", vanilla.name, "Name before update"
+      vanilla.name = "vanilla"
+      vanilla.save!
+      vanilla.reload
+      assert_equal "vanilla", vanilla.name, "Name after update"
     end
   end
 end

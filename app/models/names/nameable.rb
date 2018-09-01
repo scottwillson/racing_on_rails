@@ -38,7 +38,7 @@ module Names
     end
 
     def results_before_this_year?
-      # Exists? doesn't support joins
+      # .exists? doesn't support joins
       count = self.class.count_by_sql([%(
         select results.id from #{self.class.table_name}, results, races, events
         where #{self.class.table_name}.id = ? and #{self.class.table_name}.id = results.#{self.class.name.downcase}_id

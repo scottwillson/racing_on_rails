@@ -7,12 +7,13 @@ class TeamObserver < ActiveRecord::Observer
   end
 
   def around_update(team)
-    if team.member_changed?
-      yield
+    member_changed = team.member_changed?
+
+    yield
+
+    if member_changed
       Result.where(team_id: team.id).update_all(team_member: team.member)
       Result.where(team_id: team.id, year: RacingAssociation.current.year).update_all(team_name: team.name)
     end
-
-    true
   end
 end
