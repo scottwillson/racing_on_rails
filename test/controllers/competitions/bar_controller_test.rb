@@ -25,27 +25,27 @@ module Competitions
     end
 
     test "show no bar" do
-      get :show, year: "2012"
+      get :show, params: { year: "2012" }
       assert_response :success
       assert_template "bar/show"
       assert flash.present?, "flash.present?"
     end
 
     test "defaults" do
-      get :show, year: Time.zone.today.year.to_s, discipline: "overall", category: "senior_men"
+      get :show, params: { year: Time.zone.today.year.to_s, discipline: "overall", category: "senior_men" }
       assert_response :success
       assert_template "bar/show"
     end
 
     test "show empty" do
-      get :show, year: Time.zone.today.year.to_s, discipline: "road", category: "senior_men"
+      get :show, params: { year: Time.zone.today.year.to_s, discipline: "road", category: "senior_men" }
       assert_response :success
       assert_template "bar/show"
     end
 
     test "show" do
       Bar.calculate! Time.zone.today.year
-      get :show, year: Time.zone.today.year.to_s, discipline: "road", category: "senior_women"
+      get :show, params: { year: Time.zone.today.year.to_s, discipline: "road", category: "senior_women" }
       assert_response :success
       assert_template "bar/show"
     end
@@ -54,7 +54,7 @@ module Competitions
       masters_men = Category.find_by(name: "Masters Men")
       FactoryBot.create(:category, name: "Masters Men 30-34", parent: masters_men)
       FactoryBot.create(:discipline, name: "Overall")
-      get :show, discipline: "badbadbad", year: "2004", category: "masters_men_30_34"
+      get :show, params: { discipline: "badbadbad", year: "2004", category: "masters_men_30_34" }
       assert_response :success
       assert_template "bar/show"
       assert flash.present?, "flash.present?"
@@ -64,7 +64,7 @@ module Competitions
       masters_men = Category.find_by(name: "Masters Men")
       FactoryBot.create(:category, name: "Masters Men 30-34", parent: masters_men)
       FactoryBot.create(:discipline, name: "Overall")
-      get :show, discipline: "overall", year: "19", category: "masters_men_30_34"
+      get :show, params: { discipline: "overall", year: "19", category: "masters_men_30_34" }
       assert_response :success
       assert_template "bar/show"
       assert flash.present?, "flash.present?"
@@ -74,7 +74,7 @@ module Competitions
       masters_men = Category.find_by(name: "Masters Men")
       FactoryBot.create(:category, name: "Masters Men 30-34", parent: masters_men)
       FactoryBot.create(:discipline, name: "Overall")
-      get :show, discipline: "overall", year: "2009", category: "dhaskjdhal"
+      get :show, params: { discipline: "overall", year: "2009", category: "dhaskjdhal" }
       assert_response :success
       assert_template "bar/show"
       assert flash.present?, "flash.present?"

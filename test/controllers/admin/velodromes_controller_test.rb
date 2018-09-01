@@ -61,7 +61,7 @@ module Admin
 
     test "destroy" do
       velodrome = FactoryBot.create(:velodrome)
-      delete :destroy, id: velodrome.id
+      delete :destroy, params: { id: velodrome.id }
       assert(!Velodrome.exists?(velodrome.id), "Should delete velodrome")
       assert_not_nil(flash[:notice], "Should have flash :notice")
     end

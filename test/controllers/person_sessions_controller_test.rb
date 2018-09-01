@@ -11,7 +11,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
   test "admin login" do
     FactoryBot.create(:administrator)
-    post :create, person_session: { login: "admin@example.com", password: "secret" }
+    post :create, params: { person_session: { login: "admin@example.com", password: "secret" } }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert assigns["person_session"].errors.empty?, assigns["person_session"].errors.full_messages.join
     assert_redirected_to admin_home_path
@@ -21,7 +21,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
   test "member login" do
     member = FactoryBot.create(:person_with_login)
-    post :create, person_session: { login: member.login, password: "secret" }
+    post :create, params: { person_session: { login: member.login, password: "secret" } }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert assigns["person_session"].errors.empty?, assigns["person_session"].errors.full_messages.join
     assert_redirected_to edit_person_path(member)
@@ -31,7 +31,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
   test "login failure" do
     FactoryBot.create(:administrator)
-    post :create, person_session: { login: "admin@example.com", password: "bad password" }
+    post :create, params: { person_session: { login: "admin@example.com", password: "bad password" } }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(!assigns["person_session"].errors.empty?, "@person_session should have errors")
     assert_response :success
@@ -41,7 +41,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
   test "blank login should fail" do
     FactoryBot.create(:administrator)
-    post :create, person_session: { login: "", password: "" }
+    post :create, params: { person_session: { login: "", password: "" } }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(assigns["person_session"].errors.present?, "@person_session should have errors")
     assert_response :success
@@ -51,7 +51,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
   test "blank login should fail with blank email address" do
     Person.create!
-    post :create, params: { person_session: { email: "", password: "" }, login: "Login" }
+    post :create, params: { params: { person_session: { email: "", password: "" }, login: "Login" } }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(!assigns["person_session"].errors.empty?, "@person_session should have errors")
     assert_response :success
@@ -110,12 +110,12 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   test "show and return to" do
-    get :show, return_to: "/admin"
+    get :show, params: { return_to: "/admin" }
     assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
   test "show and return to registration" do
-    get :show, return_to: "/events/123/register"
+    get :show, params: { return_to: "/events/123/register" }
     assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 

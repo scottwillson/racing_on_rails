@@ -365,7 +365,7 @@ module Admin
       assert tonkin.results.include?(result)
       assert !weaver.results.include?(result)
 
-      post :move, person_id: weaver.id, result_id: result.id, format: "js"
+      post :move, params: { person_id: weaver.id, result_id: result.id, format: "js" }
 
       assert !tonkin.results.reload.include?(result)
       assert weaver.results.reload.include?(result)
@@ -445,7 +445,7 @@ module Admin
       assert_equal("DNF", dnf.place, "DNF place after insert")
       assert_equal("DNF", race.results.reload.sort.last.place, "DNF place after insert")
 
-      post :create, xhr: true, params: { race_id: race.id }
+      post :create, params: { xhr: true, params: { race_id: race.id } }
       assert_response(:success)
       assert_equal(11, race.results.reload.size, "Results after insert")
       tonkin_result.reload

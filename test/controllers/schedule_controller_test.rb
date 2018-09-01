@@ -54,19 +54,19 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
   test "index rss" do
     FactoryBot.create(:event)
-    get :index, format: :rss
+    get :index, params: { format: :rss }
     assert_redirected_to schedule_path(format: :atom)
   end
 
   test "index atom" do
     FactoryBot.create(:event)
-    get :index, format: :atom
+    get :index, params: { format: :atom }
     assert_response :success
   end
 
   test "index excel" do
     FactoryBot.create(:event)
-    get :index, format: :xlsx
+    get :index, params: { format: :xlsx }
     assert_response :success
   end
 
@@ -76,7 +76,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
     FactoryBot.create(:event, discipline: "Mountain Bike")
 
-    get :index, discipline: "mtb", format: :xlsx
+    get :index, params: { discipline: "mtb", format: :xlsx }
     assert_response :success
   end
 
@@ -85,7 +85,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
     FactoryBot.create(:event, discipline: "Road")
 
-    get :list, discipline: "road", format: :xlsx
+    get :list, params: { discipline: "road", format: :xlsx }
     assert_response :success
   end
 
@@ -178,7 +178,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       racing_association.show_only_association_sanctioned_races_on_calendar = false
       racing_association.save!
 
-      get :index, sanctioning_organization: "FIAC"
+      get :index, params: { sanctioning_organization: "FIAC" }
       html = @response.body
       assert html["FIAC Event"], "Should include FIAC event"
       assert !html["UCI Event"], "Should not include UCI event"
@@ -199,7 +199,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       FactoryBot.create(:event, region: wa, name: "WA Event")
       FactoryBot.create(:event, region: oregon, name: "OR Event")
 
-      get :index, region: "washington"
+      get :index, params: { region: "washington" }
       html = @response.body
       assert html["WA Event"], "Should include Washington event"
       assert !html["OR Event"], "Should not include Oregon event"
@@ -231,7 +231,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get :index, year: year, discipline: "mountain_bike"
+    get :index, params: { year: year, discipline: "mountain_bike" }
 
     html = @response.body
     assert(html["Mudslinger"], "mountain_bike should show MTB races")
@@ -278,17 +278,17 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     FactoryBot.create(:discipline)
     FactoryBot.create(:event, discipline: "Road")
 
-    get :list, discipline: "road", format: :xlsx
+    get :list, params: { discipline: "road", format: :xlsx }
     assert_response :success
   end
 
   test "index as json" do
-    get :index, format: "json"
+    get :index, params: { format: "json" }
     assert_response :success
   end
 
   test "calendar as json" do
-    get :calendar, format: "json"
+    get :calendar, params: { format: "json" }
     assert_response :success
   end
 

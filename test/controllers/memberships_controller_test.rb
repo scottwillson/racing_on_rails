@@ -8,7 +8,7 @@ class MembershipsControllerTest < ActionController::TestCase
     use_ssl
     person = FactoryBot.create(:person)
     login_as person
-    get :show, person_id: person
+    get :show, params: { person_id: person }
     assert_equal person, assigns(:person), "@person"
   end
 end

@@ -131,8 +131,9 @@ module Admin
     end
 
     test "create with empty password and no numbers" do
-      post :create,  person: { login: "", password_confirmation: "", password: "", team_name: "",
+      post :create, params: {  person: { login: "", password_confirmation: "", password: "", team_name: "",
                                first_name: "Henry", last_name: "David", license: "" }, number_issuer_id: [{ "1" => nil }]
+                             }
       assert_not_nil assigns(:person), "@person"
       assert assigns(:person).errors.empty?, "Did no expect @person errors: #{assigns(:person).errors.full_messages.join(', ')}"
       assert_redirected_to edit_admin_person_path(assigns(:person))
@@ -318,7 +319,7 @@ module Admin
 
     test "destroy" do
       person = FactoryBot.create(:person)
-      delete :destroy, id: person.id
+      delete :destroy, params: { id: person.id }
       assert !Person.exists?(person.id)
       assert_redirected_to admin_people_path
       assert flash.notice.present?
@@ -327,7 +328,7 @@ module Admin
     test "cannot destroy" do
       result = FactoryBot.create(:result)
       person = result.person
-      delete :destroy, id: person.id
+      delete :destroy, params: { id: person.id }
       assert Person.exists?(person.id)
       assert_response :success
       assert flash[:warn].present?

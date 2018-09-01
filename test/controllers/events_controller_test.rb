@@ -11,7 +11,7 @@ class EventsControllerTest < ActionController::TestCase
 
   test "index with person id" do
     promoter = FactoryBot.create(:promoter)
-    get :index, person_id: promoter
+    get :index, params: { person_id: promoter }
     assert_response :success
     assert_select ".nav.tabs", count: 0
     assert_select "a[href*='/admin/events']", 0
@@ -23,7 +23,7 @@ class EventsControllerTest < ActionController::TestCase
       PersonSession.create(promoter)
 
       use_ssl
-      get :index, person_id: promoter
+      get :index, params: { person_id: promoter }
       assert_response :success
       assert_select "a[href*='/events']" if css_select(".nav.tabs").present?
     end
@@ -32,7 +32,7 @@ class EventsControllerTest < ActionController::TestCase
   test "index as xml" do
     Timecop.freeze(Time.zone.local(2012, 5)) do
       FactoryBot.create(:event)
-      get :index, format: "xml"
+      get :index, params: { format: "xml" }
       assert_response :success
       assert_equal "application/xml", @response.content_type
       [

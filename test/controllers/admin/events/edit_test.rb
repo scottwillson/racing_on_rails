@@ -68,7 +68,7 @@ module Admin
       test "edit as promoter" do
         event = FactoryBot.create(:event)
         login_as event.promoter
-        get :edit, id: event.to_param
+        get :edit, params: { id: event.to_param }
         assert_response :success
         assert_template "admin/events/edit"
         assert_select "#event_human_date", count: 0
@@ -79,7 +79,7 @@ module Admin
         event_2 = FactoryBot.create(:event)
 
         login_as event_2.promoter
-        get :edit, id: event.to_param
+        get :edit, params: { id: event.to_param }
         assert_redirected_to unauthorized_path
       end
 
@@ -88,7 +88,7 @@ module Admin
         person = FactoryBot.create(:person)
         event.editors << person
         login_as person
-        get :edit, id: event.to_param
+        get :edit, params: { id: event.to_param }
         assert_response :success
         assert_template "admin/events/edit"
         assert_select "#event_human_date", count: 0

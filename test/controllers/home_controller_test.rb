@@ -35,7 +35,7 @@ class HomeControllerTest < ActionController::TestCase
   test "update" do
     use_ssl
     login_as :administrator
-    put :update, home: { weeks_of_recent_results: 1 }
+    put :update, params: { home: { weeks_of_recent_results: 1 } }
     assert_redirected_to edit_home_path
   end
 end

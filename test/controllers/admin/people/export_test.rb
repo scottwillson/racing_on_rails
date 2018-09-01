@@ -44,7 +44,7 @@ module Admin
           weaver.race_numbers.create!(discipline: Discipline[:road], value: "888")
           weaver.race_numbers.create!(discipline: Discipline[:road], value: "999")
 
-          get :index, format: "xls", include: "all"
+          get :index, params: { format: "xls", include: "all" }
 
           assert_response :success
           assert_equal("filename=\"people_2012_11_1.xls\"", @response.headers["Content-Disposition"], "Should set disposition")
@@ -101,7 +101,7 @@ module Admin
         destroy_person_session
         PersonSession.create(FactoryBot.create(:promoter))
 
-        get :index, format: "xls", include: "members_only", excel_layout: "scoring_sheet"
+        get :index, params: { format: "xls", include: "members_only", excel_layout: "scoring_sheet" }
 
         assert_response :success
         assert_equal("filename=\"scoring_sheet.xls\"", @response.headers["Content-Disposition"], "Should set disposition")

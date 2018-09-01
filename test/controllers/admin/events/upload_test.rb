@@ -26,8 +26,8 @@ module Admin
         mt_hood_1 = FactoryBot.create(:stage_race)
         assert(mt_hood_1.races.empty?, "Should have no races before import")
 
-        post :upload, id: mt_hood_1.to_param,
-                      results_file: fixture_file_upload("results/pir_2006_format.xlsx", "application/vnd.ms-excel", :binary)
+        post :upload, params: { id: mt_hood_1.to_param,
+                      results_file: fixture_file_upload("results/pir_2006_format.xlsx", "application/vnd.ms-excel", :binary) }
 
         assert(flash[:warn].blank?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
         assert_redirected_to edit_admin_event_path(mt_hood_1)
@@ -39,8 +39,8 @@ module Admin
         RacingAssociation.current.update_attributes! usac_results_format: true
         mt_hood_1 = FactoryBot.create(:stage_race)
 
-        post :upload, id: mt_hood_1.to_param,
-                      results_file: fixture_file_upload("results/tt_usac.xls", "application/vnd.ms-excel", :binary)
+        post :upload, params: { id: mt_hood_1.to_param,
+                      results_file: fixture_file_upload("results/tt_usac.xls", "application/vnd.ms-excel", :binary) }
 
         assert flash[:warn].blank?, "flash[:warn] should be empty, but was: #{flash[:warn]}"
         assert_redirected_to edit_admin_event_path(mt_hood_1)
@@ -52,8 +52,8 @@ module Admin
         mt_hood_1 = FactoryBot.create(:stage_race)
         assert(mt_hood_1.races.empty?, "Should have no races before import")
 
-        post :upload, id: mt_hood_1.to_param,
-                      results_file: fixture_file_upload("results/custom_columns.xls", "application/vnd.ms-excel", :binary)
+        post :upload, params: { id: mt_hood_1.to_param,
+                      results_file: fixture_file_upload("results/custom_columns.xls", "application/vnd.ms-excel", :binary) }
         assert_redirected_to edit_admin_event_path(mt_hood_1)
 
         assert_response :redirect
@@ -65,7 +65,7 @@ module Admin
       test "upload with many warnings" do
         event = FactoryBot.create(:event)
 
-        post :upload, id: event.to_param, results_file: fixture_file_upload("results/ttt.xls", "application/vnd.ms-excel", :binary)
+        post :upload, params: { id: event.to_param, results_file: fixture_file_upload("results/ttt.xls", "application/vnd.ms-excel", :binary) }
 
         assert_redirected_to edit_admin_event_path(event)
         assert flash[:notice].nil? || flash[:notice].size < 1024, "flash[:notice] is too big: #{flash[:notice].size} characters"
@@ -82,7 +82,7 @@ module Admin
         assert(mt_hood_1.races.reload.empty?, "Should have no races before import")
 
         file = fixture_file_upload("results/dupe_people.xls", "application/vnd.ms-excel", :binary)
-        post :upload, id: mt_hood_1.to_param, results_file: file
+        post :upload, params: { id: mt_hood_1.to_param, results_file: file }
 
         assert_response :redirect
 
@@ -110,8 +110,8 @@ module Admin
 
         Results::ResultsFile.any_instance.expects(:import).raises(Ole::Storage::FormatError, "OLE2 signature is invalid")
 
-        post :upload, id: mt_hood_1.to_param,
-                      results_file: fixture_file_upload("results/pir_2006_format.xlsx", "application/vnd.ms-excel", :binary)
+        post :upload, params: { id: mt_hood_1.to_param,
+                      results_file: fixture_file_upload("results/pir_2006_format.xlsx", "application/vnd.ms-excel", :binary) }
 
         assert(flash[:warn].present?, "should have flash[:warn]")
         assert_response :success

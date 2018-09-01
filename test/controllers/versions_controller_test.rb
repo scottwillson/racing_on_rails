@@ -12,7 +12,7 @@ class VersionsControllerTest < ActionController::TestCase
 
   test "index for person" do
     person = FactoryBot.create(:person)
-    get :index, person_id: person.to_param
+    get :index, params: { person_id: person.to_param }
     assert_response :success
     assert_equal person, assigns(:person), "@person"
   end

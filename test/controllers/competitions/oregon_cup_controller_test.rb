@@ -12,7 +12,7 @@ module Competitions
       race = event.races.create!(category: FactoryBot.create(:category))
       race.results.create!(place: 1, person: Person.create!(name: "Floyd Landis"))
 
-      get :index, year: "2004"
+      get :index, params: { year: "2004" }
       assert_response :success
       assert_template "oregon_cup/index"
       assert_equal event, assigns["oregon_cup"], "Should assign oregon_cup"

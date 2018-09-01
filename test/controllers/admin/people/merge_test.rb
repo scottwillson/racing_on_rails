@@ -35,7 +35,7 @@ module Admin
         tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
 
-        post :merge, xhr: true, params: { other_person_id: tonkin.to_param, id: molly.to_param, format: :js }
+        post :merge, params: { xhr: true, params: { other_person_id: tonkin.to_param, id: molly.to_param, format: :js } }
         assert_response :success
         assert_template "admin/people/merge"
 
@@ -47,7 +47,7 @@ module Admin
         tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
 
-        post :merge, xhr: true, params: { other_person_id: tonkin.to_param, id: tonkin.to_param, format: :js }
+        post :merge, params: { xhr: true, params: { other_person_id: tonkin.to_param, id: tonkin.to_param, format: :js } }
         assert_response :success
         assert_template "admin/people/merge"
 
@@ -132,7 +132,7 @@ module Admin
         assert_equal(tonkin_with_different_road_number.new_record?, false, "tonkin_with_different_road_number should be saved")
         assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Tonkins in database")
 
-        post :merge, id: molly.id, other_person_id: tonkin.to_param, format: :js
+        post :merge, params: { id: molly.id, other_person_id: tonkin.to_param, format: :js }
         assert_response :success
         assert_template("admin/people/merge")
 

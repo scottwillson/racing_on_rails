@@ -26,7 +26,7 @@ module Admin
         people_before_import = Person.count
 
         file = fixture_file_upload("membership/upload.xlsx", "application/vnd.ms-excel")
-        post :preview_import, people_file: file
+        post :preview_import, params: { people_file: file }
 
         assert(flash[:warn].blank?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
         assert_response :success
@@ -54,7 +54,7 @@ module Admin
 
         fixture_file_upload "membership/upload.xlsx", "application/vnd.ms-excel"
         @request.session[:people_file_path] = File.expand_path("#{::Rails.root}/test/fixtures/membership/upload.xlsx")
-        post :import, commit: "Import", update_membership: "true"
+        post :import, params: { commit: "Import", update_membership: "true" }
 
         assert_nil session[:people_file_path], "Should remove temp file path from session"
         assert_equal 7, Person.count, "Should have added people"
@@ -122,7 +122,7 @@ module Admin
       end
 
       test "import with no file" do
-        post :import, commit: "Import", update_membership: "true"
+        post :import, params: { commit: "Import", update_membership: "true" }
         assert flash[:warn].present?, "should have flash[:warn]"
         assert_redirected_to admin_people_path
       end

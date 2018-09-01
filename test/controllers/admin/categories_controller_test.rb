@@ -19,7 +19,7 @@ module Admin
 
     test "edit" do
       category = FactoryBot.create(:category)
-      get :edit, id: category
+      get :edit, params: { id: category }
     end
 
     test "update should save name as-is" do

@@ -14,7 +14,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
     member = FactoryBot.create(:person, email: "person@example.com")
 
     login_as promoter
-    post :create, id: member.to_param, editor_id: promoter.to_param
+    post :create, params: { id: member.to_param, editor_id: promoter.to_param }
     assert_redirected_to edit_person_path(promoter)
 
     editor_request = EditorRequest.where(person_id: member.id, editor_id: promoter.id).first
@@ -28,7 +28,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
     existing_editor_request = member.editor_requests.create!(editor: promoter)
 
     login_as promoter
-    post :create, id: member.to_param, editor_id: promoter.to_param
+    post :create, params: { id: member.to_param, editor_id: promoter.to_param }
     assert_redirected_to edit_person_path(promoter)
 
     editor_requests = EditorRequest.where(person_id: member.id).where(editor_id: promoter.id)
@@ -43,7 +43,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
 
     member.editors << promoter
     login_as promoter
-    post :create, id: member.to_param, editor_id: promoter.to_param
+    post :create, params: { id: member.to_param, editor_id: promoter.to_param }
     assert_redirected_to edit_person_path(promoter)
 
     editor_request = EditorRequest.where(person_id: member.id, editor_id: promoter.id).first
@@ -59,7 +59,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
   test "must login" do
     promoter = FactoryBot.create(:person)
     member = FactoryBot.create(:person, email: "person@example.com")
-    post :create, id: member.to_param, editor_id: promoter.to_param
+    post :create, params: { id: member.to_param, editor_id: promoter.to_param }
     assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
@@ -69,7 +69,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
     past_member = FactoryBot.create(:person_with_login)
 
     login_as past_member
-    post :create, id: member.to_param, editor_id: promoter.to_param
+    post :create, params: { id: member.to_param, editor_id: promoter.to_param }
     assert_redirected_to unauthorized_path
   end
 
@@ -78,7 +78,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
     member = FactoryBot.create(:person, email: "person@example.com")
 
     editor_request = member.editor_requests.create!(editor: promoter)
-    get :show, person_id: member.to_param, id: editor_request.token
+    get :show, params: { person_id: member.to_param, id: editor_request.token }
     assert_response :success
     assert member.editors.reload.include?(promoter), "Should add editor"
   end

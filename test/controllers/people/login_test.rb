@@ -203,7 +203,7 @@ class LoginTest < ActionController::TestCase
     person = FactoryBot.create(:person_with_login)
     person.reset_perishable_token!
     use_ssl
-    get :new_login, id: person.perishable_token
+    get :new_login, params: { id: person.perishable_token }
     assert_response :success
     assert !assigns(:person).new_record?, "@person should not be a new record"
   end
@@ -213,7 +213,7 @@ class LoginTest < ActionController::TestCase
     person.reset_perishable_token!
     login_as person
     use_ssl
-    get :new_login, id: person.perishable_token
+    get :new_login, params: { id: person.perishable_token }
     assert_response :success
     assert !assigns(:person).new_record?, "@person should not be a new record"
   end

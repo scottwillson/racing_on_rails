@@ -6,7 +6,7 @@ require File.expand_path("../../test_helper", __FILE__)
 class PostsControllerTest < ActionController::TestCase
   test "new" do
     obra_chat = FactoryBot.create(:mailing_list)
-    get :new, mailing_list_id: obra_chat.id
+    get :new, params: { mailing_list_id: obra_chat.id }
     assert_template "posts/new"
     assert_not_nil assigns["mailing_list"], "Should assign mailing_list"
     assert_not_nil assigns["post"], "Should assign post"
@@ -29,7 +29,7 @@ class PostsControllerTest < ActionController::TestCase
       body: "This is a test message."
     )
 
-    get :new, mailing_list_id: obra_race.id, reply_to_id: original_post.id
+    get :new, params: { mailing_list_id: obra_race.id, reply_to_id: original_post.id }
     assert_template "posts/new"
     assert_not_nil assigns["mailing_list"], "Should assign mailing_list"
     post = assigns["post"]
@@ -46,37 +46,37 @@ class PostsControllerTest < ActionController::TestCase
 
   test "index" do
     mailing_list = FactoryBot.create(:mailing_list)
-    get :index, mailing_list_id: mailing_list.id
+    get :index, params: { mailing_list_id: mailing_list.id }
     assert_response :success
   end
 
   test "index atom" do
     mailing_list = FactoryBot.create(:mailing_list)
-    get :index, mailing_list_id: mailing_list.id, format: :atom
+    get :index, params: { mailing_list_id: mailing_list.id, format: :atom }
     assert_response :success
   end
 
   test "index rss" do
     mailing_list = FactoryBot.create(:mailing_list)
-    get :index, mailing_list_id: mailing_list.id, format: :rss
+    get :index, params: { mailing_list_id: mailing_list.id, format: :rss }
     assert_redirected_to format: :atom
   end
 
   test "index with date" do
     post = FactoryBot.create(:post)
-    get :index, mailing_list_id: post.mailing_list.id, month: 12, year: 2007
+    get :index, params: { mailing_list_id: post.mailing_list.id, month: 12, year: 2007 }
     assert_response :success
   end
 
   test "index with bogus date" do
     post = FactoryBot.create(:post)
-    get :index, mailing_list_id: post.mailing_list.id, month: 25, year: 7
+    get :index, params: { mailing_list_id: post.mailing_list.id, month: 25, year: 7 }
     assert_response :success
   end
 
   test "index with bogus page" do
     post = FactoryBot.create(:post)
-    get :index, mailing_list_id: post.mailing_list.id, page: "atz"
+    get :index, params: { mailing_list_id: post.mailing_list.id, page: "atz" }
     assert_response :success
   end
 

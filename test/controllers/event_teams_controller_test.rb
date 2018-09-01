@@ -8,33 +8,33 @@ class EventTeamsControllerTest < ActionController::TestCase
 
   test "index" do
     event_team_membership = FactoryBot.create(:event_team_membership)
-    get :index, event_id: event_team_membership.event
+    get :index, params: { event_id: event_team_membership.event }
     assert_response :success
   end
 
   test "index empty" do
     event = FactoryBot.create(:event)
-    get :index, event_id: event
+    get :index, params: { event_id: event }
     assert_response :success
   end
 
   test "index for admin" do
     login_as :administrator
     event_team_membership = FactoryBot.create(:event_team_membership)
-    get :index, event_id: event_team_membership.event
+    get :index, params: { event_id: event_team_membership.event }
     assert_response :success
   end
 
   test "index for promoter" do
     event_team_membership = FactoryBot.create(:event_team_membership)
     login_as event_team_membership.event.promoter
-    get :index, event_id: event_team_membership.event
+    get :index, params: { event_id: event_team_membership.event }
     assert_response :success
   end
 
   test "create requires current_person" do
     event = FactoryBot.create(:event)
-    post :create, event_id: event, team_attributes: { name: "Grant HS" }
+    post :create, params: { event_id: event, team_attributes: { name: "Grant HS" } }
     assert_redirected_to new_person_session_path
   end
 
@@ -44,7 +44,7 @@ class EventTeamsControllerTest < ActionController::TestCase
 
     assert_difference "EventTeamMembership.count" do
       login_as person
-      post :create, event_id: event, event_team: { team_attributes: { name: " Grant HS" } }
+      post :create, params: { event_id: event, event_team: { team_attributes: { name: " Grant HS" } } }
     end
 
     event_team_membership = EventTeamMembership.first

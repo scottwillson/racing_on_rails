@@ -36,7 +36,7 @@ module Competitions
       competition_result = competition.races.create!(category: @senior_men).results.create!
       Score.create!(competition_result: competition_result, source_result: weaver_banana_belt, points: 1)
 
-      get :person, person_id: weaver.to_param
+      get :person, params: { person_id: weaver.to_param }
       assert_response(:success)
       assert_template("results/person")
       assert_not_nil(assigns["person"], "Should assign person")
@@ -50,7 +50,7 @@ module Competitions
       Competitions::Bar.calculate!(2004)
       bar = Bar.year(2004).where(discipline: "Road").first
 
-      get :person_event, event_id: bar.to_param, person_id: person.to_param
+      get :person_event, params: { event_id: bar.to_param, person_id: person.to_param }
       assert_response :success
       assert_template "results/person_event"
       assert_not_nil assigns["results"], "Should assign results"
@@ -87,19 +87,19 @@ module Competitions
 
     test "redirect to ironman" do
       event = Ironman.create!
-      get :event, event_id: event.to_param
+      get :event, params: { event_id: event.to_param }
       assert_redirected_to ironman_path(year: event.year)
     end
 
     test "cross crusade team competition" do
       event = CrossCrusadeTeamCompetition.create!(parent: Series.create!)
-      get :event, event_id: event.to_param
+      get :event, params: { event_id: event.to_param }
       assert_template "results/event"
     end
 
     test "event bar" do
       bar = Bar.create!
-      get :event, event_id: bar.to_param
+      get :event, params: { event_id: bar.to_param }
       assert_redirected_to(controller: "competitions/bar", action: "show", year: bar.date.year, discipline: bar.discipline)
     end
 
@@ -139,7 +139,7 @@ module Competitions
       assert_not_nil(result, "result")
       assert_not_nil result.team, "result.team"
 
-      get :team_event, event_id: bar.to_param, team_id: result.team.to_param
+      get :team_event, params: { event_id: bar.to_param, team_id: result.team.to_param }
 
       assert_response(:success)
       assert_template("results/team_event")
@@ -150,7 +150,7 @@ module Competitions
       person = FactoryBot.create(:person)
       event = CrossCrusadeOverall.create!(parent: Series.create!)
       event.races.create!(category: @senior_men).results.create!(place: "1")
-      get :person, person_id: person.to_param
+      get :person, params: { person_id: person.to_param }
       assert_response :success
     end
 

@@ -27,7 +27,7 @@ module Competitions
     end
 
     test "index with page" do
-      get :index, page: "2", year: "2004"
+      get :index, params: { page: "2", year: "2004" }
       assert_response(:success)
       assert_template("ironman/index")
       assert_not_nil(assigns["ironman"], "Should assign ironman")
@@ -36,7 +36,7 @@ module Competitions
     end
 
     test "index with bogus page" do
-      get :index, page: "http", year: "2004"
+      get :index, params: { page: "http", year: "2004" }
       assert_response(:success)
       assert_template("ironman/index")
       assert_not_nil(assigns["ironman"], "Should assign ironman")

@@ -25,7 +25,7 @@ module Admin
 
     test "index as txt" do
       FactoryBot.create :event, date: 3.days.from_now
-      get :index, format: "text"
+      get :index, params: { format: "text" }
       assert_response :success
     end
 
@@ -64,7 +64,7 @@ module Admin
 
     test "email" do
       FactoryBot.create(:event, date: 3.days.from_now)
-      get :index, format: "text"
+      get :index, params: { format: "text" }
       assert_response :success
     end
   end

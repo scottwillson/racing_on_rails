@@ -13,7 +13,7 @@ class MailingListsControllerTest < ActionController::TestCase
 
   test "confirm" do
     obra_race = FactoryBot.create(:mailing_list)
-    get :confirm, mailing_list_id: obra_race.id
+    get :confirm, params: { mailing_list_id: obra_race.id }
     assert_response :success
     assert_template "mailing_lists/confirm"
     assert_equal obra_race, assigns["mailing_list"], "Should assign mailing list"

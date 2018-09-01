@@ -32,7 +32,7 @@ class TeamsControllerTest < ActionController::TestCase
 
   test "find json" do
     vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
-    get :index, name: "van", format: "json"
+    get :index, params: { format: "json", params: { name: "van" } }
     assert_response :success
     assert_equal [vanilla], assigns["teams"], "Search for 'van' should find Vanilla"
     assert_equal "van", assigns["name"], "'name' assigns"

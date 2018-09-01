@@ -34,19 +34,19 @@ module Competitions
     end
 
     test "show age graded" do
-      get :show, discipline: "age_graded", year: "2007", category: "masters_men_30_34"
+      get :show, params: { discipline: "age_graded", year: "2007", category: "masters_men_30_34" }
       assert_response :success
       assert_template "bar/show"
       assert_not_nil assigns["race"], "Should assign race"
     end
 
     test "show age graded redirect 2006" do
-      get :show, discipline: "age_graded", year: "2006", category: "masters_men_30_34"
+      get :show, params: { discipline: "age_graded", year: "2006", category: "masters_men_30_34" }
       assert_redirected_to "http://#{RacingAssociation.current.static_host}/bar/2006/overall_by_age.html"
     end
 
     test "show redirect before 2006" do
-      get :show, discipline: "overall", year: "2003", category: "masters_men_30_34"
+      get :show, params: { discipline: "overall", year: "2003", category: "masters_men_30_34" }
       assert_redirected_to "http://#{RacingAssociation.current.static_host}/bar/2003"
     end
   end

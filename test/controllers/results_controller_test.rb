@@ -39,7 +39,7 @@ class ResultsControllerTest < ActionController::TestCase
     big_person = Person.create!(first_name: "f" * 60, last_name: "L" * 60, team: big_team)
     banana_belt_1.races.first.results.create!(place: 20, person: big_person, team: big_team, number: "")
 
-    get :event, event_id: banana_belt_1.to_param
+    get :event, params: { event_id: banana_belt_1.to_param }
     assert_response(:success)
     assert_template("results/event")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -48,7 +48,7 @@ class ResultsControllerTest < ActionController::TestCase
 
   test "event tt" do
     jack_frost = FactoryBot.create(:time_trial_event)
-    get :event, event_id: jack_frost.to_param
+    get :event, params: { event_id: jack_frost.to_param }
     assert_response(:success)
     assert_template("results/event")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -56,7 +56,7 @@ class ResultsControllerTest < ActionController::TestCase
 
   test "series xls" do
     series = FactoryBot.create(:weekly_series_event_result).event.parent
-    get :event, event_id: series.to_param, format: :xlsx
+    get :event, params: { event_id: series.to_param, format: :xlsx }
     assert_not_nil response.body
   end
 
@@ -185,7 +185,7 @@ class ResultsControllerTest < ActionController::TestCase
     weaver = FactoryBot.create(:person)
     result = SingleDayEvent.create!(date: Date.new(2008)).races.create!(category: @senior_men).results.create!(person: weaver, place: "1")
 
-    get :person, person_id: weaver.to_param, year: "2008"
+    get :person, params: { person_id: weaver.to_param, year: "2008" }
     assert_response(:success)
     assert_template("results/person")
     assert_not_nil(assigns["person"], "Should assign person")
@@ -198,7 +198,7 @@ class ResultsControllerTest < ActionController::TestCase
     big_person = Person.create!(first_name: "f" * 60, last_name: "L" * 60, team: big_team)
     FactoryBot.create(:result, person: big_person, team: big_team, place: 2, number: "99")
 
-    get :person, person_id: big_person.to_param
+    get :person, params: { person_id: big_person.to_param }
     assert_response(:success)
     assert_template("results/person")
     assert_not_nil(assigns["person"], "Should assign person")
@@ -210,7 +210,7 @@ class ResultsControllerTest < ActionController::TestCase
   test "column headers display correctly" do
     result = FactoryBot.create(:result, points_bonus: 8, points_penalty: -2, laps: 9)
 
-    get :event, event_id: result.event_id
+    get :event, params: { event_id: result.event_id }
     assert_response :success
 
     assert(@response.body["Bonus"], "Should format points_bonus correctly")
@@ -226,18 +226,18 @@ class ResultsControllerTest < ActionController::TestCase
 
   test "person json" do
     person = FactoryBot.create(:result).person
-    get :person, person_id: person.id, format: :json
+    get :person, params: { person_id: person.id, format: :json }
   end
 
   test "person json with year" do
     result = FactoryBot.create(:result)
-    get :person, person_id: result.person_id, format: :json, year: result.year
+    get :person, params: { person_id: result.person_id, format: :json, year: result.year }
   end
 
   test "person xml" do
     Timecop.freeze(Time.zone.local(2015, 11)) do
       person = FactoryBot.create(:result).person
-      get :person, person_id: person.id, format: :xml
+      get :person, params: { person_id: person.id, format: :xml }
       assert_equal "application/xml", @response.content_type
       [
         "results > result",
@@ -276,22 +276,22 @@ class ResultsControllerTest < ActionController::TestCase
 
   test "team" do
     team = FactoryBot.create(:result).team
-    get :team, team_id: team.id
+    get :team, params: { team_id: team.id }
   end
 
   test "team json" do
     team = FactoryBot.create(:result).team
-    get :team, team_id: team.id, format: :json
+    get :team, params: { team_id: team.id, format: :json }
   end
 
   test "team xml" do
     team = FactoryBot.create(:result).team
-    get :team, team_id: team.id, format: :xml
+    get :team, params: { team_id: team.id, format: :xml }
   end
 
   test "index xml" do
     FactoryBot.create(:result)
-    get :index, format: :xml
+    get :index, params: { format: :xml }
     assert_response :success
   end
 
@@ -301,7 +301,7 @@ class ResultsControllerTest < ActionController::TestCase
     result = FactoryBot.create(:result, team: kona)
     FactoryBot.create(:result, team: gentle_lovers, race: result.race)
 
-    get :event, event_id: result.event.to_param
+    get :event, params: { event_id: result.event.to_param }
     assert_response :success
     assert @response.body["Kona"]
     assert @response.body["Gentle Lovers"]
@@ -321,7 +321,7 @@ class ResultsControllerTest < ActionController::TestCase
     race.results.create! person: tonkin, team: kona
     race.results.create! person: Person.create!, team: Team.create!(name: "DFL")
 
-    get :event, event_id: event.to_param
+    get :event, params: { event_id: event.to_param }
     assert_response :success
     assert @response.body["Kona"], "Expected 'Kona' in #{@response.body}"
     assert @response.body["DFL"], "Expected 'DFL' in #{@response.body}"
@@ -336,7 +336,7 @@ class ResultsControllerTest < ActionController::TestCase
     result = FactoryBot.create(:result, team: kona)
     FactoryBot.create(:result, team: gentle_lovers, race: result.race)
 
-    get :event, event_id: result.event.to_param
+    get :event, params: { event_id: result.event.to_param }
     assert_response :success
     assert !@response.body["Kona"], "Expected no 'Kona' in #{@response.body}"
     assert @response.body["Gentle Lovers"], "Expected 'Gentle Lovers' in #{@response.body}"
