@@ -82,7 +82,7 @@ module Admin
 
     test "index rjs" do
       vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
-      xhr :get, :index, name: "nilla"
+      get :index, xhr: true, params: { name: "nilla" }
       assert_response(:success)
       assert_template("admin/teams/index")
       assert_not_nil(assigns["teams"], "Should assign teams")
@@ -288,7 +288,7 @@ module Admin
       kona = FactoryBot.create(:team, name: "Kona")
       assert(Team.find_by(name: "Kona"), "Kona should be in database")
 
-      xhr :post, :merge, id: vanilla.id, other_team_id: kona.to_param
+      post :merge, xhr: true, params: { id: vanilla.id, other_team_id: kona.to_param }
       assert_response(:success)
       assert_template("admin/teams/merge")
 
@@ -331,7 +331,7 @@ module Admin
       assert_equal(1, vanilla.names.count, "Vanilla names")
       name = vanilla.names.first
 
-      xhr :post, :destroy_name, id: vanilla.to_param, name_id: name.to_param
+      post :destroy_name, xhr: true, params: { id: vanilla.to_param, name_id: name.to_param }
       assert_response(:success)
       assert_equal(0, vanilla.names.reload.count, "Vanilla names after destruction")
     end

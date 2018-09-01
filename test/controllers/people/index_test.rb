@@ -66,7 +66,7 @@ class IndexTest < ActionController::TestCase
   test "ajax ssl find" do
     FactoryBot.create(:person)
     use_ssl
-    xhr :get, :index, name: "weav", format: "json"
+    get :index, xhr: true, params: { name: "weav", format: "json" }
     assert @response.body["Weaver"], "Response should include Weaver in #{@response.body}"
     assert_response :success
     assert_template nil

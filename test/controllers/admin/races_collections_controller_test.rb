@@ -11,7 +11,7 @@ module Admin
       @controller.expects :require_administrator_or_promoter
       race = FactoryBot.create(:race)
       FactoryBot.create(:race, event: race.event)
-      xhr :get, :edit, event_id: race.event
+      get :edit, xhr: true, params: { event_id: race.event }
       assert_response :success
       assert_not_nil assigns[:races_collection], "@races_collection"
     end
@@ -20,7 +20,7 @@ module Admin
       @controller.expects :require_administrator_or_promoter
       race = FactoryBot.create(:race)
       FactoryBot.create(:race, event: race.event)
-      xhr :get, :show, event_id: race.event
+      get :show, xhr: true, params: { event_id: race.event }
       assert_response :success
       assert_not_nil assigns[:races_collection], "@races_collection"
     end
@@ -29,7 +29,7 @@ module Admin
       @controller.expects :require_administrator_or_promoter
       race = FactoryBot.create(:race)
       FactoryBot.create(:race, event: race.event)
-      xhr :put, :update, event_id: race.event, races_collection: { text: "Senior Men\r\nCat 3" }
+      put :update, xhr: true, params: { event_id: race.event, races_collection: { text: "Senior Men\r\nCat 3" } }
       assert_response :success
       assert_not_nil assigns[:races_collection], "@races_collection"
       assert_equal ["Category 3", "Senior Men"], race.event.races.reload.map(&:name).sort
@@ -43,7 +43,7 @@ module Admin
       previous_year.races.create! category: FactoryBot.create(:category, name: "Women 3")
 
       event = FactoryBot.create(:event, name: "Tabor")
-      xhr :post, :create, event_id: event
+      post :create, xhr: true, params: { event_id: event }
       assert_response :success
 
       assert_same_elements ["Senior Men", "Women 3"], event.reload.categories.map(&:name)

@@ -15,7 +15,7 @@ module Admin
       race_number = FactoryBot.create(:race_number)
       assert_not_nil(RaceNumber.find(race_number.id), "RaceNumber should exist")
 
-      xhr :delete, :destroy, id: race_number.to_param
+      delete admin_race_number_url(race_number), xhr: true
       assert_response :success
 
       assert !RaceNumber.exists?(race_number.id)

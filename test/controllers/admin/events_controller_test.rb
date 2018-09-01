@@ -180,7 +180,7 @@ module Admin
       CombinedTimeTrialResults.calculate!
       assert_not_nil(jack_frost.combined_results, "Event should have combined results before destroying races")
       assert_equal(1, jack_frost.races.count, "Races before destroy")
-      xhr :delete, :destroy_races, id: jack_frost.id, commit: "Delete"
+      delete :destroy_races, xhr: true, params: { id: jack_frost.id, commit: "Delete" }
       assert_not_nil(assigns(:races), "@races")
       assert_not_nil(assigns(:combined_results), "@combined_results")
       assert_response(:success)

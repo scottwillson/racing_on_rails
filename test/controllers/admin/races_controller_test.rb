@@ -44,7 +44,7 @@ module Admin
 
     test "destroy" do
       kings_valley_women_2003 = FactoryBot.create(:race)
-      xhr :delete, :destroy, id: kings_valley_women_2003.id, commit: "Delete"
+      delete :destroy, xhr: true, params: { id: kings_valley_women_2003.id, commit: "Delete" }
       assert_response(:success)
       assert_raise(ActiveRecord::RecordNotFound, "kings_valley_women_2003 should have been destroyed") { Race.find(kings_valley_women_2003.id) }
     end
@@ -86,7 +86,7 @@ module Admin
 
     test "create xhr" do
       event = FactoryBot.create(:event)
-      xhr :post, :create, event_id: event.to_param
+      post :create, xhr: true, params: { event_id: event.to_param }
       assert_response :success
       assert_not_nil assigns(:race), "@race"
       assert_equal "New Category", assigns(:race).name, "@race name"
@@ -97,7 +97,7 @@ module Admin
     test "create xhr promoter" do
       event = FactoryBot.create(:event)
       login_as event.promoter
-      xhr :post, :create, event_id: event.to_param
+      post :create, xhr: true, params: { event_id: event.to_param }
       assert_response :success
       assert_not_nil assigns(:race), "@race"
       assert_equal "New Category", assigns(:race).name, "@race name"
@@ -107,7 +107,7 @@ module Admin
 
     test "admin set race category name" do
       race = FactoryBot.create(:race)
-      xhr :put, :update_attribute, id: race.to_param, value: "Fixed Gear", name: "category_name"
+      put :update_attribute, xhr: true, params: { id: race.to_param, value: "Fixed Gear", name: "category_name" }
       assert_response :success
       assert_not_nil assigns(:race), "@race"
       assert_equal "Fixed Gear", assigns(:race).reload.category_name, "Should update category"
@@ -116,7 +116,7 @@ module Admin
     test "promoter set race category name" do
       race = FactoryBot.create(:race)
       login_as race.promoter
-      xhr :put, :update_attribute, id: race.to_param, value: "Fixed Gear", name: "category_name"
+      put :update_attribute, xhr: true, params: { id: race.to_param, value: "Fixed Gear", name: "category_name" }
       assert_response :success
       assert_not_nil assigns(:race), "@race"
       assert_equal "Fixed Gear", assigns(:race).reload.category_name, "Should update category"
@@ -125,7 +125,7 @@ module Admin
     test "propagate" do
       event = FactoryBot.create(:event)
       login_as event.promoter
-      xhr :post, :propagate, event_id: event.to_param
+      post :propagate, xhr: true, params: { event_id: event.to_param }
       assert_response :success
       assert_template "admin/races/propagate", "template"
     end

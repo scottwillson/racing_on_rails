@@ -445,7 +445,7 @@ module Admin
       assert_equal("DNF", dnf.place, "DNF place after insert")
       assert_equal("DNF", race.results.reload.sort.last.place, "DNF place after insert")
 
-      xhr :post, :create, race_id: race.id
+      post :create, xhr: true, params: { race_id: race.id }
       assert_response(:success)
       assert_equal(11, race.results.reload.size, "Results after insert")
       tonkin_result.reload
