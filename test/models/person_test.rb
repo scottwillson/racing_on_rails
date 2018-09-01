@@ -897,10 +897,10 @@ class PersonTest < ActiveSupport::TestCase
     person.save!
     assert(person.valid?, "Renamed Mollie Cameron should be valid")
 
-    assert_not_nil(Person.find_by(name: "Mollie Cameron"), "Mollie Cameron should exist")
-    assert_nil(Person.find_by(name: "Molly Cameron"), "Molly Cameron should not exist")
-    assert_nil(Alias.find_by(name: "Mollie Cameron"), "Mollie Cameron alias should not exist")
-    assert_not_nil(Alias.find_by(name: "Molly Cameron"), "Molly Cameron alias should exist")
+    assert Person.exists?(name: "Mollie Cameron"), "Mollie Cameron should  exist"
+    assert !Person.exists?(name: "Molly Cameron"), "Molly Cameron should not exist"
+    assert !Alias.exists?(name: "Mollie Cameron"), "Mollie Cameron alias should exist"
+    assert Alias.exists?(name: "Molly Cameron"), "Molly Cameron alias should exist"
   end
 
   test "sort" do
