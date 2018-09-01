@@ -68,11 +68,10 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert_not_nil(series.combined_results.reload, "Series parent should have combined results")
     assert_not_nil(event.combined_results.reload, "Series child event parent should have combined results")
 
-    series.reload
     event.reload
     event.destroy_races
-    event.combined_results.destroy_races
-    assert_nil(event.combined_results.reload, "Series child event parent should not have combined results")
+
+    assert event.reload.combined_results.nil?, "Series child event parent should not have combined results"
   end
 
   test "should not calculate combined results for combined results" do
