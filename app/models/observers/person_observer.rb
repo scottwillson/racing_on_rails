@@ -12,12 +12,12 @@ class PersonObserver < ActiveRecord::Observer
   end
 
   def around_update(person)
+    yield
+
     if person.first_name_changed? || person.last_name_changed?
-      yield
       person.results.each do |result|
         result.cache_attributes! :non_event if result[:name] != person.name(result.year)
       end
     end
-    true
   end
 end
