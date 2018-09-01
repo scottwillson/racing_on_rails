@@ -76,7 +76,7 @@ module Admin
       end
 
       test "export to excel with date" do
-        get(:index, format: "xls", include: "all", date: "2008-12-31")
+        get(:index, format: "xls", params: { include: "all", date: "2008-12-31" })
 
         assert_response :success
         assert_equal("filename=\"people_2008_12_31.xls\"", @response.headers["Content-Disposition"], "Should set disposition")

@@ -20,10 +20,12 @@ module Admin
 
         post(:create,
              "commit" => "Save",
-             "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
-                          "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
-                          "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
-                          "promoter_id" => person.to_param, "type" => "SingleDayEvent" })
+             params: {
+               "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
+                            "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
+                            "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
+                            "promoter_id" => person.to_param, "type" => "SingleDayEvent" }
+            })
 
         skull_hollow = Event.find_by(name: "Skull Hollow Roubaix")
         assert_not_nil(skull_hollow, "Skull Hollow Roubaix should be in DB")
@@ -51,11 +53,13 @@ module Admin
 
         post(:create,
              "commit" => "Save",
-             "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
-                          "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
-                          "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
-                          "parent_id" => parent.to_param,
-                          "promoter_id" => person.to_param, "type" => "Event" })
+             params: {
+               "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
+                            "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
+                            "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
+                            "parent_id" => parent.to_param,
+                            "promoter_id" => person.to_param, "type" => "Event" }
+             })
 
         skull_hollow = Event.find_by(name: "Skull Hollow Roubaix")
         assert_not_nil(skull_hollow, "Skull Hollow Roubaix should be in DB")
@@ -84,11 +88,13 @@ module Admin
 
         post(:create,
              "commit" => "Save",
-             "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
-                          "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
-                          "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
-                          "parent_id" => parent.to_param,
-                          "promoter_id" => person.to_param, "type" => "SingleDayEvent" })
+             params:{
+               "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
+                            "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
+                            "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
+                            "parent_id" => parent.to_param,
+                            "promoter_id" => person.to_param, "type" => "SingleDayEvent" }
+             })
 
         skull_hollow = Event.find_by(name: "Skull Hollow Roubaix")
         assert_not_nil(skull_hollow, "Skull Hollow Roubaix should be in DB")
@@ -115,10 +121,12 @@ module Admin
 
         post(:create,
              "commit" => "Save",
-             "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
-                          "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
-                          "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
-                          "promoter_id" => person.to_param, "type" => "Series" })
+             params: {
+               "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
+                            "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
+                            "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
+                            "promoter_id" => person.to_param, "type" => "Series" }
+             })
 
         skull_hollow = Event.find_by(name: "Skull Hollow Roubaix")
         assert_not_nil(skull_hollow, "Skull Hollow Roubaix should be in DB")
@@ -133,10 +141,12 @@ module Admin
 
         post(:create,
              "commit" => "Save",
-             "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
-                          "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
-                          "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
-                          "promoter_id" => person.to_param, "type" => "SingleDayEvent" })
+             params: {
+               "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
+                            "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
+                            "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
+                            "promoter_id" => person.to_param, "type" => "SingleDayEvent" }
+             })
 
         skull_hollow = Event.find_by(name: "Skull Hollow Roubaix")
         assert_not_nil(skull_hollow, "Skull Hollow Roubaix should be in DB")

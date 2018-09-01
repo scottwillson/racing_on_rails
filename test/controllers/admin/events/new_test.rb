@@ -15,7 +15,7 @@ module Admin
       end
 
       test "new single day event" do
-        get(:new, event: { date: "2008-01-01" })
+        get(:new, params: { event: { date: "2008-01-01" } })
         assert_response(:success)
         assert_template("admin/events/edit")
         assert_not_nil(assigns["event"], "Should assign event")
@@ -40,7 +40,7 @@ module Admin
 
       test "new child event" do
         parent = SingleDayEvent.create!
-        get(:new, event: { parent_id: parent.to_param, type: "Event" })
+        get(:new, params: { event: { parent_id: parent.to_param, type: "Event" } })
         assert_response(:success)
         assert_template("admin/events/edit")
         assert_not_nil(assigns["event"], "Should assign event")
