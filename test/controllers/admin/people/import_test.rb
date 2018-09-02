@@ -50,7 +50,6 @@ module Admin
         existing_duplicate = Duplicate.new(new_attributes: Person.new(name: "Erik Tonkin").attributes)
         existing_duplicate.people << tonkin
         existing_duplicate.save!
-        people_before_import = Person.count
 
         fixture_file_upload "membership/upload.xlsx", "application/vnd.ms-excel"
         @request.session[:people_file_path] = File.expand_path("#{::Rails.root}/test/fixtures/membership/upload.xlsx")
@@ -76,7 +75,7 @@ module Admin
         fixture_file_upload("membership/upload.xlsx", "application/vnd.ms-excel", :binary)
         @request.session[:people_file_path] = File.expand_path("#{::Rails.root}/test/fixtures/membership/upload.xlsx")
         next_year = Time.zone.today.year + 1
-        post(:import, commit: "Import", update_membership: "true", year: next_year)
+        post :import, params: { commit: "Import", update_membership: "true", year: next_year }
 
         assert(flash[:warn].blank?, "flash[:warn] should be empty, but was: #{flash[:warn]}")
         assert(flash.notice.present?, "flash[:notice] should not be empty")
@@ -110,7 +109,7 @@ module Admin
 
         fixture_file_upload("membership/duplicates.xlsx", "application/vnd.ms-excel", :binary)
         @request.session[:people_file_path] = "#{::Rails.root}/test/fixtures/membership/duplicates.xlsx"
-        post(:import, commit: "Import", update_membership: "true")
+        post :import, params: { commit: "Import", update_membership: "true" }
 
         assert(flash[:warn].present?, "flash[:warn] should not be empty")
         assert(flash.notice.present?, "flash[:notice] should not be empty")
@@ -129,9 +128,9 @@ module Admin
 
       test "duplicates" do
         @request.session[:duplicates] = []
-        get(:duplicates)
+        get :duplicates
         assert_response :success
-        assert_template("admin/people/duplicates")
+        assert_template "admin/people/duplicates"
       end
 
       test "resolve duplicates" do
@@ -148,7 +147,12 @@ module Admin
         tonkin_dupe = Duplicate.create!(new_attributes: { name: "Erik Tonkin" }, people: Person.where(last_name: "Tonkin"))
         ryan_dupe = Duplicate.create!(new_attributes: { name: "Ryan Weaver", city: "Las Vegas" }, people: Person.where(last_name: "Weaver"))
         alice_dupe = Duplicate.create!(new_attributes: { name: "Alice Pennington", road_category: "2" }, people: Person.where(last_name: "Pennington"))
-        post(:resolve_duplicates, tonkin_dupe.to_param => "new", ryan_dupe.to_param => weaver_3.to_param, alice_dupe.to_param => alice_2.to_param)
+
+        post :resolve_duplicates,
+          params: {
+            tonkin_dupe.to_param => "new", ryan_dupe.to_param => weaver_3.to_param, alice_dupe.to_param => alice_2.to_param
+          }
+
         assert_redirected_to admin_people_path
         assert_equal(0, Duplicate.count, "Should have no duplicates")
 
@@ -164,7 +168,7 @@ module Admin
       end
 
       test "cancel import" do
-        post(:import, commit: "Cancel", update_membership: "false")
+        post :import, params: { commit: "Cancel", update_membership: "false" }
         assert_redirected_to admin_people_path
         assert_nil(session[:people_file_path], "Should remove temp file path from session")
       end

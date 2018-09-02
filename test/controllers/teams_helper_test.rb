@@ -12,25 +12,25 @@ class TeamsHelperTest < ActionController::TestCase
   include ActionView::Helpers::UrlHelper
 
   test "blank link to contact" do
-    get(:index)
+    get :index
     team = Team.new
     assert_nil(link_to_contact(team), "blank contact name")
   end
 
   test "name only link to contact" do
-    get(:index)
+    get :index
     team = Team.new(contact_name: "Davis Phinney")
     assert_equal("Davis Phinney", link_to_contact(team), "contact name only")
   end
 
   test "name and email link to contact" do
-    get(:index)
+    get :index
     team = Team.new(contact_name: "Davis Phinney", contact_email: "david@team.com")
     assert_equal(%(<a href="mailto:david@team.com">Davis Phinney</a>), link_to_contact(team), "contact name and email")
   end
 
   test "email only link to contact" do
-    get(:index)
+    get :index
     team = Team.new(contact_email: "david@team.com")
     assert_equal(%(<a href="mailto:david@team.com">david@team.com</a>), link_to_contact(team), "contact email only")
   end

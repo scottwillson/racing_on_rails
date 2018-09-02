@@ -294,7 +294,7 @@ class PostsControllerTest < ActionController::TestCase
 
   test "list with no lists" do
     assert_raise(ActiveRecord::RecordNotFound) do
-      get(:index)
+      get :index
     end
   end
 

@@ -16,7 +16,7 @@ module Admin
 
       test "not logged in index" do
         destroy_person_session
-        get(:index)
+        get :index
         assert_redirected_to new_person_session_url(secure_redirect_options)
         assert_nil(@request.session["person"], "No person in session")
       end
@@ -30,7 +30,7 @@ module Admin
       end
 
       test "index" do
-        get(:index)
+        get :index
         assert_response :success
         assert_template("admin/people/index")
         assert_template layout: "admin/application"
@@ -110,7 +110,7 @@ module Admin
       test "index with cookie" do
         FactoryBot.create(:person)
         @request.cookies["person_name"] = "weaver"
-        get(:index)
+        get :index
         assert_response :success
         assert_not_nil(assigns["people"], "Should assign people")
         assert_equal("weaver", assigns["name"], "Should assign name")

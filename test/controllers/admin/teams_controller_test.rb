@@ -13,7 +13,7 @@ module Admin
 
     test "not logged in index" do
       destroy_person_session
-      get(:index)
+      get :index
       assert_redirected_to new_person_session_url(secure_redirect_options)
       assert_nil(@request.session["person"], "No person in session")
     end
@@ -21,14 +21,14 @@ module Admin
     test "not logged in edit" do
       destroy_person_session
       vanilla = FactoryBot.create(:team)
-      get(:edit, id: vanilla.to_param)
+      get :edit, params: { id: vanilla.to_param }
       assert_redirected_to new_person_session_url(secure_redirect_options)
       assert_nil(@request.session["person"], "No person in session")
     end
 
     test "find" do
       vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
-      get(:index, name: "van")
+      get :index, params: { name: "van" }
       assert_response(:success)
       assert_template("admin/teams/index")
       assert_not_nil(assigns["teams"], "Should assign teams")
@@ -41,7 +41,7 @@ module Admin
       FactoryBot.create(:team, name: "Vanilla Bicycles")
       FactoryBot.create(:team)
 
-      get(:index, name: "s7dfnacs89danfx")
+      get :index, params: { name: "s7dfnacs89danfx" }
       assert_response(:success)
       assert_template("admin/teams/index")
       assert_not_nil(assigns["teams"], "Should assign teams")
@@ -51,7 +51,7 @@ module Admin
     test "find empty name" do
       FactoryBot.create(:team, name: "Vanilla Bicycles")
 
-      get(:index, name: "")
+      get :index, params: { name: "" }
       assert_response(:success)
       assert_template("admin/teams/index")
       assert_not_nil(assigns["teams"], "Should assign teams")
@@ -61,7 +61,7 @@ module Admin
     end
 
     test "index" do
-      get(:index)
+      get :index
       assert_response(:success)
       assert_template("admin/teams/index")
       assert_not_nil(assigns["teams"], "Should assign teams")
@@ -72,7 +72,7 @@ module Admin
     test "index with cookie" do
       FactoryBot.create(:team, name: "Gentle Lovers")
       @request.cookies["team_name"] = "gentle"
-      get(:index)
+      get :index
       assert_response(:success)
       assert_template("admin/teams/index")
       assert_not_nil(assigns["teams"], "Should assign teams")
@@ -92,10 +92,13 @@ module Admin
     test "blank name" do
       vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
       assert_raise(ActiveRecord::RecordInvalid) do
-        xhr :put, :update_attribute,
+        put :update_attribute,
+          params: {
             id: vanilla.to_param,
             name: "name",
             value: ""
+          },
+          xhr: true
       end
       assert_template(nil)
       assert_not_nil(assigns["team"], "Should assign team")
@@ -107,10 +110,13 @@ module Admin
 
     test "set name" do
       vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
-      xhr :put, :update_attribute,
+      put :update_attribute,
+        params: {
           id: vanilla.to_param,
           name: "name",
           value: "Vaniller"
+        },
+        xhr: true
       assert_response(:success)
       assert_not_nil(assigns["team"], "Should assign team")
       assert_equal(vanilla, assigns["team"], "Team")
@@ -122,10 +128,13 @@ module Admin
 
     test "set name same name" do
       vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
-      xhr :put, :update_attribute,
+      put :update_attribute,
+        params: {
           id: vanilla.to_param,
           name: "name",
           value: "Vanilla"
+        },
+        xhr: true
       assert_response(:success)
       assert_template(nil)
       assert_not_nil(assigns["team"], "Should assign team")
@@ -136,10 +145,13 @@ module Admin
 
     test "set name same name different case" do
       vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
-      xhr :put, :update_attribute,
+      put :update_attribute,
+        params: {
           id: vanilla.to_param,
           name: "name",
           value: "vanilla"
+        },
+        xhr: true
       assert_response(:success)
       assert_template(nil)
       assert_not_nil(assigns["team"], "Should assign team")
@@ -152,10 +164,13 @@ module Admin
       vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
       FactoryBot.create(:team, name: "Kona")
 
-      xhr :put, :update_attribute,
+      put :update_attribute,
+        params: {
           id: vanilla.to_param,
           name: "name",
           value: "Kona"
+        },
+        chr: true
       assert_response(:success)
       assert_template("admin/teams/merge_confirm")
       assert_not_nil(assigns["team"], "Should assign team")
@@ -170,10 +185,13 @@ module Admin
       vanilla = FactoryBot.create(:team, name: "Vanilla")
       vanilla.aliases.create!(name: "Vanilla Bicycles")
 
-      xhr :put, :update_attribute,
+      put :update_attribute,
+        params: {
           id: vanilla.to_param,
           name: "name",
           value: "Vanilla Bicycles"
+        },
+        xhr: true
       assert_response(:success)
       assert_not_nil(assigns["team"], "Should assign team")
       assert assigns["team"].errors.empty?, assigns["team"].errors.full_messages.join
@@ -193,10 +211,13 @@ module Admin
       vanilla.aliases.create!(name: "Vanilla Bicycles")
 
       vanilla = vanilla
-      xhr :put, :update_attribute,
+      put :update_attribute,
+        params: {
           id: vanilla.to_param,
           name: "name",
           value: "vanilla bicycles"
+        },
+        xhr: true
       assert_response(:success)
       assert_template(nil)
       assert_not_nil(assigns["team"], "Should assign team")

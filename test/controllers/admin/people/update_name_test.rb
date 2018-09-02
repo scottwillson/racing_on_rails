@@ -77,10 +77,13 @@ module Admin
         tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         tonkin.aliases.create!(name: "Eric Tonkin")
 
-        xhr :put, :update_attribute,
+        put :update_attribute,
+          params: {
             id: tonkin.to_param,
             name: "name",
             value: "Eric Tonkin"
+          },
+          xhr: true
         assert_response :success
         assert_not_nil(assigns["person"], "Should assign person")
         assert_equal(tonkin, assigns["person"], "Person")
@@ -98,10 +101,13 @@ module Admin
         molly.aliases.create!(name: "Mollie Cameron")
         assert !Alias.exists?(name: "Molly Cameron")
 
-        xhr :put, :update_attribute,
+        put :update_attribute,
+          params: {
             id: molly.to_param,
             name: "name",
             value: "mollie cameron"
+          },
+          xhr: true
         assert_response :success
         assert_not_nil(assigns["person"], "Should assign person")
         assert_equal(molly, assigns["person"], "Person")
@@ -119,10 +125,13 @@ module Admin
         molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         molly.aliases.create!(name: "Mollie Cameron")
 
-        xhr :put, :update_attribute,
+        put :update_attribute,
+          params: {
             id: tonkin.to_param,
             name: "name",
             value: "Mollie Cameron"
+          },
+          xhr: true
         assert_response :success
         assert_template("admin/people/merge_confirm")
         assert_not_nil(assigns["person"], "Should assign person")
@@ -148,10 +157,13 @@ module Admin
         assert_equal 1, Person.where(first_name: "Erik", last_name: "Tonkin").count, "Eriks in database"
         assert_equal 1, Alias.where(name: "Mollie Cameron").count, "Mollie aliases in database"
 
-        xhr :put, :update_attribute,
+        put :update_attribute,
+          params: {
             id: tonkin.to_param,
             name: "name",
             value: "Mollie Cameron"
+          },
+          xhr: true
         assert_response :success
         assert_template("admin/people/merge_confirm")
         assert_not_nil(assigns["person"], "Should assign person")

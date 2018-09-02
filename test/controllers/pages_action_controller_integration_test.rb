@@ -69,7 +69,7 @@ class PagesActionControllerIntegrationTest < ActionController::TestCase
 
   test "replace file based template for controllers index" do
     Page.create!(title: "fake", body: "<em>Homepage!</em>")
-    get(:index)
+    get :index
     assert_select("em", text: "Homepage!")
     assert_template layout: "application"
   end

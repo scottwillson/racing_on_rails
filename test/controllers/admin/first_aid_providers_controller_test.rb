@@ -13,7 +13,7 @@ module Admin
 
     test "index" do
       FactoryBot.create(:event, date: 3.days.from_now)
-      get(:index)
+      get :index
       assert_response(:success)
       assert_template("admin/first_aid_providers/index")
       assert_not_nil(assigns["events"], "Should assign events")

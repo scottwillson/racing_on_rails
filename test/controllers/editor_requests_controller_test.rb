@@ -88,7 +88,11 @@ class EditorRequestsControllerTest < ActionController::TestCase
     member = FactoryBot.create(:person, email: "person@example.com")
 
     member.editor_requests.create!(editor: promoter)
-    assert_raise(ActiveRecord::RecordNotFound) { get(:show, person_id: member.to_param, id: "12367127836shdgadasd") }
+
+    assert_raise(ActiveRecord::RecordNotFound) { 
+      get(:show, params: { person_id: member.to_param, id: "12367127836shdgadasd" })
+    }
+
     assert !member.editors.reload.include?(promoter), "Should add editor"
   end
 end

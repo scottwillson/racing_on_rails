@@ -7,7 +7,7 @@ class IndexTest < ActionController::TestCase
   tests PeopleController
 
   test "index" do
-    get(:index)
+    get :index
     assert_response(:success)
     assert_template("people/index")
     assert_template layout: "application"
@@ -27,7 +27,7 @@ class IndexTest < ActionController::TestCase
   test "index as promoter" do
     promoter = FactoryBot.create(:promoter)
     PersonSession.create(promoter)
-    get(:index)
+    get :index
     assert_response(:success)
     assert_template("people/index")
     assert_template layout: "application"

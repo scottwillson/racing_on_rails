@@ -73,7 +73,7 @@ class ResultsControllerTest < ActionController::TestCase
 
   test "index only shows sanctioned events" do
     future_national_federation_event = FactoryBot.create(:event, date: 1.day.from_now, sanctioned_by: "USA Cycling")
-    get(:index)
+    get :index
     assert_response(:success)
     assert_template("results/index")
     assert_not_nil(assigns["events"], "Should assign events")

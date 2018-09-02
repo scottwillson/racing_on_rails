@@ -18,7 +18,7 @@ module Admin
 
     test "destroy event" do
       jack_frost = FactoryBot.create(:event)
-      delete(:destroy, id: jack_frost.to_param, commit: "Delete")
+      delete :destroy, params: { id: jack_frost.to_param, commit: "Delete" }
       assert_redirected_to(admin_events_path(year: jack_frost.date.year))
       assert(!Event.exists?(jack_frost.id), "Jack Frost should have been destroyed")
     end
@@ -26,7 +26,7 @@ module Admin
     test "destroy event ajax" do
       event = FactoryBot.create(:event)
       event.destroy_races
-      xhr(:delete, :destroy, id: event.to_param, commit: "Delete")
+      delete :destroy, params: { id: event.to_param, commit: "Delete" }, xhr: true
       assert_response(:success)
       assert(!Event.exists?(event.id), "Event should have been destroyed")
     end
@@ -34,12 +34,16 @@ module Admin
     test "save no promoter" do
       assert_nil(SingleDayEvent.find_by(name: "Silverton"), "Silverton should not be in database")
       # New event, no changes, single day, no promoter
-      post(:create,
-           "commit" => "Save",
-           "same_promoter" => "true",
-           "event" => { "name" => "Silverton",
-                        "type" => "SingleDayEvent",
-                        "promoter_id" => "" })
+      post :create,
+          params: {
+            "commit" => "Save",
+            "same_promoter" => "true",
+            "event" => { "name" => "Silverton",
+                         "type" => "SingleDayEvent",
+                         "promoter_id" => "" }
+
+          }
+
       silverton = SingleDayEvent.find_by(name: "Silverton")
       assert_not_nil(silverton, "Silverton should be in database")
       assert_nil(silverton.promoter, "Silverton Promoter")
@@ -50,13 +54,15 @@ module Admin
       promoter = FactoryBot.create(:person)
       banana_belt = FactoryBot.create(:event, promoter: promoter)
 
-      post(:update,
-           "commit" => "Save",
-           id: banana_belt.to_param,
-           "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
-                        "flyer" => "../../flyers/2006/banana_belt.html", "sanctioned_by" => "UCI", "flyer_approved" => "1",
-                        "discipline" => "Track", "cancelled" => "1", "state" => "OR", "type" => "SingleDayEvent",
-                        "promoter_id" => promoter.to_param })
+      post :update,
+        params: {
+          "commit" => "Save",
+          id: banana_belt.to_param,
+          "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
+                       "flyer" => "../../flyers/2006/banana_belt.html", "sanctioned_by" => "UCI", "flyer_approved" => "1",
+                       "discipline" => "Track", "cancelled" => "1", "state" => "OR", "type" => "SingleDayEvent",
+                       "promoter_id" => promoter.to_param }
+        }
       assert_nil(flash[:warn], "flash[:warn]")
       assert_redirected_to edit_admin_event_path(banana_belt)
 
@@ -69,7 +75,7 @@ module Admin
       assert_nil(event.parent)
 
       parent = FactoryBot.create(:series, name: "The Event")
-      get(:set_parent, parent_id: parent, child_id: event)
+      get :set_parent, params: { parent_id: parent, child_id: event }
 
       event.reload
       assert_equal(parent, event.parent)
@@ -80,7 +86,7 @@ module Admin
       FactoryBot.create(:series, name: "The Event")
       event = FactoryBot.create(:event, name: "The Event")
       assert(event.missing_parent?, "Event should be missing parent")
-      get(:edit, id: event.to_param)
+      get :edit, params: { id: event.to_param }
       assert_response(:success)
       assert_template("admin/events/edit")
     end
@@ -90,7 +96,7 @@ module Admin
       FactoryBot.create(:event, name: "The Event")
       assert(event.missing_children?, "Event should be missing children")
       assert_not_nil(event.missing_children, "Event should be missing children")
-      get(:edit, id: event.to_param)
+      get :edit, params: { id: event.to_param }
       assert_response(:success)
       assert_template("admin/events/edit")
     end
@@ -104,7 +110,7 @@ module Admin
       assert(event.multi_day_event_children_with_no_parent?, "multi_day_event_children_with_no_parent?")
       assert_not_nil(event.multi_day_event_children_with_no_parent, "multi_day_event_children_with_no_parent")
       assert(!event.multi_day_event_children_with_no_parent.empty?, "multi_day_event_children_with_no_parent")
-      get(:edit, id: event.to_param)
+      get :edit, params: { id: event.to_param }
       assert_response(:success)
       assert_template("admin/events/edit")
     end
@@ -114,7 +120,7 @@ module Admin
         FactoryBot.create(:event, name: "Event", date: 1.month.from_now)
 
         event = FactoryBot.create(:series, name: "Event")
-        get(:add_children, parent_id: event.to_param)
+        get :add_children, params: { parent_id: event.to_param }
         assert_redirected_to edit_admin_event_path(event)
         event.reload.children.reload
         assert_equal 1.month.from_now.to_date, event.start_date, "parent start_date"
@@ -123,7 +129,7 @@ module Admin
     end
 
     test "index" do
-      get(:index, year: "2004")
+      get :index, params: { year: "2004" }
       assert_response(:success)
       assert_template("admin/events/index")
       assert_not_nil(assigns["schedule"], "Should assign schedule")
@@ -131,14 +137,14 @@ module Admin
 
     test "not logged in" do
       destroy_person_session
-      get(:index, year: "2004")
+      get :index, params: { year: "2004" }
       assert_redirected_to new_person_session_url(secure_redirect_options)
       assert_nil(@request.session["person"], "No person in session")
     end
 
     test "links to years" do
       FactoryBot.create(:event, date: Date.new(2003, 6))
-      get(:index, year: "2004")
+      get :index, params: { year: "2004" }
 
       link = @response.body["href=\"/admin/events?year=2003"]
       obra_link = @response.body["/schedule/2003"]
@@ -154,7 +160,7 @@ module Admin
       last_year = current_year - 1
       SingleDayEvent.create!(date: Date.new(last_year))
 
-      get(:index, year: current_year)
+      get :index, params: { year:current_year }
       assert_match("href=\"/admin/events?year=#{last_year}", @response.body, "Should link to #{last_year} in:\n#{@response.body}")
       assert_select(".nav a", { text: current_year.to_s }, "Should have tab for current year")
     end
@@ -163,15 +169,15 @@ module Admin
     test "gracefully handle bad person id" do
       @request.session[:person_id] = 31_289_371_283
       @request.session[:person_credentials] = 31_289_371_283
-      get(:index)
+      get :index
       assert_redirected_to new_person_session_url(secure_redirect_options)
     end
 
     test "destroy child event" do
       event = FactoryBot.create(:series_event)
       event.destroy_races
-      delete(:destroy, id: event.to_param, commit: "Delete")
-      assert(!Event.exists?(event.id), "Should have deleted Event")
+      delete :destroy, params: { id: event.to_param, commit: "Delete" }
+      assert !Event.exists?(event.id), "Should have deleted Event"
     end
 
     test "destroy races" do
