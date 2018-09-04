@@ -15,9 +15,8 @@ class EventObserver < ActiveRecord::Observer
     true
   end
 
-  def after_destroy(event)
+  def around_destroy(event)
+    yield
     event.parent.try :update_date
-
-    true
   end
 end
