@@ -1,5 +1,7 @@
 CKEDITOR.editorConfig = function(config) {
   config.allowedContent = true;
+  config.entities = false;
+  config.protectedSource.push( /<%[\s\S]*?%>/g );
 
   config.toolbar = [
     { name: 'undo', groups: [ 'undo' ], items: [ 'Undo', 'Redo' ] },
@@ -7,7 +9,8 @@ CKEDITOR.editorConfig = function(config) {
     { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule' ] },
     { name: 'paragraph', groups: [ 'list' ], items: [ 'NumberedList', 'BulletedList' ] },
     { name: 'styles', items: [ 'Format' ] },
-    { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Maximize' ] }
+    { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline' ] },
+    { name: 'editing', groups: [ 'editing' ], items: [ 'Source', 'Maximize' ] }
   ];
 
   config.toolbar_Articles = [
