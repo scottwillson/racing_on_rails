@@ -53,7 +53,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
   test "not found" do
     promoter = FactoryBot.create(:person_with_login)
     login_as promoter
-    assert_raise(ActiveRecord::RecordNotFound) { post(:create, id: 1_231_232_213_133, editor_id: promoter.to_param) }
+    assert_raise(ActiveRecord::RecordNotFound) { post(:create, params: { id: 1_231_232_213_133, editor_id: promoter.to_param }) }
   end
 
   test "must login" do
@@ -89,7 +89,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
 
     member.editor_requests.create!(editor: promoter)
 
-    assert_raise(ActiveRecord::RecordNotFound) { 
+    assert_raise(ActiveRecord::RecordNotFound) {
       get(:show, params: { person_id: member.to_param, id: "12367127836shdgadasd" })
     }
 

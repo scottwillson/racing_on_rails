@@ -19,7 +19,7 @@ class IndexTest < ActionController::TestCase
 
   test "list" do
     FactoryBot.create(:person, first_name: "Bob", last_name: "Jones")
-    get(:list, name: "jone")
+    get :list, params: { name: "jone" }
     assert_response(:success)
     assert_not_nil(@response.body.index("Jones"), "Search for jone should find Jones #{@response}")
   end
@@ -38,7 +38,7 @@ class IndexTest < ActionController::TestCase
 
   test "find" do
     weaver = FactoryBot.create(:person)
-    get(:index, name: "weav")
+    get :index, params: { name: "weav" }
     assert_response(:success)
     assert_not_nil(assigns["people"], "Should assign people")
     assert_equal([weaver], assigns["people"], "Search for weav should find Weaver")
@@ -47,7 +47,7 @@ class IndexTest < ActionController::TestCase
   end
 
   test "find nothing" do
-    get(:index, name: "s7dfnacs89danfx")
+    get :index, params: { name: "s7dfnacs89danfx" }
     assert_response(:success)
     assert_not_nil(assigns["people"], "Should assign people")
     assert_equal(0, assigns["people"].size, "Should find no people")
@@ -55,7 +55,7 @@ class IndexTest < ActionController::TestCase
 
   test "find empty name" do
     FactoryBot.create(:person)
-    get(:index, name: "")
+    get :index, params: { name: "" }
     assert_response(:success)
     assert_not_nil(assigns["people"], "Should assign people")
     assert(assigns["people"].empty?, "Should find no one")

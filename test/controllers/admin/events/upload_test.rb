@@ -92,7 +92,7 @@ module Admin
       end
 
       test "upload schedule" do
-        post(:upload_schedule, schedule_file: fixture_file_upload("schedule/excel.xls", "application/vnd.ms-excel", :binary))
+        post :upload_schedule, params: { schedule_file: fixture_file_upload("schedule/excel.xls", "application/vnd.ms-excel", :binary) }
 
         assert(flash[:warn].blank?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
         assert_response :redirect

@@ -76,7 +76,7 @@ module Admin
       end
 
       test "export to excel with date" do
-        get(:index, format: "xls", params: { include: "all", date: "2008-12-31" })
+        get :index, format: "xls", params: { include: "all", date: "2008-12-31" }
 
         assert_response :success
         assert_equal("filename=\"people_2008_12_31.xls\"", @response.headers["Content-Disposition"], "Should set disposition")
@@ -101,7 +101,7 @@ module Admin
         destroy_person_session
         PersonSession.create(FactoryBot.create(:promoter))
 
-        get :index, params: { format: "xls", include: "members_only", excel_layout: "scoring_sheet" }
+        get :index, params: { include: "members_only", excel_layout: "scoring_sheet" }, format: "xls"
 
         assert_response :success
         assert_equal("filename=\"scoring_sheet.xls\"", @response.headers["Content-Disposition"], "Should set disposition")
@@ -111,7 +111,7 @@ module Admin
       end
 
       test "export members only to scoring sheet" do
-        get(:index, format: "xls", include: "members_only", excel_layout: "scoring_sheet")
+        get :index, format: "xls", params: { include: "members_only", excel_layout: "scoring_sheet" }
 
         assert_response :success
         assert_equal("filename=\"scoring_sheet.xls\"", @response.headers["Content-Disposition"], "Should set disposition")
@@ -121,7 +121,7 @@ module Admin
       end
 
       test "export print cards to endicia" do
-        get(:index, format: "xls", include: "print_cards", excel_layout: "endicia")
+        get :index, format: "xls", params: { include: "print_cards", excel_layout: "endicia" }
 
         assert_response :success
         assert_equal("filename=\"print_cards.xls\"", @response.headers["Content-Disposition"], "Should set disposition")

@@ -62,7 +62,7 @@ class ResultsControllerTest < ActionController::TestCase
 
   test "index" do
     future_national_federation_event = FactoryBot.create(:event, date: Date.new(2004, 3), sanctioned_by: "USA Cycling")
-    get(:index, year: "2004")
+    get :index, params: { year: "2004" }
     assert_response(:success)
     assert_template("results/index")
     assert_not_nil(assigns["events"], "Should assign events")
@@ -84,7 +84,7 @@ class ResultsControllerTest < ActionController::TestCase
 
   test "index road" do
     FactoryBot.create(:event, date: Date.new(2004)).races.create!(category: @senior_women).results.create!(place: "1", person: Person.create!, team: Team.create!(name: "dfl"))
-    get(:index, year: "2004", discipline: "road")
+    get :index, params: { year: "2004", discipline: "road" }
     assert_response(:success)
     assert_template("results/index")
     assert_not_nil(assigns["events"], "Should assign events")
@@ -93,7 +93,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
 
   test "index road with discipline" do
-    get(:index, year: "2004", discipline: "time_trial")
+    get :index, params: { year: "2004", discipline: "time_trial" }
     assert_response(:success)
     assert_template("results/index")
     assert_not_nil(assigns["events"], "Should assign events")
@@ -166,7 +166,7 @@ class ResultsControllerTest < ActionController::TestCase
       usa_cycling_event_with_results = SingleDayEvent.create!(date: Date.new(2007, 5), sanctioned_by: "CBRA")
       usa_cycling_event_with_results.races.create!(category: @senior_men).results.create!
 
-      get(:index, year: "2007")
+      get :index, params: { year: "2007" }
       assert_response(:success)
 
       assert_not_nil(assigns["events"], "Should assign 'events'")

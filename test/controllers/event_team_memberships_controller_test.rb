@@ -12,12 +12,14 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     login_as event_team.event.promoter
 
     post :create,
-         event_team_id: event_team,
-         event_team_membership: {
-           person_attributes: {
-             name: "Jane Racer"
-           }
-         }
+      params: {
+        event_team_id: event_team,
+        event_team_membership: {
+          person_attributes: {
+            name: "Jane Racer"
+          }
+        }
+      }
 
     event_team_membership = assigns(:event_team_membership)
     assert_not_nil event_team_membership
@@ -31,6 +33,7 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     login_as event_team.event.promoter
 
     post :create,
+      params: {
          event_team_id: event_team,
          event_team_membership: {
            person_id: person,
@@ -38,6 +41,7 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
              name: person.name
            }
          }
+       }
 
     event_team_membership = assigns(:event_team_membership)
     assert_not_nil event_team_membership
@@ -52,6 +56,7 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     login_as event_team.event.promoter
 
     post :create,
+      params: {
          event_team_id: event_team,
          event_team_membership: {
            person_id: person,
@@ -59,6 +64,7 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
              name: person.name
            }
          }
+       }
 
     event_team_membership = assigns(:event_team_membership)
     assert_not_nil event_team_membership

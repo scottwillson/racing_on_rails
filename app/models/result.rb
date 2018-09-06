@@ -117,7 +117,7 @@ class Result < ActiveRecord::Base
   end
 
   def event_id
-    self[:event_id] || (race || race.reload).try(:event_id)
+    self[:event_id] || (race || race&.reload)&.event_id
   end
 
   def event(reload = false)
