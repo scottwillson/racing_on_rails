@@ -51,6 +51,7 @@ module RacingOnRails
 
     config.action_mailer.default_url_options = { mobile: nil }
     config.action_mailer.smtp_settings = {
+      domain: "list.obra.org",
       enable_starttls_auto: false,
       openssl_verify_mode: :none
     }
