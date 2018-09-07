@@ -26,10 +26,12 @@ module Admin
         assert_not_equal(2, event.bar_points, "bar_points")
         assert_not_equal("Cyclocross", event.discipline, "discipline")
 
-        post(:update,
-             "commit" => "Save",
-             id: event.to_param,
-             "event" => { "bar_points" => "2", "name" => "Banana Belt One", "discipline" => "Cyclocross" })
+        post :update,
+             params: {
+               "commit" => "Save",
+               id: event.to_param,
+               "event" => { "bar_points" => "2", "name" => "Banana Belt One", "discipline" => "Cyclocross" }
+             }
         assert_redirected_to edit_admin_event_path(event)
 
         event.reload
@@ -44,10 +46,12 @@ module Admin
         assert_nil(event[:discipline], "discipline")
         assert_equal("Road", event.parent.discipline, "Parent event discipline")
 
-        post(:update,
-             "commit" => "Save",
-             id: event.to_param,
-             "event" => { "bar_points" => "2", "name" => "Banana Belt One", "discipline" => "Road" })
+        post :update,
+             params: {
+               "commit" => "Save",
+               id: event.to_param,
+               "event" => { "bar_points" => "2", "name" => "Banana Belt One", "discipline" => "Road" }
+             }
         assert_redirected_to edit_admin_event_path(event)
 
         event.reload
@@ -60,10 +64,12 @@ module Admin
         assert_equal("Road", event[:discipline], "discipline")
         assert_equal("Road", event.discipline, "Parent event discipline")
 
-        post(:update,
-             "commit" => "Save",
-             id: event.to_param,
-             "event" => { "bar_points" => "2", "name" => "Banana Belt One", "discipline" => "Road" })
+        post :update,
+             params: {
+               "commit" => "Save",
+               id: event.to_param,
+               "event" => { "bar_points" => "2", "name" => "Banana Belt One", "discipline" => "Road" }
+             }
         assert_redirected_to edit_admin_event_path(event)
 
         event.reload
@@ -80,12 +86,17 @@ module Admin
         source_event.save!
         event = CombinedTimeTrialResults.create!(parent: source_event)
 
-        post(:update, "id" => event.id,
-                      "event" => { "auto_combined_results" => "1",
-                                   "name" => "Portland MTB Short Track Series",
-                                   "bar_points" => "0",
-                                   "ironman" => "1",
-                                   "discipline" => "Mountain Bike" })
+        post :update,
+             params: {
+               "id" => event.id,
+               "event" => {
+                 "auto_combined_results" => "1",
+                 "name" => "Portland MTB Short Track Series",
+                 "bar_points" => "0",
+                 "ironman" => "1",
+                 "discipline" => "Mountain Bike"
+                 }
+               }
 
         assert_nil(flash[:warn], "flash[:warn] should be empty, but was: #{flash[:empty]}")
         assert_redirected_to edit_admin_event_path(event)

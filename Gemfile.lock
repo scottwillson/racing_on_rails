@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/amerine/acts_as_tree.git
-  revision: 25ef76f9e5e3f4eddffdf4c71c341d75d0e1fff2
+  revision: 53b513bd716756e2c55e6e101fbc85de1355084b
   specs:
-    acts_as_tree (2.7.1)
+    acts_as_tree (2.8.0)
       activerecord (>= 3.0.0)
 
 GIT
@@ -65,7 +65,7 @@ GEM
     activejob (5.2.1)
       activesupport (= 5.2.1)
       globalid (>= 0.3.6)
-    activemerchant (1.82.0)
+    activemerchant (1.83.0)
       activesupport (>= 4.2, < 6.x)
       builder (>= 2.1.2, < 4.0.0)
       i18n (>= 0.6.9)
@@ -85,7 +85,7 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    acts_as_list (0.9.15)
+    acts_as_list (0.9.16)
       activerecord (>= 3.0)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
@@ -99,7 +99,7 @@ GEM
       activesupport (>= 4.2, < 5.3)
       request_store (~> 1.0)
       scrypt (>= 1.2, < 4.0)
-    autoprefixer-rails (9.1.2)
+    autoprefixer-rails (9.1.4)
       execjs
     axlsx (1.3.6)
       htmlentities (~> 4.3.1)
@@ -144,7 +144,7 @@ GEM
       capistrano (~> 3.7)
       capistrano-bundler
       puma (~> 3.4)
-    capybara (3.6.0)
+    capybara (3.7.1)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -310,15 +310,13 @@ GEM
     nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
     ntlm-http (0.1.1)
-    oj (3.6.6)
+    oj (3.6.7)
     orm_adapter (0.5.0)
-    paper_trail (9.2.0)
+    paper_trail (10.0.1)
       activerecord (>= 4.2, < 5.3)
-      paper_trail-association_tracking (< 2)
       request_store (~> 1.1)
-    paper_trail-association_tracking (1.0.0)
     parallel (1.12.1)
-    parallel_tests (2.22.0)
+    parallel_tests (2.22.1)
       parallel
     parser (2.5.1.2)
       ast (~> 2.4.0)
@@ -404,7 +402,7 @@ GEM
     ruby-progressbar (1.10.0)
     ruby-rc4 (0.1.5)
     ruby_dep (1.5.0)
-    rubyzip (1.2.1)
+    rubyzip (1.2.2)
     sass (3.5.7)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -444,7 +442,7 @@ GEM
     sshkit (1.17.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stripe (3.22.0)
+    stripe (3.26.0)
       faraday (~> 0.10)
     table_print (1.5.6)
     tabular (0.4.3)
@@ -470,7 +468,7 @@ GEM
     unf_ext (0.0.7.5)
     unicode-display_width (1.4.0)
     uniform_notifier (1.11.0)
-    web-console (3.6.2)
+    web-console (3.7.0)
       actionview (>= 5.0)
       activemodel (>= 5.0)
       bindex (>= 0.4.0)

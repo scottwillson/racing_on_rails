@@ -31,12 +31,12 @@ class PhotosControllerTest < ActionController::TestCase
 
     Photo.any_instance.stubs height: 300, width: 400
 
-    post :create, params: { params: {
+    post :create, params: {
       photo: {
         caption: "Caption",
         image: fixture_file_upload("photo.jpg")
       }
-    }}
+    }
 
     assert_redirected_to edit_photo_path(assigns(:photo))
   end

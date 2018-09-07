@@ -21,7 +21,7 @@ class MailingListsControllerTest < ActionController::TestCase
 
   test "confirm private reply" do
     obra_race = FactoryBot.create(:mailing_list)
-    get(:confirm_private_reply, mailing_list_id: obra_race.id)
+    get :confirm_private_reply, params: { mailing_list_id: obra_race.id }
     assert_response(:success)
     assert_template("mailing_lists/confirm_private_reply")
     assert_equal(obra_race, assigns["mailing_list"], "Should assign mailing list")

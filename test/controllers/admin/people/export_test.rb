@@ -87,7 +87,7 @@ module Admin
       end
 
       test "export members only to excel" do
-        get(:index, format: "xls", include: "members_only")
+        get :index, format: "xls", params: { include: "members_only" }
 
         assert_response :success
         today = RacingAssociation.current.effective_today

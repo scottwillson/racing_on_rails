@@ -13,11 +13,13 @@ module Admin
 
     test "update no team" do
       result = FactoryBot.create(:result, team: nil)
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "team_name",
-          value: ""
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "team_name",
+            value: ""
+          }
       assert_response(:success)
 
       result.reload
@@ -28,11 +30,13 @@ module Admin
       result = FactoryBot.create(:result, team: nil)
       FactoryBot.create(:team, name: "Vanilla")
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "team_name",
-          value: "Vanilla"
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "team_name",
+            value: "Vanilla"
+          }
 
       assert_response(:success)
 
@@ -43,11 +47,13 @@ module Admin
     test "update no team to new" do
       result = FactoryBot.create(:result, team: nil)
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "team_name",
-          value: "Team Vanilla"
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "team_name",
+            value: "Team Vanilla"
+          }
       assert_response(:success)
 
       result.reload
@@ -59,11 +65,13 @@ module Admin
       gentle_lovers = FactoryBot.create(:team, name: "Gentle Lovers")
       gentle_lovers.aliases.create!(name: "Gentile Lovers")
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "team_name",
-          value: "Gentile Lovers"
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "team_name",
+            value: "Gentile Lovers"
+          }
       assert_response(:success)
 
       result.reload
@@ -73,11 +81,13 @@ module Admin
     test "update to no team" do
       result = FactoryBot.create(:result)
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "team_name",
-          value: ""
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "team_name",
+            value: ""
+          }
       assert_response(:success)
 
       result.reload
@@ -88,11 +98,13 @@ module Admin
       result = FactoryBot.create(:result, team: nil)
       vanilla = FactoryBot.create(:team, name: "Vanilla")
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "team_name",
-          value: "Vanilla"
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "team_name",
+            value: "Vanilla"
+          }
       assert_response(:success)
 
       result.reload
@@ -102,11 +114,13 @@ module Admin
     test "update to new team" do
       result = FactoryBot.create(:result, team: nil)
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "team_name",
-          value: "Astana"
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "team_name",
+            value: "Astana"
+          }
       assert_response(:success)
 
       result.reload
@@ -118,11 +132,13 @@ module Admin
       gentle_lovers = FactoryBot.create(:team, name: "Gentle Lovers")
       gentle_lovers.aliases.create!(name: "Gentile Lovers")
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "team_name",
-          value: "Gentile Lovers"
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "team_name",
+            value: "Gentile Lovers"
+          }
       assert_response(:success)
 
       result.reload
@@ -132,11 +148,13 @@ module Admin
     test "set result points" do
       result = FactoryBot.create(:result)
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "points",
-          value: "12"
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "points",
+            value: "12"
+          }
       assert_response(:success)
 
       result.reload
@@ -147,11 +165,13 @@ module Admin
       result = FactoryBot.create(:result, person: nil)
       original_team_name = result.team_name
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "team_name",
-          value: original_team_name
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "team_name",
+            value: original_team_name
+          }
       assert_response(:success)
 
       result.reload
@@ -167,11 +187,13 @@ module Admin
       tonkin.aliases.create!(name: "Eric Tonkin")
       original_team_name = result.team_name
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "name",
-          value: "Erik Tonkin"
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "name",
+            value: "Erik Tonkin"
+          }
       assert_response(:success)
 
       result.reload
@@ -188,11 +210,13 @@ module Admin
 
       original_team_name = result.team_name
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "name",
-          value: "Eric Tonkin"
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "name",
+            value: "Eric Tonkin"
+          }
       assert_response(:success)
 
       result.reload
@@ -207,11 +231,13 @@ module Admin
 
       original_team_name = result.team_name
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "name",
-          value: ""
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "name",
+            value: ""
+          }
       assert_response(:success)
 
       result.reload
@@ -228,11 +254,13 @@ module Admin
 
       original_team_name = result.team_name
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "name",
-          value: "Erik Tonkin"
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "name",
+            value: "Erik Tonkin"
+          }
       assert_response(:success)
 
       result.reload
@@ -249,11 +277,13 @@ module Admin
       tonkin.aliases.create!(name: "Eric Tonkin")
       original_team_name = result.team_name
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "name",
-          value: "Eric Tonkin"
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "name",
+            value: "Eric Tonkin"
+          }
       assert_response(:success)
 
       result.reload
@@ -273,11 +303,13 @@ module Admin
       FactoryBot.create_list(:result, 3, person: weaver)
       result = FactoryBot.create(:result, person: weaver)
 
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "name",
-          value: "Stella Carey"
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "name",
+            value: "Stella Carey"
+          }
 
       assert_response :success
 
@@ -296,11 +328,13 @@ module Admin
 
     test "update attribute should format times" do
       result = FactoryBot.create(:result, time: 600)
-      xhr :put,
-          :update_attribute,
-          id: result.to_param,
-          name: "time",
-          value: "7159"
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: result.to_param,
+            name: "time",
+            value: "7159"
+          }
 
       assert_response :success
       assert_equal "01:59:19.00", response.body, "Should format time but was #{response.body}"
@@ -320,7 +354,7 @@ module Admin
       FactoryBot.create(:person, first_name: "Ryan", last_name: "Weaver")
       FactoryBot.create(:person, name: "Alice")
       tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
-      post(:find_person, name: "e", ignore_id: tonkin.id)
+      post :find_person, params: { name: "e", ignore_id: tonkin.id }
       assert_response(:success)
       assert_template("admin/results/_people")
     end
@@ -329,7 +363,7 @@ module Admin
       weaver = FactoryBot.create(:person)
       tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
 
-      post(:find_person, name: weaver.name, ignore_id: tonkin.id)
+      post :find_person, params: { name: weaver.name, ignore_id: tonkin.id }
 
       assert_response(:success)
       assert_template("admin/results/_person")
@@ -337,7 +371,7 @@ module Admin
 
     test "find person no results" do
       tonkin = FactoryBot.create(:person)
-      post(:find_person, name: "not a person in the database", ignore_id: tonkin.id)
+      post :find_person, params: { name: "not a person in the database", ignore_id: tonkin.id }
       assert_response(:success)
       assert_template("admin/results/_people")
     end
@@ -345,7 +379,7 @@ module Admin
     test "results" do
       weaver = FactoryBot.create(:result).person
 
-      post(:results, person_id: weaver.id)
+      post :results, params: { person_id: weaver.id }
 
       assert_response(:success)
       assert_template("admin/results/_person")
@@ -353,7 +387,7 @@ module Admin
 
     test "scores" do
       result = FactoryBot.create(:result)
-      post(:scores, id: result.id, format: "js")
+      post :scores, params: { id: result.id }, format: "js"
       assert_response(:success)
     end
 
@@ -379,7 +413,7 @@ module Admin
       matson_result = FactoryBot.create(:result, race: race, place: "3")
       molly_result = FactoryBot.create(:result, race: race, place: "16")
 
-      xhr(:post, :create, race_id: race.id, before_result_id: weaver_result.id)
+      post :create, params: { race_id: race.id, before_result_id: weaver_result.id }, xhr: true
       assert_response(:success)
       assert_equal(5, race.results.size, "Results after insert")
       tonkin_result.reload
@@ -391,7 +425,7 @@ module Admin
       assert_equal("4", matson_result.place, "Matson place after insert")
       assert_equal("17", molly_result.place, "Molly place after insert")
 
-      xhr(:post, :create, race_id: race.id, before_result_id: tonkin_result.id)
+      post :create, params: { race_id: race.id, before_result_id: tonkin_result.id }, xhr: true
       assert_response(:success)
       assert_equal(6, race.results.size, "Results after insert")
       tonkin_result.reload
@@ -403,7 +437,7 @@ module Admin
       assert_equal("5", matson_result.place, "Matson place after insert")
       assert_equal("18", molly_result.place, "Molly place after insert")
 
-      xhr(:post, :create, race_id: race.id, before_result_id: molly_result.id)
+      post :create, params: { race_id: race.id, before_result_id: molly_result.id }, xhr: true
       assert_response(:success)
       assert_equal(7, race.results.size, "Results after insert")
       tonkin_result.reload
@@ -416,7 +450,7 @@ module Admin
       assert_equal("19", molly_result.place, "Molly place after insert")
 
       dnf = race.results.create(place: "DNF")
-      xhr(:post, :create, race_id: race.id, before_result_id: weaver_result.id)
+      post :create, params: { race_id: race.id, before_result_id: weaver_result.id }, xhr: true
       assert_response(:success)
       assert_equal(9, race.results.reload.size, "Results after insert")
       tonkin_result.reload
@@ -430,7 +464,7 @@ module Admin
       assert_equal("20", molly_result.place, "Molly place after insert")
       assert_equal("DNF", dnf.place, "DNF place after insert")
 
-      xhr(:post, :create, race_id: race.id, before_result_id: dnf.id)
+      post :create, params: { race_id: race.id, before_result_id: dnf.id }, xhr: true
       assert_response(:success)
       assert_equal(10, race.results.reload.size, "Results after insert")
       tonkin_result.reload
@@ -445,7 +479,7 @@ module Admin
       assert_equal("DNF", dnf.place, "DNF place after insert")
       assert_equal("DNF", race.results.reload.sort.last.place, "DNF place after insert")
 
-      post :create, params: { xhr: true, params: { race_id: race.id } }
+      create params: { xhr: true, params: { race_id: race.id } }, xhr: true
       assert_response(:success)
       assert_equal(11, race.results.reload.size, "Results after insert")
       tonkin_result.reload
@@ -465,7 +499,7 @@ module Admin
       result_2 = FactoryBot.create(:result)
       assert_not_nil(result_2, "Result should exist in DB")
 
-      xhr(:post, :destroy, id: result_2.to_param)
+      post :destroy, params: { id: result_2.to_param }, xhr: true
       assert_response(:success)
       assert_raise(ActiveRecord::RecordNotFound, "Result should not exist in DB") { Result.find(result_2.id) }
     end

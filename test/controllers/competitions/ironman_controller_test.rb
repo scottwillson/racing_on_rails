@@ -18,7 +18,7 @@ module Competitions
     end
 
     test "index with year" do
-      get(:index, year: "2004")
+      get :index, params: { year: "2004" }
       assert_response(:success)
       assert_template("ironman/index")
       assert_not_nil(assigns["ironman"], "Should assign ironman")

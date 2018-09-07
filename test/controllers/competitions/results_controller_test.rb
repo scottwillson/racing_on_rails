@@ -105,13 +105,13 @@ module Competitions
 
     test "event rider rankings" do
       rider_rankings = RiderRankings.create!
-      get(:event, event_id: rider_rankings.to_param)
+      get :event, params: { event_id: rider_rankings.to_param }
       assert_redirected_to(rider_rankings_path(rider_rankings.date.year))
     end
 
     test "event overall bar" do
       bar = OverallBar.create!
-      get(:event, event_id: bar.to_param)
+      get :event, params: { event_id: bar.to_param }
       assert_redirected_to(controller: "competitions/bar", action: "show", year: bar.date.year)
     end
 
@@ -119,7 +119,7 @@ module Competitions
       bar = Competitions::Bar.create!
       person = Person.create!(name: "JP Morgen")
 
-      get(:person_event, event_id: bar.to_param, person_id: person.to_param)
+      get :person_event, params: { event_id: bar.to_param, person_id: person.to_param }
       assert_response(:success)
       assert_template("results/person_event")
       assert_equal(assigns["results"], [], "Should assign results")
@@ -158,14 +158,14 @@ module Competitions
       person = FactoryBot.create(:person)
       event = CrossCrusadeOverall.create!(parent: Series.create!)
       event.races.create!(category: @senior_men).results.create!(place: "1")
-      get(:person_event, event_id: event.to_param, person_id: person.to_param)
+      get :person_event, params: { event_id: event.to_param, person_id: person.to_param }
       assert_response :success
     end
 
     test "missing person event result" do
       Bar.create!
       event = Bar.find_for_year
-      get(:person_event, event_id: event.to_param, person_id: Person.create!.to_param)
+      get :person_event, params: { event_id: event.to_param, person_id: Person.create!.to_param }
       assert_response :success
     end
   end

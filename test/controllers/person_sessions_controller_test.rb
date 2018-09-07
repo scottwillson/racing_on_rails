@@ -51,7 +51,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
   test "blank login should fail with blank email address" do
     Person.create!
-    post :create, params: { params: { person_session: { email: "", password: "" }, login: "Login" } }
+    post :create, params: { person_session: { email: "", password: "" }, login: "Login" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(!assigns["person_session"].errors.empty?, "@person_session should have errors")
     assert_response :success

@@ -26,7 +26,7 @@ class ResultsControllerTest < ActionController::TestCase
 
   test "event" do
     banana_belt_1 = FactoryBot.create(:event)
-    get(:event, event_id: banana_belt_1.to_param)
+    get :event, params: { event_id: banana_belt_1.to_param }
     assert_response(:success)
     assert_template("results/event")
     assert_not_nil(assigns["event"], "Should assign event")
