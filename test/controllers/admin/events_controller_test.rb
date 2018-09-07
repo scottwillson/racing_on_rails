@@ -67,7 +67,7 @@ module Admin
       assert_redirected_to edit_admin_event_path(banana_belt)
 
       banana_belt.reload
-      assert_equal(promoter, banana_belt.promoter(true), "Promoter after save")
+      assert_equal(promoter, banana_belt.promoter.reload, "Promoter after save")
     end
 
     test "set parent" do
@@ -186,7 +186,7 @@ module Admin
       CombinedTimeTrialResults.calculate!
       assert_not_nil(jack_frost.combined_results, "Event should have combined results before destroying races")
       assert_equal(1, jack_frost.races.count, "Races before destroy")
-      delete :destroy_races, params: { xhr: true, params: { id: jack_frost.id, commit: "Delete" } }
+      delete :destroy_races, xhr: true, params: { id: jack_frost.id, commit: "Delete" }
       assert_not_nil(assigns(:races), "@races")
       assert_not_nil(assigns(:combined_results), "@combined_results")
       assert_response(:success)

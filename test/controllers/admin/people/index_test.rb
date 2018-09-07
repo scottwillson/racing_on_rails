@@ -40,7 +40,7 @@ module Admin
 
       test "find" do
         person = FactoryBot.create(:person)
-        get(:index, name: "weav")
+        get :index, params: { name: "weav" }
         assert_response :success
         assert_template("admin/people/index")
         assert_not_nil(assigns["people"], "Should assign people")
@@ -53,7 +53,7 @@ module Admin
         FactoryBot.create(:discipline)
         FactoryBot.create(:number_issuer)
         person = FactoryBot.create(:person, road_number: "777")
-        get(:index, name: "777")
+        get :index, params: { name: "777" }
         assert_response :success
         assert_template("admin/people/index")
         assert_not_nil(assigns["people"], "Should assign people")
@@ -64,7 +64,7 @@ module Admin
 
       test "find nothing" do
         FactoryBot.create(:person)
-        get(:index, name: "s7dfnacs89danfx")
+        get :index, params: { name: "s7dfnacs89danfx" }
         assert_response :success
         assert_template("admin/people/index")
         assert_not_nil(assigns["people"], "Should assign people")
@@ -72,7 +72,7 @@ module Admin
       end
 
       test "find empty name" do
-        get(:index, name: "")
+        get :index, name: ""
         assert_response :success
         assert_template("admin/people/index")
         assert_not_nil(assigns["people"], "Should assign people")
@@ -83,7 +83,7 @@ module Admin
 
       test "find limit" do
         FactoryBot.create_list(:person, 100)
-        get(:index, name: "Ryan")
+        get :index, params: { name: "Ryan" }
         assert_response :success
         assert_template("admin/people/index")
         assert_not_nil(assigns["people"], "Should assign people")
@@ -94,10 +94,13 @@ module Admin
 
       test "blank name" do
         molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
-        xhr :put, :update_attribute,
-            id: molly.to_param,
-            name: "name",
-            value: ""
+        put :update_attribute,
+            xhr: true,
+            params: {
+              id: molly.to_param,
+              name: "name",
+              value: ""
+            }
         assert_response :success
         person = assigns["person"]
         assert_equal molly, person, "@person"

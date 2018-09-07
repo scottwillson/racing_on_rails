@@ -237,7 +237,7 @@ module Admin
 
       kona = FactoryBot.create(:team, name: "Kona")
 
-      xhr :put, :update_attribute,
+      put :update_attribute, xhr: true,
           id: kona.to_param,
           name: "name",
           value: "Vanilla Bicycles"
@@ -257,7 +257,7 @@ module Admin
       landshark.aliases.create(name: "Land Shark")
       landshark.aliases.create(name: "Team Landshark")
 
-      xhr :put, :update_attribute,
+      put :update_attribute, xhr: true,
           id: landshark.to_param,
           name: "name",
           value: "Land Shark"
@@ -293,7 +293,7 @@ module Admin
     test "merge?" do
       vanilla = FactoryBot.create(:team, name: "Vanilla")
       kona = FactoryBot.create(:team)
-      xhr :put, :update_attribute,
+      put :update_attribute, xhr: true,
           id: kona.to_param,
           name: "name",
           value: "Vanilla"

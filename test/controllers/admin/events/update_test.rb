@@ -121,13 +121,17 @@ module Admin
         norba = NumberIssuer.create!(name: "NORBA")
         assert_not_equal(norba, event.number_issuer, "number_issuer")
 
-        post(:update,
-             "commit" => "Save",
-             id: event.to_param,
-             "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
-                          "flyer" => "http://#{RacingAssociation.current.static_host}/flyers/2006/event.html", "sanctioned_by" => "UCI", "flyer_approved" => "1",
-                          "discipline" => "Track", "cancelled" => "1", "state" => "WA",
-                          "promoter_id" => brad_ross.to_param, "number_issuer_id" => norba.to_param })
+        post :update,
+             params: {
+               "commit" => "Save",
+               id: event.to_param,
+               "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
+                            "flyer" => "http://#{RacingAssociation.current.static_host}/flyers/2006/event.html", "sanctioned_by" => "UCI", "flyer_approved" => "1",
+                            "discipline" => "Track", "cancelled" => "1", "state" => "WA",
+                            "promoter_id" => brad_ross.to_param, "number_issuer_id" => norba.to_param
+                          }
+               }
+
         assert_redirected_to edit_admin_event_path(event)
 
         event.reload
@@ -152,16 +156,19 @@ module Admin
         for type in [MultiDayEvent, Series, WeeklySeries]
           event = FactoryBot.create(:event)
 
-          post(:update,
-               "commit" => "Save",
-               id: event.to_param,
-               "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
-                            "flyer" => "../../flyers/2006/event.html", "sanctioned_by" => "UCI",
-                            "flyer_approved" => "1",
-                            "discipline" => "Track", "cancelled" => "1", "state" => "OR",
-                            "promoter_id" => event.promoter.to_param,
-                            "number_issuer_id" => number_issuer.to_param,
-                            "type" => type })
+          post :update,
+               params: {
+                 "commit" => "Save",
+                 id: event.to_param,
+                 "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
+                              "flyer" => "../../flyers/2006/event.html", "sanctioned_by" => "UCI",
+                              "flyer_approved" => "1",
+                              "discipline" => "Track", "cancelled" => "1", "state" => "OR",
+                              "promoter_id" => event.promoter.to_param,
+                              "number_issuer_id" => number_issuer.to_param,
+                              "type" => type
+                            }
+                }
           assert_redirected_to edit_admin_event_path(event)
           event = Event.find(event.id)
           assert(event.is_a?(type), "#{event.name} should be a #{type}")
@@ -175,16 +182,19 @@ module Admin
         [MultiDayEvent, Series, WeeklySeries, SingleDayEvent].each do |type|
           event = type.create!
 
-          post(:update,
-               "commit" => "Save",
-               id: event.to_param,
-               "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
-                            "flyer" => "../../flyers/2006/event.html", "sanctioned_by" => "UCI",
-                            "flyer_approved" => "1",
-                            "discipline" => "Track", "cancelled" => "1", "state" => "OR",
-                            "promoter_id" => event.promoter.to_param,
-                            "number_issuer_id" => number_issuer.to_param,
-                            "type" => "Event" })
+          post :update,
+               params: {
+                 "commit" => "Save",
+                 id: event.to_param,
+                 "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
+                              "flyer" => "../../flyers/2006/event.html", "sanctioned_by" => "UCI",
+                              "flyer_approved" => "1",
+                              "discipline" => "Track", "cancelled" => "1", "state" => "OR",
+                              "promoter_id" => event.promoter.to_param,
+                              "number_issuer_id" => number_issuer.to_param,
+                              "type" => "Event"
+                            }
+              }
           assert_redirected_to edit_admin_event_path(event)
           event = Event.find(event.id)
           assert_equal Event, event.class, "#{event.name} should be an Event, but is a #{event.class}"
@@ -195,13 +205,16 @@ module Admin
         event = FactoryBot.create(:stage_race)
         original_attributes = event.attributes.clone
 
-        post(:update,
-             "commit" => "Save",
-             id: event.to_param,
-             "event" => { "city" => event.city, "name" => "Mt. Hood One Day",
-                          "flyer" => event.flyer, "sanctioned_by" => event.sanctioned_by, "flyer_approved" => event.flyer_approved,
-                          "discipline" => event.discipline, "cancelled" => event.cancelled, "state" => event.state,
-                          "promoter_id" => event.promoter_id, "number_issuer_id" => event.number_issuer_id, "type" => "SingleDayEvent" })
+        post :update,
+             params: {
+               "commit" => "Save",
+               id: event.to_param,
+               "event" => { "city" => event.city, "name" => "Mt. Hood One Day",
+                            "flyer" => event.flyer, "sanctioned_by" => event.sanctioned_by, "flyer_approved" => event.flyer_approved,
+                            "discipline" => event.discipline, "cancelled" => event.cancelled, "state" => event.state,
+                            "promoter_id" => event.promoter_id, "number_issuer_id" => event.number_issuer_id, "type" => "SingleDayEvent"
+                          }
+             }
         event = assigns(:event)
         assert_not_nil(event, "@event")
         assert event.errors.empty?, event.errors.full_messages.join
@@ -226,13 +239,16 @@ module Admin
         event = FactoryBot.create(:stage_race)
         original_attributes = event.attributes.clone
 
-        put(:update,
-            "commit" => "Save",
-            id: event.to_param,
-            "event" => { "city" => event.city, "name" => "Mt. Hood Series", "date" => event.date.to_date,
-                         "flyer" => event.flyer, "sanctioned_by" => event.sanctioned_by, "flyer_approved" => event.flyer_approved,
-                         "discipline" => event.discipline, "cancelled" => event.cancelled, "state" => event.state,
-                         "promoter_id" => event.promoter_id, "number_issuer_id" => event.number_issuer_id, "type" => "Series" })
+        put :update,
+            params: {
+              "commit" => "Save",
+              id: event.to_param,
+              "event" => { "city" => event.city, "name" => "Mt. Hood Series", "date" => event.date.to_date,
+                           "flyer" => event.flyer, "sanctioned_by" => event.sanctioned_by, "flyer_approved" => event.flyer_approved,
+                           "discipline" => event.discipline, "cancelled" => event.cancelled, "state" => event.state,
+                           "promoter_id" => event.promoter_id, "number_issuer_id" => event.number_issuer_id, "type" => "Series"
+                         }
+             }
         assert_redirected_to edit_admin_event_path(event)
         event = Event.find(event.id)
         assert(event.is_a?(Series), "Mt Hood should be a Series, but is a #{event.class}")

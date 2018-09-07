@@ -16,10 +16,13 @@ module Admin
 
       test "update name" do
         molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
-        xhr :put, :update_attribute,
-            id: molly.to_param,
-            name: "name",
-            value: "Mollie Cameron"
+        put :update_attribute,
+            xhr: true,
+            params: {
+              id: molly.to_param,
+              name: "name",
+              value: "Mollie Cameron"
+            }
         assert_response :success
         assert @response.body["Mollie Cameron"]
         molly.reload
@@ -29,10 +32,13 @@ module Admin
 
       test "update same name" do
         molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
-        xhr :put, :update_attribute,
-            id: molly.to_param,
-            name: "name",
-            value: "Molly Cameron"
+        put :update_attribute,
+            xhr: true,
+            params: {
+              id: molly.to_param,
+              name: "name",
+              value: "Molly Cameron"
+            }
         assert_response :success
         assert_not_nil(assigns["person"], "Should assign person")
         assert_equal(molly, assigns["person"], "Person")
@@ -43,10 +49,13 @@ module Admin
 
       test "update same name different case" do
         molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
-        xhr :put, :update_attribute,
-            id: molly.to_param,
-            name: "name",
-            value: "molly cameron"
+        put :update_attribute,
+            xhr: true,
+            params: {
+              id: molly.to_param,
+              name: "name",
+              value: "molly cameron"
+            }
         assert_response :success
         assert_not_nil(assigns["person"], "Should assign person")
         assert_equal(molly, assigns["person"], "Person")
@@ -59,10 +68,13 @@ module Admin
         # Should ask to merge
         FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
-        xhr :put, :update_attribute,
-            id: molly.to_param,
-            name: "name",
-            value: "Erik Tonkin"
+        put :update_attribute,
+            xhr: true,
+            params: {
+              id: molly.to_param,
+              name: "name",
+              value: "Erik Tonkin"
+            }
         assert_response :success
         assert_template("admin/people/merge_confirm")
         assert_not_nil(assigns["person"], "Should assign person")

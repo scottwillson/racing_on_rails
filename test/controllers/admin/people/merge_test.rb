@@ -17,7 +17,7 @@ module Admin
       test "merge?" do
         molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         tonkin = FactoryBot.create(:person)
-        xhr :put, :update_attribute,
+        put :update_attribute, xhr: true,
             id: tonkin.to_param,
             name: "name",
             value: molly.name
@@ -61,7 +61,7 @@ module Admin
         molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         molly_with_different_road_number = Person.create(name: "Molly Cameron", road_number: "987123")
         tonkin = FactoryBot.create(:person)
-        xhr :put, :update_attribute,
+        put :update_attribute, xhr: true,
             id: tonkin.to_param,
             name: "name",
             value: molly.name
@@ -85,7 +85,7 @@ module Admin
         molly.save!
         molly_with_different_cross_number = Person.create(name: "Molly Cameron", ccx_number: "810", road_number: "1009")
         tonkin = FactoryBot.create(:person)
-        xhr :put, :update_attribute,
+        put :update_attribute, xhr: true,
             id: tonkin.to_param,
             name: "name",
             value: molly.name
@@ -109,7 +109,7 @@ module Admin
         tonkin = FactoryBot.create(:person, first_name: "Erik", last_name: "Tonkin")
         tonkin.aliases.create!(name: "Eric Tonkin")
 
-        xhr :put, :update_attribute,
+        put :update_attribute, xhr: true,
             id: molly.to_param,
             name: "name",
             value: "Eric Tonkin"

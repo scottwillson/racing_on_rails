@@ -7,7 +7,6 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
   setup :use_ssl
 
   test "#create for person name" do
-    person = FactoryBot.create(:person)
     event_team = FactoryBot.create(:event_team)
     login_as event_team.event.promoter
 
@@ -118,10 +117,12 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     event_team = FactoryBot.create(:event_team)
 
     post :create,
-         event_team_id: event_team,
-         event_team_membership: {
-           person_id: different_person
-         }
+        params: {
+          event_team_id: event_team,
+          event_team_membership: {
+            person_id: different_person
+          }
+        }
 
     assert_redirected_to unauthorized_path
   end
