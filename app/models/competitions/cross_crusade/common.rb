@@ -67,6 +67,7 @@ module Competitions
             "Masters Women 35+ 1/2",
             "Masters Women 35+ 3",
             "Masters Women 50+",
+            "Masters Women 60+",
             "Men 1/2",
             "Men 2/3",
             "Men 4",
@@ -74,7 +75,7 @@ module Competitions
             "Singlespeed Women",
             "Singlespeed",
             "Women 1/2",
-            "Women 3",
+            "Women 2/3",
             "Women 4",
             "Women 5"
           ]
