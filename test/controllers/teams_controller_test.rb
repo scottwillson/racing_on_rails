@@ -22,7 +22,7 @@ class TeamsControllerTest < ActionController::TestCase
     nonmember = Team.create!(name: "Not Member")
     hidden_team = Team.create!(name: "Hidden Member", member: true, show_on_public_page: false)
 
-    get(:index, format: :xlsx)
+    get :index, format: :xlsx
     assert_response(:success)
     assert_not_nil(assigns(:teams), "Should assign @teams")
     assert(!assigns(:teams).include?(nonmember), "Should only show member teams") unless RacingAssociation.current.show_all_teams_on_public_page?
@@ -32,7 +32,7 @@ class TeamsControllerTest < ActionController::TestCase
 
   test "find json" do
     vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
-    get :index, params: { format: "json", params: { name: "van" } }
+    get :index, params: { name: "van" }, format: "json"
     assert_response :success
     assert_equal [vanilla], assigns["teams"], "Search for 'van' should find Vanilla"
     assert_equal "van", assigns["name"], "'name' assigns"
