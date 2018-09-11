@@ -39,12 +39,12 @@ class PagesControllerTest < ActionController::TestCase
   end
 
   test "render 404 correctly for missing page" do
-    assert_raise(ActiveRecord::RecordNotFound) { get(:show, path: "not_a_page") }
+    assert_raise(ActiveRecord::RecordNotFound) { get(:show, params: { path: "not_a_page" }) }
     assert_response(:success)
   end
 
   test "render 404 correctly for missing children" do
-    assert_raise(ActiveRecord::RecordNotFound) { get(:show, path: "parent/child/missing") }
+    assert_raise(ActiveRecord::RecordNotFound) { get(:show, params: { path: "parent/child/missing" }) }
     assert_response(:success)
   end
 

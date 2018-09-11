@@ -20,7 +20,7 @@ module Competitions
     end
 
     test "index without event" do
-      get(:index, year: "2004")
+      get :index, params: { year: "2004" }
       assert_response(:success)
       assert_template("oregon_cup/index")
       assert_not_nil(assigns["oregon_cup"], "Should assign oregon_cup")

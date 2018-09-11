@@ -78,7 +78,7 @@ class ActiveSupport::TestCase
     assert_response :success
     assert_template "person_sessions/new"
 
-    post person_session_path, person_session: { login: person.login, password: password }
+    post person_session_path, params: { person_session: { login: person.login, password: password } }
     assert_response :redirect
   end
 
