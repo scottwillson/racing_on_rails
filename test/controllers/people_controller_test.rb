@@ -167,7 +167,7 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   test "index as json" do
-    get :index, params: { format: "json", name: "ron" }
+    get :index, params: { name: "ron" }, format: "json"
     assert_response :success
     assert_equal "application/json", @response.content_type
   end
@@ -176,15 +176,16 @@ class PeopleControllerTest < ActionController::TestCase
     FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
     FactoryBot.create(:person, first_name: "Kevin", last_name: "Condron")
 
-    get :index, params: { name: "ron", format: "xml" }
+    get :index, params: { name: "ron" }, format: "xml"
     assert_response :success
+    pp response.body
     assert_select "first-name", "Molly"
     assert_select "first-name", "Kevin"
   end
 
   test "find by license as xml" do
     FactoryBot.create(:person, first_name: "Mark", last_name: "Matson", license: "576")
-    get :index, params: { name: "m", license: 576, format: "xml" }
+    get :index, params: { name: "m", license: 576 }, format: "xml"
     assert_response :success
     assert_select "first-name", "Mark"
   end
