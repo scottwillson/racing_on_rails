@@ -76,7 +76,7 @@ module Competitions
       result = overall_bar.races.detect { |r| r.name == "Senior Women" }.results.first
       assert_not_nil(result, "result")
 
-      get(:person_event, event_id: overall_bar.to_param, person_id: result.person.to_param)
+      get :person_event, params: { event_id: overall_bar.to_param, person_id: result.person.to_param }
       assert_response(:success)
       assert_template("results/person_event")
       assert_not_nil(assigns["results"], "Should assign results")

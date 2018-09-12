@@ -16,7 +16,7 @@ module Admin
 
       test "edit" do
         event = FactoryBot.create(:event, velodrome: FactoryBot.create(:velodrome))
-        get(:edit, id: event.to_param)
+        get :edit, params: { id: event.to_param }
         assert_response(:success)
         assert_template("admin/events/edit")
         assert_not_nil(assigns["event"], "Should assign event")
@@ -28,7 +28,7 @@ module Admin
       test "edit sti subclasses" do
         [SingleDayEvent, MultiDayEvent, Series, WeeklySeries].each do |event_class|
           event = event_class.create!
-          get(:edit, id: event.to_param)
+          get :edit, params: { id: event.to_param }
           assert_response(:success)
           if event_class == SingleDayEvent
             assert_select "input#event_human_date"
@@ -40,7 +40,7 @@ module Admin
 
       test "edit parent" do
         event = FactoryBot.create(:series)
-        get(:edit, id: event.to_param)
+        get :edit, params: { id: event.to_param }
         assert_response(:success)
         assert_template("admin/events/edit")
         assert_not_nil(assigns["event"], "Should assign event")
@@ -49,7 +49,7 @@ module Admin
 
       test "edit no results" do
         event = FactoryBot.create(:event)
-        get(:edit, id: event.to_param)
+        get :edit, params: { id: event.to_param }
         assert_response(:success)
         assert_template("admin/events/edit")
         assert_not_nil(assigns["event"], "Should assign event")
@@ -58,7 +58,7 @@ module Admin
 
       test "edit with promoter" do
         event = FactoryBot.create(:event)
-        get(:edit, id: event.to_param)
+        get :edit, params: { id: event.to_param }
         assert_response(:success)
         assert_template("admin/events/edit")
         assert_not_nil(assigns["event"], "Should assign event")
@@ -96,7 +96,7 @@ module Admin
 
       test "edit child event" do
         event = FactoryBot.create(:series_event)
-        get(:edit, id: event.id)
+        get :edit, params: { id: event.id }
         assert_response(:success)
       end
 
@@ -104,7 +104,7 @@ module Admin
         event = FactoryBot.create(:time_trial_event)
         FactoryBot.create(:result, event: event)
         combined = CombinedTimeTrialResults.create!(parent: event)
-        get(:edit, id: combined.id)
+        get :edit, params: { id: combined.to_param }
         assert_response(:success)
       end
     end

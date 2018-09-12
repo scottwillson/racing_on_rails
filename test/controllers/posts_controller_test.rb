@@ -109,7 +109,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
     assert_equal(22, assigns["posts"].size, "Should show recent posts")
 
-    get(:index, mailing_list_id: obra_race.id)
+    get :index, params: { mailing_list_id: obra_race.id }
     assert_response(:success)
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
     assert_not_nil(assigns["posts"], "Should assign posts")

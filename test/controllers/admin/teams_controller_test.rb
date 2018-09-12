@@ -82,7 +82,7 @@ module Admin
 
     test "index rjs" do
       vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
-      get :index, params: { xhr: true, params: { name: "nilla" } }
+      get :index, params: { name: "nilla" }, xhr: true
       assert_response(:success)
       assert_template("admin/teams/index")
       assert_not_nil(assigns["teams"], "Should assign teams")
@@ -237,10 +237,13 @@ module Admin
 
       kona = FactoryBot.create(:team, name: "Kona")
 
-      put :update_attribute, xhr: true,
-          id: kona.to_param,
-          name: "name",
-          value: "Vanilla Bicycles"
+      put :update_attribute,
+          xhr: true,
+          params: {
+            id: kona.to_param,
+            name: "name",
+            value: "Vanilla Bicycles"
+          }
       assert_response(:success)
       assert_template("admin/teams/merge_confirm")
       assert_not_nil(assigns["team"], "Should assign team")
@@ -257,10 +260,13 @@ module Admin
       landshark.aliases.create(name: "Land Shark")
       landshark.aliases.create(name: "Team Landshark")
 
-      put :update_attribute, xhr: true,
-          id: landshark.to_param,
-          name: "name",
-          value: "Land Shark"
+      put :update_attribute,
+          params: {
+            id: landshark.to_param,
+            name: "name",
+            value: "Land Shark"
+          },
+          xhr: true
       assert_response(:success)
       assert_not_nil(assigns["team"], "Should assign team")
       assert assigns["team"].errors.empty?, assigns["team"].errors.full_messages.join
@@ -293,10 +299,13 @@ module Admin
     test "merge?" do
       vanilla = FactoryBot.create(:team, name: "Vanilla")
       kona = FactoryBot.create(:team)
-      put :update_attribute, xhr: true,
-          id: kona.to_param,
-          name: "name",
-          value: "Vanilla"
+      put :update_attribute,
+          params: {
+            id: kona.to_param,
+            name: "name",
+            value: "Vanilla"
+          },
+          xhr: true
       assert_response(:success)
       assert_template("admin/teams/merge_confirm")
       assert_equal(kona, assigns["team"], "Team")
@@ -309,7 +318,7 @@ module Admin
       kona = FactoryBot.create(:team, name: "Kona")
       assert(Team.find_by(name: "Kona"), "Kona should be in database")
 
-      post :merge, params: { xhr: true, params: { id: vanilla.id, other_team_id: kona.to_param } }
+      post :merge, params: { id: vanilla.id, other_team_id: kona.to_param }, xhr: true
       assert_response(:success)
       assert_template("admin/teams/merge")
 
@@ -352,7 +361,7 @@ module Admin
       assert_equal(1, vanilla.names.count, "Vanilla names")
       name = vanilla.names.first
 
-      post :destroy_name, params: { xhr: true, params: { id: vanilla.to_param, name_id: name.to_param } }
+      post :destroy_name, params: { id: vanilla.to_param, name_id: name.to_param }, xhr: true
       assert_response(:success)
       assert_equal(0, vanilla.names.reload.count, "Vanilla names after destruction")
     end
@@ -372,13 +381,17 @@ module Admin
 
     test "update" do
       team = FactoryBot.create(:team, name: "Vanilla")
-      post(:update, id: team.to_param, team: { name: "Speedvagen",
-                                               website: "http://speedvagen.net",
-                                               sponsors: %(<a href="http://stumptowncoffeeroasters">Stumptown</a>),
-                                               contact_name: "Sacha White",
-                                               contact_email: "sacha@speedvagen.net",
-                                               contact_phone: "14115555",
-                                               member: true })
+      post :update,
+           params: {
+             id: team.to_param,
+             team: { name: "Speedvagen",
+                     website: "http://speedvagen.net",
+                     sponsors: %(<a href="http://stumptowncoffeeroasters">Stumptown</a>),
+                     contact_name: "Sacha White",
+                     contact_email: "sacha@speedvagen.net",
+                     contact_phone: "14115555",
+                     member: true
+                   }
       assert_redirected_to(edit_admin_team_path(team))
       team.reload
       assert_equal("Speedvagen", team.name, "Name should be updated")

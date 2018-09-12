@@ -24,7 +24,7 @@ module Admin
       test "not logged in edit" do
         destroy_person_session
         person = FactoryBot.create(:person)
-        get(:edit, id: person.to_param)
+        get :edit, params: { id: person.to_param }
         assert_nil(@request.session["person"], "No person in session")
         assert_redirected_to new_person_session_url(secure_redirect_options)
       end
@@ -72,7 +72,7 @@ module Admin
       end
 
       test "find empty name" do
-        get :index, name: ""
+        get :index, params: { name: "" }
         assert_response :success
         assert_template("admin/people/index")
         assert_not_nil(assigns["people"], "Should assign people")

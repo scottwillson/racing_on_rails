@@ -39,7 +39,7 @@ module Admin
       end
 
       test "preview import with no file" do
-        post(:preview_import, commit: "Import", people_file: "")
+        post :preview_import, params: { commit: "Import", people_file: "" }
 
         assert(flash[:warn].present?, "should have flash[:warn]")
         assert_redirected_to admin_people_path
