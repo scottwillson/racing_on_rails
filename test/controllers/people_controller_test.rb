@@ -178,7 +178,6 @@ class PeopleControllerTest < ActionController::TestCase
 
     get :index, params: { name: "ron" }, format: "xml"
     assert_response :success
-    pp response.body
     assert_select "first-name", "Molly"
     assert_select "first-name", "Kevin"
   end

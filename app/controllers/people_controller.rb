@@ -11,7 +11,7 @@ class PeopleController < ApplicationController
     respond_to do |format|
       format.html { find_people }
       format.js { find_people }
-      format.xml { render xml: find_people, only: %i[id first_name last_name] }
+      format.xml { render xml: find_people.to_xml(only: %i[id first_name last_name]) }
       format.json { render json: find_people.as_json(only: %i[id first_name last_name name city], methods: [:team_name]) }
     end
   end

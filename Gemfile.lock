@@ -72,6 +72,10 @@ GEM
       nokogiri (~> 1.4)
     activemodel (5.2.1)
       activesupport (= 5.2.1)
+    activemodel-serializers-xml (1.0.2)
+      activemodel (> 5.x)
+      activesupport (> 5.x)
+      builder (~> 3.1)
     activerecord (5.2.1)
       activemodel (= 5.2.1)
       activesupport (= 5.2.1)
@@ -490,6 +494,7 @@ PLATFORMS
 DEPENDENCIES
   Ascii85
   activemerchant
+  activemodel-serializers-xml
   acts_as_list
   acts_as_tree!
   authlogic
