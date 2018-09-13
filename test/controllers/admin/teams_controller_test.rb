@@ -170,7 +170,7 @@ module Admin
           name: "name",
           value: "Kona"
         },
-        chr: true
+        xhr: true
       assert_response(:success)
       assert_template("admin/teams/merge_confirm")
       assert_not_nil(assigns["team"], "Should assign team")
