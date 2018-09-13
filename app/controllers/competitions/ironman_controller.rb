@@ -17,7 +17,7 @@ module Competitions
       @results = Result
                  .where(event_id: @ironman.id)
                  .includes(:person)
-                 .order("cast(place as signed), person_id")
+                 .order(Arel.sql("cast(place as signed), person_id"))
                  .paginate(page: page, per_page: 200)
     end
   end
