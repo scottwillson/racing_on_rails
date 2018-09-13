@@ -4,7 +4,7 @@ module Admin
   # Work assignments for Event. First aid provider and chief official.
   # Officials can view, but not edit, this page.
   class FirstAidProvidersController < Admin::AdminController
-    skip_callback :require_administrator
+    skip_before_action :require_administrator
     before_action :require_administrator_or_official
     helper :table
 

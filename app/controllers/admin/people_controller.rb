@@ -5,7 +5,7 @@ module Admin
   class PeopleController < Admin::AdminController
     before_action :require_current_person
     # Funky permissions filtering here to allow officials and promoters download Excel file
-    skip_callback :require_administrator, only: :index
+    skip_before_action :require_administrator, only: :index
     before_action :require_administrator_or_promoter_or_official, only: :index
     before_action :remember_event
     layout "admin/application", except: %i[card cards]
