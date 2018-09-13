@@ -10,7 +10,7 @@ class AdminPagesTest < RacingOnRails::IntegrationTest
     assert_redirected_to "http://www.example.com/person_session/new"
     assert_equal "Please login to your #{RacingAssociation.current.short_name} account", flash[:notice]
 
-    login person_session: { login: "admin@example.com", password: "secret" }
+    login params: { person_session: { login: "admin@example.com", password: "secret" } }
     assert_redirected_to "http://www.example.com/admin/events"
 
     get admin_events_path

@@ -80,7 +80,7 @@ module Competitions
       assert_redirected_to new_person_session_url(secure_redirect_options)
 
       go_to_login
-      login person_session: { login: person.login, password: "secret" }
+      login params: { person_session: { login: person.login, password: "secret" } }
       get "/admin/first_aid_providers"
       assert_response :success
     end

@@ -14,7 +14,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
   test "member account" do
     get "/account"
     assert_redirected_to "http://www.example.com/person_session/new"
-    login person_session: { login: "bob.jones", password: "secret" }
+    login params: { person_session: { login: "bob.jones", password: "secret" } }
     assert_redirected_to "http://www.example.com/account"
     follow_redirect!
     assert_redirected_to "http://www.example.com/people/#{@member.id}/edit"
@@ -36,7 +36,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
 
     get "/logout"
     get "/account"
-    login person_session: { login: "admin@example.com", password: "secret" }
+    login params: { person_session: { login: "admin@example.com", password: "secret" } }
     assert_redirected_to "http://www.example.com/account"
     follow_redirect!
     assert_redirected_to "http://www.example.com/people/#{@administrator.id}/edit"
@@ -67,7 +67,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     get "http://www.example.com/login"
     assert_response :success
 
-    login person_session: { login: "bob.jones", password: "secret" }
+    login params: { person_session: { login: "bob.jones", password: "secret" } }
     assert_redirected_to "http://www.example.com/people/#{@member.id}/edit"
   end
 
@@ -75,7 +75,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     get "http://www.example.com:8080/login"
     assert_response :success
 
-    login person_session: { login: "bob.jones", password: "secret" }
+    login params: { person_session: { login: "bob.jones", password: "secret" } }
     assert_redirected_to "http://www.example.com:8080/people/#{@member.id}/edit"
   end
 
@@ -88,19 +88,19 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     assert_template "person_sessions/new"
     assert_equal "Please login to your #{RacingAssociation.current.short_name} account", flash[:notice]
 
-    login person_session: { login: "admin@example.com", password: "secret" }
+    login params: { person_session: { login: "admin@example.com", password: "secret" } }
     assert_redirected_to admin_people_path
   end
 
   test "should redirect to admin home after admin login" do
     go_to_login
-    login person_session: { login: "admin@example.com", password: "secret" }
+    login params: { person_session: { login: "admin@example.com", password: "secret" } }
     assert_redirected_to "/admin"
   end
 
   test "valid member login" do
     go_to_login
-    login person_session: { login: "bob.jones", password: "secret" }
+    login params: { person_session: { login: "bob.jones", password: "secret" } }
     assert_redirected_to edit_person_path(@member)
   end
 
