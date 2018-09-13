@@ -31,14 +31,16 @@ class PeopleTest < RacingOnRails::IntegrationTest
     FactoryBot.create :number_issuer
     goto_login_page_and_login_as FactoryBot.create(:administrator)
     post "/admin/people/preview_import",
-         people_file: fixture_file_upload(
-           "#{ActionController::TestCase.fixture_path}membership/upload.xlsx",
-           "application/vnd.ms-excel"
-         )
+         params: {
+           people_file: fixture_file_upload(
+             "#{ActionController::TestCase.fixture_path}membership/upload.xlsx",
+             "application/vnd.ms-excel"
+           )
+         }
     assert_response :success
 
     assert_not_nil session[:people_file_path], "Should have :people_file_path in session"
-    post "/admin/people/import", commit: "Import"
+    post "/admin/people/import", params: { commit: "Import" }
     assert_redirected_to admin_people_path
   end
 end

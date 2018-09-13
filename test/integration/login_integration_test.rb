@@ -116,7 +116,7 @@ class LoginIntegrationTest < RacingOnRails::IntegrationTest
     Person.create!
 
     https!
-    post person_session_path, "person_session" => { "email" => "", "password" => "" }, "login" => "Login"
+    post person_session_path, params: { person_session: { email: "", password: "" }, login: "Login" }
     assert_response :success
     assert_template "person_sessions/new"
 
