@@ -49,6 +49,10 @@ module People
       date_as_date = case date
                      when Date, DateTime, Time
                        Time.zone.local(date.year, date.month, date.day)
+                     when Array
+                       Time.zone.local(date[0], date[1], date[2])
+                     when Hash
+                       Time.zone.local(date[1], date[2], date[3])
                      else
                        Time.zone.parse(date)
       end
