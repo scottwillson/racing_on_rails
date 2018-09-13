@@ -54,7 +54,7 @@ class Team < ActiveRecord::Base
     return true if no_results?
 
     errors.add :base, "Cannot delete team with results. #{name} has #{results.count} results."
-    false
+    throw :abort
   end
 
   def no_results?
