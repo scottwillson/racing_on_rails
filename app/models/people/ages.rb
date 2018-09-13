@@ -5,14 +5,19 @@ module People
     extend ActiveSupport::Concern
 
     def date_of_birth=(value)
-      if value.is_a?(String)
-        if value[%r{^\d\d/\d\d/\d\d$}]
-          value = value.gsub %r{(\d+)/(\d+)/(\d+)}, '19\3/\1/\2'
-        else
-          value = value.gsub(/^00/, "19")
-          value = value.gsub(/^(\d+\/\d+\/)(\d\d)$/, '\119\2')
-        end
-      end
+      value = case value
+              when String
+                if value[%r{^\d\d/\d\d/\d\d$}]
+                  value.gsub %r{(\d+)/(\d+)/(\d+)}, '19\3/\1/\2'
+                else
+                  value.gsub(/^00/, "19")
+                  value.gsub(/^(\d+\/\d+\/)(\d\d)$/, '\119\2')
+                end
+              when Array
+                Date.new(value[0], value[1], value[2])
+              when Hash
+                Date.new(value[1], value[2], value[3])
+              end
 
       if value && value.to_s.size < 5
         int_value = value.to_i
