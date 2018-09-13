@@ -30,7 +30,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     )
 
     SingleDayEvent.create!(postponed: true)
-    get(:index, year: year)
+    get :index, params: { year: year }
 
     html = @response.body
     assert(html["Banana Belt I"], "'Banana Belt I' should be in HTML")
@@ -54,19 +54,19 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
   test "index rss" do
     FactoryBot.create(:event)
-    get :index, params: { format: :rss }
+    get :index, format: :rss
     assert_redirected_to schedule_path(format: :atom)
   end
 
   test "index atom" do
     FactoryBot.create(:event)
-    get :index, params: { format: :atom }
+    get :index, format: :atom
     assert_response :success
   end
 
   test "index excel" do
     FactoryBot.create(:event)
-    get :index, params: { format: :xlsx }
+    get :index, format: :xlsx
     assert_response :success
   end
 
@@ -76,7 +76,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
     FactoryBot.create(:event, discipline: "Mountain Bike")
 
-    get :index, params: { discipline: "mtb", format: :xlsx }
+    get :index, params: { discipline: "mtb" }, format: :xlsx
     assert_response :success
   end
 
@@ -85,7 +85,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
     FactoryBot.create(:event, discipline: "Road")
 
-    get :list, params: { discipline: "road", format: :xlsx }
+    get :list, params: { discipline: "road" }, format: :xlsx
     assert_response :success
   end
 
@@ -112,7 +112,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:index, year: year, discipline: "Road")
+    get :index, params: { year: year, discipline: "Road" }
 
     html = @response.body
     assert(!html["Mudslinger"], "Road events should not include MTB")
@@ -143,7 +143,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:index, year: year, discipline: "Mountain Bike")
+    get :index, params: { year: year, discipline: "Mountain Bike" }
 
     html = @response.body
     assert(html["Mudslinger"], "Road events should include MTB")
@@ -267,7 +267,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:list, year: year, discipline: "Mountain Bike")
+    get :list, params: { year: year, discipline: "Mountain Bike" }
 
     html = @response.body
     assert(html["Mudslinger"], "Road events should include MTB")
@@ -278,7 +278,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     FactoryBot.create(:discipline)
     FactoryBot.create(:event, discipline: "Road")
 
-    get :list, params: { discipline: "road", format: :xlsx }
+    get :list, params: { discipline: "road" }, format: :xlsx
     assert_response :success
   end
 
@@ -313,7 +313,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:index, year: 2006, discipline: "Mountain Bike", format: "json")
+    get :index, params: { year: 2006, discipline: "Mountain Bike" }, format: "json"
 
     json = @response.body
     assert(json["Mudslinger"], "Calendar should include MTB event")
@@ -341,7 +341,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       promoter: Person.create!(name: "Mike Ripley", email: "mikecycle@earthlink.net", home_phone: "203-259-8577")
     )
 
-    get(:calendar, year: 2006, discipline: "Mountain Bike", format: "json")
+    get :calendar, params: { year: 2006, discipline: "Mountain Bike" }, format: "json"
 
     json = @response.body
     assert(json["Mudslinger"], "Calendar should include MTB event")

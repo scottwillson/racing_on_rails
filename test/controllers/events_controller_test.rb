@@ -32,7 +32,7 @@ class EventsControllerTest < ActionController::TestCase
   test "index as xml" do
     Timecop.freeze(Time.zone.local(2012, 5)) do
       FactoryBot.create(:event)
-      get :index, params: { format: "xml" }
+      get :index, format: "xml"
       assert_response :success
       assert_equal "application/xml", @response.content_type
       [

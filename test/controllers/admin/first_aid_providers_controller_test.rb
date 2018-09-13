@@ -30,7 +30,7 @@ module Admin
     end
 
     test "first aid update options" do
-      get(:index, past_events: "true")
+      get :index, params: { past_events: "true" }
       assert_response(:success)
       assert_template("admin/first_aid_providers/index")
       assert_not_nil(assigns["events"], "Should assign events")
@@ -39,7 +39,7 @@ module Admin
     end
 
     test "index sorting" do
-      get(:index, sort_by: "promoter_name", sort_direction: "desc")
+      get :index, params: { sort_by: "promoter_name", sort_direction: "desc" }
       assert_response(:success)
       assert_template("admin/first_aid_providers/index")
       assert_not_nil(assigns["events"], "Should assign events")

@@ -10,7 +10,7 @@ module Competitions
       RiderRankings.calculate!
       rider_rankings = RiderRankings.find_for_year
       rider_rankings.races.first.results.create!(place: "1")
-      get(:show, type: "rider_rankings")
+      get :show, params: { type: "rider_rankings" }
       assert_response(:success)
       assert_template("results/event")
       assert_not_nil(assigns["event"], "Should assign event")
@@ -18,7 +18,7 @@ module Competitions
     end
 
     test "unknown competition type" do
-      assert_raise(ActionController::UrlGenerationError) { get(:show, type: "not_a_series") }
+      assert_raise(ActionController::UrlGenerationError) { get(:show, params: { type: "not_a_series" }) }
     end
   end
 end

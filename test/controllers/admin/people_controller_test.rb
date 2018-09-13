@@ -28,7 +28,7 @@ module Admin
       molly.reload
       assert_equal(false, molly.member, "member after update")
 
-      post(:toggle_member, id: molly.to_param)
+      post :toggle_member, params: { id: molly.to_param }
       assert_response :success
       assert_template("shared/_member")
       molly.reload
@@ -43,7 +43,7 @@ module Admin
     test "edit" do
       alice = FactoryBot.create(:person)
 
-      get(:edit, id: alice.to_param)
+      get :edit, params: { id: alice.to_param }
       assert_response :success
       assert_nil(assigns["event"], "Should not assign 'event'")
     end
@@ -53,7 +53,7 @@ module Admin
       alice.updater = ImportFile.create!(name: "some_very_long_import_file_name.xls")
       alice.save!
 
-      get(:edit, id: alice.to_param)
+      get :edit, params: { id: alice.to_param }
       assert_response :success
       assert_template("admin/people/edit")
       assert_not_nil(assigns["person"], "Should assign person")
@@ -63,16 +63,20 @@ module Admin
     test "create" do
       assert_equal([], Person.find_all_by_name("Jon Knowlson"), "Knowlson should not be in database")
 
-      post(:create,  "person" => {
-             "member_from(1i)" => "", "member_from(2i)" => "", "member_from(3i)" => "",
-             "member_to(1i)" => "", "member_to(2i)" => "", "member_to(3i)" => "",
-             "date_of_birth(2i)" => "", "date_of_birth(1i)" => "", "date_of_birth(3i)" => "",
-             "work_phone" => "", "occupation" => "", "city" => "Brussels", "cell_fax" => "", "zip" => "",
-             "mtb_category" => "", "dh_category" => "", "member" => "1", "gender" => "", "ccx_category" => "",
-             "team_name" => "", "road_category" => "", "street" => "", "track_category" => "", "home_phone" => "",
-             "first_name" => "Jon", "last_name" => "Knowlson",
-             "email" => "", "state" => ""
-           }, "commit" => "Save")
+      post :create,
+            params: {
+              "person" => {
+                 "member_from(1i)" => "", "member_from(2i)" => "", "member_from(3i)" => "",
+                 "member_to(1i)" => "", "member_to(2i)" => "", "member_to(3i)" => "",
+                 "date_of_birth(2i)" => "", "date_of_birth(1i)" => "", "date_of_birth(3i)" => "",
+                 "work_phone" => "", "occupation" => "", "city" => "Brussels", "cell_fax" => "", "zip" => "",
+                 "mtb_category" => "", "dh_category" => "", "member" => "1", "gender" => "", "ccx_category" => "",
+                 "team_name" => "", "road_category" => "", "street" => "", "track_category" => "", "home_phone" => "",
+                 "first_name" => "Jon", "last_name" => "Knowlson",
+                 "email" => "", "state" => ""
+               },
+            "commit" => "Save"
+          }
 
       assert assigns["person"].errors.empty?, assigns["person"].errors.full_messages.join
 
@@ -96,27 +100,31 @@ module Admin
         molly_road_number = RaceNumber.last
         year = Time.zone.today.year.to_s
 
-        put(:update, "commit" => "Save",
-                     "number_year" => year,
-                     "number_issuer_id" => [@association.to_param], "number_value" => ["AZY"],
-                     "discipline_id" => [@mountain_bike.id.to_s],
-                     "person" => {
-                       "work_phone" => "", "date_of_birth(2i)" => "1", "occupation" => "engineer", "city" => "Wilsonville",
-                       "cell_fax" => "", "zip" => "97070",
-                       "date_of_birth(3i)" => "1", "mtb_category" => "Spt", "dh_category" => "",
-                       "member" => "1", "gender" => "M", "notes" => "rm", "ccx_category" => "", "team_name" => "", "road_category" => "5",
-                       "street" => "31153 SW Willamette Hwy W",
-                       "track_category" => "", "home_phone" => "503-582-8823", "first_name" => "Paul", "last_name" => "Formiller",
-                       "date_of_birth(1i)" => "1969",
-                       "member_from(1i)" => "", "member_from(2i)" => "", "member_from(3i)" => "",
-                       "member_to(1i)" => "", "member_to(2i)" => "", "member_to(3i)" => "",
-                       "email" => "paul.formiller@verizon.net", "state" => "OR",
-                       "race_numbers_attributes" => {
-                         "0" => { "number_issuer_id" => @association.id, "discipline_id" => @road.id, "year" => year, "value" => "202", "id" => molly_road_number.to_param },
-                         "1" => { "number_issuer_id" => @association.id, "discipline_id" => @mountain_bike.id, "year" => year, "value" => "AZY" }
-                       }
-                     },
-                     "id" => molly.to_param)
+        put :update,
+            params: {
+              "commit" => "Save",
+              "number_year" => year,
+              "number_issuer_id" => [@association.to_param], "number_value" => ["AZY"],
+              "discipline_id" => [@mountain_bike.id.to_s],
+              "person" => {
+                "work_phone" => "", "date_of_birth(2i)" => "1", "occupation" => "engineer", "city" => "Wilsonville",
+                "cell_fax" => "", "zip" => "97070",
+                "date_of_birth(3i)" => "1", "mtb_category" => "Spt", "dh_category" => "",
+                "member" => "1", "gender" => "M", "notes" => "rm", "ccx_category" => "", "team_name" => "", "road_category" => "5",
+                "street" => "31153 SW Willamette Hwy W",
+                "track_category" => "", "home_phone" => "503-582-8823", "first_name" => "Paul", "last_name" => "Formiller",
+                "date_of_birth(1i)" => "1969",
+                "member_from(1i)" => "", "member_from(2i)" => "", "member_from(3i)" => "",
+                "member_to(1i)" => "", "member_to(2i)" => "", "member_to(3i)" => "",
+                "email" => "paul.formiller@verizon.net", "state" => "OR",
+                "race_numbers_attributes" => {
+                  "0" => { "number_issuer_id" => @association.id, "discipline_id" => @road.id, "year" => year, "value" => "202", "id" => molly_road_number.to_param },
+                  "1" => { "number_issuer_id" => @association.id, "discipline_id" => @mountain_bike.id, "year" => year, "value" => "AZY" }
+                }
+              },
+              "id" => molly.to_param
+            }
+
         assert assigns(:person).errors.empty?, assigns(:person).errors.full_messages.join(", ")
         assert(flash.empty?, "flash empty? but was: #{flash}")
         assert_redirected_to edit_admin_person_path(molly)
@@ -147,24 +155,27 @@ module Admin
       assert_equal 1, molly.versions.size, "versions"
       molly_road_number = RaceNumber.first
 
-      put(:update, "commit" => "Save",
-                   "number_year" => Time.zone.today.year.to_s,
-                   "person" => {
-                     "member_from(1i)" => "2004", "member_from(2i)" => "2", "member_from(3i)" => "16",
-                     "member_to(1i)" => "2004", "member_to(2i)" => "12", "member_to(3i)" => "31",
-                     "print_card" => "1", "work_phone" => "", "date_of_birth(2i)" => "1", "occupation" => "engineer", "city" => "Wilsonville",
-                     "cell_fax" => "", "zip" => "97070", "date_of_birth(3i)" => "1", "mtb_category" => "Spt", "dh_category" => "",
-                     "member" => "1", "gender" => "M", "notes" => "rm", "ccx_category" => "", "team_name" => "", "road_category" => "5",
-                     "street" => "31153 SW Willamette Hwy W", "track_category" => "", "home_phone" => "503-582-8823",
-                     "first_name" => "Paul", "last_name" => "Formiller",
-                     "date_of_birth(1i)" => "1969", "email" => "paul.formiller@verizon.net", "state" => "OR", "ccx_only" => "1",
-                     "official" => "1",
-                     "race_numbers_attributes" => {
-                       "0" => { "value" => "222", "id" => molly_road_number.id },
-                       "1" => { "number_issuer_id" => @association.to_param, "discipline_id" => @cyclocross.id, "year" => Time.zone.today.year.to_s }
-                     }
-                   },
-                   "id" => molly.to_param)
+      put :update,
+          params: {
+            "commit" => "Save",
+             "number_year" => Time.zone.today.year.to_s,
+             "person" => {
+               "member_from(1i)" => "2004", "member_from(2i)" => "2", "member_from(3i)" => "16",
+               "member_to(1i)" => "2004", "member_to(2i)" => "12", "member_to(3i)" => "31",
+               "print_card" => "1", "work_phone" => "", "date_of_birth(2i)" => "1", "occupation" => "engineer", "city" => "Wilsonville",
+               "cell_fax" => "", "zip" => "97070", "date_of_birth(3i)" => "1", "mtb_category" => "Spt", "dh_category" => "",
+               "member" => "1", "gender" => "M", "notes" => "rm", "ccx_category" => "", "team_name" => "", "road_category" => "5",
+               "street" => "31153 SW Willamette Hwy W", "track_category" => "", "home_phone" => "503-582-8823",
+               "first_name" => "Paul", "last_name" => "Formiller",
+               "date_of_birth(1i)" => "1969", "email" => "paul.formiller@verizon.net", "state" => "OR", "ccx_only" => "1",
+               "official" => "1",
+               "race_numbers_attributes" => {
+                 "0" => { "value" => "222", "id" => molly_road_number.id },
+                 "1" => { "number_issuer_id" => @association.to_param, "discipline_id" => @cyclocross.id, "year" => Time.zone.today.year.to_s }
+               }
+             },
+             "id" => molly.to_param
+           }
       assert(flash.empty?, "Expected flash.empty? but was: #{flash[:warn]}")
       assert_redirected_to edit_admin_person_path(molly)
       molly.reload
@@ -188,7 +199,9 @@ module Admin
 
     test "update bad member from date" do
       person = FactoryBot.create(:person)
-      put(:update, "commit" => "Save", "person" => {
+      put :update,
+        params: {
+          "commit" => "Save", "person" => {
             "member_from(1i)" => "", "member_from(2i)" => "10", "member_from(3i)" => "19",
             "member_to(3i)" => "31", "date_of_birth(2i)" => "1", "city" => "Hood River",
             "work_phone" => "541-387-8883 x 213", "occupation" => "Sales Territory Manager", "cell_fax" => "541-387-8884",
@@ -199,8 +212,10 @@ module Admin
             "track_category" => "5", "first_name" => "Karsten", "last_name" => "Hagen",
             "member_to(1i)" => "2008", "member_to(2i)" => "12", "email" => "khagen69@hotmail.com", "date_of_birth(1i)" => "1969",
             "state" => "OR"
-          }, "id" => person.to_param,
-                   "number_year" => "2008")
+          },
+           "id" => person.to_param,
+           "number_year" => "2008"
+         }
       assert_not_nil(assigns(:person), "@person")
       assert(assigns(:person).errors.empty?, "Should not have errors")
       assert(assigns(:person).errors[:member_from].empty?, "Should have no errors on 'member_from' but had #{assigns(:person).errors[:member_from]}")
@@ -210,7 +225,7 @@ module Admin
     test "one print card" do
       tonkin = FactoryBot.create(:person)
 
-      get(:card, format: "pdf", id: tonkin.to_param)
+      get :card, format: "pdf", params: { id: tonkin.to_param }
 
       assert_response :success
       assert_equal(tonkin, assigns["person"], "Should assign person")
@@ -271,7 +286,7 @@ module Admin
     test "edit with event" do
       kings_valley = FactoryBot.create(:event)
       promoter = FactoryBot.create(:person)
-      get(:edit, id: promoter.to_param, event_id: kings_valley.to_param.to_s)
+      get :edit, params: { id: promoter.to_param, event_id: kings_valley.to_param.to_s }
       assert_equal(promoter, assigns["person"], "Should assign 'person'")
       assert_equal(kings_valley, assigns["event"], "Should Kings Valley assign 'event'")
       assert_template("admin/people/edit")
@@ -290,10 +305,13 @@ module Admin
       promoter = FactoryBot.create(:person)
       jack_frost = FactoryBot.create(:event)
 
-      put(:update, id: promoter.id,
-                   "person" => { "home_phone" => "(510) 410-2201", "email" => "fred@whatley.net" },
-                   "commit" => "Save",
-                   "event_id" => jack_frost.id)
+      put :update,
+        params: {
+          id: promoter.id,
+           "person" => { "home_phone" => "(510) 410-2201", "email" => "fred@whatley.net" },
+           "commit" => "Save",
+           "event_id" => jack_frost.id
+         }
 
       assert_nil(flash["warn"], "Should not have flash['warn'], but has: #{flash['warn']}")
 
@@ -304,12 +322,12 @@ module Admin
 
     test "remember event id on create" do
       jack_frost = FactoryBot.create(:event)
-      post(
-        :create,
-        "person" => { "first_name" => "Fred", "last_name" => "Whatley", "home_phone" => "(510) 410-2201", "email" => "fred@whatley.net" },
-        "commit" => "Save",
-        "event_id" => jack_frost.id
-      )
+      post :create,
+        params: {
+          "person" => { "first_name" => "Fred", "last_name" => "Whatley", "home_phone" => "(510) 410-2201", "email" => "fred@whatley.net" },
+          "commit" => "Save",
+          "event_id" => jack_frost.id
+        }
 
       assert_nil(flash["warn"], "Should not have flash['warn'], but has: #{flash['warn']}")
 

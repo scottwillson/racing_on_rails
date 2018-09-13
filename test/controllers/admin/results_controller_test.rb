@@ -23,7 +23,7 @@ module Admin
       assert_response(:success)
 
       result.reload
-      assert_nil(result.team.reload, "team")
+      assert_nil(result.team, "team")
     end
 
     test "update no team to existing" do
@@ -91,7 +91,7 @@ module Admin
       assert_response(:success)
 
       result.reload
-      assert_nil(result.team.reload, "team")
+      assert_nil(result.team, "team")
     end
 
     test "update to existing team" do
@@ -178,7 +178,7 @@ module Admin
       assert_nil(result.first_name, "first_name")
       assert_nil(result.last_name, "last_name")
       assert_equal(original_team_name, result.team_name, "team_name")
-      assert_nil(result.person.reload, "person")
+      assert_nil(result.person, "person")
     end
 
     test "update no person to existing" do
@@ -244,7 +244,7 @@ module Admin
       assert_nil(result.first_name, "first_name")
       assert_nil(result.last_name, "last_name")
       assert_equal(original_team_name, result.team_name, "team_name")
-      assert_nil(result.person.reload, "person")
+      assert_nil(result.person, "person")
     end
 
     test "update to different person" do
@@ -343,7 +343,7 @@ module Admin
     test "person" do
       weaver = FactoryBot.create(:result).person
 
-      get(:index, person_id: weaver.to_param.to_s)
+      get :index, params: { person_id: weaver.to_param.to_s }
 
       assert_not_nil(assigns["results"], "Should assign results")
       assert_equal(weaver, assigns["person"], "Should assign person")
@@ -399,7 +399,7 @@ module Admin
       assert tonkin.results.include?(result)
       assert !weaver.results.include?(result)
 
-      post :move, params: { person_id: weaver.id, result_id: result.id, format: "js" }
+      post :move, params: { person_id: weaver.id, result_id: result.id }, format: "js"
 
       assert !tonkin.results.reload.include?(result)
       assert weaver.results.reload.include?(result)
@@ -479,7 +479,7 @@ module Admin
       assert_equal("DNF", dnf.place, "DNF place after insert")
       assert_equal("DNF", race.results.reload.sort.last.place, "DNF place after insert")
 
-      create params: { xhr: true, params: { race_id: race.id } }, xhr: true
+      post :create, params: { race_id: race.id }, xhr: true
       assert_response(:success)
       assert_equal(11, race.results.reload.size, "Results after insert")
       tonkin_result.reload

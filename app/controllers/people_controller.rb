@@ -135,7 +135,7 @@ class PeopleController < ApplicationController
 
     @person.errors.add :email, "can't be blank" if person_params[:email].blank?
 
-    @person.errors.add :email, "must been email address" if person_params[:email].blank? || !person_params[:email][Authlogic::Regex.email]
+    @person.errors.add :email, "must been email address" if person_params[:email].blank? || !person_params[:email][Authlogic::Regex::EMAIL]
 
     @person.errors.add :login, "can't be blank" if person_params[:login].blank?
 

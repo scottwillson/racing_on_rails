@@ -19,8 +19,8 @@ module Admin
         person = FactoryBot.create(:person)
 
         post(:create,
-             "commit" => "Save",
              params: {
+               "commit" => "Save",
                "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
                             "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
                             "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
@@ -52,8 +52,8 @@ module Admin
         assert_nil(Event.find_by(name: "Skull Hollow Roubaix"), "Skull Hollow Roubaix should not be in DB")
 
         post(:create,
-             "commit" => "Save",
              params: {
+               "commit" => "Save",
                "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
                             "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
                             "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
@@ -88,8 +88,8 @@ module Admin
         person = FactoryBot.create(:person)
 
         post(:create,
-             "commit" => "Save",
              params: {
+               "commit" => "Save",
                "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
                             "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
                             "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
@@ -122,8 +122,8 @@ module Admin
         person = FactoryBot.create(:person)
 
         post(:create,
-             "commit" => "Save",
              params: {
+               "commit" => "Save",
                "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
                             "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
                             "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
@@ -142,8 +142,8 @@ module Admin
         person = FactoryBot.create(:person)
 
         post(:create,
-             "commit" => "Save",
              params: {
+               "commit" => "Save",
                "event" => { "city" => "Smith Rock", "name" => "Skull Hollow Roubaix", "date" => "2010-01-02",
                             "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
                             "discipline" => "Downhill", "cancelled" => "1", "state" => "KY",
@@ -168,7 +168,8 @@ module Admin
       end
 
       test "create without promoter id" do
-        post :create, params: {
+        post :create,
+          params: {
           "event" => { "promoter_name" => "Tour de Nuit", "city" => "Calgary ", "name" => "Ride the Road Tour", "date(1i)" => "2010",
                        "flyer_approved" => "0", "number_issuer_id" => "1", "sanctioned_by" => "CBRA", "date(2i)" => "6", "notes" => "",
                        "pre_event_fees" => "", "first_aid_provider" => "", "date(3i)" => "6", "post_event_fees" => "", "flyer" => "",

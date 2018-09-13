@@ -392,6 +392,7 @@ module Admin
                      contact_phone: "14115555",
                      member: true
                    }
+                 }
       assert_redirected_to(edit_admin_team_path(team))
       team.reload
       assert_equal("Speedvagen", team.name, "Name should be updated")
