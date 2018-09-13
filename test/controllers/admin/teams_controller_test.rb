@@ -283,14 +283,14 @@ module Admin
 
     test "destroy" do
       csc = Team.create!(name: "CSC")
-      delete(:destroy, id: csc.id)
+      delete :destroy, params: { id: csc.id }
       assert_redirected_to(admin_teams_path)
       assert(!Team.exists?(csc.id), "CSC should have been destroyed")
     end
 
     test "destroy team with results should not cause hard errors" do
       team = FactoryBot.create(:result).team
-      delete(:destroy, id: team.id)
+      delete :destroy, params: { id: team.id }
       assert(Team.exists?(team.id), "Team should not have been destroyed")
       assert(!assigns(:team).errors.empty?, "Team should have error")
       assert_response(:success)
@@ -331,14 +331,14 @@ module Admin
       result = FactoryBot.create(:result, team: vanilla)
 
       assert_equal(true, vanilla.member, "member before update")
-      post(:toggle_member, id: vanilla.to_param)
+      post :toggle_member, params: { id: vanilla.to_param }
       assert_response(:success)
       assert_template("shared/_member")
       vanilla.reload
       assert_equal(false, vanilla.member, "member after update")
       assert_equal false, result.reload.team_member?, "Result#team_member should be updated"
 
-      post(:toggle_member, id: vanilla.to_param)
+      post :toggle_member, params: { id: vanilla.to_param }
       assert_response(:success)
       assert_template("shared/_member")
       vanilla.reload
@@ -348,7 +348,7 @@ module Admin
 
     test "edit" do
       vanilla = FactoryBot.create(:team, name: "Vanilla")
-      get(:edit, id: vanilla.to_param)
+      get :edit, params: { id: vanilla.to_param }
       assert_response(:success)
       assert_template("admin/teams/edit")
       assert_not_nil(assigns["team"], "Should assign team")
@@ -373,7 +373,7 @@ module Admin
     end
 
     test "create" do
-      post(:create, team: { name: "My Fancy New Bike Team" })
+      post :create, params: { team: { name: "My Fancy New Bike Team" } }
       team = Team.find_by(name: "My Fancy New Bike Team")
       assert_not_nil(team, "Should create new team")
       assert_redirected_to(edit_admin_team_path(team))

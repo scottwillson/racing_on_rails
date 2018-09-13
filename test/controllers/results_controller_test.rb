@@ -226,18 +226,18 @@ class ResultsControllerTest < ActionController::TestCase
 
   test "person json" do
     person = FactoryBot.create(:result).person
-    get :person, params: { person_id: person.id, format: :json }
+    get :person, params: { person_id: person.id }, format: :json
   end
 
   test "person json with year" do
     result = FactoryBot.create(:result)
-    get :person, params: { person_id: result.person_id, format: :json, year: result.year }
+    get :person, params: { person_id: result.person_id, year: result.year }, format: :json
   end
 
   test "person xml" do
     Timecop.freeze(Time.zone.local(2015, 11)) do
       person = FactoryBot.create(:result).person
-      get :person, params: { person_id: person.id, format: :xml }
+      get :person, params: { person_id: person.id }, format: :xml
       assert_equal "application/xml", @response.content_type
       [
         "results > result",

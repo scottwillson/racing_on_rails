@@ -22,7 +22,7 @@ module Admin
     test "toggle member" do
       molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
       assert_equal(true, molly.member, "member before update")
-      post(:toggle_member, id: molly.to_param)
+      post :toggle_member, params: { id: molly.to_param }
       assert_response :success
       assert_template("shared/_member")
       molly.reload
@@ -96,7 +96,7 @@ module Admin
       Timecop.freeze(Date.new(2008, 6)) do
         molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron", road_number: "202")
         assert_equal("202", molly.road_number(true, 2008), "Road number")
-        assert_equal("202", molly.road_number.reload, "Road number")
+        assert_equal("202", molly.reload.road_number, "Road number")
         molly_road_number = RaceNumber.last
         year = Time.zone.today.year.to_s
 
@@ -294,7 +294,7 @@ module Admin
 
     test "new with event" do
       kings_valley = FactoryBot.create(:event)
-      get(:new, event_id: kings_valley.to_param)
+      get :new, params: { event_id: kings_valley.to_param }
       assert_not_nil(assigns["person"], "Should assign 'person'")
       assert(assigns["person"].new_record?, "Promoter should be new record")
       assert_equal(kings_valley, assigns["event"], "Should Kings Valley assign 'event'")
