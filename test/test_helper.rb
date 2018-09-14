@@ -9,6 +9,7 @@ require_relative "../config/environment"
 require "rails/test_help"
 require "mocha/setup"
 require "authlogic/test_case"
+require_relative "fakeweb_registrations"
 require "parallel_tests/test/runtime_logger" if ENV["RECORD_RUNTIME"]
 require "test/enumerable_assertions"
 
