@@ -8,9 +8,7 @@ ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
 require "mocha/setup"
-# require "action_view/test_case"
 require "authlogic/test_case"
-require "fakeweb_registrations"
 require "parallel_tests/test/runtime_logger" if ENV["RECORD_RUNTIME"]
 require "test/enumerable_assertions"
 
