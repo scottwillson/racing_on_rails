@@ -203,14 +203,14 @@ module Admin
         params: {
           "commit" => "Save", "person" => {
             "member_from(1i)" => "", "member_from(2i)" => "10", "member_from(3i)" => "19",
-            "member_to(3i)" => "31", "date_of_birth(2i)" => "1", "city" => "Hood River",
+            "member_to(3i)" => "31", "member_to(2i)" => "1", "city" => "Hood River",
             "work_phone" => "541-387-8883 x 213", "occupation" => "Sales Territory Manager", "cell_fax" => "541-387-8884",
             "date_of_birth(3i)" => "1", "zip" => "97031", "license" => "583", "mtb_category" => "Beg",
             "dh_category" => "Beg", "notes" => "interests: 6\r\nr\r\ninterests: 4\r\nr\r\ninterests: 4\r\n", "gender" => "M",
             "ccx_category" => "B", "team_name" => "River City Specialized", "print_card" => "1",
             "street" => "3541 Avalon Drive", "home_phone" => "503-367-5193", "road_category" => "3",
             "track_category" => "5", "first_name" => "Karsten", "last_name" => "Hagen",
-            "member_to(1i)" => "2008", "member_to(2i)" => "12", "email" => "khagen69@hotmail.com", "date_of_birth(1i)" => "1969",
+            "date_of_birth(1i)" => "2008", "date_of_birth(2i)" => "12", "email" => "khagen69@hotmail.com",
             "state" => "OR"
           },
            "id" => person.to_param,

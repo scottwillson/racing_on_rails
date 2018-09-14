@@ -42,22 +42,9 @@ module People
     def member_from=(date)
       if date.nil?
         self[:member_from] = nil
-        self[:member_to] = nil
-        return date
       end
 
-      date_as_date = case date
-                     when Date, DateTime, Time
-                       Time.zone.local(date.year, date.month, date.day)
-                     when Array
-                       Time.zone.local(date[0], date[1], date[2])
-                     when Hash
-                       Time.zone.local(date[1], date[2], date[3])
-                     else
-                       Time.zone.parse(date)
-      end
-
-      self[:member_from] = date_as_date
+      super
     end
 
     # Also sets member_from if it is blank
