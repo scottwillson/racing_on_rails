@@ -459,10 +459,20 @@ class RaceTest < ActiveSupport::TestCase
     race.results.create!(place: "1", person: weaver)
     result = race.results.create!(place: "2", person: Person.new(name: "Jonah Braun"))
     race.results.create!(place: "3", person: mathew_braun)
-    assert(Person.exists?(first_name: "Jonah", last_name: "Braun"), "New person Jonah Braun should have been created")
 
-    race = Race.find(race.id)
-    race.destroy
+    jonah = Person.where(first_name: "Jonah", last_name: "Braun").first!
+    assert_equal event, jonah.created_by
+    assert jonah.created_from_result?
+
+    mathew_braun.reload
+    assert_nil mathew_braun.created_by
+    assert !mathew_braun.created_from_result?
+
+    weaver.reload
+    assert_nil weaver.created_by
+    assert !weaver.created_from_result?
+
+    race.reload.destroy
     assert !Result.exists?(result.id), "Should destroy result"
     assert !Race.exists?(race.id), "Should be destroyed. #{race.errors.full_messages}"
     assert !Person.exists?(first_name: "Jonah", last_name: "Braun"), "New person Jonah Braun should have been deleted"

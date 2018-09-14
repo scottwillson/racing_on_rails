@@ -162,7 +162,9 @@ module Results
 
     # Destroy People that only exist because they were created by importing results
     def destroy_people
-      person.destroy if person&.results&.count == 0 && person.created_from_result? && !person.updated_after_created?
+      if person&.results&.count == 0 && person.created_from_result? && !person.updated_after_created?
+        person.destroy
+      end
     end
 
     # Only used for manual entry of Cat 4 Womens Series Results

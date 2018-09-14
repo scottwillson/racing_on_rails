@@ -313,8 +313,10 @@ class Person < ActiveRecord::Base
   end
 
   def ensure_no_results
-    errors.add :base, "Can't delete person with results" if results.present?
-    throw :abort
+    if results.present?
+      errors.add :base, "Can't delete person with results"
+      throw :abort
+    end
   end
 
   # TODO: Any reason not to change this to last name, first name?
