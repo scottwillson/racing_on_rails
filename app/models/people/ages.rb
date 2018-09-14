@@ -11,12 +11,14 @@ module People
                   value.gsub %r{(\d+)/(\d+)/(\d+)}, '19\3/\1/\2'
                 else
                   value.gsub(/^00/, "19")
-                  value.gsub(/^(\d+\/\d+\/)(\d\d)$/, '\119\2')
+                       .gsub(/^(\d+\/\d+\/)(\d\d)$/, '\119\2')
                 end
               when Array
                 Date.new(value[0], value[1], value[2])
               when Hash
                 Date.new(value[1], value[2], value[3])
+              else
+                value
               end
 
       if value && value.to_s.size < 5
@@ -34,7 +36,8 @@ module People
                    end
         return if new_date.year == self[:date_of_birth].year && new_date.month == 1 && new_date.day == 1
       end
-      super
+
+      super value
     end
 
     def birthdate
