@@ -64,7 +64,7 @@ module Admin
           if @other_teams.empty?
             @team.save!
             expire_cache
-            render plain: @team[params[:name]]
+            render plain: @team[params[:name]], content_type: "text/plain"
           else
             render "merge_confirm"
           end

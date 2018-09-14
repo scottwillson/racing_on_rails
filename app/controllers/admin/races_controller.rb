@@ -57,7 +57,7 @@ module Admin
           expire_cache
           @race.update! params[:name] => params[:value]
           expire_cache
-          render plain: @race.send(params[:name])
+          render plain: @race.send(params[:name]), content_type: "text/plain"
         end
       end
     end

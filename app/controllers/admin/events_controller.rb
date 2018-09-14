@@ -109,7 +109,7 @@ module Admin
           @event = Event.find(params[:id])
           @event.update! params[:name] => params[:value]
           expire_cache
-          render plain: @event.send(params[:name])
+          render plain: @event.send(params[:name]), content_type: "text/plain"
         end
       end
     end

@@ -51,7 +51,7 @@ module Admin
           @page = Page.find(params[:id])
           @page.update! params[:name] => params[:value]
           expire_cache
-          render plain: @page.send(params[:name])
+          render plain: @page.send(params[:name]), content_type: "text/plain"
         end
       end
     end

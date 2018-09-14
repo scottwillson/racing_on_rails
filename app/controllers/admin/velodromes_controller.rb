@@ -44,7 +44,7 @@ module Admin
           @velodrome = Velodrome.find(params[:id])
           @velodrome.update! params[:name] => params[:value]
           expire_cache
-          render plain: @velodrome.send(params[:name])
+          render plain: @velodrome.send(params[:name]), content_type: "text/plain"
         end
       end
     end

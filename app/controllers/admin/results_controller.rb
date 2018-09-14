@@ -63,7 +63,7 @@ module Admin
                    @result.send(params[:name])
                  end
 
-          render plain: text
+          render plain: text, content_type: "text/plain"
         end
       end
     end

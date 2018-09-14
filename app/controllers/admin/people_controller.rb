@@ -124,7 +124,7 @@ module Admin
           else
             @person.update! params[:name] => params[:value]
             expire_cache
-            render plain: @person.send(params[:name])
+            render plain: @person.send(params[:name]), content_type: "text/plain"
           end
         end
       end
@@ -188,7 +188,7 @@ module Admin
       if @other_people.empty?
         @person.save
         expire_cache
-        render plain: @person.name
+        render plain: @person.name, content_type: "text/plain"
       else
         render "merge_confirm"
       end

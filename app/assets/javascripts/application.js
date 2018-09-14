@@ -105,7 +105,7 @@ function makeEditable() {
         dataType: 'html',
         url     : element.data('url'),
         success : function(result, status, jqXHR) {
-          if (jqXHR.getResponseHeader('Content-Type').indexOf('text/javascript') == -1) {
+          if (jqXHR.getResponseHeader('Content-Type').indexOf('text/javascript') === -1) {
             element.html(result);
             element.removeClass('saving');
             if (!jQuery.trim(element.html())) {

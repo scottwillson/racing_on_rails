@@ -35,8 +35,7 @@ module Admin
       table = Tabular::Table.new(columns + rows)
       table.renderers[:date] = DateRenderer
 
-      headers["Content-Type"] = "text/plain"
-      render plain: table.to_space_delimited
+      render plain: table.to_space_delimited, content_type: "text/plain"
     end
 
     protected
