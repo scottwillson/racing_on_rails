@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 if (Rails.env.test? || Rails.env.development?) && Rails.logger.level == 0
-  ActiveSupport::Notifications.subscribe(/process_action.action_controller|racing_on_rails/) do |name, start, finish, _, payload|
+  ActiveSupport::Notifications.subscribe(/racing_on_rails/) do |name, start, finish, _, payload|
     Rails.logger.debug "#{name} #{payload} #{finish - start}"
   end
 end
