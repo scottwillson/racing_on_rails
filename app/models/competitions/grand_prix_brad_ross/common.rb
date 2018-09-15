@@ -31,6 +31,7 @@ module Competitions
           "Category 1/2 Men",
           "Category 1/2 Women",
           "Category 2/3 Men",
+          "Category 2/3 Women",
           "Category 3 35+ Men",
           "Category 3 35+ Women",
           "Category 3 Women",
@@ -47,6 +48,7 @@ module Competitions
           "Masters 50+ Men",
           "Masters 50+ Women",
           "Masters 60+ Men",
+          "Masters 60+ Women",
           "Singlespeed Men",
           "Singlespeed Women"
         ]
