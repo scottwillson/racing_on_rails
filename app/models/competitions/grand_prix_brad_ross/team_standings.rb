@@ -107,6 +107,7 @@ module Competitions
         ages_begin = ::Categories::Ages::SENIOR.begin if ages_begin == 0
 
         ages_end = result["category_ages_end"]
+
         if result["category_ages_begin"] == 35 && ages_end == ::Categories::MAXIMUM
           ages_begin = 35
           ages_end = 49
@@ -122,8 +123,13 @@ module Competitions
           ages_end = ::Categories::Ages::SENIOR.begin
         end
 
-        ages_begin = result["age"] || ages_begin
-        ages_end = result["age"] || ages_end
+        if result["category_name"]["Junior"]
+          ages_begin = ::Categories::Ages::JUNIORS.begin
+          ages_end = ::Categories::Ages::JUNIORS.end
+        else
+          ages_begin = result["age"] || ages_begin
+          ages_end = result["age"] || ages_end
+        end
 
         team_standings_categories.detect do |category|
           (category.equipment? && result["category_equipment"] == category.equipment && category.gender == result["category_gender"]) ||
@@ -150,7 +156,7 @@ module Competitions
           Category.find_or_create_by_normalized_name("Singlespeed Women")
         ] +
           %w[ Men Women ].map do |gender|
-            ["9-18", "19-34", "35-49", "50+"].map do |ages|
+            ["9-18", "19-34", "35-49", "50+", "60+"].map do |ages|
               Category.find_or_create_by_normalized_name("#{gender} #{ages}")
             end.flatten
           end.flatten
