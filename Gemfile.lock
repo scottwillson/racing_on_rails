@@ -263,7 +263,6 @@ GEM
     minitest (5.11.3)
     mocha (1.7.0)
       metaclass (~> 0.0.1)
-    money (3.1.5)
     msgpack (1.2.4)
     multi_json (1.13.1)
     multi_xml (0.6.0)
@@ -407,7 +406,7 @@ GEM
     sshkit (1.17.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stripe (3.26.0)
+    stripe (3.26.1)
       faraday (~> 0.10)
     tabular (0.4.3)
     terrapin (0.6.0)
@@ -488,7 +487,7 @@ DEPENDENCIES
   factory_bot_rails
   fakeweb!
   hashdiff
-  i18n (>= 1.1.0)
+  i18n (>= 1.1)
   in_place_editing
   jquery-rails
   jquery-ui-rails
@@ -498,7 +497,6 @@ DEPENDENCIES
   mini_magick
   minitest
   mocha
-  money
   mysql2
   newrelic_rpm
   nokogiri
