@@ -149,7 +149,7 @@ GEM
       capistrano (~> 3.7)
       capistrano-bundler
       puma (~> 3.4)
-    capybara (3.7.2)
+    capybara (3.8.1)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -209,7 +209,7 @@ GEM
     factory_bot_rails (4.11.1)
       factory_bot (~> 4.11.1)
       railties (>= 3.0.0)
-    faraday (0.15.2)
+    faraday (0.15.3)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.25)
     ffi-compiler (1.0.1)
@@ -225,7 +225,7 @@ GEM
       domain_name (~> 0.5)
     httparty (0.16.2)
       multi_xml (>= 0.5.2)
-    i18n (1.1.0)
+    i18n (1.0.1)
       concurrent-ruby (~> 1.0)
     in_place_editing (1.2.0)
     jaro_winkler (1.5.1)
@@ -249,7 +249,7 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.7.0)
       mini_mime (>= 0.1.1)
-    marcel (0.3.2)
+    marcel (0.3.3)
       mimemagic (~> 0.3.2)
     metaclass (0.0.4)
     method_source (0.9.0)
@@ -257,7 +257,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2018.0812)
     mimemagic (0.3.2)
-    mini_magick (4.8.0)
+    mini_magick (4.9.2)
     mini_mime (1.0.1)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
@@ -282,7 +282,7 @@ GEM
       activerecord (>= 4.2, < 5.3)
       request_store (~> 1.1)
     parallel (1.12.1)
-    parallel_tests (2.22.1)
+    parallel_tests (2.23.0)
       parallel
     parser (2.5.1.2)
       ast (~> 2.4.0)
@@ -355,7 +355,7 @@ GEM
       nokogiri
       roo (>= 2.0.0, < 3)
       spreadsheet (> 0.9.0)
-    rubocop (0.59.0)
+    rubocop (0.59.1)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
@@ -368,7 +368,7 @@ GEM
     ruby-rc4 (0.1.5)
     ruby_dep (1.5.0)
     rubyzip (1.2.2)
-    sass (3.5.7)
+    sass (3.6.0)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -453,7 +453,7 @@ DEPENDENCIES
   activemodel-serializers-xml
   acts_as_list
   acts_as_tree!
-  authlogic
+  authlogic (< 4.4)
   axlsx (>= 2.0.1)
   axlsx_rails (>= 0.5.2)
   bcrypt
@@ -487,7 +487,7 @@ DEPENDENCIES
   factory_bot_rails
   fakeweb!
   hashdiff
-  i18n (>= 1.1)
+  i18n
   in_place_editing
   jquery-rails
   jquery-ui-rails
