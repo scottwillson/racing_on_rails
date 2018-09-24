@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Homepage Article Category
-class ArticleCategory < ActiveRecord::Base
+class ArticleCategory < ApplicationRecord
   acts_as_tree order: "position"
   include ActsAsTree::Validation
 

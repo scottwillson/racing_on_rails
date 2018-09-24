@@ -4,7 +4,7 @@
 # User render_page helper to look for Page before falling back on Rails templates.
 # Pages uses ERb and can execute Ruby code just like a template, so admin users can
 # do things like <% Person.destroy_all %>!
-class Page < ActiveRecord::Base
+class Page < ApplicationRecord
   acts_as_tree
   include ActsAsTree::Validation
   include Pages::Paths

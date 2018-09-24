@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Region < ActiveRecord::Base
+class Region < ApplicationRecord
   include Regions::FriendlyParam
 
   before_save :set_friendly_param

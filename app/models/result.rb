@@ -7,7 +7,7 @@
 # Result keeps its own copy of +number+ and +team+, even though each Person has
 # a +team+ atribute and many RaceNumbers. Result's number is just a String, not
 # a RaceNumber
-class Result < ActiveRecord::Base
+class Result < ApplicationRecord
   before_save :set_associated_records
 
   include Results::Caching

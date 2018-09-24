@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class ReplaceAdminRoleWithFlag < ActiveRecord::Migration
-  class Person < ActiveRecord::Base
+  class Person < ApplicationRecord
     has_and_belongs_to_many :roles
   end
 
-  class Role < ActiveRecord::Base
+  class Role < ApplicationRecord
   end
 
   def up

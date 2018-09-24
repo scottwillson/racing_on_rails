@@ -6,7 +6,7 @@
 #
 # cx_memberships? Offers cyclocross memberships
 # eager_match_on_license? Trust license number in results? Use it to match People instead of name.
-class RacingAssociation < ActiveRecord::Base
+class RacingAssociation < ApplicationRecord
   # TODO: bmx_numbers? Shouldn"t this be in disciplines?
 
   belongs_to :cat4_womens_race_series_category, class_name: "Category"

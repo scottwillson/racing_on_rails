@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Archived mailing list post
-class Post < ActiveRecord::Base
+class Post < ApplicationRecord
   include Posts::Migration
   include Posts::Search
 

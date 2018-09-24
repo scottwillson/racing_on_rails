@@ -5,7 +5,7 @@
 # Like People, Teams may have many alternate names. These are modelled as Aliases. Historical names from previous years are stored as Names.
 #
 # Team names must be unique
-class Team < ActiveRecord::Base
+class Team < ApplicationRecord
   include Export::Teams
   include Names::Nameable
   include RacingOnRails::PaperTrail::Versions

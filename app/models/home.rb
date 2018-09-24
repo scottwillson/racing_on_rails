@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Home < ActiveRecord::Base
+class Home < ApplicationRecord
   belongs_to :photo, optional: true
 
   def self.current

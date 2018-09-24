@@ -11,7 +11,7 @@
 # This all may seem to be a case or over-modelling, but it refleccts how numbers are used by promoters
 # and associations. PersonNumbers are also used to differentiate between People with the same name, and
 # to identify person results with misspelled names.
-class RaceNumber < ActiveRecord::Base
+class RaceNumber < ApplicationRecord
   include RacingOnRails::PaperTrail::Versions
 
   validates :discipline, presence: true

@@ -2,7 +2,7 @@
 
 # +editor+ would like to become an editor for +person+. Sent in an email with link keyed by +token+.
 # Sends email with link after_create. See EditorRequestMailer.
-class EditorRequest < ActiveRecord::Base
+class EditorRequest < ApplicationRecord
   belongs_to :editor, class_name: "Person"
   belongs_to :person
 

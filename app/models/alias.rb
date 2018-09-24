@@ -4,7 +4,7 @@
 # Must belong to either a Person or Team, but not both. Used by Result when importing results from Excel.
 # Aliases cannot be the same ("shadow") as Person#name or Team#name.
 # This could probably be combined with Name.
-class Alias < ActiveRecord::Base
+class Alias < ApplicationRecord
   include Export::Aliases
   belongs_to :aliasable, polymorphic: true
 

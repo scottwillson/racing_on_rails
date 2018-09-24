@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class EventTeamMembership < ActiveRecord::Base
+class EventTeamMembership < ApplicationRecord
   belongs_to :event_team
   belongs_to :person
 

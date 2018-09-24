@@ -15,7 +15,7 @@ module Competitions
   # * points: 1
   # * source_result: 3rd, Mudslinger
   # * competition_result: 200th Ironman
-  class Score < ActiveRecord::Base
+  class Score < ApplicationRecord
     belongs_to :source_result, class_name: "Result", foreign_key: "source_result_id"
     belongs_to :competition_result, class_name: "Result", foreign_key: "competition_result_id"
 

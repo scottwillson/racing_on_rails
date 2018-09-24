@@ -31,7 +31,7 @@
 # See propogated_attributes
 #
 # It's debatable whether we need STI subclasses or not.
-class Event < ActiveRecord::Base
+class Event < ApplicationRecord
   TYPES = %w[ Event SingleDayEvent MultiDayEvent Series WeeklySeries ].freeze
 
   include Events::Children

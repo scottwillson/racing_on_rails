@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Photo < ActiveRecord::Base
+class Photo < ApplicationRecord
   include Photos::Dimensions
 
   mount_uploader :image, ImageUploader

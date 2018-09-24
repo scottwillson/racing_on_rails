@@ -8,7 +8,7 @@
 #
 # Race +result_columns+: populated columns displayed on results page. Usually Result attributes, but also creates
 # virtual "custom" columns.
-class Race < ActiveRecord::Base
+class Race < ApplicationRecord
   include Comparable
   include Export::Races
   include RacingOnRails::PaperTrail::Versions

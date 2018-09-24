@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Homepage content
-class Article < ActiveRecord::Base
+class Article < ApplicationRecord
   belongs_to :article_category
   acts_as_list scope: :article_category
 

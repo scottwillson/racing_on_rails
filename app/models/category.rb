@@ -10,7 +10,7 @@ require "categories"
 # Pro/1/2 are two distinct categories. They are not combinations of Pro and Senior and Men and Cat 1
 #
 # +friendly_param+ is used for friendly links on BAR pages. Example: senior_men
-class Category < ActiveRecord::Base
+class Category < ApplicationRecord
   acts_as_tree
   include ActsAsTree::Validation
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Mailman archives
-class MailingList < ActiveRecord::Base
+class MailingList < ApplicationRecord
   has_many :posts
 
   scope :is_public, -> { where(public: true) }

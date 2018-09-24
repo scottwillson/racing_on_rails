@@ -2,7 +2,7 @@
 
 # Store Person attributes after import and manually resolve duplicates.
 # +new_record+ and +attributes+ are somewhat redundant
-class Duplicate < ActiveRecord::Base
+class Duplicate < ApplicationRecord
   serialize :new_attributes
   validates :new_attributes, presence: true
 
