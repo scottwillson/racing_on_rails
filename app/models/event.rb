@@ -32,7 +32,7 @@
 #
 # It's debatable whether we need STI subclasses or not.
 class Event < ApplicationRecord
-  TYPES = %w[ Event SingleDayEvent MultiDayEvent Series WeeklySeries ].freeze
+  TYPES = %w[ Event SingleDayEvent MultiDayEvent Series WeeklySeries ].freeze unless defined?(TYPES)
 
   include Events::Children
   include Events::Comparison
