@@ -38,8 +38,28 @@ module Events
 
     def propogated_attributes
       @propogated_attributes ||= %w[
-        city discipline flyer name number_issuer_id promoter_id prize_list sanctioned_by state time velodrome_id time
-        postponed cancelled flyer_approved instructional practice sanctioned_by email phone team_id beginner_friendly
+        beginner_friendly
+        cancelled
+        city
+        discipline
+        email
+        flyer
+        flyer_approved
+        instructional
+        name
+        number_issuer_id
+        phone
+        postponed
+        practice
+        prize_list
+        promoter_id
+        sanctioned_by
+        sanctioned_by
+        state
+        team_id
+        time
+        time
+        velodrome_id
       ]
     end
 
