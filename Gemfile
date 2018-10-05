@@ -84,12 +84,12 @@ end
 
 group :test do
   gem "capybara"
+  gem "chromedriver-helper"
   gem "database_cleaner"
   gem "factory_bot_rails"
   gem "fakeweb", git: "https://github.com/chrisk/fakeweb.git"
   gem "minitest", "~> 5.4"
   gem "mocha", require: false
-  gem "poltergeist"
   gem "selenium-webdriver"
   gem "simplecov"
   gem "timecop"
