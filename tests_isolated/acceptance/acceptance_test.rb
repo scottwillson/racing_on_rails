@@ -34,7 +34,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     if ENV["JAVASCRIPT_DRIVER"].present?
       ENV["JAVASCRIPT_DRIVER"].to_sym
     else
-      :headless_chrome
+      :chrome
     end
   end
 
@@ -395,15 +395,6 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   Capybara.register_driver :chrome do |app|
-    # prefs = {
-    #   download: {
-    #     prompt_for_download: false,
-    #     default_directory: AcceptanceTest.download_directory
-    #   }
-    # }
-    # args = ["--window-size=1024,768"]
-    # Capybara::Selenium::Driver.new(app, browser: :chrome, prefs: prefs, args: args)
-    #
     options = Selenium::WebDriver::Chrome::Options.new
 
     options.add_argument('--headless')
@@ -412,18 +403,19 @@ class AcceptanceTest < ActiveSupport::TestCase
     options.add_argument('--disable-popup-blocking')
     options.add_argument('--window-size=1024,768')
 
-    options.add_preference(:download, directory_upgrade: true,
-                                  prompt_for_download: false,
-                                  default_directory: AcceptanceTest.download_directory)
+    options.add_preference(
+      :download,
+      directory_upgrade: true,
+      prompt_for_download: false,
+      default_directory: AcceptanceTest.download_directory
+    )
 
     options.add_preference(:browser, set_download_behavior: { behavior: 'allow' })
 
     driver = Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 
     bridge = driver.browser.send(:bridge)
-
-    path = '/session/:session_id/chromium/send_command'
-    path[':session_id'] = bridge.session_id
+    path = "/session/#{bridge.session_id}/chromium/send_command"
 
     bridge.http.call(:post, path, cmd: 'Page.setDownloadBehavior',
                                   params: {
@@ -432,16 +424,6 @@ class AcceptanceTest < ActiveSupport::TestCase
                               })
 
     driver
-  end
-
-  Capybara.register_driver :headless_chrome do |app|
-    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-      chromeOptions: { args: %w(headless disable-gpu) }
-    )
-
-    Capybara::Selenium::Driver.new app,
-      browser: :chrome,
-      desired_capabilities: capabilities
   end
 
   Capybara.register_driver :firefox do |app|
