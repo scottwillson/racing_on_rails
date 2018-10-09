@@ -5,11 +5,10 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
 require "capybara/rails"
 require "minitest/autorun"
-require "capybara/poltergeist"
 require_relative "../../test/fakeweb_registrations"
 
 # Capybara supports a number of drivers/browsers. AcceptanceTest default is RackTest for non-JavaScript tests
-# and Poltergeist for JS test. Note that most tests require JS.
+# and Chrome for JS test. Note that most tests require JS.
 #
 # Use DEFAULT_DRIVER and JAVASCRIPT_DRIVER to set Capybara drivers:
 # :rack_test, :firefox, :chrome, :poltergeist, :webkit
@@ -21,9 +20,6 @@ require_relative "../../test/fakeweb_registrations"
 # Capybara-Webkit is the fastest (about 50% faster than Firefox). Executes JS, requires Qt library, capybara-webkit gem.
 # Need to fake downloads and tends to be less stable. Not included by default. Need 'require "capybara/webkit"' in AcceptanceTest
 # and a custom Gemfile with 'gem "capybara-webkit"'.
-# Poltergeist is another headless JS driver. Almost as fast as capybara-webkit. Also has hefty dependencies, needs a hack for downloads,
-# and can be fragile. Checks for JS errors. The default driver for acceptance tests because it is slightly easier to work with than
-# capybara-webkit.
 class AcceptanceTest < ActiveSupport::TestCase
   include Capybara::DSL
 
@@ -38,7 +34,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     if ENV["JAVASCRIPT_DRIVER"].present?
       ENV["JAVASCRIPT_DRIVER"].to_sym
     else
-      :poltergeist
+      :chrome
     end
   end
 
@@ -399,14 +395,35 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   Capybara.register_driver :chrome do |app|
-    prefs = {
-      download: {
-        prompt_for_download: false,
-        default_directory: AcceptanceTest.download_directory
-      }
-    }
-    args = ["--window-size=1024,768"]
-    Capybara::Selenium::Driver.new(app, browser: :chrome, prefs: prefs, args: args)
+    options = Selenium::WebDriver::Chrome::Options.new
+
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--disable-popup-blocking')
+    options.add_argument('--window-size=1024,768')
+
+    options.add_preference(
+      :download,
+      directory_upgrade: true,
+      prompt_for_download: false,
+      default_directory: AcceptanceTest.download_directory
+    )
+
+    options.add_preference(:browser, set_download_behavior: { behavior: 'allow' })
+
+    driver = Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+
+    bridge = driver.browser.send(:bridge)
+    path = "/session/#{bridge.session_id}/chromium/send_command"
+
+    bridge.http.call(:post, path, cmd: 'Page.setDownloadBehavior',
+                                  params: {
+                                    behavior: 'allow',
+                                    downloadPath: AcceptanceTest.download_directory
+                              })
+
+    driver
   end
 
   Capybara.register_driver :firefox do |app|
@@ -416,13 +433,6 @@ class AcceptanceTest < ActiveSupport::TestCase
     profile["browser.helperApps.neverAsk.saveToDisk"] = "application/vnd.ms-excel,application/vnd.ms-excel; charset=utf-8"
 
     Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
-  end
-
-  Capybara.register_driver :poltergeist do |app|
-    options = {
-      js_errors: true
-    }
-    Capybara::Poltergeist::Driver.new app, options
   end
 
   Capybara.current_driver = default_driver

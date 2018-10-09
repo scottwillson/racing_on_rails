@@ -176,7 +176,7 @@ class EventsTest < AcceptanceTest
 
     click_link "Edit all"
     wait_for "#races_collection_text"
-    assert_equal "Men A Men B", find("#races_collection_text").value
+    assert_match /Men A[\s]+Men B/, find("#races_collection_text").value
 
     fill_in "races_collection_text", with: "Women"
     click_link "Cancel"
