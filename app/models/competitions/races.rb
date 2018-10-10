@@ -33,7 +33,7 @@ module Competitions
     def races_created_for_competition
       puts self.class
       source_events.map do |event|
-        puts event.races.map(&:created_by)
+        # event.races.each {|r| puts "#{event.name} #{r.name} #{r.created_by}"}
         event.races.select { |r| r.created_by.is_a?(self.class) }
       end.flatten
     end
