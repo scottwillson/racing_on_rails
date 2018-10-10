@@ -3,6 +3,8 @@
 module Competitions
   module OregonJuniorCyclocrossSeries
     class Overall < Competition
+      include Races
+
       def friendly_name
         "Oregon Junior Cyclocross Series"
       end
