@@ -10,7 +10,6 @@ module Competitions
 
     def before_calculate
       races_created_for_competition.reject(&:visible?).each do |race|
-        puts "destroy #{race.name}"
         race.results.clear
         race.destroy
       end
@@ -24,6 +23,8 @@ module Competitions
       end
 
       races.reload
+      races_created_for_competition.each(&:destroy_duplicate_results!)
+      source_events.reload
       adjust_times
       races_created_for_competition.each(&:place_results_by_time)
       source_events.each(&:update_split_from!)
@@ -31,9 +32,7 @@ module Competitions
 
     # Split or combined races created only to calculate the competition
     def races_created_for_competition
-      puts self.class
       source_events.map do |event|
-        # event.races.each {|r| puts "#{event.name} #{r.name} #{r.created_by}"}
         event.races.select { |r| r.created_by.is_a?(self.class) }
       end.flatten
     end
@@ -47,8 +46,6 @@ module Competitions
           source_event.races.none? do |race|
             race.category.gender == category.gender &&
               race.category.ages == category.ages &&
-              race.category.ability_begin >= category.ability_begin &&
-              race.category.ability_end <= category.ability_end
               race.any_results?
           end
         end
@@ -76,9 +73,7 @@ module Competitions
           r.category.gender        == competition_category.gender &&
           r.category.ages          != competition_category.ages &&
           r.category.ages_begin    <= competition_category.ages_begin &&
-          r.category.ages_end      >= competition_category.ages_end &&
-          r.category.ability_begin <= competition_category.ability_begin &&
-          r.category.ability_end   >= competition_category.ability_end
+          r.category.ages_end      >= competition_category.ages_end
       end
     end
 
@@ -128,25 +123,22 @@ module Competitions
             (result.person.racing_age(year) >= competition_category.ages_begin && result.person.racing_age(year) <= competition_category.ages_end)
           )
       end
-      .each { |result| puts "combine #{race_to_combine.name} #{race.name} #{competition_category.name} #{result.name}" }
       .each { |result| create_result(race, result) }
     end
 
     def split?(competition_category, result)
-      x = result.person&.racing_age &&
-        competition_category.ages.include?(result.person.racing_age(year)) &&
+      age = result.age || result.person&.racing_age
+      return age &&
+        competition_category.ages.include?(age) &&
         result.time &&
-        result.time > 0
-
-      if x
-        puts "split? #{competition_category.name} #{result.name}"
-      end
-
-      x
+        result.time > 0 &&
+        result.race.category.ability_begin <= competition_category.ability_begin &&
+        result.race.category.ability_end   >= competition_category.ability_end
     end
 
     def adjust_times
       races_created_for_competition.each do |race|
+        next if race.event.discipline != "Time Trial"
         distances = race.results.map(&:distance).compact.select(&:positive?)
         next if distances.empty?
         max_distance = distances.max
@@ -162,10 +154,10 @@ module Competitions
     end
 
     def create_result(race, result)
-      puts "create_result(#{race.name}, #{result.name})"
       race.results.create!(
+        age: result.age,
         distance: result.distance,
-        place: result.place,
+        laps: result.laps,
         person: result.person,
         team: result.team,
         time: result.time
