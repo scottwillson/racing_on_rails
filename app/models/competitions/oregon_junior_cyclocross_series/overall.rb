@@ -3,6 +3,8 @@
 module Competitions
   module OregonJuniorCyclocrossSeries
     class Overall < Competition
+      include Races
+
       def friendly_name
         "Oregon Junior Cyclocross Series"
       end
@@ -37,8 +39,8 @@ module Competitions
           Category
             .where(gender: race.category.gender)
             .where("(ability_begin = 3 and ability_end = 5) or (ability_begin = 0 and ability_end = 999)")
-            .where("ages_begin >= ?", race.category.ages_begin)
-            .where("ages_end <= ?", race.category.ages_end)
+            .where("ages_begin = ?", race.category.ages_begin)
+            .where("ages_end = ?", race.category.ages_end)
         end
       end
 

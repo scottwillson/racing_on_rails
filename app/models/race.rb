@@ -261,9 +261,12 @@ class Race < ApplicationRecord
     end
   end
 
+  # Sort results by laps, time
   def place_results_by_time
     _results = results.to_a.sort do |x, y|
-      if x.time
+      if x.laps && y.laps && x.laps != y.laps
+        y.laps <=> x.laps
+      elsif x.time
         if y.time
           x.time <=> y.time
         else
