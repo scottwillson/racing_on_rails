@@ -2,10 +2,10 @@
 
 require File.expand_path("../../test_case", __FILE__)
 require File.expand_path("../../../../lib/array/each_row", __FILE__)
-require File.expand_path("../../../../lib/array/stable_sort", __FILE__)
+require File.expand_path("../../../../lib/enumerable/stable_sort", __FILE__)
 
 # :stopdoc:
-class ArrayTest < Ruby::TestCase
+class EnumerableTest < Ruby::TestCase
   def test_each_row
     assert_equal([nil, nil], [].each_row { |row| })
     assert_equal([[1]], [1].each_row { |row| })

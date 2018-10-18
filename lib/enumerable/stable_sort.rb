@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class Array
-  # Sort by +method+ and preserve existing order. Ruby 1.8 sort_by does not preserve order.
+module Enumerable
+  # Sort by +method+ and preserve existing order. Ruby sort_by does not preserve order.
   def stable_sort_by(method, order = :asc)
     if order == :asc
       merge_sort do |x, y|
