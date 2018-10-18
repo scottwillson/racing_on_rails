@@ -32,8 +32,6 @@ module Events
 
       changes_for_propogation.each { |change| update_child_attribute(change) }
       children.each(&:update_children)
-
-      true
     end
 
     def changes_for_propogation
@@ -60,7 +58,6 @@ module Events
     def children_changed(_child)
       # Don't trigger callbacks
       Event.where(id: id).update_all(updated_at: Time.zone.now)
-      true
     end
 
     # Always return false
