@@ -150,7 +150,6 @@ class MultiDayEvent < Event
         MultiDayEvent.where(id: id).update_all(date: date, end_date: end_date)
       end
     end
-    true
   end
 
   def set_end_date
