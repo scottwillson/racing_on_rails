@@ -46,7 +46,7 @@ module Admin
     def assign_previous
       @previous = nil
 
-      @previous = @event.previous if @event.races.empty?
+      @previous = @event.previous_year if @event.races.empty?
     end
 
     def races_collection_params
