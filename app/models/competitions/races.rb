@@ -153,14 +153,20 @@ module Competitions
       end
     end
 
-    def create_result(race, result)
-      race.results.create!(
-        age: result.age,
-        distance: result.distance,
-        laps: result.laps,
-        person: result.person,
-        team: result.team,
-        time: result.time
+    def create_result(race, source_result)
+      result = race.results.create!(
+        age: source_result.age,
+        distance: source_result.distance,
+        laps: source_result.laps,
+        person: source_result.person,
+        team: source_result.team,
+        time: source_result.time
+      )
+
+      result.scores.create!(
+        source_result_id: source_result.id,
+        competition_result_id: result.id,
+        points: 0
       )
     end
   end
