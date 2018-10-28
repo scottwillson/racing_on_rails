@@ -68,8 +68,9 @@ gem "yui-compressor"
 gem "zip-zip"
 
 # Require after WillPaginate
-gem "elasticsearch-model"
-gem "elasticsearch-rails"
+# version 6 doesn't work with our version of elasticsearch
+gem "elasticsearch-model", "< 6.0.0"
+gem "elasticsearch-rails", "< 6.0.0"
 
 group :development do
   gem "brakeman"
