@@ -27,6 +27,7 @@ module Events
 
     def editable_by?(person)
       return false unless person
+
       person.administrator? ||
         person == promoter ||
         editors.include?(person)
@@ -58,7 +59,15 @@ module Events
 
     # Find valid email: either promoter's email or event email. If all are blank, raise exception.
     def email!
-      promoter.try(:email).presence || email.presence || raise(BlankEmail, "Event #{name} has no email")
+      promoter_or_event_email || raise(BlankEmail, "Event #{name} has no email")
+    end
+
+    def email?
+      promoter_or_event_email.present?
+    end
+
+    def promoter_or_event_email
+      promoter.try(:email).presence || email.presence
     end
 
     class BlankEmail < StandardError; end
