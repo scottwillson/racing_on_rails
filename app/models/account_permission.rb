@@ -5,6 +5,8 @@ class AccountPermission
   attr_accessor :person, :can_edit_person, :person_can_edit
 
   def initialize(person, can_edit_person, person_can_edit)
+    raise(ArgumentError, "person must be present") unless person
+
     @person = person
     @can_edit_person = can_edit_person
     @person_can_edit = person_can_edit
@@ -18,6 +20,10 @@ class AccountPermission
   # AccountPermission person can edit "owner"
   def person_can_edit?
     @person_can_edit
+  end
+
+  def <=>(other)
+    other.person <=> person
   end
 
   def to_s
