@@ -49,7 +49,7 @@ gem "rake"
 gem "redcarpet"
 gem "rest-client"
 gem "ri_cal"
-# Roo versions after 2.1.1 break fractional seconds in Excel import, and 2.1.1 has warnings in Rubby 2.4
+# Roo versions after 2.1.1 break fractional seconds in Excel import, and 2.1.1 has warnings in Ruby 2.4
 gem "roo", git: "https://github.com/scottwillson/roo.git", branch: "v2.1.1-ruby-2-4"
 gem "roo-xls"
 gem "ruby-ole"
