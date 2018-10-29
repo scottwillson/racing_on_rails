@@ -22,11 +22,13 @@ class AccountPermission
     @person_can_edit
   end
 
-  def <=>(other)
-    other.person <=> person
-  end
-
   def to_s
     "#<AccountPermission #{person.try(:id)} #{@can_edit_person} #{@person_can_edit}>"
   end
+
+  def eql?(other)
+    person.eql?(other.person)
+  end
+
+  delegate :hash, to: :person
 end
