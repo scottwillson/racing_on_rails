@@ -2,7 +2,7 @@
 
 ENV["RAILS_ENV"] = "test"
 
-require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
+require_relative "../../config/environment"
 require "capybara/rails"
 require "minitest/autorun"
 require_relative "../../test/fakeweb_registrations"
