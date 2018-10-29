@@ -23,7 +23,7 @@ class ActiveSupport::TestCase
   include Authlogic::TestCase
   include Test::EnumerableAssertions
 
-  DatabaseCleaner.strategy = :truncation
+  DatabaseCleaner.strategy = :truncation, { except: %w(ar_internal_metadata) }
 
   setup :clean_database, :activate_authlogic, :reset_association, :reset_disciplines, :reset_person_current
 

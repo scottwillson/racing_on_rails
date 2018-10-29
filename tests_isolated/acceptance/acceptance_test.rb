@@ -25,7 +25,7 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   # Selenium tests start the Rails server in a separate process. If test data is wrapped in a
   # transaction, the server won't see it.
-  DatabaseCleaner.strategy = :truncation
+  DatabaseCleaner.strategy = :truncation, { except: %w(ar_internal_metadata) }
 
   setup :clean_database, :set_capybara_driver
   teardown :reset_session
