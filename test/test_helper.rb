@@ -70,7 +70,7 @@ class ActiveSupport::TestCase
                person
              else
                raise "Don't recognize #{person}"
-    end
+            end
 
     https! if RacingAssociation.current.ssl?
     get new_person_session_path
@@ -150,7 +150,7 @@ class ActiveSupport::TestCase
     Result.all.group_by(&:race).each do |race, results|
       all_results = results.collect(&:place)
       # important to get last place in last
-      (1..results.sort.last.numeric_place).reverse_each do |res|
+      (1..results.max.numeric_place).reverse_each do |res|
         unless all_results.include?(res.to_s)
           # we need a result, there is a gap here
           race.results.create!(place: res)

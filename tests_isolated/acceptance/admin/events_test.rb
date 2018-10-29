@@ -31,13 +31,13 @@ class EventsTest < AcceptanceTest
     type_in "promoter_autocomplete", with: "Tom Brown"
 
     click_button "Save"
-    assert_match /\d+/, find("#event_promoter_id", visible: false).value
+    assert_match(/\d+/, find("#event_promoter_id", visible: false).value)
     assert page.has_field?("promoter_autocomplete", with: "Tom Brown")
 
     visit "/admin/events"
     assert_page_has_content "Sausalito Criterium"
     click_link "Sausalito Criterium"
-    assert_match /\d+/, find("#event_promoter_id", visible: false).value
+    assert_match(/\d+/, find("#event_promoter_id", visible: false).value)
     assert page.has_field?("promoter_autocomplete", with: "Tom Brown")
 
     click_link "edit_promoter_link"
@@ -49,7 +49,7 @@ class EventsTest < AcceptanceTest
 
     click_link "back_to_event"
 
-    assert_match /\d+/, find("#event_promoter_id", visible: false).value
+    assert_match(/\d+/, find("#event_promoter_id", visible: false).value)
     assert page.has_field?("promoter_autocomplete", with: "Tim Brown")
 
     type_in "promoter_autocomplete", with: "candi m"
@@ -146,6 +146,7 @@ class EventsTest < AcceptanceTest
 
     click_ok_on_confirm_dialog
     click_link "destroy_races"
+    assert_page_has_no_content "Senior Men Pro/1/2"
 
     visit "/admin/events?year=2003"
 
@@ -176,7 +177,7 @@ class EventsTest < AcceptanceTest
 
     click_link "Edit all"
     wait_for "#races_collection_text"
-    assert_match /Men A[\s]+Men B/, find("#races_collection_text").value
+    assert_match(/Men A[\s]+Men B/, find("#races_collection_text").value)
 
     fill_in "races_collection_text", with: "Women"
     click_link "Cancel"

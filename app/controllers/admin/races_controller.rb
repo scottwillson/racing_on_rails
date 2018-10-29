@@ -68,8 +68,12 @@ module Admin
     # === Flash
     # * notice
     def destroy
-      @race = Race.find(params[:id])
-      @destroyed = @race.destroy
+      respond_to do |format|
+        format.js do
+          @race = Race.find(params[:id])
+          @destroyed = @race.destroy
+        end
+      end
     end
 
     # Create Races for all +children+ to match parent Event

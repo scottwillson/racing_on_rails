@@ -344,13 +344,8 @@ class AcceptanceTest < ActiveSupport::TestCase
     visit "/logout"
   end
 
-  # Work around Chrome bug
   def visit_event(event)
-    if Capybara.current_driver == :chrome
-      visit "/admin/events/#{event.id}/edit"
-    else
-      click_link event.name
-    end
+    click_link event.name
   end
 
   def clean_database
@@ -397,11 +392,11 @@ class AcceptanceTest < ActiveSupport::TestCase
   Capybara.register_driver :chrome do |app|
     options = Selenium::WebDriver::Chrome::Options.new
 
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--disable-popup-blocking')
-    options.add_argument('--window-size=1024,768')
+    options.add_argument "--headless"
+    options.add_argument "--no-sandbox"
+    options.add_argument "--disable-gpu"
+    options.add_argument "--disable-popup-blocking"
+    options.add_argument "--window-size=1024,768"
 
     options.add_preference(
       :download,
@@ -410,18 +405,18 @@ class AcceptanceTest < ActiveSupport::TestCase
       default_directory: AcceptanceTest.download_directory
     )
 
-    options.add_preference(:browser, set_download_behavior: { behavior: 'allow' })
+    options.add_preference(:browser, set_download_behavior: { behavior: "allow" })
 
     driver = Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 
     bridge = driver.browser.send(:bridge)
     path = "/session/#{bridge.session_id}/chromium/send_command"
 
-    bridge.http.call(:post, path, cmd: 'Page.setDownloadBehavior',
+    bridge.http.call(:post, path, cmd: "Page.setDownloadBehavior",
                                   params: {
-                                    behavior: 'allow',
+                                    behavior: "allow",
                                     downloadPath: AcceptanceTest.download_directory
-                              })
+                                  })
 
     driver
   end
