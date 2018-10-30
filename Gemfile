@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "~>2.5"
+ruby "~> 2.5"
 
 gem "rails", "~> 5.2.1"
 
@@ -13,7 +13,7 @@ gem "acts_as_list"
 gem "acts_as_tree", git: "https://github.com/amerine/acts_as_tree.git"
 gem "Ascii85", require: "ascii85"
 gem "authlogic", "< 4.4"
-gem "axlsx", ">=2.0.1"
+gem "axlsx", ">= 2.0.1"
 gem "axlsx_rails", ">=0.5.2"
 gem "bcrypt"
 gem "bootsnap", ">= 1.1.0", require: false
@@ -81,13 +81,13 @@ group :development do
   gem "capistrano3-puma"
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "rubocop", require: false
-  gem "spring-watcher-listen", "~> 2.0.0"
   gem "spring"
+  gem "spring-watcher-listen", "~> 2.0.0"
   gem "web-console", ">= 3.3.0"
 end
 
 group :development, :test do
-  gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
+  gem "byebug", platforms: %i[mri mingw x64_mingw]
 end
 
 group :test do
