@@ -47,7 +47,7 @@ module Competitions
     def after_calculate
       races.select { |race| race.name["Elite"] || race.name["3/4/5"] }
            .each do |race|
-             race.update_attributes! bar_points: 0
+             race.update! bar_points: 0
            end
 
       super
