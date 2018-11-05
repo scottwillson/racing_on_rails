@@ -128,7 +128,8 @@ module Competitions
 
     def split?(competition_category, result)
       age = result.age || result.person&.racing_age
-      return age &&
+
+      age &&
         competition_category.ages.include?(age) &&
         result.time &&
         result.time > 0 &&
@@ -139,8 +140,10 @@ module Competitions
     def adjust_times
       races_created_for_competition.each do |race|
         next if race.event.discipline != "Time Trial"
+
         distances = race.results.map(&:distance).compact.select(&:positive?)
         next if distances.empty?
+
         max_distance = distances.max
         race.results.each do |result|
           if result.distance.nil? || result.distance == 0
@@ -168,6 +171,10 @@ module Competitions
         competition_result_id: result.id,
         points: 0
       )
+    end
+
+    def reject_invisible_results?
+      false
     end
   end
 end

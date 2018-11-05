@@ -68,6 +68,7 @@ module Competitions
           competition = find_or_create_for_year(year)
           competition.set_date
           raise(ActiveRecord::ActiveRecordError, competition.errors.full_messages) unless competition.errors.empty?
+
           competition.delete_races
           competition.create_races
           competition.create_children
@@ -186,6 +187,7 @@ module Competitions
                 "people.name as person_name",
                 "points_factor",
                 "races.bar_points as race_bar_points",
+                "races.visible",
                 "results.#{participant_id_attribute} as participant_id",
                 "results.event_id",
                 "place",
@@ -201,7 +203,9 @@ module Competitions
               .joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id")
               .joins("left outer join categories on categories.id = races.category_id")
               .joins("left outer join competition_event_memberships on results.event_id = competition_event_memberships.event_id and competition_event_memberships.competition_id = #{id}")
-              .where("results.year = ?", year)
+              .where("results.year" => year)
+
+      query = query.where("races.visible" => true) if reject_invisible_results?
 
       query = if source_event_types.include?(Event)
                 query.where("(events.type in (?) or events.type is NULL)", source_event_types)
@@ -323,6 +327,7 @@ module Competitions
         person_name
         points_factor
         race_bar_points
+        visible
       ]
       results.map do |result|
         result.except(*non_calculation_attributes)
@@ -547,6 +552,12 @@ module Competitions
 
     def dnf_points
       0
+    end
+
+    # Events that combine/split races create invisible (visible: false) results
+    # Other competitions shoudl ignroe those results.
+    def reject_invisible_results?
+      true
     end
 
     def results_per_event
