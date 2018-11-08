@@ -131,7 +131,8 @@ module Competitions
         "category_name" => source_result.race.name,
         "year" => RacingAssociation.current.year,
         "team_member" => 1,
-        "team_name" => source_result.team.name
+        "team_name" => source_result.team.name,
+        "visible" => 1
       }
       assert_equal [expected], ironman.source_results(ironman.races.first).to_a, "source_results"
     end
