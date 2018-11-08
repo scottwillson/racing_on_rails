@@ -13,6 +13,8 @@ if Rails.env.production? || Rails.env.staging?
   ActiveSupport::Notifications.subscribe(/process_action.action_controller|racing_on_rails/) do |name, start, finish, id, payload|
     payload[:status] = payload[:status].to_s if payload[:status] && payload[:status].is_a?(Integer)
 
+    payload.delete :headers
+
     message = {
       current_person_name: ::Person.current.try(:name),
       current_person_id: ::Person.current.try(:id),
