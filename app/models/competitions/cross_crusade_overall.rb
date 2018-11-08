@@ -20,7 +20,11 @@ module Competitions
       3
     end
 
-    def maximum_events(_race)
+    def maximum_events(race)
+      if race.name.in?([ "Women 2/3", "Women 4", "Women 5"])
+        return 6
+      end
+
       7
     end
 
