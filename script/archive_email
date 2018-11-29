@@ -2,12 +2,4 @@
 
 echo `date` >> /var/log/mailman_archiver.log 2>&1
 
-export PATH=$PATH:/usr/local/bin
-export HOME=/home/app
-
-source "/home/app/.rvm/scripts/rvm" 2>&1
-
-cd /var/www/rails/obra/current
-
-export NEWRELIC_ENABLE=false
-bundle exec rails runner -e "production" "MailingListMailer.receive(STDIN.read)" >> /var/log/mailman_archiver.log 2>&1
+curl https://0.0.0.0/admin/mailing_lists/1/posts/receive -X POST -F "raw=@-" >> /var/log/mailman_archiver.log 2>&1

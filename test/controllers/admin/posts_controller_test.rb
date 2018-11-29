@@ -50,7 +50,7 @@ module Admin
         "date(1i)" => "2009",
         "date(2i)" => "11",
         "date(3i)" => "22"
-      }}
+      } }
       assert_not_nil assigns(:post), @post
       assert assigns(:post).errors.empty?, assigns(:post).errors.full_messages.join(", ")
       assert_redirected_to "/edit"
@@ -60,7 +60,8 @@ module Admin
       Post.expects(:save).returns(true)
       Post.any_instance.expects(:save!).never
 
-      login_as FactoryBot.create(:administrator)
+      @request.host = "0.0.0.0"
+
       mailing_list = FactoryBot.create(:mailing_list, name: "obra")
       post :receive, params: { mailing_list_id: mailing_list.to_param, raw: fixture_file_upload("email/for_sale.eml") }
       assert_not_nil assigns(:post), @post
