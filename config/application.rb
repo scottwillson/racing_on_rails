@@ -50,12 +50,17 @@ module RacingOnRails
     end
 
     config.action_mailer.default_url_options = { mobile: nil }
-    config.action_mailer.smtp_settings = {
-      domain: "list.obra.org",
-      enable_starttls_auto: false,
-      openssl_verify_mode: :none
-    }
 
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: "smtp.gmail.com",
+      port: 587,
+      domain: "obra.org",
+      user_name: "app",
+      password: Rails.application.secrets.stripe[:smtp_password],
+      authentication: "plain",
+      enable_starttls_auto: true
+    }
     config.exceptions_app = routes
 
     require "#{config.root}/lib/registration_engine/lib/registration_engine/engine" if Dir.exist?("#{config.root}/lib/registration_engine")
