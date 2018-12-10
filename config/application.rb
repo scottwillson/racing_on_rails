@@ -57,7 +57,7 @@ module RacingOnRails
       port: 587,
       domain: "obra.org",
       user_name: "app",
-      password: Rails.application.secrets.stripe[:smtp_password],
+      password: Rails.application.credentials.smtp_password,
       authentication: "plain",
       enable_starttls_auto: true
     }

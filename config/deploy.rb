@@ -3,7 +3,7 @@
 lock "3.11.0"
 
 set :linked_dirs, %w[ log public/assets public/system public/uploads tmp/pids tmp/cache tmp/sockets vendor/bundle ]
-set :linked_files, %w[ config/database.yml config/newrelic.yml config/secrets.yml ]
+set :linked_files, %w[ config/database.yml config/newrelic.yml ]
 
 set :bundle_jobs, 4
 set :bundle_without, %w[ development test ]

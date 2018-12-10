@@ -8,7 +8,7 @@ Rails.application.configure do
   config.action_dispatch.x_sendfile_header                  = "X-Accel-Redirect"
   config.action_mailer.perform_caching                      = false
   config.active_record.dump_schema_after_migration          = false
-  config.active_storage.service                              = :local
+  config.active_storage.service                             = :local
   config.active_support.deprecation                         = :notify
   config.assets.compile                                     = false
   config.assets.js_compressor                               = :uglifier
@@ -21,7 +21,8 @@ Rails.application.configure do
   config.log_level                                          = :info
   config.log_tags                                           = [ :request_id ]
   config.logger                                             = Syslog::Logger.new("racing_on_rails", Syslog::LOG_LOCAL4)
-  config.public_file_server.enabled                         = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  config.public_file_server.enabled                         = ENV["RAILS_SERVE_STATIC_FILES"].present?
+  config.require_master_key                                 = true
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger           = ActiveSupport::Logger.new(STDOUT)

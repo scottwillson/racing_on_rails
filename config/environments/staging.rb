@@ -23,6 +23,7 @@ Rails.application.configure do
   config.log_tags                                           = [ :request_id ]
   config.logger                                             = Syslog::Logger.new("racing_on_rails", Syslog::LOG_LOCAL4)
   config.public_file_server.enabled                         = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  config.require_master_key                                 = true
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
