@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.config.assets.paths << Rails.root.join("node_modules")
-Rails.application.config.assets.version = "3.2"
+Rails.application.config.assets.version = "3.3"
 
 Rails.application.configure do
   config.assets.precompile += %w[
