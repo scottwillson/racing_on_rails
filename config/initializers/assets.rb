@@ -10,6 +10,7 @@ Rails.application.configure do
     favicon.ico
     racing_association.css
     racing_association.js
+    registration_engine/application.js
   ]
   config.assets.precompile << /.*\.png$/
   config.assets.precompile << /.*\.jpg$/
