@@ -56,7 +56,7 @@ module RacingOnRails
       address: "smtp.gmail.com",
       port: 587,
       domain: "obra.org",
-      user_name: "app",
+      user_name: "help@obra.org",
       password: Rails.application.credentials.smtp_password,
       authentication: "plain",
       enable_starttls_auto: true
