@@ -19,7 +19,6 @@ class MailingListsTest < AcceptanceTest
     visit "/mailing_lists/#{mailing_list.id}/posts"
     assert_no_text "Cervelo for sale"
 
-
     click_link "Schedule Changes"
     assert_page_has_content "This is a test message."
 

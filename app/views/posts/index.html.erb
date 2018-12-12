@@ -17,6 +17,15 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-sm-offset-3 col-sm-6 col-xs-offset-1 col-xs-10">
+    You are viewing the old mailing list archives. The new list is at
+    <%= link_to "https://groups.google.com/a/obra.org/forum/#!forum/obra-chat",
+    "https://groups.google.com/a/obra.org/forum/#!forum/obra-chat",
+    class: "obvious" %>.
+  </div>
+</div>
+
 <%= render "pagination", posts: @post, mailing_list: @mailing_list %>
 
 <% cache cache_key(@posts, @posts.current_page) do %>
