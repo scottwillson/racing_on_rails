@@ -13,7 +13,6 @@ class HomeController < ApplicationController
 
     assign_home
     @photo = @home.photo
-    @posts = recent_posts
 
     @events_with_recent_results = Event.with_recent_results(@home.weeks_of_recent_results.weeks.ago)
     @most_recent_event_with_recent_result = Event.most_recent_with_recent_result(@home.weeks_of_recent_results.weeks.ago)
@@ -52,9 +51,5 @@ class HomeController < ApplicationController
 
   def home_params
     params_without_mobile.require(:home).permit(:photo_id, :weeks_of_recent_results, :weeks_of_upcoming_events)
-  end
-
-  def recent_posts
-    Post.recent
   end
 end

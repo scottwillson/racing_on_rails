@@ -1,32 +1,3 @@
 <% @page_title = "Mailing Lists" %>
 
-<% @mailing_lists.each do |mailing_list| %>
-	<div class="row">
-	  <div class="col-sm-12">
-	    <h4><%= link_to mailing_list.friendly_name, mailing_list_posts_path(mailing_list) %></h4>
-	    <p><%= mailing_list.description %></p>
-	    <ul class="list-inline">
-	      <li><a href="/mailman/listinfo/<%= mailing_list.name %>">Subscribe</a></li>
-	      <li><a href="/mailman/listinfo/<%= mailing_list.name %>#subscribers">Subscription Options</a></li>
-	      <li><%= link_to "New Post", new_mailing_list_post_path(mailing_list) %></li>
-	      <li><%= link_to_unless_current "View Posts", mailing_list_posts_path(mailing_list) %></li>
-	    </ul>
-	  </div>
-	</div>
-<% end %>
-
-<p>Having trouble? Please don't email the entire list. Contact the
-<a href="mailto:mailman@list.obra.org">administrator</a> at mailman@list.obra.org.</p>
-
-<p>Forgot your password?
-  <ol>
-    <li>Go to the <a href="http://list.obra.org/mailman/listinfo/obra">subscriber options</a> page</li>
-    <li>Enter your email address and click the 'Unsubscribe or edit options' button</li>
-    <li>Click the 'Remind' button -- your password will be emailed to you</li>
-  </ol>
-</p>
-
-<p>You must subscribe and <b>confirm</b> before you can post. The system may
-take a few minutes to process your confirmation.</p>
-
-<p><%= link_to "Privacy Policy", "/privacy_policy" %></p>
+<%= link_to "New list at Google Groups", "https://groups.google.com/a/obra.org/forum/#!forum/obra-chat" %>

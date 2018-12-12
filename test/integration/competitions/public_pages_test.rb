@@ -100,9 +100,6 @@ module Competitions
 
       get "/posts/#{mailing_list_post.id}"
       assert_response :success
-
-      get "/mailing_lists/#{mailing_list.id}/posts/new"
-      assert_response :success
     end
   end
 end
