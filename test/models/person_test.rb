@@ -1203,24 +1203,28 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "create new name if there are results from previous year" do
-    person = FactoryBot.create(:person, name: "Ryan Weaver")
-    person = Person.find(person.id)
-    event = SingleDayEvent.create!(date: 1.year.ago)
     senior_men = FactoryBot.create(:category)
-    old_result = event.races.create!(category: senior_men).results.create!(person: person)
+    old_result = nil
+    person = nil
+
+    Timecop.freeze(1.year.ago) do
+      person = FactoryBot.create(:person, name: "Ryan Weaver")
+      person = Person.find(person.id)
+      event = SingleDayEvent.create!
+      old_result = event.races.create!(category: senior_men).results.create!(person: person)
+    end
+
     assert_equal("Ryan Weaver", old_result.name, "Name on old result")
     assert_equal("Ryan", old_result.first_name, "first_name on old result")
     assert_equal("Weaver", old_result.last_name, "last_name on old result")
 
-    event = SingleDayEvent.create!(date: Time.zone.today)
+    event = SingleDayEvent.create!
     result = event.races.create!(category: senior_men).results.create!(person: person)
     assert_equal("Ryan Weaver", old_result.name, "Name on old result")
     assert_equal("Ryan", old_result.first_name, "first_name on old result")
     assert_equal("Weaver", old_result.last_name, "last_name on old result")
 
     person.name = "Rob Farris"
-    Rails.logger.debug ">> first_name_changed? #{person.first_name_changed?}"
-    Rails.logger.debug "save!"
     person.save!
 
     assert_equal(1, person.names.reload.size, "names")
