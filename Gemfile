@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "2.5.3"
+ruby "2.6.0"
 
 gem "rails", "~> 5.2.1"
 
@@ -75,7 +75,7 @@ gem "elasticsearch-rails", "< 6.0.0"
 group :development do
   gem "brakeman"
   gem "bullet"
-  gem "bundler-audit"
+  gem "bundler-audit", github: "rubysec/bundler-audit"
   gem "capistrano-rails"
   gem "capistrano-rvm"
   gem "capistrano3-puma"

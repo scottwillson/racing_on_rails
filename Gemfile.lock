@@ -19,6 +19,14 @@ GIT
       will_paginate (>= 3.0.3)
 
 GIT
+  remote: https://github.com/rubysec/bundler-audit.git
+  revision: fade76150372f18e9c2755fa11604b9b8f6a2c2e
+  specs:
+    bundler-audit (0.6.0)
+      bundler (>= 1.2.0, < 3)
+      thor (~> 0.18)
+
+GIT
   remote: https://github.com/sandal/prawn.git
   revision: 857f13e919d1bd7120de1ea9ba0429620329865b
   specs:
@@ -129,9 +137,6 @@ GEM
     bullet (5.9.0)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
-    bundler-audit (0.6.0)
-      bundler (~> 1.2)
-      thor (~> 0.18)
     byebug (10.0.2)
     capistrano (3.11.0)
       airbrussh (>= 1.0.0)
@@ -469,7 +474,7 @@ DEPENDENCIES
   bootstrap-sass
   brakeman
   bullet
-  bundler-audit
+  bundler-audit!
   byebug
   capistrano
   capistrano-bundler
@@ -547,7 +552,7 @@ DEPENDENCIES
   zip-zip
 
 RUBY VERSION
-   ruby 2.5.3p105
+   ruby 2.6.0p0
 
 BUNDLED WITH
-   1.17.1
+   2.0.1
