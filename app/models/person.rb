@@ -192,9 +192,9 @@ class Person < ApplicationRecord
                   end
 
     case _discipline
-    when Discipline[:road], Discipline[:track], Discipline[:criterium], Discipline[:time_trial], Discipline[:circuit]
-      self["road_category"]
     when Discipline[:road], Discipline[:criterium], Discipline[:time_trial], Discipline[:circuit]
+      self["road_category"]
+    when Discipline[:track]
       self["track_category"]
     when Discipline[:cyclocross]
       self["ccx_category"]
