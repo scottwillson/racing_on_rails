@@ -68,7 +68,8 @@ class Result < ApplicationRecord
 
   # Destroy Team that only exist because they were created by importing results
   def destroy_teams
-    team.destroy if team&.no_results? && team.no_people? && team.created_from_result? && team.never_updated?
+    return unless team
+    team.destroy if team.no_results? && team.no_people? && team.created_from_result? && team.never_updated?
   end
 
   def category_name=(name)
