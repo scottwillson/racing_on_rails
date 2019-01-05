@@ -12,7 +12,7 @@ blocks:
       - name: bundle gems
         commands:
           - checkout
-          - apt-get install libmysqlclient-dev
+          - sudo apt-get install libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
           - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
@@ -24,7 +24,7 @@ blocks:
         commands:
           - checkout
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
-          - sem-service start mysql
+          - sem-service start mysql 5.7
           - bundle exec rake db:setup
           - bundle exec rake db:test:prepare
           - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -44,7 +44,7 @@ blocks:
         commands:
           - checkout
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
-          - sem-service start mysql
+          - sem-service start mysql 5.7
           - bundle exec rake db:setup
           - bundle exec rake db:test:prepare
       jobs:
