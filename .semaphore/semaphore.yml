@@ -12,6 +12,7 @@ blocks:
       - name: bundle gems
         commands:
           - checkout
+          - apt-get install libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
           - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
