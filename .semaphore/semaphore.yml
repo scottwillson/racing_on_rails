@@ -24,6 +24,7 @@ blocks:
       prologue:
         commands:
           - checkout
+          - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
           - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
@@ -46,6 +47,7 @@ blocks:
       prologue:
         commands:
           - checkout
+          - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
           - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
