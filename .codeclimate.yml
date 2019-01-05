@@ -3,7 +3,7 @@ engines:
   brakeman:
     enabled: false
   bundler-audit:
-    enabled: true
+    enabled: false
   # Fails locally
   csslint:
     enabled: false

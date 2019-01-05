@@ -1,63 +1,52 @@
 version: v1.0
-name: First pipeline example
+name: CI tests
 agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
 
 blocks:
-  - name: "Build"
-    task:
-      env_vars:
-        - name: APP_ENV
-          value: prod
-      jobs:
-      - name: Docker build
-        commands:
-          - checkout
-          - ls -1
-          - echo $APP_ENV
-          - echo "Docker build..."
-          - echo "done"
-
-  - name: "Smoke tests"
+  - name: "Bundle gems"
     task:
       jobs:
-      - name: Smoke
+      - name: bundle gems
         commands:
           - checkout
-          - echo "make smoke"
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
+          - gem install bundler:2.0.1
+          - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
+          - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
 
   - name: "Unit tests"
     task:
+      prologue:
+        commands:
+          - checkout
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
+          - sem-service start mysql
+          - bundle exec rake db:setup
+          - bundle exec rake db:test:prepare
+          - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          - chmod +x ./cc-test-reporter
+          - ./cc-test-reporter before-build
       jobs:
-      - name: RSpec
+      - name: unit tests
         commands:
-          - checkout
-          - echo "make rspec"
+          - bundle exec rake test:ruby
+          - bundle exec rake test
+          - exitcode=$(if [ "$SEMAPHORE_JOB_RESULT" == "failed" ]; then echo 1; else echo 0; fi)
+          - ./cc-test-reporter after-build --exit-code $exitcode -t simplecov
 
-      - name: Lint code
-        commands:
-          - checkout
-          - echo "make lint"
-
-      - name: Check security
-        commands:
-          - checkout
-          - echo "make security"
-
-  - name: "Integration tests"
+  - name: "Acceptance tests"
     task:
-      jobs:
-      - name: Cucumber
+      prologue:
         commands:
           - checkout
-          - echo "make cucumber"
-
-  - name: "Push Image"
-    task:
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
+          - sem-service start mysql
+          - bundle exec rake db:setup
+          - bundle exec rake db:test:prepare
       jobs:
-      - name: Push
+      - name: acceptance tests
         commands:
-          - checkout
-          - echo "make docker.push"
+          - bundle exec rake test:acceptance
