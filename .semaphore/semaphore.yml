@@ -26,7 +26,7 @@ blocks:
           - checkout
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
-          - gem install rake
+          - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
           - sem-service start mysql 5.7
           - bundle exec rake db:setup
           - bundle exec rake db:test:prepare
@@ -48,7 +48,7 @@ blocks:
           - checkout
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
-          - gem install rake
+          - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
           - sem-service start mysql 5.7
           - bundle exec rake db:setup
           - bundle exec rake db:test:prepare
