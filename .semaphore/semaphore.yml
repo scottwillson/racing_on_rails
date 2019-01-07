@@ -29,6 +29,7 @@ blocks:
           - gem install bundler:2.0.1
           - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
           - sem-service start mysql 5.7
+          - mv config/semaphore_database.yml config/database.yml
           - bundle exec rake db:setup
           - bundle exec rake db:test:prepare
           - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -52,6 +53,7 @@ blocks:
           - gem install bundler:2.0.1
           - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
           - sem-service start mysql 5.7
+          - mv config/semaphore_database.yml config/database.yml
           - bundle exec rake db:setup
           - bundle exec rake db:test:prepare
       jobs:
