@@ -18,6 +18,12 @@ blocks:
           - gem install rake
           - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
           - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
+      - name: code codeclimate
+        commands:
+          - cache restore codeclimate
+          - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          - chmod +x ./cc-test-reporter
+          - cache store codeclimate
 
   - name: "Unit tests"
     task:
@@ -32,8 +38,7 @@ blocks:
           - mv config/semaphore_database.yml config/database.yml
           - bundle exec rake db:setup
           - bundle exec rake db:test:prepare
-          - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          - chmod +x ./cc-test-reporter
+          - cache restore codeclimate
           - ./cc-test-reporter before-build
       jobs:
       - name: unit tests
