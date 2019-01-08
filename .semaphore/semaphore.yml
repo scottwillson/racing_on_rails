@@ -42,6 +42,9 @@ blocks:
           - bundle exec rake test
           - exitcode=$(if [ "$SEMAPHORE_JOB_RESULT" == "failed" ]; then echo 1; else echo 0; fi)
           - ./cc-test-reporter after-build --exit-code $exitcode -t simplecov
+      secrets:
+        - name: environmental_variables
+
 
   - name: "Acceptance tests"
     task:
