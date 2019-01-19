@@ -28,9 +28,10 @@ class Card < Prawn::Document
       draw_text "DH: #{Category.short_name(person.dh_category)}", at: [card_left_side + 75, card_top - 36]
 
       draw_text "CCX: #{Category.short_name(person.ccx_category)}", at: [card_left_side, card_top - 48]
-      draw_text "Age: #{person.racing_age}", at: [card_left_side + 75, card_top - 48]
+      draw_text "CCX Age: #{person.cyclocross_racing_age}", at: [card_left_side + 75, card_top - 48]
 
       draw_text "Road # #{person.road_number}", at: [card_left_side, card_top - 60]
+      draw_text "Age: #{person.racing_age}", at: [card_left_side + 75, card_top - 60]
 
       draw_text "#{RacingAssociation.current.short_name} License # #{person.license}", at: [card_left_side, card_top - 72]
 
