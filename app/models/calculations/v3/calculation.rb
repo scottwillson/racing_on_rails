@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Calculations::V3::Calculation < ApplicationRecord
-  has_and_belongs_to_many :categories
+  has_and_belongs_to_many :categories # rubocop:disable Rails/HasAndBelongsToMany
   belongs_to :event, dependent: :destroy, inverse_of: :calculation, optional: true
   belongs_to :source_event, class_name: "Event"
 
