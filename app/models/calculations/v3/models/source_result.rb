@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Result from event. Typically, from a rider crossing a finish line,
+# but could be calculated by another calculated event. For example, Road BAR
+# and Overall BAR.
 class Calculations::V3::Models::SourceResult
   attr_reader :id
   attr_reader :participant
