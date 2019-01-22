@@ -7,7 +7,7 @@ class Calculations::V3::Models::EventCategory
     @category = category
   end
 
-  def name
+  def name # rubocop:disable Rails/Delegate
     category.name
   end
 
