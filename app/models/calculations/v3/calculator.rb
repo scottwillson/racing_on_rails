@@ -18,10 +18,12 @@
 #   6. place results (skip zero-results?)
 # many missing steps ...
 class Calculations::V3::Calculator
+  # categories/rules
   def initialize(categories)
     @categories = categories
   end
 
+  # Do the work, all in memory with Ruby classes
   def calculate!(source_results)
     event_categories = map_categories_to_event_categories
     results = map_source_results_to_results(source_results)

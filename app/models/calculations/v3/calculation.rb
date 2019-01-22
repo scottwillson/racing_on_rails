@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# Rules to create and calculate results for event based on another event's results.
+# Older code uses the term "Competition.""
+# Link source event(s) with caculated Event.
+# Handle all ActiveRecord work. All calculation occurs in pure-Ruby Calculator and Models.
 class Calculations::V3::Calculation < ApplicationRecord
   has_and_belongs_to_many :categories # rubocop:disable Rails/HasAndBelongsToMany
   belongs_to :event, dependent: :destroy, inverse_of: :calculation, optional: true
@@ -26,6 +30,7 @@ class Calculations::V3::Calculation < ApplicationRecord
     Result.all
   end
 
+  # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them
   def results_to_models(source_results)
     source_results.map do |result|
       Calculations::V3::Models::SourceResult.new(
@@ -36,6 +41,8 @@ class Calculations::V3::Calculation < ApplicationRecord
     end
   end
 
+  # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them.
+  # Categories are a subset of "rules."
   def categories_to_models(categories)
     categories.map do |category|
       Calculations::V3::Models::Category.new(category.name)

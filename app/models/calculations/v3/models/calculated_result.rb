@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Result calculated from source results. Belongs to EventCategory.
 class Calculations::V3::Models::CalculatedResult
   attr_reader :participant
   attr_accessor :place
