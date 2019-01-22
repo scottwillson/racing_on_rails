@@ -29,7 +29,7 @@ module Competitions
         expected = [result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2", member_from: Date.new(2012), member_to: end_of_year, year: Date.today.year)]
         actual = Calculator.select_results(
           source_results,
-          results_per_event: UNLIMITED,
+          results_per_event: Competitions::Calculations::Calculator::UNLIMITED,
           results_per_race: 1,
           dnf: false,
           members_only: true
@@ -57,7 +57,7 @@ module Competitions
         actual = Calculator.select_results(
           source_results,
           results_per_event: 2,
-          results_per_race: UNLIMITED
+          results_per_race: Competitions::Calculations::Calculator::UNLIMITED
         )
         assert_equal_results expected, actual
       end
@@ -101,7 +101,7 @@ module Competitions
         ]
         actual = Calculator.select_results(
           source_results,
-          results_per_event: UNLIMITED,
+          results_per_event: Competitions::Calculations::Calculator::UNLIMITED,
           results_per_race: 2
         )
         assert_equal_results expected, actual
@@ -122,7 +122,7 @@ module Competitions
         actual = Calculator.select_results(
           source_results,
           results_per_event: 2,
-          results_per_race: UNLIMITED
+          results_per_race: Competitions::Calculations::Calculator::UNLIMITED
         )
         assert_equal_results expected, actual
       end
@@ -160,7 +160,7 @@ module Competitions
           minimum_events: 3,
           members_only: false,
           results_per_event: 1,
-          results_per_race: UNLIMITED,
+          results_per_race: Competitions::Calculations::Calculator::UNLIMITED,
           source_event_ids: [1, 2, 3, 4, 5, 6, 7, 8]
         )
         assert_equal_results expected, actual
@@ -187,7 +187,7 @@ module Competitions
           completed_events: 4,
           members_only: false,
           results_per_event: 1,
-          results_per_race: UNLIMITED,
+          results_per_race: Competitions::Calculations::Calculator::UNLIMITED,
           source_event_ids: [1, 2, 3, 4]
         )
         assert_equal_results expected, actual
@@ -215,8 +215,8 @@ module Competitions
         ]
         actual = Calculator.select_results(
           source_results,
-          results_per_event: UNLIMITED,
-          results_per_race: UNLIMITED
+          results_per_event: Competitions::Calculations::Calculator::UNLIMITED,
+          results_per_race: Competitions::Calculations::Calculator::UNLIMITED
         )
         assert_equal [1, 2], actual.map(&:id).sort
       end
