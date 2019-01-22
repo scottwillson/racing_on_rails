@@ -57,6 +57,17 @@ class Event < ApplicationRecord
 
   validate :inclusion_of_discipline
 
+  has_one :calculation,
+          class_name: "Calculations::V3::Calculation",
+          dependent: :destroy,
+          inverse_of: :event
+
+  has_many :calculations,
+           class_name: "Calculations::V3::Calculation",
+           dependent: :destroy,
+           foreign_key: :source_event_id,
+           inverse_of: :source_event
+
   has_many :event_teams, dependent: :destroy
   has_many :event_team_memberships, through: :event_teams
   belongs_to :number_issuer, optional: true
