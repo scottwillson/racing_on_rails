@@ -78,7 +78,7 @@ module Competitions
           source_results,
           point_schedule: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
           results_per_event: 3,
-          results_per_race: UNLIMITED,
+          results_per_race: Competitions::Calculations::Calculator::UNLIMITED,
           members_only: false
         )
         assert_equal_results expected, actual

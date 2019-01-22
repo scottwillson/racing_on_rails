@@ -119,7 +119,7 @@ module Competitions
         results = add_field_size(results)
         results = map_team_member_to_boolean(results)
 
-        calculated_results = Calculations::Calculator.calculate(results, rules(race))
+        calculated_results = Competitions::Calculations::Calculator.calculate(results, rules(race))
 
         race.destroy_duplicate_results!
         race.results.reload
