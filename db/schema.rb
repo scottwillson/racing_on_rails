@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_11_214620) do
-
+ActiveRecord::Schema.define(version: 2019_01_21_002143) do
   create_table "adjustments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "order_id"
     t.integer "person_id"
@@ -66,6 +65,23 @@ ActiveRecord::Schema.define(version: 2019_01_11_214620) do
     t.boolean "approved"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "calculations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "event_id"
+    t.bigint "source_event_id"
+    t.string "name", default: "New Calculation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_calculations_on_event_id"
+    t.index ["source_event_id"], name: "index_calculations_on_source_event_id"
+  end
+
+  create_table "calculations_categories", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "calculation_id"
+    t.bigint "category_id"
+    t.index ["calculation_id"], name: "index_calculations_categories_on_calculation_id"
+    t.index ["category_id"], name: "index_calculations_categories_on_category_id"
   end
 
   create_table "categories", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -822,6 +838,17 @@ ActiveRecord::Schema.define(version: 2019_01_11_214620) do
     t.index ["name"], name: "index_regions_on_name", unique: true
   end
 
+  create_table "result_sources", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "calculated_result_id", null: false
+    t.decimal "points", precision: 10, default: "0", null: false
+    t.string "rejection_reason"
+    t.integer "source_result_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["calculated_result_id", "source_result_id"], name: "calculated_result_id_source_result_id"
+    t.index ["source_result_id"], name: "fk_rails_6213531152"
+  end
+
   create_table "results", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "category_id"
     t.integer "person_id"
@@ -988,6 +1015,8 @@ ActiveRecord::Schema.define(version: 2019_01_11_214620) do
   add_foreign_key "race_numbers", "people", name: "race_numbers_person_id", on_delete: :cascade
   add_foreign_key "races", "categories"
   add_foreign_key "races", "events", name: "races_event_id_fk", on_delete: :cascade
+  add_foreign_key "result_sources", "results", column: "calculated_result_id"
+  add_foreign_key "result_sources", "results", column: "source_result_id"
   add_foreign_key "results", "categories"
   add_foreign_key "results", "people", name: "results_person_id"
   add_foreign_key "results", "races", name: "results_race_id_fk", on_delete: :cascade

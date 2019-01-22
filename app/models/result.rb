@@ -24,6 +24,13 @@ class Result < ApplicationRecord
   belongs_to :category, optional: true
   belongs_to :event
   belongs_to :race
+  has_many :source_results, through: :sources
+  has_many :sources,
+           class_name: "ResultSource",
+           dependent: :destroy,
+           foreign_key: :calculated_result_id,
+           inverse_of: :calculated_result
+
   belongs_to :team, optional: true
 
   validates :race, presence: true
