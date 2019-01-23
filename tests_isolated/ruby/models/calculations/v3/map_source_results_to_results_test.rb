@@ -24,15 +24,16 @@ class Calculations::V3::MapSourceResultsToResultsTest < Ruby::TestCase
     calculator = Calculations::V3::Calculator.new([category])
 
     event_categories = [Calculations::V3::Models::EventCategory.new(category)]
-    results = calculator.map_source_results_to_results(source_results, event_categories)
+    event_categories = calculator.map_source_results_to_results(source_results, event_categories)
 
-    assert_equal 1, results.size
-    result = results.first
+    assert_equal 1, event_categories.size
+    assert_equal 1, event_categories.first.results.size
+    result = event_categories.first.results.first
     assert_equal 0, result.participant.id
 
-    assert_equal 1, result.results.size
-    assert_equal 33, result.results.first.id
-    assert_equal "19", result.results.first.place
+    assert_equal 1, result.source_results.size
+    assert_equal 33, result.source_results.first.id
+    assert_equal "19", result.source_results.first.place
   end
 
   def test_group_by_participant_id
@@ -62,16 +63,22 @@ class Calculations::V3::MapSourceResultsToResultsTest < Ruby::TestCase
     calculator = Calculations::V3::Calculator.new([category])
 
     event_categories = [Calculations::V3::Models::EventCategory.new(category)]
-    results = calculator.map_source_results_to_results(source_results, event_categories)
+    event_categories = calculator.map_source_results_to_results(source_results, event_categories)
 
-    assert_equal 2, results.size
-    result = results.find { |r| r.participant_id == 0 }
+    assert_equal 1, event_categories.size
+    assert_equal 2, event_categories.first.results.size
 
+    result = event_categories.first.results.find { |r| r.participant.id == 0 }
     assert_equal 2, result.source_results.size
     source_results = result.source_results.sort_by(&:id)
     assert_equal 33, source_results.first.id
     assert_equal "19", source_results.first.place
-    assert_equal 35, source_results.first.id
-    assert_equal "3", source_results.first.place
+    assert_equal 35, source_results.second.id
+    assert_equal "3", source_results.second.place
+
+    result = event_categories.first.results.find { |r| r.participant.id == 1 }
+    assert_equal 1, result.source_results.size
+    assert_equal 34, result.source_results.first.id
+    assert_equal "7", result.source_results.first.place
   end
 end

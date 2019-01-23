@@ -57,6 +57,8 @@ class Calculations::V3::Calculator
         )
       end
     end
+
+    event_categories
   end
 
   def assign_points(event_categories)
