@@ -27,7 +27,9 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def source_results
-    Result.all
+    Result
+      .joins(race: :event)
+      .where("events.parent_id" => source_event)
   end
 
   # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them
