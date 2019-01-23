@@ -51,7 +51,9 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     different_series = WeeklySeries.create!
     source_child_event = different_series.children.create!
     source_race = source_child_event.races.create!(category: category)
-    source_race.results.create!(place: 1, person: FactoryBot.create(:person))
+    person_1 = FactoryBot.create(:person)
+    source_race.results.create!(place: 1, person: person_1)
+    source_race.results.create!(place: 2, person: FactoryBot.create(:person))
 
     series = WeeklySeries.create!
     source_child_event = series.children.create!
@@ -60,8 +62,9 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     calculation.categories << category
 
     source_race = source_child_event.races.create!(category: category)
-    person = FactoryBot.create(:person)
-    source_result = source_race.results.create!(place: 1, person: person)
+    source_race.results.create!(place: 1, person: person_1)
+    person_2 = FactoryBot.create(:person)
+    source_race.results.create!(place: 2, person: person_2)
 
     calculation.calculate!
 
@@ -72,8 +75,8 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     men_a_overall_race = overall.races.detect { |race| race.category == category }
     assert_not_nil(men_a_overall_race, "Should have Men A overall race")
 
-    results = men_a_overall_race.results
-    assert_equal 1, results.size
+    results = men_a_overall_race.results.sort
+    assert_equal 2, results.size
 
     result = results.first
     assert_equal person, result.person
@@ -83,6 +86,17 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     assert_equal 1, result.sources.size
     source = result.sources.first
     assert_equal 100, source.points
+    assert_nil source.rejection_reason
+    assert_equal source_result, source.source_result
+
+    result = results.second
+    assert_equal person, result.person
+    assert_equal "2", result.place
+    assert_equal 90, result.points
+
+    assert_equal 1, result.sources.size
+    source = result.sources.first
+    assert_equal 90, source.points
     assert_nil source.rejection_reason
     assert_equal source_result, source.source_result
   end
