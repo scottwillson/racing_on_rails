@@ -38,12 +38,7 @@ class Calculations::V3::Calculator
     end
   end
 
-  # This is very wrong
   def map_source_results_to_results(source_results, event_categories)
-    # find best category match
-    # create participant result
-    # add source result to participant result
-
     source_results.each do |source_result|
       event_category = event_categories.first
 
