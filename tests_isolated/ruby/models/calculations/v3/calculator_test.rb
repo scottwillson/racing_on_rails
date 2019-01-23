@@ -26,24 +26,6 @@ class Calculations::V3::CalculatorTest < Ruby::TestCase
     assert_equal "Masters Men", event_categories.first.name
   end
 
-  def test_group_results_by_event_category
-    calculator = Calculations::V3::Calculator.new([])
-    participant = Calculations::V3::Models::Participant.new(0)
-    source_result = Calculations::V3::Models::SourceResult.new(
-      id: 33,
-      participant: participant,
-      place: "19"
-    )
-    results = [Calculations::V3::Models::CalculatedResult.new(participant, [source_result])]
-    category = Calculations::V3::Models::Category.new("Masters Men")
-    event_categories = [Calculations::V3::Models::EventCategory.new(category)]
-
-    event_categories = calculator.group_results_by_event_category(results, event_categories)
-
-    assert_equal 1, event_categories.size
-    assert_equal 1, event_categories.first.results.size
-  end
-
   def test_assign_points
     calculator = Calculations::V3::Calculator.new([])
     participant = Calculations::V3::Models::Participant.new(0)

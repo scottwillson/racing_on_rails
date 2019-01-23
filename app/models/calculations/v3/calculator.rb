@@ -26,8 +26,7 @@ class Calculations::V3::Calculator
   # Do the work, all in memory with Ruby classes
   def calculate!(source_results)
     event_categories = map_categories_to_event_categories(@categories)
-    results = map_source_results_to_results(source_results)
-    event_categories = group_results_by_event_category(results, event_categories)
+    event_categories = map_source_results_to_results(source_results, event_categories)
     event_categories = assign_points(event_categories)
     event_categories = sum_points(event_categories)
     place(event_categories)
@@ -40,21 +39,24 @@ class Calculations::V3::Calculator
   end
 
   # This is very wrong
-  def map_source_results_to_results(source_results)
-    source_results.map do |source_result|
-      Calculations::V3::Models::CalculatedResult.new(
-        Calculations::V3::Models::Participant.new(source_result.participant.id),
-        [source_result]
-      )
-    end
-  end
+  def map_source_results_to_results(source_results, event_categories)
+    # find best category match
+    # create participant result
+    # add source result to participant result
 
-  def group_results_by_event_category(results, event_categories)
-    results.each do |result|
-      event_categories.first.results << result
-    end
+    source_results.each do |source_result|
+      event_category = event_categories.first
 
-    event_categories
+      calculated_result = event_category.results.find { |r| r.participant.id == source_result.participant.id }
+      if calculated_result
+        calculated_result.source_results << source_result
+      else
+        event_category.results << Calculations::V3::Models::CalculatedResult.new(
+          Calculations::V3::Models::Participant.new(source_result.participant.id),
+          [source_result]
+        )
+      end
+    end
   end
 
   def assign_points(event_categories)
