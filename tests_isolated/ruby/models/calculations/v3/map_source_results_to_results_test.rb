@@ -6,6 +6,7 @@ require_relative "../../../../../app/models/calculations/v3"
 require_relative "../../../../../app/models/calculations/v3/calculator"
 require_relative "../../../../../app/models/calculations/v3/models"
 require_relative "../../../../../app/models/calculations/v3/models/calculated_result"
+require_relative "../../../../../app/models/calculations/v3/models/event_category"
 
 # :stopdoc:
 class Calculations::V3::MapSourceResultsToResultsTest < Ruby::TestCase
@@ -18,17 +19,20 @@ class Calculations::V3::MapSourceResultsToResultsTest < Ruby::TestCase
       place: "19"
     )
     source_results = [source_result]
-    calculator = Calculations::V3::Calculator.new([])
 
-    results = calculator.map_source_results_to_results(source_results)
+    category = Calculations::V3::Models::Category.new("Masters Men")
+    calculator = Calculations::V3::Calculator.new([category])
+
+    event_categories = [Calculations::V3::Models::EventCategory.new(category)]
+    results = calculator.map_source_results_to_results(source_results, event_categories)
 
     assert_equal 1, results.size
     result = results.first
     assert_equal 0, result.participant.id
 
-    assert_equal 1, result.source_results.size
-    assert_equal 33, result.source_results.first.id
-    assert_equal "19", result.source_results.first.place
+    assert_equal 1, result.results.size
+    assert_equal 33, result.results.first.id
+    assert_equal "19", result.results.first.place
   end
 
   def test_group_by_participant_id
@@ -54,9 +58,11 @@ class Calculations::V3::MapSourceResultsToResultsTest < Ruby::TestCase
       place: "3"
     )
 
-    categories = [Calculations::V3::Models::Category.new("Masters Men")]
-    calculator = Calculations::V3::Calculator.new(categories)
-    results = calculator.map_source_results_to_results(source_results)
+    category = Calculations::V3::Models::Category.new("Masters Men")
+    calculator = Calculations::V3::Calculator.new([category])
+
+    event_categories = [Calculations::V3::Models::EventCategory.new(category)]
+    results = calculator.map_source_results_to_results(source_results, event_categories)
 
     assert_equal 2, results.size
     result = results.find { |r| r.participant_id == 0 }
