@@ -83,6 +83,17 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
   end
 
   test "#source_results" do
-    
+    FactoryBot.create(:result)
+
+    series = WeeklySeries.create!
+    source_child_event = series.children.create!
+
+    category = Category.find_or_create_by(name: "Men A")
+    source_race = source_child_event.races.create!(category: category)
+    person = FactoryBot.create(:person)
+    source_race.results.create!(place: 1, person: person)
+
+    calculation = series.calculations.create!(source_event: series)
+    assert_equal 1, calculation.source_results.size
   end
 end
