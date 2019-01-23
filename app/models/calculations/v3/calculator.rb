@@ -25,7 +25,7 @@ class Calculations::V3::Calculator
 
   # Do the work, all in memory with Ruby classes
   def calculate!(source_results)
-    event_categories = map_categories_to_event_categories
+    event_categories = map_categories_to_event_categories(@categories)
     results = map_source_results_to_results(source_results)
     event_categories = group_results_by_event_category(results, event_categories)
     event_categories = assign_points(event_categories)
@@ -33,8 +33,8 @@ class Calculations::V3::Calculator
     place(event_categories)
   end
 
-  def map_categories_to_event_categories
-    @categories.map do |category|
+  def map_categories_to_event_categories(categories)
+    categories.map do |category|
       Calculations::V3::Models::EventCategory.new(category)
     end
   end
