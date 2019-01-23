@@ -48,6 +48,11 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     source_race.results.create!(place: 1, person: FactoryBot.create(:person))
     source_race.results.create!(place: 2, person: FactoryBot.create(:person))
 
+    different_series = WeeklySeries.create!
+    source_child_event = different_series.children.create!
+    source_race = source_child_event.races.create!(category: category)
+    source_race.results.create!(place: 1, person: FactoryBot.create(:person))
+
     series = WeeklySeries.create!
     source_child_event = series.children.create!
 

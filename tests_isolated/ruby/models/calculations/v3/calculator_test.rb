@@ -19,32 +19,11 @@ class Calculations::V3::CalculatorTest < Ruby::TestCase
   end
 
   def test_map_categories_to_event_categories
-    calculator = Calculations::V3::Calculator.new([Calculations::V3::Models::Category.new("Masters Men")])
-    event_categories = calculator.map_categories_to_event_categories
+    categories = [Calculations::V3::Models::Category.new("Masters Men")]
+    calculator = Calculations::V3::Calculator.new(categories)
+    event_categories = calculator.map_categories_to_event_categories(categories)
     assert_equal 1, event_categories.size
     assert_equal "Masters Men", event_categories.first.name
-  end
-
-  def test_map_source_results_to_results
-    participant = Calculations::V3::Models::Participant.new(0)
-
-    source_result = Calculations::V3::Models::SourceResult.new(
-      id: 33,
-      participant: participant,
-      place: "19"
-    )
-    source_results = [source_result]
-    calculator = Calculations::V3::Calculator.new([])
-
-    results = calculator.map_source_results_to_results(source_results)
-
-    assert_equal 1, results.size
-    result = results.first
-    assert_equal 0, result.participant.id
-
-    assert_equal 1, result.source_results.size
-    assert_equal 33, result.source_results.first.id
-    assert_equal "19", result.source_results.first.place
   end
 
   def test_group_results_by_event_category
