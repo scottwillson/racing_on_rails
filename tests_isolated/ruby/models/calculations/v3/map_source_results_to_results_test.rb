@@ -21,7 +21,8 @@ class Calculations::V3::MapSourceResultsToResultsTest < Ruby::TestCase
     source_results = [source_result]
 
     category = Calculations::V3::Models::Category.new("Masters Men")
-    calculator = Calculations::V3::Calculator.new([category])
+    rules = Calculations::V3::Rules.new(categories: [category])
+    calculator = Calculations::V3::Calculator.new(rules)
 
     event_categories = [Calculations::V3::Models::EventCategory.new(category)]
     event_categories = calculator.map_source_results_to_results(source_results, event_categories)
@@ -60,7 +61,8 @@ class Calculations::V3::MapSourceResultsToResultsTest < Ruby::TestCase
     )
 
     category = Calculations::V3::Models::Category.new("Masters Men")
-    calculator = Calculations::V3::Calculator.new([category])
+    rules = Calculations::V3::Rules.new(categories: [category])
+    calculator = Calculations::V3::Calculator.new(rules)
 
     event_categories = [Calculations::V3::Models::EventCategory.new(category)]
     event_categories = calculator.map_source_results_to_results(source_results, event_categories)
