@@ -62,9 +62,9 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     calculation.categories << category
 
     source_race = source_child_event.races.create!(category: category)
-    source_race.results.create!(place: 1, person: person_1)
+    source_result_1 = source_race.results.create!(place: 1, person: person_1)
     person_2 = FactoryBot.create(:person)
-    source_race.results.create!(place: 2, person: person_2)
+    source_result_2 = source_race.results.create!(place: 2, person: person_2)
 
     calculation.calculate!
 
@@ -79,7 +79,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     assert_equal 2, results.size
 
     result = results.first
-    assert_equal person, result.person
+    assert_equal person_1, result.person
     assert_equal "1", result.place
     assert_equal 100, result.points
 
@@ -87,10 +87,10 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     source = result.sources.first
     assert_equal 100, source.points
     assert_nil source.rejection_reason
-    assert_equal source_result, source.source_result
+    assert_equal source_result_1, source.source_result
 
     result = results.second
-    assert_equal person, result.person
+    assert_equal person_2, result.person
     assert_equal "2", result.place
     assert_equal 90, result.points
 
@@ -98,7 +98,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     source = result.sources.first
     assert_equal 90, source.points
     assert_nil source.rejection_reason
-    assert_equal source_result, source.source_result
+    assert_equal source_result_2, source.source_result
   end
 
   test "#source_results" do
