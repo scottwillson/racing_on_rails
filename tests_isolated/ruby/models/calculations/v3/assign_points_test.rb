@@ -9,7 +9,7 @@ require_relative "../../../../../app/models/calculations/v3/models/calculated_re
 require_relative "../../../../../app/models/calculations/v3/models/event_category"
 
 # :stopdoc:
-class Calculations::V3::MapSourceResultsToResultsTest < Ruby::TestCase
+class Calculations::V3::AssignPointsTest < Ruby::TestCase
   def test_assign_points
     calculator = Calculations::V3::Calculator.new([])
     participant = Calculations::V3::Models::Participant.new(0)
