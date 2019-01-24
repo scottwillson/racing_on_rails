@@ -18,14 +18,15 @@
 #   6. place results (skip zero-results?)
 # many missing steps ...
 class Calculations::V3::Calculator
-  # categories/rules
-  def initialize(categories)
-    @categories = categories
+  def initialize(rules = Calculations::V3::Rules.new)
+    raise(ArgumentError, "rules should be Calculations::V3::Rules, but are #{rules.class}") unless rules.is_a?(Calculations::V3::Rules)
+
+    @rules = rules
   end
 
   # Do the work, all in memory with Ruby classes
   def calculate!(source_results)
-    event_categories = map_categories_to_event_categories(@categories)
+    event_categories = map_categories_to_event_categories(@rules.categories)
     event_categories = map_source_results_to_results(source_results, event_categories)
     event_categories = assign_points(event_categories)
     event_categories = sum_points(event_categories)

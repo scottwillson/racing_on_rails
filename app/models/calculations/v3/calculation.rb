@@ -19,8 +19,7 @@ class Calculations::V3::Calculation < ApplicationRecord
         event = create_event!
         source_event.children << event
         results = results_to_models(source_results)
-        model_categories = categories_to_models(categories)
-        event_categories = Calculations::V3::Calculator.new(model_categories).calculate!(results)
+        event_categories = Calculations::V3::Calculator.new(rules).calculate!(results)
         save_results event_categories
       end
     end
@@ -41,6 +40,10 @@ class Calculations::V3::Calculation < ApplicationRecord
         place: result.place
       )
     end
+  end
+
+  def rules
+    Calculations::V3::Rules.new(categories: categories_to_models(categories))
   end
 
   # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them.
