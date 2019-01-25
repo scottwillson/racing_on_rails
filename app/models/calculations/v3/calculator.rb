@@ -18,68 +18,44 @@
 #   6. place results (skip zero-results?)
 # many missing steps ...
 class Calculations::V3::Calculator
-  def initialize(rules = Calculations::V3::Rules.new)
+  attr_reader :event_categories
+  attr_reader :rules
+  attr_reader :source_results
+
+  def initialize(logger: Logger.new(STDOUT, level: :fatal), rules: Calculations::V3::Rules.new, source_results: [])
     raise(ArgumentError, "rules should be Calculations::V3::Rules, but are #{rules.class}") unless rules.is_a?(Calculations::V3::Rules)
 
+    @event_categories = []
+    @logger = logger
     @rules = rules
+    @source_results = source_results
   end
 
   # Do the work, all in memory with Ruby classes
-  def calculate!(source_results)
-    event_categories = map_categories_to_event_categories(@rules.categories)
-    event_categories = map_source_results_to_results(source_results, event_categories)
-    event_categories = assign_points(event_categories)
-    event_categories = sum_points(event_categories)
-    place(event_categories)
+  def calculate!
+    @logger.debug "Calculations::V3::Calculator#calculate! source_results: #{source_results.size}"
+
+    calculate_step(Calculations::V3::Steps::MapCategoriesToEventCategories)
+      .calculate_step(Calculations::V3::Steps::MapSourceResultsToResults)
+      .calculate_step(Calculations::V3::Steps::AssignPoints)
+      .calculate_step(Calculations::V3::Steps::SumPoints)
+      .calculate_step(Calculations::V3::Steps::Place)
+      .event_categories
   end
 
-  def map_categories_to_event_categories(categories)
-    categories.map do |category|
-      Calculations::V3::Models::EventCategory.new(category)
-    end
-  end
+  def calculate_step(step)
+    results_count_before = @event_categories.flat_map(&:results).size
+    rejections_count_before = @event_categories.flat_map(&:results).flat_map(&:source_results).select(&:rejected?).size
 
-  def map_source_results_to_results(source_results, event_categories)
-    source_results.each do |source_result|
-      event_category = event_categories.first
-
-      calculated_result = event_category.results.find { |r| r.participant.id == source_result.participant.id }
-      if calculated_result
-        calculated_result.source_results << source_result
-      else
-        event_category.results << Calculations::V3::Models::CalculatedResult.new(
-          Calculations::V3::Models::Participant.new(source_result.participant.id),
-          [source_result]
-        )
-      end
+    time = Benchmark.measure do
+      @event_categories = step.calculate!(self)
     end
 
-    event_categories
-  end
+    results_count_after = @event_categories.flat_map(&:results).size
+    rejections_count_after = @event_categories.flat_map(&:results).flat_map(&:source_results).select(&:rejected?).size
+    formatted_time = format("%.1fms", time.real)
+    @logger.debug "Calculations::V3::Steps::#{step}#calculate! duration: #{formatted_time} results: #{results_count_before} to #{results_count_after} rejections: #{rejections_count_before} to #{rejections_count_after}"
 
-  def assign_points(event_categories)
-    event_categories.each do |category|
-      category.results.each do |result|
-        result.source_results.each do |source_result|
-          source_result.points = 100
-        end
-      end
-    end
-  end
-
-  def sum_points(event_categories)
-    event_categories.each do |category|
-      category.results.each do |result|
-        result.points = result.source_results.sum(&:points)
-      end
-    end
-  end
-
-  def place(event_categories)
-    event_categories.each do |category|
-      category.results.each do |result|
-        result.place = "1"
-      end
-    end
+    self
   end
 end

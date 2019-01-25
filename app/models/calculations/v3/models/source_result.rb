@@ -17,6 +17,10 @@ class Calculations::V3::Models::SourceResult
     validate!
   end
 
+  def rejected?
+    false
+  end
+
   def validate!
     raise(ArgumentError, "id is required") unless id
     raise(ArgumentError, "id must be a Numeric") unless id.is_a?(Numeric)
