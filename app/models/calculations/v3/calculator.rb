@@ -25,18 +25,20 @@ class Calculations::V3::Calculator
   def initialize(logger: Logger.new(STDOUT, level: :fatal), rules: Calculations::V3::Rules.new, source_results: [])
     raise(ArgumentError, "rules should be Calculations::V3::Rules, but are #{rules.class}") unless rules.is_a?(Calculations::V3::Rules)
 
-    @event_categories = []
     @logger = logger
     @rules = rules
     @source_results = source_results
+
+    @event_categories = rules.categories.map do |category|
+      Calculations::V3::Models::EventCategory.new(category)
+    end
   end
 
   # Do the work, all in memory with Ruby classes
   def calculate!
     @logger.debug "Calculations::V3::Calculator#calculate! source_results: #{source_results.size}"
 
-    calculate_step(Calculations::V3::Steps::MapCategoriesToEventCategories)
-      .calculate_step(Calculations::V3::Steps::MapSourceResultsToResults)
+    calculate_step(Calculations::V3::Steps::MapSourceResultsToResults)
       .calculate_step(Calculations::V3::Steps::AssignPoints)
       .calculate_step(Calculations::V3::Steps::SumPoints)
       .calculate_step(Calculations::V3::Steps::Place)
