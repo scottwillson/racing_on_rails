@@ -19,7 +19,8 @@ class Calculations::V3::Calculation < ApplicationRecord
         event = create_event!
         source_event.children << event
         results = results_to_models(source_results)
-        event_categories = Calculations::V3::Calculator.new(rules).calculate!(results)
+        calculator = Calculations::V3::Calculator.new(logger: logger, rules: rules, source_results: results)
+        event_categories = calculator.calculate!
         save_results event_categories
       end
     end

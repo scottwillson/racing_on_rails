@@ -7,6 +7,8 @@ require_relative "../../../../../app/models/calculations/v3/calculator"
 require_relative "../../../../../app/models/calculations/v3/models"
 require_relative "../../../../../app/models/calculations/v3/models/calculated_result"
 require_relative "../../../../../app/models/calculations/v3/models/event_category"
+require_relative "../../../../../app/models/calculations/v3/steps"
+require_relative "../../../../../app/models/calculations/v3/steps/map_source_results_to_results"
 
 # :stopdoc:
 class Calculations::V3::MapSourceResultsToResultsTest < Ruby::TestCase
@@ -22,10 +24,9 @@ class Calculations::V3::MapSourceResultsToResultsTest < Ruby::TestCase
 
     category = Calculations::V3::Models::Category.new("Masters Men")
     rules = Calculations::V3::Rules.new(categories: [category])
-    calculator = Calculations::V3::Calculator.new(rules)
+    calculator = Calculations::V3::Calculator.new(rules: rules, source_results: source_results)
 
-    event_categories = [Calculations::V3::Models::EventCategory.new(category)]
-    event_categories = calculator.map_source_results_to_results(source_results, event_categories)
+    event_categories = Calculations::V3::Steps::MapSourceResultsToResults.calculate!(calculator)
 
     assert_equal 1, event_categories.size
     assert_equal 1, event_categories.first.results.size
@@ -62,10 +63,9 @@ class Calculations::V3::MapSourceResultsToResultsTest < Ruby::TestCase
 
     category = Calculations::V3::Models::Category.new("Masters Men")
     rules = Calculations::V3::Rules.new(categories: [category])
-    calculator = Calculations::V3::Calculator.new(rules)
+    calculator = Calculations::V3::Calculator.new(rules: rules, source_results: source_results)
 
-    event_categories = [Calculations::V3::Models::EventCategory.new(category)]
-    event_categories = calculator.map_source_results_to_results(source_results, event_categories)
+    event_categories = Calculations::V3::Steps::MapSourceResultsToResults.calculate!(calculator)
 
     assert_equal 1, event_categories.size
     assert_equal 2, event_categories.first.results.size
