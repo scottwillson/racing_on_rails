@@ -7,7 +7,7 @@ class Calculations::V3::Models::SourceResult
   attr_reader :id
   attr_reader :participant
   attr_accessor :place
-  attr_accessor :points
+  attr_writer :points
 
   def initialize(id: nil, participant: nil, place: nil)
     @id = id
@@ -19,6 +19,10 @@ class Calculations::V3::Models::SourceResult
 
   def numeric_place
     place&.to_i || 0
+  end
+
+  def points
+    @points || 0
   end
 
   def rejected?

@@ -20,6 +20,7 @@ class Calculations::V3::Models::SourceResultTest < Ruby::TestCase
     assert_equal 19, result.id
     assert_equal participant, result.participant
     assert_equal "DNF", result.place
+    assert_equal 0, result.points
   end
 
   def test_id
