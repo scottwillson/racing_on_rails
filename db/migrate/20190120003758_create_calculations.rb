@@ -6,6 +6,7 @@ class CreateCalculations < ActiveRecord::Migration[5.2]
       t.references :event
       t.references :source_event
       t.string :name, default: "New Calculation", required: true, unique: true
+      t.string :points_for_place, array: true, default: [].to_yaml
       t.timestamps
     end
   end

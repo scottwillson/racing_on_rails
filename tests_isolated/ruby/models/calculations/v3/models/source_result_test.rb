@@ -26,4 +26,17 @@ class Calculations::V3::Models::SourceResultTest < Ruby::TestCase
     assert_raises(ArgumentError) { Calculations::V3::Models::SourceResult.new(nil) }
     assert_raises(ArgumentError) { Calculations::V3::Models::SourceResult.new("id") }
   end
+
+  def test_rejected
+    result = Calculations::V3::Models::SourceResult.new(id: 19)
+    assert_equal false, result.rejected?
+  end
+
+  def test_numeric_place
+    result = Calculations::V3::Models::SourceResult.new(id: 19)
+    assert_equal 0, result.numeric_place
+
+    result = Calculations::V3::Models::SourceResult.new(id: 19, place: "1")
+    assert_equal 1, result.numeric_place
+  end
 end

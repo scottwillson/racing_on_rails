@@ -17,6 +17,10 @@ class Calculations::V3::Models::SourceResult
     validate!
   end
 
+  def numeric_place
+    place&.to_i || 0
+  end
+
   def rejected?
     false
   end

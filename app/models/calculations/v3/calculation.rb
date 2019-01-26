@@ -5,6 +5,8 @@
 # Link source event(s) with caculated Event.
 # Handle all ActiveRecord work. All calculation occurs in pure-Ruby Calculator and Models.
 class Calculations::V3::Calculation < ApplicationRecord
+  serialize :points_for_place, Array
+
   has_and_belongs_to_many :categories # rubocop:disable Rails/HasAndBelongsToMany
   belongs_to :event, dependent: :destroy, inverse_of: :calculation, optional: true
   belongs_to :source_event, class_name: "Event"
@@ -44,7 +46,10 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def rules
-    Calculations::V3::Rules.new(categories: categories_to_models(categories))
+    Calculations::V3::Rules.new(
+      categories: categories_to_models(categories),
+      points_for_place: points_for_place
+    )
   end
 
   # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them.

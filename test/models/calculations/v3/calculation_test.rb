@@ -8,7 +8,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     series = WeeklySeries.create!
     source_child_event = series.children.create!
 
-    calculation = series.calculations.create!
+    calculation = series.calculations.create!(points_for_place: [100, 50, 25, 12])
     category = Category.find_or_create_by(name: "Men A")
     calculation.categories << category
 
@@ -58,7 +58,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     series = WeeklySeries.create!
     source_child_event = series.children.create!
 
-    calculation = series.calculations.create!
+    calculation = series.calculations.create!(points_for_place: [100, 90, 75, 50, 40, 30, 20, 10])
     calculation.categories << category
 
     source_race = source_child_event.races.create!(category: category)
