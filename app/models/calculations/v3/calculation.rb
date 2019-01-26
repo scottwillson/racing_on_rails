@@ -11,6 +11,14 @@ class Calculations::V3::Calculation < ApplicationRecord
   belongs_to :event, dependent: :destroy, inverse_of: :calculation, optional: true
   belongs_to :source_event, class_name: "Event"
 
+  before_save :set_name
+
+  def set_name
+    if name == "New Calculation" && source_event
+      self.name = "#{source_event.name}: Overall"
+    end
+  end
+
   # Find all source results with coarse scope (year, source_events)
   # Map results and calculation rules to calculate models
   # model calculate
@@ -18,7 +26,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   def calculate!
     ActiveSupport::Notifications.instrument "calculate.calculations.#{name}.racing_on_rails" do
       transaction do
-        event = create_event!
+        event = create_event!(name: "Overall")
         source_event.children << event
         results = results_to_models(source_results)
         calculator = Calculations::V3::Calculator.new(logger: logger, rules: rules, source_results: results)

@@ -5,7 +5,7 @@ require "test_helper"
 # :stopdoc:
 class Calculations::V3::CalculationTest < ActiveSupport::TestCase
   test "simplest #calculate!" do
-    series = WeeklySeries.create!
+    series = WeeklySeries.create!(name: "Cross Crusade")
     source_child_event = series.children.create!
 
     calculation = series.calculations.create!(points_for_place: [100, 50, 25, 12])
@@ -20,6 +20,8 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
 
     overall = calculation.reload.event
     assert series.children.reload.include?(overall), "should add overall as child event"
+    assert_equal "Overall", overall.name
+    assert_equal "Cross Crusade: Overall", calculation.name
 
     assert_equal 1, overall.races.size
     men_a_overall_race = overall.races.detect { |race| race.category == category }
