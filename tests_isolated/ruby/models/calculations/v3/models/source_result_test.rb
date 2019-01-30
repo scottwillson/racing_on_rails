@@ -13,6 +13,7 @@ class Calculations::V3::Models::SourceResultTest < Ruby::TestCase
 
     result = Calculations::V3::Models::SourceResult.new(
       id: 19,
+      event_category: event_category,
       participant: participant,
       place: "DNF"
     )
@@ -24,24 +25,32 @@ class Calculations::V3::Models::SourceResultTest < Ruby::TestCase
   end
 
   def test_id
-    assert_raises(ArgumentError) { Calculations::V3::Models::SourceResult.new(id: nil) }
-    assert_raises(ArgumentError) { Calculations::V3::Models::SourceResult.new(id: "id") }
+    assert_raises(ArgumentError) { Calculations::V3::Models::SourceResult.new(id: nil, event_category: event_category) }
+    assert_raises(ArgumentError) { Calculations::V3::Models::SourceResult.new(id: "id", event_category: event_category) }
   end
 
   def test_event_category
     assert_raises(ArgumentError) { Calculations::V3::Models::SourceResult.new(event_category: nil) }
+    assert_raises(ArgumentError) { Calculations::V3::Models::SourceResult.new(event_category: "A") }
   end
 
   def test_rejected
-    result = Calculations::V3::Models::SourceResult.new(id: 19)
+    result = Calculations::V3::Models::SourceResult.new(id: 19, event_category: event_category)
     assert_equal false, result.rejected?
   end
 
   def test_numeric_place
-    result = Calculations::V3::Models::SourceResult.new(id: 19)
+    result = Calculations::V3::Models::SourceResult.new(id: 19, event_category: event_category)
     assert_equal 0, result.numeric_place
 
-    result = Calculations::V3::Models::SourceResult.new(id: 19, place: "1")
+    result = Calculations::V3::Models::SourceResult.new(id: 19, place: "1", event_category: event_category)
     assert_equal 1, result.numeric_place
+  end
+
+  private
+
+  def event_category
+    category = Calculations::V3::Models::Category.new("A")
+    Calculations::V3::Models::EventCategory.new(category)
   end
 end
