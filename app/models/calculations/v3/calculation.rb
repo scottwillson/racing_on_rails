@@ -45,8 +45,10 @@ class Calculations::V3::Calculation < ApplicationRecord
   # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them
   def results_to_models(source_results)
     source_results.map do |result|
+      category = Calculations::V3::Models::Category.new("")
       Calculations::V3::Models::SourceResult.new(
         id: result.id,
+        event_category: Calculations::V3::Models::EventCategory.new(category),
         participant: Calculations::V3::Models::Participant.new(result.person_id),
         place: result.place
       )

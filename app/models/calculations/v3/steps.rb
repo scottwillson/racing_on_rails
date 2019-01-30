@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
-# Each transformation of calculated results.
-module Calculations::V3::Steps
+module Calculations
+  module V3
+    # Each transformation of calculated results.
+    module Steps
+    end
+  end
 end
