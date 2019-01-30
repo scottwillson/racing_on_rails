@@ -39,7 +39,7 @@ module Calculations
           raise(ArgumentError, "id is required") unless id
           raise(ArgumentError, "id must be a Numeric") unless id.is_a?(Numeric)
           raise(ArgumentError, "event_category is required") unless event_category
-          raise(ArgumentError, "event_category must be an EventCategory") unless event_category.is_a?(Calculations::V3::Models::EventCategory)
+          raise(ArgumentError, "event_category must be an EventCategory, but was a #{event_category.class}") unless event_category.is_a?(EventCategory)
         end
       end
     end

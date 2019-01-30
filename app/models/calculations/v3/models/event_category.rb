@@ -23,7 +23,7 @@ module Calculations
 
         def validate!
           raise(ArgumentError, "category is required") unless category
-          raise(ArgumentError, "category must be a Category") unless category.is_a?(Calculations::V3::Models::Category)
+          raise(ArgumentError, "category must be a Models::Category, but is a #{category.class}") unless category.is_a?(Models::Category)
         end
       end
     end

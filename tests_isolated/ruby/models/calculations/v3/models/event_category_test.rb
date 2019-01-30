@@ -8,15 +8,15 @@ module Calculations
       # :stopdoc:
       class EventCategoryTest < Ruby::TestCase
         def test_initialize
-          participant = Calculations::V3::Models::Participant.new(1)
-          category = Calculations::V3::Models::Category.new("Juniors")
+          participant = Participant.new(1)
+          category = Category.new("Juniors")
           sources = [
-            Calculations::V3::Models::SourceResult.new(id: 11, event_category: Calculations::V3::Models::EventCategory.new(category)),
-            Calculations::V3::Models::SourceResult.new(id: 13, event_category: Calculations::V3::Models::EventCategory.new(category))
+            SourceResult.new(id: 11, event_category: EventCategory.new(category)),
+            SourceResult.new(id: 13, event_category: EventCategory.new(category))
           ]
 
-          result = Calculations::V3::Models::CalculatedResult.new(participant, sources)
-          event_category = Calculations::V3::Models::EventCategory.new(category)
+          result = CalculatedResult.new(participant, sources)
+          event_category = EventCategory.new(category)
           event_category.results << result
         end
       end
