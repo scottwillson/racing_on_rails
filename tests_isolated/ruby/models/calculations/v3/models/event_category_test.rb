@@ -13,13 +13,13 @@ require_relative "../../../../../../app/models/calculations/v3/models/source_res
 class Calculations::V3::Models::EventCategoryTest < Ruby::TestCase
   def test_initialize
     participant = Calculations::V3::Models::Participant.new(1)
+    category = Calculations::V3::Models::Category.new("Juniors")
     sources = [
-      Calculations::V3::Models::SourceResult.new(id: 11),
-      Calculations::V3::Models::SourceResult.new(id: 13)
+      Calculations::V3::Models::SourceResult.new(id: 11, event_category: Calculations::V3::Models::EventCategory.new(category)),
+      Calculations::V3::Models::SourceResult.new(id: 13, event_category: Calculations::V3::Models::EventCategory.new(category))
     ]
 
     result = Calculations::V3::Models::CalculatedResult.new(participant, sources)
-    category = Calculations::V3::Models::Category.new("Juniors")
     event_category = Calculations::V3::Models::EventCategory.new(category)
     event_category.results << result
   end
