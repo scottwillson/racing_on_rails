@@ -31,6 +31,7 @@ module Enumerable
   # Sort is stable only if predicate includes an equal comparison. Example: x.name <= y.name
   def merge_sort(&predicate)
     return dup if size <= 1
+
     mid = size / 2
     left  = self[0, mid].dup
     right = self[mid, size].dup
@@ -47,13 +48,13 @@ module Enumerable
                     left.shift
                   else
                     right.shift
-                            end
+                  end
                 else
                   if left.first <= right.first
                     left.shift
                   else
                     right.shift
-                            end
+                  end
                 end
     end
     sorted.concat(left).concat(right)
