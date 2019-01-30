@@ -8,25 +8,25 @@ module Calculations
       # :stopdoc:
       class CalculatedResultTest < Ruby::TestCase
         def test_initialize
-          category = Calculations::V3::Models::Category.new("A")
-          event_category = Calculations::V3::Models::EventCategory.new(category)
-          sources = [Calculations::V3::Models::SourceResult.new(id: 11, event_category: event_category)]
-          participant = Calculations::V3::Models::Participant.new(1)
+          category = Category.new("A")
+          event_category = EventCategory.new(category)
+          sources = [SourceResult.new(id: 11, event_category: event_category)]
+          participant = Participant.new(1)
 
-          result = Calculations::V3::Models::CalculatedResult.new(participant, sources)
+          result = CalculatedResult.new(participant, sources)
 
           assert_equal participant, result.participant
           assert_equal sources, result.source_results
         end
 
         def test_participant
-          assert_raises(ArgumentError) { Calculations::V3::Models::CalculatedResult.new(nil) }
+          assert_raises(ArgumentError) { CalculatedResult.new(nil) }
         end
 
         def test_sources
-          assert_raises(ArgumentError) { Calculations::V3::Models::CalculatedResult.new(1, nil) }
-          assert_raises(ArgumentError) { Calculations::V3::Models::CalculatedResult.new(2, []) }
-          assert_raises(ArgumentError) { Calculations::V3::Models::CalculatedResult.new(2, "") }
+          assert_raises(ArgumentError) { CalculatedResult.new(1, nil) }
+          assert_raises(ArgumentError) { CalculatedResult.new(2, []) }
+          assert_raises(ArgumentError) { CalculatedResult.new(2, "") }
         end
       end
     end

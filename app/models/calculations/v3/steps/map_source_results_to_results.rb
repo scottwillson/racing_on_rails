@@ -13,8 +13,8 @@ module Calculations
             if calculated_result
               calculated_result.source_results << source_result
             else
-              event_category.results << Calculations::V3::Models::CalculatedResult.new(
-                Calculations::V3::Models::Participant.new(source_result.participant.id),
+              event_category.results << Models::CalculatedResult.new(
+                Models::Participant.new(source_result.participant.id),
                 [source_result]
               )
             end
