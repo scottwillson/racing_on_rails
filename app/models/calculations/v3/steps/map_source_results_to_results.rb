@@ -3,9 +3,8 @@
 module Calculations::V3::Steps::MapSourceResultsToResults
   def self.calculate!(calculator)
     calculator.source_results.each do |source_result|
-      event_category = calculator.event_categories.first
-      # This short-circuit will go away once we actually match categories
-      return calculator.event_categories unless event_category
+      event_category = calculator.event_categories.find { |c| c.category == source_result.event_category.category }
+      raise("Could not find calculated event category in #{calculator.event_categories.map(&:category).flat_map(&:name).sort} for #{source_result.event_category.category.name}") unless event_category
 
       calculated_result = event_category.results.find { |r| r.participant.id == source_result.participant.id }
       if calculated_result

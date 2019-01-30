@@ -49,6 +49,9 @@ StringLiterals:
 Style/GuardClause:
   Enabled: false
 
+Style/IfUnlessModifer:
+  Enabled: false
+
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
 

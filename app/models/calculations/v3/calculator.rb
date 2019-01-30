@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "logger"
+
 # Inputs:
 #   * Calculation rules
 #   * results as model SourceResults

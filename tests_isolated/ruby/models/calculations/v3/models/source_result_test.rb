@@ -24,8 +24,12 @@ class Calculations::V3::Models::SourceResultTest < Ruby::TestCase
   end
 
   def test_id
-    assert_raises(ArgumentError) { Calculations::V3::Models::SourceResult.new(nil) }
-    assert_raises(ArgumentError) { Calculations::V3::Models::SourceResult.new("id") }
+    assert_raises(ArgumentError) { Calculations::V3::Models::SourceResult.new(id: nil) }
+    assert_raises(ArgumentError) { Calculations::V3::Models::SourceResult.new(id: "id") }
+  end
+
+  def test_event_category
+    assert_raises(ArgumentError) { Calculations::V3::Models::SourceResult.new(event_category: nil) }
   end
 
   def test_rejected
