@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../../../test_case"
-require_relative "../../../../../app/models/calculations"
-require_relative "../../../../../app/models/calculations/v3"
-require_relative "../../../../../app/models/calculations/v3/calculator"
-require_relative "../../../../../app/models/calculations/v3/models"
-require_relative "../../../../../app/models/calculations/v3/models/calculated_result"
-require_relative "../../../../../app/models/calculations/v3/models/event_category"
-require_relative "../../../../../app/models/calculations/v3/steps"
-require_relative "../../../../../app/models/calculations/v3/steps/place"
+require_relative "../v3"
 
 # :stopdoc:
 class Calculations::V3::PlaceTest < Ruby::TestCase
