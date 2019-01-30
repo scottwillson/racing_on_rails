@@ -15,6 +15,7 @@ class Calculations::V3::Models::SourceResult
     @event_category = event_category
     @participant = participant
     @place = place
+    @points = nil
 
     validate!
   end
