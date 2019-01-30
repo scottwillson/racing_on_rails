@@ -10,8 +10,10 @@ require_relative "../../../../../../app/models/calculations/v3/models/source_res
 # :stopdoc:
 class Calculations::V3::Models::CalculatedResultTest < Ruby::TestCase
   def test_initialize
+    category = Calculations::V3::Models::Category.new("A")
+    event_category = Calculations::V3::Models::EventCategory.new(category)
+    sources = [Calculations::V3::Models::SourceResult.new(id: 11, event_category: event_category)]
     participant = Calculations::V3::Models::Participant.new(1)
-    sources = [Calculations::V3::Models::SourceResult.new(id: 11)]
 
     result = Calculations::V3::Models::CalculatedResult.new(participant, sources)
 

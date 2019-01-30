@@ -19,6 +19,7 @@ class Calculations::V3::SumPointsTest < Ruby::TestCase
     participant = Calculations::V3::Models::Participant.new(0)
     source_result = Calculations::V3::Models::SourceResult.new(
       id: 33,
+      event_category: Calculations::V3::Models::EventCategory.new(category),
       participant: participant,
       place: "19"
     )
