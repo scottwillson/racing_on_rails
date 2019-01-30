@@ -27,26 +27,26 @@ module Calculations
       attr_reader :rules
       attr_reader :source_results
 
-      def initialize(logger: Logger.new(STDOUT, level: :fatal), rules: Calculations::V3::Rules.new, source_results: [])
-        raise(ArgumentError, "rules should be Calculations::V3::Rules, but are #{rules.class}") unless rules.is_a?(Calculations::V3::Rules)
+      def initialize(logger: Logger.new(STDOUT, level: :fatal), rules: Rules.new, source_results: [])
+        raise(ArgumentError, "rules should be Rules, but are #{rules.class}") unless rules.is_a?(Rules)
 
         @logger = logger
         @rules = rules
         @source_results = source_results
 
         @event_categories = rules.categories.map do |category|
-          Calculations::V3::Models::EventCategory.new(category)
+          Models::EventCategory.new(category)
         end
       end
 
       # Do the work, all in memory with Ruby classes
       def calculate!
-        @logger.debug "Calculations::V3::Calculator#calculate! source_results: #{source_results.size}"
+        @logger.debug "Calculator#calculate! source_results: #{source_results.size}"
 
-        calculate_step(Calculations::V3::Steps::MapSourceResultsToResults)
-          .calculate_step(Calculations::V3::Steps::AssignPoints)
-          .calculate_step(Calculations::V3::Steps::SumPoints)
-          .calculate_step(Calculations::V3::Steps::Place)
+        calculate_step(Steps::MapSourceResultsToResults)
+          .calculate_step(Steps::AssignPoints)
+          .calculate_step(Steps::SumPoints)
+          .calculate_step(Steps::Place)
           .event_categories
       end
 
@@ -61,7 +61,7 @@ module Calculations
         results_count_after = @event_categories.flat_map(&:results).size
         rejections_count_after = @event_categories.flat_map(&:results).flat_map(&:source_results).select(&:rejected?).size
         formatted_time = format("%.1fms", time.real)
-        @logger.debug "Calculations::V3::Steps::#{step}#calculate! duration: #{formatted_time} results: #{results_count_before} to #{results_count_after} rejections: #{rejections_count_before} to #{rejections_count_after}"
+        @logger.debug "Steps::#{step}#calculate! duration: #{formatted_time} results: #{results_count_before} to #{results_count_after} rejections: #{rejections_count_before} to #{rejections_count_after}"
 
         self
       end
