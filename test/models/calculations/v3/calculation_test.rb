@@ -80,15 +80,15 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
 
   test "series #calculate!" do
     previous_year_series = WeeklySeries.create!(date: 1.year.ago)
-    category = Category.find_or_create_by(name: "Men A")
+    men_a = Category.find_or_create_by(name: "Men A")
     source_child_event = previous_year_series.children.create!(date: 1.year.ago)
-    source_race = source_child_event.races.create!(category: category)
+    source_race = source_child_event.races.create!(category: men_a)
     source_race.results.create!(place: 1, person: FactoryBot.create(:person))
     source_race.results.create!(place: 2, person: FactoryBot.create(:person))
 
     different_series = WeeklySeries.create!
     source_child_event = different_series.children.create!
-    source_race = source_child_event.races.create!(category: category)
+    source_race = source_child_event.races.create!(category: men_a)
     person_1 = FactoryBot.create(:person)
     source_race.results.create!(place: 1, person: person_1)
     source_race.results.create!(place: 2, person: FactoryBot.create(:person))
@@ -97,20 +97,25 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     source_child_event = series.children.create!
 
     calculation = series.calculations.create!(points_for_place: [100, 90, 75, 50, 40, 30, 20, 10])
-    calculation.categories << category
+    calculation.categories << men_a
 
-    source_race = source_child_event.races.create!(category: category)
+    source_race = source_child_event.races.create!(category: men_a)
     source_result_1 = source_race.results.create!(place: 1, person: person_1)
     person_2 = FactoryBot.create(:person)
     source_result_2 = source_race.results.create!(place: 2, person: person_2)
+
+    women_a = Category.find_or_create_by(name: "Women A")
+    source_race = source_child_event.races.create!(category: women_a)
+    person_3 = FactoryBot.create(:person)
+    women_source_result = source_race.results.create!(place: 1, person: person_3)
 
     calculation.calculate!
 
     overall = calculation.reload.event
     assert series.children.reload.include?(overall), "should add overall as child event"
 
-    assert_equal 1, overall.races.size
-    men_a_overall_race = overall.races.detect { |race| race.category == category }
+    assert_equal 2, overall.races.size
+    men_a_overall_race = overall.races.detect { |race| race.category == men_a }
     assert_not_nil(men_a_overall_race, "Should have Men A overall race")
 
     results = men_a_overall_race.results.sort
@@ -137,6 +142,22 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     assert_equal 90, source.points
     assert_nil source.rejection_reason
     assert_equal source_result_2, source.source_result
+
+    women_a_overall_race = overall.races.detect { |race| race.category == women_a }
+    assert_not_nil(women_a_overall_race, "Should have Women A overall race")
+
+    results = women_a_overall_race.results.sort
+    assert_equal 1, results.size
+
+    result = results.first
+    assert_equal person_3, result.person
+    assert_equal "1", result.place
+    assert_equal 100, result.points
+    assert_equal 1, result.sources.size
+    source = result.sources.first
+    assert_equal 100, source.points
+    assert_nil source.rejection_reason
+    assert_equal source_result_3, source.source_result
   end
 
   test "#source_results" do
