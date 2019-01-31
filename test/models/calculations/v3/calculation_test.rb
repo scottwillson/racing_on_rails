@@ -80,7 +80,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
 
   test "series #calculate!" do
     previous_year_series = WeeklySeries.create!(date: 1.year.ago)
-    men_a = Category.find_or_create_by(name: "Men A")
+    men_a = Category.find_or_create_by_normalized_name("Men A")
     source_child_event = previous_year_series.children.create!(date: 1.year.ago)
     source_race = source_child_event.races.create!(category: men_a)
     source_race.results.create!(place: 1, person: FactoryBot.create(:person))
@@ -104,7 +104,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     person_2 = FactoryBot.create(:person)
     source_result_2 = source_race.results.create!(place: 2, person: person_2)
 
-    women_a = Category.find_or_create_by(name: "Women A")
+    women_a = Category.find_or_create_by_normalized_name("Women A")
     source_race = source_child_event.races.create!(category: women_a)
     person_3 = FactoryBot.create(:person)
     source_race.results.create!(place: 1, person: person_3)
