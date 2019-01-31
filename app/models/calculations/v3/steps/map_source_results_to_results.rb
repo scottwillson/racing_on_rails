@@ -4,10 +4,11 @@ module Calculations
   module V3
     module Steps
       module MapSourceResultsToResults
+        # Put source results in "best" calculated event category.
+        # Unmatched categories are added, too, for audit, but will be given no points
         def self.calculate!(calculator)
           calculator.source_results.each do |source_result|
-            event_category = calculator.event_categories.find { |c| c.category == source_result.event_category.category }
-            raise("Could not find calculated event category in #{calculator.event_categories.map(&:category).flat_map(&:name).sort} for #{source_result.event_category.category.name}") unless event_category
+            event_category = find_or_create_event_category(source_result, calculator)
 
             calculated_result = event_category.results.find { |r| r.participant.id == source_result.participant.id }
             if calculated_result
@@ -21,6 +22,16 @@ module Calculations
           end
 
           calculator.event_categories
+        end
+
+        def self.find_or_create_event_category(source_result, calculator)
+          event_category = calculator.event_categories.find { |c| c.category == source_result.event_category.category }
+          return event_category if event_category
+
+          event_category = Models::EventCategory.new(source_result.event_category.category)
+          calculator.event_categories << event_category
+
+          event_category
         end
       end
     end

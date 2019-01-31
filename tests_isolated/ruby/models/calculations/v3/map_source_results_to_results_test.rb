@@ -33,6 +33,37 @@ module Calculations
         assert_equal "19", result.source_results.first.place
       end
 
+      def test_add_missing_categories
+        participant = Models::Participant.new(0)
+        category = Models::Category.new("Masters Men")
+
+        source_result = Models::SourceResult.new(
+          id: 33,
+          event_category: Models::EventCategory.new(category),
+          participant: participant,
+          place: "19"
+        )
+        source_results = [source_result]
+
+        event_category = Models::Category.new("Masters Women")
+        rules = Rules.new(categories: [event_category])
+        calculator = Calculator.new(rules: rules, source_results: source_results)
+
+        event_categories = Steps::MapSourceResultsToResults.calculate!(calculator)
+
+        assert_equal 2, event_categories.size
+        assert_equal ["Masters Men", "Masters Women"], event_categories.map(&:name).sort
+
+        event_category = event_categories.detect { |ec| ec.name == "Masters Men" }
+        assert_equal 1, event_category.results.size
+        result = event_category.results.first
+        assert_equal 0, result.participant.id
+
+        assert_equal 1, result.source_results.size
+        assert_equal 33, result.source_results.first.id
+        assert_equal "19", result.source_results.first.place
+      end
+
       def test_group_by_participant_id
         source_results = []
         category = Models::Category.new("Masters Men")
