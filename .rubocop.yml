@@ -53,7 +53,7 @@ StringLiterals:
 Style/GuardClause:
   Enabled: false
 
-Style/IfUnlessModifer:
+Style/IfUnlessModifier:
   Enabled: false
 
 Style/ClassAndModuleChildren:
