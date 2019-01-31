@@ -27,7 +27,7 @@ class Category < ApplicationRecord
 
   acts_as_list
 
-  has_and_belongs_to_many :calculations
+  has_and_belongs_to_many :calculations # rubocop:disable Rails/HasAndBelongsToMany
   has_many :results
   has_many :races
 

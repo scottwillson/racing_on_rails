@@ -1,4 +1,7 @@
 inherit_from: ../../.rubocop.yml
 
+Metrics/BlockLength:
+  Max: 100
+
 Metrics/AbcSize:
   Max: 80
