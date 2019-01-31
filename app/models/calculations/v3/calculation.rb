@@ -73,23 +73,25 @@ class Calculations::V3::Calculation < ApplicationRecord
   # Change to generic persist
   # Destroy obsolete races
   def save_results(event_categories)
-    event_categories.each do |event_category|
-      category = Category.find_or_create_by_normalized_name(event_category.name)
-      race = event.races.find_or_create_by!(category: category)
+    ActiveSupport::Notifications.instrument "save_results.calculations.#{name}.racing_on_rails" do
+      event_categories.each do |event_category|
+        category = Category.find_or_create_by_normalized_name(event_category.name)
+        race = event.races.find_or_create_by!(category: category)
 
-      event_category.results.each do |result|
-        person = Person.find(result.participant.id)
-        result_record = race.results.create!(
-          person: person,
-          place: result.place,
-          points: result.points
-        )
-
-        result.source_results.each do |source_result|
-          result_record.sources.create!(
-            points: source_result.points,
-            source_result_id: source_result.id
+        event_category.results.each do |result|
+          person = Person.find(result.participant.id)
+          result_record = race.results.create!(
+            person: person,
+            place: result.place,
+            points: result.points
           )
+
+          result.source_results.each do |source_result|
+            result_record.sources.create!(
+              points: source_result.points,
+              source_result_id: source_result.id
+            )
+          end
         end
       end
     end
