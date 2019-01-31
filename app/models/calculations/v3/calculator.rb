@@ -71,6 +71,12 @@ module Calculations
 
         self
       end
+
+      def validate!
+        if event_categories.size != event_categories.uniq.size
+          raise("Duplicate categories in #{event_categories.map(&:name).sort}")
+        end
+      end
     end
   end
 end
