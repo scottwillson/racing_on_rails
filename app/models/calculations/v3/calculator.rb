@@ -61,13 +61,13 @@ module Calculations
         results_count_after = @event_categories.flat_map(&:results).size
         rejections_count_after = @event_categories.flat_map(&:results).flat_map(&:source_results).select(&:rejected?).size
         formatted_time = format("%.1fms", time.real)
-        @logger.debug(<<-MSG
+        @logger.debug(<<~MSG
           Steps::#{step}#calculate!
           duration: #{formatted_time}
           results: #{results_count_before} to #{results_count_after}
           rejections: #{rejections_count_before} to #{rejections_count_after}
-          MSG
-        )
+        MSG
+                     )
 
         self
       end

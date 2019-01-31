@@ -45,7 +45,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them
   def results_to_models(source_results)
     source_results.map do |result|
-      category = Calculations::V3::Models::Category.new("")
+      category = Calculations::V3::Models::Category.new(result.race_name)
       Calculations::V3::Models::SourceResult.new(
         id: result.id,
         event_category: Calculations::V3::Models::EventCategory.new(category),
@@ -74,7 +74,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   # Destroy obsolete races
   def save_results(event_categories)
     event_categories.each do |event_category|
-      category = Category.find_or_create_by(name: event_category.name)
+      category = Category.find_or_create_by_normalized_name(event_category.name)
       race = event.races.create!(category: category)
 
       event_category.results.each do |result|
