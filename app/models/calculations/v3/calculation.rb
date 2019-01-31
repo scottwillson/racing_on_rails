@@ -75,7 +75,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   def save_results(event_categories)
     event_categories.each do |event_category|
       category = Category.find_or_create_by_normalized_name(event_category.name)
-      race = event.races.create!(category: category)
+      race = event.races.find_or_create_by!(category: category)
 
       event_category.results.each do |result|
         person = Person.find(result.participant.id)
