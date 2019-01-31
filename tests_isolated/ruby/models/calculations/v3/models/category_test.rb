@@ -39,6 +39,25 @@ module Calculations
           refute_equal nil, a
           refute_equal nil, d
         end
+
+        def test_hash
+          a = Category.new("Women")
+          b = Category.new("Women")
+          c = Category.new("Women")
+          d = Category.new("Men")
+
+          assert_equal a.hash, a.hash
+          assert_equal a.hash, b.hash
+          assert_equal a.hash, c.hash
+          assert_equal d.hash, d.hash
+          refute_equal a.hash, d.hash
+          refute_equal b.hash, d.hash
+          refute_equal c.hash, d.hash
+          refute_equal a.hash, nil.hash
+          refute_equal d.hash, nil.hash
+          refute_equal nil.hash, a.hash
+          refute_equal nil.hash, d.hash
+        end
       end
     end
   end

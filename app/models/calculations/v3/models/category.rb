@@ -17,6 +17,14 @@ module Calculations
 
           other.name == name
         end
+
+        def eql?(other)
+          self == other
+        end
+
+        def hash
+          name&.hash
+        end
       end
     end
   end

@@ -22,6 +22,16 @@ module Calculations
         assert_equal 1, calculator.event_categories.size
         assert_equal "Masters Men", calculator.event_categories.first.name
       end
+
+      def test_validate
+        calculator = Calculator.new
+        calculator.validate!
+
+        calculator.event_categories << Models::EventCategory.new(Models::Category.new("Masters Men"))
+        calculator.validate!
+        calculator.event_categories << Models::EventCategory.new(Models::Category.new("Masters Men"))
+        assert_raises(RuntimeError) { calculator.validate! }
+      end
     end
   end
 end

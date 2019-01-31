@@ -25,6 +25,20 @@ module Calculations
           raise(ArgumentError, "category is required") unless category
           raise(ArgumentError, "category must be a Models::Category, but is a #{category.class}") unless category.is_a?(Models::Category)
         end
+
+        def ==(other)
+          return false if other.nil?
+
+          other.category == category
+        end
+
+        def eql?(other)
+          self == other
+        end
+
+        def hash
+          category&.hash
+        end
       end
     end
   end
