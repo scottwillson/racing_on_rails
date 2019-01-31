@@ -117,6 +117,7 @@ module Calculations
         source_results = []
         masters_men = Models::Category.new("Masters Men")
         junior_women = Models::Category.new("Junior Women")
+        rejected_category = Models::Category.new("Category 3")
 
         participant_1 = Models::Participant.new(0)
         source_results << Models::SourceResult.new(
@@ -141,11 +142,25 @@ module Calculations
           place: "3"
         )
 
+        source_results << Models::SourceResult.new(
+          id: 36,
+          event_category: Models::EventCategory.new(rejected_category),
+          participant: participant_2,
+          place: "19"
+        )
+
+        source_results << Models::SourceResult.new(
+          id: 37,
+          event_category: Models::EventCategory.new(rejected_category),
+          participant: participant_1,
+          place: "7"
+        )
+
         rules = Rules.new(categories: [masters_men, junior_women])
         calculator = Calculator.new(rules: rules, source_results: source_results)
 
         event_categories = Steps::MapSourceResultsToResults.calculate!(calculator)
-        assert_equal 2, event_categories.size
+        assert_equal 3, event_categories.size, event_categories.map(&:name)
         junior_women_event_category = event_categories.find { |ec| ec.category == junior_women }
         assert_equal 1, junior_women_event_category.results.size
         masters_men_event_category = event_categories.find { |ec| ec.category == masters_men }

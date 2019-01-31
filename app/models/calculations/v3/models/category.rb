@@ -11,6 +11,12 @@ module Calculations
         def initialize(name)
           @name = name
         end
+
+        def ==(other)
+          return false if other.nil?
+
+          other.name == name
+        end
       end
     end
   end

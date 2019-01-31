@@ -107,14 +107,14 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     women_a = Category.find_or_create_by_normalized_name("Women A")
     source_race = source_child_event.races.create!(category: women_a)
     person_3 = FactoryBot.create(:person)
-    source_race.results.create!(place: 1, person: person_3)
+    source_result_3 = source_race.results.create!(place: 1, person: person_3)
 
     calculation.calculate!
 
     overall = calculation.reload.event
     assert series.children.reload.include?(overall), "should add overall as child event"
 
-    assert_equal 2, overall.races.size
+    assert_equal 2, overall.races.size, overall.races.map(&:name)
     men_a_overall_race = overall.races.detect { |race| race.category == men_a }
     assert_not_nil(men_a_overall_race, "Should have Men A overall race")
 
