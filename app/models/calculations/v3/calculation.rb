@@ -79,11 +79,11 @@ class Calculations::V3::Calculation < ApplicationRecord
         race = event.races.find_or_create_by!(category: category)
 
         event_category.results.each do |result|
-          person = Person.find(result.participant.id)
           result_record = race.results.create!(
-            person: person,
+            person_id: result.participant.id,
             place: result.place,
-            points: result.points
+            points: result.points,
+            team_id: team_id(result)
           )
 
           result.source_results.each do |source_result|
@@ -95,5 +95,9 @@ class Calculations::V3::Calculation < ApplicationRecord
         end
       end
     end
+  end
+
+  def team_id(result)
+    Person.where(id: result.participant.id).pluck(:team_id).first
   end
 end
