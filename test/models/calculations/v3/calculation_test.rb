@@ -89,8 +89,9 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     different_series = WeeklySeries.create!
     source_child_event = different_series.children.create!
     source_race = source_child_event.races.create!(category: men_a)
-    person_1 = FactoryBot.create(:person)
-    source_race.results.create!(place: 1, person: person_1)
+    team = FactoryBot.create(:team)
+    person_1 = FactoryBot.create(:person, team: team)
+    source_race.results.create!(place: 1, person: person_1, team: team)
     source_race.results.create!(place: 2, person: FactoryBot.create(:person))
 
     series = WeeklySeries.create!
@@ -100,7 +101,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     calculation.categories << men_a
 
     source_race = source_child_event.races.create!(category: men_a)
-    source_result_1 = source_race.results.create!(place: 1, person: person_1)
+    source_result_1 = source_race.results.create!(place: 1, person: person_1, team: team)
     person_2 = FactoryBot.create(:person)
     source_result_2 = source_race.results.create!(place: 2, person: person_2)
 
@@ -125,6 +126,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     assert_equal person_1, result.person
     assert_equal "1", result.place
     assert_equal 100, result.points
+    assert_equal team, result.team
 
     assert_equal 1, result.sources.size
     source = result.sources.first
