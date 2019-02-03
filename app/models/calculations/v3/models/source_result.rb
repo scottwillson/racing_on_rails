@@ -19,8 +19,13 @@ module Calculations
           @participant = participant
           @place = place
           @points = nil
+          @rejected = false
 
           validate!
+        end
+
+        def category
+          event_category&.category
         end
 
         def numeric_place
@@ -31,8 +36,12 @@ module Calculations
           @points || 0
         end
 
+        def reject
+          @rejected = true
+        end
+
         def rejected?
-          false
+          @rejected
         end
 
         def validate!
