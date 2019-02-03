@@ -9,7 +9,7 @@ module Calculations
         def self.calculate!(calculator)
           calculator.source_results.each do |source_result|
             unless calculator.rules.categories.include?(source_result.category)
-              source_result.reject
+              source_result.reject "not_calculation_category"
             end
 
             event_category = find_or_create_event_category(source_result, calculator)
@@ -33,6 +33,7 @@ module Calculations
           return event_category if event_category
 
           event_category = Models::EventCategory.new(source_result.event_category.category)
+          event_category.reject "not_calculation_category"
           calculator.event_categories << event_category
 
           event_category

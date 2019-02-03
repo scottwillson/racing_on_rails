@@ -8,13 +8,24 @@ module Calculations
         attr_reader :participant
         attr_accessor :place
         attr_accessor :points
+        attr_accessor :rejection_reason
         attr_reader :source_results
 
         def initialize(participant, source_results)
           @participant = participant
+          @rejected = false
           @source_results = source_results
 
           validate!
+        end
+
+        def reject(reason)
+          @rejection_reason = reason
+          @rejected = true
+        end
+
+        def rejected?
+          @rejected
         end
 
         def validate!

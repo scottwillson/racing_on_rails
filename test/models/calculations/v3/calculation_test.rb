@@ -147,18 +147,21 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
 
     women_a_overall_race = overall.races.detect { |race| race.category == women_a }
     assert_not_nil(women_a_overall_race, "Should have Women A overall race")
+    assert women_a_overall_race.rejected?
+    assert_equal "not_calculation_category", women_a_overall_race.rejection_reason
 
     results = women_a_overall_race.results.sort
     assert_equal 1, results.size
 
     result = results.first
     assert_equal person_3, result.person
-    assert_equal "1", result.place
-    assert_equal 100, result.points
+    assert_equal "", result.place
+    assert_equal 0, result.points
     assert_equal 1, result.sources.size
     source = result.sources.first
-    assert_equal 100, source.points
-    assert_nil source.rejection_reason
+    assert_equal 0, source.points
+    assert source.rejected?
+    assert_equal "not_calculation_category", source.rejection_reason
     assert_equal source_result_3, source.source_result
   end
 

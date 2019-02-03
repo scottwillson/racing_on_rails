@@ -7,14 +7,26 @@ module Calculations
       # A "Race" in the older domain model.
       class EventCategory
         attr_reader :category
+        attr_accessor :rejection_reason
 
         def initialize(category)
           @category = category
+          @rejected = false
+
           validate!
         end
 
         def name # rubocop:disable Rails/Delegate
           category.name
+        end
+
+        def reject(reason)
+          @rejection_reason = reason
+          @rejected = true
+        end
+
+        def rejected?
+          @rejected
         end
 
         def results

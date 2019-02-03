@@ -76,19 +76,27 @@ class Calculations::V3::Calculation < ApplicationRecord
     ActiveSupport::Notifications.instrument "save_results.calculations.#{name}.racing_on_rails" do
       event_categories.each do |event_category|
         category = Category.find_or_create_by_normalized_name(event_category.name)
-        race = event.races.find_or_create_by!(category: category)
+        race = event.races.find_or_create_by!(
+          category: category,
+          rejected: event_category.rejected?,
+          rejection_reason: event_category.rejection_reason
+        )
 
         event_category.results.each do |result|
           result_record = race.results.create!(
             person_id: result.participant.id,
             place: result.place,
             points: result.points,
+            rejected: result.rejected?,
+            rejection_reason: result.rejection_reason,
             team_id: team_id(result)
           )
 
           result.source_results.each do |source_result|
             result_record.sources.create!(
               points: source_result.points,
+              rejected: source_result.rejected?,
+              rejection_reason: source_result.rejection_reason,
               source_result_id: source_result.id
             )
           end

@@ -8,7 +8,9 @@ module Calculations
           calculator.event_categories.each do |category|
             category.results.each do |result|
               result.source_results.each do |source_result|
-                source_result.points = points_for_place(source_result, calculator.rules.points_for_place)
+                unless category.rejected?
+                  source_result.points = points_for_place(source_result, calculator.rules.points_for_place)
+                end
               end
             end
           end
