@@ -8,6 +8,8 @@ module Calculations
           calculator.event_categories.each do |category|
             place = 0
             category.results.sort_by!(&:points).reverse!.each do |result|
+              next if category.rejected?
+
               place += 1
               result.place = place.to_s
             end

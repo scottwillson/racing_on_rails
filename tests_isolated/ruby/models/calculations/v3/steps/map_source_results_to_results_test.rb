@@ -28,7 +28,7 @@ module Calculations
           assert_equal 1, event_categories.first.results.size
           result = event_categories.first.results.first
           assert_equal 0, result.participant.id
-          # refute event_categories.first.rejected?
+          refute event_categories.first.rejected?
           # refute result.rejected?
 
           assert_equal 1, result.source_results.size
@@ -63,7 +63,7 @@ module Calculations
           result = event_category.results.first
           assert_equal 0, result.participant.id
           # assert result.rejected?
-          # assert event_category.rejected?
+          assert event_category.rejected?
 
           assert_equal 1, result.source_results.size
           assert_equal 33, result.source_results.first.id

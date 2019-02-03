@@ -12,6 +12,7 @@ module Calculations
         attr_reader :participant
         attr_accessor :place
         attr_writer :points
+        attr_accessor :rejection_reason
 
         def initialize(id: nil, event_category: nil, participant: nil, place: nil)
           @id = id
@@ -36,7 +37,8 @@ module Calculations
           @points || 0
         end
 
-        def reject
+        def reject(reason)
+          @rejection_reason = reason
           @rejected = true
         end
 

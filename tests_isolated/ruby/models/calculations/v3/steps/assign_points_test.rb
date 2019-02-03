@@ -31,6 +31,26 @@ module Calculations
           assert_equal 100, event_categories.first.results[0].source_results.first.points
           assert_equal 75, event_categories.first.results[1].source_results.first.points
         end
+
+        def test_skip_rejcted_categoeies
+          category = Models::Category.new("Masters Men")
+          rules = Rules.new(
+            categories: [category],
+            points_for_place: [100, 75, 50, 20, 10]
+          )
+          calculator = Calculator.new(rules: rules, source_results: [])
+          event_category = calculator.event_categories.first
+
+          source_result = Models::SourceResult.new(id: 33, event_category: Models::EventCategory.new(category), place: 1)
+          participant = Models::Participant.new(0)
+          result = Models::CalculatedResult.new(participant, [source_result])
+          event_category.results << result
+
+          event_category.reject("nope")
+          event_categories = AssignPoints.calculate!(calculator)
+
+          assert_equal 0, event_categories.first.results[0].source_results.first.points
+        end
       end
     end
   end

@@ -64,6 +64,29 @@ module Calculations
           assert_equal "3", calculator.event_categories.first.results[2].place
           assert_equal result_2, calculator.event_categories.first.results[2]
         end
+
+        def test_do_not_place_rejected
+          category = Models::Category.new("Masters Men")
+          rules = Rules.new(categories: [category])
+
+          participant = Models::Participant.new(0)
+          source_result = Models::SourceResult.new(
+            id: 33,
+            event_category: Models::EventCategory.new(category),
+            participant: participant,
+            place: "19"
+          )
+          result = Models::CalculatedResult.new(participant, [source_result])
+
+          calculator = Calculator.new(rules: rules, source_results: [source_result])
+          event_category = calculator.event_categories.first
+          event_category.results << result
+
+          event_category.reject("not_allowed")
+          Place.calculate! calculator
+
+          assert_nil calculator.event_categories.first.results.first.place
+        end
       end
     end
   end
