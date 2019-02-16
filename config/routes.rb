@@ -137,6 +137,12 @@ Rails.application.routes.draw do
     get "/bar/:year/:discipline/:category" => "competitions/bar#show", as: "bar_full"
     get "/bar(/:year(/:discipline(/:category)))" => "competitions/bar#show", as: "bar", defaults: { discipline: "overall", category: "senior_men" }
 
+    namespace :calculations do
+      resources :events do
+        resources :results
+      end
+    end
+
     get "/cat4_womens_race_series/:year" => "competitions/competitions#show", as: :cat4_womens_race_series, type: "cat4_womens_race_series", constraints: { year: /\d{4}/ }
     get "/cat4_womens_race_series" => "competitions/competitions#show", type: "cat4_womens_race_series"
 

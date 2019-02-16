@@ -38,6 +38,8 @@
   <p class="created_updated">Updated <%= @event.updated_at.to_formatted_s :long_and_friendly_date_and_time %></p>
   <% end %>
 
+  <p class="event_notes"><%= link_to "Show all results", calculations_event_results_path(@event) %></p>
+
   <% ActiveSupport::Notifications.instrument "@event.results.racing_on_rails", event_id: @event.id, event_name: @event.name do %>
     <% @races.select(&:any_results?).select(&:visible?).reject(&:rejected?).sort.each do |race| %>
       <h3 class="race" id="race_<%= race.id %>"><%= link_to race.name, category_races_path(race.category) %><% if race.distance.present? && race.distance > 0 %> (<%= race.distance %> miles)<% end %></h3>
