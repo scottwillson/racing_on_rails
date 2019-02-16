@@ -36,5 +36,13 @@ class CalculationsTest < AcceptanceTest
 
     assert_page_has_no_content "Women B"
     assert_page_has_no_content "Liz B-Racer"
+
+    click_link "Show all results"
+    assert_page_has_content "Women A"
+    assert_page_has_content "Jane Racer"
+    assert_page_has_content 100
+
+    assert_page_has_content "Women B"
+    assert_page_has_content "Liz B-Racer"
   end
 end
