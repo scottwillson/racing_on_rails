@@ -1,1 +1,47 @@
-<h4>Nothing here yet</h4>
+<% @page_title = "Results: #{@event.date.year}: #{@event.full_name}" %>
+
+<% cache cache_key(@event) do %>
+  <h2><%= @event.full_name %></h2>
+
+  <div class="row event_info">
+    <%- if @event.multiple_days? -%>
+      <%= @event.date_range_long_s %>
+    <%- else -%>
+      <%= @event.date.to_formatted_s(:long) %>
+    <%- end -%>
+
+    <%- if @event.parent -%>
+    <p>Part of the <%= link_to @event.parent.name, event_results_path(@event.parent) %></p>
+    <%- end -%>
+  </div>
+
+  <%= render partial: "races", locals: { races: @races } %>
+
+  <%- if @event.notes.present? -%>
+    <%= tag.div class: notes_class(@event) do -%>
+      <%= @event.notes.html_safe -%>
+    <%- end -%>
+  <%- end -%>
+
+  <%- if @races.empty? -%>
+  <p class="event_notes">No results for <%= @event.year %></p>
+  <%- end -%>
+
+  <p class="created_updated">Updated <%= @event.updated_at.to_formatted_s :long_and_friendly_date_and_time %></p>
+
+  <% ActiveSupport::Notifications.instrument "@event.results.calculations.racing_on_rails", event_id: @event.id, event_name: @event.name do %>
+    <% @races.select(&:any_results?).select(&:visible?).sort.each do |race| %>
+      <%= tag.h3(
+            class: (race&.rejected? ? %w( race rejected ) : :race),
+            id: "race_#{race.id}"
+      ) do %><%= link_to race.name, category_races_path(race.category) %><% if race.distance.present? && race.distance > 0 %> (<%= race.distance %> miles)<% end %>
+      <% end -%>
+      <%- if race.rejected? -%>
+        <p class="event_notes">
+          <%= t race.rejection_reason, category: race.category_name %>
+        </p>
+        <% end -%>
+      <%= results_table @event, race %>
+    <% end -%>
+  <%- end -%>
+<% end %>

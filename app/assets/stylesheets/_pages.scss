@@ -386,6 +386,10 @@ table.base td.total_points {
   padding-right: $line-height-computed;
 }
 
+.race.rejected a {
+  font-style: italic;
+}
+
 table.child_single_day_events, .source_events {
   display: inline-table;
 }

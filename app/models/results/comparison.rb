@@ -85,9 +85,12 @@ module Results
     end
 
     # Poor name. For comparison, we sort by placed, finished, DNF, etc
+    # Rejected calculation results are last
     def major_place
       if numeric_place?
         0
+      elsif rejected?
+        5
       elsif place.blank? || place == 0
         1
       elsif place.casecmp("DNF").zero?
@@ -97,19 +100,29 @@ module Results
       elsif place.casecmp("DNS").zero?
         4
       else
-        5
+        6
       end
     end
 
     # All numbered places first, then blanks, followed by DNF, DQ, and DNS
     def <=>(other)
       # Respect eql?
-      return 0 if id.present? && (id == other.try(:id))
+      return 0 if id.present? && (id == other&.id)
 
-      # Figure out the major position by place first, then break it down further if
+      # Figure out the major position by place first, then break it down further if needed
       begin
         major_difference = (major_place <=> other.major_place)
-        return major_difference if major_difference != 0
+        if major_difference != 0
+          if rejected? && other.rejected?
+            if last_name == other.last_name
+              return first_name <=> other.first_name
+            else
+              return last_name <=> other.last_name
+            end
+          else
+            return major_difference
+          end
+        end
 
         if numeric_place?
           numeric_place <=> other.numeric_place
