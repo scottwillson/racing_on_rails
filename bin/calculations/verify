@@ -1,0 +1,32 @@
+#!/usr/bin/env bin/rails runner
+
+# Quick and dirty script to fetch old data and recalc competitions
+
+# Dir.chdir("tmp/db") do
+#   unless File.exist?("bushtit_obra_sql")
+#     puts `scp nutcracker.rocketsurgeryllc.com:/mnt/bak4/daily/bushtit_obra_sql-2018-12-05.tar.gz .`
+#     puts `tar xf bushtit_obra_sql-2018-12-05.tar.gz`
+#   end
+# end
+
+#puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists obra_development'`
+#puts `bundle exec rake db:setup RAILS_ENV=development`
+#puts `mysql -u root obra_development < tmp/db/production.sql`
+# puts `bundle exec rake db:migrate`
+#
+tabor = WeeklySeries.find(26072)
+# calculation = tabor.calculations.create!(points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11])
+# calculation.categories << Category.find_or_create_by(name: "Senior Men")
+# calculation.calculate!
+#
+overall = Event.find(26708)
+expected_races = overall.races.map(&:name).sort
+calculation_event = tabor.calculations.last.event
+actual_races = calculation_event.races.reject(&:rejected?).map(&:name).sort
+
+if expected_races != actual_races
+  puts "Tabor races"
+  puts "expected: #{expected_races}"
+  puts "actual:   #{actual_races}"
+  puts "diff:     #{expected_races - actual_races}"
+end
