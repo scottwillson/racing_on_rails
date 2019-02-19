@@ -8,7 +8,8 @@ module Calculations
         # Unmatched categories are added, too, for audit, but will be given no points
         def self.calculate!(calculator)
           calculator.source_results.each do |source_result|
-            unless calculator.rules.categories.include?(source_result.category)
+            source_result_in_calculation_category = calculator.rules.categories.include?(source_result.category)
+            unless source_result_in_calculation_category
               source_result.reject "not_calculation_category"
             end
 
@@ -18,10 +19,15 @@ module Calculations
             if calculated_result
               calculated_result.source_results << source_result
             else
-              event_category.results << Models::CalculatedResult.new(
+              calculated_result = Models::CalculatedResult.new(
                 Models::Participant.new(source_result.participant.id),
                 [source_result]
               )
+              unless source_result_in_calculation_category
+                calculated_result.reject "not_calculation_category"
+              end
+
+              event_category.results << calculated_result
             end
           end
 

@@ -1,2 +1,2 @@
 en:
-  hello: "Hello world"
+  not_calculation_category: "Results in %{category} do not count"

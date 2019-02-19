@@ -9,12 +9,34 @@ module Results
     class TestResult
       include Results::Comparison
 
-      attr_accessor :id, :person_id, :person_name, :preliminary, :place, :points, :team_id, :team_name
+      attr_accessor :first_name,
+                    :id,
+                    :last_name,
+                    :person_id,
+                    :person_name,
+                    :preliminary,
+                    :place,
+                    :points,
+                    :rejected,
+                    :team_id,
+                    :team_name
 
       def initialize(attr = {})
         attr.each do |k, v|
           send "#{k}=", v
         end
+      end
+
+      def numeric_place?
+        place && place.to_i > 0
+      end
+
+      def rejected?
+        @rejected
+      end
+
+      def inspect
+        "#<Result #{place} #{first_name} #{last_name}>"
       end
     end
 
@@ -62,6 +84,17 @@ module Results
       result_1 = TestResult.new(person_id: 2, person_name: "Chris", place: "3", points: 4, team_id: 5, team_name: "Mercury")
       result_2 = TestResult.new(person_id: 2, person_name: "Chris", place: "3", points: 4, team_id: 5, team_name: "Postal")
       assert result_1.competition_result_hash != result_2.competition_result_hash, "team_name different"
+    end
+
+    def test_rejected_results
+      first_place = TestResult.new(first_name: "Zach", last_name: "Taylor", place: "1")
+      rejected_1 = TestResult.new(first_name: "Abram", last_name: "McName", place: nil, rejected: true)
+      dq = TestResult.new(first_name: "Melodie", last_name: "Doe", place: "DQ")
+      rejected_2 = TestResult.new(first_name: "Yaz", last_name: "Smith", place: nil, rejected: true)
+      rejected_3 = TestResult.new(first_name: "Lori", last_name: "Smith", place: nil, rejected: true)
+
+      assert_equal [first_place, dq, rejected_1, rejected_3, rejected_2],
+                   [first_place, rejected_1, dq, rejected_2, rejected_3].sort
     end
 
     def test_nils
