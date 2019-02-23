@@ -492,4 +492,14 @@ class RaceTest < ActiveSupport::TestCase
     race.destroy_duplicate_results!
     assert_equal [result_1, result_2], race.results.reload
   end
+
+  test "sort rejected races last" do
+    races = [
+      Race.new(id: 0, category: Category.new(name: "Women A")),
+      Race.new(id: 1, category: Category.new(name: "Junior Women"), rejected: true),
+      Race.new(id: 2, category: Category.new(name: "Women B"))
+    ]
+
+    assert_equal ["Women A", "Women B", "Junior Women"], races.sort.map(&:name)
+  end
 end
