@@ -113,14 +113,14 @@ module Results
       begin
         major_difference = (major_place <=> other.major_place)
         if major_difference != 0
-          if rejected? && other.rejected?
-            if last_name == other.last_name
-              return first_name <=> other.first_name
-            else
-              return last_name <=> other.last_name
-            end
+          return major_difference
+        end
+
+        if rejected? && other.rejected?
+          if last_name == other.last_name
+            return first_name <=> other.first_name
           else
-            return major_difference
+            return last_name <=> other.last_name
           end
         end
 
