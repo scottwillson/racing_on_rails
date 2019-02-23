@@ -370,7 +370,15 @@ class Race < ApplicationRecord
 
   # By category name
   def <=>(other)
-    category.name <=> other.category.name
+    return -1 if other.nil?
+
+    if rejected?
+      return 1
+    elsif other.rejected?
+      return -1
+    end
+
+    category_name <=> other.category_name
   end
 
   def hash
