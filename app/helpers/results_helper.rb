@@ -9,7 +9,7 @@ module ResultsHelper
   RESULT_COLUMNS = %w[
     place number name team_name age city age_group category_class category_name points_bonus points_bonus_penalty
     points_from_place points_penalty points_total time_bonus_penalty time_gap_to_leader time_gap_to_previous
-    time_gap_to_winner points laps time time_total notes
+    time_gap_to_winner points laps time time_total notes rejection_reason
   ].freeze
 
   # results for pagination
@@ -57,6 +57,7 @@ module ResultsHelper
     table.renderers[:points_from_place] = Results::Renderers::PointsRenderer
     table.renderers[:points_penalty] = Results::Renderers::PointsRenderer
     table.renderers[:points_total] = Results::Renderers::PointsRenderer
+    table.renderers[:rejection_reason] = Results::Renderers::RejectionReasonRenderer
     render "results/table", table: table, css_class: "results"
   end
 
