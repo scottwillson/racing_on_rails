@@ -39,7 +39,7 @@ module Calculations
 
         def test_add_missing_categories
           participant = Models::Participant.new(0)
-          category = Models::Category.new("Masters Men")
+          category = Models::Category.new("Junior Men")
 
           source_result = Models::SourceResult.new(
             id: 33,
@@ -56,9 +56,9 @@ module Calculations
           event_categories = MapSourceResultsToResults.calculate!(calculator)
 
           assert_equal 2, event_categories.size
-          assert_equal ["Masters Men", "Masters Women"], event_categories.map(&:name).sort
+          assert_equal ["Junior Men", "Masters Women"], event_categories.map(&:name).sort
 
-          event_category = event_categories.detect { |ec| ec.name == "Masters Men" }
+          event_category = event_categories.detect { |ec| ec.name == "Junior Men" }
           assert_equal 1, event_category.results.size
           result = event_category.results.first
           assert_equal 0, result.participant.id
@@ -168,6 +168,46 @@ module Calculations
 
           event_categories = MapSourceResultsToResults.calculate!(calculator)
           assert_equal 3, event_categories.size, event_categories.map(&:name)
+          junior_women_event_category = event_categories.find { |ec| ec.category == junior_women }
+          assert_equal 1, junior_women_event_category.results.size
+          masters_men_event_category = event_categories.find { |ec| ec.category == masters_men }
+          assert_equal 2, masters_men_event_category.results.size
+        end
+
+        def test_match_equivalent_categories
+          source_results = []
+          masters_men = Models::Category.new("Masters Men")
+          masters_30 = Models::Category.new("Masters 30+")
+          junior_women = Models::Category.new("Junior Women")
+
+          participant_1 = Models::Participant.new(0)
+          source_results << Models::SourceResult.new(
+            id: 33,
+            event_category: Models::EventCategory.new(junior_women),
+            participant: participant_1,
+            place: "19"
+          )
+
+          participant_2 = Models::Participant.new(1)
+          source_results << Models::SourceResult.new(
+            id: 34,
+            event_category: Models::EventCategory.new(masters_men),
+            participant: participant_2,
+            place: "7"
+          )
+
+          source_results << Models::SourceResult.new(
+            id: 35,
+            event_category: Models::EventCategory.new(masters_30),
+            participant: participant_1,
+            place: "3"
+          )
+
+          rules = Rules.new(categories: [masters_men, junior_women])
+          calculator = Calculator.new(rules: rules, source_results: source_results)
+
+          event_categories = MapSourceResultsToResults.calculate!(calculator)
+          assert_equal 2, event_categories.size, event_categories.map(&:name)
           junior_women_event_category = event_categories.find { |ec| ec.category == junior_women }
           assert_equal 1, junior_women_event_category.results.size
           masters_men_event_category = event_categories.find { |ec| ec.category == masters_men }

@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 
+require_relative "../../../../app/models/categories"
+require_relative "../../../../app/models/categories/ability"
+require_relative "../../../../app/models/categories/ages"
+require_relative "../../../../app/models/categories/equipment"
+require_relative "../../../../app/models/categories/gender"
+require_relative "../../../../app/models/categories/matching"
+require_relative "../../../../app/models/categories/weight"
+
 require_relative "../../test_case"
 require_relative "../../../../app/models/calculations"
 require_relative "../../../../app/models/calculations/v3"

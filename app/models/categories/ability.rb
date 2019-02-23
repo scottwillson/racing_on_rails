@@ -18,10 +18,6 @@ module Categories
       "Novice" => 5
     }.freeze
 
-    included do
-      before_save :set_abilities_from_name
-    end
-
     # Pro/1/2 => 0..2
     def set_abilities_from_name
       abilities = abilities_from_name

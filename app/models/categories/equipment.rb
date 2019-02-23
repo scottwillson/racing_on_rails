@@ -4,10 +4,6 @@ module Categories
   module Equipment
     extend ActiveSupport::Concern
 
-    included do
-      before_save :set_equipment_from_name
-    end
-
     def set_equipment_from_name
       self.equipment = equipment_from_name
     end
