@@ -17,6 +17,13 @@
 tabor = WeeklySeries.find(26072)
 # calculation = tabor.calculations.create!(points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11])
 # calculation.categories << Category.find_or_create_by(name: "Senior Men")
+calculation.categories << Category.find_or_create_by(name: "Category 4 Men")
+calculation.categories << Category.find_or_create_by(name: "Category 4/5 Women")
+calculation.categories << Category.find_or_create_by(name: "Category 5 Men")
+calculation.categories << Category.find_or_create_by(name: "Masters Men 50+")
+calculation.categories << Category.find_or_create_by(name: "Masters Men 40+")
+calculation.categories << Category.find_or_create_by(name: "Senior Women")
+
 # calculation.calculate!
 #
 overall = Event.find(26708)

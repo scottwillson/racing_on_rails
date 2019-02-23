@@ -4,13 +4,9 @@ module Categories
   module Ages
     extend ActiveSupport::Concern
 
-    JUNIORS =  9..18
-    SENIOR  = 19..29
-    MASTERS = 30..::Categories::MAXIMUM.freeze
-
-    included do
-      before_save :set_ages_from_name
-    end
+    JUNIORS = (9..18).freeze
+    SENIOR  = (19..29).freeze
+    MASTERS = (30..::Categories::MAXIMUM).freeze
 
     def age_group?
       ages_begin && ages_end && (ages_begin != 0 || ages_end != ::Categories::MAXIMUM)

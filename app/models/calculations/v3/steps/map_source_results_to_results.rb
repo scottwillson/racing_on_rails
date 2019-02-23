@@ -8,7 +8,7 @@ module Calculations
         # Unmatched categories are added, too, for audit, but will be given no points
         def self.calculate!(calculator)
           calculator.source_results.each do |source_result|
-            source_result_in_calculation_category = calculator.rules.categories.include?(source_result.category)
+            source_result_in_calculation_category = in_calculation_category?(source_result, calculator)
             unless source_result_in_calculation_category
               source_result.reject "not_calculation_category"
             end
@@ -35,7 +35,8 @@ module Calculations
         end
 
         def self.find_or_create_event_category(source_result, calculator)
-          event_category = calculator.event_categories.find { |c| c.category == source_result.category }
+          category = source_result.category.best_match_in(calculator.event_categories.map(&:category))
+          event_category = calculator.event_categories.find { |c| c.category == category }
           return event_category if event_category
 
           event_category = Models::EventCategory.new(source_result.event_category.category)
@@ -43,6 +44,10 @@ module Calculations
           calculator.event_categories << event_category
 
           event_category
+        end
+
+        def self.in_calculation_category?(source_result, calculator)
+          source_result.category.best_match_in(calculator.rules.categories).present?
         end
       end
     end
