@@ -36,6 +36,7 @@
             id: "race_#{race.id}"
       ) do %><%= link_to race.name, category_races_path(race.category) %><% if race.distance.present? && race.distance > 0 %> (<%= race.distance %> miles)<% end %>
       <% end -%>
+      <p class="event_notes"><%= link_to "Show source results", calculations_race_results_path(race) %></p>
       <%- if race.rejected? -%>
         <p class="event_notes">
           <%= t race.rejection_reason, category: race.category_name %>
