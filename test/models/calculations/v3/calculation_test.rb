@@ -109,8 +109,8 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     person_2 = FactoryBot.create(:person)
     source_result_2 = source_race.results.create!(place: 2, person: person_2)
 
-    women_a = Category.find_or_create_by_normalized_name("Women A")
-    source_race = source_child_event.races.create!(category: women_a)
+    women_b = Category.find_or_create_by_normalized_name("Women B")
+    source_race = source_child_event.races.create!(category: women_b)
     person_3 = FactoryBot.create(:person)
     source_result_3 = source_race.results.create!(place: 1, person: person_3)
 
@@ -149,12 +149,12 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     assert_nil source.rejection_reason
     assert_equal source_result_2, source.source_result
 
-    women_a_overall_race = overall.races.detect { |race| race.category == women_a }
-    assert_not_nil(women_a_overall_race, "Should have Women A overall race")
-    assert women_a_overall_race.rejected?
-    assert_equal "not_calculation_category", women_a_overall_race.rejection_reason
+    women_b_overall_race = overall.races.detect { |race| race.category == women_b }
+    assert_not_nil(women_b_overall_race, "Should have Women B overall race")
+    assert women_b_overall_race.rejected?
+    assert_equal "not_calculation_category", women_b_overall_race.rejection_reason
 
-    results = women_a_overall_race.results.sort
+    results = women_b_overall_race.results.sort
     assert_equal 1, results.size
 
     result = results.first
