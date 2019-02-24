@@ -26,13 +26,19 @@ class Calculations::V3::Calculation < ApplicationRecord
   def calculate!
     ActiveSupport::Notifications.instrument "calculate.calculations.#{name}.racing_on_rails" do
       transaction do
-        event = create_event!(name: "Overall")
-        source_event.children << event
+        add_event!
         results = results_to_models(source_results)
         calculator = Calculations::V3::Calculator.new(logger: logger, rules: rules, source_results: results)
         event_categories = calculator.calculate!
         save_results event_categories
       end
+    end
+  end
+
+  def add_event!
+    unless event
+      event = create_event!(name: "Overall")
+      source_event.children << event
     end
   end
 

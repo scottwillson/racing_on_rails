@@ -40,6 +40,10 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     assert_equal 100, source.points
     assert_nil source.rejection_reason
     assert_equal source_result, source.source_result
+
+    calculation.reload.calculate!
+    assert_equal 1, Calculations::V3::Calculation.count, "Reuse existing event"
+    assert_equal 2, series.children.count, "Reuse existing event"
   end
 
   test "previous year #calculate!" do
