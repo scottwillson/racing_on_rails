@@ -143,6 +143,9 @@ Rails.application.routes.draw do
       resources :events do
         resources :results
       end
+      resources :races do
+        resources :results
+      end
     end
 
     get "/cat4_womens_race_series/:year" => "competitions/competitions#show", as: :cat4_womens_race_series, type: "cat4_womens_race_series", constraints: { year: /\d{4}/ }
