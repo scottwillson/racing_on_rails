@@ -44,7 +44,7 @@ module Competitions
       result_categories_by_race = Hash.new { |hash, race_category| hash[race_category] = [] }
 
       result_categories.each do |category|
-        best_match = category.best_match_in(self)
+        best_match = category.best_match_in_event(self)
         result_categories_by_race[best_match] << category if best_match
       end
 
