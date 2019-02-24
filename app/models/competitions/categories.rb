@@ -2,7 +2,7 @@
 
 module Competitions
   module Categories
-    # Competition's races. Default to +category_names+ (e.g., Men A, Men B, …)
+    # Competition's races. Default to +category_names+ (e.g., Men A, Men B, ...)
     # But some competitions have race names like "Team" or "Overall" drawn
     # from +source_result_category_names+.
     def race_category_names
@@ -44,7 +44,7 @@ module Competitions
       result_categories_by_race = Hash.new { |hash, race_category| hash[race_category] = [] }
 
       result_categories.each do |category|
-        best_match = category.best_match_in_event(self)
+        best_match = category.best_match_in(categories)
         result_categories_by_race[best_match] << category if best_match
       end
 
