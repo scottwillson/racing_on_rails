@@ -136,11 +136,13 @@ module Competitions
 
     def assert_best_match_in(categories, race_category, event)
       categories.each do |category|
-        assert race_category == category.best_match_in(event), "#{race_category.name} should be best_match_in for #{category.name} in event with categories #{event.races.map(&:name).join(', ')}"
+        assert race_category == category.best_match_in(event.categories),
+               "#{race_category.name} should be best_match_in for #{category.name} in event with categories #{event.races.map(&:name).join(', ')}"
       end
 
       ::Category.where.not(id: categories).each do |category|
-        assert race_category != category.best_match_in(event), "Did not expect #{race_category.name} to match #{category.name} in event with categories #{event.races.map(&:name).join(', ')}"
+        assert race_category != category.best_match_in(event.categories),
+               "Did not expect #{race_category.name} to match #{category.name} in event with categories #{event.races.map(&:name).join(', ')}"
       end
     end
   end
