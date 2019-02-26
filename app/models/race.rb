@@ -191,7 +191,7 @@ class Race < ApplicationRecord
     return false if results.blank?
 
     event.races.reject { |race| race == self }.each do |race|
-      if category.in?(race.category) && results_in?(race)
+      if category.include?(race.category) && results_in?(race)
         self.split_from = race
         return true
       end

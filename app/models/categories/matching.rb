@@ -103,7 +103,7 @@ module Categories
         weight == other.weight
     end
 
-    def in?(other)
+    def include?(other)
       return false unless other
 
       abilities.in?(other.abilities) &&
