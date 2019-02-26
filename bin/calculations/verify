@@ -11,8 +11,9 @@
 
 puts `spring stop`
 puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists obra_development'`
+puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists obra_test'`
 puts `bundle exec rake db:setup RAILS_ENV=development`
-puts `mysql -u root obra_development < tmp/db/bushtit_obra_sql`
+puts `mysql -u root obra_development < tmp/db/production.sql`
 puts `bundle exec rake db:migrate`
 
 tabor = WeeklySeries.find(26_072)
