@@ -46,6 +46,7 @@ class Calculations::V3::Calculation < ApplicationRecord
     Result
       .joins(race: :event)
       .where("events.parent_id" => source_event)
+      .where.not(competition_result: true)
   end
 
   # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them
