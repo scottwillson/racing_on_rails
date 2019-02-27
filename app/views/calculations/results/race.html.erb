@@ -40,14 +40,14 @@
           </tr>
         </thead>
         <tbody>
-          <%- result.source_results.each do |source_result| -%>
+          <%- result.sources.each do |source| -%>
             <tr>
-              <td class="place"><%= source_result.place %></td>
-              <td class="event"><%= source_result.event_full_name %></td>
-              <td class="category"><%= source_result.race_name %></td>
-              <td class="date"><%= source_result.event_date_range_s %></td>
-              <td class="rejection_reason"><%= t source_result.rejection_reason %></td>
-              <td class="points"><%= source_result.points %></td>
+              <td class="place"><%= source.source_result.place %></td>
+              <td class="event"><%= source.source_result.event_full_name %></td>
+              <td class="category"><%= source.source_result.race_name %></td>
+              <td class="date"><%= source.source_result.event_date_range_s %></td>
+              <td class="rejection_reason"><%= t source.rejection_reason %></td>
+              <td class="points"><%= source.points %></td>
             </tr>
           <%- end -%>
           <tr class="total">
