@@ -23,7 +23,10 @@ Calculations::V3::Calculation.all.each do |calc|
 end
 
 tabor = WeeklySeries.find(26_072)
-calculation = tabor.calculations.create!(points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11])
+calculation = tabor.calculations.create!(
+  double_points_for_last_event: true,
+  points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11]
+)
 calculation.categories << Category.find_or_create_by(name: "Senior Men")
 calculation.categories << Category.find_or_create_by(name: "Category 3 Men")
 calculation.categories << Category.find_or_create_by(name: "Category 4 Men")
