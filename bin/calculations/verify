@@ -9,12 +9,12 @@
 #   end
 # end
 
-puts `spring stop`
-puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists obra_development'`
-puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists obra_test'`
-puts `bundle exec rake db:setup RAILS_ENV=development`
-puts `mysql -u root obra_development < tmp/db/production.sql`
-puts `bundle exec rake db:migrate`
+# puts `spring stop`
+# puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists obra_development'`
+# puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists obra_test'`
+# puts `bundle exec rake db:setup RAILS_ENV=development`
+# puts `mysql -u root obra_development < tmp/db/production.sql`
+# puts `bundle exec rake db:migrate`
 
 tabor = WeeklySeries.find(26_072)
 calculation = tabor.calculations.create!(points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11])
