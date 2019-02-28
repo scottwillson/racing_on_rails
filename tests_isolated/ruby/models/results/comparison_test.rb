@@ -32,7 +32,7 @@ module Results
       end
 
       def rejected?
-        @rejected
+        @rejected ||= false
       end
 
       def inspect

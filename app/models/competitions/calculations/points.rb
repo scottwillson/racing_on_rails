@@ -87,6 +87,7 @@ module Competitions
 
       def last_event?(result, rules)
         raise(ArgumentError, "End date required to check for last event") unless rules[:end_date]
+
         result.date == rules[:end_date]
       end
 

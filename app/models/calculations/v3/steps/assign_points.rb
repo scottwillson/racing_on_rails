@@ -10,6 +10,7 @@ module Calculations
               result.source_results.each do |source_result|
                 unless category.rejected?
                   source_result.points = points_for_place(source_result, calculator.rules.points_for_place)
+                  source_result.points = source_result.points * last_event_multiplier(source_result, calculator.rules)
                 end
               end
             end
@@ -20,6 +21,21 @@ module Calculations
           return 1 unless points_for_place
 
           points_for_place[source_result.numeric_place - 1]
+        end
+
+        def self.last_event_multiplier(source_result, rules)
+          if rules.double_points_for_last_event? && last_event?(source_result, rules.end_date)
+            2
+          else
+            1
+          end
+        end
+
+        def self.last_event?(source_result, end_date)
+          raise(ArgumentError, "source_result.date required to check for last event") unless source_result.date
+          raise(ArgumentError, "end_date required to check for last event") unless end_date
+
+          source_result.date == end_date
         end
       end
     end
