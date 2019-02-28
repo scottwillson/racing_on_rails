@@ -28,6 +28,7 @@ class Calculations::V3::Calculation < ApplicationRecord
       transaction do
         add_event!
         results = results_to_models(source_results)
+        rules.end_date = source_event.end_date
         calculator = Calculations::V3::Calculator.new(logger: logger, rules: rules, source_results: results)
         event_categories = calculator.calculate!
         save_results event_categories

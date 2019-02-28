@@ -37,21 +37,20 @@ module Calculations
           rules = Rules.new(
             categories: [category],
             double_points_for_last_event: true,
+            end_date: Date.new(2018, 5, 8),
             points_for_place: [100, 75, 50, 20, 10]
           )
           calculator = Calculator.new(rules: rules, source_results: [])
           calculation_event_category = calculator.event_categories.first
 
-          event = Models::Event.new(id: 0, date: Date.new(2018, 5, 1))
-          event_category = Models::EventCategory.new(event, category)
-          source_result = Models::SourceResult.new(id: 33, event_category: event_category, place: 1)
+          event_category = Models::EventCategory.new(category)
+          source_result = Models::SourceResult.new(id: 33, date: Date.new(2018, 5, 1), event_category: event_category, place: 1)
           participant = Models::Participant.new(0)
           result = Models::CalculatedResult.new(participant, [source_result])
           calculation_event_category.results << result
 
-          event = Models::Event.new(id: 1, date: Date.new(2018, 5, 8))
-          event_category = Models::EventCategory.new(event, category)
-          source_result = Models::SourceResult.new(id: 19, event_category: event_category, place: 2)
+          event_category = Models::EventCategory.new(category)
+          source_result = Models::SourceResult.new(id: 19, date: Date.new(2018, 5, 8), event_category: event_category, place: 2)
           result = Models::CalculatedResult.new(participant, [source_result])
           calculation_event_category.results << result
 
