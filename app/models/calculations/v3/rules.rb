@@ -6,7 +6,7 @@ module Calculations
       attr_reader :categories
       # end_date is calculated and set for each calculate!
       # breaks model fo simplicity and speed
-      attr_accessor :end_date
+      attr_reader :end_date
       attr_reader :points_for_place
 
       def initialize(categories: [], double_points_for_last_event: false, end_date: nil, points_for_place: nil)
