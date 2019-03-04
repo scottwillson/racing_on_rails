@@ -141,7 +141,7 @@ class MultiDayEvent < Event
   def update_date(_child = nil)
     return true if new_record?
 
-    child_dates = Event.where(parent_id: id).where(cancelled: false).where(postponed: false).pluck(:date)
+    child_dates = child_dates_query.pluck(:date)
     if child_dates.present?
       self.date = child_dates.min
       self.end_date = child_dates.max
@@ -152,8 +152,25 @@ class MultiDayEvent < Event
     end
   end
 
+  def child_dates_query
+    if is_a?(Competitions::Competition)
+      Event.where(parent_id: id).where(cancelled: false).where(postponed: false)
+    else
+      SingleDayEvent
+        .where(parent_id: id)
+        .where(cancelled: false)
+        .where(postponed: false)
+    end
+  end
+
   def set_end_date
-    self.end_date = children.map(&:date).max || date if self[:end_date].nil?
+    children_for_date = children
+
+    unless is_a?(Competitions::Competition)
+      children_for_date = children_for_date.reject { |child| child.is_a?(Competitions::Competition) }
+    end
+
+    self.end_date = children_for_date.map(&:date).max || date if self[:end_date].nil?
   end
 
   def end_date_s

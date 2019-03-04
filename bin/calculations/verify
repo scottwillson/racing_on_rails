@@ -22,7 +22,13 @@ Calculations::V3::Calculation.all.each do |calc|
   calc.destroy!
 end
 
+Event.where("id >= 26709").all.each do |event|
+  event.destroy_races
+  event.destroy!
+end
+
 tabor = WeeklySeries.find(26_072)
+tabor.update_date
 calculation = tabor.calculations.create!(
   double_points_for_last_event: true,
   points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11]
@@ -38,7 +44,7 @@ calculation.categories << Category.find_or_create_by(name: "Senior Women")
 
 calculation.calculate!
 
-overall = Event.find(26_708)
+overall = Event.find(26_299)
 expected_races = overall.races.map(&:name).sort
 calculation_event = tabor.calculations.last.event
 actual_races = calculation_event.races.reject(&:rejected?).map(&:name).sort

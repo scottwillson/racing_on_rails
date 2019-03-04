@@ -40,7 +40,7 @@
           </tr>
         </thead>
         <tbody>
-          <%- result.sources.each do |source| -%>
+          <%- result.sources.sort_by {|source| source.source_result.date }.each do |source| -%>
             <tr>
               <td class="place"><%= source.source_result.place %></td>
               <td class="event"><%= source.source_result.event_full_name %></td>
