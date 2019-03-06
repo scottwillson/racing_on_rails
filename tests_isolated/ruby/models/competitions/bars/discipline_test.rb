@@ -15,7 +15,7 @@ module Competitions
 
       def test_discipline_for_road_race
         race = stub("race", discipline: "Road")
-        assert_equal ["Road", "Circuit", "Road/Gravel"].sort, @bar.disciplines_for(race).sort, "disciplines"
+        assert_equal ["Road", "Circuit"].sort, @bar.disciplines_for(race).sort, "disciplines"
       end
 
       def test_discipline_for_track
