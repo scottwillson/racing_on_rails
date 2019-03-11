@@ -37,19 +37,25 @@ module Calculations
           rules = Rules.new(
             categories: [category],
             double_points_for_last_event: true,
-            end_date: Date.new(2018, 5, 8),
             points_for_place: [100, 75, 50, 20, 10]
           )
           calculator = Calculator.new(rules: rules, source_results: [])
           calculation_event_category = calculator.event_categories.first
 
-          event_category = Models::EventCategory.new(category)
+          # TODO just use this date and assume it is correct
+          series = Models::Event.new(id: 0, date: Date.new(2018, 5, 1), end_date: Date.new(2018, 5, 8))
+          # TODO test Event validation for id, date, and date == start_date
+          # TODO test add_child
+          series.add_child Models::Event.new(id: 1, date: Date.new(2018, 5, 1))
+          series.add_child Models::Event.new(id: 2, date: Date.new(2018, 5, 8))
+
+          event_category = Models::EventCategory.new(category, series.children[0])
           source_result = Models::SourceResult.new(id: 33, date: Date.new(2018, 5, 1), event_category: event_category, place: 1)
           participant = Models::Participant.new(0)
           result = Models::CalculatedResult.new(participant, [source_result])
           calculation_event_category.results << result
 
-          event_category = Models::EventCategory.new(category)
+          event_category = Models::EventCategory.new(category, series.children[1])
           source_result = Models::SourceResult.new(id: 19, date: Date.new(2018, 5, 8), event_category: event_category, place: 2)
           result = Models::CalculatedResult.new(participant, [source_result])
           calculation_event_category.results << result
@@ -60,7 +66,11 @@ module Calculations
           assert_equal 150, event_categories.first.results[1].source_results.first.points
         end
 
-        def test_skip_rejcted_categoeies
+        # TODO DRY up equality assertions
+        # TODO test event children setting
+        # TODO test last event calculation. On model or in step?
+
+        def test_skip_rejected_categories
           category = Models::Category.new("Masters Men")
           rules = Rules.new(
             categories: [category],
