@@ -31,6 +31,10 @@ module Calculations
           event_category&.category
         end
 
+        def last_event_date
+          event_category.event.parent.end_date
+        end
+
         def numeric_place
           place&.to_i || 0
         end

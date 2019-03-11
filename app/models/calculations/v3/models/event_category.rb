@@ -7,10 +7,12 @@ module Calculations
       # A "Race" in the older domain model.
       class EventCategory
         attr_reader :category
+        attr_reader :event
         attr_accessor :rejection_reason
 
-        def initialize(category)
+        def initialize(category, event = nil)
           @category = category
+          @event = event
           @rejected = false
 
           validate!
@@ -36,6 +38,7 @@ module Calculations
         def validate!
           raise(ArgumentError, "category is required") unless category
           raise(ArgumentError, "category must be a Models::Category, but is a #{category.class}") unless category.is_a?(Models::Category)
+          raise(ArgumentError, "event must be a Models::Event, but is a #{event.class}") unless event.nil? || event.is_a?(Models::Event)
         end
 
         def ==(other)

@@ -46,6 +46,23 @@ module Calculations
           assert_equal 1, result.numeric_place
         end
 
+        def test_last_event_date
+          series = Models::Event.new(date: Date.new(2018, 5, 1), end_date: Date.new(2018, 5, 16))
+          series.add_child Models::Event.new(date: Date.new(2018, 5, 1))
+          series.add_child Models::Event.new(date: Date.new(2018, 5, 16))
+
+          category = Category.new("A")
+
+          event_category = EventCategory.new(category, series.children[0])
+          result_1 = SourceResult.new(id: 0, event_category: event_category)
+
+          event_category = EventCategory.new(category, series.children[1])
+          result_2 = SourceResult.new(id: 1, event_category: event_category)
+
+          assert_equal Date.new(2018, 5, 16), result_1.last_event_date
+          assert_equal Date.new(2018, 5, 16), result_2.last_event_date
+        end
+
         private
 
         def event_category

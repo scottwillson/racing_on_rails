@@ -24,18 +24,18 @@ module Calculations
         end
 
         def self.last_event_multiplier(source_result, rules)
-          if rules.double_points_for_last_event? && last_event?(source_result, rules.end_date)
+          if rules.double_points_for_last_event? && last_event?(source_result)
             2
           else
             1
           end
         end
 
-        def self.last_event?(source_result, end_date)
+        def self.last_event?(source_result)
           raise(ArgumentError, "source_result.date required to check for last event") unless source_result.date
-          raise(ArgumentError, "end_date required to check for last event") unless end_date
+          raise(ArgumentError, "source_result.last_event_date required to check for last event") unless source_result.last_event_date
 
-          source_result.date == end_date
+          source_result.date == source_result.last_event_date
         end
       end
     end
