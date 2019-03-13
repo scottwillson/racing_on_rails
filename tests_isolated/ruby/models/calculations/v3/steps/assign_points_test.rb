@@ -63,10 +63,6 @@ module Calculations
           assert_equal 150, event_categories.first.results[1].source_results.first.points
         end
 
-        # TODO DRY up equality assertions
-        # TODO test event children setting
-        # TODO test last event calculation. On model or in step?
-
         def test_skip_rejected_categories
           category = Models::Category.new("Masters Men")
           rules = Rules.new(
