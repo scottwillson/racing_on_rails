@@ -37,7 +37,7 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   def add_event!
     unless event
-      event = create_event!(name: "Overall")
+      event = create_event!(date: source_event.date, end_date: source_event.end_date, name: "Overall")
       source_event.children << event
     end
   end
@@ -47,6 +47,7 @@ class Calculations::V3::Calculation < ApplicationRecord
       .joins(race: :event)
       .where("events.parent_id" => source_event)
       .where.not(competition_result: true)
+      .where(year: year)
   end
 
   # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them
@@ -73,9 +74,8 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   # Create event records cache: Hash by ud
   def populate_source_result_events
-    ::Event.year(year).reduce({}) do |events, event|
+    ::Event.year(year).each_with_object({}) do |event, events|
       events[event.id] = event
-      events
     end
   end
 
@@ -153,7 +153,5 @@ class Calculations::V3::Calculation < ApplicationRecord
     Person.where(id: result.participant.id).pluck(:team_id).first
   end
 
-  def year
-    source_event.year
-  end
+  delegate :year, to: :source_event
 end
