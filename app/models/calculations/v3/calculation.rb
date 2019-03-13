@@ -79,7 +79,7 @@ class Calculations::V3::Calculation < ApplicationRecord
     end
   end
 
-  # Find of create Models::Event from source result Event cache
+  # Find or create Models::Event from source result Event cache
   def model_events
     @model_events ||= Hash.new do |cache, id|
       event = source_result_events[id]
