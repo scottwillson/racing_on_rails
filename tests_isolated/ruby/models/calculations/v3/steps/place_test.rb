@@ -65,6 +65,34 @@ module Calculations
           assert_equal result_2, calculator.event_categories.first.results[2]
         end
 
+        def test_break_ties_by_best_place
+          category = Models::Category.new("Junior Women")
+          rules = Rules.new(categories: [category])
+          calculator = Calculator.new(rules: rules, source_results: [])
+          event_category = calculator.event_categories.first
+
+          participant = Models::Participant.new(1)
+          source_result = Models::SourceResult.new(id: 1, event_category: Models::EventCategory.new(category), place: 2)
+          result = Models::CalculatedResult.new(participant, [source_result])
+          result.points = 15
+          event_category.results << result
+
+          participant = Models::Participant.new(0)
+          source_result = Models::SourceResult.new(id: 0, event_category: Models::EventCategory.new(category), place: 4)
+          source_result_2 = Models::SourceResult.new(id: 0, event_category: Models::EventCategory.new(category), place: 6)
+          result = Models::CalculatedResult.new(participant, [source_result, source_result_2])
+          result.points = 15
+          event_category.results << result
+
+          Place.calculate! calculator
+
+          assert_equal "1", calculator.event_categories.first.results[0].place
+          assert_equal 1, calculator.event_categories.first.results[0].participant.id
+
+          assert_equal "2", calculator.event_categories.first.results[1].place
+          assert_equal 0, calculator.event_categories.first.results[1].participant.id
+        end
+
         def test_do_not_place_rejected
           category = Models::Category.new("Masters Men")
           rules = Rules.new(categories: [category])
