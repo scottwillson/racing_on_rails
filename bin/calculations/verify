@@ -55,7 +55,7 @@ actual_categories = actual_races.map(&:name).sort
 if expected_categories != actual_categories
   puts "Tabor races"
   puts "expected: #{expected_races}"
-  puts "actual:   #{expected_categories}"
+  puts "actual:   #{actual_categories}"
   puts "diff:     #{expected_categories - actual_categories}"
 end
 
@@ -64,5 +64,19 @@ expected_races.each do |expected_race|
   actual_race_results_count = actual_race.results.reject { |r| r.points == 0 }.size
   if expected_race.results.count != actual_race_results_count
     puts "Expected #{actual_race.name} to have #{expected_race.results.count} results, but has #{actual_race_results_count}"
+  end
+
+  expected_results = expected_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points]}.sort
+  actual_results = actual_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points]}.sort
+  # expected_results = expected_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.team_id, result.points]}.sort
+  # actual_results = actual_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.team_id, result.points]}.sort
+  if expected_results != actual_results
+    puts "#{expected_race.name} results"
+    puts "expected:"
+    pp expected_results
+    puts "actual:"
+    pp actual_results
+    puts "diff:"
+    pp expected_results - actual_results
   end
 end
