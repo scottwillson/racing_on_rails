@@ -89,6 +89,38 @@ module Calculations
 
           assert_equal 0, event_categories.first.results[0].source_results.first.points
         end
+
+        def test_points_for_place
+          points_for_place = [100, 75, 50, 20, 10]
+          event_category = Models::EventCategory.new(Models::Category.new("Masters Men"))
+
+          source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "1")
+          assert_equal 100, AssignPoints.points_for_place(source_result, points_for_place)
+
+          source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "5")
+          assert_equal 10, AssignPoints.points_for_place(source_result, points_for_place)
+
+          source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "")
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place)
+
+          source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: nil)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place)
+
+          source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "6")
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place)
+
+          source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "999999")
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place)
+
+          source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "DNF")
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place)
+
+          source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "DQ")
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place)
+
+          source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "DNS")
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place)
+        end
       end
     end
   end

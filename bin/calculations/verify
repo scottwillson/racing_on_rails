@@ -29,7 +29,6 @@ end
 
 tabor = WeeklySeries.find(26_072)
 tabor.update_date
-puts "Tabor dates #{tabor.reload.date_range_s}"
 calculation = tabor.calculations.create!(
   double_points_for_last_event: true,
   points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11]
@@ -46,13 +45,24 @@ calculation.categories << Category.find_or_create_by(name: "Senior Women")
 calculation.calculate!
 
 overall = Event.find(26_299)
-expected_races = overall.races.map(&:name).sort
+expected_races = overall.races.sort
 calculation_event = tabor.calculations.last.event
-actual_races = calculation_event.races.reject(&:rejected?).map(&:name).sort
+actual_races = calculation_event.races.reject(&:rejected?).sort
 
-if expected_races != actual_races
+expected_categories = expected_races.map(&:name).sort
+actual_categories = actual_races.map(&:name).sort
+
+if expected_categories != actual_categories
   puts "Tabor races"
   puts "expected: #{expected_races}"
-  puts "actual:   #{actual_races}"
-  puts "diff:     #{expected_races - actual_races}"
+  puts "actual:   #{expected_categories}"
+  puts "diff:     #{expected_categories - actual_categories}"
+end
+
+expected_races.each do |expected_race|
+  actual_race = actual_races.detect { |r| r.name == expected_race.name }
+  actual_race_results_count = actual_race.results.reject { |r| r.points == 0 }.size
+  if expected_race.results.count != actual_race_results_count
+    puts "Expected #{actual_race.name} to have #{expected_race.results.count} results, but has #{actual_race_results_count}"
+  end
 end
