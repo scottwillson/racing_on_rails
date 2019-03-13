@@ -19,8 +19,9 @@ module Calculations
 
         def self.points_for_place(source_result, points_for_place)
           return 1 unless points_for_place
+          return 0 unless source_result.numeric_place > 0
 
-          points_for_place[source_result.numeric_place - 1]
+          points_for_place[source_result.numeric_place - 1] || 0
         end
 
         def self.last_event_multiplier(source_result, rules)
