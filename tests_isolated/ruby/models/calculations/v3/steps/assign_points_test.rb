@@ -42,10 +42,7 @@ module Calculations
           calculator = Calculator.new(rules: rules, source_results: [])
           calculation_event_category = calculator.event_categories.first
 
-          # TODO just use this date and assume it is correct
           series = Models::Event.new(id: 0, date: Date.new(2018, 5, 1), end_date: Date.new(2018, 5, 8))
-          # TODO test Event validation for id, date, and date == start_date
-          # TODO test add_child
           series.add_child Models::Event.new(id: 1, date: Date.new(2018, 5, 1))
           series.add_child Models::Event.new(id: 2, date: Date.new(2018, 5, 8))
 
