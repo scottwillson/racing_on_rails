@@ -101,7 +101,10 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     series = WeeklySeries.create!
     source_child_event = series.children.create!
 
-    calculation = series.calculations.create!(points_for_place: [100, 90, 75, 50, 40, 30, 20, 10])
+    calculation = series.calculations.create!(
+      double_points_for_last_event: true,
+      points_for_place: [100, 90, 75, 50, 40, 30, 20, 10]
+    )
     calculation.categories << men_a
 
     source_race = source_child_event.races.create!(category: men_a)
@@ -129,23 +132,23 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     result = results.first
     assert_equal person_1, result.person
     assert_equal "1", result.place
-    assert_equal 100, result.points
+    assert_equal 200, result.points
     assert_equal team, result.team
 
     assert_equal 1, result.sources.size
     source = result.sources.first
-    assert_equal 100, source.points
+    assert_equal 200, source.points
     assert_nil source.rejection_reason
     assert_equal source_result_1, source.source_result
 
     result = results.second
     assert_equal person_2, result.person
     assert_equal "2", result.place
-    assert_equal 90, result.points
+    assert_equal 180, result.points
 
     assert_equal 1, result.sources.size
     source = result.sources.first
-    assert_equal 90, source.points
+    assert_equal 180, source.points
     assert_nil source.rejection_reason
     assert_equal source_result_2, source.source_result
 

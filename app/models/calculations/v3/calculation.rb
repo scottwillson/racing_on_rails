@@ -53,12 +53,48 @@ class Calculations::V3::Calculation < ApplicationRecord
   def results_to_models(source_results)
     source_results.map do |result|
       category = Calculations::V3::Models::Category.new(result.race_name)
+      event = model_events[result.event_id]
       Calculations::V3::Models::SourceResult.new(
+        date: result.date,
+        event_category: Calculations::V3::Models::EventCategory.new(category, event),
         id: result.id,
-        event_category: Calculations::V3::Models::EventCategory.new(category),
         participant: Calculations::V3::Models::Participant.new(result.person_id),
         place: result.place
       )
+    end
+  end
+
+  # Event records cache. Complicated to recurse up parent tree. Want to fetch
+  # each event once and use same instance in Model graph.
+  # Each year has less than 1_000 events, so fetch them all once.
+  def source_result_events
+    @source_result_events ||= populate_source_result_events
+  end
+
+  # Create event records cache: Hash by ud
+  def populate_source_result_events
+    ::Event.year(year).reduce({}) do |events, event|
+      events[event.id] = event
+      events
+    end
+  end
+
+  # Find of create Models::Event from source result Event cache
+  def model_events
+    @model_events ||= Hash.new do |cache, id|
+      event = source_result_events[id]
+
+      model_event = Calculations::V3::Models::Event.new(
+        date: event.date,
+        end_date: event.end_date,
+        id: id
+      )
+
+      if event.parent_id
+        model_event.parent = model_events[event.parent_id]
+      end
+
+      cache[id] = model_event
     end
   end
 
@@ -66,7 +102,6 @@ class Calculations::V3::Calculation < ApplicationRecord
     Calculations::V3::Rules.new(
       categories: categories_to_models(categories),
       double_points_for_last_event: double_points_for_last_event?,
-      end_date: source_event.end_date,
       points_for_place: points_for_place
     )
   end
@@ -116,5 +151,9 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   def team_id(result)
     Person.where(id: result.participant.id).pluck(:team_id).first
+  end
+
+  def year
+    source_event.year
   end
 end
