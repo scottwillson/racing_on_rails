@@ -9,12 +9,14 @@ module Calculations
         attr_accessor :place
         attr_accessor :points
         attr_accessor :rejection_reason
+        attr_accessor :tied
         attr_reader :source_results
 
         def initialize(participant, source_results)
           @participant = participant
           @rejected = false
           @source_results = source_results
+          @tied = false
 
           validate!
         end
@@ -26,6 +28,10 @@ module Calculations
 
         def rejected?
           @rejected
+        end
+
+        def tied?
+          @tied
         end
 
         def validate!

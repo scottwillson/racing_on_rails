@@ -9,27 +9,36 @@ module Calculations
             place = 1
             previous_result = nil
 
-            sort_by_points(results, rules[:break_ties], rules[:most_points_win]).map.with_index do |result, index|
+            sort_by_points(category.results).map.with_index do |result, index|
+              next if category.rejected?
+
               if index == 0
                 place = 1
               elsif result.points != previous_result.points
                 place = index + 1
-              elsif rules[:break_ties] && (!result.tied || !previous_result.tied)
+              elsif !result.tied || !previous_result.tied
                 place = index + 1
               end
               previous_result = result
-              merge_struct result, place: place
-            end
-
-
-            place = 0
-            category.results.sort_by!(&:points).reverse!.each do |result|
-              next if category.rejected?
-
-              place += 1
               result.place = place.to_s
             end
           end
+        end
+
+        def self.sort_by_points(results)
+          results.sort do |x, y|
+            compare_by_points x, y
+          end
+        end
+
+        def self.compare_by_points(x, y)
+          diff = y.points <=> x.points
+          return diff if diff != 0
+
+          # Special-case. Tie cannot be broken.
+          x.tied = true
+          y.tied = true
+          0
         end
       end
     end
