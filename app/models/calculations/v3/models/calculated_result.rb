@@ -21,6 +21,10 @@ module Calculations
           validate!
         end
 
+        def placed_source_results_with_points
+          source_results.select(&:placed?).select(&:points?)
+        end
+
         def reject(reason)
           @rejection_reason = reason
           @rejected = true
