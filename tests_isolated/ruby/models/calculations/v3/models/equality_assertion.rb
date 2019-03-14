@@ -4,8 +4,6 @@
 # rubocop:disable Style/NilComparison
 # rubocop:disable Style/YodaCondition
 
-require_relative "./equality_assertion"
-
 module EqualityAssertion
   # Test equality, hash, instancend comparison operation
   # instance, equal_instance, equal_instance_2 are separate, equal instances

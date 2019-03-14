@@ -76,14 +76,14 @@ module Calculations
           event_category = calculator.event_categories.first
 
           participant = Models::Participant.new(1)
-          source_result = Models::SourceResult.new(id: 1, event_category: Models::EventCategory.new(category), place: 2)
+          source_result = Models::SourceResult.new(id: 1, event_category: Models::EventCategory.new(category), place: 2, points: 15)
           result = Models::CalculatedResult.new(participant, [source_result])
           result.points = 15
           event_category.results << result
 
           participant = Models::Participant.new(0)
-          source_result = Models::SourceResult.new(id: 0, event_category: Models::EventCategory.new(category), place: 4)
-          source_result_2 = Models::SourceResult.new(id: 0, event_category: Models::EventCategory.new(category), place: 6)
+          source_result = Models::SourceResult.new(id: 0, event_category: Models::EventCategory.new(category), place: 4, points: 9)
+          source_result_2 = Models::SourceResult.new(id: 0, event_category: Models::EventCategory.new(category), place: 6, points: 6)
           result = Models::CalculatedResult.new(participant, [source_result, source_result_2])
           result.points = 15
           event_category.results << result
@@ -104,15 +104,35 @@ module Calculations
           category = Models::Category.new("Junior Women")
 
           participant = Models::Participant.new(1)
-          source_result = Models::SourceResult.new(id: 1, event_category: Models::EventCategory.new(category), place: 2)
+          source_result = Models::SourceResult.new(id: 1, date: Date.new(2018, 5, 8), event_category: Models::EventCategory.new(category), place: 2, points: 15)
           result = Models::CalculatedResult.new(participant, [source_result])
           result.points = 15
 
           participant = Models::Participant.new(0)
-          source_result = Models::SourceResult.new(id: 0, event_category: Models::EventCategory.new(category), place: 4)
-          source_result_2 = Models::SourceResult.new(id: 0, event_category: Models::EventCategory.new(category), place: 6)
+          source_result = Models::SourceResult.new(id: 0, date: Date.new(2018, 5, 1), event_category: Models::EventCategory.new(category), place: 4, points: 9)
+          source_result_2 = Models::SourceResult.new(id: 0, date: Date.new(2018, 5, 15), event_category: Models::EventCategory.new(category), place: 6, points: 6)
           result_2 = Models::CalculatedResult.new(participant, [source_result, source_result_2])
           result_2.points = 15
+
+          assert_equal(-1, Place.compare_by_points(result, result_2))
+          assert_equal 1, Place.compare_by_points(result_2, result)
+          assert_equal 0, Place.compare_by_points(result, result)
+          assert_equal 0, Place.compare_by_points(result_2, result_2)
+        end
+
+        def test_compare_by_points_ignores_dqs
+          category = Models::Category.new("Junior Women")
+
+          participant = Models::Participant.new(1)
+          source_result = Models::SourceResult.new(id: 1, date: Date.new(2018, 6, 6), event_category: Models::EventCategory.new(category), place: 3, points: 50)
+          result = Models::CalculatedResult.new(participant, [source_result])
+          result.points = 50
+
+          participant = Models::Participant.new(0)
+          source_result = Models::SourceResult.new(id: 0, date: Date.new(2018, 5, 30), event_category: Models::EventCategory.new(category), place: 3, points: 50)
+          source_result_2 = Models::SourceResult.new(id: 0, date: Date.new(2018, 6, 6), event_category: Models::EventCategory.new(category), place: "DQ", points: 0)
+          result_2 = Models::CalculatedResult.new(participant, [source_result, source_result_2])
+          result_2.points = 50
 
           assert_equal(-1, Place.compare_by_points(result, result_2))
           assert_equal 1, Place.compare_by_points(result_2, result)
@@ -124,20 +144,69 @@ module Calculations
           category = Models::Category.new("Junior Women")
 
           participant = Models::Participant.new(1)
-          source_result = Models::SourceResult.new(id: 1, event_category: Models::EventCategory.new(category), place: 2)
+          source_result = Models::SourceResult.new(id: 1, event_category: Models::EventCategory.new(category), place: 2, points: 15)
           result = Models::CalculatedResult.new(participant, [source_result])
           result.points = 15
 
           participant = Models::Participant.new(0)
-          source_result = Models::SourceResult.new(id: 0, event_category: Models::EventCategory.new(category), place: 4)
-          source_result_2 = Models::SourceResult.new(id: 0, event_category: Models::EventCategory.new(category), place: 6)
-          result_2 = Models::CalculatedResult.new(participant, [source_result, source_result_2])
+          source_result = Models::SourceResult.new(id: 0, event_category: Models::EventCategory.new(category), place: 4, points: 9)
+          source_result_2 = Models::SourceResult.new(id: 2, event_category: Models::EventCategory.new(category), place: 6, points: 6)
+          source_result_3 = Models::SourceResult.new(id: 3, event_category: Models::EventCategory.new(category), place: "DNF")
+          source_result_4 = Models::SourceResult.new(id: 3, event_category: Models::EventCategory.new(category), place: "99")
+          result_2 = Models::CalculatedResult.new(participant, [source_result, source_result_2, source_result_3, source_result_4])
           result_2.points = 15
 
           assert_equal(-1, Place.compare_by_best_place(result, result_2))
           assert_equal 1, Place.compare_by_best_place(result_2, result)
           assert_equal 0, Place.compare_by_best_place(result, result)
-          assert_equal 0, Place.compare_by_best_place(result_2, result_2)
+        end
+
+        def test_compare_by_most_recent_result
+          category = Models::Category.new("Junior Women")
+
+          participant = Models::Participant.new(1)
+          source_result = Models::SourceResult.new(id: 1, date: Date.new(2018, 5, 1), event_category: Models::EventCategory.new(category), place: 2, points: 15)
+          result = Models::CalculatedResult.new(participant, [source_result])
+          result.points = 15
+
+          participant = Models::Participant.new(0)
+          source_result = Models::SourceResult.new(id: 0, date: Date.new(2018, 4, 1), event_category: Models::EventCategory.new(category), place: 2, points: 15)
+          result_2 = Models::CalculatedResult.new(participant, [source_result])
+          result_2.points = 15
+
+          assert_equal(-1, Place.compare_by_most_recent_result(result, result_2))
+          assert_equal 1, Place.compare_by_most_recent_result(result_2, result)
+          assert_equal 0, Place.compare_by_most_recent_result(result, result)
+          assert_equal 0, Place.compare_by_most_recent_result(result_2, result_2)
+        end
+
+        def test_compare_by_most_recent_result_ignores_dqs
+          category = Models::Category.new("Junior Women")
+
+          participant = Models::Participant.new(1)
+          source_result = Models::SourceResult.new(id: 1, date: Date.new(2018, 5, 1), event_category: Models::EventCategory.new(category), place: 2, points: 15)
+          result = Models::CalculatedResult.new(participant, [source_result])
+          result.points = 15
+
+          participant = Models::Participant.new(0)
+          source_result = Models::SourceResult.new(id: 0, date: Date.new(2018, 4, 1), event_category: Models::EventCategory.new(category), place: 2, points: 15)
+          source_result_2 = Models::SourceResult.new(id: 2, date: Date.new(2018, 6, 1), event_category: Models::EventCategory.new(category), place: "DQ", points: 15)
+          source_result_3 = Models::SourceResult.new(id: 2, date: Date.new(2018, 8, 1), event_category: Models::EventCategory.new(category), place: "99")
+          result_2 = Models::CalculatedResult.new(participant, [source_result, source_result_2, source_result_3])
+          result_2.points = 15
+
+          assert_equal(-1, Place.compare_by_most_recent_result(result, result_2))
+          assert_equal 1, Place.compare_by_most_recent_result(result_2, result)
+          assert_equal 0, Place.compare_by_most_recent_result(result, result)
+          assert_equal 0, Place.compare_by_most_recent_result(result_2, result_2)
+        end
+
+        def test_compare_by_date
+          category = Models::Category.new("Masters Men")
+
+          result = Models::SourceResult.new(id: 0, date: Date.new(2018, 4, 1), event_category: Models::EventCategory.new(category), place: 2, points: 15)
+          result_2 = Models::SourceResult.new(id: 0, date: Date.new(2018, 5, 1), event_category: Models::EventCategory.new(category), place: 2, points: 15)
+          assert_equal 1, Place.compare_by_date(result, result_2)
         end
 
         def test_do_not_place_rejected

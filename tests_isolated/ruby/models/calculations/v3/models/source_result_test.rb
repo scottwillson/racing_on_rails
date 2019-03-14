@@ -40,7 +40,7 @@ module Calculations
 
         def test_numeric_place
           result = SourceResult.new(id: 19, event_category: event_category)
-          assert_equal 0, result.numeric_place
+          assert_equal Float::INFINITY, result.numeric_place
 
           result = SourceResult.new(id: 19, place: "1", event_category: event_category)
           assert_equal 1, result.numeric_place

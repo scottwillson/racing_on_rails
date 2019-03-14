@@ -15,13 +15,13 @@ module Calculations
         attr_writer :points
         attr_accessor :rejection_reason
 
-        def initialize(id: nil, date: nil, event_category: nil, participant: nil, place: nil)
+        def initialize(id: nil, date: nil, event_category: nil, participant: nil, place: nil, points: nil)
           @id = id
           @date = date
           @event_category = event_category
           @participant = participant
           @place = place
-          @points = nil
+          @points = points
           @rejected = false
 
           validate!
@@ -35,12 +35,26 @@ module Calculations
           event_category.event.parent.end_date
         end
 
+        # Opposite convention of ::Result (for now)
         def numeric_place
-          place&.to_i || 0
+          case place&.to_i
+          when nil, 0
+            Float::INFINITY
+          else
+            place.to_i
+          end
+        end
+
+        def placed?
+          numeric_place != Float::INFINITY
         end
 
         def points
           @points || 0
+        end
+
+        def points?
+          points.positive?
         end
 
         def reject(reason)

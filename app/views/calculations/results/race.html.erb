@@ -24,7 +24,7 @@
       </p>
     <% end -%>
 
-    <%- @race.results.each do |result| -%>
+    <%- @race.results.sort.each do |result| -%>
       <h3><%= result.numeric_place.ordinalize %> &mdash; <%=
         link_to(result.person_name, person_results_year_path(result.person, result.year))
       %></h3>
