@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Naming/UncommunicativeMethodParamName
 module Calculations
   module V3
     module Steps
@@ -35,12 +36,58 @@ module Calculations
           diff = y.points <=> x.points
           return diff if diff != 0
 
+          diff = compare_by_best_place(x, y)
+          return diff if diff != 0
+
           # Special-case. Tie cannot be broken.
           x.tied = true
           y.tied = true
           0
         end
+
+        def self.compare_by_best_place(x, y)
+          return 0 if none?(x.source_results, y.source_results)
+
+          x_places = places(x.source_results)
+          y_places = places(y.source_results)
+
+          while any?(x_places, y_places)
+            x_place = x_places.pop
+            y_place = y_places.pop
+
+            diff = compare(x_place, y_place)
+            return diff if diff != 0
+          end
+          0
+        end
+
+        def self.none?(x, y)
+          !any?(x, y)
+        end
+
+        def self.any?(x, y)
+          # Nil-check
+          x.present? || y.present?
+        end
+
+        def self.compare(x, y)
+          if x.nil? && y.nil?
+            0
+          elsif x.nil?
+            1
+          elsif y.nil?
+            -1
+          else
+            x <=> y
+          end
+        end
+
+        # Sort places highest (worst) to lowest (best) so caller can use #pop
+        def self.places(source_results)
+          (source_results || []).map(&:numeric_place).sort.reverse
+        end
       end
     end
   end
 end
+# rubocop:enable Naming/UncommunicativeMethodParamName
