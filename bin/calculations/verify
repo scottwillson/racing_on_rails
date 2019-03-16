@@ -24,6 +24,7 @@ end
 
 ResultSource.destroy_all
 Result.where(year: 2019).destroy_all
+Result.where("created_at > ?", Date.new(2019)).destroy_all
 
 Event.where("id >= 26450").all.each do |event|
   event.destroy_races
