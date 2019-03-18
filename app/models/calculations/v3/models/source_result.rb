@@ -60,6 +60,7 @@ module Calculations
         def reject(reason)
           @rejection_reason = reason
           @rejected = true
+          @points = 0
         end
 
         def rejected?

@@ -16,49 +16,112 @@
 # puts `mysql -u root obra_development < tmp/db/production.sql`
 # puts `bundle exec rake db:migrate`
 
+ResultSource.destroy_all
+Result.where(year: 2019).destroy_all
+Result.where("created_at > ?", Date.new(2019)).destroy_all
+Race.where("created_at > ?", Date.new(2019)).destroy_all
+
 Calculations::V3::Calculation.all.each do |calc|
   calc.event&.destroy_races
   calc.event&.destroy!
   calc.destroy!
 end
 
-ResultSource.destroy_all
-Result.where(year: 2019).destroy_all
-Result.where("created_at > ?", Date.new(2019)).destroy_all
-
-Event.where("id >= 26450").all.each do |event|
-  event.destroy_races
-  event.destroy!
-end
-
-tabor = WeeklySeries.find(26_072)
-tabor.update_date
-calculation = tabor.calculations.create!(
-  double_points_for_last_event: true,
-  points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11]
+# Event.where("id >= 26450").all.each do |event|
+#   event.destroy_races
+#   event.destroy
+# end
+#
+# tabor = WeeklySeries.find(26_072)
+# tabor.update_date
+# calculation = tabor.calculations.create!(
+#   double_points_for_last_event: true,
+#   points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11]
+# )
+# calculation.categories << Category.find_or_create_by(name: "Senior Men")
+# calculation.categories << Category.find_or_create_by(name: "Category 3 Men")
+# calculation.categories << Category.find_or_create_by(name: "Category 4 Men")
+# calculation.categories << Category.find_or_create_by(name: "Category 4/5 Women")
+# calculation.categories << Category.find_or_create_by(name: "Category 5 Men")
+# calculation.categories << Category.find_or_create_by(name: "Masters Men 50+")
+# calculation.categories << Category.find_or_create_by(name: "Masters Men 40+")
+# calculation.categories << Category.find_or_create_by(name: "Senior Women")
+#
+# calculation.calculate!
+#
+# overall = Event.find(26_299)
+# expected_races = overall.races.sort
+# calculation_event = tabor.calculations.last.event
+# actual_races = calculation_event.races.reject(&:rejected?).sort
+#
+# expected_categories = expected_races.map(&:name).sort
+# actual_categories = actual_races.map(&:name).sort
+#
+# if expected_categories != actual_categories
+#   puts "Tabor races"
+#   puts "expected: #{expected_races}"
+#   puts "actual:   #{actual_categories}"
+#   puts "diff:     #{expected_categories - actual_categories}"
+# end
+#
+# expected_races.each do |expected_race|
+#   actual_race = actual_races.detect { |r| r.name == expected_race.name }
+#   actual_race_results_count = actual_race.results.reject { |r| r.points == 0 }.size
+#   if expected_race.results.count != actual_race_results_count
+#     puts "Expected #{actual_race.name} to have #{expected_race.results.count} results, but has #{actual_race_results_count}"
+#   end
+#
+#   expected_results = expected_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points]}.sort
+#   actual_results = actual_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points]}.sort
+#   if expected_results != actual_results
+#     puts "#{expected_race.name} results"
+#     puts "expected:"
+#     pp expected_results
+#     puts "actual:"
+#     pp actual_results
+#     puts "diff:"
+#     pp expected_results - actual_results
+#   end
+# end
+#
+blind_date = Event.find(26208)
+blind_date.update_date
+calculation = blind_date.calculations.create!(
+  points_for_place: [15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+  reject_worst_results: 1
 )
-calculation.categories << Category.find_or_create_by(name: "Senior Men")
-calculation.categories << Category.find_or_create_by(name: "Category 3 Men")
-calculation.categories << Category.find_or_create_by(name: "Category 4 Men")
-calculation.categories << Category.find_or_create_by(name: "Category 4/5 Women")
+calculation.categories << Category.find_or_create_by(name: "Category 1/2 Men")
+calculation.categories << Category.find_or_create_by(name: "Category 2/3 Men")
+calculation.categories << Category.find_or_create_by(name: "Category 3/4 Men")
 calculation.categories << Category.find_or_create_by(name: "Category 5 Men")
+calculation.categories << Category.find_or_create_by(name: "Junior Men 14-18")
+calculation.categories << Category.find_or_create_by(name: "Junior Men 9-13")
+calculation.categories << Category.find_or_create_by(name: "Junior Women 14-18")
+calculation.categories << Category.find_or_create_by(name: "Junior Women 9-13")
+calculation.categories << Category.find_or_create_by(name: "Masters Men 1/2 40+")
+calculation.categories << Category.find_or_create_by(name: "Masters Men 2/3 40+")
+calculation.categories << Category.find_or_create_by(name: "Masters Men 3/4 40+")
 calculation.categories << Category.find_or_create_by(name: "Masters Men 50+")
-calculation.categories << Category.find_or_create_by(name: "Masters Men 40+")
-calculation.categories << Category.find_or_create_by(name: "Senior Women")
+calculation.categories << Category.find_or_create_by(name: "Masters Men 60+")
+calculation.categories << Category.find_or_create_by(name: "Singlespeed")
+calculation.categories << Category.find_or_create_by(name: "Stampede")
+calculation.categories << Category.find_or_create_by(name: "Women 1/2")
+calculation.categories << Category.find_or_create_by(name: "Women 3")
+calculation.categories << Category.find_or_create_by(name: "Women 4")
+calculation.categories << Category.find_or_create_by(name: "Women 5")
 
 calculation.calculate!
-
-overall = Event.find(26_299)
+overall = Event.find(26417)
 expected_races = overall.races.sort
-calculation_event = tabor.calculations.last.event
+calculation_event = blind_date.calculations.last.event
 actual_races = calculation_event.races.reject(&:rejected?).sort
 
 expected_categories = expected_races.map(&:name).sort
 actual_categories = actual_races.map(&:name).sort
 
 if expected_categories != actual_categories
-  puts "Tabor races"
-  puts "expected: #{expected_races}"
+  puts "Blind Date races"
+  puts "expected: #{expected_categories}"
   puts "actual:   #{actual_categories}"
   puts "diff:     #{expected_categories - actual_categories}"
 end
@@ -72,8 +135,6 @@ expected_races.each do |expected_race|
 
   expected_results = expected_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points]}.sort
   actual_results = actual_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points]}.sort
-  # expected_results = expected_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.team_id, result.points]}.sort
-  # actual_results = actual_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.team_id, result.points]}.sort
   if expected_results != actual_results
     puts "#{expected_race.name} results"
     puts "expected:"

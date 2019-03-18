@@ -48,5 +48,9 @@ module Events
     def source_events?
       false
     end
+
+    def competition?
+      false
+    end
   end
 end

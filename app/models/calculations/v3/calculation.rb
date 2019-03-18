@@ -98,11 +98,21 @@ class Calculations::V3::Calculation < ApplicationRecord
     end
   end
 
+  def model_source_events
+    source_event
+      .children
+      .reject(&:competition?)
+      .reject { |e| e == event }
+      .map { |event| model_events[event.id] }
+  end
+
   def rules
     Calculations::V3::Rules.new(
       categories: categories_to_models(categories),
       double_points_for_last_event: double_points_for_last_event?,
-      points_for_place: points_for_place
+      points_for_place: points_for_place,
+      reject_worst_results: reject_worst_results,
+      source_events: model_source_events
     )
   end
 

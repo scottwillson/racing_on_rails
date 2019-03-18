@@ -1,2 +1,3 @@
 en:
   not_calculation_category: "Results in %{category} do not count"
+  worse_result: "Worst results do not count"

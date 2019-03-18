@@ -590,6 +590,10 @@ module Competitions
       {}
     end
 
+    def competition?
+      true
+    end
+
     def expire_cache
       ApplicationController.expire_cache
     end

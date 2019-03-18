@@ -54,6 +54,7 @@ module Calculations
 
           event_category = Models::EventCategory.new(category, series.children[1])
           source_result = Models::SourceResult.new(id: 19, date: Date.new(2018, 5, 8), event_category: event_category, place: 2)
+          participant = Models::Participant.new(1)
           result = Models::CalculatedResult.new(participant, [source_result])
           calculation_event_category.results << result
 
