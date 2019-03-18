@@ -44,6 +44,7 @@ module Calculations
         @logger.debug "Calculator#calculate! source_results: #{source_results.size}"
 
         calculate_step(Steps::MapSourceResultsToResults)
+          .calculate_step(Steps::RejectNoParticipant)
           .calculate_step(Steps::AssignPoints)
           .calculate_step(Steps::RejectWorstResults)
           .calculate_step(Steps::SumPoints)

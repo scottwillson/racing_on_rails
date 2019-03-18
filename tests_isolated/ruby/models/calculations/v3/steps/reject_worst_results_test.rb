@@ -156,12 +156,6 @@ module Calculations
           refute source_results[2].rejected?
           refute source_results[3].rejected?
         end
-
-        # TODO more than 1 reject_worst_results
-        # TODO consider points, not place
-        # TODO calculate drop results threshold from total events - reject_worst_results
-        # TODO validate reject_worst_results < total count of events
-        # TODO consider date
       end
     end
   end
