@@ -167,6 +167,7 @@ ActiveRecord::Schema.define(version: 2019_02_03_161738) do
   create_table "calculations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "event_id"
     t.bigint "source_event_id"
+    t.integer "reject_worst_results", default: 0, null: false
     t.boolean "double_points_for_last_event", default: false, null: false
     t.string "name", default: "New Calculation"
     t.string "points_for_place", default: "--- []\n"

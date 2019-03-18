@@ -45,6 +45,7 @@ module Calculations
 
         calculate_step(Steps::MapSourceResultsToResults)
           .calculate_step(Steps::AssignPoints)
+          .calculate_step(Steps::RejectWorstResults)
           .calculate_step(Steps::SumPoints)
           .calculate_step(Steps::Place)
           .event_categories

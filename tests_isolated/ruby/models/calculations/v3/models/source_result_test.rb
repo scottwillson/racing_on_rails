@@ -33,6 +33,14 @@ module Calculations
           assert_raises(ArgumentError) { SourceResult.new(event_category: "A") }
         end
 
+        def test_reject
+          result = SourceResult.new(id: 19, event_category: event_category, points: 12)
+          result.reject(:worse_result)
+          assert result.rejected?
+          assert_equal :worse_result, result.rejection_reason
+          assert_equal 0, result.points
+        end
+
         def test_rejected
           result = SourceResult.new(id: 19, event_category: event_category)
           assert_equal false, result.rejected?
