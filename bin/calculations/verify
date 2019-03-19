@@ -5,6 +5,7 @@
 ids = {
   blind_date: { event: 26_208, competition: 26_417 },
   cross_crusade: { event: 25_896, competition: 26_440 },
+  gpcd: { event: 26_278, competition: 26_421 },
   tabor: { event: 26_072, competition: 26_299 }
 }
 
@@ -112,6 +113,43 @@ def create_cross_crusade(ids)
   calculation
 end
 
+def create_gpcd(ids)
+  tabor = Event.find(ids[:gpcd][:event])
+  calculation = tabor.calculations.create!(
+    points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+    reject_worst_results: 1
+  )
+
+  calculation.categories << Category.find_or_create_by(name: "Athena")
+  calculation.categories << Category.find_or_create_by(name: "Category 1/2 35+ Men")
+  calculation.categories << Category.find_or_create_by(name: "Category 1/2 35+ Women")
+  calculation.categories << Category.find_or_create_by(name: "Category 1/2 Men")
+  calculation.categories << Category.find_or_create_by(name: "Category 1/2 Women")
+  calculation.categories << Category.find_or_create_by(name: "Category 2/3 Men")
+  calculation.categories << Category.find_or_create_by(name: "Category 2/3 Women")
+  calculation.categories << Category.find_or_create_by(name: "Category 3 35+ Men")
+  calculation.categories << Category.find_or_create_by(name: "Category 3 35+ Women")
+  calculation.categories << Category.find_or_create_by(name: "Category 3 Women")
+  calculation.categories << Category.find_or_create_by(name: "Category 4 35+ Men")
+  calculation.categories << Category.find_or_create_by(name: "Category 4 Men")
+  calculation.categories << Category.find_or_create_by(name: "Category 4 Women")
+  calculation.categories << Category.find_or_create_by(name: "Category 5 Men")
+  calculation.categories << Category.find_or_create_by(name: "Category 5 Women")
+  calculation.categories << Category.find_or_create_by(name: "Clydesdale")
+  calculation.categories << Category.find_or_create_by(name: "Elite Junior Men")
+  calculation.categories << Category.find_or_create_by(name: "Elite Junior Women")
+  calculation.categories << Category.find_or_create_by(name: "Junior Men 3/4/5")
+  calculation.categories << Category.find_or_create_by(name: "Junior Women 3/4/5")
+  calculation.categories << Category.find_or_create_by(name: "Masters 50+ Men")
+  calculation.categories << Category.find_or_create_by(name: "Masters 50+ Women")
+  calculation.categories << Category.find_or_create_by(name: "Masters 60+ Men")
+  calculation.categories << Category.find_or_create_by(name: "Masters 60+ Women")
+  calculation.categories << Category.find_or_create_by(name: "Singlespeed Men")
+  calculation.categories << Category.find_or_create_by(name: "Singlespeed Women")
+
+  calculation
+end
+
 def create_tabor(ids)
   tabor = Event.find(ids[:tabor][:event])
   calculation = tabor.calculations.create!(
@@ -133,6 +171,7 @@ def create_calculations(ids)
   [
     create_blind_date(ids),
     create_cross_crusade(ids),
+    create_gpcd(ids),
     create_tabor(ids)
   ]
 end
@@ -171,7 +210,7 @@ def compare_event_results(expected_event, actual_event)
     expected_results = expected_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points]}.sort
     actual_results = actual_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points]}.sort
     if expected_results != actual_results
-      puts "#{expected_race.name} results"
+      puts "#{expected_event.full_name} #{expected_race.name} results"
       puts "expected:"
       pp expected_results
       puts "actual:"
