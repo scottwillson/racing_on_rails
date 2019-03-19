@@ -4,7 +4,8 @@
 
 ids = {
   blind_date: { event: 26208, competition: 26417 },
-  tabor: { event: 26072, competition: 26299 }
+  cross_crusade: { event: 26208, competition: 26417 },
+  tabor: { event: 25896, competition: 26440 }
 }
 
 def fetch_data
@@ -71,8 +72,53 @@ def create_blind_date(ids)
   calculation
 end
 
+def create_cross_crusade(ids)
+  cross_crusade = Event.find(ids[:cross_crusade][:event])
+  calculation = cross_crusade.calculations.create!(
+    points_for_place: [26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+    reject_worst_results: 1
+  )
+  calculation.categories << Category.find_or_create_by(name: "Athena")
+  calculation.categories << Category.find_or_create_by(name: "Clydesdale")
+  calculation.categories << Category.find_or_create_by(name: "Elite Junior Men")
+  calculation.categories << Category.find_or_create_by(name: "Elite Junior Women")
+  calculation.categories << Category.find_or_create_by(name: "Junior Men 3/4/5")
+  calculation.categories << Category.find_or_create_by(name: "Junior Women 3/4/5")
+  calculation.categories << Category.find_or_create_by(name: "Junior Men 10-12")
+  calculation.categories << Category.find_or_create_by(name: "Junior Men 13-14")
+  calculation.categories << Category.find_or_create_by(name: "Junior Men 15-16")
+  calculation.categories << Category.find_or_create_by(name: "Junior Men 17-18")
+  calculation.categories << Category.find_or_create_by(name: "Junior Men 9")
+  calculation.categories << Category.find_or_create_by(name: "Junior Women 10-12")
+  calculation.categories << Category.find_or_create_by(name: "Junior Women 13-14")
+  calculation.categories << Category.find_or_create_by(name: "Junior Women 15-16")
+  calculation.categories << Category.find_or_create_by(name: "Junior Women 17-18")
+  calculation.categories << Category.find_or_create_by(name: "Junior Women 9")
+  calculation.categories << Category.find_or_create_by(name: "Masters 35+ 1/2")
+  calculation.categories << Category.find_or_create_by(name: "Masters 35+ 3")
+  calculation.categories << Category.find_or_create_by(name: "Masters 35+ 4")
+  calculation.categories << Category.find_or_create_by(name: "Masters 50+")
+  calculation.categories << Category.find_or_create_by(name: "Masters 60+")
+  calculation.categories << Category.find_or_create_by(name: "Masters 70+")
+  calculation.categories << Category.find_or_create_by(name: "Masters Women 35+ 1/2")
+  calculation.categories << Category.find_or_create_by(name: "Masters Women 35+ 3")
+  calculation.categories << Category.find_or_create_by(name: "Masters Women 50+")
+  calculation.categories << Category.find_or_create_by(name: "Masters Women 60+")
+  calculation.categories << Category.find_or_create_by(name: "Men 1/2")
+  calculation.categories << Category.find_or_create_by(name: "Men 2/3")
+  calculation.categories << Category.find_or_create_by(name: "Men 4")
+  calculation.categories << Category.find_or_create_by(name: "Men 5")
+  calculation.categories << Category.find_or_create_by(name: "Singlespeed Women")
+  calculation.categories << Category.find_or_create_by(name: "Singlespeed")
+  calculation.categories << Category.find_or_create_by(name: "Women 1/2")
+  calculation.categories << Category.find_or_create_by(name: "Women 2/3")
+  calculation.categories << Category.find_or_create_by(name: "Women 4")
+  calculation.categories << Category.find_or_create_by(name: "Women 5")
+  calculation
+end
+
 def create_tabor(ids)
-  tabor = WeeklySeries.find(ids[:tabor][:event])
+  tabor = Event.find(ids[:tabor][:event])
   calculation = tabor.calculations.create!(
     double_points_for_last_event: true,
     points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11]
@@ -91,6 +137,7 @@ end
 def create_calculations(ids)
   [
     create_blind_date(ids),
+    create_cross_crusade(ids),
     create_tabor(ids)
   ]
 end
@@ -119,6 +166,8 @@ def compare_event_results(expected_event, actual_event)
 
   expected_races.each do |expected_race|
     actual_race = actual_races.detect { |r| r.name == expected_race.name }
+    next unless actual_race
+
     actual_race_results_count = actual_race.results.reject { |r| r.points == 0 }.size
     if expected_race.results.count != actual_race_results_count
       puts "Expected #{actual_race.name} to have #{expected_race.results.count} results, but has #{actual_race_results_count}"
