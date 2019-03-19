@@ -2,11 +2,136 @@
 
 # Quick and dirty script to fetch old data and recalc competitions
 
-ids = {
-  blind_date: { event: 26_208, competition: 26_417 },
-  cross_crusade: { event: 25_896, competition: 26_440 },
-  gpcd: { event: 26_278, competition: 26_421 },
-  tabor: { event: 26_072, competition: 26_299 }
+competitions = {
+  blind_date: {
+    categories: [
+      "Category 1/2 Men",
+      "Category 2/3 Men",
+      "Category 3/4 Men",
+      "Category 5 Men",
+      "Junior Men 14-18",
+      "Junior Men 9-13",
+      "Junior Women 14-18",
+      "Junior Women 9-13",
+      "Masters Men 1/2 40+",
+      "Masters Men 2/3 40+",
+      "Masters Men 3/4 40+",
+      "Masters Men 50+",
+      "Masters Men 60+",
+      "Singlespeed",
+      "Stampede",
+      "Women 1/2",
+      "Women 3",
+      "Women 4",
+      "Women 5"
+    ],
+    competition_id: 26_417,
+    event_id: 26_208,
+    rules: {
+      points_for_place: [15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      reject_worst_results: 1
+    }
+  },
+  cross_crusade: {
+    categories: [
+      "Athena",
+      "Clydesdale",
+      "Elite Junior Men",
+      "Elite Junior Women",
+      "Junior Men 3/4/5",
+      "Junior Women 3/4/5",
+      "Junior Men 10-12",
+      "Junior Men 13-14",
+      "Junior Men 15-16",
+      "Junior Men 17-18",
+      "Junior Men 9",
+      "Junior Women 10-12",
+      "Junior Women 13-14",
+      "Junior Women 15-16",
+      "Junior Women 17-18",
+      "Junior Women 9",
+      "Masters 35+ 1/2",
+      "Masters 35+ 3",
+      "Masters 35+ 4",
+      "Masters 50+",
+      "Masters 60+",
+      "Masters 70+",
+      "Masters Women 35+ 1/2",
+      "Masters Women 35+ 3",
+      "Masters Women 50+",
+      "Masters Women 60+",
+      "Men 1/2",
+      "Men 2/3",
+      "Men 4",
+      "Men 5",
+      "Singlespeed Women",
+      "Singlespeed",
+      "Women 1/2",
+      "Women 2/3",
+      "Women 4",
+      "Women 5"
+    ],
+    competition_id: 26_440,
+    event_id: 25_896,
+    rules: {
+      points_for_place: [26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      reject_worst_results: 1
+    }
+ },
+  gpcd: {
+    categories: [
+      "Athena",
+      "Category 1/2 35+ Men",
+      "Category 1/2 35+ Women",
+      "Category 1/2 Men",
+      "Category 1/2 Women",
+      "Category 2/3 Men",
+      "Category 2/3 Women",
+      "Category 3 35+ Men",
+      "Category 3 35+ Women",
+      "Category 3 Women",
+      "Category 4 35+ Men",
+      "Category 4 Men",
+      "Category 4 Women",
+      "Category 5 Men",
+      "Category 5 Women",
+      "Clydesdale",
+      "Elite Junior Men",
+      "Elite Junior Women",
+      "Junior Men 3/4/5",
+      "Junior Women 3/4/5",
+      "Masters 50+ Men",
+      "Masters 50+ Women",
+      "Masters 60+ Men",
+      "Masters 60+ Women",
+      "Singlespeed Men",
+      "Singlespeed Women"
+    ],
+    competition_id: 26_421,
+    event_id: 26_278,
+    rules: {
+      points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      reject_worst_results: 1
+    }
+  },
+  tabor: {
+    categories: [
+      "Senior Men",
+      "Category 3 Men",
+      "Category 4 Men",
+      "Category 4/5 Women",
+      "Category 5 Men",
+      "Masters Men 50+",
+      "Masters Men 40+",
+      "Senior Women"
+    ],
+    competition_id: 26_299,
+    event_id: 26_072,
+    rules: {
+      double_points_for_last_event: true,
+      points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11]
+    }
+  }
 }
 
 def fetch_data
@@ -40,147 +165,26 @@ def destroy_calculations
   end
 end
 
-def create_blind_date(ids)
-  blind_date = Event.find(ids[:blind_date][:event])
-  calculation = blind_date.calculations.create!(
-    points_for_place: [15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-    reject_worst_results: 1
-  )
-  calculation.categories << Category.find_or_create_by(name: "Category 1/2 Men")
-  calculation.categories << Category.find_or_create_by(name: "Category 2/3 Men")
-  calculation.categories << Category.find_or_create_by(name: "Category 3/4 Men")
-  calculation.categories << Category.find_or_create_by(name: "Category 5 Men")
-  calculation.categories << Category.find_or_create_by(name: "Junior Men 14-18")
-  calculation.categories << Category.find_or_create_by(name: "Junior Men 9-13")
-  calculation.categories << Category.find_or_create_by(name: "Junior Women 14-18")
-  calculation.categories << Category.find_or_create_by(name: "Junior Women 9-13")
-  calculation.categories << Category.find_or_create_by(name: "Masters Men 1/2 40+")
-  calculation.categories << Category.find_or_create_by(name: "Masters Men 2/3 40+")
-  calculation.categories << Category.find_or_create_by(name: "Masters Men 3/4 40+")
-  calculation.categories << Category.find_or_create_by(name: "Masters Men 50+")
-  calculation.categories << Category.find_or_create_by(name: "Masters Men 60+")
-  calculation.categories << Category.find_or_create_by(name: "Singlespeed")
-  calculation.categories << Category.find_or_create_by(name: "Stampede")
-  calculation.categories << Category.find_or_create_by(name: "Women 1/2")
-  calculation.categories << Category.find_or_create_by(name: "Women 3")
-  calculation.categories << Category.find_or_create_by(name: "Women 4")
-  calculation.categories << Category.find_or_create_by(name: "Women 5")
-  calculation
+def create_calculations(competitions)
+  calculations = []
+
+  competitions.values.each do |competition|
+    event = Event.find(competition[:event_id])
+    calculation = event.calculations.create!(competition[:rules])
+    competition[:categories].each do |category_name|
+      calculation.categories << Category.find_or_create_by(name: category_name)
+    end
+    calculations << calculation
+  end
+
+  calculations
 end
 
-def create_cross_crusade(ids)
-  cross_crusade = Event.find(ids[:cross_crusade][:event])
-  calculation = cross_crusade.calculations.create!(
-    points_for_place: [26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-    reject_worst_results: 1
-  )
-  calculation.categories << Category.find_or_create_by(name: "Athena")
-  calculation.categories << Category.find_or_create_by(name: "Clydesdale")
-  calculation.categories << Category.find_or_create_by(name: "Elite Junior Men")
-  calculation.categories << Category.find_or_create_by(name: "Elite Junior Women")
-  calculation.categories << Category.find_or_create_by(name: "Junior Men 3/4/5")
-  calculation.categories << Category.find_or_create_by(name: "Junior Women 3/4/5")
-  calculation.categories << Category.find_or_create_by(name: "Junior Men 10-12")
-  calculation.categories << Category.find_or_create_by(name: "Junior Men 13-14")
-  calculation.categories << Category.find_or_create_by(name: "Junior Men 15-16")
-  calculation.categories << Category.find_or_create_by(name: "Junior Men 17-18")
-  calculation.categories << Category.find_or_create_by(name: "Junior Men 9")
-  calculation.categories << Category.find_or_create_by(name: "Junior Women 10-12")
-  calculation.categories << Category.find_or_create_by(name: "Junior Women 13-14")
-  calculation.categories << Category.find_or_create_by(name: "Junior Women 15-16")
-  calculation.categories << Category.find_or_create_by(name: "Junior Women 17-18")
-  calculation.categories << Category.find_or_create_by(name: "Junior Women 9")
-  calculation.categories << Category.find_or_create_by(name: "Masters 35+ 1/2")
-  calculation.categories << Category.find_or_create_by(name: "Masters 35+ 3")
-  calculation.categories << Category.find_or_create_by(name: "Masters 35+ 4")
-  calculation.categories << Category.find_or_create_by(name: "Masters 50+")
-  calculation.categories << Category.find_or_create_by(name: "Masters 60+")
-  calculation.categories << Category.find_or_create_by(name: "Masters 70+")
-  calculation.categories << Category.find_or_create_by(name: "Masters Women 35+ 1/2")
-  calculation.categories << Category.find_or_create_by(name: "Masters Women 35+ 3")
-  calculation.categories << Category.find_or_create_by(name: "Masters Women 50+")
-  calculation.categories << Category.find_or_create_by(name: "Masters Women 60+")
-  calculation.categories << Category.find_or_create_by(name: "Men 1/2")
-  calculation.categories << Category.find_or_create_by(name: "Men 2/3")
-  calculation.categories << Category.find_or_create_by(name: "Men 4")
-  calculation.categories << Category.find_or_create_by(name: "Men 5")
-  calculation.categories << Category.find_or_create_by(name: "Singlespeed Women")
-  calculation.categories << Category.find_or_create_by(name: "Singlespeed")
-  calculation.categories << Category.find_or_create_by(name: "Women 1/2")
-  calculation.categories << Category.find_or_create_by(name: "Women 2/3")
-  calculation.categories << Category.find_or_create_by(name: "Women 4")
-  calculation.categories << Category.find_or_create_by(name: "Women 5")
-  calculation
-end
-
-def create_gpcd(ids)
-  tabor = Event.find(ids[:gpcd][:event])
-  calculation = tabor.calculations.create!(
-    points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-    reject_worst_results: 1
-  )
-
-  calculation.categories << Category.find_or_create_by(name: "Athena")
-  calculation.categories << Category.find_or_create_by(name: "Category 1/2 35+ Men")
-  calculation.categories << Category.find_or_create_by(name: "Category 1/2 35+ Women")
-  calculation.categories << Category.find_or_create_by(name: "Category 1/2 Men")
-  calculation.categories << Category.find_or_create_by(name: "Category 1/2 Women")
-  calculation.categories << Category.find_or_create_by(name: "Category 2/3 Men")
-  calculation.categories << Category.find_or_create_by(name: "Category 2/3 Women")
-  calculation.categories << Category.find_or_create_by(name: "Category 3 35+ Men")
-  calculation.categories << Category.find_or_create_by(name: "Category 3 35+ Women")
-  calculation.categories << Category.find_or_create_by(name: "Category 3 Women")
-  calculation.categories << Category.find_or_create_by(name: "Category 4 35+ Men")
-  calculation.categories << Category.find_or_create_by(name: "Category 4 Men")
-  calculation.categories << Category.find_or_create_by(name: "Category 4 Women")
-  calculation.categories << Category.find_or_create_by(name: "Category 5 Men")
-  calculation.categories << Category.find_or_create_by(name: "Category 5 Women")
-  calculation.categories << Category.find_or_create_by(name: "Clydesdale")
-  calculation.categories << Category.find_or_create_by(name: "Elite Junior Men")
-  calculation.categories << Category.find_or_create_by(name: "Elite Junior Women")
-  calculation.categories << Category.find_or_create_by(name: "Junior Men 3/4/5")
-  calculation.categories << Category.find_or_create_by(name: "Junior Women 3/4/5")
-  calculation.categories << Category.find_or_create_by(name: "Masters 50+ Men")
-  calculation.categories << Category.find_or_create_by(name: "Masters 50+ Women")
-  calculation.categories << Category.find_or_create_by(name: "Masters 60+ Men")
-  calculation.categories << Category.find_or_create_by(name: "Masters 60+ Women")
-  calculation.categories << Category.find_or_create_by(name: "Singlespeed Men")
-  calculation.categories << Category.find_or_create_by(name: "Singlespeed Women")
-
-  calculation
-end
-
-def create_tabor(ids)
-  tabor = Event.find(ids[:tabor][:event])
-  calculation = tabor.calculations.create!(
-    double_points_for_last_event: true,
-    points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11]
-  )
-  calculation.categories << Category.find_or_create_by(name: "Senior Men")
-  calculation.categories << Category.find_or_create_by(name: "Category 3 Men")
-  calculation.categories << Category.find_or_create_by(name: "Category 4 Men")
-  calculation.categories << Category.find_or_create_by(name: "Category 4/5 Women")
-  calculation.categories << Category.find_or_create_by(name: "Category 5 Men")
-  calculation.categories << Category.find_or_create_by(name: "Masters Men 50+")
-  calculation.categories << Category.find_or_create_by(name: "Masters Men 40+")
-  calculation.categories << Category.find_or_create_by(name: "Senior Women")
-  calculation
-end
-
-def create_calculations(ids)
-  [
-    create_blind_date(ids),
-    create_cross_crusade(ids),
-    create_gpcd(ids),
-    create_tabor(ids)
-  ]
-end
-
-def compare_results(ids)
-  ids.values.each do |values|
-    expected_event = Competitions::Competition.find(values[:competition])
-    actual_event = Event.find(values[:event]).calculations.first.event
-    compare_event_results(expected_event, actual_event)
+def compare_results(competitions)
+  competitions.values.each do |competition|
+    expected_event = Competitions::Competition.find(competition[:competition_id])
+    actual_event = Event.find(competition[:event_id]).calculations.first.event
+    compare_event_results expected_event, actual_event
   end
 end
 
@@ -231,7 +235,7 @@ end
 # fetch_data
 # recreate_databases
 destroy_calculations
-calculations = create_calculations(ids)
+calculations = create_calculations(competitions)
 calculations.map(&:source_event).each(&:update_date)
 calculations.each(&:calculate!)
-compare_results(ids)
+compare_results(competitions)
