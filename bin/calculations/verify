@@ -3,9 +3,9 @@
 # Quick and dirty script to fetch old data and recalc competitions
 
 ids = {
-  blind_date: { event: 26208, competition: 26417 },
-  cross_crusade: { event: 26208, competition: 26417 },
-  tabor: { event: 25896, competition: 26440 }
+  blind_date: { event: 26_208, competition: 26_417 },
+  cross_crusade: { event: 25_896, competition: 26_440 },
+  tabor: { event: 26_072, competition: 26_299 }
 }
 
 def fetch_data
@@ -36,11 +36,6 @@ def destroy_calculations
     calc.event&.destroy_races
     calc.event&.destroy!
     calc.destroy!
-  end
-
-  Event.where("id >= 26450").all.each do |event|
-    event.destroy_races
-    event.destroy
   end
 end
 
