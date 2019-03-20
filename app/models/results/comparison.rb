@@ -110,31 +110,26 @@ module Results
       return 0 if id.present? && (id == other&.id)
 
       # Figure out the major position by place first, then break it down further if needed
-      begin
-        major_difference = (major_place <=> other.major_place)
-        if major_difference != 0
-          return major_difference
-        end
-
-        if rejected? && other.rejected?
-          if last_name == other.last_name
-            return first_name <=> other.first_name
-          else
-            return last_name <=> other.last_name
-          end
-        end
-
-        if numeric_place?
-          numeric_place <=> other.numeric_place
-        elsif id.present?
-          id <=> other.id
-        else
-          0
-        end
-      rescue ArgumentError => error
-        logger.error("Error in Result.<=> #{error} comparing #{self} with #{other}")
-        throw error
+      major_difference = (major_place <=> other.major_place)
+      if major_difference != 0
+        return major_difference
       end
+
+      if rejected? && other.rejected?
+        if last_name == other.last_name
+          return (first_name || "") <=> (other.first_name || "")
+        else
+          return (last_name || "") <=> (other.last_name || "")
+        end
+      end
+
+      if numeric_place?
+        return numeric_place <=> other.numeric_place
+      elsif id.present?
+        return id <=> other.id
+      end
+
+      0
     end
   end
 end
