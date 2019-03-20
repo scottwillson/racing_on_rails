@@ -74,7 +74,7 @@ competitions = {
     competition_id: 26_440,
     event_id: 25_896,
     rules: {
-      minimum_events: 3, 
+      minimum_events: 3,
       points_for_place: [26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       reject_worst_results: 1
     }
@@ -213,7 +213,7 @@ def compare_event_results(expected_event, actual_event)
     next unless actual_race
 
     expected_results = expected_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points]}.sort
-    actual_results = actual_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points]}.sort
+    actual_results = actual_race.results.reject { |r| r.points == 0 }.reject(&:rejected?).map { |result| [result.place, result.person_id, result.points]}.sort
     if expected_results.size != actual_results.size
       puts "Expected #{actual_race.name} to have #{expected_results.size} results, but has #{actual_results.size}"
     end
