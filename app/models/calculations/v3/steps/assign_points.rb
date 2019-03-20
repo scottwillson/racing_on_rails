@@ -5,16 +5,16 @@ module Calculations
     module Steps
       module AssignPoints
         def self.calculate!(calculator)
-          calculator.event_categories.each do |category|
-            category.results.each do |result|
+          calculator.event_categories.reject(&:rejected?).each do |category|
+            category.results.reject(&:rejected?).each do |result|
               result.source_results.each do |source_result|
-                unless category.rejected?
-                  source_result.points = points_for_place(source_result, calculator.rules.points_for_place)
-                  source_result.points = source_result.points * last_event_multiplier(source_result, calculator.rules)
-                end
+                source_result.points = points_for_place(source_result, calculator.rules.points_for_place)
+                source_result.points = source_result.points * last_event_multiplier(source_result, calculator.rules)
               end
             end
           end
+
+          calculator.event_categories
         end
 
         def self.points_for_place(source_result, points_for_place)

@@ -15,7 +15,6 @@ class Race < ApplicationRecord
   include Sanctioned
 
   DEFAULT_RESULT_COLUMNS = %w[ place number last_name first_name team_name points time ].freeze
-  REJECTION_REASONS = %w[ not_calculation_category ].freeze
   RESULT_COLUMNS = %w[
     age age_group category_class category_name city date_of_birth first_name gender laps last_name license notes
     number place points points_bonus points_bonus_penalty points_from_place points_penalty points_total state
@@ -23,7 +22,7 @@ class Race < ApplicationRecord
   ].freeze
 
   validates :event, :category, presence: true
-  validates :rejection_reason, inclusion: { in: REJECTION_REASONS, allow_blank: true }
+  validates :rejection_reason, inclusion: { in: ::Calculations::V3::REJECTION_REASONS, allow_blank: true }
 
   before_validation :find_associated_records
 

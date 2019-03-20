@@ -8,8 +8,6 @@
 # a +team+ atribute and many RaceNumbers. Result's number is just a String, not
 # a RaceNumber
 class Result < ApplicationRecord
-  REJECTION_REASONS = %w[ not_calculation_category ].freeze
-
   before_save :set_associated_records
 
   include Results::Caching
@@ -36,7 +34,7 @@ class Result < ApplicationRecord
   belongs_to :team, optional: true
 
   validates :race, presence: true
-  validates :rejection_reason, inclusion: { in: REJECTION_REASONS, allow_blank: true }
+  validates :rejection_reason, inclusion: { in: ::Calculations::V3::REJECTION_REASONS, allow_blank: true }
 
   scope :person_event, lambda { |person, event|
     includes(scores: %i[source_result competition_result])
