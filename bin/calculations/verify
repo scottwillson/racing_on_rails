@@ -74,10 +74,11 @@ competitions = {
     competition_id: 26_440,
     event_id: 25_896,
     rules: {
+      minimum_events: 3, 
       points_for_place: [26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       reject_worst_results: 1
     }
- },
+  },
   gpcd: {
     categories: [
       "Athena",
@@ -110,6 +111,7 @@ competitions = {
     competition_id: 26_421,
     event_id: 26_278,
     rules: {
+      minimum_events: 4,
       points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       reject_worst_results: 1
     }

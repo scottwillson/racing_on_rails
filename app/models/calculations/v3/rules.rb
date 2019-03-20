@@ -4,12 +4,14 @@ module Calculations
   module V3
     class Rules
       attr_reader :categories
+      attr_reader :minimum_events
       attr_reader :points_for_place
       attr_reader :reject_worst_results
       attr_reader :source_events
 
       def initialize(
         categories: [],
+        minimum_events: 0,
         reject_worst_results: 0,
         double_points_for_last_event: false,
         points_for_place: nil,
@@ -17,6 +19,7 @@ module Calculations
       )
 
         @categories = categories
+        @minimum_events = minimum_events
         @reject_worst_results = reject_worst_results
         @double_points_for_last_event = double_points_for_last_event
         @points_for_place = points_for_place
