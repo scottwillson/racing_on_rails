@@ -11,10 +11,10 @@ module Calculations
 
       def initialize(
         categories: [],
-        minimum_events: 0,
-        reject_worst_results: 0,
         double_points_for_last_event: false,
+        minimum_events: 0,
         points_for_place: nil,
+        reject_worst_results: 0,
         source_events: []
       )
 
@@ -40,6 +40,17 @@ module Calculations
         if !reject_worst_results.is_a?(Integer) || reject_worst_results.to_i.negative?
           raise(ArgumentError, "reject_worst_results must be a positive integer, but is #{reject_worst_results.class} #{reject_worst_results}")
         end
+      end
+
+      def to_h
+        {
+          categories: categories.map(&:name),
+          double_points_for_last_event: double_points_for_last_event?,
+          minimum_events: minimum_events,
+          points_for_place: points_for_place,
+          reject_worst_results: reject_worst_results,
+          source_events: source_events.map(&:id)
+        }
       end
     end
   end

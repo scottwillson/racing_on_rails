@@ -41,7 +41,7 @@ module Calculations
 
       # Do the work, all in memory with Ruby classes
       def calculate!
-        @logger.debug "Calculator#calculate! source_results: #{source_results.size}"
+        @logger.debug "Calculator#calculate! source_results: #{source_results.size} rules: #{rules.to_h}"
 
         calculate_step(Steps::MapSourceResultsToResults)
           .calculate_step(Steps::RejectNoParticipant)
@@ -56,20 +56,26 @@ module Calculations
 
       def calculate_step(step)
         results_count_before = @event_categories.flat_map(&:results).size
-        rejections_count_before = @event_categories.flat_map(&:results).flat_map(&:source_results).select(&:rejected?).size
+        rejections_count_before = @event_categories.flat_map(&:results).select(&:rejected?).size
+        source_results_count_before = @event_categories.flat_map(&:results).flat_map(&:source_results).size
+        source_result_rejections_count_before = @event_categories.flat_map(&:results).flat_map(&:source_results).select(&:rejected?).size
 
         time = Benchmark.measure do
           @event_categories = step.calculate!(self)
         end
 
         results_count_after = @event_categories.flat_map(&:results).size
-        rejections_count_after = @event_categories.flat_map(&:results).flat_map(&:source_results).select(&:rejected?).size
+        rejections_count_after = @event_categories.flat_map(&:results).select(&:rejected?).size
+        source_results_count_after = @event_categories.flat_map(&:results).flat_map(&:source_results).size
+        source_result_rejections_count_after = @event_categories.flat_map(&:results).flat_map(&:source_results).select(&:rejected?).size
         formatted_time = format("%.1fms", time.real)
         @logger.debug(<<~MSG
           Steps::#{step}#calculate!
           duration: #{formatted_time}
-          results: #{results_count_before} to #{results_count_after}
-          rejections: #{rejections_count_before} to #{rejections_count_after}
+          results: #{results_count_after - results_count_before}
+          rejections: #{rejections_count_after - rejections_count_before}
+          source_results: #{source_results_count_after - source_results_count_before}
+          source_result_rejections: #{source_result_rejections_count_after - source_result_rejections_count_before}
         MSG
                      )
 

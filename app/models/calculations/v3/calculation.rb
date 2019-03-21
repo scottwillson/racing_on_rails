@@ -107,7 +107,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def rules
-    Calculations::V3::Rules.new(
+    @rules ||= Calculations::V3::Rules.new(
       categories: categories_to_models(categories),
       double_points_for_last_event: double_points_for_last_event?,
       minimum_events: minimum_events,
