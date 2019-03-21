@@ -23,6 +23,7 @@ module Calculations
         def add_child(event)
           event.parent = self
           children << event
+          event
         end
 
         def dates

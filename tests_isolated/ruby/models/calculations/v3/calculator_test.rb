@@ -23,6 +23,69 @@ module Calculations
         assert_equal "Masters Men", calculator.event_categories.first.name
       end
 
+      def test_min_max
+        category = Models::Category.new("Athena")
+        participant = Models::Participant.new(id: 0)
+        source_events = []
+        source_results = []
+
+        series = Models::Event.new(id: 0, date: Date.new(2018, 10, 6), end_date: Date.new(2018, 11, 18))
+        event = series.add_child(Models::Event.new(id: 1, date: Date.new(2018, 10, 6)))
+        event_category = Models::EventCategory.new(category, event)
+        source_results << Models::SourceResult.new(id: 10, date: event.date, event_category: event_category, participant: participant, place: 2)
+        source_events << event
+
+        event = series.add_child(Models::Event.new(id: 3, date: Date.new(2018, 10, 7)))
+        event_category = Models::EventCategory.new(category, event)
+        source_results << Models::SourceResult.new(id: 11, date: event.date, event_category: event_category, participant: participant, place: 2)
+        source_events << event
+
+        event = series.add_child(Models::Event.new(id: 4, date: Date.new(2018, 10, 14)))
+        event_category = Models::EventCategory.new(category, event)
+        source_results << Models::SourceResult.new(id: 12, date: event.date, event_category: event_category, participant: participant, place: 1)
+        source_events << event
+
+        event = series.add_child(Models::Event.new(id: 5, date: Date.new(2018, 10, 28)))
+        event_category = Models::EventCategory.new(category, event)
+        source_results << Models::SourceResult.new(id: 13, date: event.date, event_category: event_category, participant: participant, place: 1)
+        source_events << event
+
+        event = series.add_child(Models::Event.new(id: 6, date: Date.new(2018, 11, 3)))
+        event_category = Models::EventCategory.new(category, event)
+        source_results << Models::SourceResult.new(id: 14, date: event.date, event_category: event_category, participant: participant, place: 2)
+        source_events << event
+
+        event = series.add_child(Models::Event.new(id: 7, date: Date.new(2018, 11, 4)))
+        source_events << event
+
+        event = series.add_child(Models::Event.new(id: 8, date: Date.new(2018, 11, 11)))
+        event_category = Models::EventCategory.new(category, event)
+        source_results << Models::SourceResult.new(id: 15, date: event.date, event_category: event_category, participant: participant, place: 1)
+        source_events << event
+
+        event = series.add_child(Models::Event.new(id: 9, date: Date.new(2018, 11, 18)))
+        event_category = Models::EventCategory.new(category, event)
+        source_results << Models::SourceResult.new(id: 16, date: event.date, event_category: event_category, participant: participant, place: 3)
+        source_events << event
+
+        rules = Rules.new(
+          categories: [category],
+          minimum_events: 3,
+          points_for_place: [26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+          reject_worst_results: 1,
+          source_events: source_events
+        )
+        calculator = Calculator.new(rules: rules, source_results: source_results)
+
+        event_categories = calculator.calculate!
+
+        assert_equal 1, event_categories.first.results.size
+        result = event_categories.first.results.first
+        assert_equal 7, result.source_results.size
+        assert_equal [26, 26, 26, 20, 20, 20, 16], result.source_results.map(&:points).sort.reverse
+        assert_equal 154, result.points
+      end
+
       def test_validate
         calculator = Calculator.new
         calculator.validate!
