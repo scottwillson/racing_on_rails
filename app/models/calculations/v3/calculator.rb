@@ -45,6 +45,7 @@ module Calculations
 
         calculate_step(Steps::MapSourceResultsToResults)
           .calculate_step(Steps::RejectNoParticipant)
+          .calculate_step(Steps::RejectDnfs)
           .calculate_step(Steps::RejectBelowMinimumEvents)
           .calculate_step(Steps::AssignPoints)
           .calculate_step(Steps::RejectWorstResults)

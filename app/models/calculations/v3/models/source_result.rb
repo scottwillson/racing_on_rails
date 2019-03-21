@@ -31,6 +31,10 @@ module Calculations
           event_category&.category
         end
 
+        def dnf?
+          "DNF".casecmp(place) == 0
+        end
+
         def last_event_date
           event_category.event.parent.end_date
         end
