@@ -44,6 +44,7 @@ module Calculations
         @logger.debug "Calculator#calculate! source_results: #{source_results.size} rules: #{rules.to_h}"
 
         calculate_step(Steps::MapSourceResultsToResults)
+          .calculate_step(Steps::RejectCategories)
           .calculate_step(Steps::RejectNoParticipant)
           .calculate_step(Steps::RejectDnfs)
           .calculate_step(Steps::RejectBelowMinimumEvents)
