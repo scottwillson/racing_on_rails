@@ -8,13 +8,19 @@ module Calculations
           rules = calculator.rules
           return calculator.event_categories unless rules.reject_worst_results?
 
-          maximum_events = rules.source_events.size - rules.reject_worst_results
-
-          calculator.event_categories.flat_map(&:results).each do |result|
-            reject_worst_results result, maximum_events
+          calculator.event_categories.each do |event_category|
+            maximum_events = maximum_events(rules, event_category)
+            event_category.results.each do |result|
+              reject_worst_results result, maximum_events
+            end
           end
 
           calculator.event_categories
+        end
+
+        def self.maximum_events(rules, event_category)
+          source_events = event_category.results.flat_map(&:source_results).flat_map(&:event_category).map(&:event_id).uniq.size
+          source_events - rules.reject_worst_results
         end
 
         def self.reject_worst_results(result, maximum_events)

@@ -18,6 +18,10 @@ module Calculations
           validate!
         end
 
+        def event_id
+          event&.id
+        end
+
         def name # rubocop:disable Rails/Delegate
           category.name
         end

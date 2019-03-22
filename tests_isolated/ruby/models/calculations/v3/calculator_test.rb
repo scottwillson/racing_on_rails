@@ -25,7 +25,7 @@ module Calculations
 
       def test_min_max
         category = Models::Category.new("Athena")
-        participant = Models::Participant.new(id: 0)
+        participant = Models::Participant.new(0)
         source_events = []
         source_results = []
 
@@ -56,6 +56,10 @@ module Calculations
         source_events << event
 
         event = series.add_child(Models::Event.new(id: 7, date: Date.new(2018, 11, 4)))
+        # Someone else's result. Need a result to know that event was held.
+        event_category = Models::EventCategory.new(category, event)
+        participant_2 = Models::Participant.new(1)
+        source_results << Models::SourceResult.new(id: 99, date: event.date, event_category: event_category, participant: participant_2, place: 2)
         source_events << event
 
         event = series.add_child(Models::Event.new(id: 8, date: Date.new(2018, 11, 11)))
@@ -78,9 +82,7 @@ module Calculations
         calculator = Calculator.new(rules: rules, source_results: source_results)
 
         event_categories = calculator.calculate!
-
-        assert_equal 1, event_categories.first.results.size
-        result = event_categories.first.results.first
+        result = event_categories.first.results.detect { |r| r.participant.id == 0 }
         assert_equal 7, result.source_results.size
         assert_equal [26, 26, 26, 20, 20, 20, 16], result.source_results.map(&:points).sort.reverse
         assert_equal 154, result.points
