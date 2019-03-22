@@ -9,6 +9,9 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   has_and_belongs_to_many :categories # rubocop:disable Rails/HasAndBelongsToMany
   belongs_to :event, dependent: :destroy, inverse_of: :calculation, optional: true
+  has_and_belongs_to_many :rejected_categories,
+    class_name: "Category",
+    join_table: :calculations_rejected_categories # rubocop:disable Rails/HasAndBelongsToMany
   belongs_to :source_event, class_name: "Event"
 
   before_save :set_name
@@ -113,6 +116,7 @@ class Calculations::V3::Calculation < ApplicationRecord
       minimum_events: minimum_events,
       points_for_place: points_for_place,
       reject_worst_results: reject_worst_results,
+      rejected_categories: categories_to_models(rejected_categories),
       source_events: model_source_events
     )
   end

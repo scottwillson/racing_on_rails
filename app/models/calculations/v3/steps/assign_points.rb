@@ -7,7 +7,7 @@ module Calculations
         def self.calculate!(calculator)
           calculator.event_categories.reject(&:rejected?).each do |category|
             category.results.reject(&:rejected?).each do |result|
-              result.source_results.each do |source_result|
+              result.source_results.reject(&:rejected?).each do |source_result|
                 source_result.points = points_for_place(source_result, calculator.rules.points_for_place)
                 source_result.points = source_result.points * last_event_multiplier(source_result, calculator.rules)
               end

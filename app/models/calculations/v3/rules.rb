@@ -7,6 +7,7 @@ module Calculations
       attr_reader :minimum_events
       attr_reader :points_for_place
       attr_reader :reject_worst_results
+      attr_reader :rejected_categories
       attr_reader :source_events
 
       def initialize(
@@ -14,15 +15,17 @@ module Calculations
         double_points_for_last_event: false,
         minimum_events: 0,
         points_for_place: nil,
+        rejected_categories: [],
         reject_worst_results: 0,
         source_events: []
       )
 
         @categories = categories
-        @minimum_events = minimum_events
-        @reject_worst_results = reject_worst_results
         @double_points_for_last_event = double_points_for_last_event
+        @minimum_events = minimum_events
         @points_for_place = points_for_place
+        @reject_worst_results = reject_worst_results
+        @rejected_categories = rejected_categories
         @source_events = source_events
 
         validate!
@@ -49,6 +52,7 @@ module Calculations
           minimum_events: minimum_events,
           points_for_place: points_for_place,
           reject_worst_results: reject_worst_results,
+          rejected_categories: rejected_categories.map(&:name),
           source_events: source_events.map(&:id)
         }
       end
