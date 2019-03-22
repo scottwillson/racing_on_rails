@@ -72,6 +72,69 @@ module Calculations
           assert_equal :worse_result, source_results[1].rejection_reason
         end
 
+        def test_reject_worst_results_by_category
+          women = Models::Category.new("Women")
+          women_4 = Models::Category.new("Women 4")
+
+          series = Models::Event.new(id: 0, date: Date.new(2018, 5, 1), end_date: Date.new(2018, 5, 15))
+          series.add_child Models::Event.new(id: 1, date: Date.new(2018, 5, 1))
+          series.add_child Models::Event.new(id: 2, date: Date.new(2018, 5, 8))
+          series.add_child Models::Event.new(id: 3, date: Date.new(2018, 5, 15))
+
+          rules = Rules.new(
+            categories: [women, women_4],
+            source_events: series.children,
+            reject_worst_results: 1,
+            points_for_place: [100, 75, 50, 20, 10]
+          )
+          calculator = Calculator.new(rules: rules, source_results: [])
+
+          event_category = Models::EventCategory.new(women, series.children[0])
+          source_result = Models::SourceResult.new(id: 33, date: Date.new(2018, 5, 1), event_category: event_category, place: 1, points: 100)
+
+          event_category = Models::EventCategory.new(women, series.children[1])
+          source_result_2 = Models::SourceResult.new(id: 19, date: Date.new(2018, 5, 8), event_category: event_category, place: 3, points: 50)
+
+          event_category = Models::EventCategory.new(women, series.children[2])
+          source_result_3 = Models::SourceResult.new(id: 20, date: Date.new(2018, 5, 15), event_category: event_category, place: 2, points: 75)
+
+          participant = Models::Participant.new(0)
+          result = Models::CalculatedResult.new(participant, [source_result, source_result_2, source_result_3])
+          calculator.event_categories.first.results << result
+
+          # No May 1 Women 4 race
+          event_category = Models::EventCategory.new(women_4, series.children[1])
+          source_result = Models::SourceResult.new(id: 22, date: Date.new(2018, 5, 8), event_category: event_category, place: 3, points: 50)
+
+          event_category = Models::EventCategory.new(women_4, series.children[2])
+          source_result_2 = Models::SourceResult.new(id: 25, date: Date.new(2018, 5, 15), event_category: event_category, place: 2, points: 75)
+
+          participant = Models::Participant.new(1)
+          result = Models::CalculatedResult.new(participant, [source_result, source_result_2])
+          calculator.event_categories.last.results << result
+
+          event_categories = RejectWorstResults.calculate!(calculator)
+          results = event_categories.detect { |ec| ec.category == women }.results
+          source_results = results.first.source_results.sort_by(&:place)
+
+          assert_equal 100, source_results.first.points
+          refute source_results.first.rejected?
+
+          assert_equal 0, source_results[2].points
+          assert source_results[2].rejected?
+          assert_equal :worse_result, source_results[2].rejection_reason
+
+          results = event_categories.detect { |ec| ec.category == women_4 }.results
+          source_results = results.first.source_results.sort_by(&:place)
+
+          assert_equal 75, source_results.first.points
+          refute source_results.first.rejected?
+
+          assert_equal 0, source_results[1].points
+          assert source_results[1].rejected?
+          assert_equal :worse_result, source_results[1].rejection_reason
+        end
+
         def test_reject_no_points
           category = Models::Category.new("Women")
           source_result = Models::SourceResult.new(id: 0, event_category: Models::EventCategory.new(category), points: 0)
