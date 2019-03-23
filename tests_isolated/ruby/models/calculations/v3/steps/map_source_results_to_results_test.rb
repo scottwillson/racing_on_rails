@@ -19,7 +19,7 @@ module Calculations
           )
           source_results = [source_result]
 
-          rules = Rules.new(categories: [category])
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)])
           calculator = Calculator.new(rules: rules, source_results: source_results)
 
           event_categories = MapSourceResultsToResults.calculate!(calculator)
@@ -50,7 +50,7 @@ module Calculations
           source_results = [source_result]
 
           event_category = Models::Category.new("Masters Women")
-          rules = Rules.new(categories: [event_category])
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(event_category)])
           calculator = Calculator.new(rules: rules, source_results: source_results)
 
           event_categories = MapSourceResultsToResults.calculate!(calculator)
@@ -98,7 +98,7 @@ module Calculations
             place: "3"
           )
 
-          rules = Rules.new(categories: [category])
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)])
           calculator = Calculator.new(rules: rules, source_results: source_results)
 
           event_categories = MapSourceResultsToResults.calculate!(calculator)
@@ -163,7 +163,10 @@ module Calculations
             place: "7"
           )
 
-          rules = Rules.new(categories: [masters_men, junior_women])
+          rules = Rules.new(category_rules: [
+            Models::CategoryRule.new(masters_men),
+            Models::CategoryRule.new(junior_women)
+          ])
           calculator = Calculator.new(rules: rules, source_results: source_results)
 
           event_categories = MapSourceResultsToResults.calculate!(calculator)
@@ -203,7 +206,10 @@ module Calculations
             place: "3"
           )
 
-          rules = Rules.new(categories: [masters_men, junior_women])
+          rules = Rules.new(category_rules: [
+            Models::CategoryRule.new(masters_men),
+            Models::CategoryRule.new(junior_women)
+          ])
           calculator = Calculator.new(rules: rules, source_results: source_results)
 
           event_categories = MapSourceResultsToResults.calculate!(calculator)

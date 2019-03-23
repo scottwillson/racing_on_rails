@@ -3,45 +3,50 @@
 module Calculations
   module V3
     class Rules
-      attr_reader :categories
+      attr_reader :category_rules
+      attr_reader :maximum_events
       attr_reader :minimum_events
       attr_reader :points_for_place
-      attr_reader :reject_worst_results
-      attr_reader :rejected_categories
       attr_reader :source_events
 
       def initialize(
-        categories: [],
+        category_rules: [],
         double_points_for_last_event: false,
+        maximum_events: 0,
         minimum_events: 0,
         points_for_place: nil,
-        rejected_categories: [],
-        reject_worst_results: 0,
         source_events: []
       )
 
-        @categories = categories
+        @category_rules = category_rules
         @double_points_for_last_event = double_points_for_last_event
+        @maximum_events = maximum_events
         @minimum_events = minimum_events
         @points_for_place = points_for_place
-        @reject_worst_results = reject_worst_results
-        @rejected_categories = rejected_categories
         @source_events = source_events
 
         validate!
+      end
+
+      def categories
+        category_rules.map(&:category)
       end
 
       def double_points_for_last_event?
         @double_points_for_last_event
       end
 
-      def reject_worst_results?
-        reject_worst_results.positive?
+      def maximum_events?
+        maximum_events.negative?
+      end
+
+      def rejected_categories
+        category_rules.select(&:reject?).map(&:category)
       end
 
       def validate!
-        if !reject_worst_results.is_a?(Integer) || reject_worst_results.to_i.negative?
-          raise(ArgumentError, "reject_worst_results must be a positive integer, but is #{reject_worst_results.class} #{reject_worst_results}")
+        if !maximum_events.is_a?(Integer) || maximum_events.to_i.positive?
+          raise(ArgumentError, "maximum_events must be an integer < 1, but is #{maximum_events.class} #{maximum_events}")
         end
       end
 
@@ -49,10 +54,9 @@ module Calculations
         {
           categories: categories.map(&:name),
           double_points_for_last_event: double_points_for_last_event?,
+          maximum_events: maximum_events,
           minimum_events: minimum_events,
           points_for_place: points_for_place,
-          reject_worst_results: reject_worst_results,
-          rejected_categories: rejected_categories.map(&:name),
           source_events: source_events.map(&:id)
         }
       end

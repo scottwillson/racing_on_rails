@@ -9,7 +9,7 @@ module Calculations
       class RejectBelowMinimumEventsTest < Ruby::TestCase
         def test_calculate
           category = Models::Category.new("Women")
-          rules = Rules.new(categories: [category], minimum_events: 3)
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)], minimum_events: 3)
           calculator = Calculator.new(rules: rules, source_results: [])
           event_category = calculator.event_categories.first
 
@@ -29,7 +29,7 @@ module Calculations
 
         def test_dnfs_dont_count
           category = Models::Category.new("Women")
-          rules = Rules.new(categories: [category], minimum_events: 3)
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)], minimum_events: 3)
           calculator = Calculator.new(rules: rules, source_results: [])
           event_category = calculator.event_categories.first
 

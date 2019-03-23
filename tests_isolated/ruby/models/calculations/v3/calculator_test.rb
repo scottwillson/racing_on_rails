@@ -16,8 +16,8 @@ module Calculations
       end
 
       def test_map_categories_to_event_categories
-        categories = [Models::Category.new("Masters Men")]
-        rules = Rules.new(categories: categories)
+        category = Models::Category.new("Masters Men")
+        rules = Rules.new(category_rules: [Models::CategoryRule.new(category)])
         calculator = Calculator.new(rules: rules)
         assert_equal 1, calculator.event_categories.size
         assert_equal "Masters Men", calculator.event_categories.first.name
@@ -73,10 +73,10 @@ module Calculations
         source_events << event
 
         rules = Rules.new(
-          categories: [category],
+          category_rules: [Models::CategoryRule.new(category)],
           minimum_events: 3,
           points_for_place: [26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-          reject_worst_results: 1,
+          maximum_events: -1,
           source_events: source_events
         )
         calculator = Calculator.new(rules: rules, source_results: source_results)

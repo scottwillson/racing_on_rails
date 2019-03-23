@@ -9,7 +9,7 @@ module Calculations
       class RejectNoParticipantTest < Ruby::TestCase
         def test_calculate
           category = Models::Category.new("Women")
-          rules = Rules.new(categories: [category])
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)])
           calculator = Calculator.new(rules: rules, source_results: [])
           event_category = calculator.event_categories.first
 

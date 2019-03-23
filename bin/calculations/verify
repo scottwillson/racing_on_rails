@@ -175,11 +175,10 @@ def create_calculations(competitions)
   competitions.values.each do |competition|
     event = Event.find(competition[:event_id])
     calculation = event.calculations.create!(competition[:rules])
-    competition[:categories].each do |category_name|
-      calculation.categories << Category.find_or_create_by(name: category_name)
-    end
-    competition[:rejected_categories]&.each do |category_name|
-      calculation.rejected_categories << Category.find_or_create_by(name: category_name)
+    competition[:categories].each do |category_definition|
+      category = Category.find_or_create_by(name: category_definition[:name])
+      calculation_category = Calculations::V3::Category.new(category: category, maximum_events: category_definition[:maximum_events], reject: category_definition[:reject] || false)
+      calculation.calculation_categories << calculation_category
     end
     calculations << calculation
   end
@@ -245,7 +244,7 @@ def compare_event_results(expected_event, actual_event)
 end
 
 # fetch_data
-# recreate_databases
+recreate_databases
 destroy_calculations
 calculations = create_calculations(competitions)
 calculations.map(&:source_event).each(&:update_date)

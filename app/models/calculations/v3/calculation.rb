@@ -7,11 +7,9 @@
 class Calculations::V3::Calculation < ApplicationRecord
   serialize :points_for_place, Array
 
-  has_and_belongs_to_many :categories # rubocop:disable Rails/HasAndBelongsToMany
+  has_many :calculation_categories, class_name: "Calculations::V3::Category"
+  has_many :categories, through: :calculation_categories, class_name: "::Category"
   belongs_to :event, dependent: :destroy, inverse_of: :calculation, optional: true
-  has_and_belongs_to_many :rejected_categories,
-    class_name: "Category",
-    join_table: :calculations_rejected_categories # rubocop:disable Rails/HasAndBelongsToMany
   belongs_to :source_event, class_name: "Event"
 
   before_save :set_name
@@ -111,21 +109,25 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   def rules
     @rules ||= Calculations::V3::Rules.new(
-      categories: categories_to_models(categories),
+      category_rules: category_rules(categories),
       double_points_for_last_event: double_points_for_last_event?,
       minimum_events: minimum_events,
       points_for_place: points_for_place,
-      reject_worst_results: reject_worst_results,
-      rejected_categories: categories_to_models(rejected_categories),
+      maximum_events: maximum_events,
       source_events: model_source_events
     )
   end
 
   # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them.
   # Categories are a subset of "rules."
-  def categories_to_models(categories)
-    categories.map do |category|
-      Calculations::V3::Models::Category.new(category.name)
+  def category_rules(categories)
+    calculation_categories.map do |calculation_category|
+      category = Calculations::V3::Models::Category.new(calculation_category.category.name)
+      Calculations::V3::Models::CategoryRule.new(
+        category,
+        maximum_events: calculation_category.maximum_events,
+        reject: calculation_category.reject?
+      )
     end
   end
 
