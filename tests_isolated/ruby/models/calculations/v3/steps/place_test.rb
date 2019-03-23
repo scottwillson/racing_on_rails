@@ -9,7 +9,7 @@ module Calculations
       class PlaceTest < Ruby::TestCase
         def test_calculate
           category = Models::Category.new("Masters Men")
-          rules = Rules.new(categories: [category])
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)])
 
           participant = Models::Participant.new(0)
           source_result = Models::SourceResult.new(
@@ -31,7 +31,7 @@ module Calculations
 
         def test_place_many
           category = Models::Category.new("Masters Men")
-          rules = Rules.new(categories: [category])
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)])
           calculator = Calculator.new(rules: rules, source_results: [])
           event_category = calculator.event_categories.first
 
@@ -71,7 +71,7 @@ module Calculations
 
         def test_break_ties_by_best_place
           category = Models::Category.new("Junior Women")
-          rules = Rules.new(categories: [category])
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)])
           calculator = Calculator.new(rules: rules, source_results: [])
           event_category = calculator.event_categories.first
 
@@ -211,7 +211,7 @@ module Calculations
 
         def test_do_not_place_rejected
           category = Models::Category.new("Masters Men")
-          rules = Rules.new(categories: [category])
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)])
 
           participant = Models::Participant.new(0)
           source_result = Models::SourceResult.new(

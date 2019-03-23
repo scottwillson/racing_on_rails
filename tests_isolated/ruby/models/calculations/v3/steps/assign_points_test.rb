@@ -10,7 +10,7 @@ module Calculations
         def test_assign_points
           category = Models::Category.new("Masters Men")
           rules = Rules.new(
-            categories: [category],
+            category_rules: [Models::CategoryRule.new(category)],
             points_for_place: [100, 75, 50, 20, 10]
           )
           calculator = Calculator.new(rules: rules, source_results: [])
@@ -35,7 +35,7 @@ module Calculations
         def test_double_points_for_last_event
           category = Models::Category.new("Women 4")
           rules = Rules.new(
-            categories: [category],
+            category_rules: [Models::CategoryRule.new(category)],
             double_points_for_last_event: true,
             points_for_place: [100, 75, 50, 20, 10]
           )
@@ -67,7 +67,7 @@ module Calculations
         def test_skip_rejected_categories
           category = Models::Category.new("Masters Men")
           rules = Rules.new(
-            categories: [category],
+            category_rules: [Models::CategoryRule.new(category)],
             points_for_place: [100, 75, 50, 20, 10]
           )
           calculator = Calculator.new(rules: rules, source_results: [])

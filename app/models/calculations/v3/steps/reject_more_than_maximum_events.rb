@@ -3,15 +3,15 @@
 module Calculations
   module V3
     module Steps
-      module RejectWorstResults
+      module RejectMoreThanMaximumEvents
         def self.calculate!(calculator)
           rules = calculator.rules
-          return calculator.event_categories unless rules.reject_worst_results?
+          return calculator.event_categories unless rules.maximum_events?
 
           calculator.event_categories.each do |event_category|
             maximum_events = maximum_events(rules, event_category)
             event_category.results.each do |result|
-              reject_worst_results result, maximum_events
+              reject_more_than_maximum_events result, maximum_events
             end
           end
 
@@ -19,11 +19,12 @@ module Calculations
         end
 
         def self.maximum_events(rules, event_category)
-          source_events = event_category.results.flat_map(&:source_results).flat_map(&:event_category).map(&:event_id).uniq.size
-          source_events - rules.reject_worst_results
+          category_rule = rules.category_rules.detect { |rule| rule.category == event_category.category }
+          maximum_events = category_rule&.maximum_events || rules.maximum_events
+          rules.source_events.size + maximum_events
         end
 
-        def self.reject_worst_results(result, maximum_events)
+        def self.reject_more_than_maximum_events(result, maximum_events)
           source_results_count = result.source_results.size
           return if source_results_count <= maximum_events
 

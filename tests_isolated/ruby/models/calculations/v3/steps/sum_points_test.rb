@@ -9,7 +9,7 @@ module Calculations
       class SumPointsTest < Ruby::TestCase
         def test_calculate
           category = Models::Category.new("Masters Men")
-          rules = Rules.new(categories: [category])
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)])
 
           participant = Models::Participant.new(0)
           source_result = Models::SourceResult.new(

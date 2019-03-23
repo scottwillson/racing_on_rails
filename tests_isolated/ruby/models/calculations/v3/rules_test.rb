@@ -7,12 +7,12 @@ module Calculations
     # :stopdoc:
     class RulesTest < Ruby::TestCase
       def test_new
-        categories = [Models::Category.new("Masters Men")]
+        category = Models::Category.new("Masters Men")
 
-        rules = Rules.new(categories: categories)
+        rules = Rules.new(category_rules: [Models::CategoryRule.new(category)])
 
         assert_nil rules.points_for_place
-        assert_equal categories, rules.categories
+        assert_equal [category], rules.categories
       end
     end
   end

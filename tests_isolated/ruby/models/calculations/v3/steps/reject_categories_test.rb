@@ -10,7 +10,11 @@ module Calculations
         def test_calculate
           category = Models::Category.new("Junior Men 3/4/5")
           rejected_category = Models::Category.new("Junior Men 9-12 3/4/5")
-          rules = Rules.new(categories: [category], rejected_categories: [rejected_category])
+          category_rules = [
+            Models::CategoryRule.new(category),
+            Models::CategoryRule.new(rejected_category, reject: true),
+          ]
+          rules = Rules.new(category_rules: category_rules)
           calculator = Calculator.new(rules: rules, source_results: [])
 
           event_category = calculator.event_categories.first
