@@ -3,35 +3,35 @@
 # Quick and dirty script to fetch old data and recalc competitions
 
 competitions = {
-  # blind_date: {
-  #   categories: [
-  #     "Category 1/2 Men",
-  #     "Category 2/3 Men",
-  #     "Category 3/4 Men",
-  #     "Category 5 Men",
-  #     "Junior Men 14-18",
-  #     "Junior Men 9-13",
-  #     "Junior Women 14-18",
-  #     "Junior Women 9-13",
-  #     "Masters Men 1/2 40+",
-  #     "Masters Men 2/3 40+",
-  #     "Masters Men 3/4 40+",
-  #     "Masters Men 50+",
-  #     "Masters Men 60+",
-  #     "Singlespeed",
-  #     "Stampede",
-  #     "Women 1/2",
-  #     "Women 3",
-  #     "Women 4",
-  #     "Women 5"
-  #   ],
-  #   competition_id: 26_417,
-  #   event_id: 26_208,
-  #   rules: {
-  #     points_for_place: [15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-  #     reject_worst_results: 1
-  #   }
-  # },
+  blind_date: {
+    categories: [
+      "Category 1/2 Men",
+      "Category 2/3 Men",
+      "Category 3/4 Men",
+      "Category 5 Men",
+      "Junior Men 14-18",
+      "Junior Men 9-13",
+      "Junior Women 14-18",
+      "Junior Women 9-13",
+      "Masters Men 1/2 40+",
+      "Masters Men 2/3 40+",
+      "Masters Men 3/4 40+",
+      "Masters Men 50+",
+      "Masters Men 60+",
+      "Singlespeed",
+      "Stampede",
+      "Women 1/2",
+      "Women 3",
+      "Women 4",
+      "Women 5"
+    ],
+    competition_id: 26_417,
+    event_id: 26_208,
+    rules: {
+      points_for_place: [15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      reject_worst_results: 1
+    }
+  },
   cross_crusade: {
     categories: [
       "Athena",
@@ -79,62 +79,62 @@ competitions = {
       points_for_place: [26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       reject_worst_results: 1
     }
+  },
+  gpcd: {
+    categories: [
+      "Athena",
+      "Category 1/2 35+ Men",
+      "Category 1/2 35+ Women",
+      "Category 1/2 Men",
+      "Category 1/2 Women",
+      "Category 2/3 Men",
+      "Category 2/3 Women",
+      "Category 3 35+ Men",
+      "Category 3 35+ Women",
+      "Category 3 Women",
+      "Category 4 35+ Men",
+      "Category 4 Men",
+      "Category 4 Women",
+      "Category 5 Men",
+      "Category 5 Women",
+      "Clydesdale",
+      "Elite Junior Men",
+      "Elite Junior Women",
+      "Junior Men 3/4/5",
+      "Junior Women 3/4/5",
+      "Masters 50+ Men",
+      "Masters 50+ Women",
+      "Masters 60+ Men",
+      "Masters 60+ Women",
+      "Singlespeed Men",
+      "Singlespeed Women"
+    ],
+    competition_id: 26_421,
+    event_id: 26_278,
+    rules: {
+      minimum_events: 4,
+      points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      reject_worst_results: 1
+    }
+  },
+  tabor: {
+    categories: [
+      "Senior Men",
+      "Category 3 Men",
+      "Category 4 Men",
+      "Category 4/5 Women",
+      "Category 5 Men",
+      "Masters Men 50+",
+      "Masters Men 40+",
+      "Senior Women"
+    ],
+    competition_id: 26_299,
+    event_id: 26_072,
+    rules: {
+      double_points_for_last_event: true,
+      points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11]
+    }
   }
-  # gpcd: {
-  #   categories: [
-  #     "Athena",
-  #     "Category 1/2 35+ Men",
-  #     "Category 1/2 35+ Women",
-  #     "Category 1/2 Men",
-  #     "Category 1/2 Women",
-  #     "Category 2/3 Men",
-  #     "Category 2/3 Women",
-  #     "Category 3 35+ Men",
-  #     "Category 3 35+ Women",
-  #     "Category 3 Women",
-  #     "Category 4 35+ Men",
-  #     "Category 4 Men",
-  #     "Category 4 Women",
-  #     "Category 5 Men",
-  #     "Category 5 Women",
-  #     "Clydesdale",
-  #     "Elite Junior Men",
-  #     "Elite Junior Women",
-  #     "Junior Men 3/4/5",
-  #     "Junior Women 3/4/5",
-  #     "Masters 50+ Men",
-  #     "Masters 50+ Women",
-  #     "Masters 60+ Men",
-  #     "Masters 60+ Women",
-  #     "Singlespeed Men",
-  #     "Singlespeed Women"
-  #   ],
-  #   competition_id: 26_421,
-  #   event_id: 26_278,
-  #   rules: {
-  #     minimum_events: 4,
-  #     points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-  #     reject_worst_results: 1
-  #   }
-  # },
-  # tabor: {
-  #   categories: [
-  #     "Senior Men",
-  #     "Category 3 Men",
-  #     "Category 4 Men",
-  #     "Category 4/5 Women",
-  #     "Category 5 Men",
-  #     "Masters Men 50+",
-  #     "Masters Men 40+",
-  #     "Senior Women"
-  #   ],
-  #   competition_id: 26_299,
-  #   event_id: 26_072,
-  #   rules: {
-  #     double_points_for_last_event: true,
-  #     points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11]
-  #   }
-  # }
 }
 
 def fetch_data
@@ -215,6 +215,11 @@ def compare_event_results(expected_event, actual_event)
   expected_races.each do |expected_race|
     actual_race = actual_races.detect { |r| r.name == expected_race.name }
     next unless actual_race
+
+    # GPCD Elite Juniors accidentally skipped in 2018
+    if expected_race.id == 623682 || expected_race.id == 623683
+      return
+    end
 
     expected_results = expected_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points]}.sort
     actual_results = actual_race.results.reject { |r| r.points == 0 }.reject(&:rejected?).map { |result| [result.place, result.person_id, result.points]}.sort
