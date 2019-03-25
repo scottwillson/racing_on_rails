@@ -16,9 +16,15 @@ module Calculations
       end
 
       def test_map_categories_to_event_categories
-        category = Models::Category.new("Masters Men")
-        rules = Rules.new(category_rules: [Models::CategoryRule.new(category)])
+        masters_men = Models::Category.new("Masters Men")
+        senior_men = Models::Category.new("Senior Men")
+        rules = Rules.new(category_rules: [
+          Models::CategoryRule.new(masters_men),
+          Models::CategoryRule.new(senior_men, reject: true)
+        ])
+
         calculator = Calculator.new(rules: rules)
+
         assert_equal 1, calculator.event_categories.size
         assert_equal "Masters Men", calculator.event_categories.first.name
       end

@@ -29,7 +29,7 @@ module Calculations
       end
 
       def categories
-        category_rules.map(&:category)
+        category_rules.reject(&:reject?).map(&:category)
       end
 
       def double_points_for_last_event?
