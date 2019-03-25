@@ -10,7 +10,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   has_many :calculation_categories, class_name: "Calculations::V3::Category"
   has_many :categories, through: :calculation_categories, class_name: "::Category"
   belongs_to :event, dependent: :destroy, inverse_of: :calculation, optional: true
-  belongs_to :source_event, class_name: "Event"
+  belongs_to :source_event, class_name: "Event", optional: true
 
   before_save :set_name
 

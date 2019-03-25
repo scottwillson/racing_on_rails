@@ -46,6 +46,10 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     assert_equal 2, series.children.count, "Reuse existing event"
   end
 
+  test "no source event" do
+    Calculations::V3::Calculation.create!
+  end
+
   test "previous year #calculate!" do
     date = 1.year.ago
     series = WeeklySeries.create!(date: date)
