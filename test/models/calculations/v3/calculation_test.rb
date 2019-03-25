@@ -5,49 +5,62 @@ require "test_helper"
 # :stopdoc:
 class Calculations::V3::CalculationTest < ActiveSupport::TestCase
   test "simplest #calculate!" do
-    series = WeeklySeries.create!(name: "Cross Crusade")
-    source_child_event = series.children.create!
+    Timecop.freeze(Time.zone.local(2018)) do
+      series = WeeklySeries.create!(name: "Cross Crusade")
+      source_child_event = series.children.create!(date: Time.zone.local(2018, 11, 21))
 
-    calculation = series.calculations.create!(points_for_place: [100, 50, 25, 12])
-    category = Category.find_or_create_by(name: "Men A")
-    calculation.categories << category
+      calculation = series.calculations.create!(points_for_place: [100, 50, 25, 12])
+      category = Category.find_or_create_by(name: "Men A")
+      calculation.categories << category
 
-    source_race = source_child_event.races.create!(category: category)
-    person = FactoryBot.create(:person)
-    source_result = source_race.results.create!(place: 1, person: person)
+      source_race = source_child_event.races.create!(category: category)
+      person = FactoryBot.create(:person)
+      source_result = source_race.results.create!(place: 1, person: person)
 
-    calculation.calculate!
+      calculation.calculate!
 
-    overall = calculation.reload.event
-    assert series.children.reload.include?(overall), "should add overall as child event"
-    assert_equal "Overall", overall.name
-    assert_equal "Cross Crusade: Overall", calculation.name
+      overall = calculation.reload.event
+      assert series.children.reload.include?(overall), "should add overall as child event"
+      assert_equal "Overall", overall.name
+      assert_equal "Cross Crusade: Overall", calculation.name
 
-    assert_equal 1, overall.races.size
-    men_a_overall_race = overall.races.detect { |race| race.category == category }
-    assert_not_nil(men_a_overall_race, "Should have Men A overall race")
+      assert_equal 1, overall.races.size
+      men_a_overall_race = overall.races.detect { |race| race.category == category }
+      assert_not_nil(men_a_overall_race, "Should have Men A overall race")
 
-    results = men_a_overall_race.results
-    assert_equal 1, results.size
+      results = men_a_overall_race.results
+      assert_equal 1, results.size
 
-    result = results.first
-    assert_equal person, result.person
-    assert_equal "1", result.place
-    assert_equal 100, result.points
+      result = results.first
+      assert_equal person, result.person
+      assert_equal "1", result.place
+      assert_equal 100, result.points
 
-    assert_equal 1, result.sources.size
-    source = result.sources.first
-    assert_equal 100, source.points
-    assert_nil source.rejection_reason
-    assert_equal source_result, source.source_result
+      assert_equal 1, result.sources.size
+      source = result.sources.first
+      assert_equal 100, source.points
+      assert_nil source.rejection_reason
+      assert_equal source_result, source.source_result
 
-    calculation.reload.calculate!
-    assert_equal 1, Calculations::V3::Calculation.count, "Reuse existing event"
-    assert_equal 2, series.children.count, "Reuse existing event"
+      calculation.reload.calculate!
+      assert_equal 1, Calculations::V3::Calculation.count, "Reuse existing event"
+      assert_equal 2, series.children.count, "Reuse existing event"
+      assert_equal_dates "2018-11-21", calculation.date
+      assert_equal_dates "2018-11-21", calculation.end_date
+      assert_equal_dates "2018-11-21", calculation.event.date
+      assert_equal_dates "2018-11-21", calculation.event.end_date
+    end
   end
 
   test "no source event" do
-    Calculations::V3::Calculation.create!
+    Timecop.freeze(Time.zone.local(2019)) do
+      calculation = Calculations::V3::Calculation.create!
+      assert_equal_dates "2019-01-01", calculation.date
+      assert_equal_dates "2019-12-31", calculation.end_date
+      calculation.calculate!
+      assert_equal_dates "2019-01-01", calculation.event.date
+      assert_equal_dates "2019-01-01", calculation.event.end_date
+    end
   end
 
   test "previous year #calculate!" do
@@ -55,7 +68,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     series = WeeklySeries.create!(date: date)
     source_child_event = series.children.create!
 
-    calculation = series.calculations.create!(points_for_place: [100, 50, 25, 12])
+    calculation = series.calculations.create!(points_for_place: [100, 50, 25, 12], year: 2018)
     category = Category.find_or_create_by(name: "Men A")
     calculation.categories << category
 

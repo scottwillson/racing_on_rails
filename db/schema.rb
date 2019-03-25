@@ -165,6 +165,7 @@ ActiveRecord::Schema.define(version: 2019_02_03_161738) do
   end
 
   create_table "calculations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "discipline_id"
     t.bigint "event_id"
     t.bigint "source_event_id"
     t.boolean "double_points_for_last_event", default: false, null: false
@@ -172,8 +173,10 @@ ActiveRecord::Schema.define(version: 2019_02_03_161738) do
     t.integer "maximum_events", default: 0, null: false
     t.string "name", default: "New Calculation"
     t.string "points_for_place", default: "--- []\n"
+    t.integer "year", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["discipline_id"], name: "index_calculations_on_discipline_id"
     t.index ["event_id"], name: "index_calculations_on_event_id"
     t.index ["source_event_id"], name: "index_calculations_on_source_event_id"
   end

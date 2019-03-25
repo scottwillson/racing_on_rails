@@ -9,14 +9,26 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   has_many :calculation_categories, class_name: "Calculations::V3::Category"
   has_many :categories, through: :calculation_categories, class_name: "::Category"
+  belongs_to :discipline, optional: true
   belongs_to :event, dependent: :destroy, inverse_of: :calculation, optional: true
   belongs_to :source_event, class_name: "Event", optional: true
 
   before_save :set_name
+  before_save :set_year
+
+  validate :dates_are_same_year
+
+  default_value_for(:year) {Time.zone.now.year}
 
   def set_name
     if name == "New Calculation" && source_event
       self.name = "#{source_event.name}: Overall"
+    end
+  end
+
+  def set_year
+    if source_event
+      year = source_event.year
     end
   end
 
@@ -37,9 +49,13 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def add_event!
-    unless event
+    return if event
+
+    if source_event
       event = create_event!(date: source_event.date, end_date: source_event.end_date, name: "Overall")
       source_event.children << event
+    else
+      event = create_event!(date: Time.zone.local(year).beginning_of_year, end_date: Time.zone.local(year).end_of_year)
     end
   end
 
@@ -86,8 +102,8 @@ class Calculations::V3::Calculation < ApplicationRecord
       event = source_result_events[id]
 
       model_event = Calculations::V3::Models::Event.new(
-        date: event.date,
-        end_date: event.end_date,
+        date: date,
+        end_date: end_date,
         id: id
       )
 
@@ -100,11 +116,18 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def model_source_events
-    source_event
-      .children
+    source_events
       .reject(&:competition?)
       .reject { |e| e == event }
       .map { |event| model_events[event.id] }
+  end
+
+  def source_events
+    if source_event
+      source_event.children
+    else
+      Event.year(year)
+    end
   end
 
   def rules
@@ -170,5 +193,24 @@ class Calculations::V3::Calculation < ApplicationRecord
     Person.where(id: result.participant.id).pluck(:team_id).first
   end
 
-  delegate :year, to: :source_event
+  def date
+    event&.date || Time.zone.local(year).beginning_of_year
+  end
+
+  def end_date
+    event&.end_date || Time.zone.local(year).end_of_year
+  end
+
+  def dates_are_same_year
+    errors.add(:date, "must be in year #{year}, but is #{date.year}") unless year == date.year
+    errors.add(:end_date, "must be in year #{year}, but is #{end_date.year}") unless year == end_date.year
+
+    if event && year != event.year
+      errors.add(:event, "year #{event.year} must be same as year #{year}")
+    end
+
+    if source_event && year != source_event.year
+      errors.add(:source_event, "year #{source_event.year} must be same as year #{year}")
+    end
+  end
 end
