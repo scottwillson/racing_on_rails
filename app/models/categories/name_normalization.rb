@@ -99,11 +99,15 @@ module Categories
 
       # 1 2, 2 3, 3.4.5, 2-3-4 to 1/2/3
       def self.normalize_ability_punctuation(name)
+        # Don't combine Junior Men 9-12 3/4/5
+        return name if name[%r{\d-1\d \d/\d/\d}]
+
         5.downto(2).each do |length|
           ["P", 1, 2, 3, 4, 5].each_cons(length) do |cats|
             [" ", "\.", "-"].each do |delimiter|
               # Don't combine 1/2/3 40+
-              name = name.gsub(/( ?)#{cats.join(delimiter)}( ?)/, "\\1#{cats.join('/')}\\2") unless name[%r{[/ ]\d#{delimiter}\d\d}]
+              next if name[%r{[/ ]\d#{delimiter}\d\d}]
+              name = name.gsub(/( ?)#{cats.join(delimiter)}( ?)/, "\\1#{cats.join('/')}\\2")
             end
           end
         end
