@@ -111,15 +111,15 @@ module Categories
       end
 
       def self.normalize_age_group_punctuation(name)
-        (10..17).each do |age|
+        (9..17).each do |age|
           name = name.gsub(%r{#{age}/#{age + 1}}, "#{age}-#{age + 1}")
         end
 
-        (10..16).each do |age|
+        (9..16).each do |age|
           name = name.gsub(%r{#{age}/#{age + 2}}, "#{age}-#{age + 2}")
         end
 
-        (10..15).each do |age|
+        (9..15).each do |age|
           name = name.gsub(%r{#{age}/#{age + 3}}, "#{age}-#{age + 3}")
         end
 
