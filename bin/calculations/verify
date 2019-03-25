@@ -196,7 +196,7 @@ end
 
 def compare_event_results(expected_event, actual_event)
   expected_races = expected_event.races.sort
-  actual_races = actual_event.races.reject(&:rejected?).sort
+  actual_races = actual_event.races.reject(&:rejected?).select(&:visible?).sort
 
   expected_categories = expected_races.map(&:name).sort
   actual_categories = actual_races.map(&:name).sort
@@ -217,18 +217,24 @@ def compare_event_results(expected_event, actual_event)
     next unless actual_race
 
     # GPCD Elite Juniors accidentally skipped in 2018
-    if expected_race.id == 623682 || expected_race.id == 623683
+    if expected_race.id == 614969 || expected_race.id == 614970
       return
     end
 
     expected_results = expected_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points]}.sort
-    actual_results = actual_race.results.reject { |r| r.points == 0 }.reject(&:rejected?).map { |result| [result.place, result.person_id, result.points]}.sort
+    actual_results = actual_race.results
+                      .reject { |r| r.points == 0 }
+                      .reject(&:rejected?)
+                      .select(&:visible?)
+                      .map { |result| [result.place, result.person_id, result.points]}
+                      .sort
+
     if expected_results.size != actual_results.size
       puts "Expected #{actual_race.name} to have #{expected_results.size} results, but has #{actual_results.size}"
     end
 
     if expected_results != actual_results
-      puts "#{expected_event.full_name} #{expected_race.name} results"
+      puts "#{expected_event.full_name} #{expected_event.id} #{expected_race.name} #{expected_race.id} results"
       puts "expected:"
       pp expected_results
       puts "actual:"
@@ -244,7 +250,7 @@ def compare_event_results(expected_event, actual_event)
 end
 
 # fetch_data
-recreate_databases
+# recreate_databases
 destroy_calculations
 calculations = create_calculations(competitions)
 calculations.map(&:source_event).each(&:update_date)
