@@ -94,6 +94,34 @@ module Calculations
         assert_equal 154, result.points
       end
 
+      def test_ironman_rules
+        source_results = []
+        participant = Models::Participant.new(0)
+
+        event = Models::Event.new(id: 1)
+        event_category = Models::EventCategory.new(Models::Category.new("Athena"), event)
+        source_results << Models::SourceResult.new(id: 10, event_category: event_category, participant: participant, place: 99)
+
+        event = Models::Event.new(id: 2)
+        event_category = Models::EventCategory.new(Models::Category.new("Women 5"), event)
+        source_results << Models::SourceResult.new(id: 11, event_category: event_category, participant: participant, place: 1)
+
+        rules = Rules.new
+        calculator = Calculator.new(rules: rules, source_results: source_results)
+
+        event_categories = calculator.calculate!
+        assert_equal 1, event_categories.size
+        event_category = event_categories.first
+        assert_equal "Calculation", event_category.name
+        assert_equal 1, event_category.results.size
+        result = event_category.results.first
+        refute result.rejected?, result.rejection_reason
+        assert_equal 2, result.source_results.size
+        assert result.source_results.none?(&:rejected?)
+        assert_equal [1, 1], result.source_results.map(&:points)
+        assert_equal 2, result.points
+      end
+
       def test_validate
         calculator = Calculator.new
         calculator.validate!

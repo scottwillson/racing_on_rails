@@ -177,6 +177,34 @@ module Calculations
           assert_equal 2, masters_men_event_category.results.size
         end
 
+        def test_all_in_single_category
+          source_results = []
+          masters_men = Models::Category.new("Masters Men")
+          junior_women = Models::Category.new("Junior Women")
+
+          participant_1 = Models::Participant.new(0)
+          source_results << Models::SourceResult.new(
+            id: 33,
+            event_category: Models::EventCategory.new(junior_women),
+            participant: participant_1,
+            place: "19"
+          )
+
+          participant_2 = Models::Participant.new(1)
+          source_results << Models::SourceResult.new(
+            id: 34,
+            event_category: Models::EventCategory.new(masters_men),
+            participant: participant_2,
+            place: "7"
+          )
+
+          rules = Rules.new
+          calculator = Calculator.new(rules: rules, source_results: source_results)
+
+          event_categories = MapSourceResultsToResults.calculate!(calculator)
+          assert_equal 1, event_categories.size, event_categories.map(&:name)
+        end
+
         def test_match_equivalent_categories
           source_results = []
           masters_men = Models::Category.new("Masters Men")

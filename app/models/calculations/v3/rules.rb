@@ -32,6 +32,10 @@ module Calculations
         category_rules.reject(&:reject?).map(&:category)
       end
 
+      def categories?
+        !categories.empty?
+      end
+
       def double_points_for_last_event?
         @double_points_for_last_event
       end

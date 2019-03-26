@@ -34,8 +34,16 @@ module Calculations
         @rules = rules
         @source_results = source_results
 
-        @event_categories = rules.categories.map do |category|
-          Models::EventCategory.new(category)
+        @event_categories = create_event_categories
+      end
+
+      def create_event_categories
+        if rules.categories?
+          rules.categories.map do |category|
+            Models::EventCategory.new(category)
+          end
+        else
+          [Models::EventCategory.new(Models::Category.new("Calculation"))]
         end
       end
 
