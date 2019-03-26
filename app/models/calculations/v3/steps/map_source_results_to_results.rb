@@ -35,6 +35,10 @@ module Calculations
         end
 
         def self.find_or_create_event_category(source_result, calculator)
+          unless calculator.rules.categories?
+            return calculator.event_categories.first
+          end
+
           category = source_result.category.best_match_in(calculator.event_categories.map(&:category))
           event_category = calculator.event_categories.find { |c| c.category == category }
           return event_category if event_category
@@ -47,6 +51,7 @@ module Calculations
         end
 
         def self.in_calculation_category?(source_result, calculator)
+          return true unless calculator.rules.categories?
           source_result.category.best_match_in(calculator.rules.categories).present?
         end
       end
