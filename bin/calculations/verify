@@ -34,6 +34,8 @@ competitions = {
   # },
   criterium_bar: {
     categories: [
+      {name: "Athena"},
+      {name: "Clydesdale"},
       {name: "Category 3 Men"},
       {name: "Category 3 Women"},
       {name: "Category 4 Men"},
@@ -43,10 +45,13 @@ competitions = {
       {name: "Junior Men"},
       {name: "Junior Women"},
       {name: "Masters Men"},
+      {name: "Masters Men 4/5"},
       {name: "Masters Women"},
+      {name: "Masters Women 4"},
       {name: "Senior Men"},
       {name: "Senior Women"},
-      {name: "Singlespeed/Fixed"}
+      {name: "Singlespeed/Fixed"},
+      {name: "Tandem"}
     ],
     competition_id: 25_823,
     rules: {
