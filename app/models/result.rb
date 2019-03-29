@@ -125,6 +125,10 @@ class Result < ApplicationRecord
     self[:distance] || race&.distance
   end
 
+  def discipline_name
+    event&.discipline
+  end
+
   def event_id
     self[:event_id] || (race || race&.reload)&.event_id
   end

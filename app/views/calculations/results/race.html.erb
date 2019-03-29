@@ -48,6 +48,7 @@
               <td class="date"><%= source.source_result.event_date_range_s %></td>
               <td class="rejection_reason"><%= t source.rejection_reason,
                 category: source.source_result.category_name,
+                discipline: source.source_result.discipline_name,
                 minimum_events: @race.event.calculation.rules.minimum_events %></td>
               <td class="points"><%= source.points %></td>
             </tr>

@@ -60,11 +60,15 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def source_results
-    Result
-      .joins(race: :event)
-      .where("events.parent_id" => source_event)
-      .where.not(competition_result: true)
-      .where(year: year)
+    source_results = Result.joins(race: :event)
+                           .where.not(competition_result: true)
+                           .where(year: year)
+
+    if source_event
+      source_results = source_results.where("events.parent_id" => source_event)
+    end
+
+    source_results
   end
 
   # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them
@@ -103,7 +107,7 @@ class Calculations::V3::Calculation < ApplicationRecord
 
       model_event = Calculations::V3::Models::Event.new(
         date: event.date,
-        discipline: event.discipline,
+        discipline: Calculations::V3::Models::Discipline.new(event.discipline),
         end_date: event.end_date,
         id: event.id
       )
@@ -158,7 +162,7 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   def model_discipline
     if discipline
-      Models::Discipline.new(discipline.name)
+      Calculations::V3::Models::Discipline.new(discipline.name)
     end
   end
 
