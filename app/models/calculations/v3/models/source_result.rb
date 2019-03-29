@@ -77,6 +77,8 @@ module Calculations
           raise(ArgumentError, "event_category is required") unless event_category
           raise(ArgumentError, "event_category must be an EventCategory, but was a #{event_category.class}") unless event_category.is_a?(EventCategory)
         end
+
+        delegate :discipline, to: :event_category
       end
     end
   end

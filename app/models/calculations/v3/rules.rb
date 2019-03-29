@@ -4,6 +4,7 @@ module Calculations
   module V3
     class Rules
       attr_reader :category_rules
+      attr_reader :discipline
       attr_reader :maximum_events
       attr_reader :minimum_events
       attr_reader :points_for_place
@@ -11,6 +12,7 @@ module Calculations
 
       def initialize(
         category_rules: [],
+        discipline: nil,
         double_points_for_last_event: false,
         maximum_events: 0,
         minimum_events: 0,

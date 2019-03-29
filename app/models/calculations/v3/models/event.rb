@@ -6,13 +6,15 @@ module Calculations
       class Event
         attr_reader :children
         attr_reader :date
+        attr_reader :discipline
         attr_reader :end_date
         attr_reader :id
         attr_accessor :parent
 
-        def initialize(id: nil, date: nil, end_date: nil)
+        def initialize(id: nil, date: nil, discipline: Models::Discipline.new("Road"), end_date: nil)
           @id = id
           @date = date
+          @discipline = discipline
           @end_date = end_date || date
 
           @children = []
@@ -35,6 +37,7 @@ module Calculations
         end
 
         def validate!
+          raise(ArgumentError, "Discipline is nil") unless discipline
         end
 
         def ==(other)
