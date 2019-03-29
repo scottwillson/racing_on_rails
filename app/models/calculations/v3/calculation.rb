@@ -102,9 +102,10 @@ class Calculations::V3::Calculation < ApplicationRecord
       event = source_result_events[id]
 
       model_event = Calculations::V3::Models::Event.new(
-        date: date,
-        end_date: end_date,
-        id: id
+        date: event.date,
+        discipline: event.discipline,
+        end_date: event.end_date,
+        id: event.id
       )
 
       if event.parent_id
@@ -133,6 +134,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   def rules
     @rules ||= Calculations::V3::Rules.new(
       category_rules: category_rules(categories),
+      discipline: model_discipline,
       double_points_for_last_event: double_points_for_last_event?,
       minimum_events: minimum_events,
       points_for_place: points_for_place,
@@ -151,6 +153,12 @@ class Calculations::V3::Calculation < ApplicationRecord
         maximum_events: calculation_category.maximum_events,
         reject: calculation_category.reject?
       )
+    end
+  end
+
+  def model_discipline
+    if discipline
+      Models::Discipline.new(discipline.name)
     end
   end
 

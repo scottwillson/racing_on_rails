@@ -1,6 +1,7 @@
 en:
   below_minimum_events: "Minimum of %{minimum_events}"
   dnf: "DNF"
+  discipline: "Result in %{discipline}"
   not_calculation_category: "Results in %{category} do not count"
   rejected_category: "Results in %{category} do not count"
   worse_result: "Worst results do not count"

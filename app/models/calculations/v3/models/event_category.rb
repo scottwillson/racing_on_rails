@@ -58,6 +58,8 @@ module Calculations
         def hash
           category&.hash
         end
+
+        delegate :discipline, to: :event
       end
     end
   end
