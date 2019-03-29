@@ -372,7 +372,7 @@ module Competitions
       logger.debug "Competition#delete_races #{id} #{name} #{date} obselete_races: #{obselete_races.size}"
       if obselete_races.any?
         race_ids = obselete_races.map(&:id)
-        Competitions::Score.delete_all("competition_result_id in (select id from results where race_id in (#{race_ids.join(',')}))")
+        Competitions::Score.where("competition_result_id in (select id from results where race_id in (#{race_ids.join(',')}))").delete_all
         Result.where("race_id in (?)", race_ids).delete_all
       end
       obselete_races.each { |race| races.delete(race) }
