@@ -5,7 +5,7 @@ module Calculations
     module Steps
       module SelectInDiscipline
         def self.calculate!(calculator)
-          return unless calculator.rules.discipline
+          return calculator.event_categories unless calculator.rules.discipline
 
           calculator.event_categories.flat_map(&:results).flat_map(&:source_results).each do |source_result|
             if source_result.discipline != calculator.rules.discipline

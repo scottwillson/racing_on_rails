@@ -21,6 +21,7 @@ module Calculations
       )
 
         @category_rules = category_rules
+        @discipline = discipline
         @double_points_for_last_event = double_points_for_last_event
         @maximum_events = maximum_events
         @minimum_events = minimum_events

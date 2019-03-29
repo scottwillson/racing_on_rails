@@ -19,7 +19,7 @@ module Calculations
           category = Models::Category.new("Women")
           event_category = Models::EventCategory.new(category, event)
           participant = Models::Participant.new(0)
-          source_results << Models::SourceResult.new(id: 33, event_category: event_category)
+          source_results << Models::SourceResult.new(id: 1, event_category: event_category)
 
           event = Models::Event.new(discipline: cx)
           event_category = Models::EventCategory.new(category, event)
@@ -31,7 +31,14 @@ module Calculations
           event_categories = SelectInDiscipline.calculate!(calculator)
 
           assert_equal 1, event_categories.first.results.size
-          assert_equal 1, event_categories.first.results.first.source_results.size
+          source_results = event_categories.first.results.first.source_results.sort_by(&:id)
+          assert_equal 2, source_results.size
+
+          refute source_results[0].rejected?
+          assert_nil source_results[0].rejection_reason
+
+          assert source_results[1].rejected?
+          assert_equal :discipline, source_results[1].rejection_reason
         end
       end
     end
