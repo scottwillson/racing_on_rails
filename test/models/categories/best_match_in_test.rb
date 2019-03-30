@@ -134,15 +134,47 @@ module Competitions
       assert_best_match_in [women_1_2, women_1_2_3], women_1_2_3, event
     end
 
+    test "bar categories" do
+      junior_women_10_12 = Category.find_or_create_by_normalized_name("Junior Women 10-12")
+      men_15_24 = Category.find_or_create_by_normalized_name("Men 15-24")
+
+      event = FactoryBot.create(:event)
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Athena"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Clydesdale"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 3 Men"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 3 Women"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 4 Men"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 4 Women"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 5 Men"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 5 Women"))
+      event.races.create!(category: @junior_men)
+      event.races.create!(category: @junior_women)
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Masters Men"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Masters Men 4/5"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Masters Women"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Masters Women 4"))
+      event.races.create!(category: @senior_men)
+      event.races.create!(category: @senior_women)
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Singlespeed/Fixed"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Tandem"))
+
+      assert_best_match_in [@senior_men, men_15_24], @senior_men, event
+      assert_best_match_in [@junior_women, junior_women_10_12], @junior_women, event
+    end
+
     def assert_best_match_in(categories, race_category, event)
       categories.each do |category|
-        assert race_category == category.best_match_in(event.categories),
-               "#{race_category.name} should be best_match_in for #{category.name} in event with categories #{event.races.map(&:name).join(', ')}"
+        best_match = category.best_match_in(event.categories)
+        assert race_category == best_match,
+               "#{race_category.name} should be best_match_in for #{category.name} in event with categories #{event.races.map(&:name).join(', ')} but was #{best_match.name}"
       end
 
-      ::Category.where.not(id: categories).each do |category|
-        assert race_category != category.best_match_in(event.categories),
-               "Did not expect #{race_category.name} to match #{category.name} in event with categories #{event.races.map(&:name).join(', ')}"
+      event.categories
+        .reject { |category| category.in?(categories)}
+        .each do |category|
+          best_match = category.best_match_in(event.categories)
+          assert race_category != best_match,
+                 "Did not expect #{race_category.name} to match #{category.name} in event with categories #{event.races.map(&:name).join(', ')}, but was #{best_match}"
       end
     end
   end

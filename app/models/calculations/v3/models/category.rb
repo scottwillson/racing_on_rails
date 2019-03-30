@@ -22,6 +22,8 @@ module Calculations
         attr_reader :name
         attr_accessor :weight
 
+        @@logger = nil
+
         def initialize(name)
           @name = name
 
@@ -36,6 +38,10 @@ module Calculations
           set_equipment_from_name
           set_gender_from_name
           set_weight_from_name
+        end
+
+        def logger
+          @@logger
         end
 
         def ==(other)
