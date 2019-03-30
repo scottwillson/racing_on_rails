@@ -41,10 +41,12 @@ module Calculations
 
           category = source_result.category.best_match_in(calculator.event_categories.map(&:category))
           event_category = calculator.event_categories.find { |c| c.category == category }
+
           return event_category if event_category
 
           event_category = Models::EventCategory.new(source_result.event_category.category)
           event_category.reject "not_calculation_category"
+          puts "add #{event_category.name} to rejected categories"
           calculator.event_categories << event_category
 
           event_category
