@@ -15,7 +15,7 @@ module Calculations
     #      * each source result belongs to a calculated result
     #      * every calculated has at least one source result
     #      * source results may be duplicated later (for upgrades)
-    #      * cycle through each source result, find best match event category, add or create calcuted result, add source result?
+    #      * cycle through each source result, find best match event category, add or create calculated result, add source result?
     #   2. assign points
     #   3. create upgrade results
     #   4. assign points again? What is sequence for upgrades?
@@ -52,6 +52,8 @@ module Calculations
         @logger.debug "Calculator#calculate! source_results: #{source_results.size} rules: #{rules.to_h}"
 
         calculate_step(Steps::MapSourceResultsToResults)
+          .calculate_step(Steps::RejectCalculatedEvents)
+          .calculate_step(Steps::RejectWeekdayEvents)
           .calculate_step(Steps::SelectInDiscipline)
           .calculate_step(Steps::RejectCategories)
           .calculate_step(Steps::RejectNoParticipant)

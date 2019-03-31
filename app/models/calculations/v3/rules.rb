@@ -9,6 +9,7 @@ module Calculations
       attr_reader :minimum_events
       attr_reader :points_for_place
       attr_reader :source_events
+      attr_reader :weekday_events
 
       def initialize(
         category_rules: [],
@@ -17,7 +18,8 @@ module Calculations
         maximum_events: 0,
         minimum_events: 0,
         points_for_place: nil,
-        source_events: []
+        source_events: [],
+        weekday_events: true
       )
 
         @category_rules = category_rules
@@ -27,6 +29,7 @@ module Calculations
         @minimum_events = minimum_events
         @points_for_place = points_for_place
         @source_events = source_events
+        @weekday_events = weekday_events
 
         validate!
       end
@@ -55,6 +58,10 @@ module Calculations
         if !maximum_events.is_a?(Integer) || maximum_events.to_i.positive?
           raise(ArgumentError, "maximum_events must be an integer < 1, but is #{maximum_events.class} #{maximum_events}")
         end
+      end
+
+      def weekday_events?
+        @weekday_events
       end
 
       def to_h

@@ -48,6 +48,10 @@ class Calculations::V3::Calculation < ApplicationRecord
     end
   end
 
+  def calculated?(event)
+    event.competition? || event.type.nil? || event.type == "Event"
+  end
+
   def add_event!
     return if event
 
@@ -106,6 +110,7 @@ class Calculations::V3::Calculation < ApplicationRecord
       event = source_result_events[id]
 
       model_event = Calculations::V3::Models::Event.new(
+        calculated: calculated?(event),
         date: event.date,
         discipline: Calculations::V3::Models::Discipline.new(event.discipline),
         end_date: event.end_date,
@@ -143,7 +148,8 @@ class Calculations::V3::Calculation < ApplicationRecord
       minimum_events: minimum_events,
       points_for_place: points_for_place,
       maximum_events: maximum_events,
-      source_events: model_source_events
+      source_events: model_source_events,
+      weekday_events: weekday_events?
     )
   end
 

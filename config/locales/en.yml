@@ -1,7 +1,9 @@
 en:
-  below_minimum_events: "Minimum of %{minimum_events}"
+  below_minimum_events: "%{minimum_events} event minimum"
+  calculated: "Not an event result"
   dnf: "DNF"
-  discipline: "Result in %{discipline}"
-  not_calculation_category: "Results in %{category} do not count"
-  rejected_category: "Results in %{category} do not count"
+  discipline: "%{discipline} result"
+  not_calculation_category: "%{category} result"
+  rejected_category: "%{category} result"
+  weekday: "Weekday event"
   worse_result: "Worst results do not count"
