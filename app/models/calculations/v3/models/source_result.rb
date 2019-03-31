@@ -36,7 +36,7 @@ module Calculations
         end
 
         def last_event_date
-          event_category.event.parent.end_date
+          event.parent.end_date
         end
 
         # Opposite convention of ::Result (for now)
@@ -78,7 +78,7 @@ module Calculations
           raise(ArgumentError, "event_category must be an EventCategory, but was a #{event_category.class}") unless event_category.is_a?(EventCategory)
         end
 
-        delegate :discipline, to: :event_category
+        delegate :discipline, :event, to: :event_category
       end
     end
   end

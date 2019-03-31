@@ -8,7 +8,6 @@ module Calculations
       # :stopdoc:
       class MapSourceResultsToResultsTest < Ruby::TestCase
         def test_map_source_results_to_results
-          fail "match calculation categories first"
           participant = Models::Participant.new(0)
           category = Models::Category.new("Masters Men")
 

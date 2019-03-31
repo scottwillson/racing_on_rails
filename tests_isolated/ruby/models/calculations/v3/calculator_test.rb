@@ -98,11 +98,11 @@ module Calculations
         source_results = []
         participant = Models::Participant.new(0)
 
-        event = Models::Event.new(id: 1)
+        event = Models::Event.new(id: 1, date: Date.new(2019, 12, 1))
         event_category = Models::EventCategory.new(Models::Category.new("Athena"), event)
         source_results << Models::SourceResult.new(id: 10, event_category: event_category, participant: participant, place: 99)
 
-        event = Models::Event.new(id: 2)
+        event = Models::Event.new(id: 2, date: Date.new(2019, 12, 15))
         event_category = Models::EventCategory.new(Models::Category.new("Women 5"), event)
         source_results << Models::SourceResult.new(id: 11, event_category: event_category, participant: participant, place: 1)
 

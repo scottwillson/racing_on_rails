@@ -11,8 +11,9 @@ module Calculations
         attr_reader :id
         attr_accessor :parent
 
-        def initialize(id: nil, date: nil, discipline: Models::Discipline.new("Road"), end_date: nil)
+        def initialize(id: nil, calculated: false, date: nil, discipline: Models::Discipline.new("Road"), end_date: nil)
           @id = id
+          @calculated = calculated
           @date = date
           @discipline = discipline
           @end_date = end_date || date
@@ -26,6 +27,10 @@ module Calculations
           event.parent = self
           children << event
           event
+        end
+
+        def calculated?
+          @calculated
         end
 
         def dates
