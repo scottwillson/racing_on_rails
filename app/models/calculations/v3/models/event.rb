@@ -9,14 +9,24 @@ module Calculations
         attr_reader :discipline
         attr_reader :end_date
         attr_reader :id
+        attr_reader :multiplier
         attr_accessor :parent
 
-        def initialize(id: nil, calculated: false, date: nil, discipline: Models::Discipline.new("Road"), end_date: nil)
+        def initialize(
+          id: nil,
+          calculated: false,
+          date: nil,
+          discipline: Models::Discipline.new("Road"),
+          end_date: nil,
+          multiplier: 1
+        )
+
           @id = id
           @calculated = calculated
           @date = date
           @discipline = discipline
           @end_date = end_date || date
+          @multiplier = multiplier
 
           @children = []
 

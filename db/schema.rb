@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_03_161738) do
+ActiveRecord::Schema.define(version: 2019_03_31_045946) do
 
   create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
@@ -191,6 +191,16 @@ ActiveRecord::Schema.define(version: 2019_02_03_161738) do
     t.datetime "updated_at", null: false
     t.index ["calculation_id"], name: "index_calculations_categories_on_calculation_id"
     t.index ["category_id"], name: "index_calculations_categories_on_category_id"
+  end
+
+  create_table "calculations_events", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "calculation_id"
+    t.bigint "event_id"
+    t.float "multiplier", default: 1.0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["calculation_id"], name: "index_calculations_events_on_calculation_id"
+    t.index ["event_id"], name: "index_calculations_events_on_event_id"
   end
 
   create_table "categories", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
