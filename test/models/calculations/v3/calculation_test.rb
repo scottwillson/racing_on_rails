@@ -20,6 +20,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
       calculation.calculate!
 
       overall = calculation.reload.event
+      calculation_event_id = overall.id
       assert series.children.reload.include?(overall), "should add overall as child event"
       assert_equal "Overall", overall.name
       assert_equal "Cross Crusade: Overall", calculation.name
@@ -27,6 +28,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
       assert_equal 1, overall.races.size
       men_a_overall_race = overall.races.detect { |race| race.category == category }
       assert_not_nil(men_a_overall_race, "Should have Men A overall race")
+      race_ids = overall.races.map(&:id).sort
 
       results = men_a_overall_race.results
       assert_equal 1, results.size
@@ -44,11 +46,13 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
 
       calculation.reload.calculate!
       assert_equal 1, Calculations::V3::Calculation.count, "Reuse existing event"
+      assert_equal calculation_event_id, calculation.event.id
       assert_equal 2, series.children.count, "Reuse existing event"
       assert_equal_dates "2018-11-21", calculation.date
       assert_equal_dates "2018-11-21", calculation.end_date
       assert_equal_dates "2018-11-21", calculation.event.date
       assert_equal_dates "2018-11-21", calculation.event.end_date
+      assert_equal race_ids, calculation.event.races.map(&:id).sort, "Reuse races"
     end
   end
 

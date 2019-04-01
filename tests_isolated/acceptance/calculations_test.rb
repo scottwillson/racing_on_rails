@@ -5,7 +5,7 @@ require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
 # :stopdoc:
 class CalculationsTest < AcceptanceTest
   test "calculated results" do
-    series = WeeklySeries.create!(name: "Mt. Tabor Series")
+    series = Series.create!(name: "Mt. Tabor Series")
     source_child_event = series.children.create!
 
     calculation = series.calculations.create!(points_for_place: [100, 50, 25, 12])
@@ -23,8 +23,7 @@ class CalculationsTest < AcceptanceTest
 
     calculation.calculate!
 
-    visit "/results/#{series.year}/road"
-    puts page.text
+    visit "/results/#{series.year}"
     assert_page_has_content "Mt. Tabor Series"
 
     click_link "Mt. Tabor Series"
