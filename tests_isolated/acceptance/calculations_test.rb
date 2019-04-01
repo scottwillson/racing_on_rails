@@ -26,7 +26,7 @@ class CalculationsTest < AcceptanceTest
     visit "/results/#{series.year}"
     assert_page_has_content "Mt. Tabor Series"
 
-    click_link "Mt. Tabor Series"
+    click_link "Mt. Tabor Series", match: :first
     assert_page_has_content "Mt. Tabor Series"
 
     click_link "Overall"
