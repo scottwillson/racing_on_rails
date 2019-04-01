@@ -8,9 +8,11 @@ class Calculations::V3::Calculation < ApplicationRecord
   serialize :points_for_place, Array
 
   has_many :calculation_categories, class_name: "Calculations::V3::Category"
+  has_many :calculations_events, class_name: "Calculations::V3::Event"
   has_many :categories, through: :calculation_categories, class_name: "::Category"
   belongs_to :discipline, optional: true
-  belongs_to :event, dependent: :destroy, inverse_of: :calculation, optional: true
+  belongs_to :event, class_name: "::Event", dependent: :destroy, inverse_of: :calculation, optional: true
+  has_many :events, through: :calculations_events, class_name: "::Event"
   belongs_to :source_event, class_name: "Event", optional: true
 
   before_save :set_name
@@ -114,7 +116,8 @@ class Calculations::V3::Calculation < ApplicationRecord
         date: event.date,
         discipline: Calculations::V3::Models::Discipline.new(event.discipline),
         end_date: event.end_date,
-        id: event.id
+        id: event.id,
+        multiplier: multiplier(event.id)
       )
 
       if event.parent_id
@@ -130,6 +133,11 @@ class Calculations::V3::Calculation < ApplicationRecord
       .reject(&:competition?)
       .reject { |e| e == event }
       .map { |event| model_events[event.id] }
+  end
+
+  def multiplier(event_id)
+    event = calculations_events.detect { |e| e.event_id == event_id }
+    event&.multiplier || 1
   end
 
   def source_events

@@ -40,11 +40,18 @@ def create_calculations(competitions)
   competitions.values.each do |competition|
     calculation = create_calculation(competition[:event_id], competition[:rules])
     competition[:calculation] = calculation
+
     competition[:categories].each do |category_definition|
       category = Category.find_or_create_by(name: category_definition[:name])
       calculation_category = Calculations::V3::Category.new(category: category, maximum_events: category_definition[:maximum_events], reject: category_definition[:reject] || false)
       calculation.calculation_categories << calculation_category
     end
+
+    competition[:events].each do |event|
+      calculation_event = Calculations::V3::Event.new(event: Event.find(event[:id]), multiplier: event[:multiplier])
+      calculation.calculations_events << calculation_event
+    end
+
     calculations << calculation
   end
 
