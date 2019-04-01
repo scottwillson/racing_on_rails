@@ -24,6 +24,7 @@ class CalculationsTest < AcceptanceTest
     calculation.calculate!
 
     visit "/results/#{series.year}/road"
+    puts page.text
     assert_page_has_content "Mt. Tabor Series"
 
     click_link "Mt. Tabor Series"
