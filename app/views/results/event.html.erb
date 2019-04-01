@@ -38,7 +38,7 @@
   <p class="created_updated">Updated <%= @event.updated_at.to_formatted_s :long_and_friendly_date_and_time %></p>
   <% end %>
 
-  <p class="event_notes"><%= link_to "Show all results", calculations_event_results_path(@event) %></p>
+  <p class="event_notes"><%= link_to("Show all results", calculations_event_results_path(@event)) if @event.id %></p>
 
   <% ActiveSupport::Notifications.instrument "@event.results.racing_on_rails", event_id: @event.id, event_name: @event.name do %>
     <% @races.select(&:any_results?).select(&:visible?).reject(&:rejected?).sort.each do |race| %>
