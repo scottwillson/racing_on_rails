@@ -56,6 +56,24 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     end
   end
 
+  test "delete obsolete races" do
+    calculation = Calculations::V3::Calculation.create!
+    men_a = ::Category.find_or_create_by(name: "Men A")
+    calculation.categories << men_a
+    calculation.calculate!
+
+    calculation.categories.delete men_a
+
+    women_a = ::Category.find_or_create_by(name: "Women A")
+    calculation.categories << women_a
+    calculation = Calculations::V3::Calculation.find(calculation.id)
+    calculation.calculate!
+
+    races = calculation.event.races.reload
+    assert_equal 1, races.size
+    assert_equal "Women A", races.first.name
+  end
+
   test "no source event" do
     Timecop.freeze(Time.zone.local(2019)) do
       calculation = Calculations::V3::Calculation.create!
