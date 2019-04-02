@@ -46,7 +46,6 @@ module Calculations
 
           event_category = Models::EventCategory.new(source_result.event_category.category)
           event_category.reject "not_calculation_category"
-          puts "add #{event_category.name} to rejected categories"
           calculator.event_categories << event_category
 
           event_category

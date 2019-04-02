@@ -22,10 +22,10 @@ def recreate_databases
 end
 
 def destroy_calculations
-  ResultSource.destroy_all
-  Result.where(year: 2019).destroy_all
-  Result.where("created_at > ?", Date.new(2019)).destroy_all
-  Race.where("created_at > ?", Date.new(2019)).destroy_all
+  ResultSource.delete_all
+  Result.where(year: 2019).delete_all
+  Result.where("created_at > ?", Date.new(2019)).delete_all
+  Race.where("created_at > ?", Date.new(2019)).delete_all
 
   Calculations::V3::Calculation.all.each do |calc|
     calc.event&.destroy_races
