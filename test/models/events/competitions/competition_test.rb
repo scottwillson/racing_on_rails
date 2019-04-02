@@ -101,10 +101,10 @@ module Competitions
     test "partition_results with no results" do
       competition = TestCompetition.find_or_create_for_year
       race = competition.races.reload.first
-      new_results, existing_results, obselete_results = competition.partition_results([], race)
+      new_results, existing_results, obsolete_results = competition.partition_results([], race)
       assert_equal [], new_results, "new_results"
       assert_equal [], existing_results, "existing_results"
-      assert_equal [], obselete_results, "obselete_results"
+      assert_equal [], obsolete_results, "obsolete_results"
     end
 
     test "partition_results" do
@@ -119,11 +119,11 @@ module Competitions
       existing_calculated_result = ::Struct::CalculatorResult.new
       existing_calculated_result.participant_id = result_2.person_id
 
-      new_results, existing_results, obselete_results = competition.partition_results([new_calculated_result, existing_calculated_result], race)
+      new_results, existing_results, obsolete_results = competition.partition_results([new_calculated_result, existing_calculated_result], race)
 
       assert_equal [9999], new_results.map(&:participant_id), "new_results"
       assert_equal [result_2.person_id], existing_results.map(&:participant_id), "existing_results"
-      assert_equal [result_1], obselete_results, "obselete_results"
+      assert_equal [result_1], obsolete_results, "obsolete_results"
     end
   end
 end
