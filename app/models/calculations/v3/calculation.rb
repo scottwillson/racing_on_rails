@@ -202,32 +202,13 @@ class Calculations::V3::Calculation < ApplicationRecord
         create_calculated_results_for new_results, race
         update_calculated_results_for existing_results, race
         delete_calculated_results_for obsolete_results, race
-
-        # event_category.results.each do |result|
-        #   result_record = race.results.create!(
-        #     person_id: result.participant.id,
-        #     place: result.place,
-        #     points: result.points,
-        #     rejected: result.rejected?,
-        #     rejection_reason: result.rejection_reason,
-        #     team_id: team_id(result)
-        #   )
-        #
-        #   result.source_results.each do |source_result|
-        #     result_record.sources.create!(
-        #       points: source_result.points,
-        #       rejected: source_result.rejected?,
-        #       rejection_reason: source_result.rejection_reason,
-        #       source_result_id: source_result.id
-        #     )
-        #   end
-        # end
       end
     end
   end
 
   def delete_obsolete_races
     ActiveSupport::Notifications.instrument "delete_obsolete_races.calculations.#{name}.racing_on_rails" do
+    # TODO consider rejected races, too. Inspect event_categories?
     obsolete_races = event.races.reject { |race| race.name.in?(category_names) }
       logger.debug "delete_obsolete_races.calculations.#{name}.racing_on_rails.obsolete_races race_ids: #{obsolete_races.size} race_names: #{obsolete_races.map(&:name)}"
       if obsolete_races.any?
@@ -259,6 +240,15 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def create_calculated_results_for(results, race)
+    # event_category.results.each do |result|
+    #   result_record = race.results.create!(
+    #     person_id: result.participant.id,
+    #     place: result.place,
+    #     points: result.points,
+    #     rejected: result.rejected?,
+    #     rejection_reason: result.rejection_reason,
+    #     team_id: team_id(result)
+    #   )
     Rails.logger.debug "create_calculated_results_for #{race.name}"
 
     team_ids = team_ids_by_participant_id_hash(results)
@@ -333,10 +323,10 @@ class Calculations::V3::Calculation < ApplicationRecord
     sources_to_delete = existing_sources - new_sources
 
     # Delete first because new sources might have same key
-    ::Source.where(calculated_result_id: existing_result.id).where(source_result_id: sources_to_delete.map(&:first)).delete_all if sources_to_delete.present?
+    ::ResultSource.where(calculated_result_id: existing_result.id).where(source_result_id: sources_to_delete.map(&:first)).delete_all if sources_to_delete.present?
 
     sources_to_create.each do |source|
-      create_source existing_result, source.first, source.second
+      create_result_source existing_result, source.first, source.second
     end
   end
 
@@ -354,6 +344,15 @@ class Calculations::V3::Calculation < ApplicationRecord
       calculated_result_id: calculated_result.id,
       points: points
     )
+    #   result.source_results.each do |source_result|
+    #     result_record.sources.create!(
+    #       points: source_result.points,
+    #       rejected: source_result.rejected?,
+    #       rejection_reason: source_result.rejection_reason,
+    #       source_result_id: source_result.id
+    #     )
+    #   end
+    # end
   end
 
   def date
