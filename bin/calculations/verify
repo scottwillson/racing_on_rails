@@ -43,7 +43,11 @@ def create_calculations(competitions)
 
     competition[:categories].each do |category_definition|
       category = Category.find_or_create_by(name: category_definition[:name])
-      calculation_category = Calculations::V3::Category.new(category: category, maximum_events: category_definition[:maximum_events], reject: category_definition[:reject] || false)
+      calculation_category = Calculations::V3::Category.new(
+        category: category,
+        maximum_events: category_definition[:maximum_events],
+        reject: category_definition[:reject] || false
+      )
       calculation.calculation_categories << calculation_category
     end
 
@@ -104,16 +108,14 @@ def compare_event_results(expected_event, actual_event)
     next unless actual_race
 
     # GPCD Elite Juniors accidentally skipped in 2018
-    if expected_race.id == 614969 || expected_race.id == 614970
-      return
-    end
+    next if expected_race.id == 614_969 || expected_race.id == 614_970
 
-    expected_results = expected_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points]}.sort
+    expected_results = expected_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points] }.sort
     actual_results = actual_race.results
-                      .reject { |r| r.points == 0 }
-                      .reject(&:rejected?)
-                      .map { |result| [result.place, result.person_id, result.points]}
-                      .sort
+                                .reject { |r| r.points == 0 }
+                                .reject(&:rejected?)
+                                .map { |result| [result.place, result.person_id, result.points] }
+                                .sort
 
     if expected_results.size != actual_results.size
       puts "Expected #{actual_race.name} to have #{expected_results.size} results, but has #{actual_results.size} in event #{actual_race.event_id}"
