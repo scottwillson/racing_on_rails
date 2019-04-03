@@ -5,23 +5,23 @@ require "test_helper"
 # :stopdoc:
 class Calculations::V3::CalculationTest < ActiveSupport::TestCase
   test "#calculate!" do
-    previous_year_series = WeeklySeries.create!(date: 1.year.ago)
+    previous_year_series = WeeklySeries.create!(date: Time.zone.local(2018, 8, 11))
     men_a = Category.find_or_create_by_normalized_name("Men A")
-    source_child_event = previous_year_series.children.create!(date: 1.year.ago)
+    source_child_event = previous_year_series.children.create!(date: Time.zone.local(2018, 8, 11))
     source_race = source_child_event.races.create!(category: men_a)
     source_race.results.create!(place: 1, person: FactoryBot.create(:person))
     source_race.results.create!(place: 2, person: FactoryBot.create(:person))
 
-    different_series = WeeklySeries.create!
-    source_child_event = different_series.children.create!
+    different_series = WeeklySeries.create!(date: Time.zone.local(2018, 8, 25))
+    source_child_event = different_series.children.create!(date: Time.zone.local(2018, 8, 25))
     source_race = source_child_event.races.create!(category: men_a)
     team = FactoryBot.create(:team)
     person_1 = FactoryBot.create(:person, team: team)
     source_race.results.create!(place: 1, person: person_1, team: team)
     source_race.results.create!(place: 2, person: FactoryBot.create(:person))
 
-    series = WeeklySeries.create!
-    source_child_event = series.children.create!
+    series = WeeklySeries.create!(date: Time.zone.local(2019, 3, 9))
+    source_child_event = series.children.create!(date: Time.zone.local(2019, 3, 9))
 
     calculation = series.calculations.create!(
       double_points_for_last_event: true,
@@ -84,13 +84,15 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
 
     result = results.first
     assert_equal person_3, result.person
+    refute result.rejected?
+    assert_nil result.rejection_reason
     assert_equal "", result.place
     assert_equal 0, result.points
     assert_equal 1, result.sources.size
     source = result.sources.first
     assert_equal 0, source.points
-    assert source.rejected?
-    assert_equal "not_calculation_category", source.rejection_reason
+    refute source.rejected?
+    assert_nil source.rejection_reason
     assert_equal source_result_3, source.source_result
   end
 end
