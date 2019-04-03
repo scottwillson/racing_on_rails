@@ -204,6 +204,8 @@ class Calculations::V3::Calculation < ApplicationRecord
         delete_calculated_results_for obsolete_results, race
       end
     end
+
+    true
   end
 
   def delete_obsolete_races
@@ -240,15 +242,6 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def create_calculated_results_for(results, race)
-    # event_category.results.each do |result|
-    #   result_record = race.results.create!(
-    #     person_id: result.participant.id,
-    #     place: result.place,
-    #     points: result.points,
-    #     rejected: result.rejected?,
-    #     rejection_reason: result.rejection_reason,
-    #     team_id: team_id(result)
-    #   )
     Rails.logger.debug "create_calculated_results_for #{race.name}"
 
     team_ids = team_ids_by_participant_id_hash(results)
@@ -261,11 +254,13 @@ class Calculations::V3::Calculation < ApplicationRecord
         place: result.place,
         points: result.points,
         race: race,
+        rejected: result.rejected?,
+        rejection_reason: result.rejection_reason,
         team_id: team_ids[result.participant_id]
       )
 
       result.source_results.each do |source_result|
-        create_result_source calculated_result, source_result.id, source_result.points
+        create_result_source calculated_result, source_result
       end
     end
 
@@ -273,6 +268,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def team_ids_by_participant_id_hash(results)
+    # TODO cache now that this can be called more than once
     team_ids_by_participant_id_hash = {}
     results.map(&:participant_id).uniq.each do |participant_id|
       team_ids_by_participant_id_hash[participant_id] = participant_id
@@ -316,18 +312,19 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def update_sources_for(result, existing_result)
-    existing_sources = existing_result.sources.map { |s| [s.id, s.points.to_f] }
-    new_sources = result.source_results.map { |s| [s.id || existing_result.id, s.points.to_f] }
-
-    sources_to_create = new_sources - existing_sources
-    sources_to_delete = existing_sources - new_sources
-
-    # Delete first because new sources might have same key
-    ::ResultSource.where(calculated_result_id: existing_result.id).where(source_result_id: sources_to_delete.map(&:first)).delete_all if sources_to_delete.present?
-
-    sources_to_create.each do |source|
-      create_result_source existing_result, source.first, source.second
-    end
+    # TODO change this to models, not arrays
+    # existing_sources = existing_result.sources.map { |s| [s.id, s.points.to_f] }
+    # new_sources = result.source_results.map { |s| [s.id || existing_result.id, s.points.to_f] }
+    #
+    # sources_to_create = new_sources - existing_sources
+    # sources_to_delete = existing_sources - new_sources
+    #
+    # # Delete first because new sources might have same key
+    # ::ResultSource.where(calculated_result_id: existing_result.id).where(source_result_id: sources_to_delete.map(&:first)).delete_all if sources_to_delete.present?
+    #
+    # sources_to_create.each do |source|
+    #   create_result_source existing_result, source.first, source.second
+    # end
   end
 
   def delete_calculated_results_for(results, race)
@@ -338,21 +335,14 @@ class Calculations::V3::Calculation < ApplicationRecord
     end
   end
 
-  def create_result_source(calculated_result, source_result_id, points)
+  def create_result_source(calculated_result, source_result)
     ::ResultSource.create!(
-      source_result_id: source_result_id,
+      source_result_id: source_result.id,
       calculated_result_id: calculated_result.id,
-      points: points
+      points: source_result.points,
+      rejected: source_result.rejected?,
+      rejection_reason: source_result.rejection_reason
     )
-    #   result.source_results.each do |source_result|
-    #     result_record.sources.create!(
-    #       points: source_result.points,
-    #       rejected: source_result.rejected?,
-    #       rejection_reason: source_result.rejection_reason,
-    #       source_result_id: source_result.id
-    #     )
-    #   end
-    # end
   end
 
   def date
