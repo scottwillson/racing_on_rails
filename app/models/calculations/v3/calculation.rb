@@ -12,8 +12,8 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   serialize :points_for_place, Array
 
-  has_many :calculation_categories, class_name: "Calculations::V3::Category"
-  has_many :calculations_events, class_name: "Calculations::V3::Event"
+  has_many :calculation_categories, class_name: "Calculations::V3::Category", dependent: :destroy
+  has_many :calculations_events, class_name: "Calculations::V3::Event", dependent: :destroy
   has_many :categories, through: :calculation_categories, class_name: "::Category"
   belongs_to :discipline, optional: true
   belongs_to :event, class_name: "::Event", dependent: :destroy, inverse_of: :calculation, optional: true
@@ -29,7 +29,7 @@ class Calculations::V3::Calculation < ApplicationRecord
       event = create_event!(date: source_event.date, end_date: source_event.end_date, name: "Overall")
       source_event.children << event
     else
-      event = create_event!(date: Time.zone.local(year).beginning_of_year, end_date: Time.zone.local(year).end_of_year)
+      self.event = create_event!(date: Time.zone.local(year).beginning_of_year, end_date: Time.zone.local(year).end_of_year)
     end
   end
 
