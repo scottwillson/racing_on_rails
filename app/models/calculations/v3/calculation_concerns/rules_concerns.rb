@@ -5,7 +5,7 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
 
   # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them.
   # Categories are a subset of "rules."
-  def category_rules(categories)
+  def category_rules
     calculation_categories.map do |calculation_category|
       category = Calculations::V3::Models::Category.new(calculation_category.category.name)
       Calculations::V3::Models::CategoryRule.new(
@@ -18,7 +18,7 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
 
   def rules
     @rules ||= Calculations::V3::Rules.new(
-      category_rules: category_rules(categories),
+      category_rules: category_rules,
       discipline: model_discipline,
       double_points_for_last_event: double_points_for_last_event?,
       minimum_events: minimum_events,

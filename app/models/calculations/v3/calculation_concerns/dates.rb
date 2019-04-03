@@ -32,7 +32,7 @@ module Calculations::V3::CalculationConcerns::Dates
 
   def set_year
     if source_event
-      year = source_event.year
+      self.year = source_event.year
     end
   end
 end

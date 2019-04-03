@@ -139,8 +139,8 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
 
   def delete_obsolete_races
     ActiveSupport::Notifications.instrument "delete_obsolete_races.calculations.#{name}.racing_on_rails" do
-    # TODO consider rejected races, too. Inspect event_categories?
-    obsolete_races = event.races.reject { |race| race.name.in?(category_names) }
+      # TODO consider rejected races, too. Inspect event_categories?
+      obsolete_races = event.races.reject { |race| race.name.in?(category_names) }
       logger.debug "delete_obsolete_races.calculations.#{name}.racing_on_rails.obsolete_races race_ids: #{obsolete_races.size} race_names: #{obsolete_races.map(&:name)}"
       if obsolete_races.any?
         race_ids = obsolete_races.map(&:id)
