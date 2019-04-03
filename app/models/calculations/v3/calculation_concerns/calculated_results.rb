@@ -12,7 +12,6 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
         race = create_race(event_category)
         calculated_results = event_category.results
         new_results, existing_results, obsolete_results = partition_results(calculated_results, race)
-        ActiveSupport::Notifications.instrument "partition_results.calculations.#{name}.racing_on_rails new_results: #{new_results.size} existing_results: #{existing_results.size} obsolete_results: #{obsolete_results.size}"
         create_calculated_results_for new_results, race
         update_calculated_results_for existing_results, race
         delete_calculated_results_for obsolete_results, race
@@ -30,11 +29,17 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
     existing_participant_ids = calculated_participant_ids & participant_ids
     obsolete_participant_ids = participant_ids - calculated_participant_ids
 
-    [
-      calculated_results.select { |r| r.participant_id.in?            new_participant_ids },
-      calculated_results.select { |r| r.participant_id.in?            existing_participant_ids },
-      race.results.select       { |r| r.person_id.in? obsolete_participant_ids }
-    ]
+    new_results = calculated_results.select { |r| r.participant_id.in? new_participant_ids }
+    existing_results = calculated_results.select { |r| r.participant_id.in? existing_participant_ids }
+    obsolete_results = race.results.select { |r| r.person_id.in? obsolete_participant_ids }
+
+    ActiveSupport::Notifications.instrument(
+      "partition_results.calculations.#{name}.racing_on_rails new_results: #{new_results.size} " \
+      "existing_results: #{existing_results.size} " \
+      "obsolete_results: #{obsolete_results.size}"
+    )
+
+    [new_results, existing_results, obsolete_results]
   end
 
   def create_calculated_results_for(results, race)
