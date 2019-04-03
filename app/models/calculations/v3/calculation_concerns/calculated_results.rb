@@ -9,17 +9,7 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
     ActiveSupport::Notifications.instrument "save_results.calculations.#{name}.racing_on_rails" do
       delete_obsolete_races
       event_categories.each do |event_category|
-        # TODO extract to method
-        category = Category.find_or_create_by_normalized_name(event_category.name)
-        race = event.races.find_or_create_by!(
-          category: category,
-          rejected: event_category.rejected?,
-          rejection_reason: event_category.rejection_reason
-        )
-
-        race.destroy_duplicate_results!
-        race.results.reload
-
+        race = create_race(event_category)
         calculated_results = event_category.results
         new_results, existing_results, obsolete_results = partition_results(calculated_results, race)
         ActiveSupport::Notifications.instrument "partition_results.calculations.#{name}.racing_on_rails new_results: #{new_results.size} existing_results: #{existing_results.size} obsolete_results: #{obsolete_results.size}"
@@ -135,6 +125,18 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
       rejected: source_result.rejected?,
       rejection_reason: source_result.rejection_reason
     )
+  end
+
+  def create_race(event_category)
+    category = Category.find_or_create_by_normalized_name(event_category.name)
+    race = event.races.find_or_create_by!(
+      category: category,
+      rejected: event_category.rejected?,
+      rejection_reason: event_category.rejection_reason
+    )
+    race.destroy_duplicate_results!
+    race.results.reload
+    race
   end
 
   def delete_obsolete_races
