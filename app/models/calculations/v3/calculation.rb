@@ -47,6 +47,8 @@ class Calculations::V3::Calculation < ApplicationRecord
         save_results event_categories
       end
     end
+
+    true
   end
 
   def calculated?(event)

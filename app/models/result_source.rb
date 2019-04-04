@@ -11,7 +11,7 @@ class ResultSource < ApplicationRecord
       points,
       source_result_id,
       rejection_reason
-    ]
+    ].hash
   end
 
   def <=>(other)
