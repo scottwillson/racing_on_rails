@@ -6,6 +6,14 @@ class ResultSource < ApplicationRecord
 
   validates :rejection_reason, inclusion: { in: ::Calculations::V3::REJECTION_REASONS, allow_blank: true }
 
+  def hash
+    [
+      points,
+      source_result_id,
+      rejection_reason
+    ]
+  end
+
   def <=>(other)
     return 0 if id.present? && (id == other&.id)
 

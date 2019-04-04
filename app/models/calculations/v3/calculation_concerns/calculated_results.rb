@@ -123,16 +123,6 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
     end
   end
 
-  def create_result_source(calculated_result, source_result)
-    ::ResultSource.create!(
-      source_result_id: source_result.id,
-      calculated_result_id: calculated_result.id,
-      points: source_result.points,
-      rejected: source_result.rejected?,
-      rejection_reason: source_result.rejection_reason
-    )
-  end
-
   def update_calculated_result_for(result, existing_results, team_ids)
     existing_result = existing_results.detect { |r| r.person_id == result.participant_id }
 
@@ -152,19 +142,35 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
   end
 
   def update_result_sources_for(result, existing_result)
-    # TODO: change this to models, not arrays
-    # existing_sources = existing_result.sources.map { |s| [s.id, s.points.to_f] }
-    # new_sources = result.source_results.map { |s| [s.id || existing_result.id, s.points.to_f] }
-    #
-    # sources_to_create = new_sources - existing_sources
-    # sources_to_delete = existing_sources - new_sources
-    #
-    # # Delete first because new sources might have same key
-    # ::ResultSource.where(calculated_result_id: existing_result.id).where(source_result_id: sources_to_delete.map(&:first)).delete_all if sources_to_delete.present?
-    #
-    # sources_to_create.each do |source|
-    #   create_result_source existing_result, source.first, source.second
-    # end
+    result_sources = result.source_results.map do |source_result|
+      new_result_source existing_result, source_result
+    end
+
+    sources_to_create = result_sources - existing_result.sources
+    sources_to_delete = existing_result.sources - result_sources
+
+    # Delete first because new sources might have same hash
+    if sources_to_delete.present?
+      ::ResultSource.where(calculated_result_id: existing_result.id)
+                    .where(source_result_id: sources_to_delete.map(&:source_result_id))
+                    .delete_all
+    end
+
+    sources_to_create.each(&:save!)
+  end
+
+  def new_result_source(calculated_result, source_result)
+    ::ResultSource.new(
+      source_result_id: source_result.id,
+      calculated_result_id: calculated_result.id,
+      points: source_result.points,
+      rejected: source_result.rejected?,
+      rejection_reason: source_result.rejection_reason
+    )
+  end
+
+  def create_result_source(calculated_result, source_result)
+    new_result_source(calculated_result, source_result).save!
   end
 
   def team_ids_by_participant_id_hash(results)
