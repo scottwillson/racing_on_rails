@@ -20,7 +20,7 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
       end
     end
 
-    true
+    event_categories
   end
 
   def partition_results(calculated_results, race)

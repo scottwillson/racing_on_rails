@@ -94,6 +94,7 @@ module Events
     end
 
     def end_date
+      # TODO: Remove? This triggers SQL
       set_end_date
       self[:end_date]
     end

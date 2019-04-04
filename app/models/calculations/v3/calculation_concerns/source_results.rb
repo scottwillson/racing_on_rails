@@ -18,6 +18,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
         calculated: calculated?(event),
         date: event.date,
         discipline: Calculations::V3::Models::Discipline.new(event.discipline),
+        # TODO: end_date triggers SQL
         end_date: event.end_date,
         id: event.id,
         multiplier: multiplier(event.id)
