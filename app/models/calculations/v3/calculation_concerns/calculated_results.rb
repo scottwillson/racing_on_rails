@@ -152,7 +152,7 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
   end
 
   def update_result_sources_for(result, existing_result)
-    # TODO change this to models, not arrays
+    # TODO: change this to models, not arrays
     # existing_sources = existing_result.sources.map { |s| [s.id, s.points.to_f] }
     # new_sources = result.source_results.map { |s| [s.id || existing_result.id, s.points.to_f] }
     #
@@ -168,16 +168,14 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
   end
 
   def team_ids_by_participant_id_hash(results)
-    # TODO cache now that this can be called more than once
-    team_ids_by_participant_id_hash = {}
-    results.map(&:participant_id).uniq.each do |participant_id|
-      team_ids_by_participant_id_hash[participant_id] = participant_id
-    end
+    return @team_ids_by_participant_id_hash if @team_ids_by_participant_id_hash
+
+    @team_ids_by_participant_id_hash = {}
 
     ::Person.select("id, team_id").where("id in (?)", results.map(&:participant_id).uniq).map do |person|
-      team_ids_by_participant_id_hash[person.id] = person.team_id
+      @team_ids_by_participant_id_hash[person.id] = person.team_id
     end
 
-    team_ids_by_participant_id_hash
+    @team_ids_by_participant_id_hash
   end
 end
