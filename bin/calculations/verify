@@ -121,18 +121,18 @@ def compare_event_results(expected_event, actual_event)
       puts "Expected #{actual_race.name} to have #{expected_results.size} results, but has #{actual_results.size} in event #{actual_race.event_id}"
     end
 
-    if expected_results != actual_results
-      puts "#{expected_event.full_name} #{expected_event.id} #{expected_race.name} #{expected_race.id} results in event #{actual_race.event_id}"
-      puts "expected:"
-      pp expected_results
-      puts "actual:"
-      pp actual_results
-      puts "diff:"
-      if expected_results.size > actual_results.size
-        pp expected_results - actual_results
-      else
-        pp actual_results - expected_results
-      end
+    next if expected_results == actual_results
+
+    puts "#{expected_event.full_name} #{expected_event.id} #{expected_race.name} #{expected_race.id} results in event #{actual_race.event_id}"
+    puts "expected:"
+    pp expected_results
+    puts "actual:"
+    pp actual_results
+    puts "diff:"
+    if expected_results.size > actual_results.size
+      pp expected_results - actual_results
+    else
+      pp actual_results - expected_results
     end
   end
 end
