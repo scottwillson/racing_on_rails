@@ -51,7 +51,7 @@ def create_calculations(competitions)
       calculation.calculation_categories << calculation_category
     end
 
-    competition[:events].each do |event|
+    competition[:events]&.each do |event|
       calculation_event = Calculations::V3::Event.new(event: Event.find(event[:id]), multiplier: event[:multiplier])
       calculation.calculations_events << calculation_event
     end
