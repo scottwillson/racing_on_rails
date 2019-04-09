@@ -112,6 +112,7 @@ def compare_event_results(expected_event, actual_event)
 
     expected_results = expected_race.results.reject { |r| r.points == 0 }.map { |result| [result.place, result.person_id, result.points] }.sort
     actual_results = actual_race.results
+                                .reload
                                 .reject { |r| r.points == 0 }
                                 .reject(&:rejected?)
                                 .map { |result| [result.place, result.person_id, result.points] }
