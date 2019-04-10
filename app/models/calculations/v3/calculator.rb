@@ -57,6 +57,7 @@ module Calculations
           .calculate_step(Steps::SelectInDiscipline)
           .calculate_step(Steps::RejectCategories)
           .calculate_step(Steps::RejectNoParticipant)
+          .calculate_step(Steps::SelectMembers)
           .calculate_step(Steps::RejectDnfs)
           .calculate_step(Steps::RejectBelowMinimumEvents)
           .calculate_step(Steps::AssignPoints)

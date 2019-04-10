@@ -8,6 +8,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
     Timecop.freeze(2019) do
       calculation = Calculations::V3::Calculation.create!(
         discipline: Discipline[:road],
+        members_only: true,
         points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
         weekday_events: false
       )
@@ -21,20 +22,29 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       calculation.calculations_events.create!(event: event, multiplier: 2)
       source_race = event.races.create!(category: category_3_men)
       person = FactoryBot.create(:person)
-      source_result = source_race.results.create!(place: 7, person: person)
+      source_race.results.create!(place: 7, person: person)
+
+      person = FactoryBot.create(:past_member)
+      source_race.results.create!(place: 3, person: person)
 
       calculation.calculate!
 
       bar = calculation.reload.event
 
       assert_equal 3, bar.races.size
-      race = bar.races.detect { |race| race.category == category_3_men }
+      race = bar.races.detect { |r| r.category == category_3_men }
       assert_not_nil race
 
-      results = race.results
-      assert_equal 1, results.size
+      results = race.results.sort
+      assert_equal 2, results.size
+
       assert_equal 1, results.first.source_results.size
+      assert_nil results.first.rejection_reason
       assert_equal 18, results.first.points
+
+      assert_equal 0, results.second.points
+      assert 0, results.second.rejected?
+      assert_equal "members_only", results.second.rejection_reason
     end
   end
 end

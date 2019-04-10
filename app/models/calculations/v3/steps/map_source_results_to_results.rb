@@ -20,7 +20,7 @@ module Calculations
               calculated_result.source_results << source_result
             else
               calculated_result = Models::CalculatedResult.new(
-                Models::Participant.new(source_result.participant.id),
+                Models::Participant.new(source_result.participant.id, membership: source_result.participant.membership),
                 [source_result]
               )
               unless source_result_in_calculation_category

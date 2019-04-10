@@ -169,6 +169,7 @@ ActiveRecord::Schema.define(version: 2019_03_31_045946) do
     t.bigint "event_id"
     t.bigint "source_event_id"
     t.boolean "double_points_for_last_event", default: false, null: false
+    t.boolean "members_only", default: false, null: false
     t.integer "minimum_events", default: 0, null: false
     t.integer "maximum_events", default: 0, null: false
     t.string "name", default: "New Calculation"

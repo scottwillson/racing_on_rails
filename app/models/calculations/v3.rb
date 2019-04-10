@@ -6,6 +6,7 @@ module Calculations::V3
     calculated
     discipline
     dnf
+    members_only
     not_calculation_category
     rejected_category
     weekday
