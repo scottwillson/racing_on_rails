@@ -32,6 +32,20 @@ module Calculations::V3::CalculationConcerns::SourceResults
     end
   end
 
+  def model_participant(source_result)
+    person = source_result.person
+
+    membership = nil
+    if person&.member_from && person&.member_to
+      membership = person.member_from..person.member_to
+    end
+
+    Calculations::V3::Models::Participant.new(
+      source_result.person_id,
+      membership: membership
+    )
+  end
+
   def model_source_events
     source_events
       .reject(&:competition?)
@@ -60,7 +74,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
         date: result.date,
         event_category: Calculations::V3::Models::EventCategory.new(category, event),
         id: result.id,
-        participant: Calculations::V3::Models::Participant.new(result.person_id),
+        participant: model_participant(result),
         place: result.place
       )
     end
@@ -82,7 +96,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
   end
 
   def source_results
-    source_results = Result.joins(race: :event)
+    source_results = Result.joins(:person, race: :event)
                            .where.not(competition_result: true)
                            .where(year: year)
 

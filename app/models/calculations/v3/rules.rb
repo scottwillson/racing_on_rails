@@ -6,6 +6,7 @@ module Calculations
       attr_reader :category_rules
       attr_reader :discipline
       attr_reader :maximum_events
+      attr_reader :members_only
       attr_reader :minimum_events
       attr_reader :points_for_place
       attr_reader :source_events
@@ -16,6 +17,7 @@ module Calculations
         discipline: nil,
         double_points_for_last_event: false,
         maximum_events: 0,
+        members_only: false,
         minimum_events: 0,
         points_for_place: nil,
         source_events: [],
@@ -26,6 +28,7 @@ module Calculations
         @discipline = discipline
         @double_points_for_last_event = double_points_for_last_event
         @maximum_events = maximum_events
+        @members_only = members_only
         @minimum_events = minimum_events
         @points_for_place = points_for_place
         @source_events = source_events
@@ -48,6 +51,10 @@ module Calculations
 
       def maximum_events?
         maximum_events.negative?
+      end
+
+      def members_only?
+        members_only
       end
 
       def rejected_categories

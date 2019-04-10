@@ -21,9 +21,10 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
       category_rules: category_rules,
       discipline: model_discipline,
       double_points_for_last_event: double_points_for_last_event?,
+      maximum_events: maximum_events,
+      members_only: members_only?,
       minimum_events: minimum_events,
       points_for_place: points_for_place,
-      maximum_events: maximum_events,
       source_events: model_source_events,
       weekday_events: weekday_events?
     )

@@ -7,11 +7,19 @@ module Calculations
     module Models
       class Participant
         attr_reader :id
+        attr_reader :membership
 
-        def initialize(id)
+        def initialize(id, membership: nil)
           @id = id
+          @membership = membership
 
           validate!
+        end
+
+        def member?
+          return false unless membership
+
+          Date.today.in? membership
         end
 
         def validate!

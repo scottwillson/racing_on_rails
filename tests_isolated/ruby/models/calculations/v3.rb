@@ -34,4 +34,5 @@ require_relative "../../../../app/models/calculations/v3/steps/reject_more_than_
 require_relative "../../../../app/models/calculations/v3/steps/reject_no_participant"
 require_relative "../../../../app/models/calculations/v3/steps/reject_weekday_events"
 require_relative "../../../../app/models/calculations/v3/steps/select_in_discipline"
+require_relative "../../../../app/models/calculations/v3/steps/select_members"
 require_relative "../../../../app/models/calculations/v3/steps/sum_points"
