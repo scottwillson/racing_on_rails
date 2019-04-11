@@ -172,8 +172,10 @@ ActiveRecord::Schema.define(version: 2019_03_31_045946) do
     t.boolean "members_only", default: false, null: false
     t.integer "minimum_events", default: 0, null: false
     t.integer "maximum_events", default: 0, null: false
+    t.string "key", default: "calculation"
     t.string "name", default: "New Calculation"
-    t.string "points_for_place", default: "--- []\n"
+    t.text "points_for_place"
+    t.string "source_event_keys", default: "--- []\n"
     t.boolean "specific_events", default: false, null: false
     t.boolean "weekday_events", default: true, null: false
     t.integer "year", null: false
@@ -181,6 +183,7 @@ ActiveRecord::Schema.define(version: 2019_03_31_045946) do
     t.datetime "updated_at", null: false
     t.index ["discipline_id"], name: "index_calculations_on_discipline_id"
     t.index ["event_id"], name: "index_calculations_on_event_id"
+    t.index ["key", "year"], name: "index_calculations_on_key_and_year", unique: true
     t.index ["source_event_id"], name: "index_calculations_on_source_event_id"
   end
 

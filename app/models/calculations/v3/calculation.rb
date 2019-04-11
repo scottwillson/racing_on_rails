@@ -11,6 +11,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   include Calculations::V3::CalculationConcerns::SourceResults
 
   serialize :points_for_place, Array
+  serialize :source_event_keys, Array
 
   has_many :calculation_categories, class_name: "Calculations::V3::Category", dependent: :destroy
   has_many :calculations_events, class_name: "Calculations::V3::Event", dependent: :destroy
@@ -21,6 +22,10 @@ class Calculations::V3::Calculation < ApplicationRecord
   belongs_to :source_event, class_name: "Event", optional: true
 
   before_save :set_name
+
+  validates_uniqueness_of :key, scope: :year
+
+  default_value_for :points_for_place, []
 
   def add_event!
     return if event

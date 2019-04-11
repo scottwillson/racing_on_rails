@@ -373,6 +373,25 @@ COMPETITIONS = {
       points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     }
   },
+  oregon_cup: {
+    categories: [
+      { name: "Senior Men" }
+    ],
+    competition_id: 25_815,
+    events: [
+      { id: 25_917 }, 
+      { id: 25_920 },
+      { id: 25_930 },
+      { id: 25_939 },
+      { id: 25_943 },
+      { id: 26_053 }
+    ],
+    rules: {
+      members_only: true,
+      points_for_place: [100, 75, 60, 50, 45, 40, 35, 30, 25, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10],
+      specific_events: true
+    }
+  },
   tabor: {
     categories: [
       { name: "Senior Men" },
