@@ -7,7 +7,7 @@ module Calculations
         def self.calculate!(calculator)
           return calculator.event_categories unless calculator.rules.discipline
 
-          calculator.event_categories.flat_map(&:results).flat_map(&:source_results).each do |source_result|
+          calculator.source_results.each do |source_result|
             if source_result.discipline != calculator.rules.discipline
               source_result.reject :discipline
             end

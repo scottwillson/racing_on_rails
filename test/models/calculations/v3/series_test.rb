@@ -37,7 +37,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     women_b = Category.find_or_create_by_normalized_name("Women B")
     source_race = source_child_event.races.create!(category: women_b)
     person_3 = FactoryBot.create(:person)
-    source_result_3 = source_race.results.create!(place: 1, person: person_3)
+    source_race.results.create!(place: 1, person: person_3)
 
     calculation.calculate!
 

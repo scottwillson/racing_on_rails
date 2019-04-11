@@ -9,8 +9,8 @@ module Calculations
             category.results.reject(&:rejected?).each do |result|
               result.source_results.reject(&:rejected?).each do |source_result|
                 source_result.points = points_for_place(source_result, calculator.rules.points_for_place) *
-                                         last_event_multiplier(source_result, calculator.rules) *
-                                         multiplier(source_result)
+                                       last_event_multiplier(source_result, calculator.rules) *
+                                       multiplier(source_result)
               end
             end
           end
@@ -42,6 +42,7 @@ module Calculations
 
         def self.multiplier(source_result)
           raise(ArgumentError, "event required to assign points") unless source_result.event
+
           source_result.event.multiplier.to_f
         end
       end

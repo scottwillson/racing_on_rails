@@ -26,6 +26,10 @@ module Calculations
           category.name
         end
 
+        def source_results
+          results.flat_map(&:source_results)
+        end
+
         def reject(reason)
           @rejection_reason = reason
           @rejected = true
