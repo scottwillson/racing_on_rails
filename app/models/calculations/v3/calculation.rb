@@ -45,6 +45,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   def calculate!
     ActiveSupport::Notifications.instrument "calculate.calculations.#{name}.racing_on_rails" do
       transaction do
+        calculate_source_calculations
         add_event!
         results = results_to_models(source_results)
         calculator = Calculations::V3::Calculator.new(logger: logger, rules: rules, source_results: results)
@@ -54,6 +55,10 @@ class Calculations::V3::Calculation < ApplicationRecord
     end
 
     true
+  end
+
+  def calculate_source_calculations
+    Calculations::V3::Calculation.where(key: source_event_keys, year: year).find_each(&:calculate!)
   end
 
   def calculated?(event)

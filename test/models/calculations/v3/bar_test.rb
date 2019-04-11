@@ -97,6 +97,32 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       assert_equal 1, results.first.source_results.size
       assert_nil results.first.rejection_reason
       assert_equal 300, results.first.points
+
+      event = criterium.reload.event
+
+      assert_equal 1, event.races.size
+      race = event.races.detect { |r| r.category == senior_women }
+      assert_not_nil race
+
+      results = race.results.sort
+      assert_equal 1, results.size
+
+      assert_equal 1, results.first.source_results.size
+      assert_equal :discipline, results.first.rejection_reason
+      assert_equal 0, results.first.points
+
+      event = road.reload.event
+
+      assert_equal 1, event.races.size
+      race = event.races.detect { |r| r.category == senior_women }
+      assert_not_nil race
+
+      results = race.results.sort
+      assert_equal 1, results.size
+
+      assert_equal 1, results.first.source_results.size
+      assert_nil results.first.rejection_reason
+      assert_equal 4, results.first.points
     end
   end
 end
