@@ -25,21 +25,20 @@ module Calculations
     class Calculator
       attr_reader :event_categories
       attr_reader :rules
-      attr_reader :source_results
 
       def initialize(logger: Logger.new(STDOUT, level: :fatal), rules: Rules.new, source_results: [])
         raise(ArgumentError, "rules should be Rules, but are #{rules.class}") unless rules.is_a?(Rules)
 
         @logger = logger
         @rules = rules
-        @source_results = source_results
 
         @event_categories = create_event_categories
+        map_source_results_to_results source_results
       end
 
       def create_event_categories
-        if rules.categories?
-          rules.categories.map do |category|
+        if categories?
+          categories.map do |category|
             Models::EventCategory.new(category)
           end
         else
@@ -51,8 +50,7 @@ module Calculations
       def calculate!
         @logger.debug "Calculator#calculate! source_results: #{source_results.size} rules: #{rules.to_h}"
 
-        calculate_step(Steps::MapSourceResultsToResults)
-          .calculate_step(Steps::RejectCalculatedEvents)
+        calculate_step(Steps::RejectCalculatedEvents)
           .calculate_step(Steps::RejectWeekdayEvents)
           .calculate_step(Steps::SelectInDiscipline)
           .calculate_step(Steps::RejectCategories)
@@ -95,11 +93,68 @@ module Calculations
         self
       end
 
+      def find_or_create_event_category(source_result)
+        return event_categories.first unless categories?
+
+        category = source_result.category.best_match_in(event_categories.map(&:category))
+        event_category = event_categories.find { |c| c.category == category }
+
+        return event_category if event_category
+
+        event_category = Models::EventCategory.new(source_result.event_category.category)
+        event_category.reject "not_calculation_category"
+        event_categories << event_category
+
+        event_category
+      end
+
+      def in_calculation_category?(source_result)
+        return true unless categories?
+
+        source_result.category.best_match_in(categories).present?
+      end
+
+      def map_source_results_to_results(source_results)
+        source_results.each do |source_result|
+          source_result_in_calculation_category = in_calculation_category?(source_result)
+          unless source_result_in_calculation_category
+            source_result.reject "not_calculation_category"
+          end
+
+          event_category = find_or_create_event_category(source_result)
+
+          calculated_result = event_category.results.find { |r| r.participant.id == source_result.participant.id }
+          if calculated_result
+            calculated_result.source_results << source_result
+          else
+            calculated_result = Models::CalculatedResult.new(
+              Models::Participant.new(source_result.participant.id, membership: source_result.participant.membership),
+              [source_result]
+            )
+            unless source_result_in_calculation_category
+              calculated_result.reject "not_calculation_category"
+            end
+
+            event_category.results << calculated_result
+          end
+        end
+      end
+
+      def results
+        event_categories.flat_map(&:results)
+      end
+
+      def source_results
+        results.flat_map(&:source_results)
+      end
+
       def validate!
         if event_categories.size != event_categories.uniq.size
           raise("Duplicate categories in #{event_categories.map(&:name).sort}")
         end
       end
+
+      delegate :categories, :categories?, to: :rules
     end
   end
 end

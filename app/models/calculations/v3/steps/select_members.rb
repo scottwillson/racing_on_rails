@@ -6,8 +6,7 @@ module Calculations
       module SelectMembers
         def self.calculate!(calculator)
           if calculator.rules.members_only?
-            # TODO wrap
-            calculator.event_categories.flat_map(&:results).each do |result|
+            calculator.results.each do |result|
               unless result.participant.member?
                 result.reject :members_only
               end

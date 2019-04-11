@@ -7,7 +7,7 @@ module Calculations
         def self.calculate!(calculator)
           return calculator.event_categories if calculator.rules.weekday_events?
 
-          calculator.event_categories.flat_map(&:results).flat_map(&:source_results).each do |source_result|
+          calculator.source_results.each do |source_result|
             if weekday?(source_result.event)
               source_result.reject :weekday
             end
