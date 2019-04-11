@@ -47,4 +47,31 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       assert_equal "members_only", results.second.rejection_reason
     end
   end
+
+  test "overall BAR" do
+    Timecop.freeze(2019) do
+      Calculations::V3::Calculation.create!(
+        discipline: Discipline[:criterium],
+        key: "criterium",
+        members_only: true,
+        points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        weekday_events: false
+      )
+
+      Calculations::V3::Calculation.create!(
+        discipline: Discipline[:road],
+        key: "road",
+        members_only: true,
+        points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        weekday_events: false
+      )
+
+      calculation = Calculations::V3::Calculation.create!(
+        members_only: true,
+        points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        source_events: %w[criterium_bar road_bar],
+        weekday_events: false
+      )
+    end
+  end
 end

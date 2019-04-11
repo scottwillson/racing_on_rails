@@ -9,6 +9,7 @@ module Calculations
       attr_reader :members_only
       attr_reader :minimum_events
       attr_reader :points_for_place
+      attr_reader :specific_events
       attr_reader :source_events
       attr_reader :weekday_events
 
@@ -20,6 +21,7 @@ module Calculations
         members_only: false,
         minimum_events: 0,
         points_for_place: nil,
+        specific_events: false,
         source_events: [],
         weekday_events: true
       )
@@ -32,6 +34,7 @@ module Calculations
         @minimum_events = minimum_events
         @points_for_place = points_for_place
         @source_events = source_events
+        @specific_events = specific_events
         @weekday_events = weekday_events
 
         validate!
@@ -57,6 +60,10 @@ module Calculations
         members_only
       end
 
+      def specific_events?
+        specific_events
+      end
+
       def rejected_categories
         category_rules.select(&:reject?).map(&:category)
       end
@@ -78,7 +85,8 @@ module Calculations
           maximum_events: maximum_events,
           minimum_events: minimum_events,
           points_for_place: points_for_place,
-          source_events: source_events.map(&:id)
+          source_events: source_events.map(&:id),
+          specific_events: specific_events?
         }
       end
     end

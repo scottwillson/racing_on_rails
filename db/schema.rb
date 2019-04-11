@@ -174,6 +174,7 @@ ActiveRecord::Schema.define(version: 2019_03_31_045946) do
     t.integer "maximum_events", default: 0, null: false
     t.string "name", default: "New Calculation"
     t.string "points_for_place", default: "--- []\n"
+    t.boolean "specific_events", default: false, null: false
     t.boolean "weekday_events", default: true, null: false
     t.integer "year", null: false
     t.datetime "created_at", null: false

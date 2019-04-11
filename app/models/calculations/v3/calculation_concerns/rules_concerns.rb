@@ -26,6 +26,7 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
       minimum_events: minimum_events,
       points_for_place: points_for_place,
       source_events: model_source_events,
+      specific_events: specific_events?,
       weekday_events: weekday_events?
     )
   end
