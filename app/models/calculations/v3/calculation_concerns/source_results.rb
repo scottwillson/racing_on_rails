@@ -83,6 +83,8 @@ module Calculations::V3::CalculationConcerns::SourceResults
   def source_events
     if source_event
       source_event.children
+    elsif specific_events?
+      events
     else
       Event.year(year)
     end
@@ -102,6 +104,8 @@ module Calculations::V3::CalculationConcerns::SourceResults
 
     if source_event
       source_results = source_results.where("events.parent_id" => source_event)
+    elsif specific_events?
+      source_results = source_results.where(event: source_events)
     end
 
     source_results

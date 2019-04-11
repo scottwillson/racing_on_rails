@@ -12,6 +12,7 @@ class CreateCalculations < ActiveRecord::Migration[5.2]
       t.integer :maximum_events, default: 0, null: false
       t.string :name, default: "New Calculation", required: true, unique: true
       t.string :points_for_place, array: true, default: [].to_yaml
+      t.boolean :specific_events, default: false, null: false
       t.boolean :weekday_events, default: true, null: false
       t.integer :year, default: nil, null: false
       t.timestamps
