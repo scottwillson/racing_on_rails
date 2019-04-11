@@ -23,7 +23,7 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   before_save :set_name
 
-  validates_uniqueness_of :key, scope: :year
+  validates :key, uniqueness: { scope: :year }
 
   default_value_for :points_for_place, []
 
