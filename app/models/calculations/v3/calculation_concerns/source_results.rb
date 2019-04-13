@@ -80,11 +80,21 @@ module Calculations::V3::CalculationConcerns::SourceResults
     end
   end
 
+  # Consider results from these events
   def source_events
+    # Series overall like Cross Crusade, Tabor
     if source_event
       source_event.children
+
+    # BAR: Overall calculated from Criterium, Road, etc.
+    elsif source_event_keys.any?
+      Event.year(year).joins(:calculations).where("calculations.key" => source_event_keys)
+
+    # Association-sponsored competition like the Oregon Cup, OWPS
     elsif specific_events?
       events
+
+    # Ironman
     else
       Event.year(year)
     end
@@ -98,14 +108,18 @@ module Calculations::V3::CalculationConcerns::SourceResults
   end
 
   def source_results
-    source_results = Result.joins(:person, race: :event)
-                           .where.not(competition_result: true)
-                           .where(year: year)
+    source_results = Result.joins(:person, race: :event).where(year: year)
 
     if source_event
       source_results = source_results.where("events.parent_id" => source_event)
     elsif specific_events?
       source_results = source_results.where(event: source_events)
+    end
+
+    if source_event_keys.any?
+      source_results = source_results.where(competition_result: true)
+    else
+      source_results = source_results.where.not(competition_result: true)
     end
 
     source_results

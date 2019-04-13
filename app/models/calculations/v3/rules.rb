@@ -11,6 +11,7 @@ module Calculations
       attr_reader :points_for_place
       attr_reader :specific_events
       attr_reader :source_events
+      attr_reader :source_event_keys
       attr_reader :weekday_events
 
       def initialize(
@@ -23,6 +24,7 @@ module Calculations
         points_for_place: nil,
         specific_events: false,
         source_events: [],
+        source_event_keys: [],
         weekday_events: true
       )
 
@@ -34,6 +36,7 @@ module Calculations
         @minimum_events = minimum_events
         @points_for_place = points_for_place
         @source_events = source_events
+        @source_event_keys = source_event_keys
         @specific_events = specific_events
         @weekday_events = weekday_events
 
@@ -81,12 +84,16 @@ module Calculations
       def to_h
         {
           categories: categories.map(&:name),
+          discipline: discipline&.name,
           double_points_for_last_event: double_points_for_last_event?,
           maximum_events: maximum_events,
+          members_only: members_only?,
           minimum_events: minimum_events,
           points_for_place: points_for_place,
           source_events: source_events.map(&:id),
-          specific_events: specific_events?
+          source_event_keys: source_event_keys,
+          specific_events: specific_events?,
+          weekday_events: weekday_events?
         }
       end
     end

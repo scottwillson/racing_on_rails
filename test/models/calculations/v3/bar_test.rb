@@ -50,11 +50,13 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
 
   test "overall BAR" do
     Timecop.freeze(2019) do
+      criterium_discipline = Discipline.create!(name: "Criterium")
+      road_discipline = Discipline.create!(name: "Road")
       senior_women = ::Category.find_or_create_by(name: "Senior Women")
 
       criterium = Calculations::V3::Calculation.create!(
-        discipline: Discipline[:criterium],
-        key: "criterium",
+        discipline: criterium_discipline,
+        key: "criterium_bar",
         members_only: true,
         points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
         weekday_events: false
@@ -62,8 +64,8 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       criterium.categories << senior_women
 
       road = Calculations::V3::Calculation.create!(
-        discipline: Discipline[:road],
-        key: "road",
+        discipline: road_discipline,
+        key: "road_bar",
         members_only: true,
         points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
         weekday_events: false
@@ -74,29 +76,16 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
         members_only: true,
         points_for_place: (1..300).to_a.reverse,
         source_event_keys: %w[criterium_bar road_bar],
-        weekday_events: false
+        weekday_events: true
       )
       overall.categories << senior_women
 
-      event = FactoryBot.create :event
+      event = FactoryBot.create :event, date: Time.zone.local(2019, 4, 13)
       race = event.races.create!(category: senior_women)
       person = FactoryBot.create :person
       race.results.create!(place: 12, person: person)
 
       overall.calculate!
-
-      event = overall.reload.event
-
-      assert_equal 1, event.races.size
-      race = event.races.detect { |r| r.category == senior_women }
-      assert_not_nil race
-
-      results = race.results.sort
-      assert_equal 1, results.size
-
-      assert_equal 1, results.first.source_results.size
-      assert_nil results.first.rejection_reason
-      assert_equal 300, results.first.points
 
       event = criterium.reload.event
 
@@ -108,8 +97,12 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       assert_equal 1, results.size
 
       assert_equal 1, results.first.source_results.size
-      assert_equal :discipline, results.first.rejection_reason
       assert_equal 0, results.first.points
+      assert_equal "", results.first.place
+      assert_equal 0, results.first.sources.first.points
+      assert_equal "12", results.first.source_results.first.place
+      assert results.first.sources.first.rejected?
+      assert_equal "discipline", results.first.sources.first.rejection_reason
 
       event = road.reload.event
 
@@ -121,8 +114,22 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       assert_equal 1, results.size
 
       assert_equal 1, results.first.source_results.size
-      assert_nil results.first.rejection_reason
+      assert_nil results.first.sources.first.rejection_reason
       assert_equal 4, results.first.points
+      assert_equal "1", results.first.place
+
+      event = overall.reload.event
+
+      assert_equal 1, event.races.size
+      race = event.races.detect { |r| r.category == senior_women }
+      assert_not_nil race
+
+      results = race.results.sort
+      assert_equal 1, results.size
+
+      assert_equal 2, results.first.source_results.size
+      assert_equal 300, results.first.points
+      assert_equal "1", results.first.place
     end
   end
 end

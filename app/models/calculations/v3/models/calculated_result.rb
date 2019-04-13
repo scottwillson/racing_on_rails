@@ -29,6 +29,10 @@ module Calculations
           source_results.select(&:placed?).select(&:points?)
         end
 
+        def points?
+          points&.positive?
+        end
+
         def reject(reason)
           @rejection_reason = reason
           @rejected = true
@@ -47,6 +51,10 @@ module Calculations
           raise(ArgumentError, "source_results is required") unless source_results
           raise(ArgumentError, "source_results must be an Enumerable") unless source_results.is_a?(Enumerable)
           raise(ArgumentError, "source_results cannot be empty") if source_results.empty?
+
+          unless source_results.all? { |source_result| source_result.is_a?(Calculations::V3::Models::SourceResult) }
+            raise(ArgumentError, "source_results must all be Models::SourceResult")
+          end
         end
       end
     end

@@ -7,12 +7,13 @@ module Calculations
       module Place
         def self.calculate!(calculator)
           calculator.event_categories.each do |category|
+            next if category.rejected?
+
             place = 1
             previous_result = nil
 
-            sort_by_points(category.results).map.with_index do |result, index|
-              next if category.rejected?
-
+            results = category.results.select(&:points?)
+            sort_by_points(results).map.with_index do |result, index|
               if index == 0
                 place = 1
               elsif result.points != previous_result.points

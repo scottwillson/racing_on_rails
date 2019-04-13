@@ -16,9 +16,11 @@ module Calculations
             id: 33,
             event_category: Models::EventCategory.new(category),
             participant: participant,
-            place: "19"
+            place: "19",
+            points: 1
           )
           result = Models::CalculatedResult.new(participant, [source_result])
+          result.points = 1
 
           calculator = Calculator.new(rules: rules, source_results: [source_result])
           event_category = calculator.event_categories.first
@@ -26,7 +28,7 @@ module Calculations
 
           Place.calculate! calculator
 
-          assert_equal "1", calculator.event_categories.first.results.first.place
+          assert_equal "1", result.place
         end
 
         def test_place_many
@@ -227,6 +229,29 @@ module Calculations
           event_category.results << result
 
           event_category.reject("not_allowed")
+          Place.calculate! calculator
+
+          assert_nil calculator.event_categories.first.results.first.place
+        end
+
+        def test_only_place_if_points
+          category = Models::Category.new("Masters Men")
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)])
+
+          participant = Models::Participant.new(0)
+          source_result = Models::SourceResult.new(
+            id: 33,
+            event_category: Models::EventCategory.new(category),
+            participant: participant,
+            place: "19",
+            points: 0
+          )
+          result = Models::CalculatedResult.new(participant, [source_result])
+
+          calculator = Calculator.new(rules: rules, source_results: [source_result])
+          event_category = calculator.event_categories.first
+          event_category.results << result
+
           Place.calculate! calculator
 
           assert_nil calculator.event_categories.first.results.first.place
