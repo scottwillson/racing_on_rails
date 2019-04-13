@@ -36,7 +36,7 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
     obsolete_results = race.results.select { |r| r.person_id.in? obsolete_participant_ids }
 
     ActiveSupport::Notifications.instrument(
-      "partition_results.calculations.#{name}.racing_on_rails" \
+      "partition_results.calculations.#{name}.racing_on_rails " \
       "new_results: #{new_results.size} " \
       "existing_results: #{existing_results.size} " \
       "obsolete_results: #{obsolete_results.size}"

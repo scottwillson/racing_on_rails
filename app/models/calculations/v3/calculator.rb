@@ -66,19 +66,19 @@ module Calculations
       end
 
       def calculate_step(step)
-        results_count_before = @event_categories.flat_map(&:results).size
-        rejections_count_before = @event_categories.flat_map(&:results).select(&:rejected?).size
-        source_results_count_before = @event_categories.flat_map(&:results).flat_map(&:source_results).size
-        source_result_rejections_count_before = @event_categories.flat_map(&:results).flat_map(&:source_results).select(&:rejected?).size
+        results_count_before = results.size
+        rejections_count_before = results.select(&:rejected?).size
+        source_results_count_before = source_results.size
+        source_result_rejections_count_before = source_results.select(&:rejected?).size
 
         time = Benchmark.measure do
           @event_categories = step.calculate!(self)
         end
 
-        results_count_after = @event_categories.flat_map(&:results).size
-        rejections_count_after = @event_categories.flat_map(&:results).select(&:rejected?).size
-        source_results_count_after = @event_categories.flat_map(&:results).flat_map(&:source_results).size
-        source_result_rejections_count_after = @event_categories.flat_map(&:results).flat_map(&:source_results).select(&:rejected?).size
+        results_count_after = results.size
+        rejections_count_after = results.select(&:rejected?).size
+        source_results_count_after = source_results.size
+        source_result_rejections_count_after = source_results.select(&:rejected?).size
         formatted_time = format("%.1fms", time.real)
         @logger.debug(<<~MSG
           Steps::#{step}#calculate!

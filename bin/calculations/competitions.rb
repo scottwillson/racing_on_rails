@@ -55,6 +55,7 @@ COMPETITIONS = {
     events: [
       { id: 25_943, multiplier: 2 }
     ],
+    key: :criterium_bar,
     rules: {
       discipline: "Criterium",
       members_only: true,
@@ -85,6 +86,7 @@ COMPETITIONS = {
     events: [
       { id: 25_903, multiplier: 2 }
     ],
+    key: :cyclocross_bar,
     rules: {
       discipline: "Cyclocross",
       members_only: true,
@@ -121,6 +123,7 @@ COMPETITIONS = {
       { id: 26_405, multiplier: 2 },
       { id: 26_442, multiplier: 2 }
     ],
+    key: :mountain_bike_bar,
     rules: {
       discipline: "Mountain Bike",
       members_only: true,
@@ -138,6 +141,7 @@ COMPETITIONS = {
       { name: "Open Women" }
     ],
     competition_id: 25_829,
+    key: :gravel_bar,
     rules: {
       discipline: "Gravel",
       members_only: true,
@@ -172,6 +176,7 @@ COMPETITIONS = {
       { id: 25_951, multiplier: 2 },
       { id: 26_443, multiplier: 2 }
     ],
+    key: :road_bar,
     rules: {
       discipline: "Road",
       members_only: true,
@@ -203,6 +208,7 @@ COMPETITIONS = {
       { name: "Tandem" }
     ],
     competition_id: 25_828,
+    key: :short_track_bar,
     rules: {
       discipline: "Gran Fondo",
       members_only: true,
@@ -236,6 +242,7 @@ COMPETITIONS = {
       { id: 25_936, multiplier: 2 },
       { id: 25_945, multiplier: 2 }
     ],
+    key: :time_trial_bar,
     rules: {
       discipline: "Time Trial",
       members_only: true,
@@ -277,6 +284,33 @@ COMPETITIONS = {
       members_only: true,
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
+    }
+  },
+  overall_bar: {
+    categories: [
+      { name: "Athena" },
+      { name: "Category 3 Men" },
+      { name: "Category 3 Women" },
+      { name: "Category 4 Men" },
+      { name: "Category 4 Women" },
+      { name: "Category 5 Men" },
+      { name: "Category 5 Women" },
+      { name: "Clydesdale" },
+      { name: "Junior Men" },
+      { name: "Junior Women" },
+      { name: "Masters Men" },
+      { name: "Masters Women" },
+      { name: "Senior Men" },
+      { name: "Senior Women" },
+      { name: "Singlespeed/Fixed" },
+      { name: "Tandem" }
+    ],
+    competition_id: 25_821,
+    rules: {
+      members_only: true,
+      points_for_place: (1..300).to_a.reverse,
+      source_event_keys: %w[criterium_bar cyclocross_bar gravel_bar mountain_bike_bar road_bar short_track_bar time_trial_bar track_bar],
+      weekday_events: true
     }
   },
   cross_crusade: {
@@ -379,7 +413,7 @@ COMPETITIONS = {
     ],
     competition_id: 25_815,
     events: [
-      { id: 25_917 }, 
+      { id: 25_917 },
       { id: 25_920 },
       { id: 25_930 },
       { id: 25_939 },
