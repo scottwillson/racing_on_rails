@@ -92,7 +92,7 @@ module Categories
       end
 
       # Choose highest minimum age if multiple Masters 'and over' categories
-      if masters? && and_over? && candidate_categories.all?(&:masters?)
+      if masters? && candidate_categories.all?(&:and_over?)
         highest_age = candidate_categories.map(&:ages_begin).max
         highest_age_category = candidate_categories.detect { |category| category.ages_begin == highest_age }
         logger&.debug "highest age: #{highest_age_category.name}"

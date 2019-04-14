@@ -111,6 +111,17 @@ module Competitions
       assert_best_match_in [masters_men_60_plus, masters_men_70_plus], masters_men_60_plus, event
     end
 
+    test "age range with 'and over'" do
+      event = FactoryBot.create(:event)
+      masters_men_50_plus = Category.find_or_create_by_normalized_name("Masters Men 50+")
+      masters_men_60_plus = Category.find_or_create_by_normalized_name("Masters Men 60+")
+      masters_men_60_69 = Category.find_or_create_by_normalized_name("Masters Men 60-69")
+      event.races.create!(category: masters_men_50_plus)
+      event.races.create!(category: masters_men_60_plus)
+
+      assert_best_match_in [masters_men_60_plus, masters_men_60_69], masters_men_60_plus, event
+    end
+
     test "equipment" do
       event = FactoryBot.create(:event)
       event.races.create!(category: @singlespeed)
