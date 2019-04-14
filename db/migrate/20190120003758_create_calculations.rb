@@ -10,7 +10,7 @@ class CreateCalculations < ActiveRecord::Migration[5.2]
       t.boolean :members_only, default: false, null: false
       t.integer :minimum_events, default: 0, null: false
       t.integer :maximum_events, default: 0, null: false
-      t.string :key, default: "calculation", required: true
+      t.string :key
       t.string :name, default: "New Calculation", required: true, unique: true
       t.text :points_for_place, array: true
       t.string :source_event_keys, array: true, default: [].to_yaml

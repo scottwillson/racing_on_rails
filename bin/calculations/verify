@@ -73,6 +73,7 @@ def create_calculation(event_id, rules)
     event = Event.find(event_id)
     event.calculations.create!(rules)
   else
+    rules.delete(:key) if rules[:key].nil?
     Calculations::V3::Calculation.create!(rules)
   end
 end
@@ -139,7 +140,7 @@ def compare_event_results(expected_event, actual_event)
 end
 
 # fetch_data
-# recreate_databases
+recreate_databases
 destroy_calculations
 calculations = create_calculations(COMPETITIONS)
 calculations.map(&:source_event).compact.each(&:update_date)

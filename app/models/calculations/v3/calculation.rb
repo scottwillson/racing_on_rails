@@ -23,7 +23,7 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   before_save :set_name
 
-  validates :key, uniqueness: { scope: :year }
+  validates :key, uniqueness: { allow_nil: true, scope: :year }
 
   default_value_for :points_for_place, []
 
@@ -58,7 +58,6 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def calculate_source_calculations
-    logger.debug "calculate_source_calculations.calculations.#{name}.racing_on_rails source_event_keys: #{source_event_keys}"
     Calculations::V3::Calculation.where(key: source_event_keys, year: year).find_each(&:calculate!)
   end
 
