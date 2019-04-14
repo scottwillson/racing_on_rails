@@ -307,6 +307,7 @@ COMPETITIONS = {
     ],
     competition_id: 25_821,
     rules: {
+      maximum_events: -4,
       members_only: true,
       points_for_place: (1..300).to_a.reverse,
       source_event_keys: %w[criterium_bar cyclocross_bar gravel_bar mountain_bike_bar road_bar short_track_bar time_trial_bar track_bar],
