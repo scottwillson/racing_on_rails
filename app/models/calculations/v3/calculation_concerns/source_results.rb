@@ -3,8 +3,8 @@
 module Calculations::V3::CalculationConcerns::SourceResults
   extend ActiveSupport::Concern
 
-  def model_discipline
-    if discipline
+  def model_disciplines
+    disciplines.map do |discipline|
       Calculations::V3::Models::Discipline.new(discipline.name)
     end
   end
@@ -127,7 +127,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
     end
 
     if discipline?
-      source_results = source_results.where("events.discipline" => discipline.name)
+      source_results = source_results.where("events.discipline" => disciplines.map(&:name))
     end
 
     source_results

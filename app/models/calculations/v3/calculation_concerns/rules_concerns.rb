@@ -17,13 +17,13 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
   end
 
   def discipline?
-    discipline.present?
+    disciplines.any?
   end
 
   def rules
     @rules ||= Calculations::V3::Rules.new(
       category_rules: category_rules,
-      discipline: model_discipline,
+      disciplines: model_disciplines,
       double_points_for_last_event: double_points_for_last_event?,
       maximum_events: maximum_events,
       members_only: members_only?,

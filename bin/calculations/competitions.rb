@@ -56,7 +56,7 @@ COMPETITIONS = {
       { id: 25_943, multiplier: 2 }
     ],
     rules: {
-      discipline: "Criterium",
+      disciplines: ["Criterium"],
       key: :criterium_bar,
       members_only: true,
       name: "Criterium BAR",
@@ -88,7 +88,7 @@ COMPETITIONS = {
       { id: 25_903, multiplier: 2 }
     ],
     rules: {
-      discipline: "Cyclocross",
+      disciplines: ["Cyclocross"],
       key: :cyclocross_bar,
       members_only: true,
       name: "Cyclocross BAR",
@@ -126,7 +126,7 @@ COMPETITIONS = {
       { id: 26_442, multiplier: 2 }
     ],
     rules: {
-      discipline: "Mountain Bike",
+      disciplines: ["Mountain Bike", "Downhill", "Super D"],
       key: :mountain_bike_bar,
       members_only: true,
       name: "Mountain Bike BAR",
@@ -145,7 +145,7 @@ COMPETITIONS = {
     ],
     competition_id: 25_829,
     rules: {
-      discipline: "Gravel",
+      disciplines: ["Gravel", "Gran Fondo"],
       key: :gravel_bar,
       members_only: true,
       name: "Gravel BAR",
@@ -181,7 +181,7 @@ COMPETITIONS = {
       { id: 26_443, multiplier: 2 }
     ],
     rules: {
-      discipline: "Road",
+      disciplines: ["Circuit Race", "Road"],
       key: :road_bar,
       members_only: true,
       name: "Road BAR",
@@ -214,7 +214,7 @@ COMPETITIONS = {
     ],
     competition_id: 25_828,
     rules: {
-      discipline: "Short Track",
+      disciplines: ["Short Track"],
       key: :short_track_bar,
       members_only: true,
       name: "Short Track BAR",
@@ -249,7 +249,7 @@ COMPETITIONS = {
       { id: 25_945, multiplier: 2 }
     ],
     rules: {
-      discipline: "Time Trial",
+      disciplines: ["Time Trial"],
       key: :time_trial_bar,
       members_only: true,
       name: "Time Trial BAR",
@@ -287,7 +287,7 @@ COMPETITIONS = {
       { id: 26_314, multiplier: 2 }
     ],
     rules: {
-      discipline: "Track",
+      disciplines: ["Track"],
       key: :track_bar,
       members_only: true,
       name: "Track BAR",

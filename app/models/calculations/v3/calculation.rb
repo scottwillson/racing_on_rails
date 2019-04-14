@@ -12,8 +12,6 @@
 # results and do all selection and rejection in Ruby. For both performance and
 # clarity, some results are filtered early by SQL. For example, no one expects
 # criterium and track results to show in the Road BAR.
-
-# TODO prune results with no source results
 class Calculations::V3::Calculation < ApplicationRecord
   include Calculations::V3::CalculationConcerns::CalculatedResults
   include Calculations::V3::CalculationConcerns::Dates
@@ -26,7 +24,8 @@ class Calculations::V3::Calculation < ApplicationRecord
   has_many :calculation_categories, class_name: "Calculations::V3::Category", dependent: :destroy
   has_many :calculations_events, class_name: "Calculations::V3::Event", dependent: :destroy
   has_many :categories, through: :calculation_categories, class_name: "::Category"
-  belongs_to :discipline, optional: true
+  has_many :calculation_disciplines, class_name: "Calculations::V3::Discipline", dependent: :destroy
+  has_many :disciplines, through: :calculation_disciplines
   belongs_to :event, class_name: "::Event", dependent: :destroy, inverse_of: :calculation, optional: true
   has_many :events, through: :calculations_events, class_name: "::Event"
   belongs_to :source_event, class_name: "Event", optional: true

@@ -5,9 +5,11 @@ require "test_helper"
 # :stopdoc:
 class Calculations::V3::BarTest < ActiveSupport::TestCase
   test "#calculate!" do
+    Discipline.create!(name: "Road")
+
     Timecop.freeze(2019) do
       calculation = Calculations::V3::Calculation.create!(
-        discipline: Discipline[:road],
+        disciplines: [Discipline[:road]],
         members_only: true,
         name: "Road BAR",
         points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
@@ -53,11 +55,12 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
   test "overall BAR" do
     Timecop.freeze(2019) do
       criterium_discipline = Discipline.create!(name: "Criterium")
+      circuit_race_discipline = Discipline.create!(name: "Circuit Race")
       road_discipline = Discipline.create!(name: "Road")
       senior_women = ::Category.find_or_create_by(name: "Senior Women")
 
       criterium = Calculations::V3::Calculation.create!(
-        discipline: criterium_discipline,
+        disciplines: [criterium_discipline],
         key: "criterium_bar",
         members_only: true,
         name: "Criterium BAR",
@@ -67,7 +70,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       criterium.categories << senior_women
 
       road = Calculations::V3::Calculation.create!(
-        discipline: road_discipline,
+        disciplines: [circuit_race_discipline, road_discipline],
         key: "road_bar",
         name: "Road BAR",
         members_only: true,

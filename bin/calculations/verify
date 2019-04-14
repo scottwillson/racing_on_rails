@@ -63,8 +63,8 @@ def create_calculations(competitions)
 end
 
 def create_calculation(event_id, rules)
-  if rules[:discipline]
-    rules[:discipline] = Discipline.find_by!(name: rules[:discipline])
+  if rules[:disciplines]
+    rules[:disciplines] = Discipline.where(name: rules[:disciplines])
   end
 
   rules[:year] = 2018

@@ -10,7 +10,7 @@ module Calculations
         def test_calculate
           cx = Models::Discipline.new("Cyclocross")
           road = Models::Discipline.new("Road")
-          rules = Rules.new(discipline: road)
+          rules = Rules.new(disciplines: [road])
           calculator = Calculator.new(rules: rules, source_results: [])
           calculation_event_category = calculator.event_categories.first
           source_results = []
