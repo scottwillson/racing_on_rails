@@ -96,6 +96,8 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     assert_equal "not_calculation_category", source.rejection_reason
 
     # Validate multiple calculations
-    calculation.reload.calculate!
+    assert_difference "Result.count", 0 do
+      calculation.reload.calculate!
+    end
   end
 end

@@ -108,7 +108,11 @@ module Calculations::V3::CalculationConcerns::SourceResults
   end
 
   def source_results
-    source_results = Result.includes(:person).joins(race: :event).where(year: year)
+    source_results = Result
+                     .includes(:person)
+                     .joins(race: :event)
+                     .where.not(event: event)
+                     .where(year: year)
 
     if source_event
       source_results = source_results.where("events.parent_id" => source_event)
