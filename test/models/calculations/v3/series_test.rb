@@ -94,5 +94,8 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     assert_equal 0, source.points
     assert source.rejected?
     assert_equal "not_calculation_category", source.rejection_reason
+
+    # Validate multiple calculations
+    calculation.reload.calculate!
   end
 end

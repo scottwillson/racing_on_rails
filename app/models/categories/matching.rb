@@ -91,6 +91,14 @@ module Categories
         return highest_ability_category
       end
 
+      # Choose highest minimum age if multiple Masters 'and over' categories
+      if masters? && and_over? && candidate_categories.all?(&:masters?)
+        highest_age = candidate_categories.map(&:ages_begin).max
+        highest_age_category = candidate_categories.detect { |category| category.ages_begin == highest_age }
+        logger&.debug "highest age: #{highest_age_category.name}"
+        return highest_age_category
+      end
+
       candidate_categories = candidate_categories.reject { |category| gender == "F" && category.gender == "M" }
       logger&.debug "exact gender: #{candidate_categories.map(&:name).join(', ')}"
       return candidate_categories.first if candidate_categories.one?
