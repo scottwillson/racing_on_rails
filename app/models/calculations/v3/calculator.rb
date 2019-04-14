@@ -48,7 +48,7 @@ module Calculations
 
       # Do the work, all in memory with Ruby classes
       def calculate!
-        @logger.debug "Calculator#calculate! source_results: #{source_results.size} rules: #{rules.to_h}"
+        @logger.debug "Calculator#calculate! name: source_results: #{source_results.size} rules: #{rules.to_h}"
 
         calculate_step(Steps::RejectCalculatedEvents)
           .calculate_step(Steps::RejectWeekdayEvents)

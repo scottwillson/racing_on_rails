@@ -60,6 +60,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
         discipline: criterium_discipline,
         key: "criterium_bar",
         members_only: true,
+        name: "Criterium BAR",
         points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
         weekday_events: false
       )
@@ -68,6 +69,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       road = Calculations::V3::Calculation.create!(
         discipline: road_discipline,
         key: "road_bar",
+        name: "Road BAR",
         members_only: true,
         points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
         weekday_events: false
@@ -76,6 +78,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
 
       overall = Calculations::V3::Calculation.create!(
         members_only: true,
+        name: "Overall BAR",
         points_for_place: (1..300).to_a.reverse,
         source_event_keys: %w[criterium_bar road_bar],
         weekday_events: true
@@ -87,7 +90,12 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       person = FactoryBot.create :person
       race.results.create!(place: 12, person: person)
 
+      # Another non-BAR competition
+      FactoryBot.create :result, person: person, competition_result: true
+
       overall.calculate!
+
+      assert_equal 2, overall.source_events.size
 
       event = criterium.reload.event
 
