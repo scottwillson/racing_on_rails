@@ -172,7 +172,7 @@ ActiveRecord::Schema.define(version: 2019_03_31_045946) do
     t.boolean "members_only", default: false, null: false
     t.integer "minimum_events", default: 0, null: false
     t.integer "maximum_events", default: 0, null: false
-    t.string "key", default: "calculation"
+    t.string "key"
     t.string "name", default: "New Calculation"
     t.text "points_for_place"
     t.string "source_event_keys", default: "--- []\n"

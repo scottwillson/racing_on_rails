@@ -413,12 +413,12 @@ COMPETITIONS = {
     ],
     competition_id: 25_815,
     events: [
-      { id: 25_917 },
-      { id: 25_920 },
-      { id: 25_930 },
-      { id: 25_939 },
-      { id: 25_943 },
-      { id: 26_053 }
+      { id: 25_917, multiplier: 1 },
+      { id: 25_920, multiplier: 1 },
+      { id: 25_930, multiplier: 1 },
+      { id: 25_939, multiplier: 1 },
+      { id: 25_943, multiplier: 1 },
+      { id: 26_053, multiplier: 1 }
     ],
     rules: {
       members_only: true,
