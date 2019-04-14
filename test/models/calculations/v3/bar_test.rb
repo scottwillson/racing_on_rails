@@ -104,15 +104,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       assert_not_nil race
 
       results = race.results.sort
-      assert_equal 1, results.size
-
-      assert_equal 1, results.first.source_results.size
-      assert_equal 0, results.first.points
-      assert_equal "", results.first.place
-      assert_equal 0, results.first.sources.first.points
-      assert_equal "12", results.first.source_results.first.place
-      assert results.first.sources.first.rejected?
-      assert_equal "discipline", results.first.sources.first.rejection_reason
+      assert_equal 0, results.size
 
       event = road.reload.event
 
@@ -137,7 +129,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       results = race.results.sort
       assert_equal 1, results.size
 
-      assert_equal 2, results.first.source_results.size
+      assert_equal 1, results.first.source_results.size
       assert_equal 300, results.first.points
       assert_equal "1", results.first.place
     end

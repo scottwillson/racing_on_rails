@@ -122,6 +122,10 @@ module Calculations::V3::CalculationConcerns::SourceResults
       source_results = source_results.where.not(competition_result: true)
     end
 
+    if discipline?
+      source_results = source_results.where("events.discipline" => discipline.name)
+    end
+
     source_results
   end
 end

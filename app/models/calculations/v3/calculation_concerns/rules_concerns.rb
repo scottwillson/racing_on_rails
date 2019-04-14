@@ -16,6 +16,10 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
     end
   end
 
+  def discipline?
+    discipline.present?
+  end
+
   def rules
     @rules ||= Calculations::V3::Rules.new(
       category_rules: category_rules,

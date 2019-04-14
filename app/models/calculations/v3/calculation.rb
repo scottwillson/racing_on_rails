@@ -4,6 +4,16 @@
 # Older code uses the term "Competition.""
 # Link source event(s) with caculated Event.
 # Handle all ActiveRecord work. All calculation occurs in pure-Ruby Calculator and Models.
+#
+# Source results selected in two large steps:
+#   1. SQL. Apply broad criteria like current year, series events
+#   2. Ruby. Apply rules like "best of 6".
+# The distinction between SQL and Ruby is somewhat arbritrary. Could load _all_
+# results and do all selection and rejection in Ruby. For both performance and
+# clarity, some results are filtered early by SQL. For example, no one expects
+# criterium and track results to show in the Road BAR.
+
+# TODO prune results with no source results
 class Calculations::V3::Calculation < ApplicationRecord
   include Calculations::V3::CalculationConcerns::CalculatedResults
   include Calculations::V3::CalculationConcerns::Dates
