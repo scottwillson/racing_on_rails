@@ -4,7 +4,7 @@ module Calculations
   module V3
     class Rules
       attr_reader :category_rules
-      attr_reader :discipline
+      attr_reader :disciplines
       attr_reader :maximum_events
       attr_reader :members_only
       attr_reader :minimum_events
@@ -16,7 +16,7 @@ module Calculations
 
       def initialize(
         category_rules: [],
-        discipline: nil,
+        disciplines: [],
         double_points_for_last_event: false,
         maximum_events: 0,
         members_only: false,
@@ -29,7 +29,7 @@ module Calculations
       )
 
         @category_rules = category_rules
-        @discipline = discipline
+        @disciplines = disciplines
         @double_points_for_last_event = double_points_for_last_event
         @maximum_events = maximum_events
         @members_only = members_only
@@ -84,7 +84,7 @@ module Calculations
       def to_h
         {
           categories: categories.map(&:name),
-          discipline: discipline&.name,
+          disciplines: disciplines.map(&:name),
           double_points_for_last_event: double_points_for_last_event?,
           maximum_events: maximum_events,
           members_only: members_only?,

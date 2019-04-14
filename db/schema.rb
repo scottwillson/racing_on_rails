@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_31_045946) do
+ActiveRecord::Schema.define(version: 2019_04_14_192209) do
 
   create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
@@ -165,7 +165,6 @@ ActiveRecord::Schema.define(version: 2019_03_31_045946) do
   end
 
   create_table "calculations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "discipline_id"
     t.bigint "event_id"
     t.bigint "source_event_id"
     t.boolean "double_points_for_last_event", default: false, null: false
@@ -181,7 +180,6 @@ ActiveRecord::Schema.define(version: 2019_03_31_045946) do
     t.integer "year", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["discipline_id"], name: "index_calculations_on_discipline_id"
     t.index ["event_id"], name: "index_calculations_on_event_id"
     t.index ["key", "year"], name: "index_calculations_on_key_and_year", unique: true
     t.index ["source_event_id"], name: "index_calculations_on_source_event_id"
@@ -196,6 +194,16 @@ ActiveRecord::Schema.define(version: 2019_03_31_045946) do
     t.datetime "updated_at", null: false
     t.index ["calculation_id"], name: "index_calculations_categories_on_calculation_id"
     t.index ["category_id"], name: "index_calculations_categories_on_category_id"
+  end
+
+  create_table "calculations_disciplines", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "calculation_id"
+    t.bigint "discipline_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["calculation_id", "discipline_id"], name: "index_calc_disciplines_on_calculation_id_and_discipline_id", unique: true
+    t.index ["calculation_id"], name: "index_calculations_disciplines_on_calculation_id"
+    t.index ["discipline_id"], name: "index_calculations_disciplines_on_discipline_id"
   end
 
   create_table "calculations_events", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

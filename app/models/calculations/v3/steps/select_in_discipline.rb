@@ -5,10 +5,10 @@ module Calculations
     module Steps
       module SelectInDiscipline
         def self.calculate!(calculator)
-          return calculator.event_categories unless calculator.rules.discipline
+          return calculator.event_categories if calculator.rules.disciplines.empty?
 
           calculator.source_results.each do |source_result|
-            if source_result.discipline != calculator.rules.discipline
+            unless source_result.discipline.in?(calculator.rules.disciplines)
               source_result.reject :discipline
             end
           end
