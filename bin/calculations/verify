@@ -125,7 +125,7 @@ def compare_event_results(expected_event, actual_event)
 
     next if expected_results == actual_results
 
-    puts "#{expected_event.full_name} #{expected_event.id} #{expected_race.name} #{expected_race.id} results in event #{actual_race.event_id}"
+    puts "#{expected_event.full_name} #{expected_event.id} #{expected_race.name} #{expected_race.id} results in #{actual_race.event_id}  #{actual_race.id}"
     puts "expected:"
     pp expected_results
     puts "actual:"
@@ -139,10 +139,14 @@ def compare_event_results(expected_event, actual_event)
   end
 end
 
+def calculate_calculations
+  calculations.reject(&:key).each(&:calculate!)
+end
+
 # fetch_data
 recreate_databases
 destroy_calculations
 calculations = create_calculations(COMPETITIONS)
 calculations.map(&:source_event).compact.each(&:update_date)
-calculations.each(&:calculate!)
+calculate_calculations
 compare_results(COMPETITIONS)
