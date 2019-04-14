@@ -30,7 +30,7 @@ module Calculations
 
           sorted_source_results = result.source_results.sort_by(&:points).reverse
 
-          sorted_source_results[maximum_events, source_results_count].each do |rejected_result|
+          sorted_source_results[maximum_events, source_results_count]&.each do |rejected_result|
             rejected_result.reject :worse_result
           end
         end

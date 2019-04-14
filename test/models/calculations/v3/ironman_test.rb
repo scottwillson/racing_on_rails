@@ -6,8 +6,11 @@ require "test_helper"
 class Calculations::V3::IronmanTest < ActiveSupport::TestCase
   test "#calculate!" do
     calculation = Calculations::V3::Calculation.create!(
-      members_only: true
+      members_only: true,
+      name: "Ironman"
     )
     calculation.calculate!
+
+    assert_equal "Ironman", calculation.reload.event.name
   end
 end
