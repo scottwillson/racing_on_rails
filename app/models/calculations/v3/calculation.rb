@@ -34,7 +34,11 @@ class Calculations::V3::Calculation < ApplicationRecord
       event = create_event!(date: source_event.date, end_date: source_event.end_date, name: "Overall")
       source_event.children << event
     else
-      self.event = create_event!(date: Time.zone.local(year).beginning_of_year, end_date: Time.zone.local(year).end_of_year)
+      self.event = create_event!(
+        date: Time.zone.local(year).beginning_of_year,
+        end_date: Time.zone.local(year).end_of_year,
+        name: name
+      )
     end
   end
 

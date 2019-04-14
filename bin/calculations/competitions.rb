@@ -59,6 +59,7 @@ COMPETITIONS = {
     rules: {
       discipline: "Criterium",
       members_only: true,
+      name: "Criterium BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -90,6 +91,7 @@ COMPETITIONS = {
     rules: {
       discipline: "Cyclocross",
       members_only: true,
+      name: "Cyclocross BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -127,6 +129,7 @@ COMPETITIONS = {
     rules: {
       discipline: "Mountain Bike",
       members_only: true,
+      name: "Mountain Bike BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -145,6 +148,7 @@ COMPETITIONS = {
     rules: {
       discipline: "Gravel",
       members_only: true,
+      name: "Gravel BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -180,6 +184,7 @@ COMPETITIONS = {
     rules: {
       discipline: "Road",
       members_only: true,
+      name: "Road BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -210,8 +215,9 @@ COMPETITIONS = {
     competition_id: 25_828,
     key: :short_track_bar,
     rules: {
-      discipline: "Gran Fondo",
+      discipline: "Short Track",
       members_only: true,
+      name: "Short Track BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -246,6 +252,7 @@ COMPETITIONS = {
     rules: {
       discipline: "Time Trial",
       members_only: true,
+      name: "Time Trial BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -282,6 +289,7 @@ COMPETITIONS = {
     rules: {
       discipline: "Track",
       members_only: true,
+      name: "Track BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -309,6 +317,7 @@ COMPETITIONS = {
     rules: {
       maximum_events: -4,
       members_only: true,
+      name: "Overall BAR",
       points_for_place: (1..300).to_a.reverse,
       source_event_keys: %w[criterium_bar cyclocross_bar gravel_bar mountain_bike_bar road_bar short_track_bar time_trial_bar track_bar],
       weekday_events: true
@@ -405,6 +414,7 @@ COMPETITIONS = {
     rules: {
       maximum_events: -1,
       minimum_events: 4,
+      name: "Gran Prix Carl Decker",
       points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     }
   },
@@ -423,6 +433,7 @@ COMPETITIONS = {
     ],
     rules: {
       members_only: true,
+      name: "Oregon Cup",
       points_for_place: [100, 75, 60, 50, 45, 40, 35, 30, 25, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10],
       specific_events: true
     }

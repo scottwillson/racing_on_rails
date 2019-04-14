@@ -9,6 +9,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       calculation = Calculations::V3::Calculation.create!(
         discipline: Discipline[:road],
         members_only: true,
+        name: "Road BAR",
         points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
         weekday_events: false
       )
@@ -31,6 +32,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
 
       bar = calculation.reload.event
 
+      assert_equal "Road BAR", bar.name
       assert_equal 3, bar.races.size
       race = bar.races.detect { |r| r.category == category_3_men }
       assert_not_nil race
