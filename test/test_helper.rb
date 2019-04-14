@@ -72,7 +72,7 @@ class ActiveSupport::TestCase
                person
              else
                raise "Don't recognize #{person}"
-            end
+             end
 
     https! if RacingAssociation.current.ssl?
     get new_person_session_path

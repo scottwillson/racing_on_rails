@@ -88,7 +88,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
 
     # BAR: Overall calculated from Criterium, Road, etc.
     elsif source_event_keys.any?
-      Event.year(year).joins(:calculations).where("calculations.key" => source_event_keys)
+      Event.year(year).joins(:calculation).where("calculations.key" => source_event_keys)
 
     # Association-sponsored competition like the Oregon Cup, OWPS
     elsif specific_events?
@@ -117,7 +117,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
     end
 
     if source_event_keys.any?
-      source_results = source_results.where(competition_result: true)
+      source_results = source_results.where(competition_result: true).where(event: source_events)
     else
       source_results = source_results.where.not(competition_result: true)
     end
