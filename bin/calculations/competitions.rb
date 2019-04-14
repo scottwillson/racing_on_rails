@@ -55,9 +55,9 @@ COMPETITIONS = {
     events: [
       { id: 25_943, multiplier: 2 }
     ],
-    key: :criterium_bar,
     rules: {
       discipline: "Criterium",
+      key: :criterium_bar,
       members_only: true,
       name: "Criterium BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
@@ -87,9 +87,9 @@ COMPETITIONS = {
     events: [
       { id: 25_903, multiplier: 2 }
     ],
-    key: :cyclocross_bar,
     rules: {
       discipline: "Cyclocross",
+      key: :cyclocross_bar,
       members_only: true,
       name: "Cyclocross BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
@@ -125,9 +125,9 @@ COMPETITIONS = {
       { id: 26_405, multiplier: 2 },
       { id: 26_442, multiplier: 2 }
     ],
-    key: :mountain_bike_bar,
     rules: {
       discipline: "Mountain Bike",
+      key: :mountain_bike_bar,
       members_only: true,
       name: "Mountain Bike BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
@@ -144,9 +144,9 @@ COMPETITIONS = {
       { name: "Open Women" }
     ],
     competition_id: 25_829,
-    key: :gravel_bar,
     rules: {
       discipline: "Gravel",
+      key: :gravel_bar,
       members_only: true,
       name: "Gravel BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
@@ -180,9 +180,9 @@ COMPETITIONS = {
       { id: 25_951, multiplier: 2 },
       { id: 26_443, multiplier: 2 }
     ],
-    key: :road_bar,
     rules: {
       discipline: "Road",
+      key: :road_bar,
       members_only: true,
       name: "Road BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
@@ -213,9 +213,9 @@ COMPETITIONS = {
       { name: "Tandem" }
     ],
     competition_id: 25_828,
-    key: :short_track_bar,
     rules: {
       discipline: "Short Track",
+      key: :short_track_bar,
       members_only: true,
       name: "Short Track BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
@@ -248,9 +248,9 @@ COMPETITIONS = {
       { id: 25_936, multiplier: 2 },
       { id: 25_945, multiplier: 2 }
     ],
-    key: :time_trial_bar,
     rules: {
       discipline: "Time Trial",
+      key: :time_trial_bar,
       members_only: true,
       name: "Time Trial BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
@@ -288,6 +288,7 @@ COMPETITIONS = {
     ],
     rules: {
       discipline: "Track",
+      key: :track_bar,
       members_only: true,
       name: "Track BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
