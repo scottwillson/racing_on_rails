@@ -35,7 +35,8 @@ def destroy_calculations
 end
 
 def create_calculations(competitions)
-  competitions.values.each do |competition|
+  competitions.each do |key, competition|
+    competition[:rules][:key] = key
     calculation = create_calculation(competition[:event_id], competition[:rules])
 
     competition[:categories].each do |category_definition|
@@ -68,7 +69,6 @@ def create_calculation(event_id, rules)
     event = Event.find(event_id)
     event.calculations.create!(rules)
   else
-    rules.delete(:key) if rules[:key].nil?
     Calculations::V3::Calculation.create!(rules)
   end
 end
@@ -78,13 +78,15 @@ def calculations
 end
 
 def compare_results(competitions)
-  competitions.values.each do |competition|
-    # TODO remove
-    next unless competition[:rules][:key]
-
+  competitions.each do |key, competition|
     expected_event = Event.find(competition[:competition_id])
-    actual_event = Calculations::V3::Calculation.where(key: competition[:rules][:key]).first!.event
-    compare_event_results expected_event, actual_event
+    actual_event = Calculations::V3::Calculation.where(key: key).first&.event
+
+    if actual_event
+      compare_event_results expected_event, actual_event
+    else
+      puts "Could not find #{key}"
+    end
   end
 end
 
