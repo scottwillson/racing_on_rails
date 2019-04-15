@@ -61,7 +61,7 @@ class Calculations::V3::Calculation < ApplicationRecord
         calculate_source_calculations
         add_event!
         results = results_to_models(source_results)
-        calculator = Calculations::V3::Calculator.new(logger: logger, rules: rules, source_results: results)
+        calculator = Calculations::V3::Calculator.new(logger: logger, rules: rules, source_results: results, year: year)
         event_categories = calculator.calculate!
         save_results event_categories
       end

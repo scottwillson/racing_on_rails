@@ -16,10 +16,10 @@ module Calculations
           validate!
         end
 
-        def member?
+        def member?(year)
           return false unless membership
 
-          Date.today.in? membership
+          Date.new(year).in? membership
         end
 
         def validate!

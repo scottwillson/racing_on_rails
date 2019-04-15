@@ -7,7 +7,7 @@ module Calculations
         def self.calculate!(calculator)
           if calculator.rules.members_only?
             calculator.results.each do |result|
-              unless result.participant.member?
+              unless result.participant.member?(calculator.year)
                 result.reject :members_only
               end
             end

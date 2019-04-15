@@ -78,10 +78,14 @@ def create_calculation(event_id, rules)
   end
 end
 
+def calculate(calculations)
+  calculations.reject(&:key).each(&:calculate!)
+end
+
 def compare_results(competitions)
   competitions.values.each do |competition|
     expected_event = Competitions::Competition.find(competition[:competition_id])
-    actual_event = competition[:calculation].event
+    actual_event = competition[:calculation].reload.event
     compare_event_results expected_event, actual_event
   end
 end
@@ -139,14 +143,10 @@ def compare_event_results(expected_event, actual_event)
   end
 end
 
-def calculate_calculations
-  calculations.reject(&:key).each(&:calculate!)
-end
-
 # fetch_data
-recreate_databases
+# recreate_databases
 destroy_calculations
 calculations = create_calculations(COMPETITIONS)
 calculations.map(&:source_event).compact.each(&:update_date)
-calculate_calculations
+calculate calculations
 compare_results(COMPETITIONS)
