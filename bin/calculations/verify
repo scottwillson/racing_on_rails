@@ -35,11 +35,8 @@ def destroy_calculations
 end
 
 def create_calculations(competitions)
-  calculations = []
-
   competitions.values.each do |competition|
     calculation = create_calculation(competition[:event_id], competition[:rules])
-    competition[:calculation] = calculation
 
     competition[:categories].each do |category_definition|
       category = Category.find_or_create_by(name: category_definition[:name])
@@ -58,8 +55,6 @@ def create_calculations(competitions)
 
     calculations << calculation
   end
-
-  calculations
 end
 
 def create_calculation(event_id, rules)
@@ -78,14 +73,17 @@ def create_calculation(event_id, rules)
   end
 end
 
-def calculate(calculations)
-  calculations.reject(&:key).each(&:calculate!)
+def calculations
+  Calculations::V3::Calculation.all
 end
 
 def compare_results(competitions)
   competitions.values.each do |competition|
-    expected_event = Competitions::Competition.find(competition[:competition_id])
-    actual_event = competition[:calculation].reload.event
+    # TODO remove
+    next unless competition[:rules][:key]
+
+    expected_event = Event.find(competition[:competition_id])
+    actual_event = Calculations::V3::Calculation.where(key: competition[:rules][:key]).first!.event
     compare_event_results expected_event, actual_event
   end
 end
@@ -145,8 +143,8 @@ end
 
 # fetch_data
 # recreate_databases
-destroy_calculations
-calculations = create_calculations(COMPETITIONS)
-calculations.map(&:source_event).compact.each(&:update_date)
-calculate calculations
+# destroy_calculations
+# create_calculations(COMPETITIONS)
+# calculations.map(&:source_event).compact.each(&:update_date)
+# calculations.each(&:calculate!)
 compare_results(COMPETITIONS)
