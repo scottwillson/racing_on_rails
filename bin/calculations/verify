@@ -83,10 +83,41 @@ def compare_results(competitions)
     actual_event = Calculations::V3::Calculation.where(key: key).first&.event
 
     if actual_event
-      compare_event_results expected_event, actual_event
+      compare_source_events(expected_event, actual_event)
+      # compare_event_results expected_event, actual_event
     else
       puts "Could not find #{key}"
     end
+  end
+end
+
+def compare_source_events(expected_event, actual_event)
+  scores = Competitions::Score.joins(competition_result: :event).where("results.event_id" => expected_event).pluck(:source_result_id)
+  event_ids = Result.find(scores).pluck(:event_id)
+  expected = Event.find(event_ids).uniq.sort_by(&:name)
+
+  sources = ResultSource.joins(calculated_result: :event).where("results.event_id" => actual_event).pluck(:source_result_id)
+  event_ids = Result.find(sources).pluck(:event_id)
+  actual = Event.find(event_ids).uniq.sort_by(&:name)
+  return if expected == actual
+
+  puts
+  puts "#{actual_event.full_name} source events"
+  puts "expected: #{expected.map(&:id)}"
+  puts "expected: #{expected.map(&:name)}"
+  puts "actual:   #{actual.map(&:id)}"
+  puts "actual:   #{actual.map(&:name)}"
+
+  missing = expected - actual
+  if missing.any?
+    puts "missing:"
+    missing.each { |event| puts("#{event.id} #{event.date} #{event.name}") }
+  end
+
+  extra = actual - expected
+  if extra.any?
+    puts "extra:"
+    extra.each { |event| puts("#{event.id} #{event.date} #{event.name}") }
   end
 end
 
@@ -98,16 +129,26 @@ def compare_event_results(expected_event, actual_event)
   actual_categories = actual_races.map(&:name).sort
 
   if expected_categories != actual_categories
+    puts
     puts "#{actual_event.full_name} races"
     puts "expected: #{expected_categories}"
     puts "actual:   #{actual_categories}"
-    if expected_categories.size > actual_categories.size
-      puts "diff:     #{expected_categories - actual_categories}"
-    else
-      puts "diff:     #{actual_categories - expected_categories}"
+
+    missing = expected_categories - actual_categories
+    if missing.any?
+      puts "missing:  #{missing.map(&:name)}"
+    end
+
+    extra = actual_categories - expected_categories
+    if extra.any?
+      puts "extra:    #{extra.map(&:name)}"
     end
   end
 
+  compare_races expected_races, actual_races
+end
+
+def compare_races(expected_races, actual_races)
   expected_races.each do |expected_race|
     actual_race = actual_races.detect { |r| r.name == expected_race.name }
     next unless actual_race
@@ -123,23 +164,28 @@ def compare_event_results(expected_event, actual_event)
                                 .map { |result| [result.place, result.person_id, result.points] }
                                 .sort
 
-    if expected_results.size != actual_results.size
-      puts "Expected #{actual_race.name} to have #{expected_results.size} results, but has #{actual_results.size} in event #{actual_race.event_id}"
-    end
+    compare_individual_results expected_results, actual_results
+  end
+end
 
-    next if expected_results == actual_results
+def compare_individual_results(expected_results, actual_results)
+  if expected_results.size != actual_results.size
+    puts
+    puts "Expected #{actual_race.name} to have #{expected_results.size} results, but has #{actual_results.size} in event #{actual_race.event_id}"
+  end
 
-    puts "#{expected_event.full_name} #{expected_event.id} #{expected_race.name} #{expected_race.id} results in #{actual_race.event_id}  #{actual_race.id}"
-    puts "expected:"
-    pp expected_results
-    puts "actual:"
-    pp actual_results
-    puts "diff:"
-    if expected_results.size > actual_results.size
-      pp expected_results - actual_results
-    else
-      pp actual_results - expected_results
-    end
+  return if expected_results == actual_results
+
+  puts "#{expected_event.full_name} #{expected_event.id} #{expected_race.name} #{expected_race.id} results in #{actual_race.event_id}  #{actual_race.id}"
+  puts "expected:"
+  pp expected_results
+  puts "actual:"
+  pp actual_results
+  puts "diff:"
+  if expected_results.size > actual_results.size
+    pp expected_results - actual_results
+  else
+    pp actual_results - expected_results
   end
 end
 
