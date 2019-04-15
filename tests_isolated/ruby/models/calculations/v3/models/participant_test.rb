@@ -10,15 +10,18 @@ module Calculations
         def test_initialize
           participant = Participant.new(9)
           assert_equal 9, participant.id
-          refute participant.member?
+          refute participant.member?(2019)
         end
 
         def test_member
           participant = Participant.new(9, membership: (Date.new(2012, 1, 1)..(Date.new(2018, 12, 31))))
-          refute participant.member?
+          assert participant.member?(2018)
+
+          participant = Participant.new(9, membership: (Date.new(2012, 1, 1)..(Date.new(2018, 12, 31))))
+          refute participant.member?(2019)
 
           participant = Participant.new(9, membership: (Date.new(2012, 1, 1)..(Date.today.next_year)))
-          assert participant.member?
+          assert participant.member?(2019)
         end
       end
     end

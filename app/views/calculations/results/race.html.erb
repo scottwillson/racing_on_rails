@@ -25,9 +25,13 @@
     <% end -%>
 
     <%- @race.results.sort.each do |result| -%>
-      <h3><%= result.numeric_place.ordinalize %> &mdash; <%=
-        link_to(result.person_name, person_results_year_path(result.person, result.year)) if result.person_id
-      %></h3>
+      <%- if result.numeric_place.zero? -%>
+        <h3><%= link_to(result.person_name, person_results_year_path(result.person, result.year)) if result.person_id %></h3>
+      <%- else -%>
+        <h3><%= result.numeric_place.ordinalize %> &mdash; <%=
+          link_to(result.person_name, person_results_year_path(result.person, result.year)) if result.person_id
+          %></h3>
+      <%- end -%>
       <table class="base table table-striped results">
         <thead>
           <tr>
