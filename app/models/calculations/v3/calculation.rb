@@ -28,7 +28,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   has_many :disciplines, through: :calculation_disciplines
   belongs_to :event, class_name: "::Event", dependent: :destroy, inverse_of: :calculation, optional: true
   has_many :events, through: :calculations_events, class_name: "::Event"
-  belongs_to :source_event, class_name: "Event", optional: true
+  belongs_to :source_event, class_name: "::Event", optional: true
 
   before_save :set_name
 

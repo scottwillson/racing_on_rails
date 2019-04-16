@@ -39,13 +39,18 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     person_3 = FactoryBot.create(:person)
     source_race.results.create!(place: 1, person: person_3)
 
+    # Non-series event
+    event = FactoryBot.create(:event, date: Time.zone.local(2018, 5, 1))
+    race = event.races.create!(category: women_b)
+    race.results.create!(place: "3", person: person_3)
+
     calculation.calculate!
 
     overall = calculation.reload.event
     assert series.children.reload.include?(overall), "should add overall as child event"
 
     assert_equal 2, overall.races.size, overall.races.map(&:name)
-    men_a_overall_race = overall.races.detect { |race| race.category == men_a }
+    men_a_overall_race = overall.races.detect { |r| r.category == men_a }
     assert_not_nil(men_a_overall_race, "Should have Men A overall race")
 
     results = men_a_overall_race.results.sort
