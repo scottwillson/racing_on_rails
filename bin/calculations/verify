@@ -53,8 +53,6 @@ def create_calculations(competitions)
       calculation_event = Calculations::V3::Event.new(event: Event.find(event[:id]), multiplier: event[:multiplier])
       calculation.calculations_events << calculation_event
     end
-
-    calculations << calculation
   end
 end
 
