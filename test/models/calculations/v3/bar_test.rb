@@ -52,6 +52,81 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
     end
   end
 
+  test "weekly series overall" do
+    Discipline.create!(name: "Road")
+
+    Timecop.freeze(2019) do
+      bar_calculation = Calculations::V3::Calculation.create!(
+        disciplines: [Discipline[:road]],
+        members_only: true,
+        name: "Road BAR",
+        points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        weekday_events: false
+      )
+
+      category_3_men = ::Category.find_or_create_by(name: "Category 3 Men")
+      bar_calculation.categories << category_3_men
+
+      # Weekly series with no overall
+      series = FactoryBot.create(:weekly_series)
+      event = series.children.create!(date: Time.zone.local(2019, 3, 19))
+      source_race = event.races.create!(category: category_3_men)
+      person = FactoryBot.create(:person)
+      source_race.results.create!(place: 7, person: person)
+
+      event = series.children.create!(date: Time.zone.local(2019, 3, 26))
+      source_race = event.races.create!(category: category_3_men)
+      source_race.results.create!(place: 3, person: person)
+
+      # system calculated
+      series = FactoryBot.create(:weekly_series)
+      event = series.children.create!(date: Time.zone.local(2019, 5, 13))
+      source_race = event.races.create!(category: category_3_men)
+      source_race.results.create!(place: 1, person: person)
+
+      event = series.children.create!(date: Time.zone.local(2019, 5, 20))
+      source_race = event.races.create!(category: category_3_men)
+      source_race.results.create!(place: 2, person: person)
+
+      calculation = series.calculations.create!(
+        double_points_for_last_event: true,
+        points_for_place: [100, 90, 75, 50, 40, 30, 20, 10]
+      )
+      calculation.categories << category_3_men
+
+      # manually calculated
+      series = FactoryBot.create(:weekly_series)
+      event = series.children.create!(date: Time.zone.local(2019, 4, 12))
+      source_race = event.races.create!(category: category_3_men)
+      source_race.results.create!(place: 4, person: person)
+
+      event = series.children.create!(date: Time.zone.local(2019, 4, 19))
+      source_race = event.races.create!(category: category_3_men)
+      source_race.results.create!(place: 3, person: person)
+
+      event = series.children.create!(date: Time.zone.local(2019, 4, 19))
+      event.calculations.create!
+      source_race = event.races.create!(category: category_3_men)
+      source_race.results.create!(place: 2, person: person, points: 72)
+
+      bar_calculation.calculate!
+
+      bar = bar_calculation.reload.event
+
+      assert_equal "Road BAR", bar.name
+      assert_equal 1, bar.races.size
+      race = bar.races.detect { |r| r.category == category_3_men }
+      assert_not_nil race
+
+      results = race.results.sort
+      assert_equal 1, results.size
+
+      assert_equal 1, results.first.source_results.size
+      assert_nil results.first.rejection_reason
+      assert_equal 14, results.first.points
+    end
+  end
+
   test "overall BAR" do
     Timecop.freeze(2019) do
       criterium_discipline = Discipline.create!(name: "Criterium")
