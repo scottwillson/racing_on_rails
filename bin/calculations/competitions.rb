@@ -88,6 +88,8 @@ COMPETITIONS = {
     events: [
       { id: 25_903, multiplier: 2 }
     ],
+    # expect 25897, 26067
+    # reject
     rules: {
       disciplines: ["Cyclocross"],
       members_only: true,
