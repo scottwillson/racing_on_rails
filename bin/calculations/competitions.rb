@@ -55,6 +55,8 @@ COMPETITIONS = {
     events: [
       { id: 25_943, multiplier: 2 }
     ],
+    # expect 26335
+    # reject 26034
     rules: {
       disciplines: ["Criterium"],
       members_only: true,
