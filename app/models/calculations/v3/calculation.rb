@@ -40,7 +40,11 @@ class Calculations::V3::Calculation < ApplicationRecord
     return if event
 
     if source_event
-      event = create_event!(date: source_event.date, end_date: source_event.end_date, name: "Overall")
+      event = create_event!(
+        date: source_event.date,
+        end_date: source_event.end_date,
+        name: "Overall"
+      )
       source_event.children << event
     else
       self.event = create_event!(

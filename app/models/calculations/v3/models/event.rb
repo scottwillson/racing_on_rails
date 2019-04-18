@@ -11,6 +11,7 @@ module Calculations
         attr_reader :id
         attr_reader :multiplier
         attr_accessor :parent
+        attr_reader :series_overall
 
         def initialize(
           id: nil,
@@ -18,7 +19,8 @@ module Calculations
           date: nil,
           discipline: Models::Discipline.new("Road"),
           end_date: nil,
-          multiplier: 1
+          multiplier: 1,
+          series_overall: false
         )
 
           @id = id
@@ -27,6 +29,7 @@ module Calculations
           @discipline = discipline
           @end_date = end_date || date
           @multiplier = multiplier
+          @series_overall = series_overall
 
           @children = []
 
@@ -45,6 +48,10 @@ module Calculations
 
         def dates
           start_date..end_date
+        end
+
+        def series_overall?
+          @series_overall
         end
 
         def start_date

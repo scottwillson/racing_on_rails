@@ -18,7 +18,7 @@ module Calculations
           participant = Models::Participant.new(0)
           source_results = []
 
-          event = Models::Event.new(id: 0, calculated: true, date: Date.new(2019, 3, 23))
+          event = Models::Event.new(id: 0, date: Date.new(2019, 3, 23))
           source_results << Models::SourceResult.new(
             id: 0,
             event_category: Models::EventCategory.new(category, event),
@@ -27,7 +27,7 @@ module Calculations
             points: 100
           )
 
-          event = Models::Event.new(id: 1, calculated: true, date: Date.new(2019, 3, 28))
+          event = Models::Event.new(id: 1, date: Date.new(2019, 3, 28))
           source_results << Models::SourceResult.new(
             id: 1,
             event_category: Models::EventCategory.new(category, event),
@@ -60,7 +60,7 @@ module Calculations
           participant = Models::Participant.new(0)
           source_results = []
 
-          event = Models::Event.new(id: 0, calculated: true, date: Date.new(2019, 3, 23))
+          event = Models::Event.new(id: 0, series_overall: true, date: Date.new(2019, 3, 28))
           source_results << Models::SourceResult.new(
             id: 0,
             event_category: Models::EventCategory.new(category, event),
@@ -74,9 +74,8 @@ module Calculations
 
           event_categories = RejectWeekdayEvents.calculate!(calculator)
 
-          source_results = event_categories.first.results.first.source_results.sort_by(&:id)
-
-          refute source_results.first.rejected?
+          assert event_categories.first.results.none?(&:rejected?)
+          assert event_categories.first.source_results.none?(&:rejected?)
         end
       end
     end

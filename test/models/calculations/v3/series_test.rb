@@ -48,6 +48,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
 
     overall = calculation.reload.event
     assert series.children.reload.include?(overall), "should add overall as child event"
+    asser overall.series_overall?
 
     assert_equal 2, overall.races.size, overall.races.map(&:name)
     men_a_overall_race = overall.races.detect { |r| r.category == men_a }

@@ -104,9 +104,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       source_race = event.races.create!(category: category_3_men)
       source_race.results.create!(place: 3, person: person)
 
-      event = series.children.create!(date: Time.zone.local(2019, 4, 19))
-      event.calculations.create!
-      source_race = event.races.create!(category: category_3_men)
+      source_race = series.races.create!(category: category_3_men)
       source_race.results.create!(place: 2, person: person, points: 72)
 
       bar_calculation.calculate!
@@ -118,12 +116,13 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       race = bar.races.detect { |r| r.category == category_3_men }
       assert_not_nil race
 
-      results = race.results.sort
+      results = race.results
       assert_equal 1, results.size
       assert_equal 14, results.first.points
 
-      assert_equal 1, results.first.source_results.reject(&:rejected?).size
-      assert_equal 6, results.first.source_results.select(&:rejected?).size
+      assert_equal 7, results.first.sources.size
+      assert_equal 6, results.first.sources.select(&:rejected?).size
+      assert_equal 1, results.first.sources.reject(&:rejected?).size
     end
   end
 
