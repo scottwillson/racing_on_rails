@@ -8,7 +8,7 @@ module Calculations
           return calculator.event_categories if calculator.rules.weekday_events?
 
           calculator.source_results.each do |source_result|
-            if weekday?(source_result.event)
+            if weekday?(source_result.event) && !source_result.event.series_overall?
               source_result.reject :weekday
             end
           end

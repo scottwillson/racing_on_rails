@@ -22,6 +22,7 @@ def recreate_databases
 end
 
 def destroy_calculations
+  puts "destroy_calculations"
   ResultSource.delete_all
   Result.where(year: 2019).delete_all
   Result.where("created_at > ?", Date.new(2019)).delete_all
@@ -57,6 +58,7 @@ def create_calculations(competitions)
 end
 
 def create_calculation(event_id, rules)
+  puts "create_calculation #{rules[:name]}"
   if rules[:disciplines]
     rules[:disciplines] = Discipline.where(name: rules[:disciplines])
   end
@@ -199,8 +201,8 @@ end
 
 # fetch_data
 # recreate_databases
-# destroy_calculations
-# create_calculations(COMPETITIONS)
-# calculations.map(&:source_event).compact.each(&:update_date)
-# calculations.each(&:calculate!)
+destroy_calculations
+create_calculations(COMPETITIONS)
+calculations.map(&:source_event).compact.each(&:update_date)
+calculations.each(&:calculate!)
 compare_results(COMPETITIONS)

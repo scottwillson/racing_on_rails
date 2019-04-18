@@ -28,6 +28,10 @@ module Events
       end
     end
 
+    def series_overall?
+      is_a?(WeeklySeries) || calculation.present?
+    end
+
     # Set point value/factor for this Competition. Convenience method to hide CompetitionEventMembership complexity.
     def set_points_for(competition, points)
       # For now, allow Nil exception, but probably will want to auto-create membership in the future

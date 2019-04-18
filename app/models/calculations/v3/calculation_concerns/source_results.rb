@@ -21,7 +21,8 @@ module Calculations::V3::CalculationConcerns::SourceResults
         # TODO: end_date triggers SQL
         end_date: event.end_date,
         id: event.id,
-        multiplier: multiplier(event.id)
+        multiplier: multiplier(event.id),
+        series_overall: event.series_overall?
       )
 
       if event.parent_id
