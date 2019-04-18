@@ -90,13 +90,23 @@ def compare_results(competitions)
 end
 
 def compare_source_events(expected_event, actual_event)
-  scores = Competitions::Score.joins(competition_result: :event).where("results.event_id" => expected_event).pluck(:source_result_id)
-  event_ids = Result.find(scores).pluck(:event_id)
-  expected = Event.find(event_ids).uniq.sort_by(&:name)
+  scores = Competitions::Score
+           .joins(competition_result: :event)
+           .where("results.event_id" => expected_event)
+           .where("scores.points > 0")
+           .pluck(:source_result_id)
 
-  sources = ResultSource.joins(calculated_result: :event).where("results.event_id" => actual_event).pluck(:source_result_id)
+  event_ids = Result.find(scores).pluck(:event_id)
+  expected = Event.find(event_ids).uniq.sort_by(&:id)
+
+  sources = ResultSource
+            .joins(calculated_result: :event)
+            .where("results.event_id" => actual_event)
+            .where("result_sources.points > 0")
+            .pluck(:source_result_id)
+
   event_ids = Result.find(sources).pluck(:event_id)
-  actual = Event.find(event_ids).uniq.sort_by(&:name)
+  actual = Event.find(event_ids).uniq.sort_by(&:id)
   return if expected == actual
 
   puts
