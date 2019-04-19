@@ -1,6 +1,7 @@
 CKEDITOR.editorConfig = function(config) {
   config.allowedContent = true;
   config.entities = false;
+  config.language = 'en';
   config.protectedSource.push( /<%[\s\S]*?%>/g );
 
   config.toolbar = [
