@@ -6,5 +6,4 @@
  *= require people
  *= require results
  *= require teams
- //= require ckeditor/init
 */

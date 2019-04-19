@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Ckeditor.setup do |config|
-  config.assets_languages = %w[ en ]
-  config.assets_plugins = []
+# Use this hook to configure ckeditor
+Ckeditor.setup do |_|
+  require "ckeditor/orm/active_record"
 end
