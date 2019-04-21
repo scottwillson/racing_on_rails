@@ -53,10 +53,11 @@ COMPETITIONS = {
     ],
     competition_id: 25_823,
     events: [
-      { id: 25_943, multiplier: 2 }
+      { id: 25_943, multiplier: 2 },
+      { id: 26_335, multiplier: 0 }
     ],
-    # expect 26335
-    # reject 26034
+    expect: [25_880, 26_027],
+    do_no_expect: [26_034, 26_316, 26_416, 26_335],
     rules: {
       disciplines: ["Criterium"],
       members_only: true,
@@ -86,10 +87,12 @@ COMPETITIONS = {
     ],
     competition_id: 25_822,
     events: [
-      { id: 25_903, multiplier: 2 }
+      { id: 25_903, multiplier: 2 },
+      { id: 26_571, multiplier: 0 },
+      { id: 26_593, multiplier: 0 }
     ],
-    # expect 25897, 26067
-    # reject
+    expect: [26_357],
+    do_no_expect: [26_355, 26_356, 26_412],
     rules: {
       disciplines: ["Cyclocross"],
       members_only: true,

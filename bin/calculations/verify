@@ -3,6 +3,7 @@
 # Quick and dirty script to fetch old data and recalc competitions
 require_relative "./competitions"
 
+# rubocop:disable Rails/SkipsModelValidations
 def fetch_data
   Dir.chdir("tmp/db") do
     unless File.exist?("bushtit_obra_sql")
@@ -33,6 +34,23 @@ def destroy_calculations
     calc.event&.destroy!
     calc.destroy!
   end
+end
+
+def fix_source_results
+  Race.where(event_id: 26_336).update_all(event_id: 26_027)
+  Result.where(event_id: 26_336).update_all(event_id: 26_027)
+  Race.where(event_id: 26_412).update_all(event_id: 26_357)
+  Result.where(event_id: 26_412).update_all(event_id: 26_357)
+  Race.where(event_id: 26_434).update_all(event_id: 26_042)
+  Result.where(event_id: 26_434).update_all(event_id: 26_042)
+  Race.where(event_id: 26_439).update_all(event_id: 26_116)
+  Result.where(event_id: 26_439).update_all(event_id: 26_116)
+  Race.where(event_id: 26_475).update_all(event_id: 26_094)
+  Result.where(event_id: 26_475).update_all(event_id: 26_094)
+  Race.where(event_id: 26_436).update_all(event_id: 26_089)
+  Result.where(event_id: 26_436).update_all(event_id: 26_089)
+  Race.where(event_id: 26_596).update_all(event_id: 26_046)
+  Result.where(event_id: 26_596).update_all(event_id: 26_046)
 end
 
 def create_calculations(competitions)
@@ -83,7 +101,7 @@ def compare_results(competitions)
     actual_event = Calculations::V3::Calculation.where(key: key).first&.event
 
     if actual_event
-      compare_source_events(expected_event, actual_event)
+      compare_source_events(expected_event, actual_event, competition)
       # compare_event_results expected_event, actual_event
     else
       puts "Could not find #{key}"
@@ -91,7 +109,7 @@ def compare_results(competitions)
   end
 end
 
-def compare_source_events(expected_event, actual_event)
+def compare_source_events(expected_event, actual_event, competition)
   scores = Competitions::Score
            .joins(competition_result: :event)
            .where("results.event_id" => expected_event)
@@ -99,8 +117,9 @@ def compare_source_events(expected_event, actual_event)
            .pluck(:source_result_id)
 
   event_ids = Result.find(scores).pluck(:event_id)
+  competition[:do_no_expect]&.each { |e| event_ids.delete(e) }
+  competition[:expect]&.each { |e| event_ids << e }
   expected = Event.find(event_ids).uniq.sort_by(&:id)
-
   sources = ResultSource
             .joins(calculated_result: :event)
             .where("results.event_id" => actual_event)
@@ -202,7 +221,10 @@ end
 # fetch_data
 # recreate_databases
 destroy_calculations
+fix_source_results
 create_calculations(COMPETITIONS)
 calculations.map(&:source_event).compact.each(&:update_date)
 calculations.each(&:calculate!)
 compare_results(COMPETITIONS)
+
+# rubocop:enable Rails/SkipsModelValidations
