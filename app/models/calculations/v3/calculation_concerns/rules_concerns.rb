@@ -22,6 +22,7 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
 
   def rules
     @rules ||= Calculations::V3::Rules.new(
+      association: Calculations::V3::Models::Association.new(id: RacingAssociation.current.id),
       category_rules: category_rules,
       disciplines: model_disciplines,
       double_points_for_last_event: double_points_for_last_event?,

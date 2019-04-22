@@ -22,6 +22,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
         end_date: event.end_date,
         id: event.id,
         multiplier: multiplier(event.id),
+        sanctioned_by: Calculations::V3::Models::Event.new(id: event.sanctioning_org_event_id),
         series_overall: event.series_overall?
       )
 
