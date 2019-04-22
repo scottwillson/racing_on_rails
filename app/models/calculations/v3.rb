@@ -8,6 +8,7 @@ module Calculations::V3
     dnf
     members_only
     not_calculation_category
+    sanctioned_by
     rejected_category
     weekday
     worse_result

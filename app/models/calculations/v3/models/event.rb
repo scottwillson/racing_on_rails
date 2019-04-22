@@ -11,6 +11,7 @@ module Calculations
         attr_reader :id
         attr_reader :multiplier
         attr_accessor :parent
+        attr_reader :sanctioned_by
         attr_reader :series_overall
 
         def initialize(
@@ -20,6 +21,7 @@ module Calculations
           discipline: Models::Discipline.new("Road"),
           end_date: nil,
           multiplier: 1,
+          sanctioned_by: nil,
           series_overall: false
         )
 
@@ -29,6 +31,7 @@ module Calculations
           @discipline = discipline
           @end_date = end_date || date
           @multiplier = multiplier
+          @sanctioned_by = sanctioned_by
           @series_overall = series_overall
 
           @children = []
