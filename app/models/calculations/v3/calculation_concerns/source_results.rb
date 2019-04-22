@@ -3,6 +3,17 @@
 module Calculations::V3::CalculationConcerns::SourceResults
   extend ActiveSupport::Concern
 
+  def associations_by_name
+    return @associations_by_name if @associations_by_name
+
+    @associations_by_name = {}
+    RacingAssociation.find_each do |association|
+      @associations_by_name[association.name] = Calculations::V3::Models::Association.new(id: association.id)
+    end
+
+    @associations_by_name
+  end
+
   def model_disciplines
     disciplines.map do |discipline|
       Calculations::V3::Models::Discipline.new(discipline.name)
@@ -22,7 +33,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
         end_date: event.end_date,
         id: event.id,
         multiplier: multiplier(event.id),
-        sanctioned_by: Calculations::V3::Models::Event.new(id: event.sanctioning_org_event_id),
+        sanctioned_by: associations_by_name[event.sanctioned_by],
         series_overall: event.series_overall?
       )
 
