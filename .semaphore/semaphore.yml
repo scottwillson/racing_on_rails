@@ -11,7 +11,7 @@ blocks:
       jobs:
       - name: bundle gems
         commands:
-          - sem-version ruby 2.6.3
+          - sem-version ruby 2.6.2
           - checkout
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
@@ -24,7 +24,7 @@ blocks:
     task:
       prologue:
         commands:
-          - sem-version ruby 2.6.3
+          - sem-version ruby 2.6.2
           - checkout
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
@@ -52,7 +52,7 @@ blocks:
     task:
       prologue:
         commands:
-          - sem-version ruby 2.6.3
+          - sem-version ruby 2.6.2
           - checkout
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
