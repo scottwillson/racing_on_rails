@@ -37,50 +37,52 @@ module Calculations
         source_events = []
         source_results = []
 
+        association = Models::Association.new(id: 0)
         series = Models::Event.new(id: 0, date: Date.new(2018, 10, 6), end_date: Date.new(2018, 11, 18))
-        event = series.add_child(Models::Event.new(id: 1, date: Date.new(2018, 10, 6)))
+        event = series.add_child(Models::Event.new(id: 1, date: Date.new(2018, 10, 6), sanctioned_by: association))
         event_category = Models::EventCategory.new(category, event)
         source_results << Models::SourceResult.new(id: 10, date: event.date, event_category: event_category, participant: participant, place: 2)
         source_events << event
 
-        event = series.add_child(Models::Event.new(id: 3, date: Date.new(2018, 10, 7)))
+        event = series.add_child(Models::Event.new(id: 3, date: Date.new(2018, 10, 7), sanctioned_by: association))
         event_category = Models::EventCategory.new(category, event)
         source_results << Models::SourceResult.new(id: 11, date: event.date, event_category: event_category, participant: participant, place: 2)
         source_events << event
 
-        event = series.add_child(Models::Event.new(id: 4, date: Date.new(2018, 10, 14)))
+        event = series.add_child(Models::Event.new(id: 4, date: Date.new(2018, 10, 14), sanctioned_by: association))
         event_category = Models::EventCategory.new(category, event)
         source_results << Models::SourceResult.new(id: 12, date: event.date, event_category: event_category, participant: participant, place: 1)
         source_events << event
 
-        event = series.add_child(Models::Event.new(id: 5, date: Date.new(2018, 10, 28)))
+        event = series.add_child(Models::Event.new(id: 5, date: Date.new(2018, 10, 28), sanctioned_by: association))
         event_category = Models::EventCategory.new(category, event)
         source_results << Models::SourceResult.new(id: 13, date: event.date, event_category: event_category, participant: participant, place: 1)
         source_events << event
 
-        event = series.add_child(Models::Event.new(id: 6, date: Date.new(2018, 11, 3)))
+        event = series.add_child(Models::Event.new(id: 6, date: Date.new(2018, 11, 3), sanctioned_by: association))
         event_category = Models::EventCategory.new(category, event)
         source_results << Models::SourceResult.new(id: 14, date: event.date, event_category: event_category, participant: participant, place: 2)
         source_events << event
 
-        event = series.add_child(Models::Event.new(id: 7, date: Date.new(2018, 11, 4)))
+        event = series.add_child(Models::Event.new(id: 7, date: Date.new(2018, 11, 4), sanctioned_by: association))
         # Someone else's result. Need a result to know that event was held.
         event_category = Models::EventCategory.new(category, event)
         participant_2 = Models::Participant.new(1)
         source_results << Models::SourceResult.new(id: 99, date: event.date, event_category: event_category, participant: participant_2, place: 2)
         source_events << event
 
-        event = series.add_child(Models::Event.new(id: 8, date: Date.new(2018, 11, 11)))
+        event = series.add_child(Models::Event.new(id: 8, date: Date.new(2018, 11, 11), sanctioned_by: association))
         event_category = Models::EventCategory.new(category, event)
         source_results << Models::SourceResult.new(id: 15, date: event.date, event_category: event_category, participant: participant, place: 1)
         source_events << event
 
-        event = series.add_child(Models::Event.new(id: 9, date: Date.new(2018, 11, 18)))
+        event = series.add_child(Models::Event.new(id: 9, date: Date.new(2018, 11, 18), sanctioned_by: association))
         event_category = Models::EventCategory.new(category, event)
         source_results << Models::SourceResult.new(id: 16, date: event.date, event_category: event_category, participant: participant, place: 3)
         source_events << event
 
         rules = Rules.new(
+          association: association,
           category_rules: [Models::CategoryRule.new(category)],
           minimum_events: 3,
           points_for_place: [26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
@@ -100,15 +102,16 @@ module Calculations
         source_results = []
         participant = Models::Participant.new(0)
 
-        event = Models::Event.new(id: 1, date: Date.new(2019, 12, 1))
+        association = Models::Association.new(id: 0)
+        event = Models::Event.new(id: 1, date: Date.new(2019, 12, 1), sanctioned_by: association)
         event_category = Models::EventCategory.new(Models::Category.new("Athena"), event)
         source_results << Models::SourceResult.new(id: 10, event_category: event_category, participant: participant, place: 99)
 
-        event = Models::Event.new(id: 2, date: Date.new(2019, 12, 15))
+        event = Models::Event.new(id: 2, date: Date.new(2019, 12, 15), sanctioned_by: association)
         event_category = Models::EventCategory.new(Models::Category.new("Women 5"), event)
         source_results << Models::SourceResult.new(id: 11, event_category: event_category, participant: participant, place: 1)
 
-        rules = Rules.new
+        rules = Rules.new(association: association)
         calculator = Calculator.new(rules: rules, source_results: source_results)
 
         event_categories = calculator.calculate!
