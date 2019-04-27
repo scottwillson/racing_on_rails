@@ -8,7 +8,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
 
     @associations_by_name = {}
     RacingAssociation.find_each do |association|
-      @associations_by_name[association.name] = Calculations::V3::Models::Association.new(id: association.id)
+      @associations_by_name[association.short_name] = Calculations::V3::Models::Association.new(id: association.id)
     end
 
     @associations_by_name
