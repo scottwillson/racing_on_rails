@@ -92,7 +92,7 @@ COMPETITIONS = {
       { id: 26_593, multiplier: 0 }
     ],
     expect: [26_357],
-    do_no_expect: [26_355, 26_356, 26_412],
+    do_no_expect: [26_355, 26_356, 26_412, 26_571, 26_593],
     rules: {
       disciplines: ["Cyclocross"],
       members_only: true,

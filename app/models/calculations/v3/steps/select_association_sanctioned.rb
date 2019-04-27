@@ -10,11 +10,7 @@ module Calculations
               raise ArgumentError, "Rules#association sanctioned_by must be present"
             end
 
-            if source_result.event.sanctioned_by.nil?
-              raise ArgumentError, "Source event sanctioned_by must be present"
-            end
-
-            unless source_result.event.sanctioned_by == calculator.rules.association
+            if calculator.rules.association != source_result.event.sanctioned_by
               source_result.reject :sanctioned_by
             end
           end

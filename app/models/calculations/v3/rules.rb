@@ -16,7 +16,7 @@ module Calculations
       attr_reader :weekday_events
 
       def initialize(
-        association: RacingAssociation.current,
+        association: nil,
         category_rules: [],
         disciplines: [],
         double_points_for_last_event: false,
@@ -86,7 +86,7 @@ module Calculations
 
       def to_h
         {
-          association: association,
+          association: association&.id,
           categories: categories.map(&:name),
           disciplines: disciplines.map(&:name),
           double_points_for_last_event: double_points_for_last_event?,
