@@ -6,8 +6,8 @@ module Calculations
       module AssignPoints
         def self.calculate!(calculator)
           calculator.event_categories.reject(&:rejected?).each do |category|
-            category.results.reject(&:rejected?).each do |result|
-              result.source_results.reject(&:rejected?).each do |source_result|
+            category.unrejected_results.each do |result|
+              result.unrejected_source_results.each do |source_result|
                 source_result.points = points_for_place(source_result, calculator.rules.points_for_place) *
                                        last_event_multiplier(source_result, calculator.rules) *
                                        multiplier(source_result)

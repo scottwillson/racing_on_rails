@@ -6,7 +6,7 @@ module Calculations
       module SelectMembers
         def self.calculate!(calculator)
           if calculator.rules.members_only?
-            calculator.results.each do |result|
+            calculator.unrejected_results.each do |result|
               unless result.participant.member?(calculator.year)
                 result.reject :members_only
               end

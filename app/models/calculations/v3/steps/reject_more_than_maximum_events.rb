@@ -25,10 +25,10 @@ module Calculations
         end
 
         def self.reject_more_than_maximum_events(result, maximum_events)
-          source_results_count = result.source_results.size
+          source_results_count = result.unrejected_source_results.size
           return if source_results_count <= maximum_events
 
-          sorted_source_results = result.source_results.sort_by(&:points).reverse
+          sorted_source_results = result.unrejected_source_results.sort_by(&:points).reverse
 
           sorted_source_results[maximum_events, source_results_count]&.each do |rejected_result|
             rejected_result.reject :worse_result

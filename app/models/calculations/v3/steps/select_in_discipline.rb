@@ -7,7 +7,7 @@ module Calculations
         def self.calculate!(calculator)
           return calculator.event_categories if calculator.rules.disciplines.empty?
 
-          calculator.source_results.each do |source_result|
+          calculator.unrejected_source_results.each do |source_result|
             unless source_result.discipline.in?(calculator.rules.disciplines)
               source_result.reject :discipline
             end

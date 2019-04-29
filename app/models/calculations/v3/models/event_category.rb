@@ -31,6 +31,8 @@ module Calculations
         end
 
         def reject(reason)
+          raise(ArgumentError, "already rejected because #{rejection_reason}") if rejected?
+
           @rejection_reason = reason
           @rejected = true
         end
@@ -41,6 +43,14 @@ module Calculations
 
         def results
           @results ||= []
+        end
+
+        def unrejected_results
+          results.reject(&:rejected?)
+        end
+
+        def unrejected_source_results
+          source_results.reject(&:rejected?)
         end
 
         def validate!
