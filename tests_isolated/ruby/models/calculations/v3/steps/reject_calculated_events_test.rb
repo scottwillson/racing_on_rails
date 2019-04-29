@@ -50,28 +50,32 @@ module Calculations
             participant: participant
           )
 
-          event = Models::Event.new(id: 1, date: Date.new(2018, 6, 29), parent: parent)
+          event = Models::Event.new(id: 1, date: Date.new(2018, 6, 29))
+          parent.add_child event
           source_results << Models::SourceResult.new(
             id: 0,
             event_category: Models::EventCategory.new(category, event),
             participant: participant
           )
 
-          event = Models::Event.new(id: 2, date: Date.new(2018, 6, 29), parent: parent)
+          event = Models::Event.new(id: 2, date: Date.new(2018, 6, 29))
+          parent.add_child event
           source_results << Models::SourceResult.new(
             id: 1,
             event_category: Models::EventCategory.new(category, event),
             participant: participant
           )
 
-          event = Models::Event.new(id: 3, date: Date.new(2018, 6, 30), parent: parent)
+          event = Models::Event.new(id: 3, date: Date.new(2018, 6, 30))
+          parent.add_child event
           source_results << Models::SourceResult.new(
             id: 2,
             event_category: Models::EventCategory.new(category, event),
             participant: participant
           )
 
-          event = Models::Event.new(id: 4, date: Date.new(2018, 7, 1), parent: parent)
+          event = Models::Event.new(id: 4, date: Date.new(2018, 7, 1))
+          parent.add_child event
           source_results << Models::SourceResult.new(
             id: 3,
             event_category: Models::EventCategory.new(category, event),
