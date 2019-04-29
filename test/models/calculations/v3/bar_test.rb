@@ -117,6 +117,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       assert_not_nil race
 
       results = race.results
+      pp results.first.sources.map(&:rejection_reason)
       assert_equal 1, results.size
       assert_equal 14, results.first.points
 
