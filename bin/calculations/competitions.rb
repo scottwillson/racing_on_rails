@@ -89,10 +89,14 @@ COMPETITIONS = {
     events: [
       { id: 25_903, multiplier: 2 },
       { id: 26_571, multiplier: 0 },
-      { id: 26_593, multiplier: 0 }
+      { id: 26_593, multiplier: 0 },
+      { id: 26_418, multiplier: 1 },
+      { id: 26_419, multiplier: 1 },
+      { id: 26_418, multiplier: 1 },
+      { id: 26_419, multiplier: 1 }
     ],
     expect: [26_357],
-    do_no_expect: [26_355, 26_356, 26_412, 26_571, 26_593],
+    do_no_expect: [26_355, 26_356, 26_412, 26_571, 26_593, 26_571, 26_593],
     rules: {
       disciplines: ["Cyclocross"],
       members_only: true,
@@ -130,6 +134,8 @@ COMPETITIONS = {
       { id: 26_405, multiplier: 2 },
       { id: 26_442, multiplier: 2 }
     ],
+    do_no_expect: [25_898, 25_900, 25_902, 25_903, 25_904, 25_953, 26_042, 26_045, 26_046, 26_047, 26_048, 26_065, 26_066, 26_068, 26_085, 26_089, 26_093, 26_094, 26_095, 26_096, 26_097, 26_098, 26_099, 26_102, 26_116, 26_276, 26_277, 26_279, 26_280, 26_281, 26_355, 26_356, 26_357, 26_375, 26_399, 26_418, 26_419, 26_571, 26_593],
+    expect: [25_875, 25_876, 25_884, 25_885, 25_934, 25_944, 25_946, 26_064, 26_140, 26_141, 26_142, 26_143, 26_147, 26_212, 26_250, 26_251, 26_252, 26_401],
     rules: {
       disciplines: ["Mountain Bike", "Downhill", "Super D"],
       members_only: true,
@@ -148,6 +154,7 @@ COMPETITIONS = {
       { name: "Open Women" }
     ],
     competition_id: 25_829,
+    expect: [25_922, 25_935, 25_950, 26_137, 26_139],
     rules: {
       disciplines: ["Gravel", "Gran Fondo"],
       members_only: true,
@@ -178,10 +185,14 @@ COMPETITIONS = {
       { name: "Tandem" }
     ],
     competition_id: 25_825,
+    do_no_expect: [25_922, 26_443],
     events: [
       { id: 25_939, multiplier: 2 },
       { id: 25_951, multiplier: 2 },
-      { id: 26_443, multiplier: 2 }
+      { id: 26_443, multiplier: 2 },
+      { id: 26_069, multiplier: 1 },
+      { id: 26_075, multiplier: 1 },
+      { id: 26_299, multiplier: 1 }
     ],
     rules: {
       disciplines: ["Circuit Race", "Road"],

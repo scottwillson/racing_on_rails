@@ -3,7 +3,7 @@
 require "test_helper"
 
 # :stopdoc:
-class Calculations::V3::CalculationTest < ActiveSupport::TestCase
+class Calculations::V3::SeriesTest < ActiveSupport::TestCase
   test "#calculate!" do
     previous_year_series = WeeklySeries.create!(date: Time.zone.local(2018, 8, 11))
     men_a = Category.find_or_create_by_normalized_name("Men A")
@@ -80,7 +80,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     assert_nil source.rejection_reason
     assert_equal source_result_2, source.source_result
 
-    women_b_overall_race = overall.races.detect { |race| race.category == women_b }
+    women_b_overall_race = overall.races.detect { |r| r.category == women_b }
     assert_not_nil(women_b_overall_race, "Should have Women B overall race")
     assert women_b_overall_race.rejected?
     assert_equal "not_calculation_category", women_b_overall_race.rejection_reason
@@ -90,7 +90,6 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
 
     result = results.first
     assert_equal person_3, result.person
-    # TODO Seems like there's an ordering flaw in this test
     assert_equal "not_calculation_category", result.rejection_reason
     assert result.rejected?
     assert_equal "", result.place

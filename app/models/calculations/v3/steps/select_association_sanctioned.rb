@@ -5,7 +5,7 @@ module Calculations
     module Steps
       module SelectAssociationSanctioned
         def self.calculate!(calculator)
-          calculator.source_results.each do |source_result|
+          calculator.unrejected_source_results.each do |source_result|
             if calculator.rules.association.nil?
               raise ArgumentError, "Rules#association sanctioned_by must be present"
             end

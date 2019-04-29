@@ -62,6 +62,8 @@ module Calculations
         end
 
         def reject(reason)
+          raise(ArgumentError, "already rejected because #{rejection_reason}") if rejected?
+
           @rejection_reason = reason
           @rejected = true
           @points = 0

@@ -21,6 +21,7 @@ module Calculations
           discipline: Models::Discipline.new("Road"),
           end_date: nil,
           multiplier: 1,
+          parent: nil,
           sanctioned_by: nil,
           series_overall: false
         )
@@ -31,6 +32,7 @@ module Calculations
           @discipline = discipline
           @end_date = end_date || date
           @multiplier = multiplier
+          @parent = parent
           @sanctioned_by = sanctioned_by
           @series_overall = series_overall
 

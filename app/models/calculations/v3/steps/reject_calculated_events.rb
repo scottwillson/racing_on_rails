@@ -7,7 +7,7 @@ module Calculations
         def self.calculate!(calculator)
           return calculator.event_categories if calculator.rules.source_event_keys.any?
 
-          calculator.source_results.each do |source_result|
+          calculator.unrejected_source_results.each do |source_result|
             if source_result.event.calculated?
               source_result.reject :calculated
             end

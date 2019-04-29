@@ -7,8 +7,11 @@ module Calculations
         def self.calculate!(calculator)
           return calculator.event_categories if calculator.rules.weekday_events?
 
-          calculator.source_results.each do |source_result|
-            if weekday?(source_result.event) && !source_result.event.series_overall?
+          calculator.unrejected_source_results.each do |source_result|
+            if weekday?(source_result.event) &&
+               !source_result.event.series_overall? &&
+               !multi_day_event_child?(source_result.event)
+
               source_result.reject :weekday
             end
           end
@@ -20,6 +23,10 @@ module Calculations
           raise(ArgumentError, "Event date required to check for weekday") unless event.date
 
           !(event.date.saturday? || event.date.sunday?)
+        end
+
+        def self.multi_day_event_child?(event)
+          event.parent && event.parent.end_date != event.parent.date
         end
       end
     end

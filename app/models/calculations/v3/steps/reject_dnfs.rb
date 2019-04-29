@@ -5,7 +5,7 @@ module Calculations
     module Steps
       module RejectDnfs
         def self.calculate!(calculator)
-          calculator.source_results.each do |source_result|
+          calculator.unrejected_source_results.each do |source_result|
             if source_result.dnf?
               source_result.reject :dnf
             end

@@ -5,8 +5,8 @@ module Calculations
     module Steps
       module RejectBelowMinimumEvents
         def self.calculate!(calculator)
-          calculator.results.reject(&:rejected?).each do |result|
-            if result.source_results.reject(&:rejected?).size < calculator.rules.minimum_events
+          calculator.unrejected_results.each do |result|
+            if result.unrejected_source_results.size < calculator.rules.minimum_events
               result.reject :below_minimum_events
             end
           end

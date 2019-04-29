@@ -151,6 +151,14 @@ module Calculations
         results.flat_map(&:source_results)
       end
 
+      def unrejected_results
+        results.reject(&:rejected?)
+      end
+
+      def unrejected_source_results
+        source_results.reject(&:rejected?)
+      end
+
       def validate!
         if event_categories.size != event_categories.uniq.size
           raise("Duplicate categories in #{event_categories.map(&:name).sort}")

@@ -79,7 +79,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def calculated?(event)
-    event.competition? || event.type.nil? || event.type == "Event"
+    event&.type != "SingleDayEvent"
   end
 
   def category_names

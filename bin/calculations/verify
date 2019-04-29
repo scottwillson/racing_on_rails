@@ -51,6 +51,10 @@ def fix_source_results
   Result.where(event_id: 26_436).update_all(event_id: 26_089)
   Race.where(event_id: 26_596).update_all(event_id: 26_046)
   Result.where(event_id: 26_596).update_all(event_id: 26_046)
+  Race.where(event_id: 26_345).update_all(event_id: 25_760)
+  Result.where(event_id: 26_345).update_all(event_id: 25_760)
+  Race.where(event_id: 26_318).update_all(event_id: 25_985)
+  Result.where(event_id: 26_318).update_all(event_id: 25_985)
 end
 
 def create_calculations(competitions)
@@ -131,7 +135,7 @@ def compare_source_events(expected_event, actual_event, competition)
   return if expected == actual
 
   puts
-  puts "#{actual_event.full_name} source events"
+  puts "#{actual_event.full_name} #{actual_event.id} source events"
   puts "expected: #{expected.map(&:id)}"
   puts "expected: #{expected.map(&:name)}"
   puts "actual:   #{actual.map(&:id)}"
