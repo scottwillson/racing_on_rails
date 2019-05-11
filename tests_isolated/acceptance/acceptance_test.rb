@@ -5,7 +5,7 @@ ENV["RAILS_ENV"] = "test"
 require_relative "../../config/environment"
 require "capybara/rails"
 require "minitest/autorun"
-require_relative "../../test/fakeweb_registrations"
+require "webmock/minitest"
 
 # Capybara supports a number of drivers/browsers. AcceptanceTest default is RackTest for non-JavaScript tests
 # and Chrome for JS test. Note that most tests require JS.
@@ -25,7 +25,7 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   # Selenium tests start the Rails server in a separate process. If test data is wrapped in a
   # transaction, the server won't see it.
-  DatabaseCleaner.strategy = :truncation, { except: %w(ar_internal_metadata) }
+  DatabaseCleaner.strategy = :truncation, { except: %w[ar_internal_metadata] }
 
   setup :clean_database, :set_capybara_driver
   teardown :reset_session

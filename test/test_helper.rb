@@ -9,9 +9,9 @@ require_relative "../config/environment"
 require "rails/test_help"
 require "mocha/setup"
 require "authlogic/test_case"
-require_relative "fakeweb_registrations"
 require "parallel_tests/test/runtime_logger" if ENV["RECORD_RUNTIME"]
 require "test/enumerable_assertions"
+require "webmock/minitest"
 
 class ActiveSupport::TestCase
   make_my_diffs_pretty!
@@ -23,9 +23,9 @@ class ActiveSupport::TestCase
   include Authlogic::TestCase
   include Test::EnumerableAssertions
 
-  DatabaseCleaner.strategy = :truncation, { except: %w(ar_internal_metadata) }
+  DatabaseCleaner.strategy = :truncation, { except: %w[ar_internal_metadata] }
 
-  setup :clean_database, :activate_authlogic, :reset_association, :reset_disciplines, :reset_person_current
+  setup :clean_database, :activate_authlogic, :reset_association, :reset_disciplines, :reset_person_current, :stub_elasticsearch
 
   def clean_database
     DatabaseCleaner.clean
@@ -42,6 +42,19 @@ class ActiveSupport::TestCase
 
   def reset_person_current
     Person.current = nil
+  end
+
+  def stub_elasticsearch
+    WebMock.stub_request(:delete, %r{http://localhost:9200/*}).to_return(status: 200, body: String.new, headers: {})
+    WebMock.stub_request(:put, %r{http://localhost:9200/*}).to_return(status: 200, body: String.new, headers: {})
+
+    WebMock
+      .stub_request(:post, %r{http://localhost:9200/*})
+      .to_return(
+        status: 200,
+        body: { _index: "posts", _type: "post", _id: "1", _version: 136 }.to_json,
+        headers: {content_type: "application/json; charset=UTF-8"}
+      )
   end
 
   # person = fixture symbol or Person
