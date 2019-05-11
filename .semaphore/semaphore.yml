@@ -79,4 +79,4 @@ blocks:
       jobs:
       - name: acceptance tests
         commands:
-          - bundle exec rake test:acceptance
+          - DISABLE_SPRING=1 bundle exec rake test:acceptance
