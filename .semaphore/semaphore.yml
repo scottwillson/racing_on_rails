@@ -20,6 +20,21 @@ blocks:
           - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
           - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
 
+  - name: "Security"
+    task:
+      prologue:
+        commands:
+          - sem-version ruby 2.6.2
+          - checkout
+          - sudo apt-get install -y libmysqlclient-dev
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
+          - gem install bundler:2.0.1
+          - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
+      jobs:
+      - name: Brakeman
+        commands:
+          - bundle exec brakeman
+
   - name: "Unit tests"
     task:
       prologue:
@@ -46,7 +61,6 @@ blocks:
           - ./cc-test-reporter after-build --exit-code $exitcode -t simplecov
       secrets:
         - name: environmental_variables
-
 
   - name: "Acceptance tests"
     task:
