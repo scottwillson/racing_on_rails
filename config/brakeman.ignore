@@ -1,72 +1,36 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "02bd2e3deb8c695ce116a557b43eccbfec9049d86225d3958033772a1a25eb86",
-      "message": "Possible SQL injection",
-      "file": "app/models/competitions/competition.rb",
-      "line": 328,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Competitions::Score.delete_all(\"competition_result_id in (select id from results where race_id in (#{races.select do\n (not race.name.in?(race_category_names))\n end.map(&:id).join(\",\")}))\")",
+      "warning_type": "Dangerous Send",
+      "warning_code": 23,
+      "fingerprint": "114c2f4319b9460883aefe11ccae9181cbc783ed3f91b25e07e77f5baa1d28f7",
+      "check_name": "Send",
+      "message": "User controlled method execution",
+      "file": "app/controllers/admin/races_controller.rb",
+      "line": 60,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code": "(Race.find(params[:id]) or ((Event.find(params[:event_id]) or Event.find(race_params[:event_id])).races.build(race_params) or (Event.find(params[:event_id]) or Event.find(race_params[:event_id])).races.build)).send(params[:name])",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "Competitions::Competition",
-        "method": "delete_races"
+        "class": "Admin::RacesController",
+        "method": "update_attribute"
       },
-      "user_input": "races.select do\n (not race.name.in?(race_category_names))\n end.map(&:id).join(\",\")",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "0995340021ac45331856df4aa279a7860dabfd7113eeceb5c2e9dd43ee76a8cc",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/bar_controller.rb",
-      "line": 19,
-      "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(\"http://#{RacingAssociation.current.static_host}/bar/#{(params[:year].to_i or RacingAssociation.current.effective_year)}/overall_by_age.html\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "BarController",
-        "method": "show"
-      },
-      "user_input": "RacingAssociation.current.static_host",
+      "user_input": "params[:name]",
       "confidence": "High",
       "note": ""
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "0b2638c8dfc8b2d841f8dd5584a87ddc3e77f863847e2f0e402aedaa445b4283",
-      "message": "Possible SQL injection",
-      "file": "app/models/competitions/cross_crusade_callups.rb",
-      "line": 31,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Result.find_by_sql(\" SELECT results.* FROM results  \n          JOIN races ON races.id = results.race_id \n          JOIN categories ON categories.id = races.category_id \n          JOIN events ON races.event_id = events.id \n          WHERE place between 1 and #{(point_schedule.size - 1)}\n              and categories.id in (#{category_ids_for((local race)).join(\", \")})\n              and events.id in (#{source_events.map(&:id).join(\", \")})\n          order by person_id\n       \")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "CrossCrusadeCallups",
-        "method": "source_results"
-      },
-      "user_input": "(point_schedule.size - 1)",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Cross Site Scripting",
+      "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "15dc7334167cdd0ed60497683f53a2e0e96b105a9fa4bf0186ba32aeafe09018",
+      "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/admin/pages/edit.html.erb",
-      "line": 35,
-      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "line": 31,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "updated(Page.new(page_params))",
-      "render_path": [{"type":"controller","class":"Admin::PagesController","method":"create","line":27,"file":"app/controllers/admin/pages_controller.rb"}],
+      "render_path": [{"type":"controller","class":"Admin::PagesController","method":"create","line":29,"file":"app/controllers/admin/pages_controller.rb","rendered":{"name":"admin/pages/edit","file":"/Users/sw/devel/racing_on_rails/app/views/admin/pages/edit.html.erb"}}],
       "location": {
         "type": "template",
         "template": "admin/pages/edit"
@@ -76,32 +40,34 @@
       "note": ""
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "1bf7af32b9abdd692a0405abe4b7219907eda9870d4a7009c56375a83437f07c",
-      "message": "Possible SQL injection",
-      "file": "app/models/line_items/registration.rb",
-      "line": 122,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "LineItem.includes(:order => ([:order_people, :person])).includes(:event, :race, :person, :product).purchased.where(\"(line_items.event_id in (?) and line_items.type = 'LineItems::Registration') or (product_id in (?) and line_items.type = 'LineItem')\", ((event.descendants.map(&:id) + event.ancestors.map(&:id)) + [event.id]).uniq, event.products.not_dependent.map(&:id)).order(\"#{case options.extract_options![:sort_by]\nwhen \"person_name\" then\n  \"people_line_items.last_name, people_line_items.first_name\"\nwhen \"race\" then\n  \"races.id\"\nwhen \"event_race\", NilClass then\n  \"line_items.event_id, line_items.race_id\"\nwhen \"member\" then\n  \"member_from\"\nelse\n  options.extract_options![:sort_by]\nend} #{(options.extract_options![:sort_direction] or \"asc\")}\")",
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "16822c0b5f051f658518ed84ec55d812b02088ce7ce4fb938c1e67a65a930b6c",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/models/export/base.rb",
+      "line": 16,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "`tar --create --bzip2 --file=#{RacingAssociation.current.short_name.downcase}.tar.bz2 *.*`",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "LineItems::Registration",
-        "method": "LineItems::Registration.paginate_for_event"
+        "class": "Export",
+        "method": "Export.export_all"
       },
-      "user_input": "case options.extract_options![:sort_by]\nwhen \"person_name\" then\n  \"people_line_items.last_name, people_line_items.first_name\"\nwhen \"race\" then\n  \"races.id\"\nwhen \"event_race\", NilClass then\n  \"line_items.event_id, line_items.race_id\"\nwhen \"member\" then\n  \"member_from\"\nelse\n  options.extract_options![:sort_by]\nend",
-      "confidence": "Medium",
+      "user_input": "RacingAssociation.current.short_name",
+      "confidence": "High",
       "note": ""
     },
     {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "1cb9fa313c87644fc948cdfdc1c96e9edf27d8de74c3135465e62b8de392dd6a",
+      "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/competitions/bar_controller.rb",
-      "line": 18,
-      "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
+      "line": 20,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(\"http://#{RacingAssociation.current.static_host}/bar/#{@year}/overall_by_age.html\")",
       "render_path": null,
       "location": {
@@ -116,19 +82,20 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "1dd5f8800955ba19bdb53af6d5c2c12e1dc456809d96fbcecb25684a8cbe0bce",
+      "fingerprint": "1d90b15041e383e01c2c30fb42ca10c2ca34028bf611395127cda6efab1c32bf",
+      "check_name": "SQL",
       "message": "Possible SQL injection",
-      "file": "app/models/competitions/mbra_team_bar.rb",
-      "line": 57,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Result.includes(:race, { :person => :team }, :team, :race => ([{ :event => ({ :parent => :parent }) }, :category])).where(\"\n        (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)\n        and bar = true\n        and categories.id in (#{category_ids_for((local race)).join(\", \")})\n        and (events.discipline in (#{\"'#{(local race).discipline}'\"})\n          or (events.discipline is null and parents_events.discipline in (#{\"'#{(local race).discipline}'\"}))\n          or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (#{\"'#{(local race).discipline}'\"})))\n        and (races.bar_points > 0\n          or (races.bar_points is null and events.bar_points > 0)\n          or (races.bar_points is null and events.bar_points is null and parents_events.bar_points > 0)\n          or (races.bar_points is null and events.bar_points is null and parents_events.bar_points is null and parents_events_2.bar_points > 0))\n        and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'\n    \")",
+      "file": "app/models/events/children.rb",
+      "line": 46,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "SingleDayEvent.where(\"(#{change.first}=? or #{change.first} is null or #{change.first} = '') and parent_id=?\", change.last.first, self[:id])",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "MbraTeamBar",
-        "method": "source_results"
+        "class": "Events::Children",
+        "method": "update_child_attribute"
       },
-      "user_input": "category_ids_for((local race)).join(\", \")",
+      "user_input": "change.first",
       "confidence": "Medium",
       "note": ""
     },
@@ -136,10 +103,11 @@
       "warning_type": "Format Validation",
       "warning_code": 30,
       "fingerprint": "1eb9154d46381ae82a094c398ba1df536a3876bea089d1a5401b92b04d7e8ca4",
-      "message": "Insufficient validation for 'from_email' using /@/. Use \\A and \\z as anchors",
+      "check_name": "ValidationRegex",
+      "message": "Insufficient validation for `from_email` using `/@/`. Use `\\A` and `\\z` as anchors",
       "file": "app/models/post.rb",
-      "line": 12,
-      "link": "http://brakemanscanner.org/docs/warning_types/format_validation/",
+      "line": 14,
+      "link": "https://brakemanscanner.org/docs/warning_types/format_validation/",
       "code": null,
       "render_path": null,
       "location": {
@@ -151,40 +119,22 @@
       "note": ""
     },
     {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "1ffdc5161e5d9aee8ec32f1b1dc00352d81169621ac9edda7139c489139d80cc",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/bar_controller.rb",
-      "line": 21,
-      "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(\"http://#{RacingAssociation.current.static_host}/bar/#{(params[:year].to_i or RacingAssociation.current.effective_year)}\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "BarController",
-        "method": "show"
-      },
-      "user_input": "RacingAssociation.current.static_host",
-      "confidence": "High",
-      "note": ""
-    },
-    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "286af1d56483a7437eed4acf57591fbc079230754da6f870200f15fed0aa2ab7",
+      "fingerprint": "26453e120d8f975d3d9bcda5b6596c752b88b0a382fc4880886f8a4cd062c9bd",
+      "check_name": "SQL",
       "message": "Possible SQL injection",
-      "file": "app/models/competitions/overall.rb",
-      "line": 138,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Result.count_by_sql(\" SELECT count(*) FROM results  \n          JOIN races ON races.id = results.race_id \n          JOIN categories ON categories.id = races.category_id \n          JOIN events ON races.event_id = events.id \n          WHERE categories.id in (#{category_ids_for((local race)).join(\", \")})\n              and events.id in (#{parent.children.collect(&:id).join(\", \")})\n              and results.person_id = #{(local person).id}\n       \")",
+      "file": "app/models/people/export.rb",
+      "line": 25,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Person.connection.select_all(\"\\n          SELECT people.id, license, first_name, last_name, teams.name as team_name, team_id, people.notes,\\n                 member_from, member_to, member_usac_to,\\n                 (member_from IS NOT NULL AND member_to IS NOT NULL AND member_from <= NOW() AND member_to >= NOW()) as member,\\n                 print_card, card_printed_at, membership_card, ccx_only, date_of_birth, occupation,\\n                 street, people.city, people.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender,\\n                 ccx_category, road_category, track_category, mtb_category, dh_category,\\n                 volunteer_interest, official_interest, race_promotion_interest, team_interest, velodrome_committee_interest,\\n                 CEILING(#{date.year} - YEAR(date_of_birth)) as racing_age,\\n                 ccx_numbers.value as ccx_number, dh_numbers.value as dh_number, road_numbers.value as road_number,\\n                 singlespeed_numbers.value as singlespeed_number, xc_numbers.value as xc_number,\\n                 people.created_at, people.updated_at\\n          FROM people\\n          LEFT OUTER JOIN teams ON teams.id = people.team_id\\n          LEFT OUTER JOIN race_numbers as ccx_numbers ON ccx_numbers.person_id = people.id\\n                          and ccx_numbers.number_issuer_id = #{NumberIssuer.find_by(:name => RacingAssociation.current.short_name).id}\\n                          and ccx_numbers.year = #{date.year}\\n                          and ccx_numbers.discipline_id = #{Discipline[:cyclocross].id}\\n          LEFT OUTER JOIN race_numbers as dh_numbers ON dh_numbers.person_id = people.id\\n                          and dh_numbers.number_issuer_id = #{NumberIssuer.find_by(:name => RacingAssociation.current.short_name).id}\\n                          and dh_numbers.year = #{date.year}\\n                          and dh_numbers.discipline_id = #{Discipline[:downhill].id}\\n          LEFT OUTER JOIN race_numbers as road_numbers ON road_numbers.person_id = people.id\\n                          and road_numbers.number_issuer_id = #{NumberIssuer.find_by(:name => RacingAssociation.current.short_name).id}\\n                          and road_numbers.year = #{date.year}\\n                          and road_numbers.discipline_id = #{Discipline[:road].id}\\n          LEFT OUTER JOIN race_numbers as singlespeed_numbers ON singlespeed_numbers.person_id = people.id\\n                          and singlespeed_numbers.number_issuer_id = #{NumberIssuer.find_by(:name => RacingAssociation.current.short_name).id}\\n                          and singlespeed_numbers.year = #{date.year}\\n                          and singlespeed_numbers.discipline_id = #{Discipline[:singlespeed].id}\\n          LEFT OUTER JOIN race_numbers as track_numbers ON track_numbers.person_id = people.id\\n                          and track_numbers.number_issuer_id = #{NumberIssuer.find_by(:name => RacingAssociation.current.short_name).id}\\n                          and track_numbers.year = #{date.year}\\n                          and track_numbers.discipline_id = #{Discipline[:track].id}\\n          LEFT OUTER JOIN race_numbers as xc_numbers ON xc_numbers.person_id = people.id\\n                          and xc_numbers.number_issuer_id = #{NumberIssuer.find_by(:name => RacingAssociation.current.short_name).id}\\n                          and xc_numbers.year = #{date.year}\\n                          and xc_numbers.discipline_id = #{Discipline[:mountain_bike].id}\\n          #{(\"WHERE (member_to >= '#{date}')\" or \"WHERE  (member_to >= '#{date}') and print_card is true\")}\\n          ORDER BY last_name, first_name, people.id\\n        \")",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "Overall",
-        "method": "raced_minimum_events?"
+        "class": "People::Export",
+        "method": "People::Export.find_all_for_export"
       },
-      "user_input": "category_ids_for((local race)).join(\", \")",
+      "user_input": "date.year",
       "confidence": "Medium",
       "note": ""
     },
@@ -192,10 +142,11 @@
       "warning_type": "Dangerous Send",
       "warning_code": 23,
       "fingerprint": "2f130b37567fef544f7395397a7103a9b9f1a2de9c2190010cf529876d8ac11d",
+      "check_name": "Send",
       "message": "User controlled method execution",
       "file": "app/controllers/admin/events_controller.rb",
       "line": 112,
-      "link": "http://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
       "code": "Event.find(params[:id]).send(params[:name])",
       "render_path": null,
       "location": {
@@ -208,15 +159,16 @@
       "note": ""
     },
     {
-      "warning_type": "Cross Site Scripting",
+      "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "32d406867d48d958aab115dfd9d6d236667865dc9a095e929cc1e62eeca04238",
+      "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/articles/show.html.erb",
       "line": 4,
-      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Article.where(:id => params[:id]).first.body",
-      "render_path": [{"type":"controller","class":"ArticlesController","method":"show","line":10,"file":"app/controllers/articles_controller.rb"}],
+      "render_path": [{"type":"controller","class":"ArticlesController","method":"show","line":12,"file":"app/controllers/articles_controller.rb","rendered":{"name":"articles/show","file":"/Users/sw/devel/racing_on_rails/app/views/articles/show.html.erb"}}],
       "location": {
         "type": "template",
         "template": "articles/show"
@@ -229,10 +181,11 @@
       "warning_type": "File Access",
       "warning_code": 16,
       "fingerprint": "379c4e43c245f5c0afd7fbc645b055f0dfe84ab71813e183dd2e39dbb9826ecd",
+      "check_name": "FileAccess",
       "message": "Parameter value used in file name",
       "file": "app/controllers/admin/events_controller.rb",
-      "line": 185,
-      "link": "http://brakemanscanner.org/docs/warning_types/file_access/",
+      "line": 189,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
       "code": "File.open(\"#{Dir.tmpdir}/#{params[:schedule_file].original_filename}\", \"wb\")",
       "render_path": null,
       "location": {
@@ -248,10 +201,11 @@
       "warning_type": "Dangerous Send",
       "warning_code": 23,
       "fingerprint": "3b891fce9f5d9cb272f22b35d5a68ab38480e4a3e074390350587da8c765e22b",
+      "check_name": "Send",
       "message": "User controlled method execution",
       "file": "app/controllers/admin/velodromes_controller.rb",
-      "line": 45,
-      "link": "http://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "line": 47,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
       "code": "Velodrome.find(params[:id]).send(params[:name])",
       "render_path": null,
       "location": {
@@ -264,14 +218,94 @@
       "note": ""
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "4c396343ef066cacc5b66cdb62648047293993ff87a24e2fefad55a72a556dd2",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/competitions/competition.rb",
+      "line": 375,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Competitions::Score.where(\"competition_result_id in (select id from results where race_id in (#{races.reject do\n race.name.in?(race_category_names)\n end.map(&:id).join(\",\")}))\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Competitions::Competition",
+        "method": "delete_races"
+      },
+      "user_input": "races.reject do\n race.name.in?(race_category_names)\n end.map(&:id).join(\",\")",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "Dangerous Send",
       "warning_code": 23,
       "fingerprint": "5bc5ff506ee9c5a076a1bb57fc4eb70f7465b1979ec080e93441d378da550582",
+      "check_name": "Send",
+      "message": "User controlled method execution",
+      "file": "app/controllers/admin/results_controller.rb",
+      "line": 63,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code": "Result.find(params[:id]).send(params[:name])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Admin::ResultsController",
+        "method": "update_attribute"
+      },
+      "user_input": "params[:name]",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "64bbc197bd55fa0016acefa568d08eccfca21b76eea030377b4f40e818129c58",
+      "check_name": "FileAccess",
+      "message": "Parameter value used in file name",
+      "file": "app/controllers/admin/events_controller.rb",
+      "line": 132,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "File.open(\"#{Dir.tmpdir}/#{params[:results_file].original_filename}\", \"wb\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Admin::EventsController",
+        "method": "upload"
+      },
+      "user_input": "params[:results_file].original_filename",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "835c95d303e8533f2bd639bd9f0e0332f003894fefdf715303e12ef0bafb038b",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/posts/index.html.erb",
+      "line": 30,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => Post.where(:mailing_list_id => MailingList.find(params[:mailing_list_id]).id).order(\"date desc\").page(params[:page]), {})",
+      "render_path": [{"type":"controller","class":"Admin::PostsController","method":"index","line":17,"file":"app/controllers/admin/posts_controller.rb","rendered":{"name":"admin/posts/index","file":"/Users/sw/devel/racing_on_rails/app/views/admin/posts/index.html.erb"}}],
+      "location": {
+        "type": "template",
+        "template": "admin/posts/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dangerous Send",
+      "warning_code": 23,
+      "fingerprint": "915bc3fb271ed35c1c2752e0c4c9e52d1451b857cf05aaa63f6c92aa9a9678a0",
+      "check_name": "Send",
       "message": "User controlled method execution",
       "file": "app/controllers/admin/results_controller.rb",
       "line": 61,
-      "link": "http://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code": "Result.find(params[:id]).send(params[:name])",
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code": "Result.find(params[:id]).send(\"#{params[:name]}_s\")",
       "render_path": null,
       "location": {
         "type": "method",
@@ -285,31 +319,72 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "603b27dee2f3e23ae673bad1a02974c359cce6ff2248113e562d2dd6051ff6e1",
+      "fingerprint": "a2814165661dd7512063f761bdbd719a334c5b1551008a2ad18dc1e8c155cc2c",
+      "check_name": "SQL",
       "message": "Possible SQL injection",
-      "file": "app/models/event.rb",
-      "line": 359,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "SingleDayEvent.where(\"(#{(local change).first}=? or #{(local change).first} is null or #{(local change).first} = '') and parent_id=?\", (local change).last.first, self[:id])",
+      "file": "app/models/names/nameable.rb",
+      "line": 44,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "self.class.count_by_sql([\"\\n        select results.id from #{self.class.table_name}, results, races, events\\n        where #{self.class.table_name}.id = ? and #{self.class.table_name}.id = results.#{self.class.name.downcase}_id\\n          and results.race_id = races.id\\n          and races.event_id = events.id and events.date < ? limit 1\\n      \", id, Time.zone.today.beginning_of_year])",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "Event",
-        "method": "update_children"
+        "class": "Names::Nameable",
+        "method": "results_before_this_year?"
       },
-      "user_input": "(local change).first",
+      "user_input": "self.class.name.downcase",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 84,
+      "fingerprint": "a30ed10d3a9704b58bc3058e3850c6dd0aade931af26373d89ac170f18664d66",
+      "check_name": "RenderInline",
+      "message": "Unescaped model attribute rendered inline",
+      "file": "app/controllers/application_controller.rb",
+      "line": 52,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross-site_scripting/",
+      "code": "render(inline => Page.find_by(:path => (controller_path or \"#{controller_path}/#{action_name}\").dup).body, { :layout => true })",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ApplicationController",
+        "method": "render_page"
+      },
+      "user_input": "Page.find_by(:path => (controller_path or \"#{controller_path}/#{action_name}\").dup).body",
       "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "a3792ad73fe3ddb29e74351abf230ba2442451bbefbb3a023981013ad7078fa7",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/results/_result.html.erb",
+      "line": 3,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "(Unresolved Model).new.render(column).to_s",
+      "render_path": [{"type":"template","name":"results/_table","line":10,"file":"app/views/results/_table.html.erb","rendered":{"name":"results/_result","file":"/Users/sw/devel/racing_on_rails/app/views/results/_result.html.erb"}}],
+      "location": {
+        "type": "template",
+        "template": "results/_result"
+      },
+      "user_input": null,
+      "confidence": "High",
       "note": ""
     },
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "632a9da715e0548db0b20801dee090aca6cf74d0301996e70836580aecf303bb",
+      "fingerprint": "a6ed129b91a6d582ce46589d2bb076f5a956dad27f3e1086b1156650adad2450",
+      "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/competitions/competition.rb",
-      "line": 189,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Result.select(\"distinct results.id as id\", \"1 as multiplier\", \"age\", \"categories.ability as category_ability\", \"categories.ages_begin as category_ages_begin\", \"categories.ages_end as category_ages_end\", \"categories.gender as category_gender\", \"events.bar_points as event_bar_points\", \"events.date\", \"events.discipline\", \"events.type\", \"gender\", \"member_from\", \"member_to\", \"parents_events.bar_points as parent_bar_points\", \"parents_events_2.bar_points as parent_parent_bar_points\", \"people.gender as person_gender\", \"people.name as person_name\", \"points_factor\", \"races.bar_points as race_bar_points\", \"results.#{participant_id_attribute} as participant_id\", \"results.event_id\", \"place\", \"results.points\", \"results.race_id\", \"results.race_name as category_name\", \"results.year\", \"team_member\", \"team_name\")",
+      "line": 191,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Result.select(\"distinct results.id as id\", \"1 as multiplier\", \"age\", \"categories.ability_begin as category_ability\", \"categories.ages_begin as category_ages_begin\", \"categories.ages_end as category_ages_end\", \"categories.equipment as category_equipment\", \"categories.gender as category_gender\", \"events.bar_points as event_bar_points\", \"events.date\", \"events.discipline\", \"events.type\", \"gender\", \"member_from\", \"member_to\", \"parents_events.bar_points as parent_bar_points\", \"parents_events_2.bar_points as parent_parent_bar_points\", \"people.gender as person_gender\", \"people.name as person_name\", \"points_factor\", \"races.bar_points as race_bar_points\", \"races.visible\", \"results.#{participant_id_attribute} as participant_id\", \"results.event_id\", \"place\", \"results.points\", \"results.race_id\", \"results.race_name as category_name\", \"results.year\", \"team_member\", \"team_name\")",
       "render_path": null,
       "location": {
         "type": "method",
@@ -323,198 +398,12 @@
     {
       "warning_type": "File Access",
       "warning_code": 16,
-      "fingerprint": "64bbc197bd55fa0016acefa568d08eccfca21b76eea030377b4f40e818129c58",
-      "message": "Parameter value used in file name",
-      "file": "app/controllers/admin/events_controller.rb",
-      "line": 132,
-      "link": "http://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "File.open(\"#{Dir.tmpdir}/#{params[:results_file].original_filename}\", \"wb\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Admin::EventsController",
-        "method": "upload"
-      },
-      "user_input": "params[:results_file].original_filename",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "7b40a85c69c8ed5614d545eb9b46e4aa0c7d4159b5add2fe1e3df8f13723b2e0",
-      "message": "Possible SQL injection",
-      "file": "app/models/competitions/oregon_cup.rb",
-      "line": 21,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Result.find_by_sql(\"SELECT results.* FROM results  \n          LEFT OUTER JOIN races ON races.id = results.race_id \n          LEFT OUTER JOIN categories ON categories.id = races.category_id\n          LEFT OUTER JOIN events ON races.event_id = events.id \n            WHERE races.category_id is not null \n              and events.type = 'SingleDayEvent'\n              and place between 1 and 20\n              and categories.id in (#{category_ids_for((local race)).join(\", \")})\n              and (results.category_id is null or results.category_id in (#{category_ids_for((local race)).join(\", \")}))\n              and (events.id in (#{source_events.collect do\n (local event).id\n end.join(\", \")}) or events.parent_id in (#{source_events.collect do\n (local event).id\n end.join(\", \")}))\n         order by person_id\n       \")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "OregonCup",
-        "method": "source_results"
-      },
-      "user_input": "category_ids_for((local race)).join(\", \")",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "7bfc4976df4a881bc5db01157f609788b38c63b66076b8ef93651ddde0fbfb02",
-      "message": "Possible SQL injection",
-      "file": "app/models/competitions/wsba_barr.rb",
-      "line": 36,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Result.find_by_sql(\" SELECT results.*\n          FROM results  \n          LEFT OUTER JOIN races ON races.id = results.race_id \n          LEFT OUTER JOIN categories ON categories.id = races.category_id\n          LEFT OUTER JOIN events ON races.event_id = events.id \n            WHERE races.category_id is not null \n              and members_only_place between 1 and 15\n              and categories.id in (#{category_ids_for((local race)).join(\", \")})\n              and (results.category_id is null or results.category_id in (#{category_ids_for((local race)).join(\", \")}))\n              and (events.id in (#{source_events.map(&:id).join(\", \")}))\n              and results.bar\n         order by person_id\n       \")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "WsbaBarr",
-        "method": "source_results"
-      },
-      "user_input": "category_ids_for((local race)).join(\", \")",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "7cc5dadf1ecb785f90294746aa2287241023180ff4378be5d4ee9863adcc0b31",
-      "message": "Possible SQL injection",
-      "file": "app/models/competitions/competition.rb",
-      "line": 238,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Result.select(\"distinct results.id as id\", \"1 as multiplier\", \"events.bar_points as event_bar_points\", \"events.date\", \"events.type\", \"member_from\", \"member_to\", \"parents_events.bar_points as parent_bar_points\", \"parents_events_2.bar_points as parent_parent_bar_points\", \"place\", \"points_factor\", \"races.bar_points as race_bar_points\", \"results.#{participant_id_attribute} as participant_id\", \"results.event_id\", \"results.points\", \"results.race_id\", \"results.race_name as category_name\", \"results.year\", \"team_member\", \"team_name\", \"true as upgrade\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Competitions::Competition",
-        "method": "add_upgrade_results"
-      },
-      "user_input": "participant_id_attribute",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "82fa4bd5fad8c65897bfbd516729dc24cf5613cac4be2cfb622d192f3b259917",
-      "message": "Possible SQL injection",
-      "file": "app/models/competitions/oregon_junior_cyclocross_series.rb",
-      "line": 10,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Result.find_by_sql(\" SELECT results.* FROM results  \n          LEFT JOIN races ON races.id = results.race_id \n          LEFT JOIN categories ON categories.id = races.category_id \n          LEFT JOIN events ON races.event_id = events.id \n          WHERE events.id in (#{source_events.map(&:id).join(\",\")})\n            and (place > 0 or place is null or place = '')\n            and categories.id in (#{category_ids_for((local race)).join(\",\")})\n            and (events.type = \"SingleDayEvent\" or events.type = \"Event\")\n            and events.date between '#{year}-01-01' and '#{year}-12-31'\n          order by person_id\n       \")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "OregonJuniorCyclocrossSeries",
-        "method": "source_results"
-      },
-      "user_input": "source_events.map(&:id).join(\",\")",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "835c95d303e8533f2bd639bd9f0e0332f003894fefdf715303e12ef0bafb038b",
-      "message": "Render path contains parameter value",
-      "file": "app/views/admin/posts/index.html.erb",
-      "line": 30,
-      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => Post.where(:mailing_list_id => MailingList.find(params[:mailing_list_id]).id).order(\"date desc\").page(params[:page]), {})",
-      "render_path": [{"type":"controller","class":"Admin::PostsController","method":"index","line":7,"file":"app/controllers/admin/posts_controller.rb"}],
-      "location": {
-        "type": "template",
-        "template": "admin/posts/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Cross Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "868c2e44847a31b8f045e250855f3ec84820c67d2d14b2939dfb18b998315f73",
-      "message": "Unescaped model attribute",
-      "file": "app/views/admin/pages/versions/edit.html.erb",
-      "line": 17,
-      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Page::Version.find(params[:id]).versioned.body",
-      "render_path": [{"type":"controller","class":"Admin::Pages::VersionsController","method":"edit","line":10,"file":"app/controllers/admin/pages/versions_controller.rb"}],
-      "location": {
-        "type": "template",
-        "template": "admin/pages/versions/edit"
-      },
-      "user_input": "Page::Version.find(params[:id])",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "892f797beff8536aba3c60120f09f180c82275850032c3bf1eb073663c50d348",
-      "message": "Possible SQL injection",
-      "file": "app/models/competitions/overall.rb",
-      "line": 60,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Result.find_by_sql(\" SELECT results.* FROM results  \n          JOIN races ON races.id = results.race_id \n          JOIN categories ON categories.id = races.category_id \n          JOIN events ON races.event_id = events.id \n          WHERE place between 1 and #{(point_schedule.size - 1)}\n              and categories.id in (#{category_ids_for((local race)).join(\", \")})\n              and events.id in (#{parent.children.collect do\n (local event).id\n end.join(\", \")})\n          order by person_id\n       \")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Overall",
-        "method": "source_results"
-      },
-      "user_input": "(point_schedule.size - 1)",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Dangerous Send",
-      "warning_code": 23,
-      "fingerprint": "915bc3fb271ed35c1c2752e0c4c9e52d1451b857cf05aaa63f6c92aa9a9678a0",
-      "message": "User controlled method execution",
-      "file": "app/controllers/admin/results_controller.rb",
-      "line": 59,
-      "link": "http://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code": "Result.find(params[:id]).send(\"#{params[:name]}_s\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Admin::ResultsController",
-        "method": "update_attribute"
-      },
-      "user_input": "params[:name]",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Cross Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "a3792ad73fe3ddb29e74351abf230ba2442451bbefbb3a023981013ad7078fa7",
-      "message": "Unescaped model attribute",
-      "file": "app/views/results/_result.html.erb",
-      "line": 3,
-      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "(Unresolved Model).new.render(column).to_s",
-      "render_path": [{"type":"template","name":"results/_table","line":10,"file":"app/views/results/_table.html.erb"}],
-      "location": {
-        "type": "template",
-        "template": "results/_result"
-      },
-      "user_input": null,
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "File Access",
-      "warning_code": 16,
       "fingerprint": "b0ff92aa4751a312e543da4b0a2c8d789d236879150399eff51e4d1e7ca15d91",
+      "check_name": "FileAccess",
       "message": "Parameter value used in file name",
       "file": "app/controllers/admin/events_controller.rb",
       "line": 136,
-      "link": "http://brakemanscanner.org/docs/warning_types/file_access/",
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
       "code": "File.new(\"#{Dir.tmpdir}/#{params[:results_file].original_filename}\")",
       "render_path": null,
       "location": {
@@ -527,13 +416,14 @@
       "note": ""
     },
     {
-      "warning_type": "Cross Site Scripting",
+      "warning_type": "Cross-Site Scripting",
       "warning_code": 84,
       "fingerprint": "b412502a95d4c5dafe6f096bd5040b86c57d3c7f0f1ac622532b082b4bd01f8e",
+      "check_name": "RenderInline",
       "message": "Unescaped model attribute rendered inline",
       "file": "app/controllers/pages_controller.rb",
-      "line": 10,
-      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting/",
+      "line": 12,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross-site_scripting/",
       "code": "render(inline => Page.find_by_normalized_path!(params[:path]).body, { :layout => \"application\" })",
       "render_path": null,
       "location": {
@@ -546,15 +436,16 @@
       "note": ""
     },
     {
-      "warning_type": "Cross Site Scripting",
+      "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "b5aab46786fd773d58e93cc5a4b504926527936b34be017410e6d59d9ae9797d",
+      "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/articles/show.html.erb",
       "line": 3,
-      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Article.where(:id => params[:id]).first.title",
-      "render_path": [{"type":"controller","class":"ArticlesController","method":"show","line":10,"file":"app/controllers/articles_controller.rb"}],
+      "render_path": [{"type":"controller","class":"ArticlesController","method":"show","line":12,"file":"app/controllers/articles_controller.rb","rendered":{"name":"articles/show","file":"/Users/sw/devel/racing_on_rails/app/views/articles/show.html.erb"}}],
       "location": {
         "type": "template",
         "template": "articles/show"
@@ -567,10 +458,11 @@
       "warning_type": "Dangerous Send",
       "warning_code": 23,
       "fingerprint": "bc58f05f65035aa4bd08f50871b81b6f9e51743294974a632d59f093f4abf208",
+      "check_name": "Send",
       "message": "User controlled method execution",
       "file": "app/controllers/admin/people_controller.rb",
-      "line": 125,
-      "link": "http://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "line": 127,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
       "code": "Person.find(params[:id]).send(params[:name])",
       "render_path": null,
       "location": {
@@ -586,10 +478,11 @@
       "warning_type": "File Access",
       "warning_code": 16,
       "fingerprint": "c30348937ccc5fb086ad46a94f447da041d29da52f8a7d7a1f69824cd0fe115a",
+      "check_name": "FileAccess",
       "message": "Parameter value used in file name",
       "file": "app/controllers/admin/people/import.rb",
-      "line": 16,
-      "link": "http://brakemanscanner.org/docs/warning_types/file_access/",
+      "line": 18,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
       "code": "File.open(\"#{Dir.tmpdir}/#{params[:people_file].original_filename}\", \"wb\")",
       "render_path": null,
       "location": {
@@ -602,15 +495,16 @@
       "note": ""
     },
     {
-      "warning_type": "Cross Site Scripting",
+      "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "c4267d90c079d37a4af6fe65ba7a1b617ba05a6096b880fe42ccb1e8cf1e87b9",
+      "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/article_categories/_article.html.erb",
       "line": 2,
-      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "truncate(ArticleCategory.new.body, :length => 800, :separator => \" \")",
-      "render_path": [{"type":"controller","class":"ArticleCategoriesController","method":"show","line":14,"file":"app/controllers/article_categories_controller.rb"},{"type":"template","name":"article_categories/show","line":7,"file":"app/views/article_categories/show.html.erb"}],
+      "render_path": [{"type":"controller","class":"ArticleCategoriesController","method":"show","line":16,"file":"app/controllers/article_categories_controller.rb","rendered":{"name":"article_categories/show","file":"/Users/sw/devel/racing_on_rails/app/views/article_categories/show.html.erb"}},{"type":"template","name":"article_categories/show","line":7,"file":"app/views/article_categories/show.html.erb","rendered":{"name":"article_categories/_article","file":"/Users/sw/devel/racing_on_rails/app/views/article_categories/_article.html.erb"}}],
       "location": {
         "type": "template",
         "template": "article_categories/_article"
@@ -620,120 +514,34 @@
       "note": ""
     },
     {
-      "warning_type": "Cross Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "c4c23a689bf10ffa68fff4dafb3dd48fd76b71d39b7f4ac300cebe4e116ba621",
-      "message": "Unescaped model attribute",
-      "file": "app/views/admin/pages/versions/edit.html.erb",
-      "line": 21,
-      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "updated(Page::Version.find(params[:id]).versioned)",
-      "render_path": [{"type":"controller","class":"Admin::Pages::VersionsController","method":"edit","line":10,"file":"app/controllers/admin/pages/versions_controller.rb"}],
-      "location": {
-        "type": "template",
-        "template": "admin/pages/versions/edit"
-      },
-      "user_input": "Page::Version.find(params[:id])",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Cross Site Scripting",
+      "warning_type": "Cross-Site Scripting",
       "warning_code": 4,
-      "fingerprint": "c98e88e2b6b3b2309d7f76c4fab2942719a08423f57cc59fed85b624442b0019",
-      "message": "Unsafe model attribute in link_to href",
-      "file": "app/views/orders/suggestions/_suggestion.html.erb",
-      "line": 15,
-      "link": "http://brakemanscanner.org/docs/warning_types/link_to_href",
-      "code": "link_to(add_suggestion_link_text(person, ::Order.new, ::Order.find(order_id)), suggestion_link(person, ::Order.new, ::Order.find(order_id)), :class => \"obvious\", :id => (\"add_#{::Order.new.label}_#{person.id}\"))",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Orders::SuggestionsController",
-          "method": "show",
-          "line": 13,
-          "file": "app/controllers/orders/suggestions_controller.rb"
-        },
-        {
-          "type": "template",
-          "name": "orders/suggestions/show",
-          "line": 6,
-          "file": "app/views/orders/suggestions/show.html.erb"
-        }
-      ],
+      "fingerprint": "cb3c161e9cddb6b453021f5eb62870b4466b4228ddf6b0c92b78838e82345687",
+      "check_name": "LinkToHref",
+      "message": "Potentially unsafe model attribute in `link_to` href",
+      "file": "app/views/teams/_team.html.erb",
+      "line": 3,
+      "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
+      "code": "link_to((Unresolved Model).new.name, (Unresolved Model).new.website)",
+      "render_path": [{"type":"template","name":"teams/index","line":18,"file":"app/views/teams/index.html.erb","rendered":{"name":"teams/_team","file":"/Users/sw/devel/racing_on_rails/app/views/teams/_team.html.erb"}}],
       "location": {
         "type": "template",
-        "template": "orders/suggestions/_suggestion"
+        "template": "teams/_team"
       },
-      "user_input": "::Order.find(order_id)",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "cd74d5b87f88af5b5c341a60eef067d569042b55fed5097470718fd829d83dd6",
-      "message": "Possible SQL injection",
-      "file": "app/models/competitions/bar.rb",
-      "line": 91,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Result.select([\"results.id as id\", \"person_id as participant_id\", \"people.member_from\", \"people.member_to\", \"place\", \"results.event_id\", \"race_id\", \"events.date\", \"results.year\", \"coalesce(races.bar_points, events.bar_points, parents_events.bar_points, parents_events_2.bar_points) as multiplier\"]).joins(:race => :event).joins(\"left outer join people on people.id = results.person_id\").joins(\"left outer join events parents_events on parents_events.id = events.parent_id\").joins(\"left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id\").where(\"place between 1 and ?\", point_schedule.size).where(\"(events.type in (?) or events.type is NULL)\", source_event_types).where(:bar => (true)).where(\"races.category_id in (?)\", category_ids_for((local race))).where(\"events.sanctioned_by\" => (RacingAssociation.current.default_sanctioned_by))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Bar",
-        "method": "source_results"
-      },
-      "user_input": "RacingAssociation.current.default_sanctioned_by",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "ce199673a6ab758324984b219fe87d22b0f2c522c9ca749ce2a3a8f177abaeb7",
-      "message": "Render path contains parameter value",
-      "file": "app/views/categories/index.html.erb",
-      "line": 16,
-      "link": "http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => find_categories(name(params[:name])).paginate(:page => page, :per_page => 1000), {})",
-      "render_path": [{"type":"controller","class":"CategoriesController","method":"index","line":5,"file":"app/controllers/categories_controller.rb"}],
-      "location": {
-        "type": "template",
-        "template": "categories/index"
-      },
-      "user_input": "params[:name]",
+      "user_input": "(Unresolved Model).new.website",
       "confidence": "Weak",
       "note": ""
     },
     {
-      "warning_type": "Remote Code Execution",
-      "warning_code": 24,
-      "fingerprint": "d28a2f0f7ecaf48a07d28e2f7343c41d7eb3584c4d9475210b795bc102983e34",
-      "message": "Unsafe reflection method const_get called with parameter value",
-      "file": "app/controllers/admin/events_controller.rb",
-      "line": 291,
-      "link": "http://brakemanscanner.org/docs/warning_types/remote_code_execution/",
-      "code": "Object.const_get(((params[:event][:type] or \"Event\") or \"SingleDayEvent\"))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Admin::EventsController",
-        "method": "assign_new_event"
-      },
-      "user_input": "params[:event][:type]",
-      "confidence": "High",
-      "note": ""
-    },
-    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "e0e34e6bb4ae9249c358e0df1800bb1eedbc5d23125b340e7859523be57dc391",
+      "fingerprint": "cbeaccc71456d8dd8f95201cbc8cd4626d9a6fc8f774e5f3aa32dd2e6f27e062",
+      "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/weekly_series.rb",
-      "line": 40,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "WeeklySeries.connection.select_values(\"\\n          select distinct (DAYOFWEEK(date) - 1) as day_of_week\\n          from events\\n          where parent_id=#{self.id} and date between '#{date_range.begin.to_s(:db)}' and '#{date_range.end.to_s(:db)}'\\n          order by day_of_week\")",
+      "line": 41,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "WeeklySeries.connection.select_values(\"\\n          select distinct (DAYOFWEEK(date) - 1) as day_of_week\\n          from events\\n          where parent_id=#{id} and date between '#{date_range.begin.to_s(:db)}' and '#{date_range.end.to_s(:db)}'\\n          order by day_of_week\")",
       "render_path": null,
       "location": {
         "type": "method",
@@ -745,34 +553,35 @@
       "note": ""
     },
     {
-      "warning_type": "Dangerous Send",
-      "warning_code": 23,
-      "fingerprint": "e2fe971fb74e6e59fed3d9c07abcfb25d453a46e11f6ea81bbb58932c1c1c8c9",
-      "message": "User controlled method execution",
-      "file": "app/controllers/admin/races_controller.rb",
-      "line": 58,
-      "link": "http://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code": "(Race.find(params[:id]) or (((Event.find(params[:event_id]) or Event.find(race_params[:event_id])) or Race.find(params[:id]).event).races.build(race_params) or ((Event.find(params[:event_id]) or Event.find(race_params[:event_id])) or Race.find(params[:id]).event).races.build)).send(params[:name])",
-      "render_path": null,
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "ce199673a6ab758324984b219fe87d22b0f2c522c9ca749ce2a3a8f177abaeb7",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/categories/index.html.erb",
+      "line": 21,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => find_categories(name(params[:name])).paginate(:page => page, :per_page => 1000), {})",
+      "render_path": [{"type":"controller","class":"CategoriesController","method":"index","line":7,"file":"app/controllers/categories_controller.rb","rendered":{"name":"categories/index","file":"/Users/sw/devel/racing_on_rails/app/views/categories/index.html.erb"}}],
       "location": {
-        "type": "method",
-        "class": "Admin::RacesController",
-        "method": "update_attribute"
+        "type": "template",
+        "template": "categories/index"
       },
       "user_input": "params[:name]",
-      "confidence": "High",
+      "confidence": "Weak",
       "note": ""
     },
     {
-      "warning_type": "Cross Site Scripting",
+      "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "e66e37eef4a1017801c70b90eaf0b9e23e78ff6335d0c0c9ab70476bacfd55ad",
+      "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/teams/_team.html.erb",
       "line": 7,
-      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "(Unresolved Model).new.sponsors",
-      "render_path": [{"type":"template","name":"teams/index","line":18,"file":"app/views/teams/index.html.erb"}],
+      "render_path": [{"type":"template","name":"teams/index","line":18,"file":"app/views/teams/index.html.erb","rendered":{"name":"teams/_team","file":"/Users/sw/devel/racing_on_rails/app/views/teams/_team.html.erb"}}],
       "location": {
         "type": "template",
         "template": "teams/_team"
@@ -782,32 +591,14 @@
       "note": "Limited to admin users. Does echo raw HTML. Ideally would use Markdown."
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "e9e2db15e6c9774e74a27db1b993b31dd3ece95560b0ae9f76251de73994efdc",
-      "message": "Possible SQL injection",
-      "file": "app/models/competitions/mbra_bar.rb",
-      "line": 84,
-      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Result.includes(:race, { :person => :team }, :team, :race => ([{ :event => ({ :parent => :parent }) }, :category])).where(\"\n        (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)\n        and bar = true\n        and categories.id in (#{category_ids_for((local race)).join(\", \")})\n        and (events.discipline = '#{(local race).discipline}'\n          or (events.discipline is null and parents_events.discipline = '#{(local race).discipline}')\n          or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline = '#{(local race).discipline}'))\n        and (races.bar_points > 0\n          or (races.bar_points is null and events.bar_points > 0)\n          or (races.bar_points is null and events.bar_points is null and parents_events.bar_points > 0)\n          or (races.bar_points is null and events.bar_points is null and parents_events.bar_points is null and parents_events_2.bar_points > 0))\n        and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'\n    \")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "MbraBar",
-        "method": "source_results"
-      },
-      "user_input": "category_ids_for((local race)).join(\", \")",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "ead2ff6844add83d99527c47a7997af62f0e7c1bf33a42f57829bae9ffd49b39",
+      "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/competitions/bar_controller.rb",
-      "line": 20,
-      "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
+      "line": 22,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(\"http://#{RacingAssociation.current.static_host}/bar/#{@year}\")",
       "render_path": null,
       "location": {
@@ -823,10 +614,11 @@
       "warning_type": "File Access",
       "warning_code": 16,
       "fingerprint": "f38cc7e62cdbbb4d0f1af5881eb0612e34b19fb769c42af4afe89eacccc83fe0",
+      "check_name": "FileAccess",
       "message": "Parameter value used in file name",
       "file": "app/controllers/admin/events_controller.rb",
-      "line": 154,
-      "link": "http://brakemanscanner.org/docs/warning_types/file_access/",
+      "line": 155,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
       "code": "FileUtils.rm(File.new(\"#{Dir.tmpdir}/#{params[:results_file].original_filename}\"))",
       "render_path": null,
       "location": {
@@ -839,13 +631,34 @@
       "note": ""
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "f8b216ffc983cceea4c9b90794bf157504ac83537bdce7965b97772dd439b75d",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/competitions/competition.rb",
+      "line": 267,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Result.select(\"distinct results.id as id\", \"1 as multiplier\", \"events.bar_points as event_bar_points\", \"events.date\", \"events.type\", \"member_from\", \"member_to\", \"parents_events.bar_points as parent_bar_points\", \"parents_events_2.bar_points as parent_parent_bar_points\", \"place\", \"points_factor\", \"races.bar_points as race_bar_points\", \"results.#{participant_id_attribute} as participant_id\", \"results.event_id\", \"results.points\", \"results.race_id\", \"results.race_name as category_name\", \"results.year\", \"team_member\", \"team_name\", \"true as upgrade\").joins(:race, :event, :person).joins(\"left outer join events parents_events on parents_events.id = events.parent_id\").joins(\"left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id\").joins(\"left outer join competition_event_memberships on results.event_id = competition_event_memberships.event_id and competition_event_memberships.competition_id = #{id}\").where(\"results.race_id\" => (races.select do\n r.name.in?(Array.wrap(upgrades[race.name]))\n end)).where(\"results.#{participant_id_attribute}\" => results.map do\n r[\"participant_id\"]\n end.uniq)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Competitions::Competition",
+        "method": "add_upgrade_results"
+      },
+      "user_input": "participant_id_attribute",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "Dangerous Send",
       "warning_code": 23,
       "fingerprint": "f907513144575431cf0ee3f3445bace0ac08f86943a71e64e3b13f9cf6436977",
+      "check_name": "Send",
       "message": "User controlled method execution",
       "file": "app/controllers/admin/pages_controller.rb",
-      "line": 52,
-      "link": "http://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "line": 54,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
       "code": "Page.find(params[:id]).send(params[:name])",
       "render_path": null,
       "location": {
@@ -858,6 +671,6 @@
       "note": ""
     }
   ],
-  "updated": "2016-06-06 19:36:55 -0700",
-  "brakeman_version": "3.3.1"
+  "updated": "2019-05-11 11:44:04 -0700",
+  "brakeman_version": "4.5.0"
 }
