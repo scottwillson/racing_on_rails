@@ -9,9 +9,10 @@ require_relative "../config/environment"
 require "rails/test_help"
 require "mocha/setup"
 require "authlogic/test_case"
-require_relative "fakeweb_registrations"
 require "parallel_tests/test/runtime_logger" if ENV["RECORD_RUNTIME"]
 require "test/enumerable_assertions"
+require "webmock/minitest"
+require_relative "./elasticsearch_stubs"
 
 class ActiveSupport::TestCase
   make_my_diffs_pretty!
@@ -21,11 +22,12 @@ class ActiveSupport::TestCase
   self.pre_loaded_fixtures = false
 
   include Authlogic::TestCase
+  include ElasticsearchStubs
   include Test::EnumerableAssertions
 
-  DatabaseCleaner.strategy = :truncation, { except: %w(ar_internal_metadata) }
+  DatabaseCleaner.strategy = :truncation, { except: %w[ar_internal_metadata] }
 
-  setup :clean_database, :activate_authlogic, :reset_association, :reset_disciplines, :reset_person_current
+  setup :clean_database, :activate_authlogic, :reset_association, :reset_disciplines, :reset_person_current, :stub_elasticsearch
 
   def clean_database
     DatabaseCleaner.clean

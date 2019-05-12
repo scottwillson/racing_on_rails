@@ -11,7 +11,7 @@ blocks:
       jobs:
       - name: bundle gems
         commands:
-          - sem-version ruby 2.6.3
+          - sem-version ruby 2.6.2
           - checkout
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
@@ -20,11 +20,26 @@ blocks:
           - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
           - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
 
+  - name: "Security"
+    task:
+      prologue:
+        commands:
+          - sem-version ruby 2.6.2
+          - checkout
+          - sudo apt-get install -y libmysqlclient-dev
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
+          - gem install bundler:2.0.1
+          - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
+      jobs:
+      - name: Brakeman
+        commands:
+          - bundle exec brakeman
+
   - name: "Unit tests"
     task:
       prologue:
         commands:
-          - sem-version ruby 2.6.3
+          - sem-version ruby 2.6.2
           - checkout
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
@@ -47,12 +62,11 @@ blocks:
       secrets:
         - name: environmental_variables
 
-
   - name: "Acceptance tests"
     task:
       prologue:
         commands:
-          - sem-version ruby 2.6.3
+          - sem-version ruby 2.6.2
           - checkout
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
@@ -65,4 +79,4 @@ blocks:
       jobs:
       - name: acceptance tests
         commands:
-          - bundle exec rake test:acceptance
+          - DISABLE_SPRING=1 bundle exec rake test:acceptance

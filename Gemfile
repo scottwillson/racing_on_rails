@@ -3,8 +3,6 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "2.6.3"
-
 gem "rails", "~> 5.2.1"
 
 gem "activemerchant"
@@ -92,16 +90,16 @@ end
 
 group :test do
   gem "capybara"
-  gem "chromedriver-helper"
   gem "database_cleaner"
   gem "factory_bot_rails"
-  gem "fakeweb", git: "https://github.com/chrisk/fakeweb.git"
   gem "minitest"
   gem "mocha", require: false
   gem "rails-controller-testing"
   gem "selenium-webdriver"
   gem "simplecov"
   gem "timecop"
+  gem "webdrivers", ">= 3.9.1"
+  gem "webmock"
 end
 
 group :staging, :production do

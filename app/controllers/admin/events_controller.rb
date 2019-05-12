@@ -360,6 +360,7 @@ module Admin
         :region_id,
         :registration,
         :registration_ends_at,
+        :registration_start_at,
         :registration_link,
         :registration_public,
         :sanctioned_by,

@@ -5,7 +5,8 @@ ENV["RAILS_ENV"] = "test"
 require_relative "../../config/environment"
 require "capybara/rails"
 require "minitest/autorun"
-require_relative "../../test/fakeweb_registrations"
+require "webmock/minitest"
+require_relative "../../test/elasticsearch_stubs"
 
 # Capybara supports a number of drivers/browsers. AcceptanceTest default is RackTest for non-JavaScript tests
 # and Chrome for JS test. Note that most tests require JS.
@@ -22,12 +23,15 @@ require_relative "../../test/fakeweb_registrations"
 # and a custom Gemfile with 'gem "capybara-webkit"'.
 class AcceptanceTest < ActiveSupport::TestCase
   include Capybara::DSL
+  include ElasticsearchStubs
 
   # Selenium tests start the Rails server in a separate process. If test data is wrapped in a
   # transaction, the server won't see it.
-  DatabaseCleaner.strategy = :truncation, { except: %w(ar_internal_metadata) }
+  DatabaseCleaner.strategy = :truncation, { except: %w[ar_internal_metadata] }
 
-  setup :clean_database, :set_capybara_driver
+  Webdrivers.cache_time = 86_400
+
+  setup :clean_database, :set_capybara_driver, :configure_webmock, :stub_elasticsearch
   teardown :reset_session
 
   def self.javascript_driver
@@ -48,6 +52,13 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   def self.download_directory
     "/tmp/webdriver-downloads"
+  end
+
+  def configure_webmock
+    WebMock.disable_net_connect!(
+      allow: "chromedriver.storage.googleapis.com",
+      allow_localhost: true
+    )
   end
 
   def assert_page_has_content(text)
@@ -258,7 +269,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     errors = 0
     begin
       press_once key, field
-    rescue Capybara::Poltergeist::ObsoleteNode
+    rescue StandardError
       errors += 1
       retry if errors < 4
     end
