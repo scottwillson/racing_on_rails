@@ -60,7 +60,9 @@ module Calculations
           participant = Models::Participant.new(0)
           source_results = []
 
-          event = Models::Event.new(id: 0, series_overall: true, date: Date.new(2019, 3, 28))
+          event = Models::Event.new(id: 0, calculated: true, date: Date.new(2019, 3, 22), end_date: Date.new(2019, 3, 29))
+          event.add_child Models::Event.new(id: 1, date: Date.new(2019, 3, 22))
+          event.add_child Models::Event.new(id: 2, date: Date.new(2019, 3, 29))
           source_results << Models::SourceResult.new(
             id: 0,
             event_category: Models::EventCategory.new(category, event),
@@ -75,7 +77,8 @@ module Calculations
           event_categories = RejectWeekdayEvents.calculate!(calculator)
 
           assert event_categories.first.results.none?(&:rejected?)
-          assert event_categories.first.source_results.none?(&:rejected?)
+          source_result = event_categories.first.source_results.first
+          refute source_result.rejected?, source_result.rejection_reason
         end
 
         def test_stage_race
@@ -134,7 +137,7 @@ module Calculations
           event_categories = RejectWeekdayEvents.calculate!(calculator)
 
           rejected_events = event_categories.first.source_results.select(&:rejected?).map(&:id).sort
-          assert_equal [4], rejected_events
+          assert_equal [], rejected_events
         end
 
         def test_omnium_or_stage_race

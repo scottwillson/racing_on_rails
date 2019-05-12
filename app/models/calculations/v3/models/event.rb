@@ -12,7 +12,6 @@ module Calculations
         attr_reader :multiplier
         attr_accessor :parent
         attr_reader :sanctioned_by
-        attr_reader :series_overall
 
         def initialize(
           id: nil,
@@ -21,8 +20,7 @@ module Calculations
           discipline: Models::Discipline.new("Road"),
           end_date: nil,
           multiplier: 1,
-          sanctioned_by: nil,
-          series_overall: false
+          sanctioned_by: nil
         )
 
           @id = id
@@ -32,7 +30,6 @@ module Calculations
           @end_date = end_date || date
           @multiplier = multiplier
           @sanctioned_by = sanctioned_by
-          @series_overall = series_overall
 
           @children = []
 
@@ -53,10 +50,6 @@ module Calculations
           start_date..end_date
         end
 
-        def series_overall?
-          @series_overall
-        end
-
         def start_date
           date
         end
@@ -64,6 +57,7 @@ module Calculations
         def validate!
           raise(ArgumentError, "Discipline is nil") unless discipline
           raise(ArgumentError, "discipline must be a Models::Discipline, but is a #{discipline.class}") unless discipline.is_a?(Models::Discipline)
+          raise(ArgumentError, "end_date #{end_date} cannot be before date #{date}") if end_date && end_date < date
         end
 
         def ==(other)

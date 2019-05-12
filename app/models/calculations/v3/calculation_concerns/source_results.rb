@@ -33,8 +33,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
         end_date: event.end_date,
         id: event.id,
         multiplier: multiplier(event.id),
-        sanctioned_by: associations_by_name[event.sanctioned_by],
-        series_overall: event.series_overall?
+        sanctioned_by: associations_by_name[event.sanctioned_by]
       )
 
       if event.parent_id

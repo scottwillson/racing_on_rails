@@ -88,7 +88,7 @@ module Calculations
           event_categories = RejectWeekdayEvents.calculate!(calculator)
 
           rejected_events = event_categories.first.source_results.select(&:rejected?).map(&:id).sort
-          assert_equal [4], rejected_events
+          assert_equal [], rejected_events
         end
       end
     end
