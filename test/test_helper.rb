@@ -12,6 +12,7 @@ require "authlogic/test_case"
 require "parallel_tests/test/runtime_logger" if ENV["RECORD_RUNTIME"]
 require "test/enumerable_assertions"
 require "webmock/minitest"
+require_relative "./elasticsearch_stubs"
 
 class ActiveSupport::TestCase
   make_my_diffs_pretty!
@@ -21,6 +22,7 @@ class ActiveSupport::TestCase
   self.pre_loaded_fixtures = false
 
   include Authlogic::TestCase
+  include ElasticsearchStubs
   include Test::EnumerableAssertions
 
   DatabaseCleaner.strategy = :truncation, { except: %w[ar_internal_metadata] }
@@ -42,19 +44,6 @@ class ActiveSupport::TestCase
 
   def reset_person_current
     Person.current = nil
-  end
-
-  def stub_elasticsearch
-    WebMock.stub_request(:delete, %r{http://localhost:9200/*}).to_return(status: 200, body: String.new, headers: {})
-    WebMock.stub_request(:put, %r{http://localhost:9200/*}).to_return(status: 200, body: String.new, headers: {})
-
-    WebMock
-      .stub_request(:post, %r{http://localhost:9200/*})
-      .to_return(
-        status: 200,
-        body: { _index: "posts", _type: "post", _id: "1", _version: 136 }.to_json,
-        headers: {content_type: "application/json; charset=UTF-8"}
-      )
   end
 
   # person = fixture symbol or Person
