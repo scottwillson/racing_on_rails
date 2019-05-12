@@ -13,6 +13,9 @@ module Calculations
       attr_reader :specific_events
       attr_reader :source_events
       attr_reader :source_event_keys
+
+      # If true, only include weekend events
+      # If false, reject all weekday events except series overall
       attr_reader :weekday_events
 
       def initialize(

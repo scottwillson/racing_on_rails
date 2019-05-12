@@ -8,12 +8,12 @@ module Calculations
           return calculator.event_categories if calculator.rules.weekday_events?
 
           calculator.unrejected_source_results.each do |source_result|
-            if weekday?(source_result.event) &&
-               !source_result.event.series_overall? &&
-               !omnium_or_stage_race?(source_result.event.parent)
+            next if !weekday?(source_result.event) ||
+                    omnium_or_stage_race?(source_result.event.parent) ||
+                    omnium_or_stage_race?(source_result.event) ||
+                    series_overall?(source_result.event)
 
-              source_result.reject :weekday
-            end
+            source_result.reject :weekday
           end
 
           calculator.event_categories
@@ -25,10 +25,21 @@ module Calculations
           !(event.date.saturday? || event.date.sunday?)
         end
 
-        def self.omnium_or_stage_race?(parent_event)
-          parent_event &&
-            parent_event.end_date != parent_event.date &&
-            parent_event.children.map(&:date).uniq.size == (parent_event.end_date - parent_event.date).to_i + 1
+        def self.omnium_or_stage_race?(event)
+          event &&
+            event.end_date != event.date &&
+            event.children.map(&:date).uniq.size == (event.end_date - event.date).to_i + 1
+        end
+
+        def self.series_overall?(event)
+          date = event.date
+          end_date = event.end_date
+          child_dates = event.children.map(&:date).uniq
+
+          event.calculated? &&
+            end_date != date &&
+            (end_date - date).to_i > child_dates.size &&
+            end_date == child_dates.max
         end
       end
     end

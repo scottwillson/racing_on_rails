@@ -119,11 +119,10 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       results = race.results
       pp results.first.sources.map(&:rejection_reason)
       assert_equal 1, results.size
-      assert_equal 14, results.first.points
-
       assert_equal 7, results.first.sources.size
       assert_equal 6, results.first.sources.select(&:rejected?).size
       assert_equal 1, results.first.sources.reject(&:rejected?).size
+      assert_equal 14, results.first.points
     end
   end
 
