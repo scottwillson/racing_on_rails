@@ -30,12 +30,11 @@ GIT
 
 GIT
   remote: https://github.com/scottwillson/roo.git
-  revision: 79d50ac01497abe567acccf8c3aee54500c72c17
-  branch: v2.1.1-ruby-2-4
+  revision: 7affb556878466faf1a476f2ed5802f6af5b1066
   specs:
-    roo (2.1.1)
+    roo (2.8.2)
       nokogiri (~> 1)
-      rubyzip (~> 1.1, < 2.0.0)
+      rubyzip (>= 1.2.1, < 2.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -407,7 +406,7 @@ GEM
     stripe (4.16.0)
       faraday (~> 0.13)
       net-http-persistent (~> 3.0)
-    tabular (0.4.4)
+    tabular (0.4.7)
     therubyracer (0.12.3)
       libv8 (~> 3.16.14.15)
       ref
@@ -531,7 +530,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   stripe
-  tabular
+  tabular (= 0.4.7)
   therubyracer
   timecop
   truncate_html
