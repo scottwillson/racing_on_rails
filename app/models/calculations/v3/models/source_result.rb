@@ -35,8 +35,12 @@ module Calculations
           "DNF".casecmp(place) == 0
         end
 
-        def last_event_date
-          event.parent.end_date
+        def parent_date
+          event&.parent&.date || date
+        end
+
+        def parent_end_date
+          event&.parent&.end_date || date
         end
 
         # Opposite convention of ::Result (for now)

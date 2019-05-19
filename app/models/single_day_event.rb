@@ -9,7 +9,7 @@ class SingleDayEvent < Event
   before_create :set_bar_points
 
   def series_event?
-    parent && parent.is_a?(WeeklySeries)
+    parent&.is_a?(WeeklySeries)
   end
 
   def set_bar_points
@@ -31,6 +31,10 @@ class SingleDayEvent < Event
 
   def parent_not_single_day_event
     errors.add(:parent, "SingleDayEvents cannot be children of other SingleDayEvents") if parent.is_a?(SingleDayEvent)
+  end
+
+  def set_end_date
+    self.end_date = date if self[:end_date].nil? || date != self[:end_date]
   end
 
   def to_s

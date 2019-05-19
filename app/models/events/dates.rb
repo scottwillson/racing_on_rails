@@ -28,6 +28,10 @@ module Events
       end
     end
 
+    def dates
+      start_date..end_date
+    end
+
     def default_date
       if parent.present?
         parent.date
@@ -39,6 +43,7 @@ module Events
     # Format for schedule page primarily
     def short_date
       return "" unless date
+
       prefix = " " if date.month < 10
       suffix = " " if date.day < 10
       "#{prefix}#{date.month}/#{date.day}#{suffix}"
@@ -100,8 +105,7 @@ module Events
     end
 
     def year
-      return nil unless date
-      date.year
+      date&.year
     end
 
     def multiple_days?
@@ -109,7 +113,7 @@ module Events
     end
 
     def set_end_date
-      self.end_date = date if self[:end_date].nil? || date != self[:end_date]
+      self.end_date = date if self[:end_date].nil?
     end
 
     # Does nothing. Allows us to treat Events and MultiDayEvents the same.

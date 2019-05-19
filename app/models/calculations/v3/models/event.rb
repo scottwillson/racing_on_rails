@@ -38,7 +38,7 @@ module Calculations
 
         def add_child(event)
           event.parent = self
-          children << event
+          children << event unless children.include?(event)
           event
         end
 

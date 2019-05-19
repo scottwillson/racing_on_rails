@@ -34,7 +34,11 @@ module Calculations
         def self.series_overall?(event)
           date = event.date
           end_date = event.end_date
-          child_dates = event.children.map(&:date).uniq
+          child_dates = if event.calculated? && event.parent
+                          event.parent.children.map(&:date).uniq
+                        else
+                          event.children.map(&:date).uniq
+                        end
 
           event.calculated? &&
             end_date != date &&
