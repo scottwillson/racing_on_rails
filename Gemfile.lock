@@ -30,12 +30,11 @@ GIT
 
 GIT
   remote: https://github.com/scottwillson/roo.git
-  revision: 79d50ac01497abe567acccf8c3aee54500c72c17
-  branch: v2.1.1-ruby-2-4
+  revision: 7affb556878466faf1a476f2ed5802f6af5b1066
   specs:
-    roo (2.1.1)
+    roo (2.8.2)
       nokogiri (~> 1)
-      rubyzip (~> 1.1, < 2.0.0)
+      rubyzip (>= 1.2.1, < 2.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -124,7 +123,7 @@ GEM
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
-    brakeman (4.5.0)
+    brakeman (4.5.1)
     builder (3.2.3)
     bullet (6.0.0)
       activesupport (>= 3.0.0)
@@ -147,13 +146,14 @@ GEM
       capistrano (~> 3.7)
       capistrano-bundler
       puma (~> 3.4)
-    capybara (3.19.1)
+    capybara (3.20.1)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
       rack (>= 1.6.0)
       rack-test (>= 0.6.3)
       regexp_parser (~> 1.2)
+      uglifier
       xpath (~> 3.2)
     carrierwave (1.3.1)
       activemodel (>= 4.0.0)
@@ -207,7 +207,7 @@ GEM
       railties (>= 4.2.0)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
-    ffi (1.10.0)
+    ffi (1.11.0)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
@@ -263,7 +263,7 @@ GEM
     msgpack (1.2.10)
     multi_json (1.13.1)
     multi_xml (0.6.0)
-    multipart-post (2.1.0)
+    multipart-post (2.1.1)
     mysql2 (0.5.2)
     net-http-persistent (3.0.1)
       connection_pool (~> 2.2)
@@ -338,7 +338,7 @@ GEM
       ffi (~> 1.0)
     redcarpet (3.4.0)
     ref (2.0.0)
-    regexp_parser (1.4.0)
+    regexp_parser (1.5.0)
     request_store (1.4.1)
       rack (>= 1.4)
     rest-client (2.0.2)
@@ -350,13 +350,13 @@ GEM
       nokogiri
       roo (>= 2.0.0, < 3)
       spreadsheet (> 0.9.0)
-    rubocop (0.68.1)
+    rubocop (0.69.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
-      parser (>= 2.5, != 2.5.1.1)
+      parser (>= 2.6)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 1.6)
+      unicode-display_width (>= 1.4.0, < 1.7)
     ruby-ole (1.2.12.2)
     ruby-progressbar (1.10.0)
     ruby-rc4 (0.1.5)
@@ -404,10 +404,10 @@ GEM
     sshkit (1.18.2)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stripe (4.16.0)
+    stripe (4.17.0)
       faraday (~> 0.13)
       net-http-persistent (~> 3.0)
-    tabular (0.4.4)
+    tabular (0.4.7)
     therubyracer (0.12.3)
       libv8 (~> 3.16.14.15)
       ref
@@ -424,14 +424,14 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.6)
-    unicode-display_width (1.5.0)
+    unicode-display_width (1.6.0)
     uniform_notifier (1.12.1)
     web-console (3.7.0)
       actionview (>= 5.0)
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
-    webdrivers (3.9.1)
+    webdrivers (3.9.3)
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
       selenium-webdriver (~> 3.0)
