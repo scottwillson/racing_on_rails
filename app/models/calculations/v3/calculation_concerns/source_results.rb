@@ -27,17 +27,17 @@ module Calculations::V3::CalculationConcerns::SourceResults
 
       model_event = Calculations::V3::Models::Event.new(
         calculated: calculated?(event),
-        date: event.date,
+        date: event.date.to_date,
         discipline: Calculations::V3::Models::Discipline.new(event.discipline),
         # TODO: end_date triggers SQL
-        end_date: event.end_date,
+        end_date: event.end_date.to_date,
         id: event.id,
         multiplier: multiplier(event.id),
         sanctioned_by: associations_by_name[event.sanctioned_by]
       )
 
       if event.parent_id
-        model_event.parent = model_events[event.parent_id]
+        model_events[event.parent_id].add_child model_event
       end
 
       cache[id] = model_event
@@ -125,17 +125,19 @@ module Calculations::V3::CalculationConcerns::SourceResults
                      .joins(race: :event)
                      .where.not(event: event)
                      .where(year: year)
+                     .where("events.type" => Event::TYPES + [nil]) # Skip old Competitions
 
     if source_event
-      source_results = source_results.where("events.parent_id" => source_event)
+      source_results = source_results
+                       .where("events.parent_id" => source_event)
+                       .where(competition_result: false)
+
     elsif specific_events?
       source_results = source_results.where(event: source_events)
     end
 
     if source_event_keys.any?
-      source_results = source_results.where(competition_result: true).where(event: source_events)
-    else
-      source_results = source_results.where.not(competition_result: true)
+      source_results = source_results.where(event_id: source_events.ids)
     end
 
     if discipline?
