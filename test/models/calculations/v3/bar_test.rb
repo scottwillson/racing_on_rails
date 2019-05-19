@@ -174,9 +174,9 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       race.results.create! place: 12, person: person
 
       # Previous BAR version
-      # event = Competitions::Bar.create!
-      # race = event.races.create! category: senior_women
-      # race.results.create! place: 2, person: person, competition_result: true
+      event = Competitions::Bar.create!
+      race = event.races.create! category: senior_women
+      race.results.create! place: 2, person: person, competition_result: true
 
       overall.calculate!
 
