@@ -35,9 +35,12 @@ module Calculations
 
         def self.last_event?(source_result)
           raise(ArgumentError, "source_result.date required to check for last event") unless source_result.date
-          raise(ArgumentError, "source_result.last_event_date required to check for last event") unless source_result.last_event_date
+          raise(ArgumentError, "source_result.parent_end_date required to check for last event") unless source_result.parent_end_date
 
-          source_result.date == source_result.last_event_date
+          # Only one event in series
+          return if source_result.date == source_result.parent_date
+
+          source_result.date == source_result.parent_end_date
         end
 
         def self.multiplier(source_result)

@@ -68,7 +68,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       bar_calculation.categories << category_3_men
 
       # Weekly series with no overall
-      series = FactoryBot.create(:weekly_series)
+      series = FactoryBot.create(:weekly_series, name: "No overall")
       event = series.children.create!(date: Time.zone.local(2019, 3, 19))
       source_race = event.races.create!(category: category_3_men)
       person = FactoryBot.create(:person)
@@ -79,7 +79,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       source_race.results.create!(place: 3, person: person)
 
       # system calculated
-      series = FactoryBot.create(:weekly_series)
+      series = FactoryBot.create(:weekly_series, name: "System calculated overall")
       event = series.children.create!(date: Time.zone.local(2019, 5, 13))
       source_race = event.races.create!(category: category_3_men)
       source_race.results.create!(place: 1, person: person)
@@ -88,14 +88,18 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       source_race = event.races.create!(category: category_3_men)
       source_race.results.create!(place: 2, person: person)
 
-      calculation = series.calculations.create!(
+      series_overall = series.calculations.create!(
         double_points_for_last_event: true,
         points_for_place: [100, 90, 75, 50, 40, 30, 20, 10]
       )
-      calculation.categories << category_3_men
+      series_overall.categories << category_3_men
+      series_overall.calculate!
+
+      assert_equal_dates Date.new(2019, 5, 13), series_overall.date
+      assert_equal_dates Date.new(2019, 5, 20), series_overall.end_date
 
       # manually calculated
-      series = FactoryBot.create(:weekly_series)
+      series = FactoryBot.create(:weekly_series, name: "Manually calculated overall")
       event = series.children.create!(date: Time.zone.local(2019, 4, 12))
       source_race = event.races.create!(category: category_3_men)
       source_race.results.create!(place: 4, person: person)
@@ -109,6 +113,9 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
 
       bar_calculation.calculate!
 
+      assert_equal_dates Date.new(2019, 4, 12), series.date
+      assert_equal_dates Date.new(2019, 4, 19), series.end_date
+
       bar = bar_calculation.reload.event
 
       assert_equal "Road BAR", bar.name
@@ -117,12 +124,11 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       assert_not_nil race
 
       results = race.results
-      pp results.first.sources.map(&:rejection_reason)
       assert_equal 1, results.size
-      assert_equal 7, results.first.sources.size
-      assert_equal 6, results.first.sources.select(&:rejected?).size
-      assert_equal 1, results.first.sources.reject(&:rejected?).size
-      assert_equal 14, results.first.points
+      assert_equal 8, results.first.sources.size
+      assert_equal 6, results.first.sources.select(&:rejected?).size, results.first.sources.select(&:rejected?).map(&:source_result).map(&:race_full_name)
+      assert_equal 2, results.first.sources.reject(&:rejected?).size, results.first.sources.map(&:rejection_reason)
+      assert_equal 29, results.first.points
     end
   end
 
@@ -162,13 +168,15 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       )
       overall.categories << senior_women
 
-      event = FactoryBot.create :event, date: Time.zone.local(2019, 4, 13)
+      event = FactoryBot.create(:event, date: Time.zone.local(2019, 4, 13))
       race = event.races.create!(category: senior_women)
       person = FactoryBot.create :person
-      race.results.create!(place: 12, person: person)
+      race.results.create! place: 12, person: person
 
-      # Another non-BAR competition
-      FactoryBot.create :result, person: person, competition_result: true
+      # Previous BAR version
+      # event = Competitions::Bar.create!
+      # race = event.races.create! category: senior_women
+      # race.results.create! place: 2, person: person, competition_result: true
 
       overall.calculate!
 

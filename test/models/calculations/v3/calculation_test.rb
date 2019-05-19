@@ -81,7 +81,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
       assert_equal_dates "2019-12-31", calculation.end_date
       calculation.calculate!
       assert_equal_dates "2019-01-01", calculation.event.date
-      assert_equal_dates "2019-01-01", calculation.event.end_date
+      assert_equal_dates "2019-12-31", calculation.event.end_date
     end
   end
 
@@ -128,7 +128,8 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     FactoryBot.create(:result)
 
     series = WeeklySeries.create!
-    source_child_event = series.children.create!
+    series.children.create! date: Time.zone.local(2011, 1, 5)
+    source_child_event = series.children.create! date: Time.zone.local(2011, 1, 12)
 
     category = Category.find_or_create_by(name: "Men A")
     source_race = source_child_event.races.create!(category: category)
@@ -140,7 +141,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     overall_race = overall.races.create!(category: category)
     overall_race.results.create!(place: 1, person: person, competition_result: true)
 
-    calculation = series.calculations.create!(source_event: series)
+    calculation = series.calculations.create!(source_event: series, year: 2011)
     assert_equal 1, calculation.source_results.size
   end
 end

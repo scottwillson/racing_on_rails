@@ -153,7 +153,7 @@ class MultiDayEvent < Event
   end
 
   def child_dates_query
-    if is_a?(Competitions::Competition)
+    if is_a?(Competitions::Competition) || calculation.present?
       Event.where(parent_id: id).where(cancelled: false).where(postponed: false)
     else
       SingleDayEvent
@@ -166,7 +166,7 @@ class MultiDayEvent < Event
   def set_end_date
     children_for_date = children
 
-    unless is_a?(Competitions::Competition)
+    unless is_a?(Competitions::Competition) || calculation.present?
       children_for_date = children_for_date.reject { |child| child.is_a?(Competitions::Competition) }
     end
 

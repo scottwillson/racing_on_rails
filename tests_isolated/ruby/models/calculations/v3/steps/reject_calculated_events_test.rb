@@ -32,7 +32,7 @@ module Calculations
           assert_equal :calculated, source_result.rejection_reason
         end
 
-        def test_stage_race
+        def test_weekly_series_calculated_overall
           category = Models::Category.new("Women")
           rules = Rules.new(
             category_rules: [Models::CategoryRule.new(category)],
@@ -43,52 +43,65 @@ module Calculations
           participant = Models::Participant.new(0)
           source_results = []
 
-          parent = Models::Event.new(id: 0, calculated: true, date: Date.new(2018, 6, 29), end_date: Date.new(2018, 7, 1))
+          parent = Models::Event.new(id: 0, calculated: false, date: Date.new(2017, 8, 7), end_date: Date.new(2017, 8, 21))
+          calculated_overall = Models::Event.new(id: 9, calculated: true, date: Date.new(2017, 8, 7), end_date: Date.new(2017, 8, 21))
+          parent.add_child calculated_overall
+          source_results << Models::SourceResult.new(
+            id: 4,
+            event_category: Models::EventCategory.new(category, calculated_overall),
+            participant: participant
+          )
+
+          event = Models::Event.new(id: 1, date: Date.new(2017, 8, 7))
+          parent.add_child event
+
+          event = Models::Event.new(id: 2, date: Date.new(2017, 8, 14))
+          parent.add_child event
+
+          event = Models::Event.new(id: 3, date: Date.new(2017, 8, 21))
+          parent.add_child event
+
+          result = Models::CalculatedResult.new(participant, source_results)
+          calculator.event_categories.first.results << result
+
+          event_categories = RejectCalculatedEvents.calculate!(calculator)
+
+          assert event_categories.first.source_results.none?(&:rejected?), event_categories.first.source_results.map(&:rejection_reason)
+        end
+
+        def test_weekly_series_manual_overall
+          category = Models::Category.new("Women")
+          rules = Rules.new(
+            category_rules: [Models::CategoryRule.new(category)],
+            weekday_events: false
+          )
+          calculator = Calculator.new(rules: rules, source_results: [])
+
+          participant = Models::Participant.new(0)
+          source_results = []
+
+          parent = Models::Event.new(id: 0, calculated: true, date: Date.new(2017, 8, 7), end_date: Date.new(2017, 8, 21))
           source_results << Models::SourceResult.new(
             id: 4,
             event_category: Models::EventCategory.new(category, parent),
             participant: participant
           )
 
-          event = Models::Event.new(id: 1, date: Date.new(2018, 6, 29))
+          event = Models::Event.new(id: 1, date: Date.new(2017, 8, 7))
           parent.add_child event
-          source_results << Models::SourceResult.new(
-            id: 0,
-            event_category: Models::EventCategory.new(category, event),
-            participant: participant
-          )
 
-          event = Models::Event.new(id: 2, date: Date.new(2018, 6, 29))
+          event = Models::Event.new(id: 2, date: Date.new(2017, 8, 14))
           parent.add_child event
-          source_results << Models::SourceResult.new(
-            id: 1,
-            event_category: Models::EventCategory.new(category, event),
-            participant: participant
-          )
 
-          event = Models::Event.new(id: 3, date: Date.new(2018, 6, 30))
+          event = Models::Event.new(id: 3, date: Date.new(2017, 8, 21))
           parent.add_child event
-          source_results << Models::SourceResult.new(
-            id: 2,
-            event_category: Models::EventCategory.new(category, event),
-            participant: participant
-          )
-
-          event = Models::Event.new(id: 4, date: Date.new(2018, 7, 1))
-          parent.add_child event
-          source_results << Models::SourceResult.new(
-            id: 3,
-            event_category: Models::EventCategory.new(category, event),
-            participant: participant
-          )
 
           result = Models::CalculatedResult.new(participant, source_results)
           calculator.event_categories.first.results << result
 
-          event_categories = RejectWeekdayEvents.calculate!(calculator)
+          event_categories = RejectCalculatedEvents.calculate!(calculator)
 
-          rejected_events = event_categories.first.source_results.select(&:rejected?).map(&:id).sort
-          assert_equal [], rejected_events
+          assert event_categories.first.source_results.none?(&:rejected?), event_categories.first.source_results.map(&:rejection_reason)
         end
       end
     end

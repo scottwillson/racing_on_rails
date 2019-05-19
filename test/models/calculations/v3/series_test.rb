@@ -21,13 +21,8 @@ class Calculations::V3::SeriesTest < ActiveSupport::TestCase
     source_race.results.create!(place: 2, person: FactoryBot.create(:person))
 
     series = WeeklySeries.create!(date: Time.zone.local(2019, 3, 9))
-    source_child_event = series.children.create!(date: Time.zone.local(2019, 3, 9))
-
-    calculation = series.calculations.create!(
-      double_points_for_last_event: true,
-      points_for_place: [100, 90, 75, 50, 40, 30, 20, 10]
-    )
-    calculation.categories << men_a
+    series.children.create!(date: Time.zone.local(2019, 3, 9))
+    source_child_event = series.children.create!(date: Time.zone.local(2019, 3, 18))
 
     source_race = source_child_event.races.create!(category: men_a)
     source_result_1 = source_race.results.create!(place: 1, person: person_1, team: team)
@@ -39,6 +34,14 @@ class Calculations::V3::SeriesTest < ActiveSupport::TestCase
     person_3 = FactoryBot.create(:person)
     source_race.results.create!(place: 1, person: person_3)
 
+    series.children.create!(date: Time.zone.local(2019, 3, 18))
+
+    calculation = series.calculations.create!(
+      double_points_for_last_event: true,
+      points_for_place: [100, 90, 75, 50, 40, 30, 20, 10]
+    )
+    calculation.categories << men_a
+
     # Non-series event
     event = FactoryBot.create(:event, date: Time.zone.local(2018, 5, 1))
     race = event.races.create!(category: women_b)
@@ -46,7 +49,13 @@ class Calculations::V3::SeriesTest < ActiveSupport::TestCase
 
     calculation.calculate!
 
+    series.reload
+    assert_equal_dates Date.new(2019, 3, 9), series.date
+    assert_equal_dates Date.new(2019, 3, 18), series.end_date
+
     overall = calculation.reload.event
+    assert_equal_dates Date.new(2019, 3, 9), overall.date
+    assert_equal_dates Date.new(2019, 3, 18), overall.end_date
     assert series.children.reload.include?(overall), "should add overall as child event"
     assert overall.series_overall?
 
