@@ -20,20 +20,32 @@ module Competitions
     TYPES = %w[
       Competitions::AgeGradedBar
       Competitions::Bar
+      Competitions::BlindDateAtTheDairyMonthlyStandings
+      Competitions::BlindDateAtTheDairyOverall
+      Competitions::BlindDateAtTheDairyTeamCompetition
       Competitions::Cat4WomensRaceSeries
+      Competitions::Competition
       Competitions::CrossCrusadeCallups
       Competitions::CrossCrusadeOverall
       Competitions::CrossCrusadeTeamCompetition
+      Competitions::DirtyCirclesOverall
+      Competitions::GrandPrixBradRoss::Overall
+      Competitions::GrandPrixBradRoss::TeamStandings
       Competitions::Ironman
-      Competitions::OregonTTCup
       Competitions::OregonCup
       Competitions::OregonJuniorCyclocrossSeries::Overall
       Competitions::OregonJuniorCyclocrossSeries::Team
+      Competitions::OregonJuniorMountainBikeSeries::Overall
+      Competitions::OregonTTCup
       Competitions::OregonWomensPrestigeSeries
       Competitions::OregonWomensPrestigeTeamSeries
       Competitions::OverallBar
+      Competitions::PortlandShortTrackSeries::MonthlyStandings
+      Competitions::PortlandShortTrackSeries::Overall
+      Competitions::PortlandShortTrackSeries::TeamStandings
       Competitions::TaborOverall
       Competitions::TeamBar
+      Competitions::WillametteValleyClassicsTour::Overall
     ].freeze
 
     UNLIMITED = Float::INFINITY
