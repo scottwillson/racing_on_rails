@@ -64,6 +64,7 @@ class Calculations::V3::Calculation < ApplicationRecord
       transaction do
         calculate_source_calculations
         add_event!
+        update_event_dates
         results = results_to_models(source_results)
         calculator = Calculations::V3::Calculator.new(logger: logger, rules: rules, source_results: results, year: year)
         event_categories = calculator.calculate!
@@ -89,6 +90,14 @@ class Calculations::V3::Calculation < ApplicationRecord
   def set_name
     if name == "New Calculation" && source_event
       self.name = "#{source_event.name}: Overall"
+    end
+  end
+
+  def update_event_dates
+    if source_event && source_event.dates != event.dates
+      event.date = source_event.date
+      event.end_date = source_event.end_date
+      event.save!
     end
   end
 end
