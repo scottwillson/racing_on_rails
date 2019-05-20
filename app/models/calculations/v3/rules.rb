@@ -4,6 +4,7 @@ module Calculations
   module V3
     class Rules
       attr_reader :association
+      attr_reader :association_sanctioned_only
       attr_reader :category_rules
       attr_reader :disciplines
       attr_reader :maximum_events
@@ -20,6 +21,7 @@ module Calculations
 
       def initialize(
         association: nil,
+        association_sanctioned_only: false,
         category_rules: [],
         disciplines: [],
         double_points_for_last_event: false,
@@ -34,6 +36,7 @@ module Calculations
       )
 
         @association = association
+        @association_sanctioned_only = association_sanctioned_only
         @category_rules = category_rules
         @disciplines = disciplines
         @double_points_for_last_event = double_points_for_last_event
@@ -47,6 +50,10 @@ module Calculations
         @weekday_events = weekday_events
 
         validate!
+      end
+
+      def association_sanctioned_only?
+        @association_sanctioned_only
       end
 
       def categories
@@ -90,6 +97,7 @@ module Calculations
       def to_h
         {
           association: association&.id,
+          association_sanctioned_only: association_sanctioned_only,
           categories: categories.map(&:name),
           disciplines: disciplines.map(&:name),
           double_points_for_last_event: double_points_for_last_event?,

@@ -10,7 +10,7 @@ module Calculations
               raise ArgumentError, "Rules#association sanctioned_by must be present"
             end
 
-            if calculator.rules.association != source_result.event.sanctioned_by
+            if calculator.rules.association_sanctioned_only? && calculator.rules.association != source_result.event.sanctioned_by
               source_result.reject :sanctioned_by
             end
           end
