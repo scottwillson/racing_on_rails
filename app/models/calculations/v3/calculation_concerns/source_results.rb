@@ -23,7 +23,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
   # Find or create Models::Event from source result Event cache
   def model_events
     @model_events ||= Hash.new do |cache, id|
-      event = source_result_events[id]
+      event = source_result_event(id)
 
       model_event = Calculations::V3::Models::Event.new(
         calculated: calculated?(event),
@@ -61,7 +61,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
   def model_source_events
     calculations_events
       .reject { |e| e == event }
-      .map { |event| model_events[event.id] }
+      .map { |event| model_events[event.event_id] }
   end
 
   def multiplier(event_id)
@@ -109,6 +109,13 @@ module Calculations::V3::CalculationConcerns::SourceResults
     else
       Event.year(year)
     end
+  end
+
+  def source_result_event(id)
+    event = source_result_events[id]
+    return event if event
+
+    raise "Could not find source result event id: #{id}"
   end
 
   # Event records cache. Complicated to recurse up parent tree. Instead, fetch
