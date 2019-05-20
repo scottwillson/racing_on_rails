@@ -228,7 +228,7 @@ destroy_calculations
 fix_source_results
 create_calculations(COMPETITIONS)
 calculations.map(&:source_event).compact.each(&:update_date)
-calculations.each(&:calculate!)
+calculations.reject { |c| c.key != "overall_bar" && c.key["bar"] }.each(&:calculate!)
 compare_results(COMPETITIONS)
 
 # rubocop:enable Rails/SkipsModelValidations

@@ -199,281 +199,281 @@ COMPETITIONS = {
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
-  }#,
-  # cyclocross_bar: {
-  #   categories: [
-  #     { name: "Athena" },
-  #     { name: "Category 1/2 Men" },
-  #     { name: "Category 1/2 Women" },
-  #     { name: "Category 2/3 Men" },
-  #     { name: "Category 3 Women" },
-  #     { name: "Category 4 Men" },
-  #     { name: "Category 4 Women" },
-  #     { name: "Category 5 Men" },
-  #     { name: "Category 5 Women" },
-  #     { name: "Clydesdale" },
-  #     { name: "Junior Men" },
-  #     { name: "Junior Women" },
-  #     { name: "Masters Men" },
-  #     { name: "Masters Women" },
-  #     { name: "Singlespeed/Fixed" },
-  #     { name: "Tandem" }
-  #   ],
-  #   competition_id: 25_822,
-  #   events: [
-  #     { id: 25_903, multiplier: 2 },
-  #     { id: 26_571, multiplier: 0 },
-  #     { id: 26_593, multiplier: 0 },
-  #     { id: 26_418, multiplier: 1 },
-  #     { id: 26_419, multiplier: 1 },
-  #     { id: 26_418, multiplier: 1 },
-  #     { id: 26_419, multiplier: 1 }
-  #   ],
-  #   expect: [26_357],
-  #   do_no_expect: [26_355, 26_356, 26_412, 26_571, 26_593, 26_571, 26_593],
-  #   rules: {
-  #     association_sanctioned_only: true,
-  #     disciplines: ["Cyclocross"],
-  #     members_only: true,
-  #     name: "Cyclocross BAR",
-  #     points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-  #     weekday_events: false
-  #   }
-  # },
-  # mountain_bike_bar: {
-  #   categories: [
-  #     { name: "Athena" },
-  #     { name: "Category 1 Men" },
-  #     { name: "Category 1 Women" },
-  #     { name: "Category 2 Men" },
-  #     { name: "Category 2 Women" },
-  #     { name: "Category 3 Men" },
-  #     { name: "Category 3 Women" },
-  #     { name: "Category 4 Men" },
-  #     { name: "Category 4 Women" },
-  #     { name: "Category 5 Men" },
-  #     { name: "Category 5 Women" },
-  #     { name: "Clydesdale" },
-  #     { name: "Elite Men" },
-  #     { name: "Elite Women" },
-  #     { name: "Junior Men" },
-  #     { name: "Junior Women" },
-  #     { name: "Masters Men" },
-  #     { name: "Masters Women" },
-  #     { name: "Singlespeed/Fixed" },
-  #     { name: "Tandem" }
-  #   ],
-  #   competition_id: 25_822,
-  #   events: [
-  #     { id: 25_946, multiplier: 2 },
-  #     { id: 26_405, multiplier: 2 },
-  #     { id: 26_442, multiplier: 2 }
-  #   ],
-  #   do_no_expect: [25_898, 25_900, 25_902, 25_903, 25_904, 25_953, 26_042, 26_045, 26_046, 26_047, 26_048, 26_065, 26_066, 26_068, 26_085, 26_089, 26_093, 26_094, 26_095, 26_096, 26_097, 26_098, 26_099, 26_102, 26_116, 26_276, 26_277, 26_279, 26_280, 26_281, 26_355, 26_356, 26_357, 26_375, 26_399, 26_418, 26_419, 26_571, 26_593],
-  #   expect: [25_875, 25_876, 25_884, 25_885, 25_934, 25_944, 25_946, 26_064, 26_140, 26_141, 26_142, 26_143, 26_147, 26_212, 26_250, 26_251, 26_252, 26_401],
-  #   rules: {
-  #     association_sanctioned_only: true,
-  #     disciplines: ["Mountain Bike", "Downhill", "Super D"],
-  #     members_only: true,
-  #     name: "Mountain Bike BAR",
-  #     points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-  #     weekday_events: false
-  #   }
-  # },
-  # gravel_bar: {
-  #   categories: [
-  #     { name: "Junior Men" },
-  #     { name: "Junior Women" },
-  #     { name: "Masters Men" },
-  #     { name: "Masters Women" },
-  #     { name: "Open Men" },
-  #     { name: "Open Women" }
-  #   ],
-  #   competition_id: 25_829,
-  #   expect: [25_922, 25_935, 25_950, 26_137, 26_139],
-  #   rules: {
-  #     association_sanctioned_only: true,
-  #     disciplines: ["Gravel", "Gran Fondo"],
-  #     members_only: true,
-  #     name: "Gravel BAR",
-  #     points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-  #     weekday_events: false
-  #   }
-  # },
-  # road_bar: {
-  #   categories: [
-  #     { name: "Athena" },
-  #     { name: "Category 3 Men" },
-  #     { name: "Category 3 Women" },
-  #     { name: "Category 4 Men" },
-  #     { name: "Category 4 Women" },
-  #     { name: "Category 5 Men" },
-  #     { name: "Category 5 Women" },
-  #     { name: "Clydesdale" },
-  #     { name: "Junior Men" },
-  #     { name: "Junior Women" },
-  #     { name: "Masters Men" },
-  #     { name: "Masters Men 4/5" },
-  #     { name: "Masters Women" },
-  #     { name: "Masters Women 4" },
-  #     { name: "Senior Men" },
-  #     { name: "Senior Women" },
-  #     { name: "Singlespeed/Fixed" },
-  #     { name: "Tandem" }
-  #   ],
-  #   competition_id: 25_825,
-  #   do_no_expect: [25_922, 26_443],
-  #   events: [
-  #     { id: 25_939, multiplier: 2 },
-  #     { id: 25_951, multiplier: 2 },
-  #     { id: 26_443, multiplier: 2 },
-  #     { id: 26_069, multiplier: 1 },
-  #     { id: 26_075, multiplier: 1 },
-  #     { id: 26_299, multiplier: 1 }
-  #   ],
-  #   rules: {
-  #     association_sanctioned_only: true,
-  #     disciplines: ["Circuit Race", "Road"],
-  #     members_only: true,
-  #     name: "Road BAR",
-  #     points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-  #     weekday_events: false
-  #   }
-  # },
-  # short_track_bar: {
-  #   categories: [
-  #     { name: "Athena" },
-  #     { name: "Category 1 Men" },
-  #     { name: "Category 1 Women" },
-  #     { name: "Category 2 Men" },
-  #     { name: "Category 2 Women" },
-  #     { name: "Category 3 Men" },
-  #     { name: "Category 3 Women" },
-  #     { name: "Category 4 Men" },
-  #     { name: "Category 4 Women" },
-  #     { name: "Category 5 Men" },
-  #     { name: "Category 5 Women" },
-  #     { name: "Clydesdale" },
-  #     { name: "Elite Men" },
-  #     { name: "Elite Women" },
-  #     { name: "Junior Men" },
-  #     { name: "Junior Women" },
-  #     { name: "Masters Men" },
-  #     { name: "Masters Women" },
-  #     { name: "Singlespeed/Fixed" },
-  #     { name: "Tandem" }
-  #   ],
-  #   competition_id: 25_828,
-  #   rules: {
-  #     association_sanctioned_only: true,
-  #     disciplines: ["Short Track"],
-  #     members_only: true,
-  #     name: "Short Track BAR",
-  #     points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-  #     weekday_events: false
-  #   }
-  # },
-  # time_trial_bar: {
-  #   categories: [
-  #     { name: "Athena" },
-  #     { name: "Category 3 Men" },
-  #     { name: "Category 3 Women" },
-  #     { name: "Category 4 Men" },
-  #     { name: "Category 4 Women" },
-  #     { name: "Category 5 Men" },
-  #     { name: "Clydesdale" },
-  #     { name: "Junior Men" },
-  #     { name: "Junior Women" },
-  #     { name: "Masters Men" },
-  #     { name: "Masters Men 4/5" },
-  #     { name: "Masters Women" },
-  #     { name: "Masters Women 4" },
-  #     { name: "Senior Men" },
-  #     { name: "Senior Women" },
-  #     { name: "Singlespeed/Fixed" },
-  #     { name: "Tandem" }
-  #   ],
-  #   competition_id: 25_826,
-  #   events: [
-  #     { id: 25_931, multiplier: 2 },
-  #     { id: 25_936, multiplier: 2 },
-  #     { id: 25_945, multiplier: 2 }
-  #   ],
-  #   rules: {
-  #     association_sanctioned_only: true,
-  #     disciplines: ["Time Trial"],
-  #     members_only: true,
-  #     name: "Time Trial BAR",
-  #     points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-  #     weekday_events: false
-  #   }
-  # },
-  # track_bar: {
-  #   categories: [
-  #     { name: "Athena" },
-  #     { name: "Category 3 Men" },
-  #     { name: "Category 3 Women" },
-  #     { name: "Category 4 Men" },
-  #     { name: "Category 4 Women" },
-  #     { name: "Category 5 Men" },
-  #     { name: "Clydesdale" },
-  #     { name: "Junior Men" },
-  #     { name: "Junior Women" },
-  #     { name: "Masters Men" },
-  #     { name: "Masters Men 4/5" },
-  #     { name: "Masters Women" },
-  #     { name: "Masters Women 4" },
-  #     { name: "Senior Men" },
-  #     { name: "Senior Women" },
-  #     { name: "Singlespeed/Fixed" },
-  #     { name: "Tandem" }
-  #   ],
-  #   competition_id: 25_827,
-  #   events: [
-  #     { id: 26_149, multiplier: 2 },
-  #     { id: 26_150, multiplier: 2 },
-  #     { id: 26_151, multiplier: 2 },
-  #     { id: 26_152, multiplier: 2 },
-  #     { id: 26_154, multiplier: 2 },
-  #     { id: 26_314, multiplier: 2 }
-  #   ],
-  #   rules: {
-  #     association_sanctioned_only: true,
-  #     disciplines: ["Track"],
-  #     members_only: true,
-  #     name: "Track BAR",
-  #     points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-  #     weekday_events: false
-  #   }
-  # },
-  # overall_bar: {
-  #   categories: [
-  #     { name: "Athena" },
-  #     { name: "Category 3 Men" },
-  #     { name: "Category 3 Women" },
-  #     { name: "Category 4 Men" },
-  #     { name: "Category 4 Women" },
-  #     { name: "Category 5 Men" },
-  #     { name: "Category 5 Women" },
-  #     { name: "Clydesdale" },
-  #     { name: "Junior Men" },
-  #     { name: "Junior Women" },
-  #     { name: "Masters Men" },
-  #     { name: "Masters Women" },
-  #     { name: "Senior Men" },
-  #     { name: "Senior Women" },
-  #     { name: "Singlespeed/Fixed" },
-  #     { name: "Tandem" }
-  #   ],
-  #   competition_id: 25_821,
-  #   rules: {
-  #     association_sanctioned_only: true,
-  #     maximum_events: -4,
-  #     members_only: true,
-  #     name: "Overall BAR",
-  #     points_for_place: (1..300).to_a.reverse,
-  #     source_event_keys: %w[criterium_bar cyclocross_bar gravel_bar mountain_bike_bar road_bar short_track_bar time_trial_bar track_bar],
-  #     weekday_events: true
-  #   }
-  # }
+  },
+  cyclocross_bar: {
+    categories: [
+      { name: "Athena" },
+      { name: "Category 1/2 Men" },
+      { name: "Category 1/2 Women" },
+      { name: "Category 2/3 Men" },
+      { name: "Category 3 Women" },
+      { name: "Category 4 Men" },
+      { name: "Category 4 Women" },
+      { name: "Category 5 Men" },
+      { name: "Category 5 Women" },
+      { name: "Clydesdale" },
+      { name: "Junior Men" },
+      { name: "Junior Women" },
+      { name: "Masters Men" },
+      { name: "Masters Women" },
+      { name: "Singlespeed/Fixed" },
+      { name: "Tandem" }
+    ],
+    competition_id: 25_822,
+    events: [
+      { id: 25_903, multiplier: 2 },
+      { id: 26_571, multiplier: 0 },
+      { id: 26_593, multiplier: 0 },
+      { id: 26_418, multiplier: 1 },
+      { id: 26_419, multiplier: 1 },
+      { id: 26_418, multiplier: 1 },
+      { id: 26_419, multiplier: 1 }
+    ],
+    expect: [26_357],
+    do_no_expect: [26_355, 26_356, 26_412, 26_571, 26_593, 26_571, 26_593],
+    rules: {
+      association_sanctioned_only: true,
+      disciplines: ["Cyclocross"],
+      members_only: true,
+      name: "Cyclocross BAR",
+      points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      weekday_events: false
+    }
+  },
+  mountain_bike_bar: {
+    categories: [
+      { name: "Athena" },
+      { name: "Category 1 Men" },
+      { name: "Category 1 Women" },
+      { name: "Category 2 Men" },
+      { name: "Category 2 Women" },
+      { name: "Category 3 Men" },
+      { name: "Category 3 Women" },
+      { name: "Category 4 Men" },
+      { name: "Category 4 Women" },
+      { name: "Category 5 Men" },
+      { name: "Category 5 Women" },
+      { name: "Clydesdale" },
+      { name: "Elite Men" },
+      { name: "Elite Women" },
+      { name: "Junior Men" },
+      { name: "Junior Women" },
+      { name: "Masters Men" },
+      { name: "Masters Women" },
+      { name: "Singlespeed/Fixed" },
+      { name: "Tandem" }
+    ],
+    competition_id: 25_822,
+    events: [
+      { id: 25_946, multiplier: 2 },
+      { id: 26_405, multiplier: 2 },
+      { id: 26_442, multiplier: 2 }
+    ],
+    do_no_expect: [25_898, 25_900, 25_902, 25_903, 25_904, 25_953, 26_042, 26_045, 26_046, 26_047, 26_048, 26_065, 26_066, 26_068, 26_085, 26_089, 26_093, 26_094, 26_095, 26_096, 26_097, 26_098, 26_099, 26_102, 26_116, 26_276, 26_277, 26_279, 26_280, 26_281, 26_355, 26_356, 26_357, 26_375, 26_399, 26_418, 26_419, 26_571, 26_593],
+    expect: [25_875, 25_876, 25_884, 25_885, 25_934, 25_944, 25_946, 26_064, 26_140, 26_141, 26_142, 26_143, 26_147, 26_212, 26_250, 26_251, 26_252, 26_401],
+    rules: {
+      association_sanctioned_only: true,
+      disciplines: ["Mountain Bike", "Downhill", "Super D"],
+      members_only: true,
+      name: "Mountain Bike BAR",
+      points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      weekday_events: false
+    }
+  },
+  gravel_bar: {
+    categories: [
+      { name: "Junior Men" },
+      { name: "Junior Women" },
+      { name: "Masters Men" },
+      { name: "Masters Women" },
+      { name: "Open Men" },
+      { name: "Open Women" }
+    ],
+    competition_id: 25_829,
+    expect: [25_922, 25_935, 25_950, 26_137, 26_139],
+    rules: {
+      association_sanctioned_only: true,
+      disciplines: ["Gravel", "Gran Fondo"],
+      members_only: true,
+      name: "Gravel BAR",
+      points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      weekday_events: false
+    }
+  },
+  road_bar: {
+    categories: [
+      { name: "Athena" },
+      { name: "Category 3 Men" },
+      { name: "Category 3 Women" },
+      { name: "Category 4 Men" },
+      { name: "Category 4 Women" },
+      { name: "Category 5 Men" },
+      { name: "Category 5 Women" },
+      { name: "Clydesdale" },
+      { name: "Junior Men" },
+      { name: "Junior Women" },
+      { name: "Masters Men" },
+      { name: "Masters Men 4/5" },
+      { name: "Masters Women" },
+      { name: "Masters Women 4" },
+      { name: "Senior Men" },
+      { name: "Senior Women" },
+      { name: "Singlespeed/Fixed" },
+      { name: "Tandem" }
+    ],
+    competition_id: 25_825,
+    do_no_expect: [25_922, 26_443],
+    events: [
+      { id: 25_939, multiplier: 2 },
+      { id: 25_951, multiplier: 2 },
+      { id: 26_443, multiplier: 2 },
+      { id: 26_069, multiplier: 1 },
+      { id: 26_075, multiplier: 1 },
+      { id: 26_299, multiplier: 1 }
+    ],
+    rules: {
+      association_sanctioned_only: true,
+      disciplines: ["Circuit Race", "Road"],
+      members_only: true,
+      name: "Road BAR",
+      points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      weekday_events: false
+    }
+  },
+  short_track_bar: {
+    categories: [
+      { name: "Athena" },
+      { name: "Category 1 Men" },
+      { name: "Category 1 Women" },
+      { name: "Category 2 Men" },
+      { name: "Category 2 Women" },
+      { name: "Category 3 Men" },
+      { name: "Category 3 Women" },
+      { name: "Category 4 Men" },
+      { name: "Category 4 Women" },
+      { name: "Category 5 Men" },
+      { name: "Category 5 Women" },
+      { name: "Clydesdale" },
+      { name: "Elite Men" },
+      { name: "Elite Women" },
+      { name: "Junior Men" },
+      { name: "Junior Women" },
+      { name: "Masters Men" },
+      { name: "Masters Women" },
+      { name: "Singlespeed/Fixed" },
+      { name: "Tandem" }
+    ],
+    competition_id: 25_828,
+    rules: {
+      association_sanctioned_only: true,
+      disciplines: ["Short Track"],
+      members_only: true,
+      name: "Short Track BAR",
+      points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      weekday_events: false
+    }
+  },
+  time_trial_bar: {
+    categories: [
+      { name: "Athena" },
+      { name: "Category 3 Men" },
+      { name: "Category 3 Women" },
+      { name: "Category 4 Men" },
+      { name: "Category 4 Women" },
+      { name: "Category 5 Men" },
+      { name: "Clydesdale" },
+      { name: "Junior Men" },
+      { name: "Junior Women" },
+      { name: "Masters Men" },
+      { name: "Masters Men 4/5" },
+      { name: "Masters Women" },
+      { name: "Masters Women 4" },
+      { name: "Senior Men" },
+      { name: "Senior Women" },
+      { name: "Singlespeed/Fixed" },
+      { name: "Tandem" }
+    ],
+    competition_id: 25_826,
+    events: [
+      { id: 25_931, multiplier: 2 },
+      { id: 25_936, multiplier: 2 },
+      { id: 25_945, multiplier: 2 }
+    ],
+    rules: {
+      association_sanctioned_only: true,
+      disciplines: ["Time Trial"],
+      members_only: true,
+      name: "Time Trial BAR",
+      points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      weekday_events: false
+    }
+  },
+  track_bar: {
+    categories: [
+      { name: "Athena" },
+      { name: "Category 3 Men" },
+      { name: "Category 3 Women" },
+      { name: "Category 4 Men" },
+      { name: "Category 4 Women" },
+      { name: "Category 5 Men" },
+      { name: "Clydesdale" },
+      { name: "Junior Men" },
+      { name: "Junior Women" },
+      { name: "Masters Men" },
+      { name: "Masters Men 4/5" },
+      { name: "Masters Women" },
+      { name: "Masters Women 4" },
+      { name: "Senior Men" },
+      { name: "Senior Women" },
+      { name: "Singlespeed/Fixed" },
+      { name: "Tandem" }
+    ],
+    competition_id: 25_827,
+    events: [
+      { id: 26_149, multiplier: 2 },
+      { id: 26_150, multiplier: 2 },
+      { id: 26_151, multiplier: 2 },
+      { id: 26_152, multiplier: 2 },
+      { id: 26_154, multiplier: 2 },
+      { id: 26_314, multiplier: 2 }
+    ],
+    rules: {
+      association_sanctioned_only: true,
+      disciplines: ["Track"],
+      members_only: true,
+      name: "Track BAR",
+      points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      weekday_events: false
+    }
+  },
+  overall_bar: {
+    categories: [
+      { name: "Athena" },
+      { name: "Category 3 Men" },
+      { name: "Category 3 Women" },
+      { name: "Category 4 Men" },
+      { name: "Category 4 Women" },
+      { name: "Category 5 Men" },
+      { name: "Category 5 Women" },
+      { name: "Clydesdale" },
+      { name: "Junior Men" },
+      { name: "Junior Women" },
+      { name: "Masters Men" },
+      { name: "Masters Women" },
+      { name: "Senior Men" },
+      { name: "Senior Women" },
+      { name: "Singlespeed/Fixed" },
+      { name: "Tandem" }
+    ],
+    competition_id: 25_821,
+    rules: {
+      association_sanctioned_only: true,
+      maximum_events: -4,
+      members_only: true,
+      name: "Overall BAR",
+      points_for_place: (1..300).to_a.reverse,
+      source_event_keys: %w[criterium_bar cyclocross_bar gravel_bar mountain_bike_bar road_bar short_track_bar time_trial_bar track_bar],
+      weekday_events: true
+    }
+  }
 }.freeze
