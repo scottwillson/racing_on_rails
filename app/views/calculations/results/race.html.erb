@@ -53,7 +53,8 @@
               <td class="rejection_reason"><%= t source.rejection_reason,
                 category: source.source_result.category_name,
                 discipline: source.source_result.discipline_name,
-                minimum_events: @race.event.calculation.rules.minimum_events %></td>
+                minimum_events: @race.event.calculation.rules.minimum_events,
+                racing_association: RacingAssociation.current.short_name %></td>
               <td class="points"><%= source.points %></td>
             </tr>
           <%- end -%>
