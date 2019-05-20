@@ -59,8 +59,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
   end
 
   def model_source_events
-    source_events
-      .reject(&:competition?)
+    calculations_events
       .reject { |e| e == event }
       .map { |event| model_events[event.id] }
   end
