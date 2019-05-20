@@ -9,6 +9,7 @@ module Calculations
 
           calculator.unrejected_source_results.each do |source_result|
             next if !weekday?(source_result.event) ||
+                    (calculator.rules.source_events.include?(source_result.event) && source_result.event.multiplier > 0) ||
                     omnium_or_stage_race?(source_result.event.parent) ||
                     omnium_or_stage_race?(source_result.event) ||
                     series_overall?(source_result.event)

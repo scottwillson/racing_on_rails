@@ -144,13 +144,13 @@ def compare_source_events(expected_event, actual_event, competition)
   missing = expected - actual
   if missing.any?
     puts "missing:"
-    missing.each { |event| puts("#{event.id} #{event.date} #{event.name}") }
+    missing.each { |event| puts("#{event.id} #{event.date} #{event.full_name}") }
   end
 
   extra = actual - expected
   if extra.any?
     puts "extra:"
-    extra.each { |event| puts("#{event.id} #{event.date} #{event.name}") }
+    extra.each { |event| puts("#{event.id} #{event.date} #{event.full_name}") }
   end
 end
 
