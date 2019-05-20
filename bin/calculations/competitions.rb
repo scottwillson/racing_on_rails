@@ -223,14 +223,10 @@ COMPETITIONS = {
     events: [
       { id: 25_903, multiplier: 2 },
       { id: 26_571, multiplier: 0 },
-      { id: 26_593, multiplier: 0 },
-      { id: 26_418, multiplier: 1 },
-      { id: 26_419, multiplier: 1 },
-      { id: 26_418, multiplier: 1 },
-      { id: 26_419, multiplier: 1 }
+      { id: 26_593, multiplier: 0 }
     ],
     expect: [26_357],
-    do_no_expect: [26_355, 26_356, 26_412, 26_571, 26_593, 26_571, 26_593],
+    do_no_expect: [26_355, 26_356, 26_412, 26_571, 26_593, 26_571, 26_593, 26_418, 26_419],
     rules: {
       association_sanctioned_only: true,
       disciplines: ["Cyclocross"],
