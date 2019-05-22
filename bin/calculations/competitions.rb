@@ -280,26 +280,6 @@ COMPETITIONS = {
       weekday_events: false
     }
   },
-  gravel_bar: {
-    categories: [
-      { name: "Junior Men" },
-      { name: "Junior Women" },
-      { name: "Masters Men" },
-      { name: "Masters Women" },
-      { name: "Open Men" },
-      { name: "Open Women" }
-    ],
-    competition_id: 25_829,
-    expect: [25_922, 25_935, 25_950, 26_137, 26_139],
-    rules: {
-      association_sanctioned_only: true,
-      disciplines: ["Gravel", "Gran Fondo"],
-      members_only: true,
-      name: "Gravel BAR",
-      points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-      weekday_events: false
-    }
-  },
   road_bar: {
     categories: [
       { name: "Athena" },
@@ -322,18 +302,27 @@ COMPETITIONS = {
       { name: "Tandem" }
     ],
     competition_id: 25_825,
-    do_no_expect: [25_922, 26_443],
+    do_no_expect: [25_922, 26_443, 26_299],
+    expect: [25_922],
     events: [
       { id: 25_939, multiplier: 2 },
       { id: 25_951, multiplier: 2 },
-      { id: 26_443, multiplier: 2 },
       { id: 26_069, multiplier: 1 },
       { id: 26_075, multiplier: 1 },
-      { id: 26_299, multiplier: 1 }
+      { id: 26_272, multiplier: 1 },
+      { id: 26_290, multiplier: 1 },
+      { id: 26_294, multiplier: 1 },
+      { id: 26_295, multiplier: 1 },
+      { id: 26_299, multiplier: 1 },
+      { id: 26_299, multiplier: 1 },
+      { id: 26_337, multiplier: 1 },
+      { id: 26_348, multiplier: 1 },
+      { id: 26_388, multiplier: 1 },
+      { id: 26_443, multiplier: 2 }
     ],
     rules: {
       association_sanctioned_only: true,
-      disciplines: ["Circuit Race", "Road"],
+      disciplines: %w[Circuit Gravel Road],
       members_only: true,
       name: "Road BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
