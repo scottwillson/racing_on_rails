@@ -63,6 +63,7 @@ module Calculations
           .calculate_step(Steps::RejectBelowMinimumEvents)
           .calculate_step(Steps::AssignPoints)
           .calculate_step(Steps::RejectMoreThanMaximumEvents)
+          .calculate_step(Steps::RejectEmptySourceResults)
           .calculate_step(Steps::SumPoints)
           .calculate_step(Steps::Place)
           .event_categories

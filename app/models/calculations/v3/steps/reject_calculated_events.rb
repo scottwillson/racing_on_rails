@@ -15,7 +15,20 @@ module Calculations
             source_result.reject :calculated
           end
 
+          reject_calculated_results_in_different_discipline calculator
+
           calculator.event_categories
+        end
+
+        def self.reject_calculated_results_in_different_discipline(calculator)
+          return if calculator.rules.disciplines.empty?
+
+          calculator.results.each do |result|
+            result.source_results.reject! do |source_result|
+              source_result.rejection_reason == :calculated &&
+                !source_result.discipline.in?(calculator.rules.disciplines)
+            end
+          end
         end
 
         def self.series_overall?(event)

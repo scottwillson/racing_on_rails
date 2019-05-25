@@ -103,6 +103,33 @@ module Calculations
 
           assert event_categories.first.source_results.none?(&:rejected?), event_categories.first.source_results.map(&:rejection_reason)
         end
+
+        # Prevent discipline BAR results from showing up in other BARs
+        def test_remove_results_from_other_calculations
+          category = Models::Category.new("Women")
+          rules = Rules.new(
+            category_rules: [Models::CategoryRule.new(category)],
+            disciplines: [Models::Discipline.new("Road")]
+          )
+          calculator = Calculator.new(rules: rules, source_results: [])
+
+          participant = Models::Participant.new(0)
+          event = Models::Event.new(id: 0, calculated: true, discipline: Models::Discipline.new("Track"))
+
+          source_result = Models::SourceResult.new(
+            id: 0,
+            event_category: Models::EventCategory.new(category, event),
+            participant: participant,
+            place: 1,
+            points: 100
+          )
+          result = Models::CalculatedResult.new(participant, [source_result])
+          calculator.event_categories.first.results << result
+
+          event_categories = RejectCalculatedEvents.calculate!(calculator)
+
+          assert event_categories.first.results.first.source_results.empty?
+        end
       end
     end
   end
