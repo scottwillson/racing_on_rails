@@ -30,6 +30,7 @@ require_relative "../../../../app/models/calculations/v3/steps/reject_below_mini
 require_relative "../../../../app/models/calculations/v3/steps/reject_calculated_events"
 require_relative "../../../../app/models/calculations/v3/steps/reject_categories"
 require_relative "../../../../app/models/calculations/v3/steps/reject_dnfs"
+require_relative "../../../../app/models/calculations/v3/steps/reject_empty_source_results"
 require_relative "../../../../app/models/calculations/v3/steps/reject_more_than_maximum_events"
 require_relative "../../../../app/models/calculations/v3/steps/reject_no_participant"
 require_relative "../../../../app/models/calculations/v3/steps/reject_weekday_events"
