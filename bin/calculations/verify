@@ -55,6 +55,12 @@ def fix_source_results
   Result.where(event_id: 26_345).update_all(event_id: 25_760)
   Race.where(event_id: 26_318).update_all(event_id: 25_985)
   Result.where(event_id: 26_318).update_all(event_id: 25_985)
+  # Race.where(event_id: 26_332).update_all(event_id: 25_985)
+  # Result.where(event_id: 26_332).update_all(event_id: 26_122)
+  # Event.where(id: 26_340).update_all(parent_id: 26_122)
+  # Event.where(id: 26_343).update_all(parent_id: 25_760)
+  Event.where(id: 26_443).update_all(discipline: "Mountain Bike")
+  Event.where(id: 26_331).update_all(type: "SingleDayEvent")
   Event.where(id: [26_340, 26_343, 26_348]).update_all(type: "SingleDayEvent")
 end
 
@@ -106,7 +112,7 @@ def compare_results(competitions)
     actual_event = Calculations::V3::Calculation.where(key: key).first&.event
 
     if actual_event
-      compare_source_events(expected_event, actual_event, competition)
+      compare_source_events(expected_event, actual_event, competition) unless key == :overall_bar
       # compare_event_results expected_event, actual_event
     else
       puts "Could not find #{key}"
@@ -229,10 +235,10 @@ end
 # recreate_databases
 destroy_calculations
 fix_source_results
-create_calculations competitions
+create_calculations COMPETITIONS
 calculations.map(&:source_event).compact.each(&:update_date)
 calculations.each(&:calculate!)
 calculations.reject { |c| c.key != "overall_bar" && c.key["bar"] }.each(&:calculate!)
-compare_results competitions
+compare_results COMPETITIONS
 
 # rubocop:enable Rails/SkipsModelValidations
