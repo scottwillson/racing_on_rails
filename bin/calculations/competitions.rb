@@ -270,7 +270,28 @@ COMPETITIONS = {
       26_094, 26_095, 26_096, 26_097, 26_098, 26_099, 26_102, 26_116, 26_276, 26_277, 26_279, 26_280, 26_281, 26_355, 26_356, 26_357, 26_375,
       26_399, 26_418, 26_419, 26_571, 26_593
     ],
-    expect: [25_875, 25_876, 25_884, 25_885, 25_934, 25_944, 25_946, 26_064, 26_140, 26_141, 26_142, 26_143, 26_147, 26_212, 26_250, 26_251, 26_252, 26_401],
+    expect: [
+      25_875,
+      25_876,
+      25_884,
+      25_885,
+      25_934,
+      25_944,
+      25_946,
+      26_064,
+      26_140,
+      26_141,
+      26_142,
+      26_143,
+      26_147,
+      26_212,
+      26_250,
+      26_251,
+      26_252,
+      26_401,
+      26_405,
+      26_442
+    ],
     rules: {
       association_sanctioned_only: true,
       disciplines: ["Mountain Bike", "Downhill", "Super D"],
@@ -353,6 +374,12 @@ COMPETITIONS = {
       { name: "Tandem" }
     ],
     competition_id: 25_828,
+    events: [
+      { id: 26_183, multiplier: 1 },
+      # These should be skipped once we there is a PDX STXC calc
+      { id: 26_305, multiplier: 1 },
+      { id: 26_306, multiplier: 1 }
+    ],
     rules: {
       association_sanctioned_only: true,
       disciplines: ["Short Track"],
@@ -383,11 +410,13 @@ COMPETITIONS = {
       { name: "Tandem" }
     ],
     competition_id: 25_826,
+    do_no_expect: [26_377, 26_384],
     events: [
       { id: 25_931, multiplier: 2 },
       { id: 25_936, multiplier: 2 },
       { id: 25_945, multiplier: 2 }
     ],
+    expect: [25_985],
     rules: {
       association_sanctioned_only: true,
       disciplines: ["Time Trial"],
@@ -418,13 +447,23 @@ COMPETITIONS = {
       { name: "Tandem" }
     ],
     competition_id: 25_827,
+    do_no_expect: [26_176, 26_178, 26_179, 26_188, 26_189],
     events: [
+      { id: 26_011, multiplier: 1 },
+      { id: 26_014, multiplier: 1 },
       { id: 26_149, multiplier: 2 },
       { id: 26_150, multiplier: 2 },
       { id: 26_151, multiplier: 2 },
       { id: 26_152, multiplier: 2 },
       { id: 26_154, multiplier: 2 },
-      { id: 26_314, multiplier: 2 }
+      { id: 26_314, multiplier: 1 },
+      { id: 26_347, multiplier: 1 },
+      { id: 26_432, multiplier: 1 },
+      { id: 26_433, multiplier: 1 },
+      { id: 26_616, multiplier: 1 },
+      { id: 26_617, multiplier: 1 },
+      { id: 26_618, multiplier: 1 },
+      { id: 26_619, multiplier: 1 }
     ],
     rules: {
       association_sanctioned_only: true,
