@@ -55,10 +55,10 @@ def fix_source_results
   Result.where(event_id: 26_345).update_all(event_id: 25_760)
   Race.where(event_id: 26_318).update_all(event_id: 25_985)
   Result.where(event_id: 26_318).update_all(event_id: 25_985)
-  # Race.where(event_id: 26_332).update_all(event_id: 25_985)
-  # Result.where(event_id: 26_332).update_all(event_id: 26_122)
-  # Event.where(id: 26_340).update_all(parent_id: 26_122)
-  # Event.where(id: 26_343).update_all(parent_id: 25_760)
+  Race.where(event_id: 26_332).update_all(event_id: 25_985)
+  Result.where(event_id: 26_332).update_all(event_id: 26_122)
+  Event.where(id: 26_340).update_all(parent_id: 25_760)
+  Event.where(id: 26_343).update_all(parent_id: 25_760)
   Event.where(id: 26_443).update_all(discipline: "Mountain Bike")
   Event.where(id: 26_331).update_all(type: "SingleDayEvent")
   Event.where(id: [26_340, 26_343, 26_348]).update_all(type: "SingleDayEvent")
@@ -112,7 +112,9 @@ def compare_results(competitions)
     actual_event = Calculations::V3::Calculation.where(key: key).first&.event
 
     if actual_event
-      compare_source_events(expected_event, actual_event, competition) unless key == :overall_bar
+      if key != :overall_bar
+        compare_source_events(expected_event, actual_event, competition)
+      end
       # compare_event_results expected_event, actual_event
     else
       puts "Could not find #{key}"
@@ -130,6 +132,10 @@ def compare_source_events(expected_event, actual_event, competition)
   event_ids = Result.find(scores).pluck(:event_id)
   competition[:do_no_expect]&.each { |e| event_ids.delete(e) }
   competition[:expect]&.each { |e| event_ids << e }
+  tabor = Calculations::V3::Calculation.where(key: :tabor).first&.event
+  if competition[:key] == :road_bar && tabor
+    event_ids << tabor.id
+  end
   expected = Event.find(event_ids).uniq.sort_by(&:id)
   sources = ResultSource
             .joins(calculated_result: :event)
@@ -232,7 +238,7 @@ end
 # competitions = { road_bar: COMPETITIONS[:road_bar]}
 
 # fetch_data
-# recreate_databases
+recreate_databases
 destroy_calculations
 fix_source_results
 create_calculations COMPETITIONS
