@@ -323,7 +323,7 @@ COMPETITIONS = {
       { name: "Tandem" }
     ],
     competition_id: 25_825,
-    do_no_expect: [25_922, 26_443, 26_299],
+    do_no_expect: [25_922, 26_443, 26_299, 26_340],
     expect: [25_922],
     events: [
       { id: 25_939, multiplier: 2 },
