@@ -238,8 +238,8 @@ end
 # competitions = { road_bar: COMPETITIONS[:road_bar]}
 
 # fetch_data
-recreate_databases
-destroy_calculations
+# recreate_databases
+# destroy_calculations
 fix_source_results
 create_calculations COMPETITIONS
 calculations.map(&:source_event).compact.each(&:update_date)

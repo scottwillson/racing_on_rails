@@ -32,13 +32,10 @@ module Calculations
 
           assert_equal 1, event_categories.first.results.size
           source_results = event_categories.first.results.first.source_results.sort_by(&:id)
-          assert_equal 2, source_results.size
+          assert_equal 1, source_results.size
 
           refute source_results[0].rejected?
           assert_nil source_results[0].rejection_reason
-
-          assert source_results[1].rejected?
-          assert_equal :discipline, source_results[1].rejection_reason
         end
       end
     end
