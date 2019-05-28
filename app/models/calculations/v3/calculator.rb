@@ -13,15 +13,23 @@ module Calculations
     #   1. Transform source results into array of calculated event categories
     #      with a calculated result for each unique participant
     #      * each source result belongs to a calculated result
-    #      * every calculated has at least one source result
+    #      * every calculated result has at least one source result
     #      * source results may be duplicated later (for upgrades)
-    #      * cycle through each source result, find best match event category, add or create calculated result, add source result?
     #   2. assign points
     #   3. create upgrade results
     #   4. assign points again? What is sequence for upgrades?
     #   5. sum points
     #   6. place results (skip zero-results?)
     # many missing steps ...
+    #
+    # Result outcomes. The division between 1, 2, and 3 is subjective and tries
+    # to answer "why didn't this result count?" without clutter.
+    #   1. Rejected by initial SQL query (e.g., different year)
+    #   2. Rejected for reasons like a different discipline. Not shown in final
+    #      results.
+    #   3. Selected, but marked as rejected (membership required)
+    #   4. Selected, but not assigned points (lower places, "best of")
+    #   5. Selected and assigned points
     class Calculator
       attr_reader :event_categories
       attr_reader :rules
