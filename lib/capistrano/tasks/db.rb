@@ -8,7 +8,7 @@ namespace :db do
   task :database_dump do
     on roles(:db) do
       execute :mkdir, "-p #{deploy_to}/current/db"
-      execute "/bin/bash --login -c 'cd #{deploy_to}/current; /usr/bin/env bundle exec #{deploy_to}/current/bin/rake racing_on_rails:database_dump RAILS_ENV=#{fetch(:stage)}'"
+      execute "/bin/bash --login -c 'cd #{deploy_to}/current; DISABLE_SPRING=1 /usr/bin/env bundle exec #{deploy_to}/current/bin/rake racing_on_rails:database_dump RAILS_ENV=#{fetch(:stage)}'"
       execute :rm, "-f #{deploy_to}/current/db/#{fetch(:stage)}.sql.bz2"
       execute :bzip2, "#{deploy_to}/current/db/#{fetch(:stage)}.sql"
     end
