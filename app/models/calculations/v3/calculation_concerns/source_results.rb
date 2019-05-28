@@ -146,10 +146,6 @@ module Calculations::V3::CalculationConcerns::SourceResults
       source_results = source_results.where(event_id: source_events.ids)
     end
 
-    if discipline?
-      source_results = source_results.where("events.discipline" => disciplines.map(&:name))
-    end
-
     source_results
   end
 end

@@ -7,9 +7,13 @@ module Calculations
         def self.calculate!(calculator)
           return calculator.event_categories if calculator.rules.disciplines.empty?
 
-          calculator.unrejected_source_results.each do |source_result|
-            unless source_result.discipline.in?(calculator.rules.disciplines)
-              source_result.reject :discipline
+          calculator.event_categories.each do |category|
+            category.results.each do |result|
+              result.source_results.select! do |source_result|
+                raise(ArgumentError, "Discipline required") unless source_result.discipline
+
+                source_result.discipline.in?(calculator.rules.disciplines)
+              end
             end
           end
 
