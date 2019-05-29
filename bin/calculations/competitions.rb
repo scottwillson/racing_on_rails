@@ -193,6 +193,7 @@ COMPETITIONS = {
     do_no_expect: [26_034, 26_316, 26_416, 26_335],
     rules: {
       association_sanctioned_only: true,
+      discipline: "Criterium",
       disciplines: ["Criterium"],
       members_only: true,
       name: "Criterium BAR",
@@ -229,6 +230,7 @@ COMPETITIONS = {
     do_no_expect: [26_355, 26_356, 26_412, 26_571, 26_593, 26_571, 26_593, 26_418, 26_419],
     rules: {
       association_sanctioned_only: true,
+      discipline: "Cyclocross",
       disciplines: ["Cyclocross"],
       members_only: true,
       name: "Cyclocross BAR",
@@ -294,6 +296,7 @@ COMPETITIONS = {
     ],
     rules: {
       association_sanctioned_only: true,
+      discipline: "Mountain Bike",
       disciplines: ["Mountain Bike", "Downhill", "Super D"],
       members_only: true,
       name: "Mountain Bike BAR",
@@ -382,6 +385,7 @@ COMPETITIONS = {
     ],
     rules: {
       association_sanctioned_only: true,
+      discipline: "Short Track",
       disciplines: ["Short Track"],
       members_only: true,
       name: "Short Track BAR",
@@ -419,6 +423,7 @@ COMPETITIONS = {
     expect: [25_985],
     rules: {
       association_sanctioned_only: true,
+      discipline: "Time Trial",
       disciplines: ["Time Trial"],
       members_only: true,
       name: "Time Trial BAR",
@@ -467,6 +472,7 @@ COMPETITIONS = {
     ],
     rules: {
       association_sanctioned_only: true,
+      discipline: "Track",
       disciplines: ["Track"],
       members_only: true,
       name: "Track BAR",
@@ -496,6 +502,7 @@ COMPETITIONS = {
     competition_id: 25_821,
     rules: {
       association_sanctioned_only: true,
+      discipline: "Overall",
       maximum_events: -4,
       members_only: true,
       name: "Overall BAR",

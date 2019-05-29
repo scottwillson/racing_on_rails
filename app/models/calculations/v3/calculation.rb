@@ -25,6 +25,9 @@ class Calculations::V3::Calculation < ApplicationRecord
   has_many :calculations_events, class_name: "Calculations::V3::Event", dependent: :destroy
   has_many :categories, through: :calculation_categories, class_name: "::Category"
   has_many :calculation_disciplines, class_name: "Calculations::V3::Discipline", dependent: :destroy
+  # Discipline of calculated results' event
+  belongs_to :discipline, class_name: "::Discipline"
+  # Only count results in these disciplines
   has_many :disciplines, through: :calculation_disciplines
   belongs_to :event, class_name: "::Event", dependent: :destroy, inverse_of: :calculation, optional: true
   has_many :events, through: :calculations_events, class_name: "::Event"
@@ -34,6 +37,7 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   validates :key, uniqueness: { allow_nil: true, scope: :year }
 
+  default_value_for(:discipline_id) { Discipline[RacingAssociation.current.default_discipline]&.id }
   default_value_for :points_for_place, []
 
   def add_event!
@@ -42,6 +46,7 @@ class Calculations::V3::Calculation < ApplicationRecord
     if source_event
       event = create_event!(
         date: source_event.date,
+        discipline: source_event.discipline,
         end_date: source_event.end_date,
         name: "Overall"
       )
@@ -49,6 +54,7 @@ class Calculations::V3::Calculation < ApplicationRecord
     else
       self.event = create_event!(
         date: Time.zone.local(year).beginning_of_year,
+        discipline: discipline.name,
         end_date: Time.zone.local(year).end_of_year,
         name: name
       )
