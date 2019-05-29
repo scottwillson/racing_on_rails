@@ -37,7 +37,7 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   validates :key, uniqueness: { allow_nil: true, scope: :year }
 
-  default_value_for(:discipline_id) { Discipline[RacingAssociation.current.default_discipline]&.id }
+  default_value_for(:discipline_id) { ::Discipline[RacingAssociation.current.default_discipline]&.id }
   default_value_for :points_for_place, []
 
   def add_event!
