@@ -9,6 +9,7 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
   # complicated) than wiping out all results and recreating.
   def save_results(event_categories)
     ActiveSupport::Notifications.instrument "save_results.calculations.#{name}.racing_on_rails" do
+      event.races.preload(:category)
       delete_obsolete_races event_categories
       event_categories.each do |event_category|
         race = create_race(event_category)

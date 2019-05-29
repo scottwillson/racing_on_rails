@@ -165,6 +165,7 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
   end
 
   create_table "calculations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "discipline_id"
     t.bigint "event_id"
     t.bigint "source_event_id"
     t.boolean "association_sanctioned_only", default: false, null: false
@@ -181,6 +182,7 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
     t.integer "year", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["discipline_id"], name: "index_calculations_on_discipline_id"
     t.index ["event_id"], name: "index_calculations_on_event_id"
     t.index ["key", "year"], name: "index_calculations_on_key_and_year", unique: true
     t.index ["source_event_id"], name: "index_calculations_on_source_event_id"
@@ -241,7 +243,7 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
     t.index ["weight"], name: "index_categories_on_weight"
   end
 
-  create_table "ckeditor_assets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "ckeditor_assets", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "data_file_name", null: false
     t.string "data_content_type"
     t.integer "data_file_size"

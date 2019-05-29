@@ -4,9 +4,9 @@ require "test_helper"
 
 # :stopdoc:
 class Calculations::V3::BarTest < ActiveSupport::TestCase
-  test "#calculate!" do
-    Discipline.create!(name: "Road")
+  setup { FactoryBot.create :discipline }
 
+  test "#calculate!" do
     Timecop.freeze(2019) do
       calculation = Calculations::V3::Calculation.create!(
         disciplines: [Discipline[:road]],
@@ -53,8 +53,6 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
   end
 
   test "weekly series overall" do
-    Discipline.create!(name: "Road")
-
     Timecop.freeze(2019) do
       bar_calculation = Calculations::V3::Calculation.create!(
         disciplines: [Discipline[:road]],
@@ -136,10 +134,13 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
     Timecop.freeze(2019) do
       criterium_discipline = Discipline.create!(name: "Criterium")
       circuit_race_discipline = Discipline.create!(name: "Circuit Race")
-      road_discipline = Discipline.create!(name: "Road")
+      road_discipline = Discipline[:road]
+      overall_discipline = Discipline.create!(name: "Overall")
+      Discipline.create!(name: "Running")
       senior_women = ::Category.find_or_create_by(name: "Senior Women")
 
       criterium = Calculations::V3::Calculation.create!(
+        discipline: criterium_discipline,
         disciplines: [criterium_discipline],
         key: "criterium_bar",
         members_only: true,
@@ -150,6 +151,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       criterium.categories << senior_women
 
       road = Calculations::V3::Calculation.create!(
+        discipline: road_discipline,
         disciplines: [circuit_race_discipline, road_discipline],
         key: "road_bar",
         name: "Road BAR",
@@ -160,6 +162,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       road.categories << senior_women
 
       overall = Calculations::V3::Calculation.create!(
+        discipline: overall_discipline,
         members_only: true,
         name: "Overall BAR",
         points_for_place: (1..300).to_a.reverse,
@@ -168,8 +171,8 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       )
       overall.categories << senior_women
 
-      event = FactoryBot.create(:event, date: Time.zone.local(2019, 4, 13))
-      race = event.races.create!(category: senior_women)
+      source_event = FactoryBot.create(:event, date: Time.zone.local(2019, 4, 13))
+      race = source_event.races.create!(category: senior_women)
       person = FactoryBot.create :person
       race.results.create! place: 12, person: person
 
@@ -206,6 +209,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       assert_equal "1", results.first.place
 
       event = overall.reload.event
+      assert_equal "Overall", event.discipline
 
       assert_equal 1, event.races.size
       race = event.races.detect { |r| r.category == senior_women }
@@ -217,6 +221,31 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       assert_equal 1, results.first.source_results.size
       assert_equal 300, results.first.points
       assert_equal "1", results.first.place
+
+      # Idempotent
+      overall.calculate!
+      assert_equal 2, overall.reload.source_events.size
+
+      # Remove discipline BAR result
+      source_event.discipline = "Running"
+      source_event.save!
+
+      overall.calculate!
+
+      event = road.reload.event
+
+      assert_equal 1, event.races.size
+      race = event.races.detect { |r| r.category == senior_women }
+      assert_not_nil race
+
+      results = race.results
+      pp results.first.sources
+      assert_equal 0, results.size
+
+      assert_equal 2, overall.reload.source_events.size
+      event = overall.reload.event
+      results = event.races.detect { |r| r.category == senior_women }.results
+      assert_equal 0, results.size
     end
   end
 end

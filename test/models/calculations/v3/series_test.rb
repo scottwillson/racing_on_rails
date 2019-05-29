@@ -4,6 +4,8 @@ require "test_helper"
 
 # :stopdoc:
 class Calculations::V3::SeriesTest < ActiveSupport::TestCase
+  setup { FactoryBot.create :discipline }
+
   test "#calculate!" do
     previous_year_series = WeeklySeries.create!(date: Time.zone.local(2018, 8, 11))
     men_a = Category.find_or_create_by_normalized_name("Men A")

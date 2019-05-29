@@ -88,6 +88,9 @@ end
 
 def create_calculation(event_id, rules)
   puts "create_calculation #{rules[:name]}"
+  if rules[:discipline]
+    rules[:discipline] = Discipline.where(name: rules[:discipline])
+  end
   if rules[:disciplines]
     rules[:disciplines] = Discipline.where(name: rules[:disciplines])
   end
@@ -240,9 +243,9 @@ end
 # fetch_data
 # recreate_databases
 # destroy_calculations
-fix_source_results
-create_calculations COMPETITIONS
-calculations.map(&:source_event).compact.each(&:update_date)
+# fix_source_results
+# create_calculations COMPETITIONS
+# calculations.map(&:source_event).compact.each(&:update_date)
 calculations.each(&:calculate!)
 calculations.reject { |c| c.key != "overall_bar" && c.key["bar"] }.each(&:calculate!)
 compare_results COMPETITIONS

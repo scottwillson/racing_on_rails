@@ -4,6 +4,8 @@ require "test_helper"
 
 # :stopdoc:
 class Calculations::V3::OBRACompetitionTest < ActiveSupport::TestCase
+  setup { FactoryBot.create :discipline }
+
   test "#calculate!" do
     calculation = Calculations::V3::Calculation.create!(
       members_only: true,

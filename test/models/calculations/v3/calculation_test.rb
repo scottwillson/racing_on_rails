@@ -4,6 +4,8 @@ require "test_helper"
 
 # :stopdoc:
 class Calculations::V3::CalculationTest < ActiveSupport::TestCase
+  setup { FactoryBot.create :discipline }
+
   test "simplest #calculate!" do
     Timecop.freeze(Time.zone.local(2018)) do
       series = WeeklySeries.create!(name: "Cross Crusade")
