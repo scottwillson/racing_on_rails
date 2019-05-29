@@ -107,7 +107,6 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
   def delete_calculated_results_for(results, race)
     Rails.logger.debug "delete_calculated_results_for #{race.name}"
     if results.present?
-      ::ResultSource.where(calculated_result_id: results).delete_all
       ::Result.where(id: results).delete_all
     end
   end
@@ -165,7 +164,6 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
       source_result_id: source_result.id,
       calculated_result_id: calculated_result.id,
       points: source_result.points,
-      rejected: source_result.rejected?,
       rejection_reason: source_result.rejection_reason
     )
   end

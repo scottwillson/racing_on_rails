@@ -995,7 +995,6 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
     t.integer "source_result_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "rejected"
     t.index ["calculated_result_id", "source_result_id"], name: "calculated_result_id_source_result_id"
     t.index ["source_result_id"], name: "fk_rails_6213531152"
   end
@@ -1168,8 +1167,8 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
   add_foreign_key "race_numbers", "people", name: "race_numbers_person_id", on_delete: :cascade
   add_foreign_key "races", "categories"
   add_foreign_key "races", "events", name: "races_event_id_fk", on_delete: :cascade
-  add_foreign_key "result_sources", "results", column: "calculated_result_id"
-  add_foreign_key "result_sources", "results", column: "source_result_id"
+  add_foreign_key "result_sources", "results", column: "calculated_result_id", on_delete: :cascade
+  add_foreign_key "result_sources", "results", column: "source_result_id", on_delete: :cascade
   add_foreign_key "results", "categories"
   add_foreign_key "results", "people", name: "results_person_id"
   add_foreign_key "results", "races", name: "results_race_id_fk", on_delete: :cascade

@@ -11,7 +11,7 @@ class CreateResultSources < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_foreign_key :result_sources, :results, column: :calculated_result_id
-    add_foreign_key :result_sources, :results, column: :source_result_id
+    add_foreign_key :result_sources, :results, column: :calculated_result_id, on_delete: :cascade
+    add_foreign_key :result_sources, :results, column: :source_result_id, on_delete: :cascade
   end
 end

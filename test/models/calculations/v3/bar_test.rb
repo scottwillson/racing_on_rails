@@ -239,7 +239,6 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       assert_not_nil race
 
       results = race.results
-      pp results.first.sources
       assert_equal 0, results.size
 
       assert_equal 2, overall.reload.source_events.size

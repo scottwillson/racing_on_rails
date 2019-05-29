@@ -6,6 +6,10 @@ class ResultSource < ApplicationRecord
 
   validates :rejection_reason, inclusion: { in: ::Calculations::V3::REJECTION_REASONS, allow_blank: true }
 
+  def rejected?
+    rejection_reason.present?
+  end
+
   def hash
     [
       points,
