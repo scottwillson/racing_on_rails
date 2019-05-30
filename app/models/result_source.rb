@@ -18,8 +18,22 @@ class ResultSource < ApplicationRecord
     ].hash
   end
 
+  def ==(other)
+    return false if other.nil?
+
+    other.hash == hash
+  end
+
+  def eql?(other)
+    self == other
+  end
+
   def <=>(other)
-    return 0 if id.present? && (id == other&.id)
+    if rejected? && !other.rejected?
+      return 1
+    elsif !rejected? && other.rejected?
+      return -1
+    end
 
     if points == 0 && other.points > 0
       return 1
@@ -27,13 +41,11 @@ class ResultSource < ApplicationRecord
       return -1
     end
 
-    if rejected? && !other.rejected?
-      return 1
-    elsif !rejected? && other.rejected?
-      return -1
+    if date != other.date
+      return date <=> other.date
     end
 
-    date <=> other.date
+    0
   end
 
   delegate :date, to: :source_result

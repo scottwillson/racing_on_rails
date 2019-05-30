@@ -89,7 +89,7 @@ end
 def create_calculation(event_id, rules)
   puts "create_calculation #{rules[:name]}"
   if rules[:discipline]
-    rules[:discipline] = Discipline.where(name: rules[:discipline])
+    rules[:discipline] = Discipline.where(name: rules[:discipline]).first!
   end
   if rules[:disciplines]
     rules[:disciplines] = Discipline.where(name: rules[:disciplines])
@@ -238,16 +238,16 @@ def compare_individual_results(expected_results, actual_results)
   end
 end
 
-# competitions = { road_bar: COMPETITIONS[:road_bar]}
+competitions = { oregon_cup: COMPETITIONS[:oregon_cup]}
 
 # fetch_data
 # recreate_databases
 # destroy_calculations
 # fix_source_results
-# create_calculations COMPETITIONS
+# create_calculations competitions
 # calculations.map(&:source_event).compact.each(&:update_date)
 calculations.each(&:calculate!)
 calculations.reject { |c| c.key != "overall_bar" && c.key["bar"] }.each(&:calculate!)
-compare_results COMPETITIONS
+compare_results competitions
 
 # rubocop:enable Rails/SkipsModelValidations
