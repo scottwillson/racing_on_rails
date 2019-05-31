@@ -995,6 +995,7 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
     t.integer "source_result_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "rejected"
     t.index ["calculated_result_id", "source_result_id"], name: "calculated_result_id_source_result_id"
     t.index ["source_result_id"], name: "fk_rails_6213531152"
   end

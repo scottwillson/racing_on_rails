@@ -58,6 +58,7 @@ def fix_source_results
   Race.where(event_id: 26_332).update_all(event_id: 25_985)
   Result.where(event_id: 26_332).update_all(event_id: 26_122)
   Event.where(id: 26_340).update_all(parent_id: 25_760)
+  Event.where(id: 26_340).update_all(discipline: "Time Trial")
   Event.where(id: 26_343).update_all(parent_id: 25_760)
   Event.where(id: 26_443).update_all(discipline: "Mountain Bike")
   Event.where(id: 26_331).update_all(type: "SingleDayEvent")
@@ -116,7 +117,7 @@ def compare_results(competitions)
 
     if actual_event
       if key != :overall_bar
-        compare_source_events(expected_event, actual_event, competition)
+        compare_source_events(expected_event, actual_event, competition, key)
       end
       # compare_event_results expected_event, actual_event
     else
@@ -125,7 +126,7 @@ def compare_results(competitions)
   end
 end
 
-def compare_source_events(expected_event, actual_event, competition)
+def compare_source_events(expected_event, actual_event, competition, key)
   scores = Competitions::Score
            .joins(competition_result: :event)
            .where("results.event_id" => expected_event)
@@ -135,10 +136,9 @@ def compare_source_events(expected_event, actual_event, competition)
   event_ids = Result.find(scores).pluck(:event_id)
   competition[:do_no_expect]&.each { |e| event_ids.delete(e) }
   competition[:expect]&.each { |e| event_ids << e }
-  tabor = Calculations::V3::Calculation.where(key: :tabor).first&.event
-  if competition[:key] == :road_bar && tabor
-    event_ids << tabor.id
-  end
+
+  event_ids = expect_new_calculations(key, event_ids)
+
   expected = Event.find(event_ids).uniq.sort_by(&:id)
   sources = ResultSource
             .joins(calculated_result: :event)
@@ -168,6 +168,24 @@ def compare_source_events(expected_event, actual_event, competition)
     puts "extra:"
     extra.each { |event| puts("#{event.id} #{event.date} #{event.full_name}") }
   end
+end
+
+def expect_new_calculations(key, event_ids)
+  tabor = Calculations::V3::Calculation.where(key: :tabor).first&.event
+  if key == :road_bar && tabor
+    event_ids << tabor.id
+  end
+
+  if key == :cyclocross_bar
+    %w[blind_date cross_crusade gpcd].each do |other_calc_key|
+      event = Calculations::V3::Calculation.where(key: other_calc_key).first&.event
+      if event
+        event_ids << event.id
+      end
+    end
+  end
+
+  event_ids
 end
 
 def compare_event_results(expected_event, actual_event)
@@ -238,7 +256,8 @@ def compare_individual_results(expected_results, actual_results)
   end
 end
 
-competitions = { oregon_cup: COMPETITIONS[:oregon_cup]}
+competitions = COMPETITIONS
+# competitions = { oregon_cup: COMPETITIONS[:oregon_cup]}
 
 # fetch_data
 # recreate_databases
@@ -246,7 +265,7 @@ competitions = { oregon_cup: COMPETITIONS[:oregon_cup]}
 # fix_source_results
 # create_calculations competitions
 # calculations.map(&:source_event).compact.each(&:update_date)
-calculations.each(&:calculate!)
+# calculations.each(&:calculate!)
 calculations.reject { |c| c.key != "overall_bar" && c.key["bar"] }.each(&:calculate!)
 compare_results competitions
 
