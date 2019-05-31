@@ -377,11 +377,10 @@ COMPETITIONS = {
       { name: "Tandem" }
     ],
     competition_id: 25_828,
+    # We should expect the new PDX STXC calc once it exists
+    do_no_expect: [26_305, 26_306],
     events: [
-      { id: 26_183, multiplier: 1 },
-      # These should be skipped once we there is a PDX STXC calc
-      { id: 26_305, multiplier: 1 },
-      { id: 26_306, multiplier: 1 }
+      { id: 26_183, multiplier: 1 }
     ],
     rules: {
       association_sanctioned_only: true,
@@ -420,7 +419,7 @@ COMPETITIONS = {
       { id: 25_936, multiplier: 2 },
       { id: 25_945, multiplier: 2 }
     ],
-    expect: [25_985],
+    expect: [25_985, 26_340],
     rules: {
       association_sanctioned_only: true,
       discipline: "Time Trial",
@@ -456,6 +455,7 @@ COMPETITIONS = {
     events: [
       { id: 26_011, multiplier: 1 },
       { id: 26_014, multiplier: 1 },
+      { id: 26_122, multiplier: 1 },
       { id: 26_149, multiplier: 2 },
       { id: 26_150, multiplier: 2 },
       { id: 26_151, multiplier: 2 },
