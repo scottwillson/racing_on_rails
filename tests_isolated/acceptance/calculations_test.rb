@@ -5,6 +5,7 @@ require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
 # :stopdoc:
 class CalculationsTest < AcceptanceTest
   test "calculated results" do
+    FactoryBot.create :discipline
     series = Series.create!(name: "Mt. Tabor Series")
     source_child_event = series.children.create!
 
