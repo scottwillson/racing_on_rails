@@ -33,6 +33,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   has_many :events, through: :calculations_events, class_name: "::Event"
   belongs_to :source_event, class_name: "::Event", optional: true
 
+  before_destroy :destroy_event
   before_save :set_name
 
   validates :key, uniqueness: { allow_nil: true, scope: :year }
@@ -91,6 +92,11 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   def category_names
     categories.map(&:name)
+  end
+
+  def destroy_event
+    event.destroy_races
+    event&.destroy
   end
 
   def set_name

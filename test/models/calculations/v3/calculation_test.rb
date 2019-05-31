@@ -55,6 +55,13 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
       assert_equal_dates "2018-11-21", calculation.event.date
       assert_equal_dates "2018-11-21", calculation.event.end_date
       assert_equal race_ids, calculation.event.races.map(&:id).sort, "Reuse races"
+
+      calculation.destroy!
+      assert_equal 0, Calculations::V3::Calculation.count
+      assert_equal 0, ResultSource.count
+      assert_equal 1, Result.count
+      assert_not Event.exists?(overall.id)
+      assert Result.exists?(source_result.id)
     end
   end
 
