@@ -30,10 +30,13 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
       maximum_events: maximum_events,
       members_only: members_only?,
       minimum_events: minimum_events,
+      missing_result_penalty: missing_result_penalty,
       points_for_place: points_for_place,
+      results_per_event: results_per_event,
       source_events: model_source_events,
       source_event_keys: source_event_keys,
       specific_events: specific_events?,
+      team: team?,
       weekday_events: weekday_events?
     )
   end

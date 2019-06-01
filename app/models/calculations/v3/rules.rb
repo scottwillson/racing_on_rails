@@ -10,10 +10,13 @@ module Calculations
       attr_reader :maximum_events
       attr_reader :members_only
       attr_reader :minimum_events
+      attr_reader :missing_result_penalty
       attr_reader :points_for_place
+      attr_reader :results_per_event
       attr_reader :specific_events
       attr_reader :source_events
       attr_reader :source_event_keys
+      attr_reader :team
 
       # If true, only include weekend events
       # If false, reject all weekday events except series overall
@@ -28,10 +31,13 @@ module Calculations
         maximum_events: 0,
         members_only: false,
         minimum_events: 0,
+        missing_result_penalty: nil,
         points_for_place: nil,
+        results_per_event: nil,
         specific_events: false,
         source_events: [],
         source_event_keys: [],
+        team: false,
         weekday_events: true
       )
 
@@ -43,10 +49,13 @@ module Calculations
         @maximum_events = maximum_events
         @members_only = members_only
         @minimum_events = minimum_events
+        @missing_result_penalty = missing_result_penalty
         @points_for_place = points_for_place
+        @results_per_event = results_per_event
         @source_events = source_events
         @source_event_keys = source_event_keys
         @specific_events = specific_events
+        @team = team
         @weekday_events = weekday_events
 
         validate!
@@ -76,12 +85,20 @@ module Calculations
         members_only
       end
 
+      def missing_result_penalty?
+        missing_result_penalty
+      end
+
       def specific_events?
         specific_events
       end
 
       def rejected_categories
         category_rules.select(&:reject?).map(&:category)
+      end
+
+      def team?
+        team
       end
 
       def validate!

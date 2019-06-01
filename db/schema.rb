@@ -173,11 +173,14 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
     t.boolean "members_only", default: false, null: false
     t.integer "minimum_events", default: 0, null: false
     t.integer "maximum_events", default: 0, null: false
+    t.integer "missing_result_penalty"
     t.string "key"
     t.string "name", default: "New Calculation"
     t.text "points_for_place"
+    t.integer "results_per_event"
     t.string "source_event_keys", default: "--- []\n"
     t.boolean "specific_events", default: false, null: false
+    t.boolean "team", default: false, null: false
     t.boolean "weekday_events", default: true, null: false
     t.integer "year", null: false
     t.datetime "created_at", null: false
@@ -193,6 +196,7 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
     t.bigint "category_id"
     t.integer "maximum_events"
     t.boolean "reject", default: false, null: false
+    t.boolean "source_only", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["calculation_id"], name: "index_calculations_categories_on_calculation_id"
