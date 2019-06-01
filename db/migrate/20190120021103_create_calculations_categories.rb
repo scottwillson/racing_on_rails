@@ -7,6 +7,7 @@ class CreateCalculationsCategories < ActiveRecord::Migration[5.2]
       t.belongs_to :category, index: true
       t.integer :maximum_events, default: nil, null: true
       t.boolean :reject, default: false, null: false
+      t.boolean :source_only, default: false, null: false
       t.timestamps
     end
   end

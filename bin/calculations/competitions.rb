@@ -79,6 +79,45 @@ COMPETITIONS = {
       points_for_place: [26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     }
   },
+  cross_crusade_team_competition: {
+    categories: [
+      { name: "Athena", source_only: true },
+      { name: "Clydesdale", source_only: true },
+      { name: "Elite Junior Men", source_only: true },
+      { name: "Elite Junior Women", source_only: true },
+      { name: "Junior Men 3/4/5", source_only: true },
+      { name: "Junior Women 3/4/5", source_only: true },
+      { name: "Masters 35+ 1/2", source_only: true },
+      { name: "Masters 35+ 3", source_only: true },
+      { name: "Masters 35+ 4", source_only: true },
+      { name: "Masters 50+", source_only: true },
+      { name: "Masters 60+", source_only: true },
+      { name: "Masters 70+", source_only: true },
+      { name: "Masters Women 35+ 1/2", source_only: true },
+      { name: "Masters Women 35+ 3", source_only: true },
+      { name: "Masters Women 50+", source_only: true },
+      { name: "Men 1/2", source_only: true },
+      { name: "Men 2/3", source_only: true },
+      { name: "Men 4", source_only: true },
+      { name: "Men 5", source_only: true },
+      { name: "Singlespeed Women", source_only: true },
+      { name: "Singlespeed", source_only: true },
+      { name: "Team" },
+      { name: "Unicycle", source_only: true },
+      { name: "Women 1/2", source_only: true },
+      { name: "Women 3", source_only: true },
+      { name: "Women 4", source_only: true },
+      { name: "Women 5", source_only: true }
+    ],
+    competition_id: 26_441,
+    event_id: 25_896,
+    rules: {
+      missing_result_penalty: 100,
+      points_for_place: (1..100).to_a,
+      results_per_event: 10,
+      team: true
+    }
+  },
   gpcd: {
     categories: [
       { name: "Athena" },
