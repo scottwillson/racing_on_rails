@@ -95,7 +95,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def destroy_event
-    event.destroy_races
+    event&.destroy_races
     event&.destroy
   end
 
