@@ -99,6 +99,20 @@ module Categories
         return highest_age_category
       end
 
+      # Choose narrowest age if multiple Masters categories
+      if masters?
+        ranges = candidate_categories.select(&:masters?).map do |category|
+          category.ages_end - category.ages_begin
+        end
+
+        minimum_range = ranges.min
+        candidate_categories = candidate_categories.select do |category|
+          (category.ages_end - category.ages_begin) == minimum_range
+        end
+
+        return candidate_categories.first if candidate_categories.one?
+      end
+
       candidate_categories = candidate_categories.reject { |category| gender == "F" && category.gender == "M" }
       logger&.debug "exact gender: #{candidate_categories.map(&:name).join(', ')}"
       return candidate_categories.first if candidate_categories.one?
