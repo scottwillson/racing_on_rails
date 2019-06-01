@@ -163,6 +163,40 @@ COMPETITIONS = {
       points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11]
     }
   },
+  age_graded_bar: {
+    categories: [
+      { name: "Junior Men 10-12" },
+      { name: "Junior Men 13-14" },
+      { name: "Junior Men 15-16" },
+      { name: "Junior Men 17-18" },
+      { name: "Junior Women 10-12" },
+      { name: "Junior Women 13-14" },
+      { name: "Junior Women 15-16" },
+      { name: "Junior Women 17-18" },
+      { name: "Masters Men 35-39" },
+      { name: "Masters Men 40-44" },
+      { name: "Masters Men 45-49" },
+      { name: "Masters Men 50-54" },
+      { name: "Masters Men 55-59" },
+      { name: "Masters Men 60-64" },
+      { name: "Masters Men 65-69" },
+      { name: "Masters Men 70+" },
+      { name: "Masters Women 40-44" },
+      { name: "Masters Women 45-49" },
+      { name: "Masters Women 50-54" },
+      { name: "Masters Women 55-59" },
+      { name: "Masters Women 60+" }
+    ],
+    competition_id: 25_831,
+    rules: {
+      association_sanctioned_only: true,
+      discipline: "Overall",
+      members_only: true,
+      name: "Age-Graded BAR",
+      points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      weekday_events: false
+    }
+  },
   criterium_bar: {
     categories: [
       { name: "Athena" },

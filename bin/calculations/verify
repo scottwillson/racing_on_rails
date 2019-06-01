@@ -67,6 +67,8 @@ end
 
 def create_calculations(competitions)
   competitions.each do |key, competition|
+    next if Calculations::V3::Calculation.where(key: key).exists?
+
     competition[:rules][:key] = key
     calculation = create_calculation(competition[:event_id], competition[:rules])
 
@@ -256,16 +258,16 @@ def compare_individual_results(expected_results, actual_results)
   end
 end
 
-# competitions = COMPETITIONS
+competitions = COMPETITIONS
 # competitions = { oregon_cup: COMPETITIONS[:oregon_cup]}
 
 # fetch_data
 # recreate_databases
 # destroy_calculations
 # fix_source_results
-# create_calculations competitions
+create_calculations competitions
 # calculations.map(&:source_event).compact.each(&:update_date)
-calculations.reject { |c| c.key != "overall_bar" && c.key["bar"] }.each(&:calculate!)
+calculations.reject { |c| c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"] }.each(&:calculate!)
 # compare_results competitions
 
 # rubocop:enable Rails/SkipsModelValidations
