@@ -122,6 +122,17 @@ module Competitions
       assert_best_match_in [masters_men_60_plus, masters_men_60_69], masters_men_60_plus, event
     end
 
+    test "ability and overlapping age" do
+      event = FactoryBot.create(:event)
+      masters_men_30_39 = Category.find_or_create_by_normalized_name("Masters Men 30-39")
+      masters_men_35_39 = Category.find_or_create_by_normalized_name("Masters Men 35-39")
+      masters_men_3_4_35 = Category.find_or_create_by_normalized_name("Masters 3/4 35+")
+      event.races.create!(category: masters_men_30_39)
+      event.races.create!(category: masters_men_35_39)
+
+      assert_best_match_in [masters_men_3_4_35, masters_men_35_39], masters_men_35_39, event
+    end
+
     test "equipment" do
       event = FactoryBot.create(:event)
       event.races.create!(category: @singlespeed)
@@ -188,16 +199,18 @@ module Competitions
       categories.each do |category|
         best_match = category.best_match_in(event.categories)
         assert race_category == best_match,
-               "#{race_category.name} should be best_match_in for #{category.name} in event with categories #{event.races.map(&:name).join(', ')} but was #{best_match.name}"
+               "#{race_category.name} should be best_match_in for #{category.name} in event with " \
+               "categories #{event.races.map(&:name).join(', ')} but was #{best_match.name}"
       end
 
       event.categories
-        .reject { |category| category.in?(categories)}
-        .each do |category|
-          best_match = category.best_match_in(event.categories)
-          assert race_category != best_match,
-                 "Did not expect #{race_category.name} to match #{category.name} in event with categories #{event.races.map(&:name).join(', ')}, but was #{best_match}"
-      end
+           .reject { |category| category.in?(categories)}
+           .each do |category|
+             best_match = category.best_match_in(event.categories)
+             assert race_category != best_match,
+                    "Did not expect #{race_category.name} to match #{category.name} in event with " \
+                    "categories #{event.races.map(&:name).join(', ')}, but was #{best_match.name}"
+           end
     end
   end
 end
