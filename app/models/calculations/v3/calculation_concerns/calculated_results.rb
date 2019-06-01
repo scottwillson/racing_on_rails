@@ -132,14 +132,21 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
     existing_result.points        = result.points
     existing_result.team_id       = @people_by_id[result.participant_id].team_id
 
-    # TODO: Why do we need explicit dirty check?
-    if existing_result.place_changed? || existing_result.team_id_changed? || existing_result.points_changed? || existing_result.preliminary_changed?
+    if changed?(existing_result)
       # Re-use preloaded Team Names
       existing_result.team = @people_by_id[result.participant_id].team
       existing_result.save!
     end
 
     update_result_sources_for result, existing_result
+  end
+
+  def changed?(result)
+    result.place_changed? ||
+      result.points_changed? ||
+      result.preliminary_changed? ||
+      result.rejection_reason_changed? ||
+      result.team_id_changed?
   end
 
   def update_result_sources_for(result, existing_result)
