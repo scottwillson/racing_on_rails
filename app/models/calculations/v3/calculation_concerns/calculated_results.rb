@@ -11,6 +11,7 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
     ActiveSupport::Notifications.instrument "save_results.calculations.#{name}.racing_on_rails" do
       event.races.preload(:category)
       delete_obsolete_races event_categories
+      create_people_by_id event_categories.flat_map(&:results)
       event_categories.each do |event_category|
         race = create_race(event_category)
         calculated_results = event_category.results
@@ -81,19 +82,18 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
   def create_calculated_results_for(results, race)
     Rails.logger.debug "create_calculated_results_for #{race.name}"
 
-    team_ids = team_ids_by_participant_id_hash(results)
-
     results.each do |result|
+      person = @people_by_id[result.participant_id]
       calculated_result = ::Result.create!(
         competition_result: true,
         event: event,
-        person_id: result.participant_id,
+        person: person,
         place: result.place,
         points: result.points,
         race: race,
         rejected: result.rejected?,
         rejection_reason: result.rejection_reason,
-        team_id: team_ids[result.participant_id]
+        team: person.team
       )
 
       result.source_results.each do |source_result|
@@ -115,15 +115,14 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
     Rails.logger.debug "update_calculation_results_for #{race.name}"
     return true if results.empty?
 
-    team_ids = team_ids_by_participant_id_hash(results)
     existing_results = race.results.where(person_id: results.map(&:participant_id)).includes(:sources)
 
     results.each do |result|
-      update_calculated_result_for result, existing_results, team_ids
+      update_calculated_result_for result, existing_results
     end
   end
 
-  def update_calculated_result_for(result, existing_results, team_ids)
+  def update_calculated_result_for(result, existing_results)
     existing_result = existing_results.detect { |r| r.person_id == result.participant_id }
 
     # Ensure true or false, not nil
@@ -131,10 +130,12 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
     # to_s important. Otherwise, a change from 3 to "3" triggers a DB update.
     existing_result.place         = result.place.to_s
     existing_result.points        = result.points
-    existing_result.team_id       = team_ids[result.participant_id]
+    existing_result.team_id       = @people_by_id[result.participant_id].team_id
 
     # TODO: Why do we need explicit dirty check?
     if existing_result.place_changed? || existing_result.team_id_changed? || existing_result.points_changed? || existing_result.preliminary_changed?
+      # Re-use preloaded Team Names
+      existing_result.team = @people_by_id[result.participant_id].team
       existing_result.save!
     end
 
@@ -172,15 +173,18 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
     new_result_source(calculated_result, source_result).save!
   end
 
-  def team_ids_by_participant_id_hash(results)
-    return @team_ids_by_participant_id_hash if @team_ids_by_participant_id_hash
+  def create_people_by_id(results)
+    @people_by_id = {}
 
-    @team_ids_by_participant_id_hash = {}
+    people = ::Person
+             .includes(team: :names)
+             .includes(:names)
+             .where(id: results.map(&:participant_id).uniq)
 
-    ::Person.select("id, team_id").where("id in (?)", results.map(&:participant_id).uniq).map do |person|
-      @team_ids_by_participant_id_hash[person.id] = person.team_id
+    people.find_each do |person|
+      @people_by_id[person.id] = person
     end
 
-    @team_ids_by_participant_id_hash
+    @people_by_id
   end
 end
