@@ -85,7 +85,10 @@ group :development do
   gem "capistrano3-puma"
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "rubocop", require: false
+<<<<<<< HEAD
   gem "rubocop-performance"
+=======
+>>>>>>> Update gems
   gem "rubocop-rails"
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
