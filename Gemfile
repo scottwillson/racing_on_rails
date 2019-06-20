@@ -3,11 +3,6 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-<<<<<<< HEAD
-=======
-ruby "2.6.3"
-
->>>>>>> Lock to Ruby 2.6.2
 gem "rails", "~> 5.2.1"
 
 gem "activemerchant"
@@ -85,10 +80,7 @@ group :development do
   gem "capistrano3-puma"
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "rubocop", require: false
-<<<<<<< HEAD
   gem "rubocop-performance"
-=======
->>>>>>> Update gems
   gem "rubocop-rails"
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
