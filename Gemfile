@@ -27,7 +27,7 @@ gem "coffee-script-source"
 gem "damerau-levenshtein"
 gem "default_value_for"
 gem "erubis"
-gem "hashdiff"
+gem "hashdiff", [">= 1.0.0.beta1", "< 2.0.0"]
 gem "i18n"
 gem "in_place_editing"
 gem "jquery-rails"
@@ -78,6 +78,7 @@ group :development do
   gem "capistrano3-puma"
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "rubocop", require: false
+  gem "rubocop-performance"
   gem "rubocop-rails"
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
