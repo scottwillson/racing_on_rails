@@ -29,16 +29,16 @@ module Calculations
         def self.omnium_or_stage_race?(event)
           event &&
             event.end_date != event.date &&
-            event.children.map(&:date).uniq.size == (event.end_date - event.date).to_i + 1
+            event.days.size == (event.end_date - event.date).to_i + 1
         end
 
         def self.series_overall?(event)
           date = event.date
           end_date = event.end_date
           child_dates = if event.calculated? && event.parent
-                          event.parent.children.map(&:date).uniq
+                          event.parent.days
                         else
-                          event.children.map(&:date).uniq
+                          event.days
                         end
 
           event.calculated? &&

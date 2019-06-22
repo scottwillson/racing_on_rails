@@ -13,7 +13,7 @@ module Calculations
             previous_result = nil
 
             results = category.results.select(&:points?)
-            sort_by_points(results).map.with_index do |result, index|
+            sort_by_points(results, calculator.rules.most_points_win).map.with_index do |result, index|
               if index == 0
                 place = 1
               elsif result.points != previous_result.points
@@ -27,9 +27,15 @@ module Calculations
           end
         end
 
-        def self.sort_by_points(results)
-          results.sort do |x, y|
+        def self.sort_by_points(results, most_points_win)
+          results = results.sort do |x, y|
             compare_by_points x, y
+          end
+
+          if most_points_win
+            results
+          else
+            results.reverse
           end
         end
 

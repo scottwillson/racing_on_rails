@@ -50,6 +50,10 @@ module Calculations
           start_date..end_date
         end
 
+        def days
+          children.map(&:date).sort.uniq
+        end
+
         def start_date
           date
         end

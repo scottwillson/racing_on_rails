@@ -134,12 +134,13 @@ class MultiDayEvent < Event
 
   def self.same_name_and_year(event)
     raise ArgumentError, "'event' cannot be nil" if event.nil?
+
     MultiDayEvent.where(name: event.name).year(event.date.year).first
   end
 
   # Uses SQL query to set +date+ from child events. Callbacks pass in unsued child parameter.
   def update_date(_child = nil)
-    return true if new_record?
+    return true if new_record? || destroyed?
 
     child_dates = child_dates_query.pluck(:date)
     if child_dates.present?

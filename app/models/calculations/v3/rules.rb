@@ -11,6 +11,7 @@ module Calculations
       attr_reader :members_only
       attr_reader :minimum_events
       attr_reader :missing_result_penalty
+      attr_reader :most_points_win
       attr_reader :points_for_place
       attr_reader :results_per_event
       attr_reader :specific_events
@@ -32,6 +33,7 @@ module Calculations
         members_only: false,
         minimum_events: 0,
         missing_result_penalty: nil,
+        most_points_win: true,
         points_for_place: nil,
         results_per_event: nil,
         specific_events: false,
@@ -50,6 +52,7 @@ module Calculations
         @members_only = members_only
         @minimum_events = minimum_events
         @missing_result_penalty = missing_result_penalty
+        @most_points_win = most_points_win
         @points_for_place = points_for_place
         @results_per_event = results_per_event
         @source_events = source_events
@@ -89,6 +92,10 @@ module Calculations
         missing_result_penalty
       end
 
+      def most_points_win?
+        most_points_win
+      end
+
       def specific_events?
         specific_events
       end
@@ -121,10 +128,14 @@ module Calculations
           maximum_events: maximum_events,
           members_only: members_only?,
           minimum_events: minimum_events,
+          most_points_win: most_points_win?,
+          missing_result_penalty: missing_result_penalty,
           points_for_place: points_for_place,
+          results_per_event: results_per_event,
           source_events: source_events.map(&:id),
           source_event_keys: source_event_keys,
           specific_events: specific_events?,
+          team: team?,
           weekday_events: weekday_events?
         }
       end

@@ -13,9 +13,13 @@
 # clarity, some results are filtered early by SQL. For example, no one expects
 # criterium and track results to show in the Road BAR.
 class Calculations::V3::Calculation < ApplicationRecord
+  include Calculations::V3::CalculationConcerns::Cache
   include Calculations::V3::CalculationConcerns::CalculatedResults
   include Calculations::V3::CalculationConcerns::Dates
+  include Calculations::V3::CalculationConcerns::Races
+  include Calculations::V3::CalculationConcerns::ResultSources
   include Calculations::V3::CalculationConcerns::RulesConcerns
+  include Calculations::V3::CalculationConcerns::SaveResults
   include Calculations::V3::CalculationConcerns::SourceResults
 
   serialize :points_for_place, Array
@@ -29,7 +33,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   belongs_to :discipline, class_name: "::Discipline"
   # Only count results in these disciplines
   has_many :disciplines, through: :calculation_disciplines
-  belongs_to :event, class_name: "::Event", dependent: :destroy, inverse_of: :calculation, optional: true
+  belongs_to :event, class_name: "::Event", inverse_of: :calculation, optional: true
   has_many :events, through: :calculations_events, class_name: "::Event"
   belongs_to :source_event, class_name: "::Event", optional: true
 
@@ -49,7 +53,7 @@ class Calculations::V3::Calculation < ApplicationRecord
         date: source_event.date,
         discipline: source_event.discipline,
         end_date: source_event.end_date,
-        name: "Overall"
+        name: event_name
       )
       source_event.children << event
     else
@@ -57,7 +61,7 @@ class Calculations::V3::Calculation < ApplicationRecord
         date: Time.zone.local(year).beginning_of_year,
         discipline: discipline.name,
         end_date: Time.zone.local(year).end_of_year,
-        name: name
+        name: event_name
       )
     end
   end
@@ -99,9 +103,25 @@ class Calculations::V3::Calculation < ApplicationRecord
     event&.destroy
   end
 
+  def event_name
+    if source_event
+      if team?
+        "Team Competition"
+      else
+        "Overall"
+      end
+    else
+      name
+    end
+  end
+
   def set_name
     if name == "New Calculation" && source_event
-      self.name = "#{source_event.name}: Overall"
+      if team?
+        self.name = "#{source_event.name}: Team Competition"
+      else
+        self.name = "#{source_event.name}: Overall"
+      end
     end
   end
 

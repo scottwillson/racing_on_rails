@@ -10,6 +10,7 @@ module Calculations::V3
     not_calculation_category
     sanctioned_by
     rejected_category
+    results_per_event
     weekday
     worse_result
   ].freeze

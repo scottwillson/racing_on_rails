@@ -71,6 +71,46 @@ module Calculations
           assert_equal result_2, results[2]
         end
 
+        def test_fewest_points_wins
+          category = Models::Category.new("Masters Men")
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)], most_points_win: false)
+          calculator = Calculator.new(rules: rules, source_results: [])
+          event_category = calculator.event_categories.first
+
+          participant = Models::Participant.new(0)
+          source_result = Models::SourceResult.new(id: 0, event_category: Models::EventCategory.new(category))
+          result_1 = Models::CalculatedResult.new(participant, [source_result])
+          result_1.points = 10
+          event_category.results << result_1
+
+          participant = Models::Participant.new(1)
+          source_result = Models::SourceResult.new(id: 1, event_category: Models::EventCategory.new(category))
+          result_2 = Models::CalculatedResult.new(participant, [source_result])
+          result_2.points = 3
+          event_category.results << result_2
+
+          participant = Models::Participant.new(1)
+          source_result = Models::SourceResult.new(id: 2, event_category: Models::EventCategory.new(category))
+          result_3 = Models::CalculatedResult.new(participant, [source_result])
+          result_3.points = 7
+          event_category.results << result_3
+
+          Place.calculate! calculator
+
+          results = calculator.event_categories.first.results.sort_by(&:place)
+          assert_equal "1", results[0].place
+          refute results[0].tied?
+          assert_equal result_2, results[0]
+
+          assert_equal "2", results[1].place
+          refute results[1].tied?
+          assert_equal result_3, results[1]
+
+          assert_equal "3", results[2].place
+          refute results[2].tied?
+          assert_equal result_1, results[2]
+        end
+
         def test_break_ties_by_best_place
           category = Models::Category.new("Junior Women")
           rules = Rules.new(category_rules: [Models::CategoryRule.new(category)])

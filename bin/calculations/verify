@@ -72,7 +72,7 @@ def create_calculations(competitions)
     competition[:rules][:key] = key
     calculation = create_calculation(competition[:event_id], competition[:rules])
 
-    competition[:categories].each do |category_definition|
+    competition[:categories]&.each do |category_definition|
       category = Category.find_or_create_by(name: category_definition[:name])
       calculation_category = Calculations::V3::Category.new(
         category: category,
@@ -108,8 +108,8 @@ def create_calculation(event_id, rules)
   end
 end
 
-def calculations
-  Calculations::V3::Calculation.all
+def calculations(competitions)
+  Calculations::V3::Calculation.where(key: competitions.keys).all
 end
 
 def compare_results(competitions)
@@ -118,7 +118,7 @@ def compare_results(competitions)
     actual_event = Calculations::V3::Calculation.where(key: key).first&.event
 
     if actual_event
-      unless key.in? %s(age_graded_bar overall_bar)
+      unless key.in? %i[age_graded_bar overall_bar]
         compare_source_events(expected_event, actual_event, competition, key)
       end
       # compare_event_results expected_event, actual_event
@@ -259,15 +259,15 @@ def compare_individual_results(expected_results, actual_results)
 end
 
 competitions = COMPETITIONS
-# competitions = { age_graded_bar: COMPETITIONS[:age_graded_bar]}
+# competitions = { cross_crusade_team_competition: COMPETITIONS[:cross_crusade_team_competition]}
 
 # fetch_data
 # recreate_databases
 # fix_source_results
 destroy_calculations
 create_calculations competitions
-# calculations.map(&:source_event).compact.each(&:update_date)
-calculations.reject { |c| c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"] }.each(&:calculate!)
+calculations(competitions).map(&:source_event).compact.each(&:update_date)
+calculations(competitions).reject { |c| c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"] }.each(&:calculate!)
 compare_results competitions
 
 # rubocop:enable Rails/SkipsModelValidations

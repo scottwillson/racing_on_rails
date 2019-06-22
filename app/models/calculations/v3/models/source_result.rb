@@ -35,12 +35,12 @@ module Calculations
           "DNF".casecmp(place) == 0
         end
 
-        def parent_date
-          event&.parent&.date || date
+        def new?
+          id.nil?
         end
 
-        def parent_end_date
-          event&.parent&.end_date || date
+        def not_rejected?
+          !rejected?
         end
 
         # Opposite convention of ::Result (for now)
@@ -51,6 +51,14 @@ module Calculations
           else
             place.to_i
           end
+        end
+
+        def parent_date
+          event&.parent&.date || date
+        end
+
+        def parent_end_date
+          event&.parent&.end_date || date
         end
 
         def placed?
@@ -78,13 +86,13 @@ module Calculations
         end
 
         def validate!
-          raise(ArgumentError, "id is required") unless id
-          raise(ArgumentError, "id must be a Numeric") unless id.is_a?(Numeric)
+          raise(ArgumentError, "id must be a Numeric") if id && !id.is_a?(Numeric)
           raise(ArgumentError, "event_category is required") unless event_category
           raise(ArgumentError, "event_category must be an EventCategory, but was a #{event_category.class}") unless event_category.is_a?(EventCategory)
         end
 
         delegate :discipline, :event, to: :event_category
+        delegate :id, to: :participant, prefix: true
       end
     end
   end

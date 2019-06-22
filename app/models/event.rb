@@ -59,7 +59,7 @@ class Event < ApplicationRecord
 
   has_one :calculation,
           class_name: "Calculations::V3::Calculation",
-          dependent: :destroy,
+          dependent: :nullify,
           inverse_of: :event
 
   has_many :calculations,
