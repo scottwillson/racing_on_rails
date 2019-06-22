@@ -35,9 +35,9 @@ module Calculations
           date = event.date
           end_date = event.end_date
           child_dates = if event.calculated? && event.parent
-                          event.parent.children.map(&:date).uniq
+                          event.parent.days
                         else
-                          event.children.map(&:date).uniq
+                          event.days
                         end
 
           event.calculated? &&

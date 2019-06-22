@@ -31,6 +31,7 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
       members_only: members_only?,
       minimum_events: minimum_events,
       missing_result_penalty: missing_result_penalty,
+      most_points_win: most_points_win?,
       points_for_place: points_for_place,
       results_per_event: results_per_event,
       source_events: model_source_events,

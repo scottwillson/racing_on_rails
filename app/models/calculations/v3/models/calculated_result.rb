@@ -21,8 +21,8 @@ module Calculations
           validate!
         end
 
-        def participant_id
-          participant.id
+        def not_rejected?
+          !rejected?
         end
 
         def placed_source_results_with_points
@@ -62,6 +62,8 @@ module Calculations
             raise(ArgumentError, "source_results must all be Models::SourceResult")
           end
         end
+
+        delegate :id, to: :participant, prefix: true
       end
     end
   end

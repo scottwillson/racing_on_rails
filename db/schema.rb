@@ -174,6 +174,7 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
     t.integer "minimum_events", default: 0, null: false
     t.integer "maximum_events", default: 0, null: false
     t.integer "missing_result_penalty"
+    t.boolean "most_points_win", default: true, null: false
     t.string "key"
     t.string "name", default: "New Calculation"
     t.text "points_for_place"

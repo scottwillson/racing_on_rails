@@ -24,7 +24,6 @@ module Calculations
         end
 
         def test_id
-          assert_raises(ArgumentError) { SourceResult.new(id: nil, event_category: event_category) }
           assert_raises(ArgumentError) { SourceResult.new(id: "id", event_category: event_category) }
         end
 

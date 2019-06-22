@@ -51,6 +51,8 @@ module Calculations
           categories.map do |category|
             Models::EventCategory.new(category)
           end
+        elsif team?
+          [Models::EventCategory.new(Models::Category.new("Team"))]
         else
           [Models::EventCategory.new(Models::Category.new("Calculation"))]
         end
@@ -69,7 +71,9 @@ module Calculations
           .calculate_step(Steps::SelectMembers)
           .calculate_step(Steps::RejectDnfs)
           .calculate_step(Steps::RejectBelowMinimumEvents)
+          .calculate_step(Steps::RejectMoreThanResultsPerEvent)
           .calculate_step(Steps::AssignPoints)
+          .calculate_step(Steps::AddMissingResultsPenalty)
           .calculate_step(Steps::RejectMoreThanMaximumEvents)
           .calculate_step(Steps::RejectEmptySourceResults)
           .calculate_step(Steps::SumPoints)
@@ -174,7 +178,7 @@ module Calculations
         end
       end
 
-      delegate :categories, :categories?, to: :rules
+      delegate :categories, :categories?, :team?, to: :rules
     end
   end
 end

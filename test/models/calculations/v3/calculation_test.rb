@@ -65,6 +65,91 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     end
   end
 
+  test "delete event" do
+    Timecop.freeze(Time.zone.local(2018)) do
+      series = WeeklySeries.create!(name: "Cross Crusade")
+      source_child_event = series.children.create!(date: Time.zone.local(2018, 11, 21))
+
+      calculation = series.calculations.create!(points_for_place: [100, 50, 25, 12])
+      category = Category.find_or_create_by(name: "Men A")
+      calculation.categories << category
+
+      source_race = source_child_event.races.create!(category: category)
+      person = FactoryBot.create(:person)
+      source_result = source_race.results.create!(place: 1, person: person)
+      assert_equal 1, Calculations::V3::Calculation.count
+
+      calculation.calculate!
+      overall = calculation.reload.event
+      overall.destroy_races
+      overall.destroy!
+
+      assert_equal 1, Calculations::V3::Calculation.count
+      assert_equal 0, ResultSource.count
+      assert_equal 1, Result.count
+      assert Event.exists?(series.id)
+      assert_not Event.exists?(overall.id)
+      assert Result.exists?(source_result.id)
+    end
+  end
+
+  test "delete calculation" do
+    Timecop.freeze(Time.zone.local(2018)) do
+      series = WeeklySeries.create!(name: "Cross Crusade")
+      source_child_event = series.children.create!(date: Time.zone.local(2018, 11, 21))
+
+      calculation = series.calculations.create!(points_for_place: [100, 50, 25, 12])
+      category = Category.find_or_create_by(name: "Men A")
+      calculation.categories << category
+
+      source_race = source_child_event.races.create!(category: category)
+      person = FactoryBot.create(:person)
+      source_result = source_race.results.create!(place: 1, person: person)
+      assert_equal 1, Calculations::V3::Calculation.count
+
+      calculation.calculate!
+      overall = calculation.reload.event
+      calculation.destroy!
+
+      assert_equal 0, Calculations::V3::Calculation.count
+      assert_equal 0, ResultSource.count
+      assert_equal 1, Result.count
+      assert Event.exists?(series.id)
+      assert_not Event.exists?(overall.id)
+      assert Result.exists?(source_result.id)
+    end
+  end
+
+  test "delete source event" do
+    Timecop.freeze(Time.zone.local(2018)) do
+      series = WeeklySeries.create!(name: "Cross Crusade")
+      source_child_event = series.children.create!(date: Time.zone.local(2018, 11, 21))
+
+      calculation = series.calculations.create!(points_for_place: [100, 50, 25, 12])
+      category = Category.find_or_create_by(name: "Men A")
+      calculation.categories << category
+
+      source_race = source_child_event.races.create!(category: category)
+      person = FactoryBot.create(:person)
+      source_result = source_race.results.create!(place: 1, person: person)
+      assert_equal 1, Calculations::V3::Calculation.count
+
+      calculation.calculate!
+      overall = calculation.reload.event
+      source_child_event.destroy_races
+      source_child_event.destroy!
+      series.destroy_races
+      series.destroy!
+
+      assert_equal 0, Calculations::V3::Calculation.count
+      assert_equal 0, ResultSource.count
+      assert_equal 0, Result.count
+      assert_not Event.exists?(series.id)
+      assert_not Event.exists?(overall.id)
+      assert_not Result.exists?(source_result.id)
+    end
+  end
+
   test "delete obsolete races" do
     calculation = Calculations::V3::Calculation.create!
     men_a = ::Category.find_or_create_by(name: "Men A")

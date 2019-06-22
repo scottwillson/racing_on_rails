@@ -6,6 +6,7 @@ en:
   members_only: Must be an annual member
   not_calculation_category: "%{category} result"
   rejected_category: "%{category} result"
+  results_per_event: "Only first %{results_per_event} results count"
   sanctioned_by: "Must be sanctioned by %{racing_association}"
   weekday: "Weekday event"
   worse_result: "Worst results do not count"

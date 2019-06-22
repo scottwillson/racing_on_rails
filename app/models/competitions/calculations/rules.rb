@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Competitions::Calculations::Rules
+  # rubocop:disable Layout/AlignHash
   def default_rules
     {
       break_ties:                      false,
@@ -26,6 +27,7 @@ module Competitions::Calculations::Rules
       upgrade_points_multiplier:       0.50
     }
   end
+  # rubocop:enable Layout/AlignHash
 
   def default_rules_merge(rules)
     assert_valid_rules rules

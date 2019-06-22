@@ -45,17 +45,11 @@ module Calculations::V3::CalculationConcerns::SourceResults
   end
 
   def model_participant(source_result)
-    person = source_result.person
-
-    membership = nil
-    if person&.member_from && person&.member_to
-      membership = person.member_from..person.member_to
+    if team?
+      return team_participant(source_result)
     end
 
-    Calculations::V3::Models::Participant.new(
-      source_result.person_id,
-      membership: membership
-    )
+    person_participant source_result
   end
 
   def model_source_events
@@ -67,6 +61,20 @@ module Calculations::V3::CalculationConcerns::SourceResults
   def multiplier(event_id)
     event = calculations_events.detect { |e| e.event_id == event_id }
     event&.multiplier || 1
+  end
+
+  def person_participant(source_result)
+    person = source_result.person
+
+    membership = nil
+    if person&.member_from && person&.member_to
+      membership = person.member_from..person.member_to
+    end
+
+    Calculations::V3::Models::Participant.new(
+      source_result.person_id,
+      membership: membership
+    )
   end
 
   # Create event records cache: Hash by ud
@@ -147,5 +155,18 @@ module Calculations::V3::CalculationConcerns::SourceResults
     end
 
     source_results
+  end
+
+  def team_participant(source_result)
+    membership = nil
+
+    if source_result.team&.member?
+      membership = (Time.zone.now.beginning_of_year)..(Time.zone.now.end_of_year)
+    end
+
+    Calculations::V3::Models::Participant.new(
+      source_result.team_id,
+      membership: membership
+    )
   end
 end
