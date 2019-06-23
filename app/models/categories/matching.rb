@@ -15,7 +15,8 @@ module Categories
 
     # Find best matching competition race for category. Iterate through traits (weight, equipment, ages, gender, abilities) until there is a
     # single match (or none).
-    def best_match_in(event_categories)
+    # Some times, a category's results need to be split into multiple categories based on the participant's age
+    def best_match_in(event_categories, result_age = nil)
       logger&.debug "Category#best_match_in #{name}: #{event_categories.map(&:name).join(', ')}"
 
       candidate_categories = event_categories.dup
@@ -24,17 +25,24 @@ module Categories
       logger&.debug "equivalent: #{equivalent_match&.name}"
       return equivalent_match if equivalent_match
 
-      candidate_categories = candidate_categories.select { |category| weight == category.weight }
+      # If no weight match, ignore weight and match on age and gender
+      if candidate_categories.any? { |category| weight == category.weight }
+        candidate_categories = candidate_categories.select { |category| weight == category.weight }
+      end
       logger&.debug "weight: #{candidate_categories.map(&:name).join(', ')}"
 
       candidate_categories = candidate_categories.select { |category| equipment == category.equipment }
       logger&.debug "equipment: #{candidate_categories.map(&:name).join(', ')}"
 
-      candidate_categories = candidate_categories.select { |category| ages_begin.in?(category.ages) }
-      logger&.debug "ages: #{candidate_categories.map(&:name).join(', ')}"
-
       candidate_categories = candidate_categories.reject { |category| gender == "M" && category.gender == "F" }
       logger&.debug "gender: #{candidate_categories.map(&:name).join(', ')}"
+
+      if result_age && !age_group? && candidate_categories.none? { |category| ages_begin.in?(category.ages) }
+        candidate_categories = candidate_categories.select { |category| category.ages.include?(result_age) }
+      else
+        candidate_categories = candidate_categories.select { |category| ages_begin.in?(category.ages) }
+      end
+      logger&.debug "ages: #{candidate_categories.map(&:name).join(', ')}"
 
       candidate_categories = candidate_categories.select { |category| ability_begin.in?(category.abilities) }
       logger&.debug "ability: #{candidate_categories.map(&:name).join(', ')}"

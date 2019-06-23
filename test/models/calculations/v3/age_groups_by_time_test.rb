@@ -14,25 +14,48 @@ class Calculations::V3::AgeGroupsByTimeTest < ActiveSupport::TestCase
     source_race = source_child_event.races.create!(category: junior_men_17_18)
     person_1 = FactoryBot.create(:person)
     source_race.results.create!(place: 1, person: person_1, time: 1700)
+    person_2 = FactoryBot.create(:person)
+    source_race.results.create!(place: 2, person: person_2, time: 1749)
+
+    athena = ::Category.find_or_create_by_normalized_name("Athena")
+    source_race = source_child_event.races.create!(category: athena)
+    person_3 = FactoryBot.create(:person)
+    source_race.results.create!(place: 1, person: person_3, time: 2915, age: 49)
 
     calculation = series.calculations.create!(
       place_by: "time",
       year: 2018
     )
     men_9_18 = ::Category.find_or_create_by_normalized_name("Men 9-18")
-    calculation.calculation_categories.create! category: men_9_18, reject: true
+    calculation.calculation_categories.create! category: men_9_18
+    women_35_49 = ::Category.find_or_create_by_normalized_name("Women 35-49")
+    calculation.calculation_categories.create! category: women_35_49
 
     calculation.calculate!
 
     calculation_event = calculation.reload.event
-    assert_equal 1, calculation_event.races.size, calculation_event.races.map(&:name)
+    assert_equal 2, calculation_event.races.size, calculation_event.races.map(&:name)
 
-    race = calculation_event.races.first
+    race = calculation_event.races.detect { |r| r.category == men_9_18 }
+    results = race.results.sort
+    assert_equal 2, results.size
+
+    result = results.first
+    assert_equal person_1, result.person
+    assert_equal "1", result.place
+    assert_equal 1, result.sources.size
+
+    result = results[1]
+    assert_equal person_2, result.person
+    assert_equal "2", result.place
+    assert_equal 1, result.sources.size
+
+    race = calculation_event.races.detect { |r| r.category == women_35_49 }
     results = race.results.sort
     assert_equal 1, results.size
 
     result = results.first
-    assert_equal person_1, result.person
+    assert_equal person_3, result.person
     assert_equal "1", result.place
     assert_equal 1, result.sources.size
   end
