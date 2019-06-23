@@ -12,8 +12,8 @@ module Calculations
             place = 1
             previous_result = nil
 
-            results = category.results.select(&:points?)
-            sort_by_points(results, calculator.rules.most_points_win).map.with_index do |result, index|
+            results = select_results(category.results, calculator.rules.place_by)
+            sort_results(results, calculator.rules.place_by).map.with_index do |result, index|
               if index == 0
                 place = 1
               elsif result.points != previous_result.points
@@ -27,16 +27,44 @@ module Calculations
           end
         end
 
-        def self.sort_by_points(results, most_points_win)
-          results = results.sort do |x, y|
-            compare_by_points x, y
-          end
-
-          if most_points_win
-            results
+        def self.select_results(results, place_by)
+          if place_by == "time"
+            results.each(&:validate_time!)
+            results.select(&:time?)
           else
-            results.reverse
+            results.select(&:points?)
           end
+        end
+
+        def self.sort_results(results, place_by)
+          results.sort do |x, y|
+            case place_by
+            when "points"
+              compare_by_points x, y
+            when "fewest_points"
+              compare_by_points y, x
+            when "time"
+              compare_by_time x, y
+            else
+              raise ArgumentError, "place_by must be points, fewest_points, or time but is #{place_by}"
+            end
+          end
+        end
+
+        def self.compare_by_time(x, y)
+          diff = x.time <=> y.time
+          return diff if diff != 0
+
+          diff = compare_by_best_place(x, y)
+          return diff if diff != 0
+
+          diff = compare_by_most_recent_result(x, y)
+          return diff if diff != 0
+
+          # Special case. Tie cannot be broken.
+          x.tied = true
+          y.tied = true
+          0
         end
 
         def self.compare_by_points(x, y)

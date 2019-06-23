@@ -14,8 +14,9 @@ module Calculations
         attr_accessor :place
         attr_writer :points
         attr_accessor :rejection_reason
+        attr_reader :time
 
-        def initialize(id: nil, date: nil, event_category: nil, participant: nil, place: nil, points: nil)
+        def initialize(id: nil, date: nil, event_category: nil, participant: nil, place: nil, points: nil, time: nil)
           @id = id
           @date = date
           @event_category = event_category
@@ -23,6 +24,7 @@ module Calculations
           @place = place
           @points = points
           @rejected = false
+          @time = time
 
           validate!
         end

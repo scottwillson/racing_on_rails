@@ -94,7 +94,8 @@ module Calculations::V3::CalculationConcerns::SourceResults
         event_category: Calculations::V3::Models::EventCategory.new(category, event),
         id: result.id,
         participant: model_participant(result),
-        place: result.place
+        place: result.place,
+        time: result.time
       )
     end
   end

@@ -18,7 +18,7 @@ class Calculations::V3::SeriesTest < ActiveSupport::TestCase
     source_child_event = different_series.children.create!(date: Time.zone.local(2018, 8, 25))
     source_race = source_child_event.races.create!(category: men_a)
     team = FactoryBot.create(:team)
-    person_1 = FactoryBot.create(:person, team: team)
+    person_1 = FactoryBot.create(:person, team: team, name: "First Place")
     source_race.results.create!(place: 1, person: person_1, team: team)
     source_race.results.create!(place: 2, person: FactoryBot.create(:person))
 
@@ -28,12 +28,12 @@ class Calculations::V3::SeriesTest < ActiveSupport::TestCase
 
     source_race = source_child_event.races.create!(category: men_a)
     source_result_1 = source_race.results.create!(place: 1, person: person_1, team: team)
-    person_2 = FactoryBot.create(:person)
+    person_2 = FactoryBot.create(:person, name: "Second Place")
     source_result_2 = source_race.results.create!(place: 2, person: person_2)
 
     women_b = Category.find_or_create_by_normalized_name("Women B")
     source_race = source_child_event.races.create!(category: women_b)
-    person_3 = FactoryBot.create(:person)
+    person_3 = FactoryBot.create(:person, name: "Third Place")
     source_race.results.create!(place: 1, person: person_3)
 
     series.children.create!(date: Time.zone.local(2019, 3, 18))

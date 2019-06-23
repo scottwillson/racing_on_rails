@@ -3,7 +3,7 @@
 require "test_helper"
 
 # :stopdoc:
-class Calculations::V3::TeamTest < ActiveSupport::TestCase
+class Calculations::V3::IntermediateTest < ActiveSupport::TestCase
   setup { FactoryBot.create :discipline }
 
   test "#calculate!" do
@@ -34,7 +34,7 @@ class Calculations::V3::TeamTest < ActiveSupport::TestCase
     calculation = series.calculations.create!(
       key: :team_comp,
       missing_result_penalty: 100,
-      most_points_win: false,
+      place_by: "fewest_points",
       points_for_place: (1..100).to_a,
       results_per_event: 10,
       team: true,

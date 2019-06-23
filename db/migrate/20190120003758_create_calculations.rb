@@ -12,7 +12,7 @@ class CreateCalculations < ActiveRecord::Migration[5.2]
       t.integer :minimum_events, default: 0, null: false
       t.integer :maximum_events, default: 0, null: false
       t.integer :missing_result_penalty, default: nil, null: true
-      t.boolean :most_points_win, default: true, null: false
+      t.string :place_by, default: :points, null: false
       t.string :key
       t.string :name, default: "New Calculation", required: true, unique: true
       t.text :points_for_place, array: true

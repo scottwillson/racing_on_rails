@@ -266,15 +266,15 @@ def compare_individual_results(expected_results, actual_results)
 end
 
 # competitions = COMPETITIONS
-competitions = { cross_crusade_team_competition: COMPETITIONS[:cross_crusade_team_competition]}
+competitions = { gpcd_team_competition: COMPETITIONS[:gpcd_team_competition]}
 
 # fetch_data
 # recreate_databases
 # fix_source_results
 # destroy_calculations
-# create_calculations competitions
-# calculations(competitions).map(&:source_event).compact.each(&:update_date)
-# calculations(competitions).reject { |c| c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"] }.each(&:calculate!)
+create_calculations competitions
+calculations(competitions).map(&:source_event).compact.each(&:update_date)
+calculations(competitions).reject { |c| c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"] }.each(&:calculate!)
 compare_results competitions
 
 # rubocop:enable Rails/SkipsModelValidations
