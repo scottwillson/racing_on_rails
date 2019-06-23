@@ -8,6 +8,7 @@ module Calculations
       # and Overall BAR.
       class SourceResult
         attr_reader :id
+        attr_reader :age
         attr_reader :date
         attr_reader :event_category
         attr_reader :participant
@@ -16,8 +17,9 @@ module Calculations
         attr_accessor :rejection_reason
         attr_reader :time
 
-        def initialize(id: nil, date: nil, event_category: nil, participant: nil, place: nil, points: nil, time: nil)
+        def initialize(id: nil, age: nil, date: nil, event_category: nil, participant: nil, place: nil, points: nil, time: nil)
           @id = id
+          @age = age
           @date = date
           @event_category = event_category
           @participant = participant

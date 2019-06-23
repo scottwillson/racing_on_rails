@@ -148,6 +148,18 @@ module Competitions
       assert_best_match_in [@singlespeed_women], @singlespeed_women, event
     end
 
+    test "athena" do
+      athena = ::Category.find_or_create_by_normalized_name("Athena")
+      men_9_18 = ::Category.find_or_create_by_normalized_name("Men 9-18")
+      women_35_49 = ::Category.find_or_create_by_normalized_name("Women 35-49")
+
+      event = FactoryBot.create(:event)
+      event.races.create!(category: men_9_18)
+      event.races.create!(category: women_35_49)
+
+      assert_best_match_in [athena, women_35_49], women_35_49, event, 35
+    end
+
     test "gender over ability" do
       women_1_2_3 = Category.find_or_create_by_normalized_name("Women 1/2/3")
 
@@ -195,16 +207,16 @@ module Competitions
       assert_best_match_in [@junior_women, junior_women_10_12], @junior_women, event
     end
 
-    def assert_best_match_in(categories, race_category, event)
+    def assert_best_match_in(categories, race_category, event, result_age = nil)
       categories.each do |category|
-        best_match = category.best_match_in(event.categories)
+        best_match = category.best_match_in(event.categories, result_age)
         assert race_category == best_match,
                "#{race_category.name} should be best_match_in for #{category.name} in event with " \
-               "categories #{event.races.map(&:name).join(', ')} but was #{best_match.name}"
+               "categories #{event.races.map(&:name).join(', ')} but was #{best_match&.name}"
       end
 
       event.categories
-           .reject { |category| category.in?(categories)}
+           .reject { |category| category.in?(categories) }
            .each do |category|
              best_match = category.best_match_in(event.categories)
              assert race_category != best_match,

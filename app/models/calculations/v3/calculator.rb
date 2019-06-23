@@ -112,7 +112,7 @@ module Calculations
       def find_or_create_event_category(source_result)
         return event_categories.first unless categories?
 
-        category = source_result.category.best_match_in(event_categories.map(&:category))
+        category = source_result.category.best_match_in(event_categories.map(&:category), source_result.age)
         event_category = event_categories.find { |c| c.category == category }
 
         return event_category if event_category
