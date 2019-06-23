@@ -187,6 +187,13 @@ def expect_new_calculations(key, event_ids)
     end
   end
 
+  if key == :cross_crusade_team_competition
+    cross_crusade_team_competition = Calculations::V3::Calculation.where(key: :cross_crusade_team_competition).first&.event
+    if cross_crusade_team_competition
+      event_ids << cross_crusade_team_competition.id
+    end
+  end
+
   event_ids
 end
 
@@ -258,16 +265,16 @@ def compare_individual_results(expected_results, actual_results)
   end
 end
 
-competitions = COMPETITIONS
-# competitions = { cross_crusade_team_competition: COMPETITIONS[:cross_crusade_team_competition]}
+# competitions = COMPETITIONS
+competitions = { cross_crusade_team_competition: COMPETITIONS[:cross_crusade_team_competition]}
 
 # fetch_data
 # recreate_databases
 # fix_source_results
-destroy_calculations
-create_calculations competitions
-calculations(competitions).map(&:source_event).compact.each(&:update_date)
-calculations(competitions).reject { |c| c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"] }.each(&:calculate!)
+# destroy_calculations
+# create_calculations competitions
+# calculations(competitions).map(&:source_event).compact.each(&:update_date)
+# calculations(competitions).reject { |c| c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"] }.each(&:calculate!)
 compare_results competitions
 
 # rubocop:enable Rails/SkipsModelValidations
