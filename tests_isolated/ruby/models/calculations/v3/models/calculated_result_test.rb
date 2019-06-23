@@ -26,7 +26,6 @@ module Calculations
         def test_sources
           assert_raises(ArgumentError) { CalculatedResult.new(1, nil) }
           assert_raises(ArgumentError) { CalculatedResult.new(2, []) }
-          assert_raises(ArgumentError) { CalculatedResult.new(2, "") }
         end
       end
     end

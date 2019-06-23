@@ -89,7 +89,7 @@ COMPETITIONS = {
     name: "River City Bicycles Cyclocross Crusade Team Competition",
     rules: {
       missing_result_penalty: 100,
-      most_points_win: false,
+      place_by: "fewest_points",
       points_for_place: (1..100).to_a,
       results_per_event: 10,
       team: true
@@ -139,6 +139,25 @@ COMPETITIONS = {
       minimum_events: 4,
       name: "Gran Prix Carl Decker",
       points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+    }
+  },
+  gpcd_ages: {
+    categories: [
+      { name: "Men 9-18" },
+      { name: "Men 19-34" },
+      { name: "Men 35-49" },
+      { name: "Men 50+" },
+      { name: "Men 60+" },
+      { name: "Women 9-18" },
+      { name: "Women 19-34" },
+      { name: "Women 35-49" },
+      { name: "Women 60+" }
+    ],
+    competition_id: 26_430,
+    event_id: 26_278,
+    name: "Grand Prix Carl Decker Age Groups",
+    rules: {
+      place_by: "time"
     }
   },
   oregon_cup: {

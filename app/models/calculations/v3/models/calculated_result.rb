@@ -11,12 +11,15 @@ module Calculations
         attr_accessor :rejection_reason
         attr_accessor :tied
         attr_reader :source_results
+        attr_reader :time
 
         def initialize(participant, source_results)
           @participant = participant
           @rejected = false
           @source_results = source_results
           @tied = false
+
+          @time = source_results&.first&.time
 
           validate!
         end
@@ -48,6 +51,10 @@ module Calculations
           @tied
         end
 
+        def time?
+          !time.nil?
+        end
+
         def unrejected_source_results
           source_results.reject(&:rejected?)
         end
@@ -60,6 +67,12 @@ module Calculations
 
           unless source_results.all? { |source_result| source_result.is_a?(Calculations::V3::Models::SourceResult) }
             raise(ArgumentError, "source_results must all be Models::SourceResult")
+          end
+        end
+
+        def validate_time!
+          if source_results.size != 1
+            raise(ArgumentError, "results placed by time must have exactly one source result, but has #{source_results.size}")
           end
         end
 
