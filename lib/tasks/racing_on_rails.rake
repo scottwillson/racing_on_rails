@@ -44,7 +44,7 @@ namespace :racing_on_rails do
       file_path = "#{Rails.root}/tmp/#{competition_class.name.underscore}-#{discipline.underscore}.json"
       snapshot_results = JSON.parse(File.read(file_path))
       new_results = competition.as_json(nil)
-      diff = HashDiff.best_diff(snapshot_results, new_results)
+      diff = Hashdiff.best_diff(snapshot_results, new_results)
       diff.each do |line|
         p line
       end
