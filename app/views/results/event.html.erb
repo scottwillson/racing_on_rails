@@ -32,8 +32,11 @@
   <p class="event_notes">No results for <%= @event.year %></p>
   <%- end -%>
 
+  <% Rails.logger.info "@start_list.present? #{@start_list.present?}" %>
+  <% Rails.logger.info "@event.updated_at #{@event.updated_at}" %>
+  <% Rails.logger.info "@start_list.map(&:updated_at).max #{@start_list.map(&:updated_at).max}" %>
   <% if @start_list.present? && (@event.updated_at.nil? || @event.updated_at < @start_list.map(&:updated_at).max) %>
-  <p class="created_updated">Updated <%= @event.updated_at.to_formatted_s :long_and_friendly_date_and_time %></p>
+  <p class="created_updated">Updated <%= @start_list.map(&:updated_at).max.to_formatted_s :long_and_friendly_date_and_time %></p>
   <% elsif @event.updated_at %>
   <p class="created_updated">Updated <%= @event.updated_at.to_formatted_s :long_and_friendly_date_and_time %></p>
   <% end %>
