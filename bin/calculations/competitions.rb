@@ -141,23 +141,25 @@ COMPETITIONS = {
       points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     }
   },
-  gpcd_ages: {
+  gpcd_david_douglas_ages: {
     categories: [
       { name: "Men 9-18" },
       { name: "Men 19-34" },
       { name: "Men 35-49" },
       { name: "Men 50+" },
-      { name: "Men 60+" },
       { name: "Women 9-18" },
       { name: "Women 19-34" },
       { name: "Women 35-49" },
-      { name: "Women 60+" }
+      { name: "Women 50+" }
     ],
-    competition_id: 26_430,
-    event_id: 26_278,
-    name: "Grand Prix Carl Decker Age Groups",
+    events: [
+      { id: 26_276, multiplier: 1 }
+    ],
+    group_by: "age",
+    name: "Grand Prix Carl Decker: David Douglas Age Groups",
     rules: {
-      place_by: "time"
+      place_by: "time",
+      specific_events: true
     }
   },
   oregon_cup: {

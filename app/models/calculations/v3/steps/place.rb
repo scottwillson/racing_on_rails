@@ -29,7 +29,6 @@ module Calculations
 
         def self.select_results(results, place_by)
           if place_by == "time"
-            results.each(&:validate_time!)
             results.select(&:time?)
           else
             results.select(&:points?)

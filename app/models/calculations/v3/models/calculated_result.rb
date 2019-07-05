@@ -70,12 +70,6 @@ module Calculations
           end
         end
 
-        def validate_time!
-          if source_results.size != 1
-            raise(ArgumentError, "results placed by time must have exactly one source result, but has #{source_results.size}")
-          end
-        end
-
         delegate :id, to: :participant, prefix: true
       end
     end

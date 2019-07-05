@@ -27,6 +27,7 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
       category_rules: category_rules,
       disciplines: model_disciplines,
       double_points_for_last_event: double_points_for_last_event?,
+      group_by: group_by,
       maximum_events: maximum_events,
       members_only: members_only?,
       minimum_events: minimum_events,

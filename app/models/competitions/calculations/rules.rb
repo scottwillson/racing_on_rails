@@ -10,6 +10,7 @@ module Competitions::Calculations::Rules
       end_date:                        nil,
       dnf_points:                      0,
       field_size_bonus:                false,
+      group_by:                        "category",
       maximum_events:                  Competitions::Calculations::Calculator::UNLIMITED,
       maximum_upgrade_points:          Competitions::Calculations::Calculator::UNLIMITED,
       minimum_events:                  nil,

@@ -133,13 +133,11 @@ module Calculations
       def map_source_results_to_results(source_results)
         source_results.each do |source_result|
           source_result_in_calculation_category = in_calculation_category?(source_result)
-          unless source_result_in_calculation_category
-            source_result.reject "not_calculation_category"
-          end
+          source_result.reject("not_calculation_category") unless source_result_in_calculation_category
 
           event_category = find_or_create_event_category(source_result)
-
           calculated_result = event_category.results.find { |r| r.participant.id == source_result.participant.id }
+
           if calculated_result
             calculated_result.source_results << source_result
           else
@@ -147,9 +145,7 @@ module Calculations
               Models::Participant.new(source_result.participant.id, membership: source_result.participant.membership),
               [source_result]
             )
-            unless source_result_in_calculation_category
-              calculated_result.reject "not_calculation_category"
-            end
+            calculated_result.reject("not_calculation_category") unless source_result_in_calculation_category
 
             event_category.results << calculated_result
           end

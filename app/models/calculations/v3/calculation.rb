@@ -13,6 +13,7 @@
 # clarity, some results are filtered early by SQL. For example, no one expects
 # criterium and track results to show in the Road BAR.
 class Calculations::V3::Calculation < ApplicationRecord
+  GROUP_BY = %w[age category].freeze
   PLACE_BY = %w[fewest_points points time].freeze
 
   include Calculations::V3::CalculationConcerns::Cache
@@ -43,6 +44,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   before_save :set_name
 
   validates :key, uniqueness: { allow_nil: true, scope: :year }
+  validates :group_by, inclusion: { in: GROUP_BY }
   validates :place_by, inclusion: { in: PLACE_BY }
 
   default_value_for(:discipline_id) { ::Discipline[RacingAssociation.current.default_discipline]&.id }
