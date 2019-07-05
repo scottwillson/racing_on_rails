@@ -8,6 +8,7 @@ class CreateCalculations < ActiveRecord::Migration[5.2]
       t.references :source_event
       t.boolean :association_sanctioned_only, default: false, null: false
       t.boolean :double_points_for_last_event, default: false, null: false
+      t.string :group_by, default: :category, null: false
       t.boolean :members_only, default: false, null: false
       t.integer :minimum_events, default: 0, null: false
       t.integer :maximum_events, default: 0, null: false

@@ -114,6 +114,8 @@ end
 
 def compare_results(competitions)
   competitions.each do |key, competition|
+    next unless competition[:competition_id]
+
     expected_event = Event.find(competition[:competition_id])
     actual_event = Calculations::V3::Calculation.where(key: key).first&.event
 
@@ -266,12 +268,12 @@ def compare_individual_results(expected_results, actual_results)
 end
 
 # competitions = COMPETITIONS
-competitions = { gpcd_team_competition: COMPETITIONS[:gpcd_team_competition]}
+competitions = { gpcd_david_douglas_ages: COMPETITIONS[:gpcd_david_douglas_ages]}
 
 # fetch_data
 # recreate_databases
 # fix_source_results
-# destroy_calculations
+destroy_calculations
 create_calculations competitions
 calculations(competitions).map(&:source_event).compact.each(&:update_date)
 calculations(competitions).reject { |c| c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"] }.each(&:calculate!)

@@ -101,6 +101,9 @@ module Categories
 
       # Choose highest minimum age if multiple Masters 'and over' categories
       if masters? && candidate_categories.all?(&:and_over?)
+        if result_age
+          candidate_categories = candidate_categories.reject { |category| category.ages_begin > result_age }
+        end
         highest_age = candidate_categories.map(&:ages_begin).max
         highest_age_category = candidate_categories.detect { |category| category.ages_begin == highest_age }
         logger&.debug "highest age: #{highest_age_category.name}"
@@ -130,7 +133,7 @@ module Categories
       return candidate_categories.first if candidate_categories.one?
       return nil if candidate_categories.empty?
 
-      raise "Multiple matches #{candidate_categories.map(&:name)} for #{name} in #{event_categories.map(&:name).join(', ')}"
+      raise "Multiple matches #{candidate_categories.map(&:name)} for #{name}, result age: #{result_age} in #{event_categories.map(&:name).join(', ')}"
     end
 
     def equivalent?(other)

@@ -249,6 +249,77 @@ module Calculations
         masters_men_event_category = event_categories.find { |ec| ec.category == masters_men }
         assert_equal 2, masters_men_event_category.results.size
       end
+
+      def test_group_by_age
+        source_results = []
+        athena = Models::Category.new("Athena")
+        clydesdale = Models::Category.new("Clydesdale")
+        men_35_49 = Models::Category.new("Men 35-49")
+        men_50 = Models::Category.new("Men 50+")
+        men_60 = Models::Category.new("Men 60+")
+        men_9_18 = Models::Category.new("Men 9-18")
+        junior_men_17_18 = Models::Category.new("Junior Men 17-18")
+        women_35_49 = Models::Category.new("Women 35-49")
+        masters_50_plus = Models::Category.new("Masters 50+	")
+
+        source_results << Models::SourceResult.new(
+          id: 33,
+          age: 41,
+          event_category: Models::EventCategory.new(athena),
+          participant: Models::Participant.new(0),
+          place: "1"
+        )
+
+        source_results << Models::SourceResult.new(
+          id: 34,
+          age: 52,
+          event_category: Models::EventCategory.new(clydesdale),
+          participant: Models::Participant.new(1),
+          place: "7"
+        )
+
+        source_results << Models::SourceResult.new(
+          id: 35,
+          age: 17,
+          event_category: Models::EventCategory.new(junior_men_17_18),
+          participant: Models::Participant.new(2),
+          place: "1"
+        )
+
+        source_results << Models::SourceResult.new(
+          id: 36,
+          age: 53,
+          event_category: Models::EventCategory.new(masters_50_plus),
+          participant: Models::Participant.new(3),
+          place: "19"
+        )
+
+        source_results << Models::SourceResult.new(
+          id: 37,
+          event_category: Models::EventCategory.new(rejected_category),
+          participant: Models::Participant.new(4),
+          place: "7"
+        )
+
+        rules = Rules.new(
+          category_rules: [
+            Models::CategoryRule.new(men_9_18),
+            Models::CategoryRule.new(women_35_49),
+            Models::CategoryRule.new(men_35_49),
+            Models::CategoryRule.new(men_50),
+            Models::CategoryRule.new(men_60)
+          ],
+          group_by: "age"
+        )
+        calculator = Calculator.new(rules: rules, source_results: source_results)
+
+        event_categories = calculator.event_categories
+        assert_equal 3, event_categories.size, event_categories.map(&:name)
+        junior_women_event_category = event_categories.find { |ec| ec.category == junior_women }
+        assert_equal 1, junior_women_event_category.results.size
+        masters_men_event_category = event_categories.find { |ec| ec.category == masters_men }
+        assert_equal 2, masters_men_event_category.results.size
+      end
     end
   end
 end
