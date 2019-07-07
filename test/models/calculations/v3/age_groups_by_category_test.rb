@@ -3,7 +3,7 @@
 require "test_helper"
 
 # :stopdoc:
-class Calculations::V3::AgeGroupsByTimeTest < ActiveSupport::TestCase
+class Calculations::V3::AgeGroupsByCategoryTest < ActiveSupport::TestCase
   setup { FactoryBot.create :discipline }
 
   test "#calculate!" do
@@ -38,7 +38,7 @@ class Calculations::V3::AgeGroupsByTimeTest < ActiveSupport::TestCase
 
     calculation = Calculations::V3::Calculation.create!(
       group_by: "age",
-      place_by: "time",
+      place_by: "place",
       year: 2018
     )
     calculation.events << source_child_event
@@ -55,20 +55,20 @@ class Calculations::V3::AgeGroupsByTimeTest < ActiveSupport::TestCase
 
     race = calculation_event.races.detect { |r| r.category == men_9_18 }
     results = race.results.sort
-    assert_equal 3, results.size
+    assert_equal 5, results.size
 
     result = results.first
-    assert_equal person_1, result.person
+    assert result.person == person_1 || result.person == person_3
     assert_equal "1", result.place
     assert_equal 1, result.sources.size
 
     result = results[1]
-    assert_equal person_2, result.person
-    assert_equal "2", result.place
+    assert result.person == person_1 || result.person == person_3
+    assert_equal "1", result.place
     assert_equal 1, result.sources.size
 
     result = results[2]
-    assert_equal person_3, result.person
+    assert_equal person_2, result.person
     assert_equal "3", result.place
     assert_equal 1, result.sources.size
 

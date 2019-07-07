@@ -105,7 +105,7 @@ module Calculations
           source_result.reject("not_calculation_category") unless source_result_in_calculation_category
 
           event_category = find_or_create_event_category(source_result)
-          calculated_result = event_category.results.find { |r| r.participant.id == source_result.participant.id }
+          calculated_result = find_calculated_result(event_category, source_result.participant.id)
 
           if calculated_result
             calculated_result.source_results << source_result
@@ -119,6 +119,12 @@ module Calculations
             event_category.results << calculated_result
           end
         end
+      end
+
+      def find_calculated_result(event_category, participant_id)
+        return nil if rules.place_by == "place" || rules.place_by == "time"
+
+        event_category.results.find { |r| r.participant.id == participant_id }
       end
 
       def results

@@ -47,6 +47,14 @@ module Calculations
           @rejected
         end
 
+        def source_result_numeric_place
+          source_results.first.numeric_place
+        end
+
+        def source_result_placed?
+          source_results.first.placed?
+        end
+
         def tied?
           @tied
         end
@@ -67,6 +75,12 @@ module Calculations
 
           unless source_results.all? { |source_result| source_result.is_a?(Calculations::V3::Models::SourceResult) }
             raise(ArgumentError, "source_results must all be Models::SourceResult")
+          end
+        end
+
+        def validate_one_source_result!
+          if source_results.size != 1
+            raise(ArgumentError, "results placed by place or time must have exactly one source result, but has #{source_results.size}")
           end
         end
 

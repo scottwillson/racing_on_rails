@@ -155,10 +155,10 @@ COMPETITIONS = {
     events: [
       { id: 26_276, multiplier: 1 }
     ],
-    group_by: "age",
     name: "Grand Prix Carl Decker: David Douglas Age Groups",
     rules: {
-      place_by: "time",
+      group_by: "age",
+      place_by: "place",
       specific_events: true
     }
   },
@@ -176,10 +176,10 @@ COMPETITIONS = {
     events: [
       { id: 26_277, multiplier: 1 }
     ],
-    group_by: "age",
     name: "Grand Prix Carl Decker: Het Meer Age Groups",
     rules: {
-      place_by: "time",
+      group_by: "age",
+      place_by: "place",
       specific_events: true
     }
   },
@@ -197,10 +197,10 @@ COMPETITIONS = {
     events: [
       { id: 26_279, multiplier: 1 }
     ],
-    group_by: "age",
     name: "Grand Prix Carl Decker: Zaaldercross Age Groups",
     rules: {
-      place_by: "time",
+      group_by: "age",
+      place_by: "place",
       specific_events: true
     }
   },
@@ -218,10 +218,10 @@ COMPETITIONS = {
     events: [
       { id: 26_280, multiplier: 1 }
     ],
-    group_by: "age",
     name: "Grand Prix Carl Decker: Ninkrossi Age Groups",
     rules: {
-      place_by: "time",
+      group_by: "age",
+      place_by: "place",
       specific_events: true
     }
   },
@@ -239,10 +239,10 @@ COMPETITIONS = {
     events: [
       { id: 26_281, multiplier: 1 }
     ],
-    group_by: "age",
     name: "Grand Prix Carl Decker: Heiser Farm Age Groups",
     rules: {
-      place_by: "time",
+      group_by: "age",
+      place_by: "place",
       specific_events: true
     }
   },

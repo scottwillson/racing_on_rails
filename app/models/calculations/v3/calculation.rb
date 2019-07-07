@@ -14,7 +14,7 @@
 # criterium and track results to show in the Road BAR.
 class Calculations::V3::Calculation < ApplicationRecord
   GROUP_BY = %w[age category].freeze
-  PLACE_BY = %w[fewest_points points time].freeze
+  PLACE_BY = %w[fewest_points place points time].freeze
 
   include Calculations::V3::CalculationConcerns::Cache
   include Calculations::V3::CalculationConcerns::CalculatedResults

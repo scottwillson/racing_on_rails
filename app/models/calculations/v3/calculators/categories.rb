@@ -3,7 +3,7 @@
 module Calculations::V3::Calculators::Categories
   extend ActiveSupport::Concern
 
-  def best_match_in(category, categories, result_age = nil)
+  def best_match_in(category, categories, result_age)
     case rules.group_by
     when "age"
       category.best_match_by_age_in(categories, result_age)
@@ -20,9 +20,9 @@ module Calculations::V3::Calculators::Categories
         Calculations::V3::Models::EventCategory.new(category)
       end
     elsif team?
-      [Calculations::V3::Models::EventCategory.new(Models::Category.new("Team"))]
+      [Calculations::V3::Models::EventCategory.new(Calculations::V3::Models::Category.new("Team"))]
     else
-      [Calculations::V3::Models::EventCategory.new(Models::Category.new("Calculation"))]
+      [Calculations::V3::Models::EventCategory.new(Calculations::V3::Models::Category.new("Calculation"))]
     end
   end
 
@@ -44,6 +44,6 @@ module Calculations::V3::Calculators::Categories
   def in_calculation_category?(source_result)
     return true unless categories?
 
-    best_match_in(source_result.category, categories).present?
+    best_match_in(source_result.category, categories, source_result.age).present?
   end
 end

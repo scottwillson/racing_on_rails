@@ -145,12 +145,32 @@ module Categories
       logger&.debug "equivalent: #{equivalent_match&.name}"
       return equivalent_match if equivalent_match
 
-      if result_age && !age_group? && candidate_categories.none? { |category| ages_begin.in?(category.ages) }
+      logger&.debug "#{result_age} && #{age_group?}"
+      if result_age && !age_group?
         candidate_categories = candidate_categories.select { |category| category.ages.include?(result_age) }
       else
         candidate_categories = candidate_categories.select { |category| ages_begin.in?(category.ages) }
       end
       logger&.debug "ages: #{candidate_categories.map(&:name).join(', ')}"
+      return candidate_categories.first if candidate_categories.one?
+
+      candidate_categories = candidate_categories.reject { |category| gender == "M" && category.gender == "F" }
+      logger&.debug "gender: #{candidate_categories.map(&:name).join(', ')}"
+      return candidate_categories.first if candidate_categories.one?
+
+      # Choose highest minimum age if multiple Masters 'and over' categories
+      if masters? && candidate_categories.all?(&:and_over?)
+        if result_age
+          candidate_categories = candidate_categories.reject { |category| category.ages_begin > result_age }
+        end
+        highest_age = candidate_categories.map(&:ages_begin).max
+        highest_age_category = candidate_categories.detect { |category| category.ages_begin == highest_age }
+        logger&.debug "highest age: #{highest_age_category.name}"
+        return highest_age_category
+      end
+
+      candidate_categories = candidate_categories.reject { |category| gender == "F" && category.gender == "M" }
+      logger&.debug "exact gender: #{candidate_categories.map(&:name).join(', ')}"
 
       return candidate_categories.first if candidate_categories.one?
       return nil if candidate_categories.empty?
