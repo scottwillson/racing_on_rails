@@ -268,7 +268,13 @@ def compare_individual_results(expected_results, actual_results)
 end
 
 # competitions = COMPETITIONS
-competitions = { gpcd_david_douglas_ages: COMPETITIONS[:gpcd_david_douglas_ages]}
+competitions = {
+  gpcd_david_douglas_ages: COMPETITIONS[:gpcd_david_douglas_ages],
+  gpcd_het_meer_ages: COMPETITIONS[:gpcd_het_meer_ages],
+  gpcd_zaaldercross_ages: COMPETITIONS[:gpcd_zaaldercross_ages],
+  gpcd_ninkrossi_ages: COMPETITIONS[:gpcd_ninkrossi_ages],
+  gpcd_heiser_farm_ages: COMPETITIONS[:gpcd_heiser_farm_ages]
+}
 
 # fetch_data
 # recreate_databases

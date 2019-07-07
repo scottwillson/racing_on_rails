@@ -33,6 +33,9 @@ class Calculations::V3::AgeGroupsByTimeTest < ActiveSupport::TestCase
     person_3 = FactoryBot.create(:person)
     source_race.results.create!(place: 1, person: person_3, time: 2915, age: 49)
 
+    # Create second series event + calculation with results
+    # Create calculation that uses series child calculations
+
     calculation = Calculations::V3::Calculation.create!(
       group_by: "age",
       place_by: "time",
@@ -63,6 +66,7 @@ class Calculations::V3::AgeGroupsByTimeTest < ActiveSupport::TestCase
     assert_equal person_3, result.person
     assert_equal "1", result.place
     assert_equal 1, result.sources.size
+    assert_equal junior_men_15_16, result.sources.first.source_result.category
 
     result = results[2]
     assert_equal person_2, result.person
