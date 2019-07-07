@@ -31,6 +31,10 @@ module Calculations
           validate!
         end
 
+        def ability
+          category&.ability
+        end
+
         def category
           event_category&.category
         end
