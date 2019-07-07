@@ -142,31 +142,58 @@ module Calculations
           event_category = Models::EventCategory.new(Models::Category.new("Masters Men"))
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "1")
-          assert_equal 100, AssignPoints.points_for_place(source_result, points_for_place)
+          assert_equal 100, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "5")
-          assert_equal 10, AssignPoints.points_for_place(source_result, points_for_place)
+          assert_equal 10, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "")
-          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: nil)
-          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "6")
-          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "999999")
-          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "DNF")
-          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "DQ")
-          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "DNS")
-          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
+        end
+
+        def test_points_placed_by_place
+          category = Models::Category.new("Masters Men")
+          rules = Rules.new(
+            category_rules: [Models::CategoryRule.new(category)],
+            place_by: "place"
+          )
+          calculator = Calculator.new(rules: rules, source_results: [])
+          event_category = calculator.event_categories.first
+
+          event = Models::Event.new
+          source_result = Models::SourceResult.new(id: 33, event_category: Models::EventCategory.new(category, event), place: 1)
+          participant = Models::Participant.new(0)
+          result = Models::CalculatedResult.new(participant, [source_result])
+          event_category.results << result
+
+          event = Models::Event.new
+          source_result = Models::SourceResult.new(id: 19, event_category: Models::EventCategory.new(category, event), place: 2)
+          participant = Models::Participant.new(1)
+          result = Models::CalculatedResult.new(participant, [source_result])
+          event_category.results << result
+
+          event_categories = AssignPoints.calculate!(calculator)
+
+          assert_equal 100, event_categories.first.results[0].source_results.first.points
+          assert_equal 50, event_categories.first.results[1].source_results.first.points
         end
       end
     end
