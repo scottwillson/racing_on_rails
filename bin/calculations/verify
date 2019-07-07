@@ -17,7 +17,7 @@ def recreate_databases
   puts `spring stop`
   puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists obra_development'`
   puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists obra_test'`
-  puts `bundle exec rake db:setup RAILS_ENV=development`
+  puts `bundle exec rake db:create RAILS_ENV=development`
   puts `mysql -u root obra_development < tmp/db/production.sql`
   puts `bundle exec rake db:migrate`
 end
@@ -70,7 +70,7 @@ def create_calculations(competitions)
     next if Calculations::V3::Calculation.where(key: key).exists?
 
     competition[:rules][:key] = key
-    calculation = create_calculation(competition[:event_id], competition[:rules])
+    calculation = create_calculation(competition[:event_id], competition[:rules], competition[:name])
 
     competition[:categories]&.each do |category_definition|
       category = Category.find_or_create_by(name: category_definition[:name])
@@ -89,8 +89,8 @@ def create_calculations(competitions)
   end
 end
 
-def create_calculation(event_id, rules)
-  puts "create_calculation #{rules[:name]}"
+def create_calculation(event_id, rules, name)
+  puts "create_calculation #{name}"
   if rules[:discipline]
     rules[:discipline] = Discipline.where(name: rules[:discipline]).first!
   end

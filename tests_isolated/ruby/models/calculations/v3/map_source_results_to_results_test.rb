@@ -254,6 +254,7 @@ module Calculations
         source_results = []
         athena = Models::Category.new("Athena")
         clydesdale = Models::Category.new("Clydesdale")
+        men_5 = Models::Category.new("Men 5")
         men_35_49 = Models::Category.new("Men 35-49")
         men_50 = Models::Category.new("Men 50+")
         men_60 = Models::Category.new("Men 60+")
@@ -296,7 +297,7 @@ module Calculations
 
         source_results << Models::SourceResult.new(
           id: 37,
-          event_category: Models::EventCategory.new(rejected_category),
+          event_category: Models::EventCategory.new(men_5),
           participant: Models::Participant.new(4),
           place: "7"
         )

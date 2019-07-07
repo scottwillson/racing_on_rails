@@ -20,18 +20,18 @@ class Calculations::V3::AgeGroupsByTimeTest < ActiveSupport::TestCase
     person_3 = FactoryBot.create(:person)
     junior_men_15_16 = ::Category.find_or_create_by_normalized_name("Junior Men 15-16")
     source_race = source_child_event.races.create!(category: junior_men_15_16)
-    source_race.results.create!(place: 1, person: person_3)
+    source_race.results.create!(place: 1, person: person_3, age: 15)
     junior_men_3_4_5 = ::Category.find_or_create_by_normalized_name("Junior Men 3/4/5")
     source_race = source_child_event.races.create!(category: junior_men_3_4_5)
-    source_race.results.create!(place: 3, person: person_3)
+    source_race.results.create!(place: 3, person: person_3, age: 15)
     men_5 = ::Category.find_or_create_by_normalized_name("Men 5")
     source_race = source_child_event.races.create!(category: men_5)
-    source_race.results.create!(place: "DNF", person: person_3, time: 2851)
+    source_race.results.create!(place: "DNF", person: person_3, time: 2851, age: 15)
 
     athena = ::Category.find_or_create_by_normalized_name("Athena")
     source_race = source_child_event.races.create!(category: athena)
-    person_3 = FactoryBot.create(:person)
-    source_race.results.create!(place: 1, person: person_3, time: 2915, age: 49)
+    person_4 = FactoryBot.create(:person)
+    source_race.results.create!(place: 1, person: person_4, time: 2915, age: 49)
 
     # Create second series event + calculation with results
     # Create calculation that uses series child calculations
@@ -63,14 +63,13 @@ class Calculations::V3::AgeGroupsByTimeTest < ActiveSupport::TestCase
     assert_equal 1, result.sources.size
 
     result = results[1]
-    assert_equal person_3, result.person
-    assert_equal "1", result.place
-    assert_equal 1, result.sources.size
-    assert_equal junior_men_15_16, result.sources.first.source_result.category
-
-    result = results[2]
     assert_equal person_2, result.person
     assert_equal "2", result.place
+    assert_equal 1, result.sources.size
+
+    result = results[2]
+    assert_equal person_3, result.person
+    assert_equal "3", result.place
     assert_equal 1, result.sources.size
 
     race = calculation_event.races.detect { |r| r.category == women_35_49 }
@@ -78,7 +77,7 @@ class Calculations::V3::AgeGroupsByTimeTest < ActiveSupport::TestCase
     assert_equal 1, results.size
 
     result = results.first
-    assert_equal person_3, result.person
+    assert_equal person_4, result.person
     assert_equal "1", result.place
     assert_equal 1, result.sources.size
   end
