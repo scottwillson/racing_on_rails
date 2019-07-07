@@ -31,6 +31,8 @@ module Calculations
     #   4. Selected, but not assigned points (lower places, "best of")
     #   5. Selected and assigned points
     class Calculator
+      include Calculations::V3::Calculators::Categories
+
       attr_reader :event_categories
       attr_reader :rules
       attr_reader :year
@@ -44,18 +46,6 @@ module Calculations
 
         @event_categories = create_event_categories
         map_source_results_to_results source_results
-      end
-
-      def create_event_categories
-        if categories?
-          categories.map do |category|
-            Models::EventCategory.new(category)
-          end
-        elsif team?
-          [Models::EventCategory.new(Models::Category.new("Team"))]
-        else
-          [Models::EventCategory.new(Models::Category.new("Calculation"))]
-        end
       end
 
       # Do the work, all in memory with Ruby classes
@@ -107,27 +97,6 @@ module Calculations
                      )
 
         self
-      end
-
-      def find_or_create_event_category(source_result)
-        return event_categories.first unless categories?
-
-        category = source_result.category.best_match_in(event_categories.map(&:category), source_result.age)
-        event_category = event_categories.find { |c| c.category == category }
-
-        return event_category if event_category
-
-        event_category = Models::EventCategory.new(source_result.event_category.category)
-        event_category.reject "not_calculation_category"
-        event_categories << event_category
-
-        event_category
-      end
-
-      def in_calculation_category?(source_result)
-        return true unless categories?
-
-        source_result.category.best_match_in(categories).present?
       end
 
       def map_source_results_to_results(source_results)

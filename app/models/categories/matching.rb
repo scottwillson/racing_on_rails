@@ -136,6 +136,28 @@ module Categories
       raise "Multiple matches #{candidate_categories.map(&:name)} for #{name}, result age: #{result_age} in #{event_categories.map(&:name).join(', ')}"
     end
 
+    def best_match_by_age_in(event_categories, result_age = nil)
+      logger&.debug "Category#best_match_by_age_in #{name}: #{event_categories.map(&:name).join(', ')}"
+
+      candidate_categories = event_categories.dup
+
+      equivalent_match = candidate_categories.detect { |category| equivalent?(category) }
+      logger&.debug "equivalent: #{equivalent_match&.name}"
+      return equivalent_match if equivalent_match
+
+      if result_age && !age_group? && candidate_categories.none? { |category| ages_begin.in?(category.ages) }
+        candidate_categories = candidate_categories.select { |category| category.ages.include?(result_age) }
+      else
+        candidate_categories = candidate_categories.select { |category| ages_begin.in?(category.ages) }
+      end
+      logger&.debug "ages: #{candidate_categories.map(&:name).join(', ')}"
+
+      return candidate_categories.first if candidate_categories.one?
+      return nil if candidate_categories.empty?
+
+      raise "Multiple matches #{candidate_categories.map(&:name)} for #{name}, result age: #{result_age} in #{event_categories.map(&:name).join(', ')}"
+    end
+
     def equivalent?(other)
       return false unless other
 
