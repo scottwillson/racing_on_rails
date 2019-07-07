@@ -162,6 +162,90 @@ COMPETITIONS = {
       specific_events: true
     }
   },
+  gpcd_het_meer_ages: {
+    categories: [
+      { name: "Men 9-18" },
+      { name: "Men 19-34" },
+      { name: "Men 35-49" },
+      { name: "Men 50+" },
+      { name: "Women 9-18" },
+      { name: "Women 19-34" },
+      { name: "Women 35-49" },
+      { name: "Women 50+" }
+    ],
+    events: [
+      { id: 26_277, multiplier: 1 }
+    ],
+    group_by: "age",
+    name: "Grand Prix Carl Decker: Het Meer Age Groups",
+    rules: {
+      place_by: "time",
+      specific_events: true
+    }
+  },
+  gpcd_zaaldercross_ages: {
+    categories: [
+      { name: "Men 9-18" },
+      { name: "Men 19-34" },
+      { name: "Men 35-49" },
+      { name: "Men 50+" },
+      { name: "Women 9-18" },
+      { name: "Women 19-34" },
+      { name: "Women 35-49" },
+      { name: "Women 50+" }
+    ],
+    events: [
+      { id: 26_279, multiplier: 1 }
+    ],
+    group_by: "age",
+    name: "Grand Prix Carl Decker: Zaaldercross Age Groups",
+    rules: {
+      place_by: "time",
+      specific_events: true
+    }
+  },
+  gpcd_ninkrossi_ages: {
+    categories: [
+      { name: "Men 9-18" },
+      { name: "Men 19-34" },
+      { name: "Men 35-49" },
+      { name: "Men 50+" },
+      { name: "Women 9-18" },
+      { name: "Women 19-34" },
+      { name: "Women 35-49" },
+      { name: "Women 50+" }
+    ],
+    events: [
+      { id: 26_280, multiplier: 1 }
+    ],
+    group_by: "age",
+    name: "Grand Prix Carl Decker: Ninkrossi Age Groups",
+    rules: {
+      place_by: "time",
+      specific_events: true
+    }
+  },
+  gpcd_heiser_farm_ages: {
+    categories: [
+      { name: "Men 9-18" },
+      { name: "Men 19-34" },
+      { name: "Men 35-49" },
+      { name: "Men 50+" },
+      { name: "Women 9-18" },
+      { name: "Women 19-34" },
+      { name: "Women 35-49" },
+      { name: "Women 50+" }
+    ],
+    events: [
+      { id: 26_281, multiplier: 1 }
+    ],
+    group_by: "age",
+    name: "Grand Prix Carl Decker: Heiser Farm Age Groups",
+    rules: {
+      place_by: "time",
+      specific_events: true
+    }
+  },
   oregon_cup: {
     categories: [
       { name: "Senior Men" }
