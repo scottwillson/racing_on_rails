@@ -4,6 +4,7 @@ module Calculations::V3
   REJECTION_REASONS = %w[
     below_minimum_events
     calculated
+    category_worst_result
     discipline
     dnf
     members_only

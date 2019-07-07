@@ -62,6 +62,7 @@ module Calculations
           .calculate_step(Steps::RejectDnfs)
           .calculate_step(Steps::RejectBelowMinimumEvents)
           .calculate_step(Steps::RejectMoreThanResultsPerEvent)
+          .calculate_step(Steps::RejectWorstResults)
           .calculate_step(Steps::AssignPoints)
           .calculate_step(Steps::AddMissingResultsPenalty)
           .calculate_step(Steps::RejectMoreThanMaximumEvents)

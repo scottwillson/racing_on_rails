@@ -1,6 +1,7 @@
 en:
   below_minimum_events: "%{minimum_events} event minimum"
   calculated: "Not an event result"
+  category_worst_result: "Worst 10% in category"
   dnf: "DNF"
   discipline: "%{discipline} result"
   members_only: Must be an annual member
