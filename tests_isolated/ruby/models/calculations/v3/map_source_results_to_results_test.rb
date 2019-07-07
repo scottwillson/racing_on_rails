@@ -261,7 +261,7 @@ module Calculations
         men_9_18 = Models::Category.new("Men 9-18")
         junior_men_17_18 = Models::Category.new("Junior Men 17-18")
         women_35_49 = Models::Category.new("Women 35-49")
-        masters_50_plus = Models::Category.new("Masters 50+	")
+        masters_50_plus = Models::Category.new("Masters 50+")
 
         source_results << Models::SourceResult.new(
           id: 33,
@@ -297,6 +297,7 @@ module Calculations
 
         source_results << Models::SourceResult.new(
           id: 37,
+          age: 15,
           event_category: Models::EventCategory.new(men_5),
           participant: Models::Participant.new(4),
           place: "7"
@@ -315,11 +316,17 @@ module Calculations
         calculator = Calculator.new(rules: rules, source_results: source_results)
 
         event_categories = calculator.event_categories
-        assert_equal 3, event_categories.size, event_categories.map(&:name)
-        junior_women_event_category = event_categories.find { |ec| ec.category == junior_women }
-        assert_equal 1, junior_women_event_category.results.size
-        masters_men_event_category = event_categories.find { |ec| ec.category == masters_men }
-        assert_equal 2, masters_men_event_category.results.size
+        assert_equal 5, event_categories.size, event_categories.map(&:name)
+        category = event_categories.find { |ec| ec.category == men_9_18 }
+        assert_equal 2, category.results.size
+        category = event_categories.find { |ec| ec.category == women_35_49 }
+        assert_equal 1, category.results.size
+        category = event_categories.find { |ec| ec.category == men_35_49 }
+        assert_equal 0, category.results.size
+        category = event_categories.find { |ec| ec.category == men_50 }
+        assert_equal 2, category.results.size
+        category = event_categories.find { |ec| ec.category == men_60 }
+        assert_equal 0, category.results.size
       end
     end
   end

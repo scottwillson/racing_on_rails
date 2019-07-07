@@ -16,8 +16,6 @@ module Calculations
             sort_results(results, calculator.rules.place_by).map.with_index do |result, index|
               if index == 0
                 place = 1
-              elsif result.points != previous_result.points
-                place = index + 1
               elsif !result.tied || !previous_result.tied
                 place = index + 1
               end
@@ -28,7 +26,12 @@ module Calculations
         end
 
         def self.select_results(results, place_by)
-          if place_by == "time"
+          case place_by
+          when "place"
+            results.each(&:validate_one_source_result!)
+            results.select(&:source_result_placed?)
+          when "time"
+            results.each(&:validate_one_source_result!)
             results.select(&:time?)
           else
             results.select(&:points?)
@@ -38,6 +41,8 @@ module Calculations
         def self.sort_results(results, place_by)
           results.sort do |x, y|
             case place_by
+            when "place"
+              compare_by_place x, y
             when "points"
               compare_by_points x, y
             when "fewest_points"
@@ -45,9 +50,22 @@ module Calculations
             when "time"
               compare_by_time x, y
             else
-              raise ArgumentError, "place_by must be points, fewest_points, or time but is #{place_by}"
+              raise ArgumentError, "place_by must be fewest_points, place, points, or time but is #{place_by}"
             end
           end
+        end
+
+        def self.compare_by_place(x, y)
+          diff = x.source_result_numeric_place <=> y.source_result_numeric_place
+          return diff if diff != 0
+
+          diff = compare_by_most_recent_result(x, y)
+          return diff if diff != 0
+
+          # Special case. Tie cannot be broken.
+          x.tied = true
+          y.tied = true
+          0
         end
 
         def self.compare_by_time(x, y)
