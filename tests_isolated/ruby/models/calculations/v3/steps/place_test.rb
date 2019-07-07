@@ -201,6 +201,36 @@ module Calculations
           assert results[4].tied?
         end
 
+        def test_by_placed_considers_ability
+          category = Models::Category.new("19-34")
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)], place_by: "place")
+          calculator = Calculator.new(rules: rules, source_results: [])
+          event_category = calculator.event_categories.first
+
+          men_1_2 = Models::Category.new("Men 1/2")
+          participant = Models::Participant.new(0)
+          source_result = Models::SourceResult.new(id: 0, event_category: Models::EventCategory.new(men_1_2), place: 1)
+          result_1 = Models::CalculatedResult.new(participant, [source_result])
+          event_category.results << result_1
+
+          men_3 = Models::Category.new("Men 3")
+          participant = Models::Participant.new(1)
+          source_result = Models::SourceResult.new(id: 1, event_category: Models::EventCategory.new(men_3), place: 1)
+          result_2 = Models::CalculatedResult.new(participant, [source_result])
+          event_category.results << result_2
+
+          Place.calculate! calculator
+
+          results = calculator.event_categories.first.results.sort_by(&:place)
+          assert_equal "1", results[0].place
+          refute results[0].tied?
+          assert_equal result_1, results[0]
+
+          assert_equal "2", results[1].place
+          refute results[1].tied?
+          assert_equal result_2, results[1]
+        end
+
         def test_break_ties_by_best_place
           category = Models::Category.new("Junior Women")
           rules = Rules.new(category_rules: [Models::CategoryRule.new(category)])

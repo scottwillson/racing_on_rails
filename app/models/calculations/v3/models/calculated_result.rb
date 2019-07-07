@@ -47,6 +47,10 @@ module Calculations
           @rejected
         end
 
+        def source_result_ability
+          source_results.first.ability
+        end
+
         def source_result_numeric_place
           source_results.first.numeric_place
         end
