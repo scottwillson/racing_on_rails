@@ -12,102 +12,6 @@
 
 ActiveRecord::Schema.define(version: 2019_04_19_173335) do
 
-  create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 21
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_00026E8B_4_Group_1a"
-  end
-
-  create_table "#Tableau_01_sid_0004055D_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 11
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_0004055D_4_Group_1a", length: 5
-  end
-
-  create_table "#Tableau_01_sid_000405D7_10_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 21
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_10_Group_1a"
-  end
-
-  create_table "#Tableau_01_sid_000405D7_11_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 21
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_11_Group_1a"
-  end
-
-  create_table "#Tableau_01_sid_000405D7_12_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 21
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_12_Group_1a"
-  end
-
-  create_table "#Tableau_01_sid_000405D7_13_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 21
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_13_Group_1a"
-  end
-
-  create_table "#Tableau_01_sid_000405D7_14_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 21
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_14_Group_1a"
-  end
-
-  create_table "#Tableau_01_sid_000405D7_1_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 11
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_1_Group_1a", length: 5
-  end
-
-  create_table "#Tableau_01_sid_000405D7_2_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 21
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_2_Group_1a"
-  end
-
-  create_table "#Tableau_01_sid_000405D7_3_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 21
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_3_Group_1a"
-  end
-
-  create_table "#Tableau_01_sid_000405D7_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 21
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_4_Group_1a"
-  end
-
-  create_table "#Tableau_01_sid_000405D7_5_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 21
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_5_Group_1a"
-  end
-
-  create_table "#Tableau_01_sid_000405D7_6_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 21
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_6_Group_1a"
-  end
-
-  create_table "#Tableau_01_sid_000405D7_7_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 21
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_7_Group_1a"
-  end
-
-  create_table "#Tableau_01_sid_000405D7_8_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 21
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_8_Group_1a"
-  end
-
-  create_table "#Tableau_01_sid_000405D7_9_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "Age (group)", limit: 21
-    t.integer "age"
-    t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_9_Group_1a"
-  end
-
   create_table "adjustments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "order_id"
     t.integer "person_id"
@@ -1136,7 +1040,7 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
     t.index ["name"], name: "index_velodromes_on_name"
   end
 
-  create_table "versions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "versions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "item_type", limit: 191, null: false
     t.integer "item_id", null: false
     t.string "event", null: false
