@@ -4,7 +4,7 @@ require "test_helper"
 
 module Competitions
   # :stopdoc:
-  class CategoriesForTest < ActiveSupport::TestCase
+  class BestMatchByAgeTest < ActiveSupport::TestCase
     test "ages" do
       athena = ::Category.find_or_create_by_normalized_name("Athena")
       junior_men_17_18 = ::Category.find_or_create_by_normalized_name("Junior Men 17-18")
