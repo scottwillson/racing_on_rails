@@ -90,7 +90,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
       category = Calculations::V3::Models::Category.new(result.race_name)
       event = model_events[result.event_id]
       Calculations::V3::Models::SourceResult.new(
-        age: result.age,
+        age: result.racing_age,
         date: result.date,
         event_category: Calculations::V3::Models::EventCategory.new(category, event),
         id: result.id,

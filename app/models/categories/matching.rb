@@ -145,7 +145,6 @@ module Categories
       logger&.debug "equivalent: #{equivalent_match&.name}"
       return equivalent_match if equivalent_match
 
-      logger&.debug "#{result_age} && #{age_group?}"
       if result_age && !age_group?
         candidate_categories = candidate_categories.select { |category| category.ages.include?(result_age) }
       else
@@ -153,9 +152,6 @@ module Categories
       end
       logger&.debug "ages: #{candidate_categories.map(&:name).join(', ')}"
       return candidate_categories.first if candidate_categories.one?
-
-      candidate_categories = candidate_categories.select { |category| equipment == category.equipment }
-      logger&.debug "equipment: #{candidate_categories.map(&:name).join(', ')}"
 
       candidate_categories = candidate_categories.reject { |category| gender == "M" && category.gender == "F" }
       logger&.debug "gender: #{candidate_categories.map(&:name).join(', ')}"

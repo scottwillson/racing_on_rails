@@ -90,21 +90,24 @@ def create_calculations(competitions)
 end
 
 def create_calculation(event_id, rules, name)
+  attributes = rules.dup
+
   puts "create_calculation #{name}"
   if rules[:discipline]
-    rules[:discipline] = Discipline.where(name: rules[:discipline]).first!
+    attributes[:discipline] = Discipline.where(name: rules[:discipline]).first!
   end
   if rules[:disciplines]
-    rules[:disciplines] = Discipline.where(name: rules[:disciplines])
+    attributes[:disciplines] = Discipline.where(name: rules[:disciplines])
   end
 
-  rules[:year] = 2018
+  attributes[:name] = name
+  attributes[:year] = 2018
 
   if event_id
     event = Event.find(event_id)
-    event.calculations.create!(rules)
+    event.calculations.create!(attributes)
   else
-    Calculations::V3::Calculation.create!(rules)
+    Calculations::V3::Calculation.create!(attributes)
   end
 end
 
@@ -269,11 +272,11 @@ end
 
 # competitions = COMPETITIONS
 competitions = {
-  gpcd_david_douglas_ages: COMPETITIONS[:gpcd_david_douglas_ages],
-  gpcd_het_meer_ages: COMPETITIONS[:gpcd_het_meer_ages],
-  gpcd_zaaldercross_ages: COMPETITIONS[:gpcd_zaaldercross_ages],
-  gpcd_ninkrossi_ages: COMPETITIONS[:gpcd_ninkrossi_ages],
-  gpcd_heiser_farm_ages: COMPETITIONS[:gpcd_heiser_farm_ages],
+  gpcd_david_douglas_by_age: COMPETITIONS[:gpcd_david_douglas_by_age],
+  gpcd_het_meer_by_age: COMPETITIONS[:gpcd_het_meer_by_age],
+  gpcd_zaaldercross_by_age: COMPETITIONS[:gpcd_zaaldercross_by_age],
+  gpcd_ninkrossi_by_age: COMPETITIONS[:gpcd_ninkrossi_by_age],
+  gpcd_heiser_farm_by_age: COMPETITIONS[:gpcd_heiser_farm_by_age],
   gpcd_team: COMPETITIONS[:gpcd_team]
 }
 

@@ -10,6 +10,7 @@ module Calculations
 
           calculator.event_categories.each do |category|
             category.results
+              .reject(&:rejected?)
               .group_by(&:source_result_ability)
               .map do |category_ability, category_results|
                 if category_ability < 3

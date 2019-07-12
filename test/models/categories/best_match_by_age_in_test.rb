@@ -9,10 +9,12 @@ module Competitions
       athena = ::Category.find_or_create_by_normalized_name("Athena")
       junior_men_17_18 = ::Category.find_or_create_by_normalized_name("Junior Men 17-18")
       men_9_18 = ::Category.find_or_create_by_normalized_name("Men 9-18")
+      men_35_49 = ::Category.find_or_create_by_normalized_name("Men 35-49")
       women_35_49 = ::Category.find_or_create_by_normalized_name("Women 35-49")
 
       event = FactoryBot.create(:event)
       event.races.create!(category: men_9_18)
+      event.races.create!(category: men_35_49)
       event.races.create!(category: women_35_49)
 
       assert_best_match_by_age_in [athena, women_35_49], women_35_49, event, 35

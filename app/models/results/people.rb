@@ -213,5 +213,9 @@ module Results
     def person_name=(value)
       self.name = value
     end
+
+    def racing_age
+      age || person&.racing_age(year) || 19
+    end
   end
 end
