@@ -4,7 +4,7 @@ module Calculations
   module V3
     module Steps
       # Specific rule for PDX STXC and GPCD: drop worst 10% from "highest" categories
-      module RejectWorstResults
+      module RejectCategoryWorstResults
         def self.calculate!(calculator)
           return calculator.event_categories unless calculator.rules.place_by == "place"
 
