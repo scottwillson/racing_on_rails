@@ -28,8 +28,12 @@ module Calculations
           !rejected?
         end
 
+        def placed_source_results
+          source_results.select(&:placed?)
+        end
+
         def placed_source_results_with_points
-          source_results.select(&:placed?).select(&:points?)
+          placed_source_results.select(&:points?)
         end
 
         def points?
@@ -57,6 +61,10 @@ module Calculations
 
         def source_result_placed?
           source_results.first.placed?
+        end
+
+        def source_result_rejected?
+          source_results.first.rejected?
         end
 
         def tied?

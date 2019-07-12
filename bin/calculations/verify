@@ -273,7 +273,8 @@ competitions = {
   gpcd_het_meer_ages: COMPETITIONS[:gpcd_het_meer_ages],
   gpcd_zaaldercross_ages: COMPETITIONS[:gpcd_zaaldercross_ages],
   gpcd_ninkrossi_ages: COMPETITIONS[:gpcd_ninkrossi_ages],
-  gpcd_heiser_farm_ages: COMPETITIONS[:gpcd_heiser_farm_ages]
+  gpcd_heiser_farm_ages: COMPETITIONS[:gpcd_heiser_farm_ages],
+  gpcd_team: COMPETITIONS[:gpcd_team]
 }
 
 # fetch_data
@@ -282,7 +283,10 @@ competitions = {
 destroy_calculations
 create_calculations competitions
 calculations(competitions).map(&:source_event).compact.each(&:update_date)
-calculations(competitions).reject { |c| c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"] }.each(&:calculate!)
+calculations(competitions).reject do |c|
+  (c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"]) ||
+  (c.key != "gpcd_team" && c.key["gpcd"])
+end.each(&:calculate!)
 compare_results competitions
 
 # rubocop:enable Rails/SkipsModelValidations

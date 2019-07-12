@@ -170,16 +170,18 @@ module Calculations
           event_category.results << result_3
 
           participant = Models::Participant.new(3)
-          source_result = Models::SourceResult.new(id: 3, event_category: Models::EventCategory.new(category), place: 21)
+          source_result = Models::SourceResult.new(id: 3, event_category: Models::EventCategory.new(category), place: 21, date: 1.day.ago)
           result_4 = Models::CalculatedResult.new(participant, [source_result])
           event_category.results << result_4
 
           participant = Models::Participant.new(4)
-          source_result = Models::SourceResult.new(id: 4, event_category: Models::EventCategory.new(category), place: 21)
+          source_result = Models::SourceResult.new(id: 4, event_category: Models::EventCategory.new(category), place: 21, date: 1.day.ago)
           result_5 = Models::CalculatedResult.new(participant, [source_result])
           event_category.results << result_5
 
+          puts "START"
           Place.calculate! calculator
+          puts "END"
 
           results = calculator.event_categories.first.results.sort_by(&:place)
           assert_equal "1", results[0].place
@@ -276,10 +278,10 @@ module Calculations
           result_2 = Models::CalculatedResult.new(participant, [source_result, source_result_2])
           result_2.points = 15
 
-          assert_equal(-1, Place.compare_by_points(result, result_2))
-          assert_equal 1, Place.compare_by_points(result_2, result)
-          assert_equal 0, Place.compare_by_points(result, result)
-          assert_equal 0, Place.compare_by_points(result_2, result_2)
+          assert_equal(-1, Place.compare_by_points(result, result_2, "points"))
+          assert_equal 1, Place.compare_by_points(result_2, result, "points")
+          assert_equal 0, Place.compare_by_points(result, result, "points")
+          assert_equal 0, Place.compare_by_points(result_2, result_2, "points")
         end
 
         def test_compare_by_points_ignores_dqs
@@ -296,10 +298,10 @@ module Calculations
           result_2 = Models::CalculatedResult.new(participant, [source_result, source_result_2])
           result_2.points = 50
 
-          assert_equal(-1, Place.compare_by_points(result, result_2))
-          assert_equal 1, Place.compare_by_points(result_2, result)
-          assert_equal 0, Place.compare_by_points(result, result)
-          assert_equal 0, Place.compare_by_points(result_2, result_2)
+          assert_equal(-1, Place.compare_by_points(result, result_2, "points"))
+          assert_equal 1, Place.compare_by_points(result_2, result, "points")
+          assert_equal 0, Place.compare_by_points(result, result, "points")
+          assert_equal 0, Place.compare_by_points(result_2, result_2, "points")
         end
 
         def test_compare_by_best_place
@@ -336,10 +338,10 @@ module Calculations
           result_2 = Models::CalculatedResult.new(participant, [source_result])
           result_2.points = 15
 
-          assert_equal(-1, Place.compare_by_most_recent_result(result, result_2))
-          assert_equal 1, Place.compare_by_most_recent_result(result_2, result)
-          assert_equal 0, Place.compare_by_most_recent_result(result, result)
-          assert_equal 0, Place.compare_by_most_recent_result(result_2, result_2)
+          assert_equal(-1, Place.compare_by_most_recent_result(result, result_2, "points"))
+          assert_equal 1, Place.compare_by_most_recent_result(result_2, result, "points")
+          assert_equal 0, Place.compare_by_most_recent_result(result, result, "points")
+          assert_equal 0, Place.compare_by_most_recent_result(result_2, result_2, "points")
         end
 
         def test_compare_by_most_recent_result_ignores_dqs
@@ -357,10 +359,10 @@ module Calculations
           result_2 = Models::CalculatedResult.new(participant, [source_result, source_result_2, source_result_3])
           result_2.points = 15
 
-          assert_equal(-1, Place.compare_by_most_recent_result(result, result_2))
-          assert_equal 1, Place.compare_by_most_recent_result(result_2, result)
-          assert_equal 0, Place.compare_by_most_recent_result(result, result)
-          assert_equal 0, Place.compare_by_most_recent_result(result_2, result_2)
+          assert_equal(-1, Place.compare_by_most_recent_result(result, result_2, "points"))
+          assert_equal 1, Place.compare_by_most_recent_result(result_2, result, "points")
+          assert_equal 0, Place.compare_by_most_recent_result(result, result, "points")
+          assert_equal 0, Place.compare_by_most_recent_result(result_2, result_2, "points")
         end
 
         def test_compare_by_date

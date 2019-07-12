@@ -246,6 +246,31 @@ COMPETITIONS = {
       specific_events: true
     }
   },
+  gpcd_team: {
+    categories: [
+      { name: "Men 9-18" },
+      { name: "Men 19-34" },
+      { name: "Men 35-49" },
+      { name: "Men 50+" },
+      { name: "Women 9-18" },
+      { name: "Women 19-34" },
+      { name: "Women 35-49" },
+      { name: "Women 50+" }
+    ],
+    name: "Grand Prix Carl Decker: Team Standings",
+    rules: {
+      place_by: "place",
+      results_per_event: 10,
+      source_event_keys: [
+        :gpcd_david_douglas_ages,
+        :gpcd_het_meer_ages,
+        :gpcd_ninkrossi_ages,
+        :gpcd_heiser_farm_ages,
+        :gpcd_zaaldercross_ages
+      ],
+      team: true
+    }
+  },
   oregon_cup: {
     categories: [
       { name: "Senior Men" }

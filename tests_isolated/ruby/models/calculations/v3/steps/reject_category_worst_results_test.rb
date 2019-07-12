@@ -6,7 +6,7 @@ module Calculations
   module V3
     module Steps
       # :stopdoc:
-      class RejectWorstResultsTest < Ruby::TestCase
+      class RejectCategoryWorstResultsTest < Ruby::TestCase
         def test_calculate
           category = Models::Category.new("Women")
           rules = Rules.new(place_by: "place")
@@ -29,7 +29,7 @@ module Calculations
             end
           end
 
-          event_categories = RejectWorstResults.calculate!(calculator)
+          event_categories = RejectCategoryWorstResults.calculate!(calculator)
 
           rejected_results = event_categories.flat_map(&:results).select(&:rejected?)
           assert_equal 4, rejected_results.size

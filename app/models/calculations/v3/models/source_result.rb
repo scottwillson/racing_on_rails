@@ -20,7 +20,7 @@ module Calculations
         def initialize(id: nil, age: nil, date: nil, event_category: nil, participant: nil, place: nil, points: nil, time: nil)
           @id = id
           @age = age
-          @date = date
+          @date = date&.to_date
           @event_category = event_category
           @participant = participant
           @place = place
