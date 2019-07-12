@@ -19,6 +19,18 @@ module Competitions
       assert_best_match_by_age_in [junior_men_17_18, men_9_18], men_9_18, event, 35
     end
 
+    test "prefer age group over equipment" do
+      singlespeed = ::Category.find_or_create_by_normalized_name("Singlespeed")
+      men_35_49 = ::Category.find_or_create_by_normalized_name("Men 35-49")
+      masters_35_1_2 = ::Category.find_or_create_by_normalized_name("Masters 35+ 1/2")
+
+      event = FactoryBot.create(:event)
+      event.races.create!(category: singlespeed)
+      event.races.create!(category: men_35_49)
+
+      assert_best_match_by_age_in [masters_35_1_2, men_35_49], men_35_49, event, 45
+    end
+
     def assert_best_match_by_age_in(categories, race_category, event, result_age = nil)
       categories.each do |category|
         best_match = category.best_match_by_age_in(event.categories, result_age)

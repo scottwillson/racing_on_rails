@@ -179,9 +179,7 @@ module Calculations
           result_5 = Models::CalculatedResult.new(participant, [source_result])
           event_category.results << result_5
 
-          puts "START"
           Place.calculate! calculator
-          puts "END"
 
           results = calculator.event_categories.first.results.sort_by(&:place)
           assert_equal "1", results[0].place
