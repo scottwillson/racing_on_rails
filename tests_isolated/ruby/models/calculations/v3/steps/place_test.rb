@@ -170,12 +170,12 @@ module Calculations
           event_category.results << result_3
 
           participant = Models::Participant.new(3)
-          source_result = Models::SourceResult.new(id: 3, event_category: Models::EventCategory.new(category), place: 21, date: 1.day.ago)
+          source_result = Models::SourceResult.new(id: 3, event_category: Models::EventCategory.new(category), place: 21, date: Date.today)
           result_4 = Models::CalculatedResult.new(participant, [source_result])
           event_category.results << result_4
 
           participant = Models::Participant.new(4)
-          source_result = Models::SourceResult.new(id: 4, event_category: Models::EventCategory.new(category), place: 21, date: 1.day.ago)
+          source_result = Models::SourceResult.new(id: 4, event_category: Models::EventCategory.new(category), place: 21, date: Date.today)
           result_5 = Models::CalculatedResult.new(participant, [source_result])
           event_category.results << result_5
 
