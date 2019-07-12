@@ -124,6 +124,7 @@ module Calculations
           categories: categories.map(&:name),
           disciplines: disciplines.map(&:name),
           double_points_for_last_event: double_points_for_last_event?,
+          group_by: group_by,
           maximum_events: maximum_events,
           members_only: members_only?,
           minimum_events: minimum_events,

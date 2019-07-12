@@ -30,6 +30,9 @@ module Calculations::V3::Calculators::Categories
     return event_categories.first unless categories?
 
     category = best_match_in(source_result.category, event_categories.map(&:category), source_result.age)
+
+    validate_category! category, source_result
+
     event_category = event_categories.find { |c| c.category == category }
 
     return event_category if event_category
@@ -45,5 +48,23 @@ module Calculations::V3::Calculators::Categories
     return true unless categories?
 
     best_match_in(source_result.category, categories, source_result.age).present?
+  end
+
+  def validate_category!(category, source_result)
+    return unless rules.group_by == "age"
+
+    if category.nil?
+      raise(
+        ArgumentError,
+        "Calculation groups by age, but no category in #{categories.map(&:name).sort} for #{source_result.category.name}, age: #{source_result.age}, id: #{source_result.id} is not an age group category"
+      )
+    end
+
+    if !category.age_group?
+      raise(
+        ArgumentError,
+        "Calculation groups by age, but #{category.&name} in #{categories.map(&:name).sort} for #{source_result.category.name}, age: #{source_result.age}, id: #{source_result.id} is not an age group category"
+      )
+    end
   end
 end
