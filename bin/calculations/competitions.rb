@@ -141,7 +141,7 @@ COMPETITIONS = {
       points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     }
   },
-  gpcd_david_douglas_ages: {
+  gpcd_david_douglas_by_age: {
     categories: [
       { name: "Men 9-18" },
       { name: "Men 19-34" },
@@ -162,7 +162,7 @@ COMPETITIONS = {
       specific_events: true
     }
   },
-  gpcd_het_meer_ages: {
+  gpcd_het_meer_by_age: {
     categories: [
       { name: "Men 9-18" },
       { name: "Men 19-34" },
@@ -183,7 +183,7 @@ COMPETITIONS = {
       specific_events: true
     }
   },
-  gpcd_zaaldercross_ages: {
+  gpcd_zaaldercross_by_age: {
     categories: [
       { name: "Men 9-18" },
       { name: "Men 19-34" },
@@ -204,7 +204,7 @@ COMPETITIONS = {
       specific_events: true
     }
   },
-  gpcd_ninkrossi_ages: {
+  gpcd_ninkrossi_by_age: {
     categories: [
       { name: "Men 9-18" },
       { name: "Men 19-34" },
@@ -225,7 +225,7 @@ COMPETITIONS = {
       specific_events: true
     }
   },
-  gpcd_heiser_farm_ages: {
+  gpcd_heiser_farm_by_age: {
     categories: [
       { name: "Men 9-18" },
       { name: "Men 19-34" },
@@ -262,11 +262,11 @@ COMPETITIONS = {
       place_by: "place",
       results_per_event: 10,
       source_event_keys: [
-        :gpcd_david_douglas_ages,
-        :gpcd_het_meer_ages,
-        :gpcd_ninkrossi_ages,
-        :gpcd_heiser_farm_ages,
-        :gpcd_zaaldercross_ages
+        :gpcd_david_douglas_by_age,
+        :gpcd_het_meer_by_age,
+        :gpcd_ninkrossi_by_age,
+        :gpcd_heiser_farm_by_age,
+        :gpcd_zaaldercross_by_age
       ],
       team: true
     }

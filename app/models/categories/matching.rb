@@ -154,6 +154,9 @@ module Categories
       logger&.debug "ages: #{candidate_categories.map(&:name).join(', ')}"
       return candidate_categories.first if candidate_categories.one?
 
+      candidate_categories = candidate_categories.select { |category| equipment == category.equipment }
+      logger&.debug "equipment: #{candidate_categories.map(&:name).join(', ')}"
+
       candidate_categories = candidate_categories.reject { |category| gender == "M" && category.gender == "F" }
       logger&.debug "gender: #{candidate_categories.map(&:name).join(', ')}"
       return candidate_categories.first if candidate_categories.one?
