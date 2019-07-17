@@ -13,11 +13,7 @@ module Competitions
 
       def set_multiplier(results)
         results.each do |result|
-          result["multiplier"] = if result["type"] == "MultiDayEvent"
-                                   1.5
-                                 else
-                                   1
-                                 end
+          result["multiplier"] = 1
         end
       end
 

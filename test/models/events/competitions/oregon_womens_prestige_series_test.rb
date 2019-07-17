@@ -59,7 +59,7 @@ module Competitions
       OregonWomensPrestigeSeries.calculate!
 
       race = competition.races.find { |r| r.category == women_12 }
-      assert_equal [25, 1.5], race.results.sort.map(&:points), "points for Women 1/2"
+      assert_equal [25, 1], race.results.sort.map(&:points), "points for Women 1/2"
 
       race = competition.races.find { |r| r.category == women_3 }
       assert_equal [18], race.results.sort.map(&:points), "points for Women 3"
