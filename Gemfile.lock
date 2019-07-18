@@ -66,11 +66,7 @@ GEM
     activejob (5.2.3)
       activesupport (= 5.2.3)
       globalid (>= 0.3.6)
-<<<<<<< HEAD
     activemerchant (1.97.0)
-=======
-    activemerchant (1.95.0)
->>>>>>> Update gems
       activesupport (>= 4.2)
       builder (>= 2.1.2, < 4.0.0)
       i18n (>= 0.6.9)
@@ -99,11 +95,7 @@ GEM
     addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
     afm (0.2.2)
-<<<<<<< HEAD
     airbrussh (1.3.3)
-=======
-    airbrussh (1.3.2)
->>>>>>> Update gems
       sshkit (>= 1.6.1, != 1.7.0)
     arel (9.0.0)
     ast (2.4.0)
@@ -112,11 +104,7 @@ GEM
       activesupport (>= 4.2, < 5.3)
       request_store (~> 1.0)
       scrypt (>= 1.2, < 4.0)
-<<<<<<< HEAD
     autoprefixer-rails (9.6.1)
-=======
-    autoprefixer-rails (9.6.0)
->>>>>>> Update gems
       execjs
     axlsx (3.0.0.pre)
       htmlentities (~> 4.3, >= 4.3.4)
@@ -127,11 +115,7 @@ GEM
       actionpack (>= 3.1)
       axlsx (>= 2.0.1)
     bcrypt (3.1.13)
-<<<<<<< HEAD
     bindex (0.8.1)
-=======
-    bindex (0.7.0)
->>>>>>> Update gems
     bootsnap (1.4.4)
       msgpack (~> 1.0)
     bootstrap-datepicker-rails (1.8.0.1)
@@ -161,13 +145,8 @@ GEM
     capistrano3-puma (4.0.0)
       capistrano (~> 3.7)
       capistrano-bundler
-<<<<<<< HEAD
       puma (~> 4.0)
     capybara (3.28.0)
-=======
-      puma (~> 3.4)
-    capybara (3.24.0)
->>>>>>> Update gems
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -202,17 +181,10 @@ GEM
     dalli (2.7.10)
     damerau-levenshtein (1.3.1)
     database_cleaner (1.7.0)
-<<<<<<< HEAD
     default_value_for (3.3.0)
       activerecord (>= 3.2.0, < 6.1)
     docile (1.3.2)
     domain_name (0.5.20190701)
-=======
-    default_value_for (3.1.0)
-      activerecord (>= 3.2.0, < 6.0)
-    docile (1.3.2)
-    domain_name (0.5.20180417)
->>>>>>> Update gems
       unf (>= 0.0.5, < 1.0.0)
     elasticsearch (5.0.5)
       elasticsearch-api (= 5.0.5)
@@ -243,11 +215,7 @@ GEM
       rake
     globalid (0.4.2)
       activesupport (>= 4.2.0)
-<<<<<<< HEAD
     hashdiff (1.0.0)
-=======
-    hashdiff (1.0.0.beta1)
->>>>>>> Update gems
     hashery (2.1.2)
     hashie (3.6.0)
     htmlentities (4.3.4)
@@ -298,11 +266,7 @@ GEM
     minitest (5.11.3)
     mocha (1.9.0)
       metaclass (~> 0.0.1)
-<<<<<<< HEAD
     msgpack (1.3.1)
-=======
-    msgpack (1.3.0)
->>>>>>> Update gems
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
@@ -311,15 +275,9 @@ GEM
       net-ssh (>= 2.6.5, < 6.0.0)
     net-ssh (5.2.0)
     netrc (0.11.0)
-<<<<<<< HEAD
     newrelic_rpm (6.5.0.357)
     nio4r (2.4.0)
     nokogiri (1.10.4)
-=======
-    newrelic_rpm (6.4.0.356)
-    nio4r (2.3.1)
-    nokogiri (1.10.3)
->>>>>>> Update gems
       mini_portile2 (~> 2.4.0)
     oj (3.9.0)
     orm_adapter (0.5.0)
@@ -327,11 +285,7 @@ GEM
       activerecord (>= 4.2)
       request_store (~> 1.1)
     parallel (1.17.0)
-<<<<<<< HEAD
     parallel_tests (2.29.2)
-=======
-    parallel_tests (2.29.1)
->>>>>>> Update gems
       parallel
     parser (2.6.3.0)
       ast (~> 2.4.0)
@@ -341,14 +295,9 @@ GEM
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
-<<<<<<< HEAD
     public_suffix (3.1.1)
     puma (4.1.0)
       nio4r (~> 2.0)
-=======
-    public_suffix (3.1.0)
-    puma (3.12.1)
->>>>>>> Update gems
     rack (2.0.7)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -394,11 +343,7 @@ GEM
       ffi (~> 1.0)
     redcarpet (3.5.0)
     ref (2.0.0)
-<<<<<<< HEAD
     regexp_parser (1.6.0)
-=======
-    regexp_parser (1.5.1)
->>>>>>> Update gems
     request_store (1.4.1)
       rack (>= 1.4)
     rest-client (2.1.0)
@@ -411,30 +356,18 @@ GEM
       nokogiri
       roo (>= 2.0.0, < 3)
       spreadsheet (> 0.9.0)
-<<<<<<< HEAD
     rubocop (0.74.0)
-=======
-    rubocop (0.71.0)
->>>>>>> Update gems
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.6)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
-<<<<<<< HEAD
     rubocop-performance (1.4.1)
       rubocop (>= 0.71.0)
     rubocop-rails (2.3.0)
       rack (>= 1.1)
       rubocop (>= 0.72.0)
-=======
-    rubocop-performance (1.4.0)
-      rubocop (>= 0.71.0)
-    rubocop-rails (2.0.1)
-      rack (>= 1.1)
-      rubocop (>= 0.70.0)
->>>>>>> Update gems
     ruby-ole (1.2.12.2)
     ruby-progressbar (1.10.1)
     ruby-rc4 (0.1.5)
@@ -479,13 +412,7 @@ GEM
     sshkit (1.20.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-<<<<<<< HEAD
     stripe (5.0.1)
-=======
-    stripe (4.19.0)
-      faraday (~> 0.13)
-      net-http-persistent (~> 3.0)
->>>>>>> Update gems
     tabular (0.4.7)
     therubyracer (0.12.3)
       libv8 (~> 3.16.14.15)
@@ -510,30 +437,18 @@ GEM
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
-<<<<<<< HEAD
     webdrivers (4.1.2)
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
       selenium-webdriver (>= 3.0, < 4.0)
     webmock (3.6.2)
-=======
-    webdrivers (4.0.1)
-      nokogiri (~> 1.6)
-      rubyzip (~> 1.0)
-      selenium-webdriver (>= 3.0, < 4.0)
-    webmock (3.6.0)
->>>>>>> Update gems
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
-<<<<<<< HEAD
     will_paginate (3.1.8)
-=======
-    will_paginate (3.1.7)
->>>>>>> Update gems
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yui-compressor (0.12.0)
