@@ -504,7 +504,7 @@ DEPENDENCIES
   libv8
   listen (>= 3.0.5, < 3.2)
   logstash-logger
-  mini_magick
+  mini_magick (> 4.9.4)
   minitest
   mocha
   mysql2
