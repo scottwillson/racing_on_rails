@@ -16,6 +16,10 @@ module Calculations
             sort_results(results, calculator.rules.place_by).map.with_index do |result, index|
               if index == 0
                 place = 1
+              elsif calculator.rules.place_by == "points" && result.points != previous_result.points
+                place = index + 1
+              elsif calculator.rules.place_by == "place" && result.source_result_numeric_place != previous_result.source_result_numeric_place
+                place = index + 1
               elsif !result.tied || !previous_result.tied
                 place = index + 1
               end
