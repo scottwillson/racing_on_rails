@@ -8,7 +8,6 @@ module Calculations
       # :stopdoc:
       class RejectCategoryWorstResultsTest < Ruby::TestCase
         def test_calculate
-          category = Models::Category.new("Women")
           rules = Rules.new(place_by: "place")
           calculator = Calculator.new(rules: rules, source_results: [])
 
@@ -34,6 +33,29 @@ module Calculations
           rejected_results = event_categories.flat_map(&:results).select(&:rejected?)
           assert_equal 4, rejected_results.size
           assert_equal [19, 19, 20, 20], rejected_results.map(&:source_result_numeric_place).sort
+        end
+
+        def test_only_reject_aboce_than_ten_percent
+          rules = Rules.new(place_by: "place")
+          calculator = Calculator.new(rules: rules, source_results: [])
+
+          participant = Models::Participant.new(0)
+          event = Models::Event.new(id: 0, calculated: true)
+          category = Models::Category.new("Women 2")
+
+          source_result = Models::SourceResult.new(
+            id: 0,
+            event_category: Models::EventCategory.new(category, event),
+            participant: participant,
+            place: 1
+          )
+          result = Models::CalculatedResult.new(participant, [source_result])
+          calculator.event_categories.first.results << result
+
+          event_categories = RejectCategoryWorstResults.calculate!(calculator)
+
+          rejected_results = event_categories.flat_map(&:results).select(&:rejected?)
+          assert_equal 0, rejected_results.size
         end
       end
     end

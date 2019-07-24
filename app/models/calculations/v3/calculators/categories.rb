@@ -56,14 +56,18 @@ module Calculations::V3::Calculators::Categories
     if category.nil?
       raise(
         ArgumentError,
-        "Calculation groups by age, but no category in #{categories.map(&:name).sort} for #{source_result.category.name}, age: #{source_result.age}, id: #{source_result.id} is not an age group category"
+        "Calculation groups by age, but no category in #{categories.map(&:name).sort} for #{source_result.category.name}, " \
+        "age: #{source_result.age}, " \
+        "id: #{source_result.id} is not an age group category"
       )
     end
 
     if !category.age_group?
       raise(
         ArgumentError,
-        "Calculation groups by age, but #{category.&name} in #{categories.map(&:name).sort} for #{source_result.category.name}, age: #{source_result.age}, id: #{source_result.id} is not an age group category"
+        "Calculation groups by age, but #{category.&name} in #{categories.map(&:name).sort} for #{source_result.category.name}, " \
+        "age: #{source_result.age}, " \
+        "id: #{source_result.id} is not an age group category"
       )
     end
   end
