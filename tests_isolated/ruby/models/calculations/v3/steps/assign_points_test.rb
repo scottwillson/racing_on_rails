@@ -142,31 +142,31 @@ module Calculations
           event_category = Models::EventCategory.new(Models::Category.new("Masters Men"))
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "1")
-          assert_equal 100, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
+          assert_equal 100, AssignPoints.points_for_place(source_result, points_for_place, "points", 1, 0)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "5")
-          assert_equal 10, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
+          assert_equal 10, AssignPoints.points_for_place(source_result, points_for_place, "points", 1, 1)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "")
-          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1, 2)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: nil)
-          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1, 3)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "6")
-          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1, 4)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "999999")
-          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1, 5)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "DNF")
-          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1, 6)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "DQ")
-          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1, 7)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "DNS")
-          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1)
+          assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1, 8)
         end
 
         def test_points_placed_by_place

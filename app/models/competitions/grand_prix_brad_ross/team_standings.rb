@@ -80,6 +80,7 @@ module Competitions
           _results = _results.select { |r| r["place"].to_i > 0 }
           _results = group_results_by_team_standings_categories(_results)
 
+          puts Event.find(event_id).name
           _results.each do |category, category_results|
             _category_results = sort_by_ability_and_place(category_results)
             _category_results = reject_worst_results(_category_results)
@@ -197,12 +198,15 @@ module Competitions
       end
 
       def add_points(category, results)
+        puts
+        puts category.name
         raise("#{results.first} has no category") unless category
 
         results.map.with_index do |result, index|
           place = index + 1
           result["points"] = 100.0 * ((results.size - place) + 1) / results.size
           result["notes"] = "#{place}/#{results.size} in #{category.name}"
+          puts "#{place} #{result["points"]} #{result["person_name"]} #{result['team_name']} #{result['category_name']}"
           result
         end
       end
