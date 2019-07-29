@@ -7,7 +7,7 @@ module Calculations
       # but could be calculated by another calculated event. For example, Road BAR
       # and Overall BAR.
       class SourceResult
-        include Results
+        include Calculations::V3::Models::Results
 
         attr_reader :id
         attr_reader :age

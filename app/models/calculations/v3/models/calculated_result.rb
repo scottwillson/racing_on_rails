@@ -5,7 +5,7 @@ module Calculations
     module Models
       # Result calculated from source results. Belongs to EventCategory.
       class CalculatedResult
-        include Results
+        include Calculations::V3::Models::Results
 
         attr_reader :participant
         attr_accessor :place

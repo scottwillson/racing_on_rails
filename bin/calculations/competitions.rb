@@ -257,21 +257,8 @@ COMPETITIONS = {
     }
   },
   gpcd_team: {
-    categories: [
-      { name: "Junior Men 3/4/5", reject: true },
-      { name: "Junior Women 3/4/5", reject: true },
-      { name: "Men 9-18" },
-      { name: "Men 19-34" },
-      { name: "Men 35-49" },
-      { name: "Men 50+" },
-      { name: "Women 9-18" },
-      { name: "Women 19-34" },
-      { name: "Women 35-49" },
-      { name: "Women 50+" }
-    ],
     name: "Grand Prix Carl Decker: Team Standings",
     rules: {
-      place_by: "place",
       results_per_event: 10,
       source_event_keys: %i[
         gpcd_david_douglas_by_age
