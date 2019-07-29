@@ -7,6 +7,8 @@ module Calculations
       # but could be calculated by another calculated event. For example, Road BAR
       # and Overall BAR.
       class SourceResult
+        include Results
+
         attr_reader :id
         attr_reader :age
         attr_reader :date
@@ -47,20 +49,6 @@ module Calculations
           id.nil?
         end
 
-        def not_rejected?
-          !rejected?
-        end
-
-        # Opposite convention of ::Result (for now)
-        def numeric_place
-          case place&.to_i
-          when nil, 0
-            Float::INFINITY
-          else
-            place.to_i
-          end
-        end
-
         def parent_date
           event&.parent&.date || date
         end
@@ -69,28 +57,8 @@ module Calculations
           event&.parent&.end_date || date
         end
 
-        def placed?
-          numeric_place != Float::INFINITY
-        end
-
         def points
           @points || 0
-        end
-
-        def points?
-          points.positive?
-        end
-
-        def reject(reason)
-          raise(ArgumentError, "already rejected because #{rejection_reason}") if rejected?
-
-          @rejection_reason = reason
-          @rejected = true
-          @points = 0
-        end
-
-        def rejected?
-          @rejected
         end
 
         def validate!

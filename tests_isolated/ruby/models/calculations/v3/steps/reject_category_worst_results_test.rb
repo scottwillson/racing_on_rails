@@ -24,6 +24,7 @@ module Calculations
                 place: index + 1
               )
               result = Models::CalculatedResult.new(participant, [source_result])
+              result.place = index + 1
               calculator.event_categories.first.results << result
             end
           end
@@ -35,7 +36,7 @@ module Calculations
           assert_equal [19, 19, 20, 20], rejected_results.map(&:source_result_numeric_place).sort
         end
 
-        def test_only_reject_aboce_than_ten_percent
+        def test_only_reject_above_than_ten_percent
           rules = Rules.new(place_by: "place")
           calculator = Calculator.new(rules: rules, source_results: [])
 
@@ -50,6 +51,7 @@ module Calculations
             place: 1
           )
           result = Models::CalculatedResult.new(participant, [source_result])
+          result.place = 1
           calculator.event_categories.first.results << result
 
           event_categories = RejectCategoryWorstResults.calculate!(calculator)

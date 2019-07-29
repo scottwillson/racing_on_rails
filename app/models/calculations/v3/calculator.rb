@@ -52,24 +52,47 @@ module Calculations
       def calculate!
         @logger.debug "Calculator#calculate! source_results: #{source_results.size} rules: #{rules.to_h}"
 
-        calculate_step(Steps::RejectCalculatedEvents)
-          .calculate_step(Steps::RejectWeekdayEvents)
-          .calculate_step(Steps::SelectInDiscipline)
-          .calculate_step(Steps::RejectCategories)
-          .calculate_step(Steps::RejectNoParticipant)
-          .calculate_step(Steps::SelectAssociationSanctioned)
-          .calculate_step(Steps::SelectMembers)
-          .calculate_step(Steps::RejectDnfs)
-          .calculate_step(Steps::RejectBelowMinimumEvents)
-          .calculate_step(Steps::RejectMoreThanResultsPerEvent)
-          .calculate_step(Steps::RejectCategoryWorstResults)
-          .calculate_step(Steps::AssignPoints)
-          .calculate_step(Steps::AddMissingResultsPenalty)
-          .calculate_step(Steps::RejectMoreThanMaximumEvents)
-          .calculate_step(Steps::RejectEmptySourceResults)
-          .calculate_step(Steps::SumPoints)
-          .calculate_step(Steps::Place)
-          .event_categories
+        if rules.place_by == "place"
+          # place before assigning points
+          calculate_step(Steps::RejectCalculatedEvents)
+            .calculate_step(Steps::RejectWeekdayEvents)
+            .calculate_step(Steps::SelectInDiscipline)
+            .calculate_step(Steps::RejectCategories)
+            .calculate_step(Steps::RejectNoParticipant)
+            .calculate_step(Steps::SelectAssociationSanctioned)
+            .calculate_step(Steps::SelectMembers)
+            .calculate_step(Steps::RejectDnfs)
+            .calculate_step(Steps::RejectBelowMinimumEvents)
+            .calculate_step(Steps::RejectMoreThanResultsPerEvent)
+            .calculate_step(Steps::RejectCategoryWorstResults)
+            .calculate_step(Steps::Place)
+            .calculate_step(Steps::AssignPoints)
+            .calculate_step(Steps::AddMissingResultsPenalty)
+            .calculate_step(Steps::RejectMoreThanMaximumEvents)
+            .calculate_step(Steps::RejectEmptySourceResults)
+            .calculate_step(Steps::SumPoints)
+            .event_categories
+        else
+          # place after assigning points
+          calculate_step(Steps::RejectCalculatedEvents)
+            .calculate_step(Steps::RejectWeekdayEvents)
+            .calculate_step(Steps::SelectInDiscipline)
+            .calculate_step(Steps::RejectCategories)
+            .calculate_step(Steps::RejectNoParticipant)
+            .calculate_step(Steps::SelectAssociationSanctioned)
+            .calculate_step(Steps::SelectMembers)
+            .calculate_step(Steps::RejectDnfs)
+            .calculate_step(Steps::RejectBelowMinimumEvents)
+            .calculate_step(Steps::RejectMoreThanResultsPerEvent)
+            .calculate_step(Steps::RejectCategoryWorstResults)
+            .calculate_step(Steps::AssignPoints)
+            .calculate_step(Steps::AddMissingResultsPenalty)
+            .calculate_step(Steps::RejectMoreThanMaximumEvents)
+            .calculate_step(Steps::RejectEmptySourceResults)
+            .calculate_step(Steps::SumPoints)
+            .calculate_step(Steps::Place)
+            .event_categories
+        end
       end
 
       def calculate_step(step)

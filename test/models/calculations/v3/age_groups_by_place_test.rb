@@ -76,7 +76,7 @@ class Calculations::V3::AgeGroupsByPlaceTest < ActiveSupport::TestCase
     assert_equal person_2, result.person
     assert_equal "3", result.place
     assert_equal 1, result.sources.size
-    assert_equal 75, result.points
+    assert_equal 50, result.points
 
     result = results[3]
     assert result.sources.first.rejected?
