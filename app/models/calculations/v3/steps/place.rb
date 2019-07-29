@@ -75,7 +75,7 @@ module Calculations
 
         # For Calculations based on place
         def self.compare_by_place(x, y, place_by)
-          diff = x.source_result_ability <=> y.source_result_ability
+          diff = x.source_result_ability_group <=> y.source_result_ability_group
           return diff if diff != 0
 
           diff = x.source_result_numeric_place <=> y.source_result_numeric_place

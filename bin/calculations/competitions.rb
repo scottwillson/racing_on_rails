@@ -143,6 +143,8 @@ COMPETITIONS = {
   },
   gpcd_david_douglas_by_age: {
     categories: [
+      { name: "Junior Men 3/4/5", reject: true },
+      { name: "Junior Women 3/4/5", reject: true },
       { name: "Men 9-18" },
       { name: "Men 19-34" },
       { name: "Men 35-49" },
@@ -164,6 +166,8 @@ COMPETITIONS = {
   },
   gpcd_het_meer_by_age: {
     categories: [
+      { name: "Junior Men 3/4/5", reject: true },
+      { name: "Junior Women 3/4/5", reject: true },
       { name: "Men 9-18" },
       { name: "Men 19-34" },
       { name: "Men 35-49" },
@@ -185,6 +189,8 @@ COMPETITIONS = {
   },
   gpcd_zaaldercross_by_age: {
     categories: [
+      { name: "Junior Men 3/4/5", reject: true },
+      { name: "Junior Women 3/4/5", reject: true },
       { name: "Men 9-18" },
       { name: "Men 19-34" },
       { name: "Men 35-49" },
@@ -206,6 +212,8 @@ COMPETITIONS = {
   },
   gpcd_ninkrossi_by_age: {
     categories: [
+      { name: "Junior Men 3/4/5", reject: true },
+      { name: "Junior Women 3/4/5", reject: true },
       { name: "Men 9-18" },
       { name: "Men 19-34" },
       { name: "Men 35-49" },
@@ -227,6 +235,8 @@ COMPETITIONS = {
   },
   gpcd_heiser_farm_by_age: {
     categories: [
+      { name: "Junior Men 3/4/5", reject: true },
+      { name: "Junior Women 3/4/5", reject: true },
       { name: "Men 9-18" },
       { name: "Men 19-34" },
       { name: "Men 35-49" },
@@ -248,6 +258,8 @@ COMPETITIONS = {
   },
   gpcd_team: {
     categories: [
+      { name: "Junior Men 3/4/5", reject: true },
+      { name: "Junior Women 3/4/5", reject: true },
       { name: "Men 9-18" },
       { name: "Men 19-34" },
       { name: "Men 35-49" },
@@ -261,12 +273,12 @@ COMPETITIONS = {
     rules: {
       place_by: "place",
       results_per_event: 10,
-      source_event_keys: [
-        :gpcd_david_douglas_by_age,
-        :gpcd_het_meer_by_age,
-        :gpcd_ninkrossi_by_age,
-        :gpcd_heiser_farm_by_age,
-        :gpcd_zaaldercross_by_age
+      source_event_keys: %i[
+        gpcd_david_douglas_by_age
+        gpcd_het_meer_by_age
+        gpcd_ninkrossi_by_age
+        gpcd_heiser_farm_by_age
+        gpcd_zaaldercross_by_age
       ],
       team: true
     }

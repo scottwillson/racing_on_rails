@@ -5,6 +5,8 @@ module Calculations
     module Models
       # Result calculated from source results. Belongs to EventCategory.
       class CalculatedResult
+        include Results
+
         attr_reader :participant
         attr_accessor :place
         attr_accessor :points
@@ -24,10 +26,6 @@ module Calculations
           validate!
         end
 
-        def not_rejected?
-          !rejected?
-        end
-
         def placed_source_results
           source_results.select(&:placed?)
         end
@@ -36,23 +34,17 @@ module Calculations
           placed_source_results.select(&:points?)
         end
 
-        def points?
-          points&.positive?
-        end
-
-        def reject(reason)
-          raise(ArgumentError, "already rejected because #{rejection_reason}") if rejected?
-
-          @rejection_reason = reason
-          @rejected = true
-        end
-
-        def rejected?
-          @rejected
-        end
-
         def source_result_ability
           source_results.first.ability
+        end
+
+        # Awkward. Consider "0" abilities like Clydesdale and Pro as 1.
+        def source_result_ability_group
+          if source_result_ability == 0
+            return 1
+          end
+
+          source_result_ability
         end
 
         def source_result_numeric_place

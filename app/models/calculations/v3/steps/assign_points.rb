@@ -7,8 +7,16 @@ module Calculations
         def self.calculate!(calculator)
           calculator.event_categories.reject(&:rejected?).each do |category|
             category.unrejected_results.each do |result|
-              result.unrejected_source_results.each_with_index do |source_result, index|
-                source_result.points = points_for_place(source_result, calculator.rules.points_for_place, calculator.rules.place_by, category.unrejected_results.size, index) *
+              result.unrejected_source_results.each do |source_result|
+                points_for_place = points_for_place(
+                  source_result,
+                  calculator.rules.points_for_place,
+                  calculator.rules.place_by,
+                  result.numeric_place,
+                  category.results.size
+                )
+
+                source_result.points = points_for_place *
                                        last_event_multiplier(source_result, calculator.rules) *
                                        multiplier(source_result)
               end
@@ -18,12 +26,13 @@ module Calculations
           calculator.event_categories
         end
 
-        # TODO fix number of args
-        def self.points_for_place(source_result, points_for_place, place_by, results_size, index)
+        def self.points_for_place(source_result, points_for_place, place_by, result_place, results_size)
           return 0 unless source_result.placed?
 
           if place_by == "place"
-            return 100.0 * (results_size - index) / results_size
+            return 0 if result_place == Float::INFINITY
+
+            return 100.0 * ((results_size - result_place) + 1) / results_size
           end
 
           return 1 unless points_for_place
