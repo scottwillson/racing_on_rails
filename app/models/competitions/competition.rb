@@ -282,6 +282,7 @@ module Competitions
         field_size_bonus: field_size_bonus?,
         maximum_events: maximum_events(race),
         maximum_upgrade_points: maximum_upgrade_points,
+        maximum_upgrade_results: maximum_upgrade_results,
         members_only: members_only?,
         minimum_events: minimum_events,
         missing_result_penalty: missing_result_penalty,
@@ -536,6 +537,10 @@ module Competitions
     end
 
     def maximum_upgrade_points
+      Competition::UNLIMITED
+    end
+
+    def maximum_upgrade_results
       Competition::UNLIMITED
     end
 

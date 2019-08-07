@@ -12,6 +12,7 @@ module Competitions
           # Calculator needs to model results as map keyed by category, not an array,
           # to improve this code
           upgrades = selected_scores.select(&:upgrade)
+          upgrades = limit_upgrades(upgrades, rules[:maximum_upgrade_results], rules[:use_source_result_points])
           reject_scores_greater_than_maximum_events(selected_scores.reject(&:upgrade), rules) + upgrades
         else
           selected_scores
@@ -20,6 +21,32 @@ module Competitions
 
       def points?(score)
         score.points && score.points > 0.0
+      end
+
+      # Apply maximum_upgrade_results
+      def limit_upgrades(upgrades, limit, use_source_result_points)
+        if limit == UNLIMITED
+          upgrades
+        else
+          upgrades.group_by(&:participant_id)
+                  .map do |_participant_id, participant_upgrades|
+
+            puts(participant_upgrades.size) if participant_upgrades.size > 0
+
+            if use_source_result_points
+              participant_upgrades = participant_upgrades.sort_by(&:points).reverse
+            else
+              participant_upgrades = participant_upgrades.sort_by { |r| numeric_place(r) }
+            end
+
+            if participant_upgrades.size > limit
+              participant_upgrades = participant_upgrades.first(limit)
+            end
+
+            category_results + upgrades
+          end
+                 .flatten
+        end
       end
 
       def maximum_events?(rules)

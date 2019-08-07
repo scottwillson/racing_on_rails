@@ -5,6 +5,10 @@ module Competitions
     class Overall < Competitions::Overall
       include PortlandShortTrackSeries::Common
 
+      def maximum_upgrade_results
+        3
+      end
+
       def maximum_events(_race)
         7
       end

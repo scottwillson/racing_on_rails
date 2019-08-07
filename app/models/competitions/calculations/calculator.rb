@@ -42,6 +42,7 @@ module Competitions
       # * end_date: Default to nil. Is this result from the last event?
       # * field_size_bonus: boolean. Default to false. Give 1.5 X points for fields of 75 or more
       # * maximum_events: 1 to UNLIMITED. Only score results up to +maximum_events+ count. For rules like: best 7 of 8.
+      # * maximum_upgrade_results: 1 to UNLIMITED. Limit upgrade results from lower category.
       # * maximum_upgrade_points: 1 to UNLIMITED. Limit upgrade points from lower category.
       # * minimum_events: integer. Only score if +minimum_events+ results. Default to nil.
       # * missing_result_penalty: integer. Default nil. For fewest-points wins competitions. Give penalty for if a participant
