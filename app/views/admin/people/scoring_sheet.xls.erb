@@ -1,4 +1,4 @@
-license	road_number	last_name	first_name	city	racing_age	team_name	road_category	mtb_category	dh_category	track_category	cx_category	member	ccx_number
+license	road_number	last_name	first_name	city	racing_age	team_name	road_category	mtb_category	dh_category	track_category	cx_category	member	ccx_age
 <%- @people.each do |person| -%>
 <%= to_excel person["license"] -%>
 	<%= person["road_number"] -%>
@@ -14,5 +14,5 @@ license	road_number	last_name	first_name	city	racing_age	team_name	road_category
 	<%= to_excel person["ccx_category"] -%>
 	<%= to_excel person["member"] -%>
   <%# Last column is slightly different to ensure a line break -%>
-	<%= person["ccx_number"] %>
+	<%= person["ccx_age"] %>
 <%- end -%>
