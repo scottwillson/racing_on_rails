@@ -25,7 +25,8 @@ module People
                  CEILING(#{date.year} - YEAR(date_of_birth)) as racing_age,
                  ccx_numbers.value as ccx_number, dh_numbers.value as dh_number, road_numbers.value as road_number,
                  singlespeed_numbers.value as singlespeed_number, xc_numbers.value as xc_number,
-                 people.created_at, people.updated_at
+                 people.created_at, people.updated_at,
+                 CEILING((#{date.year} - YEAR(date_of_birth)) + 1) as ccx_age
           FROM people
           LEFT OUTER JOIN teams ON teams.id = people.team_id
           LEFT OUTER JOIN race_numbers as ccx_numbers ON ccx_numbers.person_id = people.id
