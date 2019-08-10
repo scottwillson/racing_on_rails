@@ -31,19 +31,17 @@ module Competitions
           upgrades.group_by(&:participant_id)
                   .map do |_participant_id, participant_upgrades|
 
-            puts(participant_upgrades.size) if participant_upgrades.size > 0
-
             if use_source_result_points
               participant_upgrades = participant_upgrades.sort_by(&:points).reverse
             else
-              participant_upgrades = participant_upgrades.sort_by { |r| numeric_place(r) }
+              participant_upgrades = participant_upgrades.sort_by(&:numeric_place)
             end
 
             if participant_upgrades.size > limit
               participant_upgrades = participant_upgrades.first(limit)
             end
 
-            category_results + upgrades
+            participant_upgrades
           end
                  .flatten
         end

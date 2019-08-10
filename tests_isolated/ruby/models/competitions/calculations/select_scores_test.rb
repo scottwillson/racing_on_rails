@@ -101,7 +101,7 @@ module Competitions
           score(numeric_place: 10, participant_id: 1, points: 1, upgrade: true),
           score(numeric_place: 1, participant_id: 1, points: 10)
         ]
-        actual = Calculator.select_scores(scores, maximum_events: 1)
+        actual = Calculator.select_scores(scores, maximum_events: 1, maximum_upgrade_results: 10)
         assert_equal_scores expected, actual
       end
 
