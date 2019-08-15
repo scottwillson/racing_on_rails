@@ -25,7 +25,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   include Calculations::V3::CalculationConcerns::SaveResults
   include Calculations::V3::CalculationConcerns::SourceResults
 
-  serialize :points_for_place, Array
+  serialize :points_for_place
   serialize :source_event_keys, Array
 
   has_many :calculation_categories, class_name: "Calculations::V3::Category", dependent: :destroy
@@ -48,7 +48,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   validates :place_by, inclusion: { in: PLACE_BY }
 
   default_value_for(:discipline_id) { ::Discipline[RacingAssociation.current.default_discipline]&.id }
-  default_value_for :points_for_place, []
+  default_value_for :points_for_place, nil
 
   def add_event!
     return if event

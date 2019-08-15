@@ -96,6 +96,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
         id: result.id,
         participant: model_participant(result),
         place: result.place,
+        points: result.points,
         time: result.time
       )
     end

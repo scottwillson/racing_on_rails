@@ -111,7 +111,7 @@ module Calculations
         event_category = Models::EventCategory.new(Models::Category.new("Women 5"), event)
         source_results << Models::SourceResult.new(id: 11, event_category: event_category, participant: participant, place: 1)
 
-        rules = Rules.new(association: association)
+        rules = Rules.new(association: association, points_for_place: 1)
         calculator = Calculator.new(rules: rules, source_results: source_results)
 
         event_categories = calculator.calculate!

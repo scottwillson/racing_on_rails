@@ -18,7 +18,7 @@ class CreateCalculations < ActiveRecord::Migration[5.2]
       t.string :name, default: "New Calculation", required: true, unique: true
       t.text :points_for_place, array: true
       t.integer :results_per_event, default: nil, null: true
-      t.string :source_event_keys, array: true, default: [].to_yaml
+      t.string :source_event_keys, array: true, default: nil
       t.boolean :specific_events, default: false, null: false
       t.boolean :team, default: false, null: false
       t.boolean :weekday_events, default: true, null: false

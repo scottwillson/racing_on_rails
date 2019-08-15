@@ -163,9 +163,9 @@ module Categories
           candidate_categories = candidate_categories.reject { |category| category.ages_begin > result_age }
         end
         highest_age = candidate_categories.map(&:ages_begin).max
-        highest_age_category = candidate_categories.detect { |category| category.ages_begin == highest_age }
-        logger&.debug "highest age: #{highest_age_category.name}"
-        return highest_age_category
+        highest_age_category = candidate_categories.select { |category| category.ages_begin == highest_age }
+        logger&.debug "highest age: #{highest_age_category.map(&:name)}"
+        return highest_age_category.first if highest_age_category.one?
       end
 
       candidate_categories = candidate_categories.reject { |category| gender == "F" && category.gender == "M" }

@@ -9,7 +9,8 @@ class Calculations::V3::IronmanTest < ActiveSupport::TestCase
   test "#calculate!" do
     calculation = Calculations::V3::Calculation.create!(
       members_only: true,
-      name: "Ironman"
+      name: "Ironman",
+      points_for_place: 1
     )
     calculation.calculate!
 

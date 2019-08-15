@@ -35,7 +35,8 @@ module Calculations
             return 100.0 * ((results_size - result_place) + 1) / results_size
           end
 
-          return 1 unless points_for_place
+          return points_for_place if points_for_place.is_a?(Numeric)
+          return source_result.points if points_for_place.nil?
 
           points_for_place[source_result.numeric_place - 1] || 0
         end

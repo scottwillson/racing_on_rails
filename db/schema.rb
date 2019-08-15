@@ -84,7 +84,7 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
     t.string "name", default: "New Calculation"
     t.text "points_for_place"
     t.integer "results_per_event"
-    t.string "source_event_keys", default: "--- []\n"
+    t.string "source_event_keys"
     t.boolean "specific_events", default: false, null: false
     t.boolean "team", default: false, null: false
     t.boolean "weekday_events", default: true, null: false
