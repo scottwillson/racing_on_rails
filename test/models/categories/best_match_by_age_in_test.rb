@@ -11,14 +11,20 @@ module Competitions
       men_9_18 = ::Category.find_or_create_by_normalized_name("Men 9-18")
       men_35_49 = ::Category.find_or_create_by_normalized_name("Men 35-49")
       women_35_49 = ::Category.find_or_create_by_normalized_name("Women 35-49")
+      men_50 = ::Category.find_or_create_by_normalized_name("Men 50+")
+      women_50 = ::Category.find_or_create_by_normalized_name("Women 50+")
+      masters_women_60 = ::Category.find_or_create_by_normalized_name("Masters Women 60+")
 
       event = FactoryBot.create(:event)
       event.races.create!(category: men_9_18)
       event.races.create!(category: men_35_49)
+      event.races.create!(category: men_50)
       event.races.create!(category: women_35_49)
+      event.races.create!(category: women_50)
 
       assert_best_match_by_age_in [athena, women_35_49], women_35_49, event, 35
-      assert_best_match_by_age_in [junior_men_17_18, men_9_18], men_9_18, event, 35
+      assert_best_match_by_age_in [junior_men_17_18, men_9_18], men_9_18, event, 15
+      assert_best_match_by_age_in [women_50, masters_women_60], women_50, event, 60
     end
 
     test "equipment" do

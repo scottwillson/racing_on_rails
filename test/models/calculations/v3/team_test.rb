@@ -3,7 +3,7 @@
 require "test_helper"
 
 # :stopdoc:
-class Calculations::V3::IntermediateTest < ActiveSupport::TestCase
+class Calculations::V3::TeamTest < ActiveSupport::TestCase
   setup { FactoryBot.create :discipline }
 
   test "#calculate!" do

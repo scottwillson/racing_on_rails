@@ -61,9 +61,9 @@ module Calculations
           assert_equal 150, event_categories.first.results[1].source_results.first.points
         end
 
-        def test_no_points_for_place
+        def test_numeric_points_for_place
           category = Models::Category.new("Masters Men")
-          rules = Rules.new
+          rules = Rules.new(points_for_place: 1)
           calculator = Calculator.new(rules: rules, source_results: [])
           event_category = calculator.event_categories.first
 
@@ -196,6 +196,23 @@ module Calculations
 
           assert_equal 100, event_categories.first.results[0].source_results.first.points
           assert_equal 50, event_categories.first.results[1].source_results.first.points
+        end
+
+        def test_points_from_source_result
+          category = Models::Category.new("Masters Men")
+          rules = Rules.new
+          calculator = Calculator.new(rules: rules, source_results: [])
+          event_category = calculator.event_categories.first
+
+          event = Models::Event.new
+          source_result = Models::SourceResult.new(id: 33, event_category: Models::EventCategory.new(category, event), place: 1, points: 22.5)
+          participant = Models::Participant.new(0)
+          result = Models::CalculatedResult.new(participant, [source_result])
+          event_category.results << result
+
+          event_categories = AssignPoints.calculate!(calculator)
+
+          assert_equal 22.5, event_categories.first.results[0].source_results.first.points
         end
       end
     end
