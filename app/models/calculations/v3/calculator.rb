@@ -65,12 +65,14 @@ module Calculations
             .calculate_step(Steps::RejectBelowMinimumEvents)
             .calculate_step(Steps::RejectMoreThanResultsPerEvent)
             .calculate_step(Steps::RejectCategoryWorstResults)
+            .calculate_step(Steps::RejectEmptySourceResults)
+            .calculate_step(Steps::RejectAllSourceResultsRejected)
             .calculate_step(Steps::Place)
             .calculate_step(Steps::AssignPoints)
             .calculate_step(Steps::AddMissingResultsPenalty)
             .calculate_step(Steps::RejectMoreThanMaximumEvents)
-            .calculate_step(Steps::RejectEmptySourceResults)
             .calculate_step(Steps::SumPoints)
+            .calculate_step(Steps::Validate)
             .event_categories
         else
           # place after assigning points
@@ -89,8 +91,10 @@ module Calculations
             .calculate_step(Steps::AddMissingResultsPenalty)
             .calculate_step(Steps::RejectMoreThanMaximumEvents)
             .calculate_step(Steps::RejectEmptySourceResults)
+            .calculate_step(Steps::RejectAllSourceResultsRejected)
             .calculate_step(Steps::SumPoints)
             .calculate_step(Steps::Place)
+            .calculate_step(Steps::Validate)
             .event_categories
         end
       end

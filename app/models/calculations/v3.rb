@@ -8,6 +8,7 @@ module Calculations::V3
     discipline
     dnf
     members_only
+    no_source_results
     not_calculation_category
     sanctioned_by
     rejected_category

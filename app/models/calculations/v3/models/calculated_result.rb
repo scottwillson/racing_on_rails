@@ -55,10 +55,6 @@ module Calculations
           source_results.first.placed?
         end
 
-        def source_result_rejected?
-          source_results.first.rejected?
-        end
-
         def tied?
           @tied
         end

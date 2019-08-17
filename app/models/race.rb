@@ -238,30 +238,6 @@ class Race < ApplicationRecord
     true
   end
 
-  # Sort results by points, assign places
-  def place_results_by_points(break_ties = true, descending = true)
-    _results = results.to_a
-    _results.sort! do |x, y|
-      x.compare_by_points(y, break_ties)
-    end
-
-    _results.reverse! unless descending
-
-    _results.each_with_index do |result, index|
-      result.place = if index == 0
-                       1
-                     else
-                       result.place = if _results[index - 1].compare_by_points(result, break_ties) == 0
-                                        _results[index - 1].place
-                                      else
-                                        index + 1
-                                      end
-                     end
-
-      result.update_column(:place, result.place) if result.place_changed?
-    end
-  end
-
   # Sort results by laps, time
   def place_results_by_time
     _results = results.to_a.sort do |x, y|

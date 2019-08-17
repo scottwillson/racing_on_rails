@@ -270,6 +270,14 @@ COMPETITIONS = {
       team: true
     }
   },
+  ironman: {
+    competition_id: 25_814,
+    name: "Ironman",
+    rules: {
+      members_only: true,
+      points_for_place: 1
+    }
+  },
   oregon_cup: {
     categories: [
       { name: "Senior Men" }

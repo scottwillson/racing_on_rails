@@ -28,7 +28,7 @@ module Enumerable
     end
   end
 
-  # Sort is stable only if predicate includes an equal comparison. Example: x.name <= y.name
+  # Sort is stable only if predicate includes an equal comparison. Example: x.name <=> y.name
   def merge_sort(&predicate)
     return dup if size <= 1
 

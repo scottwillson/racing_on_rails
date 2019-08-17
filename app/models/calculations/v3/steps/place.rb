@@ -31,15 +31,17 @@ module Calculations
 
         # What +calculated+ results are placed depend on the place_by strategy
         def self.select_results(results, place_by)
+          results = results.reject(&:rejected?)
+
           case place_by
           when "place"
             results.each(&:validate_one_source_result!)
-            results.reject(&:source_result_rejected?).select(&:source_result_placed?)
+            results.select(&:source_result_placed?)
           when "time"
             results.each(&:validate_one_source_result!)
-            results.reject(&:source_result_rejected?).select(&:time?)
+            results.select(&:time?)
           else
-            results.reject(&:source_result_rejected?).select(&:points?)
+            results.select(&:points?)
           end
         end
 
