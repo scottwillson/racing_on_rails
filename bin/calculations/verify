@@ -272,12 +272,7 @@ end
 
 # competitions = COMPETITIONS
 competitions = {
-  gpcd_david_douglas_by_age: COMPETITIONS[:gpcd_david_douglas_by_age],
-  gpcd_het_meer_by_age: COMPETITIONS[:gpcd_het_meer_by_age],
-  gpcd_zaaldercross_by_age: COMPETITIONS[:gpcd_zaaldercross_by_age],
-  gpcd_ninkrossi_by_age: COMPETITIONS[:gpcd_ninkrossi_by_age],
-  gpcd_heiser_farm_by_age: COMPETITIONS[:gpcd_heiser_farm_by_age],
-  gpcd_team: COMPETITIONS[:gpcd_team]
+  ironman: COMPETITIONS[:ironman]
 }
 
 # fetch_data
