@@ -278,6 +278,45 @@ COMPETITIONS = {
       points_for_place: 1
     }
   },
+  ojcs: {
+    categories: [
+      { name: "Elite Junior Men" },
+      { name: "Elite Junior Women" },
+      { name: "Junior Men 10-12", reject: true },
+      { name: "Junior Men 13-14 3/4/5" },
+      { name: "Junior Men 13-14", reject: true },
+      { name: "Junior Men 15-16 3/4/5" },
+      { name: "Junior Men 15-16", reject: true },
+      { name: "Junior Men 17-18 3/4/5" },
+      { name: "Junior Men 17-18", reject: true },
+      { name: "Junior Men 9-12 3/4/5" },
+      { name: "Junior Men 9", reject: true },
+      { name: "Junior Women 10-12", reject: true },
+      { name: "Junior Women 13-14 3/4/5" },
+      { name: "Junior Women 13-14", reject: true },
+      { name: "Junior Women 15-16 3/4/5" },
+      { name: "Junior Women 15-16", reject: true },
+      { name: "Junior Women 17-18 3/4/5" },
+      { name: "Junior Women 17-18", reject: true },
+      { name: "Junior Women 9-12 3/4/5" },
+      { name: "Junior Women 9", reject: true }
+    ],
+    competition_id: 25_816,
+    events: [
+      { id: 26_065, multiplier: 1 },
+      { id: 26_280, multiplier: 1 },
+      { id: 26_281, multiplier: 1 },
+      { id: 25_900, multiplier: 1 },
+      { id: 26_085, multiplier: 1 },
+      { id: 26_067, multiplier: 1 }
+    ],
+    name: "Oregon Junior Cyclocross Series",
+    rules: {
+      maximum_events: -2,
+      points_for_place: [30, 28, 26, 24, 22, 20, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      specific_events: true
+    }
+  },
   oregon_cup: {
     categories: [
       { name: "Senior Men" }
