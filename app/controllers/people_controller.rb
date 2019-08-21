@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class PeopleController < ApplicationController
-  force_https except: %i[index list show]
-
   before_action :require_current_person, only: %i[edit update card]
   before_action :assign_person, only: %i[edit update card]
   before_action :require_same_person_or_administrator_or_editor, only: %i[edit update card]
@@ -29,7 +27,7 @@ class PeopleController < ApplicationController
       redirect_to edit_person_path(person)
     else
       session[:return_to] = "/account"
-      redirect_to new_person_session_url(secure_redirect_options)
+      redirect_to new_person_session_url
     end
   end
 

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class EventTeamMembershipsController < ApplicationController
-  force_https
   before_action :require_current_person, except: :new
 
   def new

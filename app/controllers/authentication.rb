@@ -27,11 +27,11 @@ module Authentication
   def store_location_and_redirect_to_login
     if request.format == "text/javascript"
       session[:return_to] = request.referer
-      @redirect_to = new_person_session_url(secure_redirect_options)
+      @redirect_to = new_person_session_url
       render template: "redirect"
     else
       session[:return_to] = request.fullpath
-      redirect_to new_person_session_url(secure_redirect_options)
+      redirect_to new_person_session_url
     end
   end
 end

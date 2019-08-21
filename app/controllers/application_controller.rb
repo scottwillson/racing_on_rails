@@ -1,16 +1,13 @@
 # frozen_string_literal: true
 
-require "action_controller/force_https"
 require "sentient_user/sentient_controller"
 
 class ApplicationController < ActionController::Base
   helper :all
-  helper_method :use_https?
   helper_method :page
 
   protect_from_forgery with: :exception
 
-  include ActionController::ForceHTTPS
   include Authentication
   include Authorization
   include Caching
@@ -64,14 +61,6 @@ class ApplicationController < ActionController::Base
 
 
   private
-
-  def secure_redirect_options
-    if use_https?
-      { protocol: "https", host: request.host, port: 443 }
-    else
-      {}
-    end
-  end
 
   def redirect_back_or_default(default)
     if session[:return_to]

@@ -160,8 +160,4 @@ class ActiveSupport::TestCase
       end
     end
   end
-
-  def secure_redirect_options
-    @controller.send :secure_redirect_options
-  end
 end

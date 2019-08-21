@@ -11,7 +11,7 @@ module Admin
     test "only admins can edit pages" do
       destroy_person_session
       get :index
-      assert_redirected_to new_person_session_url(secure_redirect_options)
+      assert_redirected_to new_person_session_url
     end
 
     test "view pages as tree" do

@@ -4,8 +4,6 @@ class EditorRequestsController < ApplicationController
   before_action :assign_person, except: :show
   before_action :require_current_person, except: :show
 
-  force_https
-
   def create
     @editor = Person.find(params[:editor_id])
     return redirect_to(unauthorized_path) unless @editor.administrator? || (@editor && current_person == @editor)

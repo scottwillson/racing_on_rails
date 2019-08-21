@@ -77,7 +77,7 @@ module Competitions
       https! if RacingAssociation.current.ssl?
 
       get "/admin/first_aid_providers"
-      assert_redirected_to new_person_session_url(secure_redirect_options)
+      assert_redirected_to new_person_session_url
 
       go_to_login
       login params: { person_session: { login: person.login, password: "secret" } }

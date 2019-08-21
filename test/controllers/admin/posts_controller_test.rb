@@ -19,13 +19,13 @@ module Admin
       login_as FactoryBot.create(:person)
       mailing_list = FactoryBot.create(:mailing_list)
       get :index, params: { mailing_list_id: mailing_list.to_param }
-      assert_redirected_to new_person_session_url(secure_redirect_options)
+      assert_redirected_to new_person_session_url
     end
 
     test "index anonymous" do
       mailing_list = FactoryBot.create(:mailing_list)
       get :index, params: { mailing_list_id: mailing_list.to_param }
-      assert_redirected_to new_person_session_url(secure_redirect_options)
+      assert_redirected_to new_person_session_url
     end
 
     test "new" do

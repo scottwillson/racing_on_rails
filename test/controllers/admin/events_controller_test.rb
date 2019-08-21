@@ -138,7 +138,7 @@ module Admin
     test "not logged in" do
       destroy_person_session
       get :index, params: { year: "2004" }
-      assert_redirected_to new_person_session_url(secure_redirect_options)
+      assert_redirected_to new_person_session_url
       assert_nil(@request.session["person"], "No person in session")
     end
 
@@ -170,7 +170,7 @@ module Admin
       @request.session[:person_id] = 31_289_371_283
       @request.session[:person_credentials] = 31_289_371_283
       get :index
-      assert_redirected_to new_person_session_url(secure_redirect_options)
+      assert_redirected_to new_person_session_url
     end
 
     test "destroy child event" do
