@@ -374,26 +374,6 @@
     },
     {
       "warning_type": "Cross-Site Scripting",
-      "warning_code": 84,
-      "fingerprint": "a30ed10d3a9704b58bc3058e3850c6dd0aade931af26373d89ac170f18664d66",
-      "check_name": "RenderInline",
-      "message": "Unescaped model attribute rendered inline",
-      "file": "app/controllers/application_controller.rb",
-      "line": 52,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross-site_scripting/",
-      "code": "render(inline => Page.find_by(:path => (controller_path or \"#{controller_path}/#{action_name}\").dup).body, { :layout => true })",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ApplicationController",
-        "method": "render_page"
-      },
-      "user_input": "Page.find_by(:path => (controller_path or \"#{controller_path}/#{action_name}\").dup).body",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "a3792ad73fe3ddb29e74351abf230ba2442451bbefbb3a023981013ad7078fa7",
       "check_name": "CrossSiteScripting",
@@ -746,6 +726,26 @@
       "note": ""
     },
     {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 84,
+      "fingerprint": "f4f3da7e8732c913a031bde0efa73af7d519b2251b72c6d2221fd53ac221dd61",
+      "check_name": "RenderInline",
+      "message": "Unescaped model attribute rendered inline",
+      "file": "app/controllers/application_controller.rb",
+      "line": 49,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross-site_scripting/",
+      "code": "render(inline => Page.find_by(:path => ((controller_path or \"#{controller_path}/#{action_name}\"))).body, { :layout => true })",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ApplicationController",
+        "method": "render_page"
+      },
+      "user_input": "Page.find_by(:path => ((controller_path or \"#{controller_path}/#{action_name}\"))).body",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "f8b216ffc983cceea4c9b90794bf157504ac83537bdce7965b97772dd439b75d",
@@ -786,6 +786,6 @@
       "note": ""
     }
   ],
-  "updated": "2019-08-08 07:15:03 -0700",
-  "brakeman_version": "4.5.1"
+  "updated": "2019-08-21 15:13:38 -0700",
+  "brakeman_version": "4.6.1"
 }
