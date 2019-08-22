@@ -270,7 +270,7 @@ def compare_individual_results(expected_results, actual_results)
   end
 end
 
-# competitions = COMPETITIONS
+competitions = COMPETITIONS
 # competitions = {
 #   ojcs: COMPETITIONS[:ojcs]
 # }
