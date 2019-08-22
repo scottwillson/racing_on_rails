@@ -337,6 +337,178 @@ COMPETITIONS = {
       specific_events: true
     }
   },
+  oregon_tt_cup: {
+    categories: [
+      { name: "Category 3 Men" },
+      { name: "Category 3 Women" },
+      { name: "Category 4/5 Men" },
+      { name: "Category 4/5 Women" },
+      { name: "Eddy Senior Men" },
+      { name: "Eddy Senior Women" },
+      { name: "Junior Men 10-12" },
+      { name: "Junior Men 13-14" },
+      { name: "Junior Men 15-16" },
+      { name: "Junior Men 17-18" },
+      { name: "Junior Women 10-14" },
+      { name: "Junior Women 15-18" },
+      { name: "Masters Men 30-39" },
+      { name: "Masters Men 40-49" },
+      { name: "Masters Men 50-59" },
+      { name: "Masters Men 60-69" },
+      { name: "Masters Men 70+" },
+      { name: "Masters Women 30-39" },
+      { name: "Masters Women 40-49" },
+      { name: "Masters Women 50-59" },
+      { name: "Masters Women 60-69" },
+      { name: "Masters Women 70+" },
+      { name: "Senior Men Pro/1/2" },
+      { name: "Senior Women 1/2" },
+      { name: "Tandem" }
+    ],
+    competition_id: 25_820,
+    events: [
+      { id: 25_869, multiplier: 1 },
+      { id: 25_931, multiplier: 1 },
+      { id: 25_936, multiplier: 1 },
+      { id: 25_945, multiplier: 1 },
+      { id: 25_966, multiplier: 1 },
+      { id: 26_384, multiplier: 1 }
+    ],
+    rules: {
+      members_only: true,
+      name: "Oregon Time Trial Cup",
+      points_for_place: [20, 17, 15, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      specific_events: true
+    }
+  },
+  owps: {
+    categories: [
+      { name: "Women 1/2" },
+      { name: "Women 3" },
+      { name: "Women 4" }
+    ],
+    competition_id: 25_815,
+    events: [
+      { id: 25_844, multiplier: 1 },
+      { id: 25_917, multiplier: 1 },
+      { id: 25_918, multiplier: 1 },
+      { id: 25_923, multiplier: 1 },
+      { id: 25_930, multiplier: 1 },
+      { id: 26_053, multiplier: 1 },
+      { id: 26_139, multiplier: 1 }
+    ],
+    rules: {
+      members_only: true,
+      name: "Oregon Womens Prestige Series",
+      points_for_place: [25, 21, 18, 16, 14, 12, 10, 8, 7, 6, 5, 4, 3, 2, 1],
+      specific_events: true
+    }
+  },
+  pdx_stxc: {
+    categories: [
+      { name: "Category 1 Men U45" },
+      { name: "Category 1 Men 45+" },
+      { name: "Category 2 Men 40-49" },
+      { name: "Category 2 Men 50-59" },
+      { name: "Category 2 Men 60+" },
+      { name: "Category 2 Men U40" },
+      { name: "Category 2 Women 45+" },
+      { name: "Category 2 Women U45" },
+      { name: "Category 3 Men 10-13" },
+      { name: "Category 3 Men 14-18" },
+      { name: "Category 3 Men 19-39" },
+      { name: "Category 3 Men 40-49" },
+      { name: "Category 3 Men 50+" },
+      { name: "Category 3 Women 10-13" },
+      { name: "Category 3 Women 14-18" },
+      { name: "Category 3 Women 19+" },
+      { name: "Clydesdale" },
+      { name: "Elite Men" },
+      { name: "Elite/Category 1 Women" },
+      { name: "Singlespeed" }
+    ],
+    competition_id: 26_304,
+    event_id: 26_056,
+    rules: {
+      maximum_events: -1,
+      name: "Portland Short Track Series",
+      points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+    }
+  },
+  pdx_stxc_june: {
+    categories: [
+      { name: "Category 1 Men U45" },
+      { name: "Category 1 Men 45+" },
+      { name: "Category 2 Men 40-49" },
+      { name: "Category 2 Men 50-59" },
+      { name: "Category 2 Men 60+" },
+      { name: "Category 2 Men U40" },
+      { name: "Category 2 Women 45+" },
+      { name: "Category 2 Women U45" },
+      { name: "Category 3 Men 10-13" },
+      { name: "Category 3 Men 14-18" },
+      { name: "Category 3 Men 19-39" },
+      { name: "Category 3 Men 40-49" },
+      { name: "Category 3 Men 50+" },
+      { name: "Category 3 Women 10-13" },
+      { name: "Category 3 Women 14-18" },
+      { name: "Category 3 Women 19+" },
+      { name: "Clydesdale" },
+      { name: "Elite Men" },
+      { name: "Elite/Category 1 Women" },
+      { name: "Singlespeed" }
+    ],
+    competition_id: 26305,
+    rules: {
+      maximum_events: -1,
+      name: "Portland Short Track Series: June",
+      points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      specific_events: true
+    },
+    events: [
+      { id: 26_054, multiplier: 1 },
+      { id: 26_055, multiplier: 1 },
+      { id: 26_057, multiplier: 1 },
+      { id: 26_058, multiplier: 1 }
+    ]
+  },
+  pdx_stxc_july: {
+    categories: [
+      { name: "Category 1 Men U45" },
+      { name: "Category 1 Men 45+" },
+      { name: "Category 2 Men 40-49" },
+      { name: "Category 2 Men 50-59" },
+      { name: "Category 2 Men 60+" },
+      { name: "Category 2 Men U40" },
+      { name: "Category 2 Women 45+" },
+      { name: "Category 2 Women U45" },
+      { name: "Category 3 Men 10-13" },
+      { name: "Category 3 Men 14-18" },
+      { name: "Category 3 Men 19-39" },
+      { name: "Category 3 Men 40-49" },
+      { name: "Category 3 Men 50+" },
+      { name: "Category 3 Women 10-13" },
+      { name: "Category 3 Women 14-18" },
+      { name: "Category 3 Women 19+" },
+      { name: "Clydesdale" },
+      { name: "Elite Men" },
+      { name: "Elite/Category 1 Women" },
+      { name: "Singlespeed" }
+    ],
+    competition_id: 26308,
+    rules: {
+      maximum_events: -1,
+      name: "Portland Short Track Series: July",
+      points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      specific_events: true
+    },
+    events: [
+      { id: 26_059, multiplier: 1 },
+      { id: 26_060, multiplier: 1 },
+      { id: 26_061, multiplier: 1 },
+      { id: 26_062, multiplier: 1 }
+    ]
+  },
   tabor: {
     categories: [
       { name: "Senior Men" },
@@ -353,6 +525,29 @@ COMPETITIONS = {
     rules: {
       double_points_for_last_event: true,
       points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11]
+    }
+  },
+  portland_trophy_cup: {
+    categories: [
+      { name: "Junior Open" },
+      { name: "Junior Women" },
+      { name: "Open 1/2" },
+      { name: "Open 3/4 35+" },
+      { name: "Open 3/4" },
+      { name: "Open 50+" },
+      { name: "Open 60+" },
+      { name: "Open Beginner" },
+      { name: "Open Masters 1/2 35+" },
+      { name: "Open Singlespeed" },
+      { name: "Women 1/2" },
+      { name: "Women 3/4" },
+      { name: "Women Beginner" },
+      { name: "Women Single Speed" }
+    ],
+    event_id: 26_072,
+    rules: {
+      double_points_for_last_event: true,
+      points_for_place: [25, 20, 16, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 1]
     }
   },
   age_graded_bar: {
@@ -735,6 +930,17 @@ COMPETITIONS = {
       points_for_place: (1..300).to_a.reverse,
       source_event_keys: %w[criterium_bar cyclocross_bar gravel_bar mountain_bike_bar road_bar short_track_bar time_trial_bar track_bar],
       weekday_events: true
+    }
+  },
+  team_bar: {
+    competition_id: 25_830,
+    rules: {
+      association_sanctioned_only: true,
+      members_only: true,
+      name: "Team BAR",
+      points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      team: true,
+      weekday_events: false
     }
   }
 }.freeze
