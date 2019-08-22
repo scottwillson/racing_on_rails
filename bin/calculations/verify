@@ -73,7 +73,7 @@ def create_calculations(competitions)
     calculation = create_calculation(competition[:event_id], competition[:rules], competition[:name])
 
     competition[:categories]&.each do |category_definition|
-      category = Category.find_or_create_by_normalized_name(name: category_definition[:name])
+      category = Category.find_or_create_by_normalized_name(category_definition[:name])
       calculation_category = Calculations::V3::Category.new(
         category: category,
         maximum_events: category_definition[:maximum_events],
@@ -128,7 +128,7 @@ def compare_results(competitions)
       end
       # compare_event_results expected_event, actual_event
     else
-      puts "Could not find #{key}"
+      puts "Could not find actual event for #{key}"
     end
   end
 end
@@ -142,6 +142,7 @@ def compare_source_events(expected_event, actual_event, competition, key)
 
   event_ids = Result.find(scores).pluck(:event_id)
   competition[:do_no_expect]&.each { |e| event_ids.delete(e) }
+  event_ids.delete(competition[:competition_id])
   competition[:expect]&.each { |e| event_ids << e }
 
   event_ids = expect_new_calculations(key, event_ids)
@@ -283,7 +284,7 @@ create_calculations competitions
 calculations(competitions).map(&:source_event).compact.each(&:update_date)
 calculations(competitions).reject do |c|
   (c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"]) ||
-  (c.key != "gpcd_team" && c.key["gpcd"])
+  (c.key != "gpcd_team" && c.key != "gpcd" && c.key["gpcd"])
 end.each(&:calculate!)
 compare_results competitions
 
