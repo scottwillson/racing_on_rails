@@ -542,7 +542,7 @@ COMPETITIONS = {
       { name: "Women 1/2" },
       { name: "Women 3/4" },
       { name: "Women Beginner" },
-      { name: "Women Single Speed" }
+      { name: "Women Singlespeed" }
     ],
     event_id: 26_072,
     rules: {
