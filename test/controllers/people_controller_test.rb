@@ -39,7 +39,7 @@ class PeopleControllerTest < ActionController::TestCase
     member = FactoryBot.create(:person_with_login)
     use_ssl
     get :edit, params: { id: member.to_param }
-    assert_redirected_to new_person_session_url(secure_redirect_options)
+    assert_redirected_to new_person_session_url
   end
 
   test "cant see other people info" do
@@ -147,7 +147,7 @@ class PeopleControllerTest < ActionController::TestCase
   test "account not logged in" do
     use_ssl
     get :account
-    assert_redirected_to new_person_session_url(secure_redirect_options)
+    assert_redirected_to new_person_session_url
   end
 
   test "account with person not logged in" do

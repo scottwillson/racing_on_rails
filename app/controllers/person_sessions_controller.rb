@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class PersonSessionsController < ApplicationController
-  force_https
   before_action :require_current_person, only: :show
 
   def new
@@ -18,9 +17,9 @@ class PersonSessionsController < ApplicationController
     if @person_session.save
       flash.discard
       if @person_session.person.administrator?
-        redirect_back_or_default admin_home_url(secure_redirect_options)
+        redirect_back_or_default admin_home_url
       else
-        redirect_back_or_default edit_person_url(@person_session.person, secure_redirect_options)
+        redirect_back_or_default edit_person_url(@person_session.person)
       end
     else
       render :new
@@ -31,7 +30,7 @@ class PersonSessionsController < ApplicationController
     session[:return_to] = nil
     current_person_session&.destroy
     flash[:notice] = "You are logged-out"
-    redirect_back_or_default new_person_session_url(secure_redirect_options)
+    redirect_back_or_default new_person_session_url
   end
 
   private

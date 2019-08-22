@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class EventTeamsController < ApplicationController
-  force_https
-
   before_action :require_current_person, only: :create
 
   def index

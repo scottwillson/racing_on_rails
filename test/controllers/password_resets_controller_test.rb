@@ -14,7 +14,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     FactoryBot.create(:administrator)
     post :create, params: { email: "admin@example.com" }
     assert_response :redirect
-    assert_redirected_to new_password_reset_url(secure_redirect_options)
+    assert_redirected_to new_password_reset_url
     assert_equal 1, ActionMailer::Base.deliveries.count, "Should send one email"
   end
 

@@ -17,7 +17,7 @@ module Admin
       test "not logged in index" do
         destroy_person_session
         get :index
-        assert_redirected_to new_person_session_url(secure_redirect_options)
+        assert_redirected_to new_person_session_url
         assert_nil(@request.session["person"], "No person in session")
       end
 
@@ -26,7 +26,7 @@ module Admin
         person = FactoryBot.create(:person)
         get :edit, params: { id: person.to_param }
         assert_nil(@request.session["person"], "No person in session")
-        assert_redirected_to new_person_session_url(secure_redirect_options)
+        assert_redirected_to new_person_session_url
       end
 
       test "index" do

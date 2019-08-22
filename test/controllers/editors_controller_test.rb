@@ -47,7 +47,7 @@ class EditorsControllerTest < ActionController::TestCase
     promoter = FactoryBot.create(:promoter)
     member = FactoryBot.create(:person)
     post :create, params: { id: member.to_param, editor_id: promoter.to_param }
-    assert_redirected_to new_person_session_url(secure_redirect_options)
+    assert_redirected_to new_person_session_url
   end
 
   test "security" do

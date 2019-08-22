@@ -51,7 +51,7 @@ module Admin
     test "non official" do
       login_as FactoryBot.create(:person)
       get :index
-      assert_redirected_to new_person_session_url(secure_redirect_options)
+      assert_redirected_to new_person_session_url
       assert_select ".in_place_editable", 0, "Should be read-only for officials"
     end
 

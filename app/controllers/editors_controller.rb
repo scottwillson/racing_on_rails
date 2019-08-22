@@ -5,8 +5,6 @@ class EditorsController < ApplicationController
   before_action :assign_person
   before_action :require_same_person_or_administrator
 
-  force_https
-
   def create
     @editor = Person.find(params[:editor_id])
 

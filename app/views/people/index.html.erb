@@ -30,8 +30,7 @@
           admin_people_url(
             format: "xls",
             excel_layout: "scoring_sheet",
-            include: "members_only",
-            protocol: use_https? ? "https" : "http"
+            include: "members_only"
           ),
           id: "export_link"
     ) %>
