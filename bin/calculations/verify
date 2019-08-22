@@ -73,7 +73,7 @@ def create_calculations(competitions)
     calculation = create_calculation(competition[:event_id], competition[:rules], competition[:name])
 
     competition[:categories]&.each do |category_definition|
-      category = Category.find_or_create_by(name: category_definition[:name])
+      category = Category.find_or_create_by_normalized_name(name: category_definition[:name])
       calculation_category = Calculations::V3::Category.new(
         category: category,
         maximum_events: category_definition[:maximum_events],

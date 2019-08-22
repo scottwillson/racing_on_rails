@@ -25,6 +25,7 @@ COMPETITIONS = {
     ],
     competition_id: 26_417,
     event_id: 26_208,
+    name: "Blind Date at the Dairy",
     rules: {
       maximum_events: -1,
       points_for_place: [15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
@@ -73,6 +74,7 @@ COMPETITIONS = {
     ],
     competition_id: 26_440,
     event_id: 25_896,
+    name: "River City Bicycles Cyclocross Crusade",
     rules: {
       maximum_events: -1,
       minimum_events: 3,
@@ -134,10 +136,10 @@ COMPETITIONS = {
     ],
     competition_id: 26_421,
     event_id: 26_278,
+    name: "Gran Prix Carl Decker",
     rules: {
       maximum_events: -1,
       minimum_events: 4,
-      name: "Gran Prix Carl Decker",
       points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     }
   },
@@ -330,9 +332,9 @@ COMPETITIONS = {
       { id: 25_943, multiplier: 1 },
       { id: 26_053, multiplier: 1 }
     ],
+    name: "Oregon Cup",
     rules: {
       members_only: true,
-      name: "Oregon Cup",
       points_for_place: [100, 75, 60, 50, 45, 40, 35, 30, 25, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10],
       specific_events: true
     }
@@ -374,9 +376,9 @@ COMPETITIONS = {
       { id: 25_966, multiplier: 1 },
       { id: 26_384, multiplier: 1 }
     ],
+    name: "Oregon Time Trial Cup",
     rules: {
       members_only: true,
-      name: "Oregon Time Trial Cup",
       points_for_place: [20, 17, 15, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       specific_events: true
     }
@@ -397,9 +399,9 @@ COMPETITIONS = {
       { id: 26_053, multiplier: 1 },
       { id: 26_139, multiplier: 1 }
     ],
+    name: "Oregon Womens Prestige Series",
     rules: {
       members_only: true,
-      name: "Oregon Womens Prestige Series",
       points_for_place: [25, 21, 18, 16, 14, 12, 10, 8, 7, 6, 5, 4, 3, 2, 1],
       specific_events: true
     }
@@ -429,9 +431,9 @@ COMPETITIONS = {
     ],
     competition_id: 26_304,
     event_id: 26_056,
+    name: "Portland Short Track Series",
     rules: {
       maximum_events: -1,
-      name: "Portland Short Track Series",
       points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
     }
   },
@@ -459,9 +461,9 @@ COMPETITIONS = {
       { name: "Singlespeed" }
     ],
     competition_id: 26305,
+    name: "Portland Short Track Series: June",
     rules: {
       maximum_events: -1,
-      name: "Portland Short Track Series: June",
       points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       specific_events: true
     },
@@ -496,9 +498,9 @@ COMPETITIONS = {
       { name: "Singlespeed" }
     ],
     competition_id: 26308,
+    name: "Portland Short Track Series: July",
     rules: {
       maximum_events: -1,
-      name: "Portland Short Track Series: July",
       points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       specific_events: true
     },
@@ -522,6 +524,7 @@ COMPETITIONS = {
     ],
     competition_id: 26_299,
     event_id: 26_072,
+    name: "Mt. Tabor Series",
     rules: {
       double_points_for_last_event: true,
       points_for_place: [100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11]
@@ -545,6 +548,7 @@ COMPETITIONS = {
       { name: "Women Singlespeed" }
     ],
     event_id: 26_072,
+    name: "Portland Trophy Cup",
     rules: {
       double_points_for_last_event: true,
       points_for_place: [25, 20, 16, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 1]
@@ -575,11 +579,11 @@ COMPETITIONS = {
       { name: "Masters Women 60+" }
     ],
     competition_id: 25_831,
+    name: "Age-Graded BAR",
     rules: {
       association_sanctioned_only: true,
       discipline: "Overall",
       members_only: true,
-      name: "Age-Graded BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -612,12 +616,12 @@ COMPETITIONS = {
     ],
     expect: [25_880, 26_027],
     do_no_expect: [26_034, 26_316, 26_416, 26_335],
+    name: "Criterium BAR",
     rules: {
       association_sanctioned_only: true,
       discipline: "Criterium",
       disciplines: ["Criterium"],
       members_only: true,
-      name: "Criterium BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -649,12 +653,12 @@ COMPETITIONS = {
     ],
     expect: [26_357],
     do_no_expect: [26_355, 26_356, 26_412, 26_571, 26_593, 26_571, 26_593, 26_418, 26_419],
+    name: "Cyclocross BAR",
     rules: {
       association_sanctioned_only: true,
       discipline: "Cyclocross",
       disciplines: ["Cyclocross"],
       members_only: true,
-      name: "Cyclocross BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -715,12 +719,12 @@ COMPETITIONS = {
       26_405,
       26_442
     ],
+    name: "Mountain Bike BAR",
     rules: {
       association_sanctioned_only: true,
       discipline: "Mountain Bike",
       disciplines: ["Mountain Bike", "Downhill", "Super D"],
       members_only: true,
-      name: "Mountain Bike BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -765,11 +769,11 @@ COMPETITIONS = {
       { id: 26_388, multiplier: 1 },
       { id: 26_443, multiplier: 2 }
     ],
+    name: "Road BAR",
     rules: {
       association_sanctioned_only: true,
       disciplines: %w[Circuit Gravel Road],
       members_only: true,
-      name: "Road BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -803,12 +807,12 @@ COMPETITIONS = {
     events: [
       { id: 26_183, multiplier: 1 }
     ],
+    name: "Short Track BAR",
     rules: {
       association_sanctioned_only: true,
       discipline: "Short Track",
       disciplines: ["Short Track"],
       members_only: true,
-      name: "Short Track BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -841,12 +845,12 @@ COMPETITIONS = {
       { id: 25_945, multiplier: 2 }
     ],
     expect: [25_985, 26_340],
+    name: "Time Trial BAR",
     rules: {
       association_sanctioned_only: true,
       discipline: "Time Trial",
       disciplines: ["Time Trial"],
       members_only: true,
-      name: "Time Trial BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -891,12 +895,12 @@ COMPETITIONS = {
       { id: 26_618, multiplier: 1 },
       { id: 26_619, multiplier: 1 }
     ],
+    name: "Track BAR",
     rules: {
       association_sanctioned_only: true,
       discipline: "Track",
       disciplines: ["Track"],
       members_only: true,
-      name: "Track BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       weekday_events: false
     }
@@ -921,12 +925,12 @@ COMPETITIONS = {
       { name: "Tandem" }
     ],
     competition_id: 25_821,
+    name: "Overall BAR",
     rules: {
       association_sanctioned_only: true,
       discipline: "Overall",
       maximum_events: -4,
       members_only: true,
-      name: "Overall BAR",
       points_for_place: (1..300).to_a.reverse,
       source_event_keys: %w[criterium_bar cyclocross_bar gravel_bar mountain_bike_bar road_bar short_track_bar time_trial_bar track_bar],
       weekday_events: true
@@ -934,10 +938,10 @@ COMPETITIONS = {
   },
   team_bar: {
     competition_id: 25_830,
+    name: "Team BAR",
     rules: {
       association_sanctioned_only: true,
       members_only: true,
-      name: "Team BAR",
       points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       team: true,
       weekday_events: false
