@@ -1,0 +1,154 @@
+<% @page_title = "Calculations: #{@calculation.name}" %>
+
+<% cache cache_key do %>
+  <h2><%= @calculation.name %>: <%= @calculation.year %></h2>
+
+  <div class="row">
+    <div class="col-sm-6">
+      <% if @calculation.category_rules.reject(&:reject?).present? %>
+        <h3>Categories</h3>
+        <%= table id: "category_rules", collection: @calculation.category_rules.reject(&:reject?), columns: 2 do %>
+          <tr>
+            <th>Name</th>
+            <th>Maximum Events</th>
+          </tr>
+          <%= render partial: "category_rule", collection: @calculation.category_rules.reject(&:reject?).sort_by(&:name) %>
+        <% end -%>
+      <% end %>
+    </div>
+    <div class="col-sm-6">
+      <% if @calculation.category_rules.select(&:reject?).present? %>
+        <h3>Rejected Categories</h3>
+        <%= table id: "category_rules", collection: @calculation.category_rules.select(&:reject?), columns: 2 do %>
+          <tr>
+            <th>Name</th>
+          </tr>
+          <%= render partial: "rejected_category_rule", collection: @calculation.category_rules.select(&:reject?).sort_by(&:name) %>
+        <% end -%>
+      <% end %>
+    </div>
+  </div>
+
+  <table class="base table table-striped">
+    <tbody>
+      <tr>
+        <td>Association sanctioned only</td>
+        <td><%= @calculation.rules.association_sanctioned_only? %></td>
+        <td>
+          <% if @calculation.rules.association_sanctioned_only? %>
+          Events must be sanctioned by <%= RacingAssociation.current.short_name %>
+          <% else %>
+          Events sanctioned by any racing association count
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>Double points for last event</td>
+        <td><%= @calculation.rules.double_points_for_last_event? %></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Group by</td>
+        <td><%= @calculation.rules.group_by %></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Maximum events</td>
+        <td><%= @calculation.rules.maximum_events %></td>
+        <td>
+          Relative to total number of events.
+          <% if @calculation.rules.maximum_events == 0 %>
+          All events count.
+          <% else %>
+          If a series has 8 events, then <%= 8 + @calculation.rules.maximum_events %> events count.
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>Members only</td>
+        <td><%= @calculation.rules.members_only? %></td>
+        <td>
+          <% if @calculation.rules.members_only? %>
+          Require current <%= RacingAssociation.current.short_name %> membership
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>Minimum events</td>
+        <td><%= @calculation.rules.minimum_events %></td>
+        <td>Must complete at least <%= @calculation.rules.minimum_events %> events to count in the final standings</td>
+      </tr>
+      <tr>
+        <td>Missing result penalty</td>
+        <td><%= @calculation.rules.missing_result_penalty %></td>
+        <td>
+          <% if @calculation.rules.missing_result_penalty %>
+          If a team has fewer than the required results per event, they receive penalty points
+          <% else %>
+          Not applicable
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>Place by</td>
+        <td><%= @calculation.rules.place_by %></td>
+        <td>
+          <% case @calculation.rules.place_by %>
+          <% when "fewest_points" %>
+            Fewest points win
+          <% when "place" %>
+            Results are placed by category, then place in category
+          <% when "points" %>
+            Most points win
+          <% when "time" %>
+            Lowest time wins
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>Results per event</td>
+        <td><%= @calculation.rules.results_per_event %></td>
+        <td>
+          <% if @calculation.rules.results_per_event && @calculation.rules.results_per_event > 0 %>
+          If a team has fewer than the required results per event, they receive the missing result penalty
+          <% else %>
+          Not applicable
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>Specific events</td>
+        <td><%= @calculation.rules.specific_events? %></td>
+        <td>
+          <% if @calculation.rules.specific_events? %>
+          Results only from a set of events
+          <% else %>
+          All results in <%= @calculation.year %>
+          <% end %>
+      </td>
+      </tr>
+      <tr>
+        <td>Team</td>
+        <td><%= @calculation.rules.team? %></td>
+        <td>
+          <% if @calculation.rules.team? %>
+          Results are by team
+          <% else %>
+          Results by person
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>Weekday events</td>
+        <td><%= @calculation.rules.weekday_events? %></td>
+        <td>
+          <% if @calculation.rules.weekday_events? %>
+          Weekday events count
+          <% else %>
+          Weekday events do not count
+          <% end %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+<% end -%>
