@@ -139,6 +139,8 @@ Rails.application.routes.draw do
     get "/bar/:year/:discipline/:category" => "competitions/bar#show", as: "bar_full"
     get "/bar(/:year(/:discipline(/:category)))" => "competitions/bar#show", as: "bar", defaults: { discipline: "overall", category: "senior_men" }
 
+    resources :calculations
+
     namespace :calculations do
       resources :events do
         resources :results

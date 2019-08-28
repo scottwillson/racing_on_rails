@@ -1,0 +1,12 @@
+<% @page_title = "Calculations" %>
+
+<% cache cache_key do %>
+  <h2>Calculations</h2>
+
+  <%= table id: "calculations", collection: @calculations, columns: 1 do %>
+    <tr>
+      <th>Name</th>
+    </tr>
+    <%= render partial: "calculation", collection: @calculations.sort_by(&:name) %>
+  <% end -%>
+<% end -%>
