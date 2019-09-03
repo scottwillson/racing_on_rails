@@ -714,3 +714,14 @@ td.right, th.right {
 .questions {
   text-align: center;
 }
+
+.table.people-finder > tbody > tr > td {
+  border-bottom: 1px solid $light-gray;
+  border-top: none;
+  vertical-align: middle;
+}
+
+#select_promoter .form-horizontal .form-group {
+  margin-right: 0;
+  margin-left: 0;
+}
