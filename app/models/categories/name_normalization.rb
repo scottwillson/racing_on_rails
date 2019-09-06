@@ -144,7 +144,7 @@ module Categories
             # Calling RacingAssociation.current triggers an infinite loop
             if token[/of/i]
               "of"
-            if token[/women/i]
+            elsif token[/women/i]
               "Women"
             elsif token[/\Ai+\z/i] || token[/\A\d[a-z]/i]
               token.upcase
