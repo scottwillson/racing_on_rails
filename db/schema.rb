@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_19_173335) do
+ActiveRecord::Schema.define(version: 2019_09_07_150908) do
 
   create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
@@ -165,21 +165,29 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
   end
 
   create_table "calculations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "discipline_id"
     t.bigint "event_id"
     t.bigint "source_event_id"
+    t.boolean "association_sanctioned_only", default: false, null: false
     t.boolean "double_points_for_last_event", default: false, null: false
+    t.string "group_by", default: "category", null: false
     t.boolean "members_only", default: false, null: false
     t.integer "minimum_events", default: 0, null: false
     t.integer "maximum_events", default: 0, null: false
+    t.integer "missing_result_penalty"
+    t.string "place_by", default: "points", null: false
     t.string "key"
     t.string "name", default: "New Calculation"
     t.text "points_for_place"
-    t.string "source_event_keys", default: "--- []\n"
+    t.integer "results_per_event"
+    t.string "source_event_keys"
     t.boolean "specific_events", default: false, null: false
+    t.boolean "team", default: false, null: false
     t.boolean "weekday_events", default: true, null: false
     t.integer "year", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["discipline_id"], name: "index_calculations_on_discipline_id"
     t.index ["event_id"], name: "index_calculations_on_event_id"
     t.index ["key", "year"], name: "index_calculations_on_key_and_year", unique: true
     t.index ["source_event_id"], name: "index_calculations_on_source_event_id"
@@ -190,6 +198,7 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
     t.bigint "category_id"
     t.integer "maximum_events"
     t.boolean "reject", default: false, null: false
+    t.boolean "source_only", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["calculation_id"], name: "index_calculations_categories_on_calculation_id"
@@ -240,7 +249,7 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
     t.index ["weight"], name: "index_categories_on_weight"
   end
 
-  create_table "ckeditor_assets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "ckeditor_assets", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "data_file_name", null: false
     t.string "data_content_type"
     t.integer "data_file_size"
@@ -492,6 +501,8 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
     t.index ["product_variant_id"], name: "index_line_items_on_product_variant_id"
     t.index ["purchased_discount_code_id"], name: "index_line_items_on_purchased_discount_code_id"
     t.index ["race_id"], name: "index_line_items_on_race_id"
+    t.index ["status"], name: "index_line_items_on_status"
+    t.index ["type"], name: "index_line_items_on_type"
   end
 
   create_table "mailing_lists", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -1165,8 +1176,8 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
   add_foreign_key "race_numbers", "people", name: "race_numbers_person_id", on_delete: :cascade
   add_foreign_key "races", "categories"
   add_foreign_key "races", "events", name: "races_event_id_fk", on_delete: :cascade
-  add_foreign_key "result_sources", "results", column: "calculated_result_id"
-  add_foreign_key "result_sources", "results", column: "source_result_id"
+  add_foreign_key "result_sources", "results", column: "calculated_result_id", on_delete: :cascade
+  add_foreign_key "result_sources", "results", column: "source_result_id", on_delete: :cascade
   add_foreign_key "results", "categories"
   add_foreign_key "results", "people", name: "results_person_id"
   add_foreign_key "results", "races", name: "results_race_id_fk", on_delete: :cascade
