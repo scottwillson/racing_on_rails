@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_19_173335) do
+ActiveRecord::Schema.define(version: 2019_09_07_150908) do
 
   create_table "adjustments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "order_id"
@@ -405,6 +405,8 @@ ActiveRecord::Schema.define(version: 2019_04_19_173335) do
     t.index ["product_variant_id"], name: "index_line_items_on_product_variant_id"
     t.index ["purchased_discount_code_id"], name: "index_line_items_on_purchased_discount_code_id"
     t.index ["race_id"], name: "index_line_items_on_race_id"
+    t.index ["status"], name: "index_line_items_on_status"
+    t.index ["type"], name: "index_line_items_on_type"
   end
 
   create_table "mailing_lists", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
