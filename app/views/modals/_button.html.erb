@@ -1,0 +1,7 @@
+<%= f.hidden_field :promoter_id -%>
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#event_promoter_select_modal">
+  <span class="glyphicon glyphicon-user"></span>
+  <span id="event_promoter_name"><%= @event.promoter&.name %></span>
+</button>
+
+<%= render partial: "modals/select", locals: { target: "event_promoter" } %>

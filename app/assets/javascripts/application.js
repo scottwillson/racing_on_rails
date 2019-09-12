@@ -6,6 +6,7 @@
  *= require bootstrap
  *= require bootstrap-datepicker/core
  *= require raygun
+ *= require select_modal
  *= require_self
 */
 function bindAutocomplete() {
