@@ -11,13 +11,22 @@ function selectPerson(event) {
   const personName = jQuery(row).data('person-name');
 
   jQuery('#event_promoter_id').val(personId);
-  jQuery('#event_promoter_name').text(personName);
+  jQuery('#event_promoter_name').val(personName);
+  jQuery('#event_promoter_name_button').text(personName);
 
+  jQuery('#event_promoter_select_modal_button').removeClass('none');
   jQuery('#event_promoter_select_modal').modal('hide');
+  jQuery('#event_promoter_remove_button').show();
 }
 
 function findPeople() {
-  const name = $('#event_promoter_select_modal_form #name')[0].value;
+  const name = $('#event_promoter_select_modal_form .search')[0].value;
+
+  if (name === '') {
+    jQuery('#event_promoter_select_modal_form .search').select();
+    return Promise.resolve(false);
+  }
+
   return fetch(`/people.json?name=${name}`)
     .then(response => response.json())
     .then(json => {
@@ -32,18 +41,65 @@ function findPeople() {
           </tr>`
         );
       });
+
+      if (json.length === 0) {
+        jQuery('#people tbody').append(
+          `<tr>
+            <td colspan="4">No results</td>
+          </tr>`
+        );
+      }
+
       jQuery('.select-modal tr').click(selectPerson);
+      jQuery('#event_promoter_select_modal_form .search').select();
     });
+}
+
+function newPerson() {
+  const name = $('#event_promoter_select_modal_form .search')[0].value;
+  jQuery('#new_person_name').val(name);
+
+  jQuery('#event_promoter_select_modal').modal('hide');
+  jQuery('#event_promoter_select_modal_new_person').modal('show');
+}
+
+function createPerson() {
+  const personName = jQuery('#new_person_name')[0].value;
+
+  jQuery('#event_promoter_id').val("");
+  jQuery('#event_promoter_name').val(personName);
+  jQuery('#event_promoter_name_button').text(personName);
+
+  jQuery('#event_promoter_select_modal_button').removeClass('none');
+  jQuery('#event_promoter_select_modal_new_person').modal('hide');
+  jQuery('#event_promoter_remove_button').show();
+}
+
+function removePerson() {
+  jQuery('#event_promoter_id').val("");
+  jQuery('#event_promoter_name').val('');
+  jQuery('#event_promoter_name_button').text('Click to select');
+  jQuery('#event_promoter_remove_button').hide();
+  jQuery('#event_promoter_select_modal_button').addClass('none');
 }
 
 function bindSelectModal() {
   jQuery('#event_promoter_select_modal').on(
     'shown.bs.modal',
-    () => findPeople().then(() => jQuery('#event_promoter_select_modal_form #name').select())
+    () => findPeople().then(() => jQuery('#event_promoter_select_modal_form .search').select())
   );
 
-  jQuery('#event_promoter_select_modal_form #name').change(findPeople);
+  jQuery('#event_promoter_select_modal_form .search').change(findPeople);
   jQuery('#event_promoter_select_modal_form').submit(() => false);
+  jQuery('#show_event_promoter_new_modal').click(newPerson);
+
+  jQuery('#event_promoter_select_modal_new_person_form').submit(() => false);
+  jQuery('#event_promoter_select_modal_new_person').on(
+    'shown.bs.modal',
+    () => findPeople().then(() => jQuery('#new_person_name').select())
+  );
+  jQuery('#event_promoter_select_modal_new_person_create').click(createPerson);
+  jQuery('#event_promoter_remove_button').click(removePerson);
 };
 
 jQuery(document).ready(bindSelectModal);

@@ -716,7 +716,7 @@ td.right, th.right {
 }
 
 .table.select-modal > tbody > tr > td {
-  border-bottom: 1px solid $light-gray;
+  border-bottom: none;
   border-top: none;
   vertical-align: middle;
 }
@@ -728,4 +728,8 @@ td.right, th.right {
 
 #select_promoter .table-hover tr {
   cursor: pointer;
+}
+
+.none {
+  font-style: italic;
 }

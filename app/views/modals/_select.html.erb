@@ -5,9 +5,15 @@
         <%= form_tag({}, { method: "get", role: "form", id: "#{target}_select_modal_form" }) do %>
           <div class="form-group">
             <div class="input-group">
-              <%= search_field_tag("name", @event.promoter.name, class: "wants_focus form-control", placeholder: "Enter name", autocomplete: "off") %>
+              <%= search_field_tag(
+                    "name",
+                    @event.promoter_name,
+                    class: "wants_focus form-control search",
+                    placeholder: "Name",
+                    autocomplete: "off"
+              ) %>
               <span class="input-group-btn">
-                <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                <button type="submit" class="btn btn-default search"><span class="glyphicon glyphicon-search"></span></button>
               </span>
             </div>
           </div>
@@ -17,15 +23,19 @@
         <table class="table select-modal table-hover" id="people">
           <tbody>
             <tr>
-              <td class="empty">No results</td>
+              <td class="empty">
+                Enter name and click search button to find a person. Click New Person to create a new person.
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default">New Person</button>
+        <button type="button" class="btn btn-default" id="show_<%= target %>_new_modal">New Person</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>
 </div>
+
+<%= render partial: "modals/new", locals: { target: "event_promoter" } %>

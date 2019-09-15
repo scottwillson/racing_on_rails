@@ -492,6 +492,11 @@ ul.pagination {
 @import "forms";
 @import "pages";
 @import "glyphicons_pro";
+
 <% if File.exist?("local/app/assets/stylesheets/_racing_association.scss") %>
 @import "racing_association";
+<% end %>
+
+<% if Rails.env.test? %>
+@import "disable_animations";
 <% end %>
