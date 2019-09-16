@@ -1,18 +1,26 @@
-<%= f.hidden_field :promoter_id -%>
-<%= f.hidden_field :promoter_name %>
+<%= f.hidden_field :"#{method}_id" -%>
+<%= f.hidden_field :"#{method}_name" -%>
+
 <button type="button"
-        class="btn btn-default <%= 'none' unless @event.promoter %>"
+        class="btn btn-default select-modal <%= 'none' unless object.send(method) %>"
+        data-method="<%= method %>"
+        data-object-name="<%= object_name %>"
+        data-target="#<%= object_name %>_<%= method %>_select_modal"
         data-toggle="modal"
-        data-target="#event_promoter_select_modal"
-        id="event_promoter_select_modal_button">
+        data-type="<%= type %>"
+        id="<%= object_name %>_<%= method %>_select_modal_button">
+  <% if method == :team %>
+  <span class="glyphicon glyphicon-group"></span>
+  <% else %>
   <span class="glyphicon glyphicon-user"></span>
-  <span id="event_promoter_name_button"><%= @event.promoter&.name || "Click to select" %></span>
+  <% end %>
+  <span id="<%= object_name %>_<%= method %>_name_button"><%= object.send(method)&.name || "Click to select" %></span>
 </button>
 
 <button type="button"
         class="btn btn-default"
-        style="<%= 'display: none' unless @event.promoter %>"
-        title="Remove promoter"
-        id="event_promoter_remove_button">
+        style="<%= 'display: none' unless object.send(method) %>"
+        title="Remove <%= method %>"
+        id="<%= object_name %>_<%= method %>_remove_button">
   <span class="glyphicon glyphicon-remove"></span>
 </button>

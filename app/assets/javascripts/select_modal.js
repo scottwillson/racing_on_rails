@@ -5,101 +5,145 @@ function city(person) {
   return "";
 }
 
-function selectPerson(event) {
-  const row = jQuery(event.target).parent('tr')[0];
-  const personId = jQuery(row).data('person-id');
-  const personName = jQuery(row).data('person-name');
+function pluralize(type) {
+  if (type === 'person') {
+    return 'people';
+  } else if (type === 'team') {
+    return 'teams';
+  }
 
-  jQuery('#event_promoter_id').val(personId);
-  jQuery('#event_promoter_name').val(personName);
-  jQuery('#event_promoter_name_button').text(personName);
-
-  jQuery('#event_promoter_select_modal_button').removeClass('none');
-  jQuery('#event_promoter_select_modal').modal('hide');
-  jQuery('#event_promoter_remove_button').show();
+  return type;
 }
 
-function findPeople() {
-  const name = $('#event_promoter_select_modal_form .search')[0].value;
+function selectSearchResult(event, type, objectName, method) {
+  const row = jQuery(event.target).parent('tr')[0];
+  const id = jQuery(row).data(`${type}-id`);
+  const name = jQuery(row).data(`${type}-name`);
+
+  jQuery(`#${objectName}_${method}_id`).val(id);
+  jQuery(`#${objectName}_${method}_name`).val(name);
+  jQuery(`#${objectName}_${method}_name_button`).text(name);
+
+  jQuery(`#${objectName}_${method}_select_modal_button`).removeClass('none');
+  jQuery(`#${objectName}_${method}_select_modal`).modal('hide');
+  jQuery(`#${objectName}_${method}_remove_button`).show();
+}
+
+function searchResultRow(searchResult, type) {
+  if (type === 'person') {
+    return searchResultPersonCells(searchResult);
+  } else if (type === 'team') {
+    return searchResultTeamCells(searchResult);
+  }
+}
+
+function searchResultPersonCells(person) {
+  return `<td><span class="glyphicon glyphicon-user"></span></td>
+   <td>${person.name}</td>
+   <td class="team_name">${person.team_name}</td>
+   <td class="city">${city(person)}</td>`
+}
+
+function searchResultTeamCells(team) {
+  return `<td><span class="glyphicon glyphicon-group"></span></td>
+   <td>${team.name}</td>
+   <td></td>
+   <td></td>`
+}
+
+function searchFor(type, objectName, method) {
+  const searchField = $(`#${objectName}_${method}_select_modal_form input.name`)[0];
+  const name = searchField.value;
 
   if (name === '') {
-    jQuery('#event_promoter_select_modal_form .search').select();
     return Promise.resolve(false);
   }
 
-  return fetch(`/people.json?name=${name}`)
+  const types = pluralize(type);
+  return fetch(`/${types}.json?name=${name}`)
     .then(response => response.json())
     .then(json => {
-      jQuery('#people tbody').empty();
-      json.forEach(person => {
-        jQuery('#people tbody').append(
-          `<tr data-person-id=${person.id} data-person-name='${person.name}'>
-            <td><span class="glyphicon glyphicon-user"></span></td>
-            <td>${person.name}</td>
-            <td class="team_name">${person.team_name}</td>
-            <td class="city">${city(person)}</td>
-          </tr>`
+      jQuery(`#${types} tbody`).empty();
+      json.forEach(searchResult => {
+        jQuery(`#${types} tbody`).append(
+          `<tr data-${type}-id=${searchResult.id} data-${type}-name='${searchResult.name}'>
+            ${searchResultRow(searchResult, type)}
+           </tr>`
         );
       });
 
       if (json.length === 0) {
-        jQuery('#people tbody').append(
+        jQuery(`#${types} tbody`).append(
           `<tr>
             <td colspan="4">No results</td>
-          </tr>`
+           </tr>`
         );
       }
 
-      jQuery('.select-modal tr').click(selectPerson);
-      jQuery('#event_promoter_select_modal_form .search').select();
+      jQuery('.select-modal tr').click(event => selectSearchResult(event, type, objectName, method));
+      searchField.select();
     });
 }
 
-function newPerson() {
-  const name = $('#event_promoter_select_modal_form .search')[0].value;
-  jQuery('#new_person_name').val(name);
+function showNewModal(type, objectName, method) {
+  const searchField = $(`#${objectName}_${method}_select_modal_form input.name`)[0];
+  const name = searchField.value;
+  const newNameField = jQuery(`#new_${type}_name`)
+  newNameField.val(name);
 
-  jQuery('#event_promoter_select_modal').modal('hide');
-  jQuery('#event_promoter_select_modal_new_person').modal('show');
+  jQuery(`#${objectName}_${method}_select_modal`).modal('hide');
+  jQuery(`#${objectName}_${method}_select_modal_new_${type}`).modal('show');
 }
 
-function createPerson() {
-  const personName = jQuery('#new_person_name')[0].value;
+function createObject(type, objectName, method) {
+  const name = jQuery(`#new_${type}_name`)[0].value;
 
-  jQuery('#event_promoter_id').val("");
-  jQuery('#event_promoter_name').val(personName);
-  jQuery('#event_promoter_name_button').text(personName);
+  jQuery(`#${objectName}_${method}_id`).val("");
+  jQuery(`#${objectName}_${method}_name`).val(name);
+  jQuery(`#${objectName}_${method}_name_button`).text(name);
 
-  jQuery('#event_promoter_select_modal_button').removeClass('none');
-  jQuery('#event_promoter_select_modal_new_person').modal('hide');
-  jQuery('#event_promoter_remove_button').show();
+  jQuery(`#${objectName}_${method}_select_modal_button`).removeClass('none');
+  jQuery(`#${objectName}_${method}_select_modal_new_${type}`).modal('hide');
+  jQuery(`#${objectName}_${method}_remove_button`).show();
 }
 
-function removePerson() {
-  jQuery('#event_promoter_id').val("");
-  jQuery('#event_promoter_name').val('');
-  jQuery('#event_promoter_name_button').text('Click to select');
-  jQuery('#event_promoter_remove_button').hide();
-  jQuery('#event_promoter_select_modal_button').addClass('none');
+function removeObject(type, objectName, method) {
+  jQuery(`#${objectName}_${method}_id`).val("");
+  jQuery(`#${objectName}_${method}_name`).val('');
+  jQuery(`#${objectName}_${method}_name_button`).text('Click to select');
+  jQuery(`#${objectName}_${method}_remove_button`).hide();
+  jQuery(`#${objectName}_${method}_select_modal_button`).addClass('none');
 }
 
 function bindSelectModal() {
-  jQuery('#event_promoter_select_modal').on(
-    'shown.bs.modal',
-    () => findPeople().then(() => jQuery('#event_promoter_select_modal_form .search').select())
-  );
+  jQuery('button.select-modal').each((index, element) => {
+    const button = jQuery(element);
+    const method = button.data('method');
+    const objectName = button.data('object-name');
+    const type = button.data('type');
 
-  jQuery('#event_promoter_select_modal_form .search').change(findPeople);
-  jQuery('#event_promoter_select_modal_form').submit(() => false);
-  jQuery('#show_event_promoter_new_modal').click(newPerson);
+    jQuery(`#${objectName}_${method}_select_modal`).on(
+      'shown.bs.modal',
+      () =>jQuery(`#${objectName}_${method}_select_modal input.search`).select()
+    );
 
-  jQuery('#event_promoter_select_modal_new_person_form').submit(() => false);
-  jQuery('#event_promoter_select_modal_new_person').on(
-    'shown.bs.modal',
-    () => findPeople().then(() => jQuery('#new_person_name').select())
-  );
-  jQuery('#event_promoter_select_modal_new_person_create').click(createPerson);
-  jQuery('#event_promoter_remove_button').click(removePerson);
+    jQuery(`#${objectName}_${method}_select_modal_form .search`).change(
+      () => searchFor(type, objectName, method)
+    );
+
+    jQuery(`#${objectName}_${method}_select_modal_form`).submit(() => false);
+
+    jQuery(`#show_${objectName}_${method}_new_modal`).click(() => showNewModal(type, objectName, method));
+    jQuery(`#${objectName}_${method}_select_modal_new_${type}_form`).submit(() => false);
+    jQuery(`#${objectName}_${method}_select_modal_new_${type}_create`).click(() => createObject(type, objectName, method));
+
+    jQuery(`#${objectName}_${method}_select_modal_new_${type}`).on(
+      'shown.bs.modal',
+      () =>jQuery(`#new_${type}_name`).select()
+    );
+
+    jQuery(`#${objectName}_${method}_remove_button`).click(() => removePerson(type, objectName, method));
+  });
 };
 
 jQuery(document).ready(bindSelectModal);

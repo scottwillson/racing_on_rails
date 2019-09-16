@@ -88,8 +88,10 @@ class EventsTest < AcceptanceTest
     assert_equal "", find("#event_promoter_name", visible: false).value
     assert_equal "Click to select", find("#event_promoter_select_modal_button").text
 
+    assert page.has_css?("#event_team_remove_button", visible: false)
     assert_equal "", find("#event_team_id", visible: false).value
-    assert_equal "", find("#team_autocomplete").value
+    assert_equal "", find("#event_team_name", visible: false).value
+    assert_equal "Click to select", find("#event_team_select_modal_button").text
 
     assert_equal "", find("#event_phone").value
     assert_equal "", find("#event_email").value
@@ -108,20 +110,31 @@ class EventsTest < AcceptanceTest
     visit "/admin/events"
     click_link "Sausalito Criterium"
 
-    type_in "team_autocomplete", with: "Gentle Lovers"
-    find("li#team_#{gl.id} a").click
-    assert page.has_field?("team_autocomplete", with: "Gentle Lovers")
+    click_button "event_team_select_modal_button"
+    wait_for ".modal.in"
+    assert_equal "", find("input.search").value
+    fill_in "name", with: "gentle"
+
+    find('tr[data-person-name="Gentle Lovers"]').click
+    assert_equal gl.id.to_s, find("#event_team_id", visible: false).value
+    assert_equal "Gentle Lovers", find("#event_team_name", visible: false).value
+    assert_equal "Gentle Lovers", find("#event_team_select_modal_button").text
+    assert page.has_css?("#event_team_remove_button")
 
     click_button "Save"
 
     assert_equal gl.id.to_s, find("#event_team_id", visible: false).value
-    assert_equal "Gentle Lovers", find("#team_autocomplete").value
+    assert_equal "Gentle Lovers", find("#event_team_name", visible: false).value
+    assert_equal "Gentle Lovers", find("#event_team_select_modal_button").text
+    assert page.has_css?("#event_team_remove_button")
 
-    fill_in "team_autocomplete", with: ""
+    click_button "event_team_remove_button"
     click_button "Save"
 
+    assert page.has_css?("#event_team_remove_button", visible: false)
     assert_equal "", find("#event_team_id", visible: false).value
-    assert_equal "", find("#team_autocomplete").value
+    assert_equal "", find("#event_team_name", visible: false).value
+    assert_equal "Click to select", find("#event_team_select_modal_button").text
 
     fill_in "Date", with: "Nov 13, 2013"
     click_button "Save"

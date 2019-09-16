@@ -8,7 +8,7 @@
               <%= search_field_tag(
                     "name",
                     @event.promoter_name,
-                    class: "wants_focus form-control search",
+                    class: "wants_focus form-control name search",
                     placeholder: "Name",
                     autocomplete: "off"
               ) %>
@@ -20,22 +20,22 @@
         <% end -%>
       </div>
       <div class="modal-body">
-        <table class="table select-modal table-hover" id="people">
+        <table class="table select-modal table-hover" id="<%= type.pluralize %>">
           <tbody>
             <tr>
               <td class="empty">
-                Enter name and click search button to find a person. Click New Person to create a new person.
+                Enter name and click search button to find a <%= type %>. Click New <%= type.titleize %> to create a new <%= type %>.
               </td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" id="show_<%= target %>_new_modal">New Person</button>
+        <button type="button" class="btn btn-default" id="show_<%= target %>_new_modal">New <%= type.titleize %></button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>
 </div>
 
-<%= render partial: "modals/new", locals: { target: "event_promoter" } %>
+<%= render partial: "modals/new", locals: { target: "event_promoter", type: type } %>

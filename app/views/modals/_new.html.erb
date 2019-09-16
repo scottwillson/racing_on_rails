@@ -1,16 +1,16 @@
-<div class="modal fade" tabindex="-1" role="dialog" id="<%= target %>_select_modal_new_person">
+<div class="modal fade" tabindex="-1" role="dialog" id="<%= target %>_select_modal_new_<%= type %>">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-body">
         <div class="row">
-          <%= form_tag({}, { method: "get", role: "form", id: "#{target}_select_modal_new_person_form" }) do %>
+          <%= form_tag({}, { method: "get", role: "form", id: "#{target}_select_modal_new_#{type}_form" }) do %>
             <div class="form-group">
               <div class="col-sm-12">
                 <%= text_field_tag(
                       "name",
                       "",
-                      class: "wants_focus form-control col-sm-12 new_name",
-                      id: "new_person_name",
+                      class: "wants_focus form-control col-sm-12 name",
+                      id: "new_#{type}_name",
                       placeholder: "Enter name",
                       autocomplete: "off"
                 ) %>
@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" id="<%= target %>_select_modal_new_person_create">Create</button>
+        <button type="button" class="btn btn-default" id="<%= target %>_select_modal_new_<%= type %>_create">Create</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
       </div>
     </div>
