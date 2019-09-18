@@ -2,4 +2,10 @@
   <td class="name">
     <%= link_to calculation.name, calculation_path(calculation) %>
   </td>
+  <td>
+    <%= link_to "Rules", calculation_path(calculation) %>
+  </td>
+  <td>
+    <%= link_to("Results", calculations_event_results_path(event_id: calculation.event_id)) if calculation.event_id %>
+  </td>
 </tr>
