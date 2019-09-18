@@ -28,6 +28,10 @@ module Events
       end
     end
 
+    def all_year?
+      date.month == 1 && date.day == 1 && end_date.month == 12 && end_date.day == 31
+    end
+
     def dates
       start_date..end_date
     end
@@ -62,7 +66,12 @@ module Events
     end
 
     def date_range_long_s
-      date.to_s :long_with_week_day
+      start_date_s = date.to_s(:long_with_week_day)
+      if multiple_days?
+        "#{start_date_s} to #{end_date.to_s(:long_with_week_day)}"
+      else
+        start_date_s
+      end
     end
 
     def human_date
