@@ -21,7 +21,7 @@ module Results
           "row",
           :[] => "Candi Murray",
           metadata: {},
-          source: stub("result", person_id: 18, competition_result?: false, year: 2010, preliminary?: false)
+          source: stub("result", person_id: 18, competition_result?: false, year: 2010, preliminary?: false, calculation_result?: false)
         )
 
         html = NameRenderer.render(column, row)
@@ -36,7 +36,7 @@ module Results
           "row",
           :[] => "Candi Murray",
           metadata: { mobile_request: true },
-          source: stub("result", person_id: 18, competition_result?: false, year: 2010, preliminary?: false)
+          source: stub("result", person_id: 18, competition_result?: false, year: 2010, preliminary?: false, calculation_result?: false)
         )
 
         html = NameRenderer.render(column, row)
@@ -52,7 +52,7 @@ module Results
                    metadata: {},
                    source: stub(
                      "result",
-                     person_id: 18, event_id: 3, race_id: 200, competition_result?: true, year: 2010, preliminary?: false
+                     person_id: 18, event_id: 3, race_id: 200, competition_result?: true, year: 2010, preliminary?: false, calculation_result?: false
                    ))
         # TeamNameRenderer.stubs(racing_association: mock("racing_association", :unregistered_teams_in_results? => true))
 
