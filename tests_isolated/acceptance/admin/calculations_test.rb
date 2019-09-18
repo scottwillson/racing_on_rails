@@ -3,7 +3,7 @@
 require_relative "../acceptance_test"
 
 # :stopdoc:
-class CategoriesTest < AcceptanceTest
+class Admin::CategoriesTest < AcceptanceTest
   test "edit" do
     FactoryBot.create(:discipline)
 
