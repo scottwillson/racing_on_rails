@@ -6,6 +6,8 @@
   <%= table id: "calculations", collection: @calculations, columns: 1 do %>
     <tr>
       <th>Name</th>
+      <th></th>
+      <th></th>
     </tr>
     <%= render partial: "calculation", collection: @calculations.sort_by(&:name) %>
   <% end -%>
