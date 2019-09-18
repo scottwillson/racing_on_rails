@@ -33,7 +33,6 @@
     <tbody>
       <tr>
         <td>Association sanctioned only</td>
-        <td><%= @calculation.rules.association_sanctioned_only? %></td>
         <td>
           <% if @calculation.rules.association_sanctioned_only? %>
           Events must be sanctioned by <%= RacingAssociation.current.short_name %>
@@ -44,7 +43,6 @@
       </tr>
       <tr>
         <td>Double points for last event</td>
-        <td><%= @calculation.rules.double_points_for_last_event? %></td>
         <td></td>
       </tr>
       <tr>
@@ -54,7 +52,6 @@
       </tr>
       <tr>
         <td>Maximum events</td>
-        <td><%= @calculation.rules.maximum_events %></td>
         <td>
           Relative to total number of events.
           <% if @calculation.rules.maximum_events == 0 %>
@@ -66,7 +63,6 @@
       </tr>
       <tr>
         <td>Members only</td>
-        <td><%= @calculation.rules.members_only? %></td>
         <td>
           <% if @calculation.rules.members_only? %>
           Require current <%= RacingAssociation.current.short_name %> membership
@@ -80,7 +76,6 @@
       </tr>
       <tr>
         <td>Missing result penalty</td>
-        <td><%= @calculation.rules.missing_result_penalty %></td>
         <td>
           <% if @calculation.rules.missing_result_penalty %>
           If a team has fewer than the required results per event, they receive penalty points
@@ -91,7 +86,6 @@
       </tr>
       <tr>
         <td>Place by</td>
-        <td><%= @calculation.rules.place_by %></td>
         <td>
           <% case @calculation.rules.place_by %>
           <% when "fewest_points" %>
@@ -107,7 +101,6 @@
       </tr>
       <tr>
         <td>Results per event</td>
-        <td><%= @calculation.rules.results_per_event %></td>
         <td>
           <% if @calculation.rules.results_per_event && @calculation.rules.results_per_event > 0 %>
           If a team has fewer than the required results per event, they receive the missing result penalty
@@ -118,7 +111,6 @@
       </tr>
       <tr>
         <td>Specific events</td>
-        <td><%= @calculation.rules.specific_events? %></td>
         <td>
           <% if @calculation.rules.specific_events? %>
           Results only from a set of events
@@ -129,7 +121,6 @@
       </tr>
       <tr>
         <td>Team</td>
-        <td><%= @calculation.rules.team? %></td>
         <td>
           <% if @calculation.rules.team? %>
           Results are by team
@@ -140,7 +131,6 @@
       </tr>
       <tr>
         <td>Weekday events</td>
-        <td><%= @calculation.rules.weekday_events? %></td>
         <td>
           <% if @calculation.rules.weekday_events? %>
           Weekday events count
