@@ -277,7 +277,7 @@ competitions = COMPETITIONS
 # }
 
 # fetch_data
-# recreate_databases
+recreate_databases
 fix_source_results
 destroy_calculations
 create_calculations competitions

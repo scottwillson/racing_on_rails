@@ -1,0 +1,88 @@
+#!/usr/bin/env bundle exec bin/rails runner
+
+# Quick and dirty script to fetch old data and recalc competitions
+require_relative "./competitions_2019"
+
+# rubocop:disable Rails/SkipsModelValidations
+def fix_source_results
+end
+
+def create_calculations(competitions)
+  competitions.each do |key, competition|
+    next if Calculations::V3::Calculation.where(key: key).exists?
+
+    competition[:rules][:key] = key
+    calculation = create_calculation(competition[:event_id], competition[:rules], competition[:name])
+
+    competition[:categories]&.each do |category_definition|
+      category = Category.find_or_create_by_normalized_name(category_definition[:name])
+      calculation_category = Calculations::V3::Category.new(
+        category: category,
+        maximum_events: category_definition[:maximum_events],
+        reject: category_definition[:reject] || false
+      )
+      calculation.calculation_categories << calculation_category
+    end
+
+    competition[:events]&.each do |event|
+      calculation_event = Calculations::V3::Event.new(event: Event.find(event[:id]), multiplier: event[:multiplier])
+      calculation.calculations_events << calculation_event
+    end
+  end
+end
+
+def create_calculation(event_id, rules, name)
+  attributes = rules.dup
+
+  puts "create_calculation #{name}"
+  if rules[:discipline]
+    attributes[:discipline] = Discipline.where(name: rules[:discipline]).first!
+  end
+  if rules[:disciplines]
+    attributes[:disciplines] = Discipline.where(name: rules[:disciplines])
+  end
+
+  attributes[:name] = name
+  attributes[:year] = 2019
+
+  if event_id
+    event = Event.find(event_id)
+    event.calculations.create!(attributes)
+  else
+    Calculations::V3::Calculation.create!(attributes)
+  end
+end
+
+def calculations(competitions)
+  Calculations::V3::Calculation.where(key: competitions.keys).all
+end
+
+def compare_results(competitions)
+  competitions.each do |key, competition|
+    next unless competition[:competition_id]
+
+    expected_event = Event.find(competition[:competition_id])
+    actual_event = Calculations::V3::Calculation.where(key: key).first&.event
+
+    if actual_event
+      unless key.in? %i[age_graded_bar overall_bar]
+        compare_source_events(expected_event, actual_event, competition, key)
+      end
+      # compare_event_results expected_event, actual_event
+    else
+      puts "Could not find actual event for #{key}"
+    end
+  end
+end
+
+competitions = COMPETITIONS
+
+fix_source_results
+create_calculations competitions
+calculations(competitions).map(&:source_event).compact.each(&:update_date)
+calculations(competitions).reject do |c|
+  (c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"]) ||
+  (c.key != "gpcd_team" && c.key != "gpcd" && c.key["gpcd"])
+end.each(&:calculate!)
+
+# rubocop:enable Rails/SkipsModelValidations
