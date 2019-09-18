@@ -12,6 +12,8 @@ module Calculations
 
     test "race index" do
       race = FactoryBot.create(:race)
+      FactoryBot.create(:discipline)
+      race.event.calculation = Calculations::V3::Calculation.create!
       get :index, params: { race_id: race }
     end
   end
