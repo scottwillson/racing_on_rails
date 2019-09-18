@@ -1,19 +1,23 @@
 <% @page_title = "Results: #{@event.date.year}: #{@event.full_name}" %>
 
 <% cache cache_key(@event) do %>
-  <h2><%= @event.full_name %></h2>
+  <h2><%= @event.year %> <%= @event.full_name %></h2>
 
-  <div class="row event_info">
-    <%- if @event.multiple_days? -%>
-      <%= @event.date_range_long_s %>
-    <%- else -%>
-      <%= @event.date.to_formatted_s(:long) %>
-    <%- end -%>
+  <%- if !@event.all_year? || @event.parent -%>
+    <div class="row event_info">
+      <%- unless @event.all_year? -%>
+        <%- if @event.multiple_days? -%>
+          <%= @event.date_range_long_s %>
+        <%- else -%>
+          <%= @event.date.to_formatted_s(:long) %>
+        <%- end -%>
+      <%- end -%>
 
-    <%- if @event.parent -%>
-    <p>Part of the <%= link_to @event.parent.name, event_results_path(@event.parent) %></p>
-    <%- end -%>
-  </div>
+      <%- if @event.parent -%>
+      <p>Part of the <%= link_to @event.parent.name, event_results_path(@event.parent) %></p>
+      <%- end -%>
+    </div>
+  <%- end -%>
 
   <%= render partial: "races", locals: { races: @races } %>
 

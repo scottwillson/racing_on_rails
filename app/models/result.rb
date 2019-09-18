@@ -50,6 +50,10 @@ class Result < ApplicationRecord
 
   attr_accessor :updater
 
+  def calculation_result?
+    event.calculation.present?
+  end
+
   # Replace any new +person+, or +team+ with one that already exists if name matches
   # TODO rationalize names
   def set_associated_records

@@ -1,16 +1,18 @@
 <% @page_title = "Results: #{@race.event.date.year}: #{@race.full_name}" %>
 
 <% cache cache_key(@race) do %>
-  <h2><%= @race.full_name %></h2>
+  <h2><%= link_to @race.event.name, calculations_event_results_path(event_id: @race.event) %>: <%= @race.name %></h2>
 
-  <div class="row event_info">
-    <%= @race.date.to_formatted_s(:long) %>
-
-    <p>Part of the <%= link_to @race.event.full_name, event_results_path(@race.event) %></p>
-  </div>
-
-  <%- if @results.empty? -%>
-  <p class="event_notes">No results</p>
+  <%- unless @race.event.all_year? -%>
+    <div class="row event_info">
+      <%- unless @race.event.all_year? -%>
+        <%- if @race.event.multiple_days? -%>
+          <%= @race.event.date_range_long_s %>
+        <%- else -%>
+          <%= @race.event.date.to_formatted_s(:long) %>
+        <%- end -%>
+      <%- end -%>
+    </div>
   <%- end -%>
 
   <p class="created_updated">Updated <%= @race.updated_at.to_formatted_s :long_and_friendly_date_and_time %></p>
@@ -27,17 +29,17 @@
     <%- @results.sort.each do |result| -%>
       <%- if result.numeric_place.zero? -%>
         <%- if @race.event.calculation.team? -%>
-          <h3><%= link_to(result.team_name, team_results_year_path(result.team, result.year)) if result.team_id %></h3>
+          <h3 id="result_<%= result.id %>"><%= link_to(result.team_name, team_results_year_path(result.team, result.year)) if result.team_id %></h3>
         <%- else -%>
-          <h3><%= link_to(result.person_name, person_results_year_path(result.person, result.year)) if result.person_id %></h3>
+          <h3 id="result_<%= result.id %>"><%= link_to(result.person_name, person_results_year_path(result.person, result.year)) if result.person_id %></h3>
         <%- end -%>
       <%- else -%>
         <%- if @race.event.calculation.team? -%>
-          <h3><%= result.numeric_place.ordinalize %> &mdash; <%=
+          <h3 id="result_<%= result.id %>"><%= result.numeric_place.ordinalize %> &mdash; <%=
             link_to(result.team_name, team_results_year_path(result.team, result.year)) if result.team_id
             %></h3>
         <%- else -%>
-          <h3><%= result.numeric_place.ordinalize %> &mdash; <%=
+          <h3 id="result_<%= result.id %>"><%= result.numeric_place.ordinalize %> &mdash; <%=
             link_to(result.person_name, person_results_year_path(result.person, result.year)) if result.person_id
             %></h3>
         <%- end -%>

@@ -200,15 +200,6 @@ class MultiDayEvent < Event
     end
   end
 
-  def date_range_long_s
-    start_date_s = start_date.strftime("%a, %B %-d")
-    if start_date == end_date
-      start_date_s
-    else
-      "#{start_date_s} to #{end_date.strftime('%a, %B %-d, %Y')}"
-    end
-  end
-
   # Unassociated events with same name in same year
   def missing_children
     return [] unless name && date
