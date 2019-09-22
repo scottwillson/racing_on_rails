@@ -146,7 +146,7 @@ Rails.application.routes.draw do
         resources :results
       end
       resources :races do
-        resources :results
+        resources :sources
       end
     end
 

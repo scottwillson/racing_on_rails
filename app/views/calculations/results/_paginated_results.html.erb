@@ -1,0 +1,13 @@
+<% ActiveSupport::Notifications.instrument "event.paginated_results.calculations.racing_on_rails", event_id: event.id, event_name: event.name do %>
+  <%= tag.h3(
+        class: (race&.rejected? ? %w( race rejected ) : :race),
+        id: "race_#{race.id}"
+  ) do %><%= link_to race.name, category_races_path(race.category) %><% if race.distance.present? && race.distance > 0 %> (<%= race.distance %> miles)<% end %>
+  <% end -%>
+  <%- if race.rejected? -%>
+    <p class="event_notes">
+      <%= t race.rejection_reason, category: race.category_name %>
+    </p>
+    <% end -%>
+  <%= results_table event, race, results %>
+<% end -%>

@@ -1,4 +1,4 @@
-<% @page_title = "Results: #{@race.event.date.year}: #{@race.full_name}" %>
+<% @page_title = "Results: #{@event.date.year}: #{@event.full_name}: #{@race.name}" %>
 
 <% cache cache_key(@race) do %>
   <h2><%= link_to @race.event.name, calculations_event_results_path(event_id: @race.event) %>: <%= @race.name %></h2>

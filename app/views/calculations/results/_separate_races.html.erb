@@ -5,11 +5,11 @@
       <%- races.select(&:visible?).sort.each_row do |first_race, second_race| -%>
       <tr>
         <%= tag.td class: (first_race&.rejected? ? %w( race rejected ) : :race) do %>
-          <%= link_to first_race.name, "#race_#{first_race.id}" %>
+          <%= link_to first_race.name, calculations_race_path(first_race) %>
         <% end %>
         <%= tag.td class: (second_race&.rejected? ? %w( race rejected ) : :race) do %>
           <%- if second_race -%>
-            <%= link_to second_race.name, "#race_#{second_race.id}" %>
+            <%= link_to second_race.name, calculations_race_path(second_race) %>
           <% end %>
         <% end %>
       </tr>

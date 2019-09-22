@@ -149,8 +149,9 @@ class Result < ApplicationRecord
     self[:laps] || (race&.laps)
   end
 
-  def place
-    self[:place] || ""
+  def place=(value)
+    set_numeric_place value
+    super
   end
 
   def points
@@ -211,14 +212,14 @@ class Result < ApplicationRecord
   end
 
   def numeric_place?
-    place && place.to_i > 0
+    place && place.to_i != 0
   end
 
-  def numeric_place
-    if numeric_place?
-      place.to_i
+  def set_numeric_place(value)
+    if value && value.to_i != 0
+      self.numeric_place = value.to_i
     else
-      0
+      self.numeric_place = 999_999
     end
   end
 

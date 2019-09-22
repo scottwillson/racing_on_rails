@@ -1,0 +1,20 @@
+<%- if results.empty? -%>
+<p class="event_notes">No results for <%= event.year %></p>
+<%- end -%>
+
+<% ActiveSupport::Notifications.instrument "event.results.calculations.racing_on_rails", event_id: event.id, event_name: event.name do %>
+  <% races.select(&:any_results?).select(&:visible?).sort.each do |race| %>
+    <%= tag.h3(
+          class: (race&.rejected? ? %w( race rejected ) : :race),
+          id: "race_#{race.id}"
+    ) do %><%= link_to race.name, category_races_path(race.category) %><% if race.distance.present? && race.distance > 0 %> (<%= race.distance %> miles)<% end %>
+    <% end -%>
+    <p class="event_notes"><%= link_to "Show source results", calculations_race_sources_path(race) %></p>
+    <%- if race.rejected? -%>
+      <p class="event_notes">
+        <%= t race.rejection_reason, category: race.category_name %>
+      </p>
+      <% end -%>
+    <%= results_table event, race %>
+  <% end -%>
+<% end -%>

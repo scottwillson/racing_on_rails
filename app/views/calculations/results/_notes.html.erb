@@ -1,0 +1,5 @@
+<%- if event.notes.present? -%>
+  <%= tag.div class: notes_class(event) do -%>
+    <%= event.notes.html_safe -%>
+  <%- end -%>
+<%- end -%>
