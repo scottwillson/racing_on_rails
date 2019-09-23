@@ -15,7 +15,8 @@ module Results
         html_options = ' class="riera"' if result.person_id == 93_483
 
         if result.calculation_result?
-          "<a href=\"#{path_prefix(row)}/calculations/races/#{result.race_id}/results#result_#{result.id}\"#{html_options}>#{text}</a>"
+          # "<a href=\"#{path_prefix(row)}/calculations/races/#{result.race_id}/results#result_#{result.id}\"#{html_options}>#{text}</a>"
+          "<a href=\"#{path_prefix(row)}/calculations/results/#{result.id}\"#{html_options}>#{text}</a>"
         elsif result.competition_result?
           "<a href=\"#{path_prefix(row)}/events/#{result.event_id}/people/#{result.person_id}/results##{result.race_id}\"#{html_options}>#{text}</a>"
         else

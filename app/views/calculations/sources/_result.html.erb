@@ -1,0 +1,59 @@
+<%- if result.numeric_place.zero? -%>
+  <%- if race.event.calculation.team? -%>
+    <h3 id="result_<%= result.id %>"><%= link_to(result.team_name, team_results_year_path(result.team, result.year)) if result.team_id %></h3>
+  <%- else -%>
+    <h3 id="result_<%= result.id %>"><%= link_to(result.person_name, person_results_year_path(result.person, result.year)) if result.person_id %></h3>
+  <%- end -%>
+<%- else -%>
+  <%- if race.event.calculation.team? -%>
+    <h3 id="result_<%= result.id %>"><%= result.numeric_place.ordinalize %> &mdash; <%=
+      link_to(result.team_name, team_results_year_path(result.team, result.year)) if result.team_id
+      %></h3>
+  <%- else -%>
+    <h3 id="result_<%= result.id %>"><%= result.numeric_place.ordinalize %> &mdash; <%=
+      link_to(result.person_name, person_results_year_path(result.person, result.year)) if result.person_id
+      %></h3>
+  <%- end -%>
+<%- end -%>
+<table class="base table table-striped results">
+  <thead>
+    <tr>
+      <th class="place"></th>
+      <th class="event">Event</th>
+      <th class="category">Category</th>
+      <th class="date">Date</th>
+      <%- if calculation.team? -%>
+      <th class="name">Name</th>
+      <%- end -%>
+      <th class="rejection_reason"></th>
+      <th class="points">Points</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- result.sources.sort.each do |source| -%>
+      <tr>
+        <td class="place"><%= source.source_result.place %></td>
+        <td class="event"><%= source.source_result.event_full_name %></td>
+        <td class="category"><%= source.source_result.race_name %></td>
+        <td class="date"><%= source.source_result.event_date_range_s %></td>
+        <%- if calculation.team? -%>
+        <td class="name"><%= source.source_result.name %></td>
+        <%- end -%>
+        <td class="rejection_reason"><%= t source.rejection_reason,
+          category: source.source_result.category_name,
+          discipline: source.source_result.discipline_name,
+          minimum_events: calculation.rules.minimum_events,
+          racing_association: RacingAssociation.current.short_name,
+          results_per_event: calculation.rules.results_per_event %></td>
+        <td class="points"><%= source.points %></td>
+      </tr>
+    <%- end -%>
+    <tr class="total">
+      <%- if calculation.team? -%>
+      <td colspan="7" class="points total"><%= result.points %></td>
+      <%- else -%>
+      <td colspan="6" class="points total"><%= result.points %></td>
+      <%- end -%>
+    </tr>
+  </tbody>
+</table>
