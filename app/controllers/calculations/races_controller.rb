@@ -9,6 +9,7 @@ module Calculations
               .first!
 
       @event = @race.event
+      @races = @event.races.includes(:category)
 
       @results = Result
                  .where(race_id: params[:id])

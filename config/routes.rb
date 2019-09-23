@@ -142,6 +142,7 @@ Rails.application.routes.draw do
     resources :calculations
 
     namespace :calculations do
+      resources :results
       resources :events do
         resources :results
       end
