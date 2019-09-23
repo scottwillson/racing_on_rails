@@ -14,6 +14,7 @@ module Pages
 
         if path
           normalized_path = path.dup
+          normalized_path.gsub!(/^\/m/, "")
           normalized_path.gsub!(/^\//, "")
           normalized_path.gsub!(/.html$/, "")
           normalized_path.gsub!(/\/index$/, "")
