@@ -124,7 +124,11 @@ function bindSelectModal() {
 
     jQuery(`#${objectName}_${method}_select_modal`).on(
       'shown.bs.modal',
-      () =>jQuery(`#${objectName}_${method}_select_modal input.search`).select()
+      () => {
+        const name = jQuery(`#${objectName}_${method}_name`).val();
+        $(`#${objectName}_${method}_select_modal_form input.name`).val(name);
+        jQuery(`#${objectName}_${method}_select_modal input.search`).select();
+      }
     );
 
     jQuery(`#${objectName}_${method}_select_modal_form .search`).change(
@@ -139,10 +143,10 @@ function bindSelectModal() {
 
     jQuery(`#${objectName}_${method}_select_modal_new_${type}`).on(
       'shown.bs.modal',
-      () =>jQuery(`#new_${type}_name`).select()
+      () => jQuery(`#new_${type}_name`).select()
     );
 
-    jQuery(`#${objectName}_${method}_remove_button`).click(() => removePerson(type, objectName, method));
+    jQuery(`#${objectName}_${method}_remove_button`).click(() => removeObject(type, objectName, method));
   });
 };
 

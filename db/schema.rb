@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_07_150908) do
+ActiveRecord::Schema.define(version: 2019_09_20_205533) do
 
   create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
@@ -1067,6 +1067,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_150908) do
     t.decimal "distance", precision: 10, scale: 2
     t.boolean "rejected"
     t.string "rejection_reason"
+    t.integer "numeric_place", default: 999999
     t.index ["category_id"], name: "index_results_on_category_id"
     t.index ["event_id"], name: "index_results_on_event_id"
     t.index ["members_only_place"], name: "index_results_on_members_only_place"

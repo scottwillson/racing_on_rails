@@ -115,7 +115,7 @@ class EventsTest < AcceptanceTest
     assert_equal "", find("input.search").value
     fill_in "name", with: "gentle"
 
-    find('tr[data-person-name="Gentle Lovers"]').click
+    find('tr[data-team-name="Gentle Lovers"]').click
     assert_equal gl.id.to_s, find("#event_team_id", visible: false).value
     assert_equal "Gentle Lovers", find("#event_team_name", visible: false).value
     assert_equal "Gentle Lovers", find("#event_team_select_modal_button").text
