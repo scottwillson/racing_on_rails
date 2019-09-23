@@ -65,7 +65,6 @@ function searchFor(type, objectName, method) {
 
   const types = pluralize(type);
   const page = parseInt(jQuery(`#${objectName}_${method}_page`).val(), 10);
-  console.log('PAGE', page);
   return fetch(`/${types}.json?name=${name}&per_page=12&page=${page}`)
     .then(response => response.json())
     .then(json => {
@@ -84,12 +83,20 @@ function searchFor(type, objectName, method) {
             <td colspan="4">No results</td>
            </tr>`
         );
-      } else if (page === 1) {
+      }
+
+      if (page === 1 && json.length === 12) {
         jQuery(`#${objectName}_${method}_previous`).prop('disabled', true);
+        jQuery(`#${objectName}_${method}_next`).prop('disabled', false);
+      } else if (page === 1 && json.length < 12) {
+        jQuery(`#${objectName}_${method}_previous`).prop('disabled', true);
+        jQuery(`#${objectName}_${method}_next`).prop('disabled', true);
+      } else if (json.length === 12) {
+        jQuery(`#${objectName}_${method}_previous`).prop('disabled', false);
         jQuery(`#${objectName}_${method}_next`).prop('disabled', false);
       } else {
         jQuery(`#${objectName}_${method}_previous`).prop('disabled', false);
-        jQuery(`#${objectName}_${method}_next`).prop('disabled', false);
+        jQuery(`#${objectName}_${method}_next`).prop('disabled', true);
       }
 
       jQuery('.select-modal tr').click(event => selectSearchResult(event, type, objectName, method));
@@ -99,7 +106,9 @@ function searchFor(type, objectName, method) {
 
 function searchForPrevious(type, objectName, method) {
   const currentPage = parseInt(jQuery(`#${objectName}_${method}_page`).val(), 10);
-  jQuery(`#${objectName}_${method}_page`).val(currentPage - 1);
+  if (currentPage > 1) {
+    jQuery(`#${objectName}_${method}_page`).val(currentPage - 1);
+  }
   searchFor(type, objectName, method);
 }
 
@@ -111,10 +120,6 @@ function searchForNext(type, objectName, method) {
 
 function showNewModal(type, objectName, method) {
   const searchField = $(`#${objectName}_${method}_select_modal_form input.name`)[0];
-  const name = searchField.value;
-  const newNameField = jQuery(`#new_${type}_name`)
-  newNameField.val(name);
-
   jQuery(`#${objectName}_${method}_select_modal`).modal('hide');
   jQuery(`#${objectName}_${method}_select_modal_new_${type}`).modal('show');
 }
@@ -160,12 +165,18 @@ function bindSelectModal() {
     );
 
     jQuery(`#${objectName}_${method}_previous`).click(() => searchForPrevious(type, objectName, method));
-    jQuery(`#${objectName}_${method}_next`).click(searchForNext(type, objectName, method));
+    jQuery(`#${objectName}_${method}_next`).click(() => searchForNext(type, objectName, method));
 
-    jQuery(`#${objectName}_${method}_select_modal_form`).submit(() => false);
+    jQuery(`#${objectName}_${method}_select_modal_form`).submit(() => {
+      searchFor(type, objectName, method);
+      return false;
+    });
 
     jQuery(`#show_${objectName}_${method}_new_modal`).click(() => showNewModal(type, objectName, method));
-    jQuery(`#${objectName}_${method}_select_modal_new_${type}_form`).submit(() => false);
+    jQuery(`#${objectName}_${method}_select_modal_new_${type}_form`).submit(() => {
+      createObject(type, objectName, method);
+      return false;
+    });
     jQuery(`#${objectName}_${method}_select_modal_new_${type}_create`).click(() => createObject(type, objectName, method));
 
     jQuery(`#${objectName}_${method}_select_modal_new_${type}`).on(

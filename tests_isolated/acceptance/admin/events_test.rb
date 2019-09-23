@@ -66,7 +66,6 @@ class EventsTest < AcceptanceTest
 
     click_button "event_promoter_select_modal_button"
     wait_for ".modal.in"
-    assert_equal "Tim Brown", find("input.search").value
     fill_in "name", with: "candi m"
 
     find('tr[data-person-name="Candi Murray"]').click

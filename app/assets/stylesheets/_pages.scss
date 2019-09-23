@@ -721,15 +721,19 @@ td.right, th.right {
   vertical-align: middle;
 }
 
-#select_promoter .form-horizontal .form-group {
+.select-modalselect_promoter .form-horizontal .form-group {
   margin-right: 0;
   margin-left: 0;
 }
 
-#select_promoter .table-hover tr {
+.select-modal .table-hover tr {
   cursor: pointer;
 }
 
 .none {
   font-style: italic;
+}
+
+.modal-footer .modal-pagination {
+  text-align: left;
 }
