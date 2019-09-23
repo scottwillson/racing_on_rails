@@ -52,6 +52,10 @@ function searchResultTeamCells(team) {
 }
 
 function searchFor(type, objectName, method) {
+  if (!jQuery(`#${objectName}_${method}_select_modal`).is(':visible')) {
+    return;
+  }
+
   const searchField = $(`#${objectName}_${method}_select_modal_form input.name`)[0];
   const name = searchField.value;
 
@@ -60,7 +64,9 @@ function searchFor(type, objectName, method) {
   }
 
   const types = pluralize(type);
-  return fetch(`/${types}.json?name=${name}`)
+  const page = parseInt(jQuery(`#${objectName}_${method}_page`).val(), 10);
+  console.log('PAGE', page);
+  return fetch(`/${types}.json?name=${name}&per_page=12&page=${page}`)
     .then(response => response.json())
     .then(json => {
       jQuery(`#${types} tbody`).empty();
@@ -78,11 +84,29 @@ function searchFor(type, objectName, method) {
             <td colspan="4">No results</td>
            </tr>`
         );
+      } else if (page === 1) {
+        jQuery(`#${objectName}_${method}_previous`).prop('disabled', true);
+        jQuery(`#${objectName}_${method}_next`).prop('disabled', false);
+      } else {
+        jQuery(`#${objectName}_${method}_previous`).prop('disabled', false);
+        jQuery(`#${objectName}_${method}_next`).prop('disabled', false);
       }
 
       jQuery('.select-modal tr').click(event => selectSearchResult(event, type, objectName, method));
       searchField.select();
     });
+}
+
+function searchForPrevious(type, objectName, method) {
+  const currentPage = parseInt(jQuery(`#${objectName}_${method}_page`).val(), 10);
+  jQuery(`#${objectName}_${method}_page`).val(currentPage - 1);
+  searchFor(type, objectName, method);
+}
+
+function searchForNext(type, objectName, method) {
+  const currentPage = parseInt(jQuery(`#${objectName}_${method}_page`).val(), 10);
+  jQuery(`#${objectName}_${method}_page`).val(currentPage + 1);
+  searchFor(type, objectName, method);
 }
 
 function showNewModal(type, objectName, method) {
@@ -134,6 +158,9 @@ function bindSelectModal() {
     jQuery(`#${objectName}_${method}_select_modal_form .search`).change(
       () => searchFor(type, objectName, method)
     );
+
+    jQuery(`#${objectName}_${method}_previous`).click(() => searchForPrevious(type, objectName, method));
+    jQuery(`#${objectName}_${method}_next`).click(searchForNext(type, objectName, method));
 
     jQuery(`#${objectName}_${method}_select_modal_form`).submit(() => false);
 
