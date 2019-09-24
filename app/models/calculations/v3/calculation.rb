@@ -28,7 +28,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   serialize :points_for_place
   serialize :source_event_keys, Array
 
-  has_many :calculation_categories, class_name: "Calculations::V3::Category", dependent: :destroy
+  has_many :calculation_categories, class_name: "Calculations::V3::Category", dependent: :destroy, inverse_of: :calculation
   has_many :calculations_events, class_name: "Calculations::V3::Event", dependent: :destroy
   has_many :categories, through: :calculation_categories, class_name: "::Category"
   has_many :calculation_disciplines, class_name: "Calculations::V3::Discipline", dependent: :destroy
@@ -39,6 +39,8 @@ class Calculations::V3::Calculation < ApplicationRecord
   belongs_to :event, class_name: "::Event", inverse_of: :calculation, optional: true
   has_many :events, through: :calculations_events, class_name: "::Event"
   belongs_to :source_event, class_name: "::Event", optional: true
+
+  accepts_nested_attributes_for :calculation_categories
 
   before_destroy :destroy_event
   before_save :set_name
