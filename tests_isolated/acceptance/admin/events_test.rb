@@ -7,14 +7,14 @@ class EventsTest < AcceptanceTest
   test "events" do
     javascript!
 
-    candi = FactoryBot.create(:person, name: "Candi Murray", home_phone: "(503) 555-1212", email: "admin@example.com")
+    candi = FactoryBot.create(:administrator, name: "Candi Murray", home_phone: "(503) 555-1212", email: "admin@example.com")
     gl = FactoryBot.create(:team, name: "Gentle Lovers")
     kings_valley = FactoryBot.create(:event, name: "Kings Valley Road Race", date: "2003-12-31")
     race_1 = kings_valley.races.create!(category: FactoryBot.create(:category, name: "Senior Men Pro/1/2"))
     kings_valley.races.create!(category: FactoryBot.create(:category, name: "Senior Men 3"))
 
     visit "/"
-    login_as FactoryBot.create(:administrator)
+    login_as candi
 
     click_link "New Event"
 
@@ -26,19 +26,30 @@ class EventsTest < AcceptanceTest
     assert_page_has_content "Sausalito Criterium"
     click_link "Sausalito Criterium"
 
+    assert page.has_css?("#event_promoter_remove_button", visible: false)
     assert_equal "", find("#event_promoter_id", visible: false).value
-    assert_equal "", find("#promoter_autocomplete").value
-    type_in "promoter_autocomplete", with: "Tom Brown"
+    assert_equal "Click to select", find("#event_promoter_select_modal_button").text
+    click_button "event_promoter_select_modal_button"
+    wait_for ".modal.in"
+    find("#show_event_promoter_new_modal").click
+    wait_for "#event_promoter_select_modal_new_person"
+    wait_for "#new_person_name"
+    fill_in "name", with: "Tom Brown"
+    assert_equal "Tom Brown", find("#new_person_name").value
+    find("#event_promoter_select_modal_new_person_create").click
+    assert page.has_css?("#event_promoter_remove_button")
 
     click_button "Save"
     assert_match(/\d+/, find("#event_promoter_id", visible: false).value)
-    assert page.has_field?("promoter_autocomplete", with: "Tom Brown")
+    assert_equal "Tom Brown", find("#event_promoter_name", visible: false).value
+    assert_equal "Tom Brown", find("#event_promoter_select_modal_button").text
+    assert page.has_css?("#event_promoter_remove_button")
 
     visit "/admin/events"
     assert_page_has_content "Sausalito Criterium"
     click_link "Sausalito Criterium"
     assert_match(/\d+/, find("#event_promoter_id", visible: false).value)
-    assert page.has_field?("promoter_autocomplete", with: "Tom Brown")
+    assert_equal "Tom Brown", find("#event_promoter_select_modal_button").text
 
     click_link "edit_promoter_link"
     assert page.has_field?("First Name", with: "Tom")
@@ -50,25 +61,36 @@ class EventsTest < AcceptanceTest
     click_link "back_to_event"
 
     assert_match(/\d+/, find("#event_promoter_id", visible: false).value)
-    assert page.has_field?("promoter_autocomplete", with: "Tim Brown")
+    assert_equal "Tim Brown", find("#event_promoter_name", visible: false).value
+    assert_equal "Tim Brown", find("#event_promoter_select_modal_button").text
 
-    type_in "promoter_autocomplete", with: "candi m"
-    find("li#person_#{candi.id} a").click
-    assert page.has_field?("promoter_autocomplete", with: "Candi Murray")
+    click_button "event_promoter_select_modal_button"
+    wait_for ".modal.in"
+    fill_in "name", with: "candi m"
+
+    find('tr[data-person-name="Candi Murray"]').click
+    assert_equal candi.id.to_s, find("#event_promoter_id", visible: false).value
+    assert_equal "Candi Murray", find("#event_promoter_name", visible: false).value
+    assert_equal "Candi Murray", find("#event_promoter_select_modal_button").text
 
     click_button "Save"
 
     assert_equal candi.id.to_s, find("#event_promoter_id", visible: false).value
-    assert page.has_field?("promoter_autocomplete", with: "Candi Murray")
+    assert_equal "Candi Murray", find("#event_promoter_name", visible: false).value
+    assert_equal "Candi Murray", find("#event_promoter_select_modal_button").text
 
-    fill_in "promoter_autocomplete", with: ""
+    click_button "event_promoter_remove_button"
     click_button "Save"
 
+    assert page.has_css?("#event_promoter_remove_button", visible: false)
     assert_equal "", find("#event_promoter_id", visible: false).value
-    assert page.has_field?("promoter_autocomplete", with: "")
+    assert_equal "", find("#event_promoter_name", visible: false).value
+    assert_equal "Click to select", find("#event_promoter_select_modal_button").text
 
+    assert page.has_css?("#event_team_remove_button", visible: false)
     assert_equal "", find("#event_team_id", visible: false).value
-    assert_equal "", find("#team_autocomplete").value
+    assert_equal "", find("#event_team_name", visible: false).value
+    assert_equal "Click to select", find("#event_team_select_modal_button").text
 
     assert_equal "", find("#event_phone").value
     assert_equal "", find("#event_email").value
@@ -87,20 +109,31 @@ class EventsTest < AcceptanceTest
     visit "/admin/events"
     click_link "Sausalito Criterium"
 
-    type_in "team_autocomplete", with: "Gentle Lovers"
-    find("li#team_#{gl.id} a").click
-    assert page.has_field?("team_autocomplete", with: "Gentle Lovers")
+    click_button "event_team_select_modal_button"
+    wait_for ".modal.in"
+    assert_equal "", find("input.search").value
+    fill_in "name", with: "gentle"
+
+    find('tr[data-team-name="Gentle Lovers"]').click
+    assert_equal gl.id.to_s, find("#event_team_id", visible: false).value
+    assert_equal "Gentle Lovers", find("#event_team_name", visible: false).value
+    assert_equal "Gentle Lovers", find("#event_team_select_modal_button").text
+    assert page.has_css?("#event_team_remove_button")
 
     click_button "Save"
 
     assert_equal gl.id.to_s, find("#event_team_id", visible: false).value
-    assert_equal "Gentle Lovers", find("#team_autocomplete").value
+    assert_equal "Gentle Lovers", find("#event_team_name", visible: false).value
+    assert_equal "Gentle Lovers", find("#event_team_select_modal_button").text
+    assert page.has_css?("#event_team_remove_button")
 
-    fill_in "team_autocomplete", with: ""
+    click_button "event_team_remove_button"
     click_button "Save"
 
+    assert page.has_css?("#event_team_remove_button", visible: false)
     assert_equal "", find("#event_team_id", visible: false).value
-    assert_equal "", find("#team_autocomplete").value
+    assert_equal "", find("#event_team_name", visible: false).value
+    assert_equal "Click to select", find("#event_team_select_modal_button").text
 
     fill_in "Date", with: "Nov 13, 2013"
     click_button "Save"

@@ -1,0 +1,50 @@
+<div class="modal fade select-modal" tabindex="-1" role="dialog" id="<%= target %>_select_modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <%= form_tag({}, { method: "get", role: "form", id: "#{target}_select_modal_form" }) do %>
+          <div class="form-group">
+            <div class="input-group">
+              <%= search_field_tag(
+                    "name",
+                    "",
+                    class: "wants_focus form-control name search",
+                    placeholder: "Name",
+                    autocomplete: "off"
+              ) %>
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-default search"><span class="glyphicon glyphicon-search"></span></button>
+              </span>
+            </div>
+          </div>
+        <% end -%>
+        <input type="hidden" name="page" value="1" id="<%= target %>_page">
+      </div>
+      <div class="modal-body">
+        <table class="table select-modal table-hover" id="<%= type.pluralize %>">
+          <tbody>
+            <tr>
+              <td class="empty">
+                Enter name and click search button to find a <%= type %>. Click New <%= type.titleize %> to create a new <%= type %>.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-sm-4 modal-pagination">
+            <button type="button" class="btn btn-default" id="<%= target %>_previous" disabled>←</button>
+            <button type="button" class="btn btn-default" id="<%= target %>_next" disabled>→</button>
+          </div>
+          <div class="col-sm-8">
+            <button type="button" class="btn btn-default" id="show_<%= target %>_new_modal">New <%= type.titleize %></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= render partial: "modals/new", locals: { target: "event_promoter", type: type } %>

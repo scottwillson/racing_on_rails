@@ -718,3 +718,26 @@ td.right, th.right {
 .questions {
   text-align: center;
 }
+
+.table.select-modal > tbody > tr > td {
+  border-bottom: none;
+  border-top: none;
+  vertical-align: middle;
+}
+
+.select-modalselect_promoter .form-horizontal .form-group {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.select-modal .table-hover tr {
+  cursor: pointer;
+}
+
+.none {
+  font-style: italic;
+}
+
+.modal-footer .modal-pagination {
+  text-align: left;
+}

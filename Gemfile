@@ -91,6 +91,7 @@ end
 
 group :test do
   gem "capybara"
+  gem "capybara-screenshot"
   gem "database_cleaner"
   gem "factory_bot_rails"
   gem "minitest"

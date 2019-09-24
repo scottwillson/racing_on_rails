@@ -1,0 +1,26 @@
+<%= f.hidden_field :"#{method}_id" -%>
+<%= f.hidden_field :"#{method}_name" -%>
+
+<button type="button"
+        class="btn btn-default select-modal <%= 'none' unless object.send(method) %>"
+        data-method="<%= method %>"
+        data-object-name="<%= object_name %>"
+        data-target="#<%= object_name %>_<%= method %>_select_modal"
+        data-toggle="modal"
+        data-type="<%= type %>"
+        id="<%= object_name %>_<%= method %>_select_modal_button">
+  <% if method == :team %>
+  <span class="glyphicon glyphicon-group"></span>
+  <% else %>
+  <span class="glyphicon glyphicon-user"></span>
+  <% end %>
+  <span id="<%= object_name %>_<%= method %>_name_button"><%= object.send(method)&.name || "Click to select" %></span>
+</button>
+
+<button type="button"
+        class="btn btn-default"
+        style="<%= 'display: none' unless object.send(method) %>"
+        title="Remove <%= method %>"
+        id="<%= object_name %>_<%= method %>_remove_button">
+  <span class="glyphicon glyphicon-remove"></span>
+</button>

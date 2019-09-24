@@ -6,13 +6,14 @@ require_relative "../../config/environment"
 require "capybara/rails"
 require "minitest/autorun"
 require "webmock/minitest"
+require "capybara-screenshot/minitest"
 require_relative "../../test/elasticsearch_stubs"
 
 # Capybara supports a number of drivers/browsers. AcceptanceTest default is RackTest for non-JavaScript tests
 # and Chrome for JS test. Note that most tests require JS.
 #
 # Use DEFAULT_DRIVER and JAVASCRIPT_DRIVER to set Capybara drivers:
-# :rack_test, :firefox, :chrome, :poltergeist, :webkit
+# :rack_test, :firefox, :selenium_chrome_headless, :poltergeist, :webkit
 #
 # RackTest is fastest *about 20% faster than Chrome) and has no dependencies, but does not execute JS.
 # Firefox via Selenium is slowest option. It executes JS, has no dependencies and is the most reliable. Uses a custom profile to
@@ -30,6 +31,9 @@ class AcceptanceTest < ActiveSupport::TestCase
   DatabaseCleaner.strategy = :truncation, { except: %w[ar_internal_metadata] }
 
   Webdrivers.cache_time = 86_400
+  Capybara.asset_host = "http://0.0.0.0:3000"
+  Capybara::Screenshot.autosave_on_failure = false
+  Capybara::Screenshot.prune_strategy = { keep: 20 }
 
   setup :clean_database, :set_capybara_driver, :configure_webmock, :stub_elasticsearch
   teardown :reset_session
@@ -38,7 +42,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     if ENV["JAVASCRIPT_DRIVER"].present?
       ENV["JAVASCRIPT_DRIVER"].to_sym
     else
-      :chrome
+      :selenium_chrome_headless
     end
   end
 
@@ -400,7 +404,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     puts text if ENV["VERBOSE"].present?
   end
 
-  Capybara.register_driver :chrome do |app|
+  Capybara.register_driver :selenium_chrome_headless do |app|
     options = Selenium::WebDriver::Chrome::Options.new
 
     options.add_argument "--headless"
