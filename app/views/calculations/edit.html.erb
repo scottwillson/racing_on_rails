@@ -4,60 +4,53 @@
 
 <h2><%= @calculation.name %>: <%= @calculation.year %></h2>
 
-<div class="row">
-  <div class="col-sm-6">
-    <% if @calculation.category_rules.reject(&:reject?).present? %>
-      <h3>Categories</h3>
-      <%= table id: "category_rules", collection: @calculation.category_rules.reject(&:reject?), columns: 2 do %>
-        <tr>
-          <th>Name</th>
-          <th>Maximum Events</th>
-        </tr>
-        <%= render partial: "category_rule", collection: @calculation.category_rules.reject(&:reject?).sort_by(&:name) %>
-      <% end -%>
-    <% end %>
-  </div>
-  <div class="col-sm-6">
-    <% if @calculation.category_rules.select(&:reject?).present? %>
-      <h3>Rejected Categories</h3>
-      <%= table id: "category_rules", collection: @calculation.category_rules.select(&:reject?), columns: 2 do %>
-        <tr>
-          <th>Name</th>
-        </tr>
-        <%= render partial: "rejected_category_rule", collection: @calculation.category_rules.select(&:reject?).sort_by(&:name) %>
-      <% end -%>
-    <% end %>
-  </div>
-</div>
-
 <%= form_for(@calculation,
             as: :calculation,
             url: @calculation.new_record? ? calculation_path : calculation_path(@calculation),
             html: { class: "form-horizontal", role: "form", method: form_method_for(@calculation) }) do |f| -%>
 
-  <div class="check-boxes">
-    <%= f.labelled_check_box :association_sanctioned_only %>
-    <%= f.labelled_check_box :double_points_for_last_event %>
-    <%= f.labelled_check_box :members_only %>
-    <%= f.labelled_check_box :specific_events %>
-    <%= f.labelled_check_box :team %>
-    <%= f.labelled_check_box :weekday_events %>
-  </div>
-  <%= f.labelled_select :group_by, Calculations::V3::Calculation::GROUP_BY %>
-  <%= f.labelled_text_field :maximum_events %>
-  <%= f.labelled_text_field :minimum_events %>
-  <%= f.labelled_text_field :missing_result_penalty %>
-  <%= f.labelled_select :place_by, Calculations::V3::Calculation::PLACE_BY %>
-  <%= f.labelled_text_field :results_per_event %>
-
-  <div class="form-group col-sm-12">
-    <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
-    <%= link_to("Delete", calculation_path(@calculation), method: :delete, class: "btn btn-default", id: 'delete') unless @calculation.new_record? %>
-    <% unless mobile_request? %>
-    <div class="pull-right created_updated">
-      <% unless @calculation.updated_at.nil? %>Updated: <%= time_ago_in_words(@calculation.updated_at, include_seconds: true) %> ago<% end %>
-      <%= "New" if @calculation.new_record? %>
+  <div class="row">
+    <div class="col-sm-6">
+      <h3>Categories</h3>
+      <%= table id: "category_rules", collection: @calculation.calculation_categories, columns: 2 do %>
+        <tr>
+          <th>Name</th>
+          <th>Maximum Events</th>
+          <th>Reject</th>
+        </tr>
+        <%= f.fields_for :calculation_categories do |calculation_category_fields| %>
+          <%= render partial: "editable_category_category", object: calculation_category_fields %>
+        <% end -%>
+      <% end %>
     </div>
-    <% end %>
+    <div class="col-sm-6">
+      <%= f.labelled_text_field :name %>
+      <div class="check-boxes">
+        <%= f.labelled_check_box :association_sanctioned_only %>
+        <%= f.labelled_check_box :double_points_for_last_event %>
+        <%= f.labelled_check_box :members_only %>
+        <%= f.labelled_check_box :specific_events %>
+        <%= f.labelled_check_box :team %>
+        <%= f.labelled_check_box :weekday_events %>
+      </div>
+      <%= f.labelled_select :group_by, Calculations::V3::Calculation::GROUP_BY %>
+      <%= f.labelled_text_field :maximum_events %>
+      <%= f.labelled_text_field :minimum_events %>
+      <%= f.labelled_text_field :missing_result_penalty %>
+      <%= f.labelled_select :place_by, Calculations::V3::Calculation::PLACE_BY %>
+      <%= f.labelled_text_field :results_per_event %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
+      <%= link_to("Delete", calculation_path(@calculation), method: :delete, class: "btn btn-default", id: 'delete') unless @calculation.new_record? %>
+      <% unless mobile_request? %>
+        <div class="pull-right created_updated">
+          <% unless @calculation.updated_at.nil? %>Updated: <%= time_ago_in_words(@calculation.updated_at, include_seconds: true) %> ago<% end %>
+          <%= "New" if @calculation.new_record? %>
+        </div>
+      <% end %>
+    </div>
   </div>
 <% end -%>
