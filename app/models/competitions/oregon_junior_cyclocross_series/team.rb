@@ -26,11 +26,11 @@ module Competitions
       def source_result_category_names
         [
           "Junior Men 1/2/3",
-          "Junior Men 1/2/3",
           "Junior Men 13-14 3/4/5",
           "Junior Men 15-16 3/4/5",
           "Junior Men 17-18 3/4/5",
           "Junior Men 9-12 3/4/5",
+          "Junior Women 1/2/3",
           "Junior Women 13-14 3/4/5",
           "Junior Women 15-16 3/4/5",
           "Junior Women 17-18 3/4/5",
