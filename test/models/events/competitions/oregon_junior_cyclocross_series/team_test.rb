@@ -14,10 +14,10 @@ module Competitions
         team = ::Team.create!(name: "Cazenovia High School")
         event_team = EventTeam.create!(team: team, event: series)
 
-        junior_men_10_12 = Category.find_or_create_by(name: "Junior Men 9-12")
+        junior_men_123 = Category.find_or_create_by(name: "Junior Men 1/2/3")
         person = FactoryBot.create(:person)
         person.event_team_memberships.create!(event_team: event_team)
-        race = event.races.create!(category: junior_men_10_12)
+        race = event.races.create!(category: junior_men_123)
         race.results.create!(place: 3, person: person)
 
         person = FactoryBot.create(:person)
