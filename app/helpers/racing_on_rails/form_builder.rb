@@ -90,8 +90,8 @@ module RacingOnRails
       %(<div class="form-group #{method}">#{label(method, (label_text || method.to_s.titleize).to_s, label_options)} <div class="col-sm-8"><p class="form-control-static" id="#{object_name}_#{method}">#{text || @object.send(method)}</p></div></div>).html_safe
     end
 
-    def select_modal(method, type)
-      @template.render "modals/button", f: self, method: method, object: @object, object_name: object_name, type: type
+    def select_modal(method, type, remove_button = true)
+      @template.render "modals/button", f: self, method: method, object: @object, object_name: object_name, type: type, remove_button: remove_button
     end
   end
 end

@@ -151,6 +151,8 @@ function bindSelectModal() {
     const objectName = button.data('object-name');
     const type = button.data('type');
 
+    console.log(method, objectName, type, index, `#${objectName}_${method}_select_modal`);
+
     jQuery(`#${objectName}_${method}_select_modal`).on(
       'shown.bs.modal',
       () => {

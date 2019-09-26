@@ -5,10 +5,10 @@
         class="btn btn-default select-modal <%= 'none' unless object.send(method) %>"
         data-method="<%= method %>"
         data-object-name="<%= object_name %>"
-        data-target="#<%= object_name %>_<%= method %>_select_modal"
+        data-target="#order_line_items_attributes_0_person_select_modal"
         data-toggle="modal"
         data-type="<%= type %>"
-        id="<%= object_name %>_<%= method %>_select_modal_button">
+        id="order_line_items_attributes_0_person_select_modal_button">
   <% if method == :team %>
   <span class="glyphicon glyphicon-group"></span>
   <% else %>
@@ -17,10 +17,12 @@
   <span id="<%= object_name %>_<%= method %>_name_button"><%= object.send(method)&.name || "Click to select" %></span>
 </button>
 
+<% if remove_button -%>
 <button type="button"
         class="btn btn-default"
         style="<%= 'display: none' unless object.send(method) %>"
         title="Remove <%= method %>"
         id="<%= object_name %>_<%= method %>_remove_button">
   <span class="glyphicon glyphicon-remove"></span>
+  <% end -%>
 </button>
