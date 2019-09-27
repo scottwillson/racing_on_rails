@@ -157,6 +157,10 @@ class Event < ApplicationRecord
     Time.zone.local(year).beginning_of_year.to_date..Time.zone.local(year).end_of_year.to_date
   end
 
+  def source_result_events
+    races.flat_map(&:results).flat_map(&:sources).map(&:source_result).map(&:event).uniq
+  end
+
   def destroy_races
     transaction do
       destroy_combined_results
