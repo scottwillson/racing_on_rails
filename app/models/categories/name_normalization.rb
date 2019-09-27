@@ -242,6 +242,8 @@ module Categories
               "Sport"
             elsif token[/\Asinglespeeds?\z/i] || token[/\Ass\z/i]
               "Singlespeed"
+            elsif token[/fix gear/i]
+              "Fixed Gear"
             elsif token[/\Atand?\z/i] || token[/\Atandems\z/i]
               "Tandem"
             elsif token[/\Auni\z/i] || token[/\AUnicycles\z/i]

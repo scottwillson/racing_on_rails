@@ -10,7 +10,7 @@
         <% if race.source_categories.present? %>
           <h4><%= race.name %></h4>
           <ul class="calculations">
-            <% race.source_categories.sort.each do |category| %>
+            <% race.source_categories.sort_by(&:name).each do |category| %>
               <li><%= category.name %></li>
             <% end -%>
           </ul>

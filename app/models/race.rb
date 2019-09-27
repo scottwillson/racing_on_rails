@@ -342,7 +342,17 @@ class Race < ApplicationRecord
   end
 
   def source_categories
-    results.flat_map(&:sources).map(&:source_result).map(&:race).map(&:category).uniq
+    Category
+      .joins("inner join races")
+      .joins("inner join result_sources")
+      .joins("inner join results as calculated_results")
+      .joins("inner join results as source_results")
+      .where("result_sources.calculated_result_id = calculated_results.id")
+      .where("result_sources.source_result_id = source_results.id")
+      .where("races.category_id = categories.id")
+      .where("source_results.race_id = races.id")
+      .where("calculated_results.race_id": id)
+      .distinct
   end
 
   delegate :junior?, to: :category
