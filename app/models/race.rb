@@ -341,6 +341,10 @@ class Race < ApplicationRecord
     results.sort
   end
 
+  def source_categories
+    results.flat_map(&:sources).map(&:source_result).map(&:race).map(&:category).uniq
+  end
+
   delegate :junior?, to: :category
 
   # By category name

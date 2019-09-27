@@ -6,6 +6,9 @@
     <%= link_to "Rules", calculation_path(calculation) %>
   </td>
   <td>
+    <%= link_to("Categories", calculations_event_categories_path(event_id: calculation.event_id)) if calculation.event_id %>
+  </td>
+  <td>
     <%= link_to("Results", calculations_event_results_path(event_id: calculation.event_id)) if calculation.event_id %>
   </td>
   <td>

@@ -1,0 +1,61 @@
+<% @page_title = "Calculations: #{@event.name}: Categories" %>
+
+<% cache @event do %>
+  <h2><%= link_to "Calculations", calculations_path %>: <%= link_to @event.name, calculations_event_results_path(event_id: @event.id) %></h2>
+
+  <div class="row">
+    <div class="col-sm-4">
+      <h3>Source Categories</h3>
+      <% @event.races.each do |race| %>
+        <% if race.source_categories.present? %>
+          <h4><%= race.name %></h4>
+          <ul class="calculations">
+            <% race.source_categories.sort.each do |category| %>
+              <li><%= category.name %></li>
+            <% end -%>
+          </ul>
+        <% end -%>
+      <% end -%>
+    </div>
+
+    <div class="col-sm-4">
+      <h3>Empty Categories</h3>
+      <ul class="calculations">
+        <% @event.races.reject(&:rejected?).sort.each do |race| %>
+          <% if race.results.empty? %>
+            <li><%= race.name %></li>
+          <% end -%>
+        <% end -%>
+      </ul>
+    </div>
+
+    <div class="col-sm-4">
+      <h3>Rejected Categories</h3>
+      <ul class="calculations">
+        <% @event.races.select(&:rejected?).sort.each do |race| %>
+          <li><%= race.name %></li>
+        <% end -%>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6">
+      <h3>Events</h3>
+      <ul class="calculations">
+        <% @source_result_events.sort.each do |event| %>
+          <li><%= event.date.to_s(:db) %> <%= event.full_name %> <%= event.discipline %></li>
+        <% end -%>
+      </ul>
+    </div>
+
+    <div class="col-sm-6">
+      <h3>Rejected Events</h3>
+      <ul class="calculations">
+        <% @rejected_events.sort.each do |event| %>
+          <li><%= event.date.to_s(:db) %> <%= event.full_name %> <%= event.discipline %></li>
+        <% end -%>
+      </ul>
+    </div>
+  </div>
+<% end -%>

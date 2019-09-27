@@ -1,7 +1,7 @@
 <% @page_title = "Calculations: #{@calculation.name}" %>
 
 <% cache cache_key do %>
-  <h2><%= @calculation.name %>: <%= @calculation.year %></h2>
+  <h2><%= link_to "Calculations", calculations_path %>: <%= @calculation.name %>: <%= @calculation.year %></h2>
 
   <div class="row">
     <div class="col-sm-6">
@@ -140,3 +140,5 @@
     </tbody>
   </table>
 <% end -%>
+
+<%= link_to("Results", calculations_event_results_path(event_id: @calculation.event_id)) if @calculation.event_id %>
