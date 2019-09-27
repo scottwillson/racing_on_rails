@@ -158,7 +158,17 @@ class Event < ApplicationRecord
   end
 
   def source_result_events
-    races.flat_map(&:results).flat_map(&:sources).map(&:source_result).map(&:event).uniq
+    Event
+      .joins("inner join races")
+      .joins("inner join result_sources")
+      .joins("inner join results as calculated_results")
+      .joins("inner join results as source_results")
+      .where("result_sources.calculated_result_id = calculated_results.id")
+      .where("result_sources.source_result_id = source_results.id")
+      .where("source_results.race_id = races.id")
+      .where("source_results.event_id = events.id")
+      .where("calculated_results.event_id": id)
+      .distinct
   end
 
   def destroy_races
