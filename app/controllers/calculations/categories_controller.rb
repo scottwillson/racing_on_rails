@@ -9,7 +9,8 @@ module Calculations
                .first!
 
       @source_result_events = @event.source_result_events
-      @rejected_events = Event.current_year.includes(parent: :parent) - @source_result_events
+      event_ids = Result.year(@event.year).pluck(:event_id).uniq
+      @rejected_events = @event.calculation.source_events.where(id: event_ids).includes(parent: :parent) - @source_result_events
     end
   end
 end

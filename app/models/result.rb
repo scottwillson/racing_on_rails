@@ -36,6 +36,7 @@ class Result < ApplicationRecord
   validates :race, presence: true
   validates :rejection_reason, inclusion: { in: ::Calculations::V3::REJECTION_REASONS, allow_blank: true }
 
+  scope :year, ->(year) { where(year: year) }
   scope :person_event, lambda { |person, event|
     includes(scores: %i[source_result competition_result])
       .where(event: event)
