@@ -12,7 +12,7 @@ Rails.application.configure do
   config.active_storage.service                             = :local
   config.active_support.deprecation                         = :notify
   config.assets.compile                                     = false
-  config.assets.js_compressor                               = Uglifier.new(harmony: true)
+  config.assets.js_compressor                               = Uglifier.new
   config.cache_classes                                      = true
   config.cache_store                                        = :dalli_store, { pool_size: 5 }
   config.consider_all_requests_local                        = false
