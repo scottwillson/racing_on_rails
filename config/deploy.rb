@@ -3,14 +3,10 @@
 lock "3.11.1"
 
 set :linked_dirs, %w[ log public/assets public/system public/uploads tmp/pids tmp/cache tmp/sockets vendor/bundle ]
-set :linked_files, %w[ config/database.yml config/newrelic.yml config/master.key ]
+set :linked_files, %w[ config/database.yml config/newrelic.yml config/master.key config/puma.rb ]
 
 set :bundle_jobs, 4
 set :bundle_without, %w[ development test ]
-
-set :puma_preload_app, false
-set :puma_threads, [8, 32]
-set :puma_workers, 1
 
 load "local/config/deploy.rb" if File.exist?("local/config/deploy.rb")
 load "local/config/deploy/#{fetch(:stage)}.rb" if File.exist?("local/config/deploy/#{fetch(:stage)}.rb")
