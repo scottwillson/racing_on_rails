@@ -35,10 +35,11 @@ module Competitions
         return rules[:missing_result_penalty] if rules[:missing_result_penalty] && numeric_place(result) > rules[:missing_result_penalty]
 
         points = points_from_place(result, rules) || 0
-        bonus = place_bonus_points(result, rules)
+        bonus = result.bonus_points || 0
+        place_bonus = place_bonus_points(result, rules)
         team_size = (result.team_size || 1.0).to_f
 
-        ((points + bonus) / team_size) *
+        ((points + bonus + place_bonus) / team_size) *
           multiplier(result) *
           last_event_multiplier(result, rules) *
           field_size_multiplier(result, rules)
