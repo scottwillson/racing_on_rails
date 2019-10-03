@@ -127,6 +127,7 @@ module Competitions
         "event_id" => 1,
         "place" => "12",
         "points" => 0.0,
+        "points_bonus_penalty" => 0.0,
         "race_id" => 1,
         "category_name" => source_result.race.name,
         "year" => RacingAssociation.current.year,
