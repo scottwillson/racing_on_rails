@@ -125,7 +125,7 @@ function showNewModal(type, objectName, method) {
 }
 
 function createObject(type, objectName, method) {
-  var name = jQuery('#new_' + 'type}_name')[0].value;
+  var name = jQuery('#new_' + type + '_name')[0].value;
 
   jQuery('#' + objectName + '_' + method + '_id').val("");
   jQuery('#' + objectName + '_' + method + '_name').val(name);
