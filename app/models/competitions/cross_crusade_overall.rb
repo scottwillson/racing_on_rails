@@ -9,7 +9,7 @@ module Competitions
     before_create :set_notes, :set_name
 
     def self.parent_event_name
-      "River City Bicycles Cyclocross Crusade"
+      "Cyclocross Crusade"
     end
 
     def point_schedule
