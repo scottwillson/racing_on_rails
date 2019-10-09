@@ -67,6 +67,7 @@ gem "zip-zip"
 # Require after WillPaginate
 # Match deployed version
 gem "elasticsearch", ">= 6", "< 7"
+gem "elasticsearch-model", ">= 6", "< 7"
 gem "elasticsearch-rails", ">= 6", "< 7"
 
 group :development do
