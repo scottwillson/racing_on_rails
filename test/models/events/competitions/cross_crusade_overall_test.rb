@@ -6,7 +6,7 @@ module Competitions
   # :stopdoc:
   class CrossCrusadeOverallTest < ActiveSupport::TestCase
     test "recalc with one event" do
-      series = Series.create!(name: "River City Bicycles Cyclocross Crusade")
+      series = Series.create!(name: "Cyclocross Crusade")
       event = series.children.create!(date: Date.new(2017, 10, 7), name: "Cross Crusade #4")
 
       series.children.create!(date: Date.new(2017, 10, 14))
@@ -17,14 +17,14 @@ module Competitions
       series.reload
       assert_equal(Date.new(2017, 10, 7), series.date, "Series date")
 
-      men_1_2 = Category.create!(name: "Men 1/2")
+      men_1_2 = Category.create!(name: "Category 1/2 Men")
       men_1_2_race = event.races.create!(category: men_1_2)
       weaver = FactoryBot.create(:person)
       men_1_2_race.results.create!(place: 1, person: weaver)
       tonkin = FactoryBot.create(:person)
       men_1_2_race.results.create!(place: 9, person: tonkin)
 
-      masters_35_plus_women = Category.find_or_create_by(name: "Masters Women 35+ 1/2")
+      masters_35_plus_women = Category.find_or_create_by(name: "Category 1/2 Masters 35+ Women")
       masters_race = event.races.create!(category: masters_35_plus_women)
       alice = FactoryBot.create(:person)
       masters_race.results.create!(place: 15, person: alice)
@@ -32,20 +32,20 @@ module Competitions
       masters_race.results.create!(place: 19, person: molly)
 
       # Previous year should be ignored
-      previous_event = Series.create!(name: "River City Bicycles Cyclocross Crusade").children.create!(date: Date.new(2006), name: "Cross Crusade #3")
+      previous_event = Series.create!(name: "Cyclocross Crusade").children.create!(date: Date.new(2006), name: "Cross Crusade #3")
       previous_event.races.create!(category: men_1_2).results.create!(place: 6, person: weaver)
 
       # Following year should be ignored
-      following_event = Series.create!(name: "River City Bicycles Cyclocross Crusade").children.create!(date: Date.new(2018))
+      following_event = Series.create!(name: "Cyclocross Crusade").children.create!(date: Date.new(2018))
       following_event.races.create!(category: men_1_2).results.create!(place: 10, person: weaver)
 
       CrossCrusadeOverall.calculate!(2017)
       overall = CrossCrusadeOverall.last
       assert_not_nil(overall, "Should add new Overall Competition child to parent Series")
-      assert_equal 36, overall.races.size, "Overall races"
+      assert_equal 26, overall.races.size, "Overall races"
 
       assert_equal "Series Overall", overall.name, "Overall name"
-      assert_equal "River City Bicycles Cyclocross Crusade: Series Overall", overall.full_name, "Overall full name"
+      assert_equal "Cyclocross Crusade: Series Overall", overall.full_name, "Overall full name"
       assert(overall.notes.present?, "Should have notes about rules")
       assert_equal_dates Date.new(2017, 10, 7), overall.date, "Overall series date"
       assert_equal_dates Date.new(2017, 10, 7), overall.start_date, "Overall series start date"
@@ -77,10 +77,10 @@ module Competitions
     end
 
     test "many results" do
-      series = Series.create!(name: "River City Bicycles Cyclocross Crusade")
-      masters = Category.find_or_create_by(name: "Masters 35+ 1/2")
-      men_1_2 = Category.find_or_create_by(name: "Men 1/2")
-      singlespeed = Category.find_or_create_by(name: "Singlespeed")
+      series = Series.create!(name: "Cyclocross Crusade")
+      masters = Category.find_or_create_by(name: "Category 1/2 Masters 35+ Men")
+      men_1_2 = Category.find_or_create_by(name: "Category 1/2 Men")
+      singlespeed = Category.find_or_create_by(name: "Singlespeed Men")
       person = Person.create!(name: "John Browning")
 
       event = series.children.create!(date: Date.new(2018, 10, 5))
