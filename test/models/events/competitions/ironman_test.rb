@@ -105,6 +105,7 @@ module Competitions
         "id" => 1,
         "multiplier" => 1,
         "age" => nil,
+        "bonus_points" => 0.0,
         "category_ability" => source_result.race.category.ability_begin,
         "category_ages_begin" => 0,
         "category_ages_end" => ::Categories::MAXIMUM,

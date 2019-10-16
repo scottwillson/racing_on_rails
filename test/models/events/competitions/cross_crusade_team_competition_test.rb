@@ -14,7 +14,7 @@ module Competitions
       kona = FactoryBot.create(:team, name: "Kona", member: true)
       vanilla = FactoryBot.create(:team, name: "Vanilla", member: true)
 
-      series = Series.create!(name: "River City Bicycles Cyclocross Crusade")
+      series = Series.create!(name: "Cyclocross Crusade")
       event = series.children.create!(date: Date.new(2017, 10, 7))
 
       series.children.create! date: Date.new(2017, 10, 14)
@@ -66,7 +66,7 @@ module Competitions
       assert_equal 1, team_competition.races.size, "team_competition races"
 
       assert_equal "Team Competition", team_competition.name, "name"
-      assert_equal "River City Bicycles Cyclocross Crusade: Team Competition", team_competition.full_name, "full name"
+      assert_equal "Cyclocross Crusade: Team Competition", team_competition.full_name, "full name"
       assert team_competition.notes.present?, "Should have notes about rules"
 
       assert_equal_dates Date.new(2017, 10, 7), team_competition.date, "team_competition series date"
@@ -106,7 +106,7 @@ module Competitions
       kona = FactoryBot.create(:team, name: "Kona", member: true)
       vanilla = FactoryBot.create(:team, name: "Vanilla", member: true)
 
-      series = Series.create!(name: "River City Bicycles Cyclocross Crusade")
+      series = Series.create!(name: "Cyclocross Crusade")
       series.children.create! date: Date.new(2017, 10, 7)
       series.children.create! date: Date.new(2017, 10, 14)
       series.children.create! date: Date.new(2017, 10, 21)

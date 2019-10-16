@@ -6,12 +6,6 @@
   <div class="col-sm-offset-3 col-sm-6 col-xs-offset-1 col-xs-10">
     <%= form_tag({}, { method: "get", class: "form-horizontal", role: "form" }) do %>
       <div class="form-group">
-        <div class="input-group">
-          <%= search_field_tag("subject", @subject, class: "wants_focus form-control", placeholder: "Search by subject") %>
-          <span class="input-group-btn">
-            <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-          </span>
-        </div>
       </div>
     <% end -%>
   </div>

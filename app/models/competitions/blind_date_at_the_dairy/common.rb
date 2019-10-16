@@ -60,7 +60,7 @@ module Competitions
       end
 
       def point_schedule
-        [15, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+        [16, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
       end
 
       # Only members can score points?

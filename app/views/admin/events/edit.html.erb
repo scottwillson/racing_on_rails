@@ -95,14 +95,9 @@
 
         <% if administrator? %>
         <div class="form-group promoter">
-          <%= f.hidden_field :promoter_id -%>
           <%= f.label :promoter_id, nil, class: "control-label col-sm-4" %>
           <div class="col-sm-8">
-            <%= f.text_field :promoter_name,
-                  class: "form-control autocomplete",
-                  id: "promoter_autocomplete",
-                  autocomplete: "off",
-                  data: { "id-field" => "event_promoter_id" } %>
+            <%= f.select_modal :promoter, "person" %>
           </div>
         </div>
         <div class="form-group">
@@ -123,14 +118,9 @@
 
         <% if administrator? %>
         <div class="form-group team">
-          <%= f.hidden_field :team_id -%>
           <%= f.label :team_id, "Sponsoring Team", class: "control-label col-sm-4" %>
           <div class="col-sm-8">
-            <%= f.text_field :team_name,
-                  class: "form-control team_autocomplete",
-                  id: "team_autocomplete",
-                  autocomplete: "off",
-                  data: { "id-field" => "event_team_id" } %>
+            <%= f.select_modal :team, "team" %>
           </div>
         </div>
         <% end %>
@@ -204,6 +194,9 @@
     </div>
   </div>
 </div>
+
+<%= render partial: "modals/select", locals: { target: "event_promoter", type: "person" } %>
+<%= render partial: "modals/select", locals: { target: "event_team", type: "team" } %>
 
 <%# TODO UJS %>
 <% if (!@event.promoter || @event.new_record?) && administrator? %>

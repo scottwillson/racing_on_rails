@@ -17,6 +17,7 @@ module Competitions
       Struct.new(
         "CalculatorResult",
         :bar,
+        :bonus_points,
         :category_id,
         :category_name,
         :date,
