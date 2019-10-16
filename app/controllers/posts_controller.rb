@@ -3,7 +3,6 @@
 # Archive of Mailman mailing lists
 class PostsController < ApplicationController
   # List all posts for :mailing_list_id
-  # :subject: search for matching subjects. Limited to 4+ characters by MySQL full text search
   # Assigns:
   #  * @subject
   #  * @mailing_list
@@ -15,11 +14,7 @@ class PostsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @posts = if @subject.present?
-                   Post.matching(@mailing_list, @subject).page(page)
-                 else
-                   @mailing_list.posts.original.order("position desc").page(page)
-                 end
+        @posts = @mailing_list.posts.original.order("position desc").page(page)
       end
 
       format.rss do

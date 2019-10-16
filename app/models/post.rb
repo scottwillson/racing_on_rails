@@ -2,9 +2,6 @@
 
 # Archived mailing list post
 class Post < ApplicationRecord
-  include Posts::Migration
-  include Posts::Search
-
   validates :date, presence: true
   validates :from_email, presence: { on: :create }
   validates :from_name, presence: { on: :create }
