@@ -70,9 +70,10 @@ function searchFor(type, objectName, method) {
       return response.json();
     })
     .then(function(json) {
-      jQuery('#' + types + ' tbody').empty();
+      var searchResultsTable = jQuery('#' + objectName + '_' + method + '_select_modal .' + types + ' tbody');
+      searchResultsTable.empty();
       json.forEach(function(searchResult) {
-        return jQuery('#' + types + ' tbody').append(
+        return searchResultsTable.append(
           '<tr data-' + type + '-id="' + searchResult.id + '" data-' + type + '-name="' + searchResult.name + '">' +
             searchResultRow(searchResult, type) +
            '</tr>'
@@ -80,7 +81,7 @@ function searchFor(type, objectName, method) {
       });
 
       if (json.length === 0) {
-        jQuery('#' + types + ' tbody').append(
+        searchResultsTable.append(
           '<tr><td colspan="4">No results</td></tr>'
         );
       }
@@ -155,7 +156,7 @@ function bindSelectModal() {
       'shown.bs.modal',
       function() {
         var name = jQuery('#' + objectName + '_' + method + '_name').val();
-        $('#' + objectName + '_' + method + '_select_modal_form input.name').val(name);
+        jQuery('#' + objectName + '_' + method + '_select_modal_form input.name').val(name);
         jQuery('#' + objectName + '_' + method + '_select_modal input.search').select();
       }
     );

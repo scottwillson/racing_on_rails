@@ -1,4 +1,4 @@
-<div class="modal fade select-modal" tabindex="-1" role="dialog" id="order_line_items_attributes_0_person_select_modal">
+<div class="modal fade select-modal" tabindex="-1" role="dialog" id="<%= object_name %>_<%= method %>_select_modal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -21,7 +21,7 @@
         <input type="hidden" name="page" value="1" id="<%= target %>_page">
       </div>
       <div class="modal-body">
-        <table class="table select-modal table-hover" id="<%= type.pluralize %>">
+        <table class="table select-modal table-hover <%= type.pluralize %>">
           <tbody>
             <tr>
               <td class="empty">
