@@ -36,6 +36,8 @@ module Results
             format "%d:%02d:%0#{precision + 3}.#{precision}f", hours, minutes, seconds
           end
         end
+      rescue
+        ""
       end
     end
   end
