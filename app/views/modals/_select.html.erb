@@ -47,4 +47,10 @@
   </div>
 </div>
 
-<%= render partial: "modals/new", locals: { target: "event_promoter", type: type } %>
+<%= render partial: "modals/new",
+           locals: {
+             method: method,
+             object_name: object_name,
+             target: target,
+             type: type
+           } %>
