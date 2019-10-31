@@ -36,7 +36,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   Capybara::Screenshot.prune_strategy = { keep: 20 }
 
   setup :clean_database, :set_capybara_driver, :configure_webmock, :stub_elasticsearch
-  teardown :reset_session
+  teardown :report_javascript_errors, :reset_session
 
   def self.javascript_driver
     if ENV["JAVASCRIPT_DRIVER"].present?
@@ -402,6 +402,20 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   def say_if_verbose(text)
     puts text if ENV["VERBOSE"].present?
+  end
+
+  def report_javascript_errors
+    return unless Capybara.javascript_driver == :selenium_chrome_headless
+
+    errors = page.driver.browser.manage.logs.get(:browser)
+    errors.each do |error|
+      if error.level == 'WARNING'
+        STDERR.puts 'WARN: javascript warning'
+        STDERR.puts error.message
+        next
+      end
+      raise error.message
+    end
   end
 
   Capybara.register_driver :selenium_chrome_headless do |app|
