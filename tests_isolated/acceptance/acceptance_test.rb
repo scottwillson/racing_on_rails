@@ -32,6 +32,7 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   Webdrivers.cache_time = 86_400
   Capybara.asset_host = "http://0.0.0.0:3000"
+  # Doesn't seem to work with project's default setup
   Capybara::Screenshot.autosave_on_failure = false
   Capybara::Screenshot.prune_strategy = { keep: 20 }
 
@@ -416,6 +417,17 @@ class AcceptanceTest < ActiveSupport::TestCase
       end
       raise error.message
     end
+  end
+
+  def select_new_person(field, name)
+    click_button "#{field}_select_modal_button"
+    wait_for ".modal.in"
+    find("#show_#{field}_new_modal").click
+    wait_for "##{field}_select_modal_new_person"
+    wait_for "#new_person_name"
+    fill_in "name", with: name
+    find_field("new_person_name") { |f| f.value == name }
+    find("##{field}_select_modal_new_person_create").click
   end
 
   Capybara.register_driver :selenium_chrome_headless do |app|

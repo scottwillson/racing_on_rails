@@ -29,14 +29,7 @@ class EventsTest < AcceptanceTest
     assert page.has_css?("#event_promoter_remove_button", visible: false)
     assert_equal "", find("#event_promoter_id", visible: false).value
     assert_equal "Click to select", find("#event_promoter_select_modal_button").text
-    click_button "event_promoter_select_modal_button"
-    wait_for ".modal.in"
-    find("#show_event_promoter_new_modal").click
-    wait_for "#event_promoter_select_modal_new_person"
-    wait_for "#new_person_name"
-    fill_in "name", with: "Tom Brown"
-    assert_equal "Tom Brown", find("#new_person_name").value
-    find("#event_promoter_select_modal_new_person_create").click
+    select_new_person "event_promoter", "Tom Brown"
     assert page.has_css?("#event_promoter_remove_button")
 
     click_button "Save"
