@@ -406,7 +406,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def report_javascript_errors
-    return unless Capybara.javascript_driver == :selenium_chrome_headless
+    return unless Capybara.current_driver == :selenium_chrome_headless
 
     errors = page.driver.browser.manage.logs.get(:browser)
     errors.each do |error|
@@ -417,6 +417,17 @@ class AcceptanceTest < ActiveSupport::TestCase
       end
       raise error.message
     end
+  end
+
+  def select_existing_person(field, name, search_for = nil)
+    search_for ||= name
+    click_button "#{field}_select_modal_button"
+    wait_for ".modal.in"
+    fill_in "name", with: search_for
+
+    find("tr[data-person-name=\"#{name}\"]").click
+    assert_equal name, find("##{field}_name", visible: false).value
+    assert_equal name, find("##{field}_select_modal_button").text
   end
 
   def select_new_person(field, name)

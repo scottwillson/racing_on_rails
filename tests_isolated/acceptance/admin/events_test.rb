@@ -57,15 +57,8 @@ class EventsTest < AcceptanceTest
     assert_equal "Tim Brown", find("#event_promoter_name", visible: false).value
     assert_equal "Tim Brown", find("#event_promoter_select_modal_button").text
 
-    click_button "event_promoter_select_modal_button"
-    wait_for ".modal.in"
-    fill_in "name", with: "candi m"
-
-    find('tr[data-person-name="Candi Murray"]').click
+    select_existing_person "event_promoter", "Candi Murray", "candi m"
     assert_equal candi.id.to_s, find("#event_promoter_id", visible: false).value
-    assert_equal "Candi Murray", find("#event_promoter_name", visible: false).value
-    assert_equal "Candi Murray", find("#event_promoter_select_modal_button").text
-
     click_button "Save"
 
     assert_equal candi.id.to_s, find("#event_promoter_id", visible: false).value
