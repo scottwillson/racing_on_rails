@@ -120,13 +120,12 @@ function searchForNext(type, objectName, method) {
 }
 
 function showNewModal(type, objectName, method) {
-  var searchField = $('#' + objectName + '_' + method + '_select_modal_form input.name')[0];
   jQuery('#' + objectName + '_' + method + '_select_modal').modal('hide');
   jQuery('#' + objectName + '_' + method + '_select_modal_new_' + type).modal('show');
 }
 
 function createObject(type, objectName, method) {
-  var name = jQuery('#new_' + type + '_name')[0].value;
+  var name = jQuery('#' + objectName + '_' + method + '_select_modal_form input.name')[0].value;
 
   jQuery('#' + objectName + '_' + method + '_id').val("");
   jQuery('#' + objectName + '_' + method + '_name').val(name);
@@ -180,17 +179,21 @@ function bindSelectModal() {
     jQuery('#show_' + objectName + '_' + method + '_new_modal').click(function() {
       return showNewModal(type, objectName, method);
     });
+
     jQuery('#' + objectName + '_' + method + '_select_modal_new_' + type + '_form').submit(function() {
       createObject(type, objectName, method);
       return false;
     });
+
     jQuery('#' + objectName + '_' + method + '_select_modal_new_' + type + '_create').click(function() {
       return createObject(type, objectName, method);
     });
 
-    jQuery('#' + objectName + '_' + method + '_select_modal_new_' + type).on(
+    jQuery('#show_' + objectName + '_' + method + '_new_modal').on(
       'shown.bs.modal',
-      function() { return jQuery('#new_' + type + '_name').select(); }
+      function() {
+        jQuery('#' + objectName + '_' + method + '_select_modal_new_' + type + ' input.name').select();
+      }
     );
 
     jQuery('#' + objectName + '_' + method + '_remove_button').click(function() {
