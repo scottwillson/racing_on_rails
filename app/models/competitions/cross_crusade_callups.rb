@@ -2,8 +2,6 @@
 
 module Competitions
   class CrossCrusadeCallups < Competition
-    include Competitions::CrossCrusade::Common
-
     default_value_for :name, "Cross Crusade Callups"
 
     def point_schedule
