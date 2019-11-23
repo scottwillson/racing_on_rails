@@ -42,7 +42,7 @@ module Competitions
       CrossCrusadeOverall.calculate!(2017)
       overall = CrossCrusadeOverall.last
       assert_not_nil(overall, "Should add new Overall Competition child to parent Series")
-      assert_equal 26, overall.races.size, "Overall races"
+      assert_equal 34, overall.races.size, "Overall races"
 
       assert_equal "Series Overall", overall.name, "Overall name"
       assert_equal "Cyclocross Crusade: Series Overall", overall.full_name, "Overall full name"
