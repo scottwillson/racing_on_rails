@@ -42,6 +42,7 @@ gem "parallel_tests"
 gem "pdf-reader", require: "pdf/reader"
 gem "prawn", git: "https://github.com/sandal/prawn.git"
 gem "puma"
+gem "sprockets", "< 4"
 gem "rails-observers"
 gem "rake"
 gem "redcarpet"
@@ -65,9 +66,10 @@ gem "yui-compressor"
 gem "zip-zip"
 
 # Require after WillPaginate
-# version 6 doesn't work with our version of elasticsearch
-gem "elasticsearch-model", "< 6.0.0"
-gem "elasticsearch-rails", "< 6.0.0"
+# Match deployed version
+gem "elasticsearch", ">= 6", "< 7"
+gem "elasticsearch-model", ">= 6", "< 7"
+gem "elasticsearch-rails", ">= 6", "< 7"
 
 group :development do
   gem "brakeman"

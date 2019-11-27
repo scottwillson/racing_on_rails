@@ -1,16 +1,12 @@
 # frozen_string_literal: true
 
-lock "3.11.1"
+lock "3.11.2"
 
 set :linked_dirs, %w[ log public/assets public/system public/uploads tmp/pids tmp/cache tmp/sockets vendor/bundle ]
-set :linked_files, %w[ config/database.yml config/newrelic.yml config/master.key ]
+set :linked_files, %w[ config/database.yml config/newrelic.yml config/master.key config/puma.rb ]
 
 set :bundle_jobs, 4
 set :bundle_without, %w[ development test ]
-
-set :puma_preload_app, false
-set :puma_threads, [8, 32]
-set :puma_workers, 1
 
 load "local/config/deploy.rb" if File.exist?("local/config/deploy.rb")
 load "local/config/deploy/#{fetch(:stage)}.rb" if File.exist?("local/config/deploy/#{fetch(:stage)}.rb")
@@ -20,6 +16,8 @@ set :deploy_to, "/var/www/rails/#{fetch(:application)}"
 set :repo_url, "git://github.com/scottwillson/racing_on_rails.git"
 set :site_local_repo_url, "git@github.com:scottwillson/#{fetch(:application)}-local.git"
 set :branch, "competitions-3"
+
+set :puma_conf, "#{shared_path}/config/puma.rb"
 
 set :user, "app"
 

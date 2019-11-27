@@ -10,7 +10,7 @@ module Competitions
     def self.calculate!(year = Time.zone.today.year)
       ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
         transaction do
-          series = Series.where(name: "River City Bicycles Cyclocross Crusade").year(year).first
+          series = Series.where(name: "Cyclocross Crusade").year(year).first
 
           if series&.any_results_including_children?
             team_competition = series.child_competitions.detect { |c| c.is_a? CrossCrusadeTeamCompetition }
