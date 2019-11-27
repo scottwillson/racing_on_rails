@@ -1,19 +1,9 @@
-<% @page_title = "Results: #{@event.date.year}: #{@event.full_name}: #{@race.name}" %>
+<% @page_title = "Results: #{@event.date.year}: #{@event.full_name}: #{@race.name}: #{@result.name}" %>
 
-<% cache cache_key(@race) do %>
+<% cache cache_key(@result) do %>
   <h2><%= link_to @race.event.name, calculations_event_results_path(event_id: @race.event) %>: <%= @race.name %></h2>
-  <%= render partial: "calculations/date_and_parent", locals: { event: @event } %>
-  <p class="created_updated">Updated <%= @race.updated_at.to_formatted_s :long_and_friendly_date_and_time %></p>
-
   <% ActiveSupport::Notifications.instrument "@results.calculations.racing_on_rails", race_id: @race.id, race_name: @race.full_name do %>
-    <% if @race.distance.present? && @race.distance > 0 %> (<%= @race.distance %> miles)<% end %>
-
-    <%- if @race.rejected? -%>
-      <p class="event_notes">
-        <%= t @race.rejection_reason, category: @race.category_name %>
-      </p>
-    <% end -%>
-
     <%= render partial: "calculations/sources/result", locals: { calculation: @calculation, race: @race, result: @result } %>
   <%- end -%>
+  <p class="created_updated">Updated <%= @result.updated_at.to_formatted_s :long_and_friendly_date_and_time %></p>
 <%- end -%>

@@ -13,7 +13,7 @@ module Categories
       if name[/Singlespeed/]
         "Singlespeed"
       else
-        name[/Eddy|Fat Bike|Hardtail|Merckx|Stampede|Tandem|Unicycle/]
+        name[/Eddy|Fat Bike|Fixed Gear|Fixie|Hardtail|Merckx|Stampede|Tandem|Unicycle/]
       end
     end
 

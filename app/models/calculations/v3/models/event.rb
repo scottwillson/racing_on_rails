@@ -7,6 +7,7 @@ module Calculations
         attr_reader :children
         attr_reader :date
         attr_reader :discipline
+        attr_reader :event_categories
         attr_reader :end_date
         attr_reader :id
         attr_reader :multiplier
@@ -32,8 +33,15 @@ module Calculations
           @sanctioned_by = sanctioned_by
 
           @children = []
+          @event_categories = []
 
           validate!
+        end
+
+        def add_category(category)
+          event_category = Models::EventCategory.new(category, self)
+          event_categories << event_category unless event_categories.include?(event_category)
+          event_category
         end
 
         def add_child(event)
@@ -44,6 +52,10 @@ module Calculations
 
         def calculated?
           @calculated
+        end
+
+        def categories
+          event_categories.map(&:category)
         end
 
         def dates

@@ -20,6 +20,7 @@ module Categories
         "Tandem" => "Tandem",
         "Eddy" => "Eddy",
         "Fat Bike" => "Fat Bike",
+        "Fixed Gear" => "Fixed Gear",
         "Merckx" => "Merckx",
         "Singlespeed" => "Singlespeed",
         "Singlespeed/Fixed" => "Singlespeed",

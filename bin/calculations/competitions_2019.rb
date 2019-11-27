@@ -148,7 +148,7 @@ COMPETITIONS = {
   },
   oregon_cup: {
     categories: [
-      { name: "Senior Men" }
+      { name: "Category 1/2 Men" }
     ],
     events: [
       { id: 26467, multiplier: 1 },
@@ -382,8 +382,8 @@ COMPETITIONS = {
       { name: "Masters Men 4/5" },
       { name: "Masters Women" },
       { name: "Masters Women 4" },
-      { name: "Senior Men" },
-      { name: "Senior Women" },
+      { name: "Category 1/2 Men" },
+      { name: "Category 1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
     ],
@@ -475,8 +475,8 @@ COMPETITIONS = {
       { name: "Masters Men 4/5" },
       { name: "Masters Women" },
       { name: "Masters Women 4" },
-      { name: "Senior Men" },
-      { name: "Senior Women" },
+      { name: "Category 1/2 Men" },
+      { name: "Category 1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
     ],
@@ -537,8 +537,8 @@ COMPETITIONS = {
       { name: "Masters Men 4/5" },
       { name: "Masters Women" },
       { name: "Masters Women 4" },
-      { name: "Senior Men" },
-      { name: "Senior Women" },
+      { name: "Category 1/2 Men" },
+      { name: "Category 1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
     ],
@@ -567,8 +567,8 @@ COMPETITIONS = {
       { name: "Masters Men 4/5" },
       { name: "Masters Women" },
       { name: "Masters Women 4" },
-      { name: "Senior Men" },
-      { name: "Senior Women" },
+      { name: "Category 1/2 Men" },
+      { name: "Category 1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
     ],
@@ -596,8 +596,8 @@ COMPETITIONS = {
       { name: "Junior Women" },
       { name: "Masters Men" },
       { name: "Masters Women" },
-      { name: "Senior Men" },
-      { name: "Senior Women" },
+      { name: "Category 1/2 Men" },
+      { name: "Category 1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
     ],

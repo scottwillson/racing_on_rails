@@ -30,12 +30,18 @@ module Categories
         candidate_categories = candidate_categories.select { |category| weight == category.weight }
       end
       logger&.debug "weight: #{candidate_categories.map(&:name).join(', ')}"
+      return candidate_categories.first if candidate_categories.one?
+      return nil if candidate_categories.empty?
 
       candidate_categories = candidate_categories.select { |category| equipment == category.equipment }
       logger&.debug "equipment: #{candidate_categories.map(&:name).join(', ')}"
+      return candidate_categories.first if candidate_categories.one?
+      return nil if candidate_categories.empty?
 
       candidate_categories = candidate_categories.reject { |category| gender == "M" && category.gender == "F" }
       logger&.debug "gender: #{candidate_categories.map(&:name).join(', ')}"
+      return candidate_categories.first if candidate_categories.one?
+      return nil if candidate_categories.empty?
 
       if result_age && !age_group? && candidate_categories.none? { |category| ages_begin.in?(category.ages) }
         candidate_categories = candidate_categories.select { |category| category.ages.include?(result_age) }
@@ -43,6 +49,8 @@ module Categories
         candidate_categories = candidate_categories.select { |category| ages_begin.in?(category.ages) }
       end
       logger&.debug "ages: #{candidate_categories.map(&:name).join(', ')}"
+      return candidate_categories.first if candidate_categories.one?
+      return nil if candidate_categories.empty?
 
       candidate_categories = candidate_categories.select { |category| ability_begin.in?(category.abilities) }
       logger&.debug "ability: #{candidate_categories.map(&:name).join(', ')}"

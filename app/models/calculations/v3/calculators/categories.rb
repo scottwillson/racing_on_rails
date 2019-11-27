@@ -47,7 +47,8 @@ module Calculations::V3::Calculators::Categories
   def in_calculation_category?(source_result)
     return true unless categories?
 
-    best_match_in(source_result.category, categories, source_result.age).present?
+    best_match = best_match_in(source_result.category, categories, source_result.age)
+    best_match.present?
   end
 
   def validate_category!(category, source_result)
