@@ -33,7 +33,7 @@
     <%- result.sources.sort.each do |source| -%>
       <tr>
         <td class="place"><%= source.source_result.place %></td>
-        <td class="event"><%= source.source_result.event_full_name %></td>
+        <td class="event"><%= link_to source.source_result.event_full_name, event_path(id: source.source_result.event_id) %></td>
         <td class="category"><%= source.source_result.race_name %></td>
         <td class="date"><%= source.source_result.event_date_range_s %></td>
         <%- if calculation.team? -%>

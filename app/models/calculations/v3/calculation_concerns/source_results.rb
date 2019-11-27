@@ -36,6 +36,12 @@ module Calculations::V3::CalculationConcerns::SourceResults
         sanctioned_by: associations_by_name[event.sanctioned_by]
       )
 
+      event.races.each do |race|
+        if race.any_results?
+          model_event.add_category(Calculations::V3::Models::Category.new(race.name))
+        end
+      end
+
       if event.parent_id
         model_events[event.parent_id].add_child model_event
       end
@@ -79,7 +85,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
 
   # Create event records cache: Hash by ud
   def populate_source_result_events
-    ::Event.year(year).each_with_object({}) do |event, events|
+    ::Event.year(year).includes(:races).each_with_object({}) do |event, events|
       events[event.id] = event
     end
   end

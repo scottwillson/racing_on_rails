@@ -31,6 +31,10 @@ class Calculations::V3::OBRACompetitionTest < ActiveSupport::TestCase
     person = FactoryBot.create :person
     race.results.create!(place: 1, person: person)
 
+    # Not calculation category
+    race = event.races.create!(category: Category.find_or_create_by(name: "Masters Men 40+"))
+    race.results.create!(place: 1, person: FactoryBot.create(:person))
+
     calculation.events << event
 
     calculation.calculate!

@@ -12,7 +12,7 @@ module Calculations
           rejected_category = Models::Category.new("Junior Men 9-12 3/4/5")
           category_rules = [
             Models::CategoryRule.new(category),
-            Models::CategoryRule.new(rejected_category, reject: true),
+            Models::CategoryRule.new(rejected_category, reject: true)
           ]
           rules = Rules.new(category_rules: category_rules)
           calculator = Calculator.new(rules: rules, source_results: [])

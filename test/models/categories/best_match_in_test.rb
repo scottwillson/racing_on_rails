@@ -159,6 +159,19 @@ module Competitions
       assert_best_match_in [@singlespeed_women], @singlespeed_women, event
     end
 
+    test "consider equipment before ability" do
+      event = FactoryBot.create(:event)
+
+      fixed_gear = Category.find_or_create_by_normalized_name("Men Fixed Gear Open")
+      event.races.create!(category: fixed_gear)
+
+      men_1_2_3 = Category.find_or_create_by_normalized_name("Men 1/2/3")
+      event.races.create!(category: men_1_2_3)
+
+      assert_best_match_in [@senior_men, men_1_2_3], men_1_2_3, event
+      assert_best_match_in [fixed_gear], fixed_gear, event
+    end
+
     test "athena" do
       athena = ::Category.find_or_create_by_normalized_name("Athena")
       men_9_18 = ::Category.find_or_create_by_normalized_name("Men 9-18")
