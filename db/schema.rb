@@ -924,7 +924,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.string "license", limit: 64, default: ""
     t.string "notes"
     t.string "number", limit: 16, default: ""
-    t.string "place", limit: 8, default: ""
+    t.string "place", limit: 8, default: "", null: false
     t.integer "place_in_category", default: 0
     t.float "points", default: 0.0
     t.float "points_from_place", default: 0.0
