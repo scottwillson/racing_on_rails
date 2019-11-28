@@ -12,5 +12,9 @@ module Categories
     def weight_from_name
       name[/Athena|Clydesdale/]
     end
+
+    def weight?
+      weight.present?
+    end
   end
 end
