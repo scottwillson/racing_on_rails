@@ -54,7 +54,6 @@ module Calculations
 
         event_categories = calculator.event_categories
 
-        assert_equal 2, event_categories.size
         assert_equal ["Junior Men", "Masters Women"], event_categories.map(&:name).sort
 
         event_category = event_categories.detect { |ec| ec.name == "Junior Men" }

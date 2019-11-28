@@ -30,17 +30,17 @@ module Categories
         candidate_categories = candidate_categories.select { |category| weight == category.weight }
       end
       logger&.debug "weight: #{candidate_categories.map(&:name).join(', ')}"
-      return candidate_categories.first if candidate_categories.one?
+      return candidate_categories.first if one_match?(candidate_categories)
       return nil if candidate_categories.empty?
 
       candidate_categories = candidate_categories.select { |category| equipment == category.equipment }
       logger&.debug "equipment: #{candidate_categories.map(&:name).join(', ')}"
-      return candidate_categories.first if candidate_categories.one?
+      return candidate_categories.first if one_match?(candidate_categories)
       return nil if candidate_categories.empty?
 
       candidate_categories = candidate_categories.reject { |category| gender == "M" && category.gender == "F" }
       logger&.debug "gender: #{candidate_categories.map(&:name).join(', ')}"
-      return candidate_categories.first if candidate_categories.one?
+      return candidate_categories.first if one_match?(candidate_categories)
       return nil if candidate_categories.empty?
 
       if result_age && !age_group? && candidate_categories.none? { |category| ages_begin.in?(category.ages) }
@@ -49,19 +49,19 @@ module Categories
         candidate_categories = candidate_categories.select { |category| ages_begin.in?(category.ages) }
       end
       logger&.debug "ages: #{candidate_categories.map(&:name).join(', ')}"
-      return candidate_categories.first if candidate_categories.one?
+      return candidate_categories.first if one_match?(candidate_categories)
       return nil if candidate_categories.empty?
 
       candidate_categories = candidate_categories.select { |category| ability_begin.in?(category.abilities) }
       logger&.debug "ability: #{candidate_categories.map(&:name).join(', ')}"
-      return candidate_categories.first if candidate_categories.one?
+      return candidate_categories.first if one_match?(candidate_categories)
       return nil if candidate_categories.empty?
 
       # Edge case for unusual age ranges that span juniors and seniors like 15-24
       if age_group? && ages_begin <= Ages::JUNIORS.end && ages_end > Ages::JUNIORS.end
         candidate_categories = candidate_categories.reject(&:junior?)
         logger&.debug "overlapping ages: #{candidate_categories.map(&:name).join(', ')}"
-        return candidate_categories.first if candidate_categories.one?
+        return candidate_categories.first if one_match?(candidate_categories)
         return nil if candidate_categories.empty?
       end
 
@@ -87,7 +87,7 @@ module Categories
         candidate_categories = candidate_categories.reject(&:all_abilities?)
       end
       logger&.debug "reject wildcards: #{candidate_categories.map(&:name).join(', ')}"
-      return candidate_categories.first if candidate_categories.one?
+      return candidate_categories.first if one_match?(candidate_categories)
       return nil if candidate_categories.empty?
 
       # "Highest" is lowest ability number
@@ -129,23 +129,25 @@ module Categories
           (category.ages_end - category.ages_begin) == minimum_range
         end
 
-        return candidate_categories.first if candidate_categories.one?
+        return candidate_categories.first if one_match?(candidate_categories)
       end
 
       candidate_categories = candidate_categories.reject { |category| gender == "F" && category.gender == "M" }
       logger&.debug "exact gender: #{candidate_categories.map(&:name).join(', ')}"
-      return candidate_categories.first if candidate_categories.one?
+      return candidate_categories.first if one_match?(candidate_categories)
       return nil if candidate_categories.empty?
 
       logger&.debug "no wild cards: #{candidate_categories.map(&:name).join(', ')}"
-      return candidate_categories.first if candidate_categories.one?
+      return candidate_categories.first if one_match?(candidate_categories)
       return nil if candidate_categories.empty?
 
-      raise "Multiple matches #{candidate_categories.map(&:name)} for #{name}, result age: #{result_age} in #{event_categories.map(&:name).join(', ')}"
+      if candidate_categories.size > 1
+        raise "Multiple matches #{candidate_categories.map(&:name)} for #{name}, result age: #{result_age} in #{event_categories.map(&:name).join(', ')}"
+      end
     end
 
     def best_match_by_age_in(event_categories, result_age = nil)
-      logger&.debug "Category#best_match_by_age_in #{name}: #{event_categories.map(&:name).join(', ')}"
+      logger&.debug "Category#best_match_by_age_in #{name}, #{result_age}: #{event_categories.map(&:name).join(', ')}"
 
       candidate_categories = event_categories.dup
 
@@ -159,11 +161,11 @@ module Categories
         candidate_categories = candidate_categories.select { |category| ages_begin.in?(category.ages) }
       end
       logger&.debug "ages: #{candidate_categories.map(&:name).join(', ')}"
-      return candidate_categories.first if candidate_categories.one?
+      return candidate_categories.first if one_match?(candidate_categories, result_age)
 
       candidate_categories = candidate_categories.reject { |category| gender == "M" && category.gender == "F" }
       logger&.debug "gender: #{candidate_categories.map(&:name).join(', ')}"
-      return candidate_categories.first if candidate_categories.one?
+      return candidate_categories.first if one_match?(candidate_categories, result_age)
 
       # Choose highest minimum age if multiple Masters 'and over' categories
       if masters? && candidate_categories.all?(&:and_over?)
@@ -179,10 +181,11 @@ module Categories
       candidate_categories = candidate_categories.reject { |category| gender == "F" && category.gender == "M" }
       logger&.debug "exact gender: #{candidate_categories.map(&:name).join(', ')}"
 
-      return candidate_categories.first if candidate_categories.one?
-      return nil if candidate_categories.empty?
+      return candidate_categories.first if one_match?(candidate_categories, result_age)
 
-      raise "Multiple matches #{candidate_categories.map(&:name)} for #{name}, result age: #{result_age} in #{event_categories.map(&:name).join(', ')}"
+      if candidate_categories.size > 1
+        raise "Multiple matches #{candidate_categories.map(&:name)} for #{name}, result age: #{result_age} in #{event_categories.map(&:name).join(', ')}"
+      end
     end
 
     def equivalent?(other)
@@ -195,14 +198,23 @@ module Categories
         weight == other.weight
     end
 
-    def include?(other)
+    def include?(other, result_age = nil)
       return false unless other
 
-      abilities.in?(other.abilities) &&
-        ages.in?(other.ages) &&
+      (abilities.cover?(other.abilities) || other.ability_begin.in?(abilities) || other.all_abilities?) &&
+        (ages.cover?(other.ages) || result_age&.in?(ages) || other.ages_begin.in?(ages)) &&
         equipment == other.equipment &&
-        (other.gender == "M" || gender == "F") &&
-        weight == other.weight
+        (gender == "M" || other.gender == "F") &&
+        (!weight? || weight == other.weight)
+    end
+
+    # Some Calculations only have one category, and some categories shoould bever match.
+    # E.g., Masters Women and Junior Men
+    def one_match?(candidate_categories, result_age = nil)
+      return false unless candidate_categories.one?
+
+      candidate_category = candidate_categories.first
+      candidate_category.include? self, result_age
     end
   end
 end
