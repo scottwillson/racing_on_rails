@@ -41,10 +41,10 @@ class Calculations::V3::OBRACompetitionTest < ActiveSupport::TestCase
     calculation.calculate!
 
     event = calculation.reload.event
-    assert_equal 2, event.races.size
+    assert_equal 3, event.races.size, event.races.map(&:name)
 
     race = event.races.detect { |r| r.category == pro_1_2_men }
-    assert_equal 1, race.results.size
+    assert_equal 1, race.results.size, race.results.flat_map(&:source_results).map(&:race_name)
     result = race.results.first
     assert_equal 100, result.points
     assert_equal person, result.person

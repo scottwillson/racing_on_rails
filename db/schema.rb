@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_30_014059) do
+ActiveRecord::Schema.define(version: 2019_11_28_205842) do
   create_table "adjustments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "order_id"
     t.integer "person_id"
@@ -924,7 +924,7 @@ ActiveRecord::Schema.define(version: 2019_10_30_014059) do
     t.string "license", limit: 64, default: ""
     t.string "notes"
     t.string "number", limit: 16, default: ""
-    t.string "place", limit: 8, default: ""
+    t.string "place", limit: 8, default: "", null: false
     t.integer "place_in_category", default: 0
     t.float "points", default: 0.0
     t.float "points_from_place", default: 0.0

@@ -96,7 +96,7 @@ module Categories
       if candidate_categories.one? { |category| category.ability_begin == ability_begin && category.women? && women? }
         ability_category = candidate_categories.detect { |category| category.ability_begin == ability_begin && category.women? && women? }
         logger&.debug "ability begin: #{ability_category.name}"
-        return ability_category
+        return ability_category if ability_category.include?(self)
       end
 
       # Choose highest ability category
@@ -104,7 +104,7 @@ module Categories
       if candidate_categories.one? { |category| category.ability_begin == highest_ability }
         highest_ability_category = candidate_categories.detect { |category| category.ability_begin == highest_ability }
         logger&.debug "highest ability: #{highest_ability_category.name}"
-        return highest_ability_category
+        return highest_ability_category if highest_ability_category.include?(self)
       end
 
       # Choose highest minimum age if multiple Masters 'and over' categories
@@ -115,10 +115,10 @@ module Categories
         highest_age = candidate_categories.map(&:ages_begin).max
         highest_age_category = candidate_categories.detect { |category| category.ages_begin == highest_age }
         logger&.debug "highest age: #{highest_age_category.name}"
-        return highest_age_category
+        return highest_age_category if highest_age_category.include?(self)
       end
 
-      # Choose narrowest age if multiple Masters categories
+        # Choose narrowest age if multiple Masters categories
       if masters?
         ranges = candidate_categories.select(&:masters?).map do |category|
           category.ages_end - category.ages_begin
@@ -201,10 +201,10 @@ module Categories
     def include?(other, result_age = nil)
       return false unless other
 
-      (abilities.cover?(other.abilities) || other.ability_begin.in?(abilities) || other.all_abilities?) &&
-        (ages.cover?(other.ages) || result_age&.in?(ages) || other.ages_begin.in?(ages)) &&
+      abilities_include?(other) &&
+        ages_include?(other, result_age) &&
         equipment == other.equipment &&
-        (gender == "M" || other.gender == "F") &&
+        (men? || other.women?) &&
         (!weight? || weight == other.weight)
     end
 

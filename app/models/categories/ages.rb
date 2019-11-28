@@ -12,6 +12,10 @@ module Categories
       ages_begin && ages_end && (ages_begin != 0 || ages_end != ::Categories::MAXIMUM)
     end
 
+    def all_ages?
+      (ages_begin.nil? && ages_end.nil?) || (ages_begin == 0 && ages_end == ::Categories::MAXIMUM)
+    end
+
     def and_over?
       ages_end && ages_end == ::Categories::MAXIMUM
     end
@@ -45,6 +49,14 @@ module Categories
         self.ages_end = age_split[1].to_i unless age_split[1].nil?
       end
       ages
+    end
+
+    def ages_include?(other, result_age = nil)
+      (all_ages? && other.all_ages?) ||
+        (
+          age_group? &&
+          (ages.cover?(other.ages) || result_age&.in?(ages) || other.ages_begin.in?(ages))
+        )
     end
 
     def set_ages_from_name
