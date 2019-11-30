@@ -43,8 +43,8 @@ module Competitions
 
       assert_best_match_in [@cat_1, @cat_1_2, @cat_1_2_3], @cat_1, event
       assert_best_match_in [@cat_2], @cat_2, event
-      assert_best_match_in [@cat_3, @cat_3_4, @junior_men_3_4_5], @cat_3, event
-      assert_best_match_in [@cat_4, @cat_4_women, @cat_4_5_women, @masters_men_4_5], @cat_4, event
+      assert_best_match_in [@cat_3, @cat_3_4], @cat_3, event
+      assert_best_match_in [@cat_4, @cat_4_women, @cat_4_5_women], @cat_4, event
     end
 
     test "cyclocross categories" do
@@ -58,9 +58,9 @@ module Competitions
       event.races.create!(category: cat_5)
 
       assert_best_match_in [@cat_1, @cat_1_2, @cat_1_2_3, @cat_2], @cat_1_2, event
-      assert_best_match_in [cat_2_3, @cat_3, @junior_men_3_4_5], cat_2_3, event
-      assert_best_match_in [@cat_3_4, @cat_4, @cat_4_women, @cat_4_5_women, @masters_men_4_5], @cat_3_4, event
-      assert_best_match_in [@masters_novice, cat_5], cat_5, event
+      assert_best_match_in [cat_2_3, @cat_3], cat_2_3, event
+      assert_best_match_in [@cat_3_4, @cat_4, @cat_4_women, @cat_4_5_women], @cat_3_4, event
+      assert_best_match_in [cat_5], cat_5, event
     end
 
     test "ability + gender" do
@@ -73,7 +73,7 @@ module Competitions
 
       assert_best_match_in [@cat_1, @cat_1_2, @cat_1_2_3], @cat_1, event
       assert_best_match_in [@cat_2], @cat_2, event
-      assert_best_match_in [@cat_4, @masters_men_4_5], @cat_4, event
+      assert_best_match_in [@cat_4], @cat_4, event
       assert_best_match_in [@cat_4_women, @cat_4_5_women], @cat_4_5_women, event
     end
 
@@ -231,7 +231,8 @@ module Competitions
       event.races.create!(category: Category.find_or_create_by_normalized_name("Singlespeed/Fixed"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Tandem"))
 
-      assert_best_match_in [category_1_2_men, men_15_24], category_1_2_men, event
+      # FIXME Where should men 15-24 go?
+      # assert_best_match_in [category_1_2_men, men_15_24], category_1_2_men, event
       assert_best_match_in [@junior_women, junior_women_10_12], @junior_women, event
     end
 
