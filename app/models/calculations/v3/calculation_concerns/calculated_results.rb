@@ -21,7 +21,7 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
         competition_result: true,
         event: event,
         person: person,
-        place: result.place,
+        place: result.place || "",
         points: result.points,
         race: race,
         rejected: result.rejected?,

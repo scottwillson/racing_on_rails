@@ -35,21 +35,21 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     combined_results = event.combined_results.reload
     combined = combined_results.races.first
     assert_equal(3, combined.results.size, "combined.results")
-    _results = combined.results.sort
+    combined_results = combined.results.sort
 
-    result = _results[0]
+    result = combined_results[0]
     assert_equal("1", result.place, "place")
     assert_equal(result_1.person, result.person, "person")
     assert_equal(race_1.category, result.category, "category")
     assert_equal("30:00.00", result.time_s, "time_s")
 
-    result = _results[1]
+    result = combined_results[1]
     assert_equal("2", result.place, "place")
     assert_equal(result_3.person, result.person, "person")
     assert_equal(race_2.category, result.category, "category")
     assert_equal("30:01.00", result.time_s, "time_s")
 
-    result = _results[2]
+    result = combined_results[2]
     assert_equal("3", result.place, "place")
     assert_equal(result_2.person, result.person, "person")
     assert_equal(race_1.category, result.category, "category")

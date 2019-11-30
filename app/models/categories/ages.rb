@@ -53,10 +53,7 @@ module Categories
 
     def ages_include?(other, result_age = nil)
       (all_ages? && other.all_ages?) ||
-        (
-          age_group? &&
-          (ages.cover?(other.ages) || result_age&.in?(ages) || other.ages_begin.in?(ages))
-        )
+        (age_group? && (ages.cover?(other.ages) || result_age&.in?(ages) || other.ages_begin.in?(ages)))
     end
 
     def set_ages_from_name

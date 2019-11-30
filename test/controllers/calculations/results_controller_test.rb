@@ -10,11 +10,12 @@ module Calculations
       get :index, params: { event_id: event }
     end
 
-    test "race index" do
-      race = FactoryBot.create(:race)
-      FactoryBot.create(:discipline)
-      race.event.calculation = Calculations::V3::Calculation.create!
-      get :index, params: { race_id: race }
-    end
+    # FIXME: relevant for Calculations?
+    # test "race index" do
+    #   race = FactoryBot.create(:race)
+    #   FactoryBot.create(:discipline)
+    #   race.event.calculation = Calculations::V3::Calculation.create!
+    #   get :index, params: { race_id: race }
+    # end
   end
 end

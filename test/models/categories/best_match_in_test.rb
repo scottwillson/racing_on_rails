@@ -119,7 +119,8 @@ module Competitions
       event.races.create!(category: masters_men_50_plus)
       event.races.create!(category: masters_men_60_plus)
 
-      assert_best_match_in [men_5, masters_men_50_plus], masters_men_50_plus, event, 51
+      assert_best_match_in [masters_men_50_plus], masters_men_50_plus, event, 51
+      assert_best_match_in [], men_5, event, 51
     end
 
     test "age range with 'and over'" do
@@ -181,7 +182,9 @@ module Competitions
       event.races.create!(category: men_9_18)
       event.races.create!(category: women_35_49)
 
-      assert_best_match_in [athena, women_35_49], women_35_49, event, 35
+      # best_match_by_age_in would match Athena and Women 35-49
+      assert_best_match_in [women_35_49], women_35_49, event, 35
+      assert_best_match_in [], athena, event, 35
     end
 
     test "gender over ability" do
@@ -206,6 +209,7 @@ module Competitions
     test "bar categories" do
       junior_women_10_12 = Category.find_or_create_by_normalized_name("Junior Women 10-12")
       men_15_24 = Category.find_or_create_by_normalized_name("Men 15-24")
+      category_1_2_men = Category.find_or_create_by_normalized_name("Category 1/2 Men")
 
       event = FactoryBot.create(:event)
       event.races.create!(category: Category.find_or_create_by_normalized_name("Athena"))
@@ -222,12 +226,12 @@ module Competitions
       event.races.create!(category: Category.find_or_create_by_normalized_name("Masters Men 4/5"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Masters Women"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Masters Women 4"))
-      event.races.create!(category: @senior_men)
-      event.races.create!(category: @senior_women)
+      event.races.create!(category: category_1_2_men)
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 1/2 Women"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Singlespeed/Fixed"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Tandem"))
 
-      assert_best_match_in [@senior_men, men_15_24], @senior_men, event
+      assert_best_match_in [category_1_2_men, men_15_24], category_1_2_men, event
       assert_best_match_in [@junior_women, junior_women_10_12], @junior_women, event
     end
 
