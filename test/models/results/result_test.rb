@@ -392,9 +392,6 @@ class ResultTest < ActiveSupport::TestCase
     result = race.results.create!(place: "1")
     assert(result.finished?, "'1' should be a finisher")
 
-    result = race.results.create!(place: nil)
-    assert(!result.finished?, "nil should not be a finisher")
-
     result = race.results.create!(place: "")
     assert(!result.finished?, "'' should not be a finisher")
 

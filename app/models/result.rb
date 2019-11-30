@@ -33,6 +33,7 @@ class Result < ApplicationRecord
   has_many :source_results, through: :sources
   belongs_to :team, optional: true
 
+  validates :place, presence: true, allow_blank: true
   validates :race, presence: true
   validates :rejection_reason, inclusion: { in: ::Calculations::V3::REJECTION_REASONS, allow_blank: true }
 

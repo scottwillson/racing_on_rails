@@ -264,7 +264,10 @@ class Race < ApplicationRecord
                                         index + 1
                                       end
                      end
-      result.update_column(:place, result.place) if result.place_changed?
+      if result.place_changed?
+        result.update_column(:place, result.place)
+        result.update_column(:numeric_place, result.numeric_place)
+      end
     end
   end
 
