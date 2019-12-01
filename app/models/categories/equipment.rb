@@ -12,8 +12,10 @@ module Categories
     def equipment_from_name
       if name[/Singlespeed/]
         "Singlespeed"
+      elsif name[/Fix/]
+        "Fixed Gear"
       else
-        name[/Eddy|Fat Bike|Fixed Gear|Fixie|Hardtail|Merckx|Stampede|Tandem|Unicycle/]
+        name[/Eddy|Fat Bike|Hardtail|Merckx|Stampede|Tandem|Unicycle/]
       end
     end
 

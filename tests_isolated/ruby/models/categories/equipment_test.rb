@@ -21,6 +21,8 @@ module Categories
         "Eddy" => "Eddy",
         "Fat Bike" => "Fat Bike",
         "Fixed Gear" => "Fixed Gear",
+        "Fix Gear Men" => "Fixed Gear",
+        "Fix Gear Women" => "Fixed Gear",
         "Merckx" => "Merckx",
         "Singlespeed" => "Singlespeed",
         "Singlespeed/Fixed" => "Singlespeed",
