@@ -54,6 +54,8 @@ module Categories
     end
 
     def ages_include?(other, result_age = nil)
+      return false if all_ages? && other.masters?
+
       (all_ages? && other.all_ages?) ||
         (!senior? && (ages.cover?(other.ages) || result_age&.in?(ages) || other.ages_begin.in?(ages)))
     end

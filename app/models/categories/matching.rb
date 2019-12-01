@@ -9,7 +9,7 @@ module Categories
     # Find best matching competition race for category. Iterate through traits (weight, equipment, ages, gender, abilities) until there is a
     # single match (or none).
     def best_match_in_event(event)
-      debug "Category#best_match_in #{name} in #{event.name}"
+      debug "Category#best_match_in for #{name} in #{event.name}"
       best_match_in event_categories
     end
 
@@ -17,7 +17,7 @@ module Categories
     # single match (or none).
     # Some times, a category's results need to be split into multiple categories based on the participant's age
     def best_match_in(event_categories, result_age = nil)
-      debug "Category#best_match_in #{name}: #{event_categories.map(&:name).join(', ')}"
+      debug "Category#best_match_in for #{name} in #{event_categories.map(&:name).join(', ')}"
 
       candidate_categories = event_categories.dup
 
@@ -156,7 +156,7 @@ module Categories
     end
 
     def best_match_by_age_in(event_categories, result_age = nil)
-      debug "Category#best_match_by_age_in #{name}, #{result_age}: #{event_categories.map(&:name).join(', ')}"
+      debug "Category#best_match_by_age_in for #{name}, #{result_age} in #{event_categories.map(&:name).join(', ')}"
 
       candidate_categories = event_categories.dup
 
@@ -225,7 +225,9 @@ module Categories
       return false unless candidate_categories.one?
 
       candidate_category = candidate_categories.first
-      candidate_category.include? self, result_age
+      match = candidate_category.include? self, result_age
+      debug "one_match? #{match}"
+      match
     end
 
     def debug(message)
