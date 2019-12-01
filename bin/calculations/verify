@@ -25,9 +25,8 @@ end
 def destroy_calculations
   puts "destroy_calculations"
   ResultSource.delete_all
-  Result.where(year: 2019).delete_all
-  Result.where("created_at > ?", Date.new(2019)).delete_all
-  Race.where("created_at > ?", Date.new(2019)).delete_all
+  Result.where("created_at > ?", 1.day.ago).delete_all
+  Race.where("created_at > ?", 1.day.ago).delete_all
 
   Calculations::V3::Calculation.all.each do |calc|
     calc.event&.destroy_races

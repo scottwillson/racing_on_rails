@@ -8,6 +8,7 @@ module Categories
     SENIOR  = (19..29).freeze
     MASTERS = (30..::Categories::MAXIMUM).freeze
 
+    # Has any ages restrictions. Can still be a senior category. E.g., 19-21.
     def age_group?
       ages_begin && ages_end && (ages_begin != 0 || ages_end != ::Categories::MAXIMUM)
     end
@@ -24,8 +25,9 @@ module Categories
       age_group? && ages_end <= JUNIORS.end
     end
 
+    # E.g., 30+, 40-49, U34
     def masters?
-      age_group? && ages_begin >= MASTERS.begin
+      age_group? && (ages_begin >= MASTERS.begin || ages_end >= MASTERS.begin)
     end
 
     def senior?
@@ -53,7 +55,7 @@ module Categories
 
     def ages_include?(other, result_age = nil)
       (all_ages? && other.all_ages?) ||
-        (age_group? && (ages.cover?(other.ages) || result_age&.in?(ages) || other.ages_begin.in?(ages)))
+        (!senior? && (ages.cover?(other.ages) || result_age&.in?(ages) || other.ages_begin.in?(ages)))
     end
 
     def set_ages_from_name
