@@ -1243,14 +1243,14 @@ class PersonTest < ActiveSupport::TestCase
     person = Person.create!
     assert !person.renewed?, "New person"
 
-    Timecop.freeze(Date.new(2009, 12, 14)) do
+    Timecop.freeze(Date.new(2009, 11, 30)) do
       person = Person.create!(member_from: Date.new(2009, 1, 1), member_to: Date.new(2009, 12, 31))
-      assert person.renewed?, "Before Dec 16"
+      assert person.renewed?, "Before Dec 1"
     end
 
     person = Person.create!(member_from: Date.new(2009, 1, 1), member_to: Date.new(2009, 12, 31))
-    Timecop.freeze(Time.zone.local(2009, 12, 16)) do
-      assert !person.renewed?, "On Dec 16"
+    Timecop.freeze(Time.zone.local(2009, 12, 1)) do
+      assert !person.renewed?, "On Dec 1"
     end
 
     Timecop.freeze(Date.new(2010, 1, 1)) do
