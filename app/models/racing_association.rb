@@ -82,7 +82,7 @@ class RacingAssociation < ApplicationRecord
         end
       end
     else
-      return Time.zone.now.year + 1 if Time.zone.now.month == 12 && Time.zone.now.day >= 16
+      return Time.zone.now.year + 1 if Time.zone.now.month == 12 && Time.zone.now.day >= 1
     end
 
     Time.zone.now.year
@@ -118,7 +118,7 @@ class RacingAssociation < ApplicationRecord
   end
 
   def cyclocross_season_end
-    Time.zone.local(Time.zone.now.year, 12, 14).end_of_day
+    Time.zone.local(Time.zone.now.year, 12, 1).end_of_day
   end
 
   def rental_numbers
