@@ -83,14 +83,15 @@ module Categories
         candidate_categories = masters_categories if masters_categories.present?
       end
 
+      # FIME. Why is this used? Puts Masters 50+ in Masters 4 over Masters.
       # E.g., if Cat 3 matches Senior Men and Cat 3, use Cat 3
       # Could check size of range and use narrowest if there is a single one more narrow than the others
-      unless candidate_categories.all?(&:all_abilities?)
-        candidate_categories = candidate_categories.reject(&:all_abilities?)
-      end
-      debug "reject wildcards: #{candidate_categories.map(&:name).join(', ')}"
-      return candidate_categories.first if one_match?(candidate_categories)
-      return nil if candidate_categories.empty?
+      # unless candidate_categories.all?(&:all_abilities?)
+      #   candidate_categories = candidate_categories.reject(&:all_abilities?)
+      # end
+      # debug "reject wildcards: #{candidate_categories.map(&:name).join(', ')}"
+      # return candidate_categories.first if one_match?(candidate_categories)
+      # return nil if candidate_categories.empty?
 
       # "Highest" is lowest ability number
       # Choose exact ability category begin if women
