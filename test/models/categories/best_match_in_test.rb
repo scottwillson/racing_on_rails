@@ -45,6 +45,7 @@ module Competitions
       assert_best_match_in [@cat_2], @cat_2, event
       assert_best_match_in [@cat_3, @cat_3_4], @cat_3, event
       assert_best_match_in [@cat_4, @cat_4_women, @cat_4_5_women], @cat_4, event
+      assert_best_match_in [@junior_women], nil, event, 15
     end
 
     test "cyclocross categories" do
@@ -240,7 +241,7 @@ module Competitions
       categories.each do |category|
         best_match = category.best_match_in(event.categories, result_age)
         assert race_category == best_match,
-               "#{race_category.name} should be best_match_in for #{category.name} in event with " \
+               "#{race_category&.name} should be best_match_in for #{category.name} in event with " \
                "categories #{event.races.map(&:name).join(', ')} but was #{best_match&.name}"
       end
 
@@ -249,7 +250,7 @@ module Competitions
            .each do |category|
              best_match = category.best_match_in(event.categories)
              assert race_category != best_match,
-                    "Did not expect #{race_category.name} to match #{category.name} in event with " \
+                    "Did not expect #{race_category&.name} to match #{category.name} in event with " \
                     "categories #{event.races.map(&:name).join(', ')}, but was #{best_match.name}"
            end
     end

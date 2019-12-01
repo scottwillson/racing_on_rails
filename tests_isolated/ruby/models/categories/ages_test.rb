@@ -60,6 +60,16 @@ module Categories
       category.ages_begin = 10
       category.ages_end = 18
       assert category.age_group?, "10..18 age_group?"
+
+      category = Stub.new
+      category.ages_begin = 0
+      category.ages_end = 34
+      assert category.age_group?, "0..34 age_group?"
+
+      category = Stub.new
+      category.ages_begin = 19
+      category.ages_end = 29
+      assert category.age_group?, "19..29 age_group?"
     end
 
     def test_clydesdales
@@ -95,6 +105,13 @@ module Categories
       category.ages_begin = 30
       category.ages_end = 99
       assert !category.junior?, "30..99 junior?"
+    end
+
+    def test_masters
+      category = Stub.new
+      category.ages_begin = 0
+      category.ages_end = 34
+      assert category.masters?, "0..34 masters?"
     end
 
     def test_team

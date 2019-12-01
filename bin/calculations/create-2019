@@ -3,7 +3,6 @@
 # Quick and dirty script to fetch old data and recalc competitions
 require_relative "./competitions_2019"
 
-# rubocop:disable Rails/SkipsModelValidations
 def fix_source_results
 end
 
@@ -75,14 +74,26 @@ def compare_results(competitions)
   end
 end
 
+def destroy_calculations
+  puts "destroy_calculations"
+  ResultSource.delete_all
+  Result.where("created_at > ?", 1.day.ago).delete_all
+  Race.where("created_at > ?", 1.day.ago).delete_all
+
+  Calculations::V3::Calculation.all.each do |calc|
+    calc.event&.destroy_races
+    calc.event&.destroy!
+    calc.destroy!
+  end
+end
+
 competitions = COMPETITIONS
 
 fix_source_results
+destroy_calculations
 create_calculations competitions
 calculations(competitions).map(&:source_event).compact.each(&:update_date)
 calculations(competitions).reject do |c|
   (c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"]) ||
   (c.key != "gpcd_team" && c.key != "gpcd" && c.key["gpcd"])
 end.each(&:calculate!)
-
-# rubocop:enable Rails/SkipsModelValidations
