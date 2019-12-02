@@ -10,6 +10,7 @@
 class Result < ApplicationRecord
   before_save :set_associated_records
 
+  include Calculations::V3::Rejection
   include Results::Caching
   include Results::Cleanup
   include Results::Comparison
@@ -35,7 +36,6 @@ class Result < ApplicationRecord
 
   validates :place, presence: true, allow_blank: true
   validates :race, presence: true
-  validates :rejection_reason, inclusion: { in: ::Calculations::V3::REJECTION_REASONS, allow_blank: true }
 
   scope :year, ->(year) { where(year: year) }
   scope :person_event, lambda { |person, event|
