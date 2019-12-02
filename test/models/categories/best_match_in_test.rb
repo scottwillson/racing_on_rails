@@ -221,9 +221,37 @@ module Competitions
       assert_best_match_in [women_1_2, women_1_2_3], women_1_2_3, event
     end
 
+    test "mtb bar categories" do
+      event = FactoryBot.create(:event)
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 1 Men"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 1 Women"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 2 Men"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 2 Women"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 3 Men"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 3 Women"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 4 Men"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 4 Women"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 5 Men"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 5 Women"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Clydesdale"))
+      elite_men = Category.find_or_create_by_normalized_name("Elite Men")
+      event.races.create!(category: elite_men)
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Elite Women"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Junior Men"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Junior Women"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Masters Men"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Masters Women"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Singlespeed/Fixed"))
+      event.races.create!(category: Category.find_or_create_by_normalized_name("Tandem"))
+      men_19_29 = Category.find_or_create_by_normalized_name("19-29 Men")
+
+      assert_best_match_in [elite_men, men_19_29], elite_men, event
+    end
+
     test "bar categories" do
       junior_women_10_12 = Category.find_or_create_by_normalized_name("Junior Women 10-12")
       men_15_24 = Category.find_or_create_by_normalized_name("Men 15-24")
+      men_19_29 = Category.find_or_create_by_normalized_name("19-29 Men")
       category_1_2_men = Category.find_or_create_by_normalized_name("Category 1/2 Men")
 
       event = FactoryBot.create(:event)
@@ -246,8 +274,7 @@ module Competitions
       event.races.create!(category: Category.find_or_create_by_normalized_name("Singlespeed/Fixed"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Tandem"))
 
-      # FIXME Where should men 15-24 go?
-      # assert_best_match_in [category_1_2_men, men_15_24], category_1_2_men, event
+      assert_best_match_in [category_1_2_men, men_15_24, men_19_29], category_1_2_men, event
       assert_best_match_in [@junior_women, junior_women_10_12], @junior_women, event
     end
 

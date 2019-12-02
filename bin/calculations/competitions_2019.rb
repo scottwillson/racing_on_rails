@@ -3,7 +3,7 @@
 COMPETITIONS = {
   # blind_date: {
   #   categories: [
-  #     { name: "Category Pro/1/2 Men" },
+  #     { name: "Category 1/2 Men" },
   #     { name: "Category 2/3 Men" },
   #     { name: "Category 3/4 Men" },
   #     { name: "Category 5 Men" },
@@ -99,7 +99,7 @@ COMPETITIONS = {
   #     { name: "Athena" },
   #     { name: "Category 1/2 35+ Men" },
   #     { name: "Category 1/2 35+ Women" },
-  #     { name: "Category Pro/1/2 Men" },
+  #     { name: "Category 1/2 Men" },
   #     { name: "Category 1/2 Women" },
   #     { name: "Category 2/3 Men" },
   #     { name: "Category 2/3 Women" },
@@ -148,7 +148,7 @@ COMPETITIONS = {
   # },
   # oregon_cup: {
   #   categories: [
-  #     { name: "Category Pro/1/2 Men" }
+  #     { name: "Category 1/2 Men" }
   #   ],
   #   events: [
   #     { id: 26467, multiplier: 1 },
@@ -383,7 +383,7 @@ COMPETITIONS = {
       { name: "Masters Men 4/5" },
       { name: "Masters Women" },
       { name: "Masters Women 4" },
-      { name: "Category Pro/1/2 Men" },
+      { name: "Category 1/2 Men" },
       { name: "Category 1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
@@ -401,7 +401,7 @@ COMPETITIONS = {
   cyclocross_bar: {
     categories: [
       { name: "Athena" },
-      { name: "Category Pro/1/2 Men" },
+      { name: "Category 1/2 Men" },
       { name: "Category 1/2 Women" },
       { name: "Category 2/3 Men" },
       { name: "Category 3 Women" },
@@ -476,7 +476,7 @@ COMPETITIONS = {
       { name: "Masters Men 4/5" },
       { name: "Masters Women" },
       { name: "Masters Women 4" },
-      { name: "Category Pro/1/2 Men" },
+      { name: "Category 1/2 Men" },
       { name: "Category 1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
@@ -538,7 +538,7 @@ COMPETITIONS = {
       { name: "Masters Men 4/5" },
       { name: "Masters Women" },
       { name: "Masters Women 4" },
-      { name: "Category Pro/1/2 Men" },
+      { name: "Category 1/2 Men" },
       { name: "Category 1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
@@ -568,7 +568,7 @@ COMPETITIONS = {
       { name: "Masters Men 4/5" },
       { name: "Masters Women" },
       { name: "Masters Women 4" },
-      { name: "Category Pro/1/2 Men" },
+      { name: "Category 1/2 Men" },
       { name: "Category 1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
@@ -597,7 +597,7 @@ COMPETITIONS = {
       { name: "Junior Women" },
       { name: "Masters Men" },
       { name: "Masters Women" },
-      { name: "Category Pro/1/2 Men" },
+      { name: "Category 1/2 Men" },
       { name: "Category 1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
