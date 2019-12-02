@@ -9,7 +9,7 @@ module Categories
     # Find best matching competition race for category. Iterate through traits (weight, equipment, ages, gender, abilities) until there is a
     # single match (or none).
     def best_match_in_event(event)
-      debug "Category#best_match_in for #{name} in #{event.name}"
+      debug "Category#best_match_in_event for #{name} in #{event.name} id: #{event.id}"
       best_match_in event_categories
     end
 
@@ -146,9 +146,10 @@ module Categories
       return candidate_categories.first if one_match?(candidate_categories)
       return nil if candidate_categories.empty?
 
-      debug "no wild cards: #{candidate_categories.map(&:name).join(', ')}"
-      return candidate_categories.first if one_match?(candidate_categories)
-      return nil if candidate_categories.empty?
+      if wildcard? && candidate_categories.none?(&:wildcard?)
+        debug "no wild cards: #{candidate_categories.map(&:name).join(', ')}"
+        return nil
+      end
 
       if candidate_categories.size > 1
         raise "Multiple matches #{candidate_categories.map(&:name)} for #{name}, result age: #{result_age} in #{event_categories.map(&:name).join(', ')}"
@@ -234,6 +235,11 @@ module Categories
       if defined?(Rails) && defined?(Rails.logger)
         Rails.logger.debug message
       end
+    end
+
+    # No restrictions expect defaults. E.g., Senior Men, Open.
+    def wildcard?
+      all_abilities? && all_ages? && !equipment? && !weight?
     end
   end
 end

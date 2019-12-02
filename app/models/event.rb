@@ -168,7 +168,17 @@ class Event < ApplicationRecord
       .where("source_results.race_id = races.id")
       .where("source_results.event_id = events.id")
       .where("calculated_results.event_id": id)
+      .where("calculated_results.rejected": false)
+      .where("result_sources.rejected": false)
       .distinct
+    # FIXME
+    # result_ids = Result.where(event_id: id, rejected: false).pluck(:id)
+    #
+    # source_result_ids = ResultSource.where(calculated_result_id: result_ids, rejected: false).pluck(:source_result_id)
+    #
+    # event_ids = Result.where(id: source_result_ids).pluck(:event_id).uniq
+    #
+    # Event.find(event_ids)
   end
 
   def destroy_races

@@ -907,7 +907,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.integer "source_result_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "rejected"
+    t.boolean "rejected", default: false, null: false
     t.index ["calculated_result_id", "source_result_id"], name: "calculated_result_id_source_result_id"
     t.index ["source_result_id"], name: "fk_rails_6213531152"
   end
@@ -969,7 +969,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.boolean "single_event_license", default: false
     t.boolean "team_member", default: false, null: false
     t.decimal "distance", precision: 10, scale: 2
-    t.boolean "rejected"
+    t.boolean "rejected", default: false, null: false
     t.string "rejection_reason"
     t.integer "numeric_place", default: 999999
     t.index ["category_id"], name: "index_results_on_category_id"
