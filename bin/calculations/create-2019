@@ -10,6 +10,9 @@ def fix_source_results
   category = Category.find_or_create_by_normalized_name("Women 3")
   Race.where(id: 446659).update_all(category_id: category.id)
   Category.where("name like '%fix%'").update_all(equipment: "Fixed Gear")
+  Race.where(event_id: 27077).update_all(event_id: 27011)
+  Result.where(event_id: 27077).update_all(event_id: 27011)
+  Event.destroy(27077)
 end
 
 def create_calculations(competitions)
