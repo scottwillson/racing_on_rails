@@ -34,6 +34,7 @@ require_relative "../../../../app/models/calculations/v3/steps/reject_calculated
 require_relative "../../../../app/models/calculations/v3/steps/reject_categories"
 require_relative "../../../../app/models/calculations/v3/steps/reject_category_worst_results"
 require_relative "../../../../app/models/calculations/v3/steps/reject_dnfs"
+require_relative "../../../../app/models/calculations/v3/steps/reject_empty_categories"
 require_relative "../../../../app/models/calculations/v3/steps/reject_empty_source_results"
 require_relative "../../../../app/models/calculations/v3/steps/reject_more_than_results_per_event"
 require_relative "../../../../app/models/calculations/v3/steps/reject_more_than_maximum_events"

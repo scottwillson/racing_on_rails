@@ -73,6 +73,7 @@ module Calculations
             .calculate_step(Steps::RejectMoreThanMaximumEvents)
             .calculate_step(Steps::SumPoints)
             .calculate_step(Steps::Validate)
+            .calculate_step(Steps::RejectEmptyCategories)
             .event_categories
         else
           # place after assigning points
@@ -95,6 +96,7 @@ module Calculations
             .calculate_step(Steps::SumPoints)
             .calculate_step(Steps::Place)
             .calculate_step(Steps::Validate)
+            .calculate_step(Steps::RejectEmptyCategories)
             .event_categories
         end
       end
