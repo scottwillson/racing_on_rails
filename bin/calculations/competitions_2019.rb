@@ -417,6 +417,10 @@ COMPETITIONS = {
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
     ],
+    events: [
+      { id: 26901, multiplier: 2 },
+      { id: 27090, multiplier: 1 }
+    ],
     name: "Cyclocross BAR",
     rules: {
       association_sanctioned_only: true,
