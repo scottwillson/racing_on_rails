@@ -401,8 +401,8 @@ COMPETITIONS = {
   cyclocross_bar: {
     categories: [
       { name: "Athena" },
-      { name: "Category 1/2 Men" },
-      { name: "Category 1/2 Women" },
+      { name: "Category Pro/1/2 Men" },
+      { name: "Category Pro/1/2 Women" },
       { name: "Category 2/3 Men" },
       { name: "Category 3 Women" },
       { name: "Category 4 Men" },
