@@ -8,6 +8,8 @@
 # a +team+ atribute and many RaceNumbers. Result's number is just a String, not
 # a RaceNumber
 class Result < ApplicationRecord
+  UNPLACED = 999_999
+
   before_save :set_associated_records
 
   include Calculations::V3::Rejection
@@ -221,7 +223,7 @@ class Result < ApplicationRecord
     if value && value.to_i != 0
       self.numeric_place = value.to_i
     else
-      self.numeric_place = 999_999
+      self.numeric_place = UNPLACED.to_i
     end
   end
 
