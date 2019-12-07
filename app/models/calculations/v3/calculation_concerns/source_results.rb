@@ -143,12 +143,16 @@ module Calculations::V3::CalculationConcerns::SourceResults
   end
 
   def source_results
+    # Simplify once we're 100% using Calculations
+    event_types = Event::TYPES + [nil]
+    event_ids = events.map(&:id)
     source_results = Result
                      .includes(:person)
                      .joins(race: :event)
                      .where.not(event: event)
                      .where(year: year)
-                     .where("events.type" => Event::TYPES + [nil]) # Skip old Competitions
+                     .where("events.type in (?) || events.id in (?)", event_types, event_ids)
+                     # .where("events.type" => Event::TYPES + [nil]) # Skip old Competitions
 
     if source_event
       source_results = source_results
