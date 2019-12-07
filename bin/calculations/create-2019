@@ -4,6 +4,10 @@
 require_relative "./competitions_2019"
 
 def fix_source_results
+  category = Category.find_or_create_by_normalized_name("40+Singlespeed Men")
+  category.update!(name: "Singlespeed Men 40+")
+  Category.where("name like '%fix%'").update_all(equipment: "Fixed Gear")
+
   Event.where(id: 26709).update_all(discipline: "Criterium")
   category = Category.find_or_create_by_normalized_name("Category 2 Women Junior 14-18")
   Race.where(id: 623944).update_all(category_id: category.id)
@@ -96,13 +100,17 @@ def destroy_calculations
   end
 end
 
-competitions = COMPETITIONS
+# competitions = COMPETITIONS
+competitions = {
+  cyclocross_bar: COMPETITIONS[:cyclocross_bar]
+}
 
-fix_source_results
+# fix_source_results
 destroy_calculations
 create_calculations competitions
 calculations(competitions).map(&:source_event).compact.each(&:update_date)
-calculations(competitions).reject do |c|
-  (c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"]) ||
-  (c.key != "gpcd_team" && c.key != "gpcd" && c.key["gpcd"])
-end.each(&:calculate!)
+# calculations(competitions).reject do |c|
+#   (c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"]) ||
+#   (c.key != "gpcd_team" && c.key != "gpcd" && c.key["gpcd"])
+# end.each(&:calculate!)
+calculations(competitions).each(&:calculate!)

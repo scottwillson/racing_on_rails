@@ -419,7 +419,13 @@ COMPETITIONS = {
     ],
     events: [
       { id: 26901, multiplier: 2 },
-      { id: 27090, multiplier: 1 }
+      { id: 27097, multiplier: 1 },
+      { id: 27105, multiplier: 1 },
+      { id: 27106, multiplier: 1 },
+      { id: 27104, multiplier: 1 },
+      { id: 27094, multiplier: 1 },
+      { id: 27095, multiplier: 1 },
+      { id: 27187, multiplier: 1 }
     ],
     name: "Cyclocross BAR",
     rules: {
