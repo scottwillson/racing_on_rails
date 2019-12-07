@@ -47,7 +47,7 @@
         <tr>
           <td class="date"><%= event.date.to_s(:short_with_week_day) %> </td>
           <td><%= link_to event.full_name, event_path(event) %></td>
-          <td><%= event.discipline %></td>
+          <td class="discipline"><%= event.discipline %></td>
         </tr>
         <%- end -%>
       <% end -%>
@@ -60,7 +60,7 @@
         <tr>
           <td class="date"><%= event.date.to_s(:short_with_week_day) %> </td>
           <td><%= link_to event.full_name, event_path(event) %></td>
-          <td><%= event.discipline %></td>
+          <td class="discipline"><%= event.discipline %></td>
         </tr>
         <%- end -%>
       <% end -%>
