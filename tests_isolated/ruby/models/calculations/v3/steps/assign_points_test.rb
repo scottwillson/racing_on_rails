@@ -156,7 +156,7 @@ module Calculations
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "6")
           assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1, 10)
 
-          source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "999999")
+          source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: Result::UNPLACED)
           assert_equal 0, AssignPoints.points_for_place(source_result, points_for_place, "points", 1, 10)
 
           source_result = Models::SourceResult.new(event_category: event_category, id: 0, place: "DNF")

@@ -1,4 +1,4 @@
-<%- if result.numeric_place.zero? -%>
+<%- if result.numeric_place.zero? || result.numeric_place == Result::UNPLACED -%>
   <%- if race.event.calculation.team? -%>
     <h3 id="result_<%= result.id %>"><%= link_to(result.team_name, team_results_year_path(result.team, result.year)) if result.team_id %></h3>
   <%- else -%>
