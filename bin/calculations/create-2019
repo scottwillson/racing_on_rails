@@ -4,8 +4,26 @@
 require_relative "./competitions_2019"
 
 def fix_source_results
-  category = Category.find_or_create_by_normalized_name("40+Singlespeed Men")
-  category.update!(name: "Singlespeed Men 40+")
+  bad_category = Category.find_by(name: "40+Singlespeed Men")
+  if bad_category
+    good_category = Category.find_by(name: "Singlespeed Men 40+")
+    Race.where(category_id: bad_category.id).each do |race|
+      race.category = good_category
+      race.save!
+    end
+    bad_category.destroy!
+  end
+
+  bad_category = Category.find_by(name: "Wome 1/2/3")
+  if bad_category
+    good_category = Category.find_by(name: "Women 1/2/3")
+    Race.where(category_id: bad_category.id).each do |race|
+      race.category = good_category
+      race.save!
+    end
+    bad_category.destroy!
+  end
+
   Category.where("name like '%fix%'").update_all(equipment: "Fixed Gear")
 
   Event.where(id: 26709).update_all(discipline: "Criterium")
@@ -14,9 +32,11 @@ def fix_source_results
   category = Category.find_or_create_by_normalized_name("Women 3")
   Race.where(id: 446659).update_all(category_id: category.id)
   Category.where("name like '%fix%'").update_all(equipment: "Fixed Gear")
-  Race.where(event_id: 27077).update_all(event_id: 27011)
-  Result.where(event_id: 27077).update_all(event_id: 27011)
-  Event.destroy(27077)
+  if Event.exists?(27077)
+    Race.where(event_id: 27077).update_all(event_id: 27011)
+    Result.where(event_id: 27077).update_all(event_id: 27011)
+    Event.destroy(27077)
+  end
 end
 
 def create_calculations(competitions)
