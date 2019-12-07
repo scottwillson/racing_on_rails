@@ -224,7 +224,7 @@ module Categories
               "Women"
             elsif token[/\Awmn?\.?\z/i] || token[/\Awom\.?\z/i] || token[/\Aw\z/i] || token[/\Awmen?\.?\z/i] || token[/\Awomenen\z/i]
               "Women"
-            elsif token[/\Afemale\z/i] || token[/\Awommen:\z/i] || token[/\Aw\z/i]
+            elsif token[/\Afemale\z/i] || token[/\Awommen:\z/i] || token[/\Aw\z/i] || token[/\Awome\z/i]
               "Women"
             elsif token[/\Amen'?s\z/i] || token[/\Amale\Z/i] || token[/\Amen:\z/i] || token[/\Amed\z/i] || token[/\Amens's\z/i]
               "Men"
