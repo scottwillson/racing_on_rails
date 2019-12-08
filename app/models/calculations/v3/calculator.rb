@@ -170,7 +170,7 @@ module Calculations
       end
 
       def unrejected_source_results
-        source_results.reject(&:rejected?)
+        unrejected_results.flat_map(&:source_results).reject(&:rejected?)
       end
 
       def validate!
