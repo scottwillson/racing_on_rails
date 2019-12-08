@@ -30,8 +30,8 @@ class Category < ApplicationRecord
   acts_as_list
 
   has_and_belongs_to_many :calculations # rubocop:disable Rails/HasAndBelongsToMany
-  has_many :results
-  has_many :races
+  has_many :results, dependent: :restrict_with_error
+  has_many :races, dependent: :restrict_with_error
 
   before_validation :set_friendly_param
 
