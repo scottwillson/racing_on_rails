@@ -200,6 +200,10 @@ class MultiDayEvent < Event
     end
   end
 
+  def date_short_with_week_day
+    date_range_s :short
+  end
+
   # Unassociated events with same name in same year
   def missing_children
     return [] unless name && date
