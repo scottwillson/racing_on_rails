@@ -233,7 +233,7 @@ module Categories
 
     def debug(message)
       if defined?(Rails) && defined?(Rails.logger)
-        Rails.logger.debug message
+        Rails.logger&.debug message
       end
     end
 
