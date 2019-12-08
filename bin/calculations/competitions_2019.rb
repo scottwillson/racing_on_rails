@@ -383,10 +383,16 @@ COMPETITIONS = {
       { name: "Masters Men 4/5" },
       { name: "Masters Women" },
       { name: "Masters Women 4" },
-      { name: "Category 1/2 Men" },
-      { name: "Category 1/2 Women" },
+      { name: "Category Pro/1/2 Men" },
+      { name: "Category Pro/1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
+    ],
+    events: [
+      { id: 26833, multiplier: 2 },
+      { id: 27089, multiplier: 1 },
+      { id: 27089, multiplier: 1 },
+      { id: 27046, multiplier: 1 }
     ],
     name: "Criterium BAR",
     rules: {
@@ -495,10 +501,21 @@ COMPETITIONS = {
       { name: "Masters Men 4/5" },
       { name: "Masters Women" },
       { name: "Masters Women 4" },
-      { name: "Category 1/2 Men" },
-      { name: "Category 1/2 Women" },
+      { name: "Category Pro/1/2 Men" },
+      { name: "Category Pro/1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
+    ],
+    events: [
+      { id: 26518, multiplier: 1 },
+      { id: 26540, multiplier: 2 },
+      { id: 26928, multiplier: 1 },
+      { id: 26941, multiplier: 1 },
+      { id: 26944, multiplier: 1 },
+      { id: 27013, multiplier: 1 },
+      { id: 27017, multiplier: 1 },
+      { id: 27058, multiplier: 1 },
+      { id: 27083, multiplier: 1 }
     ],
     name: "Road BAR",
     rules: {
@@ -532,6 +549,10 @@ COMPETITIONS = {
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
     ],
+    events: [
+      { id: 26979, multiplier: 1 },
+      { id: 26980, multiplier: 1 }
+    ],
     name: "Short Track BAR",
     rules: {
       association_sanctioned_only: true,
@@ -557,10 +578,16 @@ COMPETITIONS = {
       { name: "Masters Men 4/5" },
       { name: "Masters Women" },
       { name: "Masters Women 4" },
-      { name: "Category 1/2 Men" },
-      { name: "Category 1/2 Women" },
+      { name: "Category Pro/1/2 Men" },
+      { name: "Category Pro/1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
+    ],
+    events: [
+      { id: 26663, multiplier: 2 },
+      { id: 27015, multiplier: 1 },
+      { id: 27014, multiplier: 1 },
+      { id: 27033, multiplier: 1 }
     ],
     name: "Time Trial BAR",
     rules: {
@@ -587,10 +614,24 @@ COMPETITIONS = {
       { name: "Masters Men 4/5" },
       { name: "Masters Women" },
       { name: "Masters Women 4" },
-      { name: "Category 1/2 Men" },
-      { name: "Category 1/2 Women" },
+      { name: "Category Pro/1/2 Men" },
+      { name: "Category Pro/1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
+    ],
+    events: [
+      { id: 26974, multiplier: 2 },
+      { id: 26975, multiplier: 2 },
+      { id: 26976, multiplier: 2 },
+      { id: 27031, multiplier: 1 },
+      { id: 27032, multiplier: 1 },
+      { id: 27037, multiplier: 1 },
+      { id: 27038, multiplier: 1 },
+      { id: 27055, multiplier: 1 },
+      { id: 27056, multiplier: 1 },
+      { id: 27057, multiplier: 1 },
+      { id: 27065, multiplier: 1 },
+      { id: 27070, multiplier: 1 }
     ],
     name: "Track BAR",
     rules: {
@@ -616,8 +657,8 @@ COMPETITIONS = {
       { name: "Junior Women" },
       { name: "Masters Men" },
       { name: "Masters Women" },
-      { name: "Category 1/2 Men" },
-      { name: "Category 1/2 Women" },
+      { name: "Category Pro/1/2 Men" },
+      { name: "Category Pro/1/2 Women" },
       { name: "Singlespeed/Fixed" },
       { name: "Tandem" }
     ],
