@@ -184,7 +184,7 @@ class PeopleTest < AcceptanceTest
     assert page.has_field? "format", with: "xls"
 
     today = RacingAssociation.current.effective_today
-    assert_download "export_button", "people_#{Time.zone.now.year}_#{today.month}_#{today.day}.xls"
+    assert_download "export_button", "people_#{RacingAssociation.current.effective_year}_#{today.month}_#{today.day}.xls"
 
     visit "/admin/teams"
 
