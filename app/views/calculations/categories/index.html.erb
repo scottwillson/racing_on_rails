@@ -11,7 +11,7 @@
           <h4><%= race.name %></h4>
           <ul class="calculations">
             <% race.source_categories.sort_by(&:name).each do |category| %>
-              <li><%= category.name %></li>
+              <li><%= link_to category.name, category_races_path(category) %></li>
             <% end -%>
           </ul>
         <% end -%>
@@ -23,7 +23,7 @@
       <ul class="calculations">
         <% @event.races.reject(&:rejected?).sort.each do |race| %>
           <% if race.results.empty? %>
-            <li><%= race.name %></li>
+          <li><%= link_to race.name, category_races_path(race.category) %></li>
           <% end -%>
         <% end -%>
       </ul>
@@ -33,7 +33,7 @@
       <h3>Rejected Categories</h3>
       <ul class="calculations">
         <% @event.races.select(&:rejected?).sort_by(&:name).each do |race| %>
-          <li><%= race.name %></li>
+        <li><%= link_to race.name, category_races_path(race.category) %></li>
         <% end -%>
       </ul>
     </div>
