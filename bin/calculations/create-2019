@@ -125,9 +125,9 @@ competitions = {
   cyclocross_bar: COMPETITIONS[:cyclocross_bar]
 }
 
-fix_source_results
-destroy_calculations
-create_calculations competitions
+# # fix_source_results
+# destroy_calculations
+# create_calculations competitions
 calculations(competitions).map(&:source_event).compact.each(&:update_date)
 # calculations(competitions).reject do |c|
 #   (c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"]) ||

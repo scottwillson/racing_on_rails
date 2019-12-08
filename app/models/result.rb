@@ -34,6 +34,15 @@ class Result < ApplicationRecord
            inverse_of: :calculated_result
 
   has_many :source_results, through: :sources
+
+  # Confusing names. Calculated results that use this result as a source result.
+  has_many :calculation_sources,
+           class_name: "ResultSource",
+           dependent: :destroy,
+           foreign_key: :source_result_id,
+           inverse_of: :source_result
+
+  has_many :calculated_results, through: :calculation_sources
   belongs_to :team, optional: true
 
   validates :place, presence: true, allow_blank: true
