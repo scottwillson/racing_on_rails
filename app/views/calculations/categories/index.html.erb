@@ -45,7 +45,7 @@
       <%= table class: "calculations", insert_header: true, columns: 3, collection: @source_result_events do %>
       <%- @source_result_events.sort.each do |event| %>
         <tr>
-          <td class="date"><%= event.date.to_s(:short_with_week_day) %> </td>
+          <td class="date"><%= event.date_short_with_week_day %> </td>
           <td><%= link_to event.full_name, event_path(event) %></td>
           <td class="discipline"><%= event.discipline %></td>
         </tr>
@@ -58,7 +58,7 @@
       <%= table class: "calculations", insert_header: true, columns: 3, collection: @rejected_events do %>
       <%- @rejected_events.sort.each do |event| %>
         <tr>
-          <td class="date"><%= event.date.to_s(:short_with_week_day) %> </td>
+          <td class="date"><%= event.date_short_with_week_day %> </td>
           <td><%= link_to event.full_name, event_path(event) %></td>
           <td class="discipline"><%= event.discipline %></td>
         </tr>

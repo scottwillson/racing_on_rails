@@ -74,6 +74,10 @@ module Events
       end
     end
 
+    def date_short_with_week_day
+      date.to_s(:short_with_week_day)
+    end
+
     def human_date
       if @human_date
         @human_date
