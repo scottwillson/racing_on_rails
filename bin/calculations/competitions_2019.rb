@@ -452,6 +452,35 @@ COMPETITIONS = {
       weekday_events: false
     }
   },
+  gravel_bar: {
+    categories: [
+      { name: "Athena" },
+      { name: "Category Pro/1/2 Men" },
+      { name: "Category Pro/1/2 Women" },
+      { name: "Category 2/3 Men" },
+      { name: "Category 3 Women" },
+      { name: "Category 4 Men" },
+      { name: "Category 4 Women" },
+      { name: "Category 5 Men" },
+      { name: "Category 5 Women" },
+      { name: "Clydesdale" },
+      { name: "Junior Men" },
+      { name: "Junior Women" },
+      { name: "Masters Men" },
+      { name: "Masters Women" },
+      { name: "Singlespeed/Fixed" },
+      { name: "Tandem" }
+    ],
+    name: "Gravel BAR",
+    rules: {
+      association_sanctioned_only: true,
+      discipline: "Gravel",
+      disciplines: ["Gravel"],
+      members_only: true,
+      points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      weekday_events: false
+    }
+  },
   mountain_bike_bar: {
     categories: [
       { name: "Athena" },
@@ -666,7 +695,7 @@ COMPETITIONS = {
     rules: {
       association_sanctioned_only: true,
       discipline: "Overall",
-      maximum_events: -4,
+      maximum_events: -3,
       members_only: true,
       points_for_place: (1..300).to_a.reverse,
       source_event_keys: %w[criterium_bar cyclocross_bar gravel_bar mountain_bike_bar road_bar short_track_bar time_trial_bar track_bar],
