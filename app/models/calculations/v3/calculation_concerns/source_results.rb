@@ -61,7 +61,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
   def model_calculations_events
     calculations_events
       .reject { |e| e == event }
-      .map { |event| model_events[event.id] }
+      .map { |e| model_events[e.event_id] }
   end
 
   def model_source_events
