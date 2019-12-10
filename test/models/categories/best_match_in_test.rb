@@ -252,12 +252,13 @@ module Competitions
       junior_women_10_12 = Category.find_or_create_by_normalized_name("Junior Women 10-12")
       men_15_24 = Category.find_or_create_by_normalized_name("Men 15-24")
       men_19_29 = Category.find_or_create_by_normalized_name("19-29 Men")
+      men_19_39 = Category.find_or_create_by_normalized_name("Amateur 19-39 Men")
       category_1_2_men = Category.find_or_create_by_normalized_name("Category 1/2 Men")
 
       event = FactoryBot.create(:event)
       event.races.create!(category: Category.find_or_create_by_normalized_name("Athena"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Clydesdale"))
-      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 3 Men"))
+      event.races.create!(@cat_3)
       event.races.create!(category: Category.find_or_create_by_normalized_name("Category 3 Women"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Category 4 Men"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Category 4 Women"))
@@ -275,6 +276,7 @@ module Competitions
       event.races.create!(category: Category.find_or_create_by_normalized_name("Tandem"))
 
       assert_best_match_in [category_1_2_men, men_15_24, men_19_29], category_1_2_men, event
+      assert_best_match_in [@cat_3, men_19_39], @cat_3, event
       assert_best_match_in [@junior_women, junior_women_10_12], @junior_women, event
     end
 
