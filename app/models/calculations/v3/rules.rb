@@ -5,6 +5,7 @@ module Calculations
     class Rules
       attr_reader :association
       attr_reader :association_sanctioned_only
+      attr_reader :calculations_events
       attr_reader :category_rules
       attr_reader :disciplines
       attr_reader :group_by
@@ -16,8 +17,8 @@ module Calculations
       attr_reader :points_for_place
       attr_reader :results_per_event
       attr_reader :specific_events
-      attr_reader :source_events
       attr_reader :source_event_keys
+      attr_reader :source_events
       attr_reader :team
 
       # If true, only include weekend events
@@ -27,6 +28,7 @@ module Calculations
       def initialize(
         association: nil,
         association_sanctioned_only: false,
+        calculations_events: [],
         category_rules: [],
         disciplines: [],
         double_points_for_last_event: false,
@@ -39,14 +41,15 @@ module Calculations
         points_for_place: nil,
         results_per_event: nil,
         specific_events: false,
-        source_events: [],
         source_event_keys: [],
+        source_events: [],
         team: false,
         weekday_events: true
       )
 
         @association = association
         @association_sanctioned_only = association_sanctioned_only
+        @calculations_events = calculations_events
         @category_rules = category_rules
         @disciplines = disciplines
         @double_points_for_last_event = double_points_for_last_event
@@ -58,8 +61,8 @@ module Calculations
         @place_by = place_by
         @points_for_place = points_for_place
         @results_per_event = results_per_event
-        @source_events = source_events
         @source_event_keys = source_event_keys
+        @source_events = source_events
         @specific_events = specific_events
         @team = team
         @weekday_events = weekday_events
@@ -121,6 +124,7 @@ module Calculations
         {
           association: association&.id,
           association_sanctioned_only: association_sanctioned_only,
+          calculations_events: calculations_events.map(&:id),
           categories: categories.map(&:name),
           disciplines: disciplines.map(&:name),
           double_points_for_last_event: double_points_for_last_event?,
@@ -132,7 +136,6 @@ module Calculations
           missing_result_penalty: missing_result_penalty,
           points_for_place: points_for_place,
           results_per_event: results_per_event,
-          source_events: source_events.map(&:id),
           source_event_keys: source_event_keys,
           specific_events: specific_events?,
           team: team?,

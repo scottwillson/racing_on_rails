@@ -10,7 +10,7 @@ module Calculations
           calculator.unrejected_source_results.each do |source_result|
             next unless source_result.event.calculated?
             next if !calculator.rules.weekday_events? && series_overall?(source_result.event)
-            next if calculator.rules.source_events.include?(source_result.event) && source_result.event.multiplier > 0
+            next if calculator.rules.calculations_events.include?(source_result.event) && !source_result.event.zero_points?
 
             source_result.reject :calculated
           end

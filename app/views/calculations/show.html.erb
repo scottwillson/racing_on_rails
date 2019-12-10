@@ -43,9 +43,13 @@
       </tr>
       <tr>
         <td>Double points for last event</td>
-        <% if @calculation.rules.double_points_for_last_event? %>
-        Double points for last event
-        <% end %>
+        <td>
+          <% if @calculation.rules.double_points_for_last_event? %>
+            Yes
+          <% else %>
+          No
+          <% end %>
+        </td>
       </tr>
       <tr>
         <td>Group by</td>
