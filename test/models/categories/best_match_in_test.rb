@@ -258,7 +258,7 @@ module Competitions
       event = FactoryBot.create(:event)
       event.races.create!(category: Category.find_or_create_by_normalized_name("Athena"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Clydesdale"))
-      event.races.create!(@cat_3)
+      event.races.create!(category: @cat_3)
       event.races.create!(category: Category.find_or_create_by_normalized_name("Category 3 Women"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Category 4 Men"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Category 4 Women"))
