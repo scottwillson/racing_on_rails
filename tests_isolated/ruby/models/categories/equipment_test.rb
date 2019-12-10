@@ -20,12 +20,12 @@ module Categories
         "Tandem" => "Tandem",
         "Eddy" => "Eddy",
         "Fat Bike" => "Fat Bike",
-        "Fixed Gear" => "Fixed Gear",
-        "Fix Gear Men" => "Fixed Gear",
-        "Fix Gear Women" => "Fixed Gear",
+        "Fixed Gear" => "Singlespeed/Fixed",
+        "Fix Gear Men" => "Singlespeed/Fixed",
+        "Fix Gear Women" => "Singlespeed/Fixed",
         "Merckx" => "Merckx",
-        "Singlespeed" => "Singlespeed",
-        "Singlespeed/Fixed" => "Singlespeed",
+        "Singlespeed" => "Singlespeed/Fixed",
+        "Singlespeed/Fixed" => "Singlespeed/Fixed",
         "Stampede" => "Stampede",
         "Unicycle" => "Unicycle"
       }.each do |name, equipment|
