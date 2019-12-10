@@ -163,7 +163,11 @@ module Competitions
     test "equipment" do
       event = FactoryBot.create(:event)
       event.races.create!(category: @singlespeed)
+      fixed_gear = Category.find_or_create_by_normalized_name("Fixed Gear")
+      fixed_gear_men = Category.find_or_create_by_normalized_name("Fix Gear Men")
+      fixed_gear_women = Category.find_or_create_by_normalized_name("Fix Gear Women")
       assert_best_match_in [@singlespeed, @singlespeed_men, @singlespeed_women], @singlespeed, event
+      assert_best_match_in [@singlespeed, @singlespeed_men, @singlespeed_women, fixed_gear, fixed_gear_men, fixed_gear_women], @singlespeed, event
     end
 
     test "equipment + gender" do
