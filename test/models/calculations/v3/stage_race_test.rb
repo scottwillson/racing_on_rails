@@ -48,10 +48,10 @@ class Calculations::V3::StageRaceTest < ActiveSupport::TestCase
     assert_equal 1, results.size
 
     result = results.first
+    assert_equal 3, result.sources.size
+    assert_equal(2, result.sources.count { |s| s.rejection_reason.nil? }, result.sources.map(&:rejection_reason))
     source = result.sources.detect { |s| s.source_result == gc_result }
     assert source.rejected?
     assert_equal "calculated", source.rejection_reason
-    assert_equal 3, result.sources.size
-    assert_equal(2, result.sources.count { |s| s.rejection_reason.nil? }, result.sources.map(&:rejection_reason))
   end
 end

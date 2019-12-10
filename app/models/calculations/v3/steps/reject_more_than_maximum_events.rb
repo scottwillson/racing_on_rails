@@ -18,10 +18,18 @@ module Calculations
           calculator.event_categories
         end
 
+        def self.events_count(rules)
+          if rules.specific_events?
+            return rules.calculations_events.count(&:points?)
+          end
+
+          rules.source_events.count(&:points?)
+        end
+
         def self.maximum_events(rules, event_category)
           category_rule = rules.category_rules.detect { |rule| rule.category == event_category.category }
           maximum_events = category_rule&.maximum_events || rules.maximum_events
-          rules.source_events.size + maximum_events
+          events_count(rules) + maximum_events
         end
 
         def self.reject_more_than_maximum_events(result, maximum_events)

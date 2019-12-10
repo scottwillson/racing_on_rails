@@ -66,6 +66,10 @@ module Calculations
           children.map(&:date).sort.uniq
         end
 
+        def points?
+          multiplier.positive?
+        end
+
         def start_date
           date
         end
@@ -74,6 +78,10 @@ module Calculations
           raise(ArgumentError, "Discipline is nil") unless discipline
           raise(ArgumentError, "discipline must be a Models::Discipline, but is a #{discipline.class}") unless discipline.is_a?(Models::Discipline)
           raise(ArgumentError, "end_date #{end_date} cannot be before date #{date}") if end_date && end_date < date
+        end
+
+        def zero_points?
+          multiplier.zero?
         end
 
         def ==(other)

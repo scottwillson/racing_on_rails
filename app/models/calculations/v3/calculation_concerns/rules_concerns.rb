@@ -24,6 +24,7 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
     @rules ||= Calculations::V3::Rules.new(
       association: Calculations::V3::Models::Association.new(id: RacingAssociation.current.id),
       association_sanctioned_only: association_sanctioned_only,
+      calculations_events: model_calculations_events,
       category_rules: category_rules,
       disciplines: model_disciplines,
       double_points_for_last_event: double_points_for_last_event?,
@@ -35,8 +36,8 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
       place_by: place_by,
       points_for_place: points_for_place,
       results_per_event: results_per_event,
-      source_events: model_source_events,
       source_event_keys: source_event_keys,
+      source_events: model_source_events,
       specific_events: specific_events?,
       team: team?,
       weekday_events: weekday_events?
