@@ -25,9 +25,9 @@ module Categories
       age_group? && ages_end <= JUNIORS.end
     end
 
-    # E.g., 30+, 40-49, U34
+    # E.g., 30+, 40-49. Not U34, 19-34
     def masters?
-      age_group? && (ages_begin >= MASTERS.begin || ages_end >= MASTERS.begin)
+      age_group? && ages_begin >= MASTERS.begin
     end
 
     def senior?
