@@ -38,6 +38,15 @@ module Categories
       return candidate_categories.first if one_match?(candidate_categories)
       return nil if candidate_categories.empty?
 
+      # Equipment matches are fuzzier
+      if equipment?
+        equipment_categories = candidate_categories.select do |category|
+          equipment == category.equipment && gender == category.gender
+        end
+        debug "equipment and gender: #{equipment_categories.map(&:name).join(', ')}"
+        return equipment_categories.first if equipment? && equipment_categories.one?
+      end
+
       candidate_categories = candidate_categories.reject { |category| gender == "M" && category.gender == "F" }
       debug "gender: #{candidate_categories.map(&:name).join(', ')}"
       return candidate_categories.first if one_match?(candidate_categories)

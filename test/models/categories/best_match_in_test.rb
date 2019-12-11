@@ -174,9 +174,11 @@ module Competitions
       event = FactoryBot.create(:event)
       event.races.create!(category: @singlespeed_men)
       event.races.create!(category: @singlespeed_women)
+      singlespeed_40_plus = Category.find_or_create_by_normalized_name("Singlespeed Men 40+")
+      singlespeed_women_40_plus = Category.find_or_create_by_normalized_name("Singlespeed Women 40+")
 
-      assert_best_match_in [@singlespeed_men, @singlespeed], @singlespeed_men, event
-      assert_best_match_in [@singlespeed_women], @singlespeed_women, event
+      assert_best_match_in [@singlespeed_men, @singlespeed, singlespeed_40_plus], @singlespeed_men, event
+      assert_best_match_in [@singlespeed_women, singlespeed_women_40_plus], @singlespeed_women, event
     end
 
     test "consider equipment before ability" do
