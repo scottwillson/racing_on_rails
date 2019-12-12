@@ -44,11 +44,10 @@ module Calculations
 
           rules = Rules.new(
             category_rules: [Models::CategoryRule.new(category)],
-            source_events: series.children,
             maximum_events: -1,
             points_for_place: [100, 75, 50, 20, 10]
           )
-          calculator = Calculator.new(rules: rules, source_results: [])
+          calculator = Calculator.new(rules: rules, source_events: series.children, source_results: [])
           calculation_event_category = calculator.event_categories.first
 
           event_category = Models::EventCategory.new(category, series.children[0])
@@ -86,11 +85,10 @@ module Calculations
               Models::CategoryRule.new(women),
               Models::CategoryRule.new(women_4, maximum_events: -2)
             ],
-            source_events: series.children,
             maximum_events: -1,
             points_for_place: [100, 75, 50, 20, 10]
           )
-          calculator = Calculator.new(rules: rules, source_results: [])
+          calculator = Calculator.new(rules: rules, source_events: series.children, source_results: [])
 
           event_category = Models::EventCategory.new(women, series.children[0])
           source_result = Models::SourceResult.new(id: 33, date: Date.new(2018, 5, 1), event_category: event_category, place: 1, points: 100)

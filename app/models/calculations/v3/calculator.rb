@@ -33,15 +33,19 @@ module Calculations
     class Calculator
       include Calculations::V3::Calculators::Categories
 
+      attr_reader :calculations_events
       attr_reader :event_categories
       attr_reader :rules
+      attr_reader :source_events
       attr_reader :year
 
-      def initialize(logger: Logger.new(STDOUT, level: :fatal), rules: Rules.new, source_results: [], year: Date.today.year)
+      def initialize(calculations_events: [], logger: Logger.new(STDOUT, level: :fatal), rules: Rules.new, source_events: [], source_results: [], year: Date.today.year)
         raise(ArgumentError, "rules should be Rules, but are #{rules.class}") unless rules.is_a?(Rules)
 
+        @calculations_events = calculations_events
         @logger = logger
         @rules = rules
+        @source_events = source_events
         @year = year
 
         @event_categories = create_event_categories

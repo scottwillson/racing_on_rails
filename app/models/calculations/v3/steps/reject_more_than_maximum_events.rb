@@ -5,11 +5,10 @@ module Calculations
     module Steps
       module RejectMoreThanMaximumEvents
         def self.calculate!(calculator)
-          rules = calculator.rules
-          return calculator.event_categories unless rules.maximum_events?
+          return calculator.event_categories unless calculator.rules.maximum_events?
 
           calculator.event_categories.each do |event_category|
-            maximum_events = maximum_events(rules, event_category)
+            maximum_events = maximum_events(calculator, event_category)
             event_category.results.each do |result|
               reject_more_than_maximum_events result, maximum_events
             end
@@ -18,18 +17,18 @@ module Calculations
           calculator.event_categories
         end
 
-        def self.events_count(rules)
-          if rules.specific_events?
-            return rules.calculations_events.count(&:points?)
+        def self.events_count(calculator)
+          if calculator.rules.specific_events?
+            return calculator.calculations_events.count(&:points?)
           end
 
-          rules.source_events.count(&:points?)
+          calculator.source_events.count(&:points?)
         end
 
-        def self.maximum_events(rules, event_category)
-          category_rule = rules.category_rules.detect { |rule| rule.category == event_category.category }
-          maximum_events = category_rule&.maximum_events || rules.maximum_events
-          events_count(rules) + maximum_events
+        def self.maximum_events(calculator, event_category)
+          category_rule = calculator.rules.category_rules.detect { |rule| rule.category == event_category.category }
+          maximum_events = category_rule&.maximum_events || calculator.rules.maximum_events
+          events_count(calculator) + maximum_events
         end
 
         def self.reject_more_than_maximum_events(result, maximum_events)
