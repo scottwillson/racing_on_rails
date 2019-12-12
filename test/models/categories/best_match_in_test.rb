@@ -259,7 +259,12 @@ module Competitions
       men_15_24 = Category.find_or_create_by_normalized_name("Men 15-24")
       men_19_29 = Category.find_or_create_by_normalized_name("19-29 Men")
       men_19_39 = Category.find_or_create_by_normalized_name("Amateur 19-39 Men")
-      category_1_2_men = Category.find_or_create_by_normalized_name("Category 1/2 Men")
+      pro_1_2_men = Category.find_or_create_by_normalized_name("Pro/1/2 Men")
+      pro_1_2_women = Category.find_or_create_by_normalized_name("Pro/1/2 Women")
+      eddy_men = Category.find_or_create_by_normalized_name("Eddy Men")
+      eddy_senior_men = Category.find_or_create_by_normalized_name("Eddy Senior Men")
+      eddy_women = Category.find_or_create_by_normalized_name("Eddy Women")
+      eddy_senior_women = Category.find_or_create_by_normalized_name("Eddy Senior Women")
 
       event = FactoryBot.create(:event)
       event.races.create!(category: Category.find_or_create_by_normalized_name("Athena"))
@@ -276,14 +281,16 @@ module Competitions
       event.races.create!(category: Category.find_or_create_by_normalized_name("Masters Men 4/5"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Masters Women"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Masters Women 4"))
-      event.races.create!(category: category_1_2_men)
-      event.races.create!(category: Category.find_or_create_by_normalized_name("Category 1/2 Women"))
+      event.races.create!(category: pro_1_2_men)
+      event.races.create!(category: pro_1_2_women)
       event.races.create!(category: Category.find_or_create_by_normalized_name("Singlespeed/Fixed"))
       event.races.create!(category: Category.find_or_create_by_normalized_name("Tandem"))
 
-      assert_best_match_in [category_1_2_men, men_15_24, men_19_29], category_1_2_men, event
+      assert_best_match_in [pro_1_2_men, men_15_24, men_19_29], pro_1_2_men, event
       assert_best_match_in [@cat_3, men_19_39], @cat_3, event
       assert_best_match_in [@junior_women, junior_women_10_12], @junior_women, event
+      assert_best_match_in [eddy_men, eddy_senior_men, pro_1_2_men], pro_1_2_men, event
+      assert_best_match_in [eddy_women, eddy_senior_women, pro_1_2_women], pro_1_2_women, event
     end
 
     def assert_best_match_in(categories, race_category, event, result_age = nil)

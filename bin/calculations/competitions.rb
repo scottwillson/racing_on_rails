@@ -365,7 +365,7 @@ COMPETITIONS = {
       { name: "Masters Women 60-69" },
       { name: "Masters Women 70+" },
       { name: "Senior Men Pro/1/2" },
-      { name: "Senior Women 1/2" },
+      { name: "Senior Women Pro/1/2" },
       { name: "Tandem" }
     ],
     competition_id: 25_820,

@@ -33,6 +33,18 @@ module Categories
       return candidate_categories.first if one_match?(candidate_categories)
       return nil if candidate_categories.empty?
 
+      # Eddy is essentially senior men/women for BAR
+      if equipment == "Eddy"
+        highest_senior_category = candidate_categories.detect do |category|
+          category.ability_begin == 0 &&
+            category.gender == gender &&
+            !category.age_group? &&
+            (category.equipment == "Eddy" || category.equipment.blank?)
+        end
+        debug "eddy: #{highest_senior_category&.name}"
+        return highest_senior_category if highest_senior_category
+      end
+
       candidate_categories = candidate_categories.select { |category| equipment == category.equipment }
       debug "equipment: #{candidate_categories.map(&:name).join(', ')}"
       return candidate_categories.first if one_match?(candidate_categories)
