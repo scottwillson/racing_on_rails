@@ -59,15 +59,15 @@ module Calculations::V3::CalculationConcerns::SourceResults
   end
 
   def model_calculations_events
-    calculations_events
-      .reject { |e| e == event }
-      .map { |e| model_events[e.event_id] }
+    @model_calculations_events ||= calculations_events
+                                   .reject { |e| e == event }
+                                   .map { |e| model_events[e.event_id] }
   end
 
   def model_source_events
-    source_events
-      .reject { |e| e == event }
-      .map { |event| model_events[event.id] }
+    @model_source_events ||= source_events
+                             .reject { |e| e == event }
+                             .map { |event| model_events[event.id] }
   end
 
   def multiplier(event_id)
