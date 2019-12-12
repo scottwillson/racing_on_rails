@@ -86,10 +86,9 @@ module Calculations
           category_rules: [Models::CategoryRule.new(category)],
           minimum_events: 3,
           points_for_place: [26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-          maximum_events: -1,
-          source_events: source_events
+          maximum_events: -1
         )
-        calculator = Calculator.new(rules: rules, source_results: source_results)
+        calculator = Calculator.new(rules: rules, source_events: source_events, source_results: source_results)
 
         event_categories = calculator.calculate!
         result = event_categories.first.results.detect { |r| r.participant.id == 0 }

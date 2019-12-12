@@ -52,11 +52,14 @@ module Calculations
         def test_include_specific_events
           category = Models::Category.new("Women")
           rules = Rules.new(
-            calculations_events: [Models::Event.new(id: 1, date: Date.new(2019, 3, 28))],
             category_rules: [Models::CategoryRule.new(category)],
             weekday_events: false
           )
-          calculator = Calculator.new(rules: rules, source_results: [])
+          calculator = Calculator.new(
+            calculations_events: [Models::Event.new(id: 1, date: Date.new(2019, 3, 28))],
+            rules: rules,
+            source_results: []
+          )
 
           participant = Models::Participant.new(0)
           source_results = []
