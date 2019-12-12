@@ -85,10 +85,10 @@ class Calculations::V3::Calculation < ApplicationRecord
         update_event_dates
         results = results_to_models(source_results)
         calculator = Calculations::V3::Calculator.new(
-          calculations_events: calculations_events,
+          calculations_events: model_calculations_events,
           logger: logger,
           rules: rules,
-          source_events: source_events,
+          source_events: model_source_events,
           source_results: results,
           year: year
         )
