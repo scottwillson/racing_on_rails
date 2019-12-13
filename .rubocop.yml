@@ -54,7 +54,7 @@ Style/GuardClause:
   Enabled: false
 
 Style/ClassAndModuleChildren:
-  EnforcedStyle: compact
+  Enabled: false
 
 Style/NumericPredicate:
   Enabled: false
