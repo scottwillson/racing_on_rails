@@ -11,6 +11,10 @@ module Competitions
 
       attr_writer :name
 
+      def initialize
+        @name = nil
+      end
+
       def [](_value)
         @name
       end

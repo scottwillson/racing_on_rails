@@ -99,11 +99,15 @@ module Categories
 
       # 1 2, 2 3, 3.4.5, 2-3-4 to 1/2/3
       def self.normalize_ability_punctuation(name)
+        # Don't combine Junior Men 9-12 3/4/5
+        return name if name[%r{\d-1\d \d/\d/\d}]
+
         5.downto(2).each do |length|
           ["P", 1, 2, 3, 4, 5].each_cons(length) do |cats|
             [" ", "\.", "-"].each do |delimiter|
               # Don't combine 1/2/3 40+
-              name = name.gsub(/( ?)#{cats.join(delimiter)}( ?)/, "\\1#{cats.join('/')}\\2") unless name[%r{[/ ]\d#{delimiter}\d\d}]
+              next if name[%r{[/ ]\d#{delimiter}\d\d}]
+              name = name.gsub(/( ?)#{cats.join(delimiter)}( ?)/, "\\1#{cats.join('/')}\\2")
             end
           end
         end
@@ -111,15 +115,15 @@ module Categories
       end
 
       def self.normalize_age_group_punctuation(name)
-        (10..17).each do |age|
+        (9..17).each do |age|
           name = name.gsub(%r{#{age}/#{age + 1}}, "#{age}-#{age + 1}")
         end
 
-        (10..16).each do |age|
+        (9..16).each do |age|
           name = name.gsub(%r{#{age}/#{age + 2}}, "#{age}-#{age + 2}")
         end
 
-        (10..15).each do |age|
+        (9..15).each do |age|
           name = name.gsub(%r{#{age}/#{age + 3}}, "#{age}-#{age + 3}")
         end
 
@@ -220,7 +224,7 @@ module Categories
               "Women"
             elsif token[/\Awmn?\.?\z/i] || token[/\Awom\.?\z/i] || token[/\Aw\z/i] || token[/\Awmen?\.?\z/i] || token[/\Awomenen\z/i]
               "Women"
-            elsif token[/\Afemale\z/i] || token[/\Awommen:\z/i] || token[/\Aw\z/i]
+            elsif token[/\Afemale\z/i] || token[/\Awommen:\z/i] || token[/\Aw\z/i] || token[/\Awome\z/i] || token[/\Awomwen\z/i]
               "Women"
             elsif token[/\Amen'?s\z/i] || token[/\Amale\Z/i] || token[/\Amen:\z/i] || token[/\Amed\z/i] || token[/\Amens's\z/i]
               "Men"
@@ -238,6 +242,8 @@ module Categories
               "Sport"
             elsif token[/\Asinglespeeds?\z/i] || token[/\Ass\z/i]
               "Singlespeed"
+            elsif token[/fix gear/i]
+              "Fixed Gear"
             elsif token[/\Atand?\z/i] || token[/\Atandems\z/i]
               "Tandem"
             elsif token[/\Auni\z/i] || token[/\AUnicycles\z/i]

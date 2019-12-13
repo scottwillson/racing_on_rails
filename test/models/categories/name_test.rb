@@ -49,6 +49,7 @@ module Categories
       assert_equal "4", Category.new(name: "4").name, "4"
       assert_equal "4", Category.new(name: 4).name, "4 (Number)"
       assert_equal "Four-Person Men Veteran (Over 160)", Category.new(name: "Four-Person Men Veteran (Over 160)").name, "Four-Person Men Veteran (Over 160)"
+      assert_equal "Junior Men 9-12 3/4/5", Category.new(name: "Junior Men 9-12 3/4/5").name, "Junior Men 9-12/3/4/5"
     end
 
     test "find_or_create_by_normalized_name" do

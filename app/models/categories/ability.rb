@@ -113,6 +113,10 @@ module Categories
       ability_begin..ability_end
     end
 
+    def abilities_include?(other)
+      abilities.cover?(other.abilities) || other.ability_begin.in?(abilities) || other.all_abilities?
+    end
+
     def all_abilities?
       abilities == ALL
     end

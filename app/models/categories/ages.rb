@@ -12,14 +12,20 @@ module Categories
       before_save :set_ages_from_name
     end
 
+    # Has any ages restrictions. Can still be a senior category. E.g., 19-21.
     def age_group?
       ages_begin && ages_end && (ages_begin != 0 || ages_end != ::Categories::MAXIMUM)
+    end
+
+    def all_ages?
+      (ages_begin.nil? && ages_end.nil?) || (ages_begin == 0 && ages_end == ::Categories::MAXIMUM)
     end
 
     def and_over?
       ages_end && ages_end == ::Categories::MAXIMUM
     end
 
+    # E.g., 30+, 40-49. Not U34, 19-34
     def junior?
       age_group? && ages_end <= JUNIORS.end
     end
@@ -49,6 +55,13 @@ module Categories
         self.ages_end = age_split[1].to_i unless age_split[1].nil?
       end
       ages
+    end
+
+    def ages_include?(other, result_age = nil)
+      return false if all_ages? && other.masters?
+
+      (all_ages? && other.all_ages?) ||
+        (!senior? && (ages.cover?(other.ages) || result_age&.in?(ages) || other.ages_begin.in?(ages)))
     end
 
     def set_ages_from_name
