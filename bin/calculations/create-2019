@@ -136,7 +136,7 @@ end
 
 # competitions = COMPETITIONS
 competitions = {
-  age_graded_bar: COMPETITIONS[:age_graded_bar]
+  team_bar: COMPETITIONS[:team_bar]
 }
 
 # recreate_databases
