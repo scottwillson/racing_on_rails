@@ -333,40 +333,43 @@ COMPETITIONS = {
   #     points_for_place: [25, 20, 16, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 1]
   #   }
   # },
-  # age_graded_bar: {
-  #   categories: [
-  #     { name: "Junior Men 10-12" },
-  #     { name: "Junior Men 13-14" },
-  #     { name: "Junior Men 15-16" },
-  #     { name: "Junior Men 17-18" },
-  #     { name: "Junior Women 10-12" },
-  #     { name: "Junior Women 13-14" },
-  #     { name: "Junior Women 15-16" },
-  #     { name: "Junior Women 17-18" },
-  #     { name: "Masters Men 35-39" },
-  #     { name: "Masters Men 40-44" },
-  #     { name: "Masters Men 45-49" },
-  #     { name: "Masters Men 50-54" },
-  #     { name: "Masters Men 55-59" },
-  #     { name: "Masters Men 60-64" },
-  #     { name: "Masters Men 65-69" },
-  #     { name: "Masters Men 70+" },
-  #     { name: "Masters Women 40-44" },
-  #     { name: "Masters Women 45-49" },
-  #     { name: "Masters Women 50-54" },
-  #     { name: "Masters Women 55-59" },
-  #     { name: "Masters Women 60+" }
-  #   ],
-  #   name: "Age-Graded BAR",
-  #   rules: {
-  #     association_sanctioned_only: true,
-  #     discipline: "Overall",
-  #     group_by: "age", #???
-  #     members_only: true,
-  #     points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-  #     weekday_events: false
-  #   }
-  # },
+  age_graded_bar: {
+    categories: [
+      { name: "Junior Men 10-12" },
+      { name: "Junior Men 13-14" },
+      { name: "Junior Men 15-16" },
+      { name: "Junior Men 17-18" },
+      { name: "Junior Women 10-12" },
+      { name: "Junior Women 13-14" },
+      { name: "Junior Women 15-16" },
+      { name: "Junior Women 17-18" },
+      { name: "Masters Men 30-34" },
+      { name: "Masters Men 35-39" },
+      { name: "Masters Men 40-44" },
+      { name: "Masters Men 45-49" },
+      { name: "Masters Men 50-54" },
+      { name: "Masters Men 55-59" },
+      { name: "Masters Men 60-64" },
+      { name: "Masters Men 65-69" },
+      { name: "Masters Men 70+" },
+      { name: "Masters Women 30-34" },
+      { name: "Masters Women 35-39" },
+      { name: "Masters Women 40-44" },
+      { name: "Masters Women 45-49" },
+      { name: "Masters Women 50-54" },
+      { name: "Masters Women 55-59" },
+      { name: "Masters Women 60+" }
+    ],
+    name: "Age-Graded BAR",
+    rules: {
+      association_sanctioned_only: true,
+      discipline: "Overall",
+      group_by: "age", #???
+      members_only: true,
+      points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      weekday_events: false
+    }
+  },
   criterium_bar: {
     categories: [
       { name: "Athena" },
