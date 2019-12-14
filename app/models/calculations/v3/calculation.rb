@@ -44,6 +44,7 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   before_destroy :destroy_event
   before_save :set_name
+  after_save :expire_cache
 
   validates :key, uniqueness: { allow_nil: true, scope: :year }
   validates :group_by, inclusion: { in: GROUP_BY }
@@ -97,6 +98,8 @@ class Calculations::V3::Calculation < ApplicationRecord
       end
     end
 
+    expire_cache
+
     true
   end
 
@@ -127,6 +130,10 @@ class Calculations::V3::Calculation < ApplicationRecord
     else
       name
     end
+  end
+
+  def expire_cache
+    ApplicationController.expire_cache
   end
 
   def set_name
