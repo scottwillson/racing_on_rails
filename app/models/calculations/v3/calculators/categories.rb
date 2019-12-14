@@ -36,7 +36,6 @@ module Calculations::V3::Calculators::Categories
 
     # Matches a calculation category
     calculation_category = best_match_in(source_result.category, categories, source_result.age)
-    validate_category! calculation_category, source_result
     return event_categories.find { |c| c.category == calculation_category } if calculation_category
 
     # New category that doesn't match any existing category
@@ -52,27 +51,5 @@ module Calculations::V3::Calculators::Categories
 
     best_match = best_match_in(source_result.category, categories, source_result.age)
     best_match.present?
-  end
-
-  def validate_category!(category, source_result)
-    return unless rules.group_by == "age"
-
-    if category.nil?
-      raise(
-        ArgumentError,
-        "Calculation groups by age, but no category in #{categories.map(&:name).sort} for #{source_result.category.name}, " \
-        "age: #{source_result.age}, " \
-        "id: #{source_result.id} is not an age group category"
-      )
-    end
-
-    if !category.age_group?
-      raise(
-        ArgumentError,
-        "Calculation groups by age, but #{category.&name} in #{categories.map(&:name).sort} for #{source_result.category.name}, " \
-        "age: #{source_result.age}, " \
-        "id: #{source_result.id} is not an age group category"
-      )
-    end
   end
 end
