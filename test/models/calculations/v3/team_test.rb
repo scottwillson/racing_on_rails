@@ -8,6 +8,18 @@ class Calculations::V3::TeamTest < ActiveSupport::TestCase
 
   test "Team BAR" do
     Timecop.travel(2019, 11) do
+      road_discipline = Discipline[:road]
+      road = Calculations::V3::Calculation.create!(
+        discipline: road_discipline,
+        disciplines: [road_discipline],
+        key: "road_bar",
+        name: "Road BAR",
+        members_only: true,
+        points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        weekday_events: false
+      )
+      road.categories << ::Category.find_or_create_by(name: "Senior Women")
+
       calculation = Calculations::V3::Calculation.create!(
         association_sanctioned_only: true,
         members_only: true,
@@ -20,8 +32,10 @@ class Calculations::V3::TeamTest < ActiveSupport::TestCase
       event = FactoryBot.create(:event, date: Time.zone.local(2019, 2, 3))
       race = FactoryBot.create(:race, event: event)
       team = FactoryBot.create(:team)
-      race.results.create!(place: 5, team: team)
+      person = FactoryBot.create(:person)
+      race.results.create!(place: 5, person: person, team: team)
 
+      road.calculate!
       calculation.calculate!
 
       calculation_event = calculation.reload.event
