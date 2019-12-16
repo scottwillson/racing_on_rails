@@ -49,6 +49,19 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       assert_equal 0, results.second.points
       assert 0, results.second.rejected?
       assert_equal "members_only", results.second.rejection_reason
+
+      # Should not count self
+      calculation.calculate!
+
+      bar = calculation.reload.event
+      assert_equal "Road BAR", bar.name
+      assert_equal 3, bar.races.size
+      race = bar.races.detect { |r| r.category == category_3_men }
+      assert_not_nil race
+
+      results = race.results.sort
+      assert_equal 2, results.size
+      assert_equal 1, results.first.source_results.size
     end
   end
 
