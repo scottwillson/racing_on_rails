@@ -65,6 +65,38 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
     end
   end
 
+  test "team source results" do
+    Timecop.freeze(2019) do
+      calculation = Calculations::V3::Calculation.create!(
+        disciplines: [Discipline[:road]],
+        members_only: true,
+        name: "Road BAR",
+        points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        weekday_events: false
+      )
+
+      event = FactoryBot.create(:event, date: Time.zone.local(2019, 3, 31))
+      source_race = FactoryBot.create(:race, event: event)
+      FactoryBot.create(:result, race: source_race, place: 1)
+      FactoryBot.create(:result, race: source_race, place: 1)
+      FactoryBot.create(:result, race: source_race, place: 1)
+      FactoryBot.create(:result, race: source_race, place: 2)
+      FactoryBot.create(:result, race: source_race, place: 2)
+
+      calculation.calculate!
+
+      bar = calculation.reload.event
+
+      assert_equal "Road BAR", bar.name
+      race = bar.races.first
+
+      results = race.results.sort
+      assert_equal 5, results.size
+
+      assert_equal [5, 5, 5, 7, 7], results.map(&:points).sort
+    end
+  end
+
   test "weekly series overall" do
     Timecop.freeze(2019) do
       bar_calculation = Calculations::V3::Calculation.create!(

@@ -62,7 +62,7 @@ module Calculations
         def ==(other)
           return false if other.nil?
 
-          other.category == category
+          other.category == category && other.event == event
         end
 
         def eql?(other)
@@ -70,7 +70,7 @@ module Calculations
         end
 
         def hash
-          category&.hash
+          [category, event].compact.hash
         end
 
         delegate :discipline, to: :event

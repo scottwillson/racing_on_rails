@@ -214,6 +214,51 @@ module Calculations
 
           assert_equal 22.5, event_categories.first.results[0].source_results.first.points
         end
+
+        def test_split_points_across_teams
+          category = Models::Category.new("Masters Men")
+          rules = Rules.new(
+            category_rules: [Models::CategoryRule.new(category)],
+            points_for_place: [100, 75, 50, 20, 10]
+          )
+          calculator = Calculator.new(rules: rules, source_results: [])
+          event_category = calculator.event_categories.first
+
+          event = Models::Event.new
+          source_event_category = Models::EventCategory.new(category, event)
+          source_result = Models::SourceResult.new(id: 33, event_category: source_event_category, place: 1, team_size: 3)
+          participant = Models::Participant.new(0)
+          result = Models::CalculatedResult.new(participant, [source_result])
+          event_category.results << result
+
+          source_result = Models::SourceResult.new(id: 19, event_category: source_event_category, place: 1, team_size: 3)
+          participant = Models::Participant.new(1)
+          result = Models::CalculatedResult.new(participant, [source_result])
+          event_category.results << result
+
+          source_result = Models::SourceResult.new(id: 20, event_category: source_event_category, place: 1, team_size: 3)
+          participant = Models::Participant.new(2)
+          result = Models::CalculatedResult.new(participant, [source_result])
+          event_category.results << result
+
+          source_result = Models::SourceResult.new(id: 21, event_category: source_event_category, place: 2, team_size: 2)
+          participant = Models::Participant.new(3)
+          result = Models::CalculatedResult.new(participant, [source_result])
+          event_category.results << result
+
+          source_result = Models::SourceResult.new(id: 22, event_category: source_event_category, place: 2, team_size: 2)
+          participant = Models::Participant.new(4)
+          result = Models::CalculatedResult.new(participant, [source_result])
+          event_category.results << result
+
+          event_categories = AssignPoints.calculate!(calculator)
+
+          source_results = event_categories.first.results.flat_map(&:source_results)
+          assert_equal(
+            [33.333, 33.333, 33.333, 37.5, 37.5],
+            source_results.map(&:points).map { |points| points.round(3) }
+          )
+        end
       end
     end
   end
