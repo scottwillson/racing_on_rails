@@ -17,7 +17,12 @@ module Results
 
       def test_render_team
         column = stub("column", key: :team_name)
-        row = stub("row", :[] => "Gentle Lovers", metadata: {}, source: stub("result", team_id: 18, team_competition_result?: false, year: 2010))
+        row = stub(
+          "row",
+          :[] => "Gentle Lovers",
+          metadata: {},
+          source: stub("result", calculation_result?: false, team_id: 18, team_competition_result?: false, year: 2010)
+        )
         TeamNameRenderer.stubs(racing_association: mock("racing_association", unregistered_teams_in_results?: true))
 
         html = TeamNameRenderer.render(column, row)
@@ -28,7 +33,12 @@ module Results
 
       def test_mobile
         column = stub("column", key: :team_name)
-        row = stub("row", :[] => "Gentle Lovers", metadata: { mobile_request: true }, source: stub("result", team_id: 18, team_competition_result?: false, year: 2010))
+        row = stub(
+          "row",
+          :[] => "Gentle Lovers",
+          metadata: { mobile_request: true },
+          source: stub("result", calculation_result?: false, team_id: 18, team_competition_result?: false, year: 2010)
+        )
         TeamNameRenderer.stubs(racing_association: mock("racing_association", unregistered_teams_in_results?: true))
 
         html = TeamNameRenderer.render(column, row)
@@ -43,6 +53,7 @@ module Results
                    :[] => "Gentle Lovers",
                    metadata: {},
                    source: stub("result",
+                                calculation_result?: false,
                                 team_id: 18,
                                 event_id: 3,
                                 race_id: 200,
