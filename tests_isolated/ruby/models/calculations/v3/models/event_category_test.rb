@@ -31,6 +31,15 @@ module Calculations
 
           assert_equality a, b, c, d
         end
+
+        def test_equality_with_event
+          a = EventCategory.new(Category.new("Women"), Event.new(id: 9))
+          b = EventCategory.new(Category.new("Women"), Event.new(id: 9))
+          c = EventCategory.new(Category.new("Women"), Event.new(id: 9))
+          d = EventCategory.new(Category.new("Women"), Event.new(id: 14))
+
+          assert_equality a, b, c, d
+        end
       end
     end
   end

@@ -18,7 +18,8 @@ module Calculations
 
                 source_result.points = points_for_place *
                                        last_event_multiplier(source_result, calculator.rules) *
-                                       multiplier(source_result)
+                                       multiplier(source_result) /
+                                       source_result.team_size
               end
             end
           end
