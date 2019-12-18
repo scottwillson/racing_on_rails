@@ -10,14 +10,12 @@ module Results
         text = row[column.key]
         return text unless result.team_id
 
-        # TODO: Should be different for person-based calcs
         if result.calculation_result?
           "<a href=\"#{path_prefix(row)}/calculations/results/#{result.id}\">#{text}</a>"
 
         elsif result.team_competition_result?
           "<a href=\"#{path_prefix(row)}/events/#{result.event_id}/teams/#{result.team_id}/results##{result.race_id}\">#{text}</a>"
 
-        # TODO: Should be at top
         elsif racing_association.unregistered_teams_in_results? ||
               result.team_member? ||
               result.year < racing_association.year
