@@ -51,6 +51,8 @@ def fix_source_results
     end
     Race.where(event_id: 27105).update_all(event_id: 26892)
     Result.where(event_id: 27105).update_all(event_id: 26892)
+    Race.where(event_id: 27187).update_all(event_id: 27041)
+    Result.where(event_id: 27187).update_all(event_id: 27041)
   end
 end
 

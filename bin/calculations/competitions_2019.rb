@@ -429,6 +429,8 @@ COMPETITIONS = {
       { name: "Category 1/2/3 Junior Women", reject: true },
       { name: "Category 3/4/5 Junior Women", reject: true },
       { name: "Category 1/2/3/4/5 Junior Women", reject: true },
+      { name: "Duchess of CX", reject: true },
+      { name: "Duke of CX", reject: true },
       { name: "Junior Women" },
       { name: "Masters Men" },
       { name: "Masters Women" },
