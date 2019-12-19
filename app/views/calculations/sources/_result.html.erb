@@ -39,12 +39,12 @@
         <%- if calculation.team? -%>
         <td class="name"><%= source.source_result.name %></td>
         <%- end -%>
-        <td class="rejection_reason"><%= t source.rejection_reason,
+        <td class="rejection_reason"><%= t(source.rejection_reason,
           category: source.source_result.category_name,
           discipline: source.source_result.discipline_name,
           minimum_events: calculation.rules.minimum_events,
           racing_association: RacingAssociation.current.short_name,
-          results_per_event: calculation.rules.results_per_event
+          results_per_event: calculation.rules.results_per_event) if source.rejected?
           %></td>
         <td class="points"><%= source.points %></td>
       </tr>
