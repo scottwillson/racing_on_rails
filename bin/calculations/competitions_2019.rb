@@ -544,6 +544,7 @@ COMPETITIONS = {
       { id: 26928, multiplier: 1 },
       { id: 26941, multiplier: 1 },
       { id: 26944, multiplier: 1 },
+      { id: 26968, multiplier: 1 },
       { id: 27013, multiplier: 1 },
       { id: 27017, multiplier: 1 },
       { id: 27058, multiplier: 1 },

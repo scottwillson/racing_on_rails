@@ -37,6 +37,7 @@ def fix_source_results
     Category.where("name like '%fix%'").update_all(equipment: "Fixed Gear")
 
     Event.where(id: 26709).update_all(discipline: "Criterium")
+    Event.where(id: 26448).update_all(discipline: "Time Trial")
     category = Category.find_or_create_by_normalized_name("Category 2 Women Junior 14-18")
     Race.where(id: 623944).update_all(category_id: category.id)
     category = Category.find_or_create_by_normalized_name("Women 3")
@@ -48,6 +49,8 @@ def fix_source_results
       Result.where(event_id: 27077).update_all(event_id: 27011)
       Event.destroy(27077)
     end
+    Race.where(event_id: 27105).update_all(event_id: 26892)
+    Result.where(event_id: 27105).update_all(event_id: 26892)
   end
 end
 
