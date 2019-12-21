@@ -48,7 +48,7 @@ module Categories
         "Junior Girls 10-12" => "F",
         "Junior Men 15-16" => "M",
         "Junior Men" => "M",
-        "Junior Women" =>  "F",
+        "Junior Women" => "F",
         "Masters Men 1/2/3" => "M",
         "Masters Men 4/5" => "M",
         "Masters Men 50+" => "M",

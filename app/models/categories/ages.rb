@@ -21,6 +21,7 @@ module Categories
       ages_end && ages_end == ::Categories::MAXIMUM
     end
 
+    # E.g., 30+, 40-49. Not U34, 19-34
     def junior?
       age_group? && ages_end <= JUNIORS.end
     end
