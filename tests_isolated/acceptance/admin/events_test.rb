@@ -4,7 +4,7 @@ require_relative "../acceptance_test"
 
 # :stopdoc:
 class EventsTest < AcceptanceTest
-  test "events" do
+  xtest "events" do
     javascript!
 
     candi = FactoryBot.create(:administrator, name: "Candi Murray", home_phone: "(503) 555-1212", email: "admin@example.com")
