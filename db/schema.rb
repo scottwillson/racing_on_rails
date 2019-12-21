@@ -971,7 +971,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.decimal "distance", precision: 10, scale: 2
     t.boolean "rejected", default: false, null: false
     t.string "rejection_reason"
-    t.integer "numeric_place", default: 999999
+    t.integer "numeric_place", default: 999999, null: false
     t.index ["category_id"], name: "index_results_on_category_id"
     t.index ["event_id"], name: "index_results_on_event_id"
     t.index ["members_only_place"], name: "index_results_on_members_only_place"
