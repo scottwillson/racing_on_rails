@@ -160,15 +160,23 @@ class ResultsController < ApplicationController
 
   def assign_person_results(person, year)
     @event_results = Result.where(
-      "person_id = ? and year = ? and competition_result = false and team_competition_result = false", person.id, year
+      person_id: person.id,
+      year: year,
+      competition_result: false,
+      team_competition_result: false
     )
     @competition_results = Result
                            .includes(scores: %i[source_result competition_result])
-                           .where("person_id = ? and year = ? and (competition_result = true or team_competition_result = true)", person.id, year)
+                           .where(person_id: person.id, year: year)
+                           .where("competition_result = true or team_competition_result = true")
+                           .where.not(numeric_place: Result::UNPLACED)
   end
 
   def assign_team_results(team, year)
-    @event_results = Result.where(team_id: team.id).where(year: year).where("competition_result = false and team_competition_result = false")
+    @event_results = Result
+                     .where(team_id: team.id, year: year)
+                     .where("competition_result = false and team_competition_result = false")
+                     .where.not(numeric_place: Result::UNPLACED)
   end
 
   # Default implementation. Return nil. Override in engines.

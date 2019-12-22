@@ -119,6 +119,41 @@ module ResultsHelper
     render "results/table", table: table, css_class: "results scores"
   end
 
+  def sources_table(result)
+    table = Tabular::Table.new
+
+    table.row_mapper = if result.team_competition_result?
+                         if mobile_request?
+                           Results::Mapper.new(%w[ place event_full_name name ])
+                         else
+                           Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s notes points ])
+                         end
+                       else
+                         if mobile_request?
+                           Results::Mapper.new(%w[ place event_full_name ])
+                         else
+                           Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s points ])
+                         end
+                       end
+
+    table.rows = result.sources
+                       .reject(&:rejected?)
+                       .sort_by { |source| [source.source_result.date, -source.points] }
+                       .map do |source|
+                         source_result = source.source_result
+                         source_result.notes = source.rejection_reason
+                         source_result.points = source.points
+                         source_result
+                       end
+
+    table.rows << Tabular::Row.new(table, points: result.points)
+    table.renderer = Results::Renderers::DefaultResultRenderer
+    table.renderers[:event_full_name] = Results::Renderers::ScoreEventFullNameRenderer
+    table.renderers[:points] = Results::Renderers::PointsRenderer
+    table.delete_blank_columns!
+    render "results/table", table: table, css_class: "results scores"
+  end
+
   def edit_results_table(race)
     table = Tabular::Table.new
     table.row_mapper = Results::Mapper.new(RESULT_COLUMNS, race.custom_columns)
