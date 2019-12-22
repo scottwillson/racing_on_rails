@@ -21,8 +21,11 @@ module Competitions
       Competitions::AgeGradedBar
       Competitions::Bar
       Competitions::BlindDateAtTheDairyMonthlyStandings
+<<<<<<< HEAD
       Competitions::BlindDateAtTheDairyOverall
       Competitions::BlindDateAtTheDairyTeamCompetition
+=======
+>>>>>>> Add missing comp types to maybe improve BAR calcs
       Competitions::Cat4WomensRaceSeries
       Competitions::Competition
       Competitions::CrossCrusadeCallups
@@ -30,12 +33,17 @@ module Competitions
       Competitions::CrossCrusadeTeamCompetition
       Competitions::DirtyCirclesOverall
       Competitions::GrandPrixBradRoss::Overall
+<<<<<<< HEAD
       Competitions::GrandPrixBradRoss::TeamStandings
+=======
+      Competitions::GrandPrixBradRoss::Team
+>>>>>>> Add missing comp types to maybe improve BAR calcs
       Competitions::Ironman
       Competitions::OregonCup
       Competitions::OregonJuniorCyclocrossSeries::Overall
       Competitions::OregonJuniorCyclocrossSeries::Team
       Competitions::OregonJuniorMountainBikeSeries::Overall
+<<<<<<< HEAD
       Competitions::OregonTTCup
       Competitions::OregonWomensPrestigeSeries
       Competitions::OregonWomensPrestigeTeamSeries
@@ -46,6 +54,18 @@ module Competitions
       Competitions::TaborOverall
       Competitions::TeamBar
       Competitions::WillametteValleyClassicsTour::Overall
+=======
+      Competitions::OregonJuniorMountainBikeSeries::Team
+      Competitions::OregonWomensPrestigeSeries
+      Competitions::OregonWomensPrestigeTeamSeries
+      Competitions::OverallBar
+      Competitions::PortlandShortTrackSeries::Overall
+      Competitions::PortlandShortTrackSeries::Team
+      Competitions::PortlandTrophyCup
+      Competitions::TaborOverall
+      Competitions::TeamBar
+      Competitions::ThrillaOverall
+>>>>>>> Add missing comp types to maybe improve BAR calcs
     ].freeze
 
     UNLIMITED = Float::INFINITY
