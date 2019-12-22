@@ -1,6 +1,6 @@
 <% @page_title = "Calculations: #{@calculation.name}" %>
 
-<% cache cache_key do %>
+<% cache cache_key(@calculation) do %>
   <h2><%= link_to "Calculations", calculations_path %>: <%= @calculation.name %>: <%= @calculation.year %></h2>
 
   <div class="row">

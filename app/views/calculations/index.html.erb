@@ -1,6 +1,6 @@
 <% @page_title = "Calculations" %>
 
-<% cache cache_key do %>
+<% cache cache_key(@calculations) do %>
   <h2>Calculations</h2>
 
   <%= table id: "calculations", collection: @calculations, columns: 4 do %>
