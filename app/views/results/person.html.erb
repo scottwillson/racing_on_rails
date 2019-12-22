@@ -12,7 +12,11 @@
 		  "#{competition_result.numeric_place.ordinalize} &mdash; #{competition_result.race_full_name}".html_safe,
 		  event_results_path(event_id: competition_result.event_id, anchor: "race_#{competition_result.race_id}")
 		).html_safe %></h3>
-		<%= scores_table competition_result %>
+		<% if competition_result.scores.present? %>
+			<%= scores_table competition_result %>
+		<% else %>
+			<%= sources_table competition_result %>
+		<% end %>
 	<% end %>
 
 	<form class="form-horizontal" role="form">
