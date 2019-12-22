@@ -148,10 +148,10 @@ competitions = COMPETITIONS
 # }
 
 # recreate_databases
-# fix_source_results
-# destroy_calculations
-# create_calculations competitions
-# calculations(competitions).map(&:source_event).compact.each(&:update_date)
+fix_source_results
+destroy_calculations
+create_calculations competitions
+calculations(competitions).map(&:source_event).compact.each(&:update_date)
 calculations(competitions).select do |c|
   c.key == "overall_bar" || c.key == "age_graded_bar" || c.key == "team_bar"
 end.each(&:calculate!)
