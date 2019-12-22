@@ -1,6 +1,6 @@
 <% @page_title = "Calculations: #{@event.name}: Categories" %>
 
-<% cache @event do %>
+<% cache cache_key(@event) do %>
   <h2><%= link_to "Calculations", calculations_path %>: <%= link_to @event.name, calculations_event_results_path(event_id: @event.id) %></h2>
 
   <div class="row">

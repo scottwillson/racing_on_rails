@@ -1,6 +1,6 @@
 <% @page_title = "Results: #{@event.date.year}: #{@event.full_name}" %>
 
-<% cache cache_key(@event) do %>
+<% cache cache_key(@event, @races) do %>
   <h2><%= @event.year %> <%= @event.full_name %></h2>
   <%= render partial: "calculations/date_and_parent", locals: { event: @event } %>
   <%= render partial: "races", locals: { races: @races } %>
