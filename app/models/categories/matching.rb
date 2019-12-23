@@ -48,7 +48,8 @@ module Categories
       # Equipment matches are fuzzier
       candidate_categories = candidate_categories.select { |category| equipment == category.equipment }
       debug "equipment: #{candidate_categories.map(&:name).join(', ')}"
-      return candidate_categories.first if candidate_categories.one?
+      return candidate_categories.first if one_match?(candidate_categories)
+      return candidate_categories.first if candidate_categories.one? && equipment?
       return nil if candidate_categories.empty?
 
       if equipment?
