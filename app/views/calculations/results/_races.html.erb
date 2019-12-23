@@ -4,10 +4,10 @@
     <tbody>
       <%- races.select(&:visible?).reject(&:rejected?).sort.each_row do |first_race, second_race| -%>
       <tr>
-        <%= tag.td class: :race) do %>
+        <%= tag.td class: :race do %>
           <%= link_to first_race.name, "#race_#{first_race.id}" %>
         <% end %>
-        <%= tag.td class: :race) do %>
+        <%= tag.td class: :race do %>
           <%- if second_race -%>
             <%= link_to second_race.name, "#race_#{second_race.id}" %>
           <% end %>
