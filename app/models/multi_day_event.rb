@@ -182,6 +182,8 @@ class MultiDayEvent < Event
   # * :short: 6/7-6/12
   # * :long: 6/7/2010-6/12/2010
   def date_range_s(format = :short)
+    return date.year if all_year?
+
     if format == :long
       if start_date == end_date
         date.strftime("%-m/%-d/%Y")
