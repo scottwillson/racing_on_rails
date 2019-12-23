@@ -10,6 +10,8 @@ module Calculations
 
         # Opposite convention of ::Result (for now)
         def numeric_place
+          return Float::INFINITY if place.nil?
+
           case place&.to_i
           when nil, 0
             Float::INFINITY
