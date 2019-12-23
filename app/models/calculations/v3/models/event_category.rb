@@ -22,6 +22,10 @@ module Calculations
           event&.id
         end
 
+        def field_size
+          results.size
+        end
+
         def name # rubocop:disable Rails/Delegate
           category.name
         end

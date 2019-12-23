@@ -69,7 +69,7 @@ module Calculations
           raise(ArgumentError, "event_category must be an EventCategory, but was a #{event_category.class}") unless event_category.is_a?(EventCategory)
         end
 
-        delegate :discipline, :event, to: :event_category
+        delegate :discipline, :event, :field_size, to: :event_category
         delegate :id, to: :participant, prefix: true
       end
     end
