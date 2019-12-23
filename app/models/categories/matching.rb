@@ -254,7 +254,7 @@ module Categories
     end
 
     def debug(message)
-      if defined?(Rails) && defined?(Rails.logger)
+      if defined?(Rails) && defined?(Rails.logger) && ENV["DEBUG_CATEGORY_MATCHING"]
         Rails.logger&.debug message
       end
     end
