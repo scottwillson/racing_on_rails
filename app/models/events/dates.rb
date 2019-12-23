@@ -47,6 +47,7 @@ module Events
     # Format for schedule page primarily
     def short_date
       return "" unless date
+      return date.year if all_year?
 
       prefix = " " if date.month < 10
       suffix = " " if date.day < 10
@@ -54,7 +55,9 @@ module Events
     end
 
     def date_range_s(format = :short)
-      if format == :long
+      if all_year?
+        date.year
+      elsif format == :long
         date.strftime("%-m/%-d/%Y")
       else
         "#{date.month}/#{date.day}"
@@ -66,6 +69,8 @@ module Events
     end
 
     def date_range_long_s
+      return date.year if all_year?
+
       start_date_s = date.to_s(:long_with_week_day)
       if multiple_days?
         "#{start_date_s} to #{end_date.to_s(:long_with_week_day)}"
