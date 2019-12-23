@@ -90,6 +90,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.integer "year", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "field_size_bonus", default: false, null: false
     t.index ["discipline_id"], name: "index_calculations_on_discipline_id"
     t.index ["event_id"], name: "index_calculations_on_event_id"
     t.index ["key", "year"], name: "index_calculations_on_key_and_year", unique: true

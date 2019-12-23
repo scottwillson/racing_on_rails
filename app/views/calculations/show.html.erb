@@ -52,6 +52,16 @@
         </td>
       </tr>
       <tr>
+        <td>Field size bonus</td>
+        <td>
+          <% if @calculation.rules.field_size_bonus? %>
+            150% points for fields of 75 or more
+          <% else %>
+            None
+          <% end %>
+        </td>
+      </tr>
+      <tr>
         <td>Group by</td>
         <td><%= @calculation.rules.group_by %></td>
       </tr>

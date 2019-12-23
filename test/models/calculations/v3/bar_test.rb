@@ -10,6 +10,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
     Timecop.freeze(2019) do
       calculation = Calculations::V3::Calculation.create!(
         disciplines: [Discipline[:road]],
+        field_size_bonus: true,
         members_only: true,
         name: "Road BAR",
         points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],

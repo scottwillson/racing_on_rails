@@ -7,6 +7,7 @@ module Calculations
       attr_reader :association_sanctioned_only
       attr_reader :category_rules
       attr_reader :disciplines
+      attr_reader :field_size_bonus
       attr_reader :group_by
       attr_reader :maximum_events
       attr_reader :members_only
@@ -29,6 +30,7 @@ module Calculations
         category_rules: [],
         disciplines: [],
         double_points_for_last_event: false,
+        field_size_bonus: false,
         group_by: "category",
         maximum_events: 0,
         members_only: false,
@@ -48,6 +50,7 @@ module Calculations
         @category_rules = category_rules
         @disciplines = disciplines
         @double_points_for_last_event = double_points_for_last_event
+        @field_size_bonus = field_size_bonus
         @group_by = group_by
         @maximum_events = maximum_events
         @members_only = members_only
@@ -78,6 +81,10 @@ module Calculations
 
       def double_points_for_last_event?
         @double_points_for_last_event
+      end
+
+      def field_size_bonus?
+        @field_size_bonus
       end
 
       def maximum_events?

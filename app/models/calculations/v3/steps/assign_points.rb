@@ -18,6 +18,7 @@ module Calculations
 
                 source_result.points = points_for_place *
                                        last_event_multiplier(source_result, calculator.rules) *
+                                       field_size_multiplier(source_result, calculator.rules) *
                                        multiplier(source_result) /
                                        source_result.team_size
               end
@@ -40,6 +41,14 @@ module Calculations
           return source_result.points if points_for_place.nil?
 
           points_for_place[source_result.numeric_place - 1] || 0
+        end
+
+        def self.field_size_multiplier(source_result, rules)
+          if rules.field_size_bonus? && source_result.field_size >= 75
+            1.5
+          else
+            1.0
+          end
         end
 
         def self.last_event_multiplier(source_result, rules)
