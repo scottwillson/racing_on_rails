@@ -71,7 +71,6 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
     # existing_result.preliminary   = result.preliminary ? true : false
     # to_s important. Otherwise, a change from 3 to "3" triggers a DB update.
     existing_result.place = result.place.to_s
-    existing_result.numeric_place = result.numeric_place
     existing_result.points = result.points
     existing_result.rejection_reason = result.rejection_reason
     existing_result.team_id = result_team_id(result)
