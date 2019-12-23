@@ -12,7 +12,7 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
   end
 
   def create_calculated_results(results, race)
-    Rails.logger.debug "create_calculated_results #{race.name}"
+    Rails.logger.debug "create_calculated_results #{race.name} #{results.size}"
 
     results.each do |result|
       person, team = result_person_and_team(result)
@@ -39,7 +39,7 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
   end
 
   def delete_calculated_results(results, race)
-    Rails.logger.debug "delete_calculated_results #{race.name}"
+    Rails.logger.debug "delete_calculated_results #{race.name} #{results.size}"
     if results.present?
       ::Result.where(id: results).delete_all
     end
@@ -54,7 +54,7 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
   end
 
   def update_calculated_results(results, race)
-    Rails.logger.debug "update_calculated_results #{race.name}"
+    Rails.logger.debug "update_calculated_results #{race.name} #{results.size}"
     return true if results.empty?
 
     existing_results = race.results.where(participant_id_symbol => results.map(&:participant_id)).includes(:sources)
