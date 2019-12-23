@@ -14,6 +14,8 @@ module Calculations
       @results = Result
                  .where(race_id: params[:id])
                  .includes(:person)
+
+      @calculation = Calculations::V3::Calculation.find_by(event_id: @event.id)
     end
   end
 end

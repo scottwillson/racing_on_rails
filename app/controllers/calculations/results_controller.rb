@@ -6,6 +6,7 @@ module Calculations
       event_id = params[:event_id]
       @event = Event.find(event_id)
       @races = @event.races.includes(:category)
+      @calculation = Calculations::V3::Calculation.find_by(event_id: @event.id)
       @page = params[:page]
 
       @many_races = Result.where(event_id: event_id).distinct.count(:race_id) > 1
@@ -25,10 +26,10 @@ module Calculations
 
     def show
       @result = Result
-               .where(id: params[:id])
-               .includes(:person)
-               .includes(sources: [source_result: { race: :event }])
-               .first!
+                .where(id: params[:id])
+                .includes(:person)
+                .includes(sources: [source_result: { race: :event }])
+                .first!
 
       @race = Race
               .where(id: @result.race_id)

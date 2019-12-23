@@ -3,6 +3,7 @@
 <% cache cache_key(@event, @page, @races) do %>
   <h2><%= @event.year %> <%= @event.full_name %></h2>
   <%= render partial: "calculations/date_and_parent", locals: { event: @event } %>
+  <%= render partial: "calculation", locals: { calculation: @calculation } %>
   <% if @many_races %>
     <%= render partial: "separate_races", locals: { races: @races } %>
   <% else %>
