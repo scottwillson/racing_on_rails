@@ -1,0 +1,3 @@
+<div class="row event_info">
+  <%= link_to "Rules", calculation_path(calculation) %> | <%= link_to("Categories", calculations_event_categories_path(event_id: calculation.event_id)) if calculation.event_id %>
+</div>

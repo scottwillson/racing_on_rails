@@ -2,12 +2,12 @@
 <div class="event_info">
   <table class="event_races">
     <tbody>
-      <%- races.select(&:visible?).sort.each_row do |first_race, second_race| -%>
+      <%- races.select(&:visible?).reject(&:rejected?).sort.each_row do |first_race, second_race| -%>
       <tr>
-        <%= tag.td class: (first_race&.rejected? ? %w( race rejected ) : :race) do %>
+        <%= tag.td class: :race) do %>
           <%= link_to first_race.name, "#race_#{first_race.id}" %>
         <% end %>
-        <%= tag.td class: (second_race&.rejected? ? %w( race rejected ) : :race) do %>
+        <%= tag.td class: :race) do %>
           <%- if second_race -%>
             <%= link_to second_race.name, "#race_#{second_race.id}" %>
           <% end %>
