@@ -35,7 +35,11 @@ module Calculations::V3::Calculators::Categories
     return event_category if event_category
 
     # Matches a calculation category
-    calculation_category = best_match_in(source_result.category, categories, source_result.age)
+    result_age = source_result.age
+    if result_age && source_result.event.discipline.name == "Cyclocross"
+      result_age -= 1
+    end
+    calculation_category = best_match_in(source_result.category, categories, result_age)
     return event_categories.find { |c| c.category == calculation_category } if calculation_category
 
     # New category that doesn't match any existing category
