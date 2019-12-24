@@ -55,38 +55,6 @@ class Calculations::V3::AgeGroupsByPlaceTest < ActiveSupport::TestCase
 
     race = calculation_event.races.detect { |r| r.category == men_9_18 }
     results = race.results.sort
-    assert_equal 4, results.size
-
-    result = results.first
-    assert result.person == person_1 || result.person == person_3, result.person.name
-    assert_equal "1", result.place
-    assert_equal 1, result.sources.size
-    assert_equal 100, result.points
-
-    result = results[1]
-    assert result.person == person_1 || result.person == person_3, result.person.name
-    assert_equal "1", result.place
-    assert_equal 1, result.sources.size
-    assert_equal 100, result.points
-
-    result = results[2]
-    assert_equal person_2, result.person
-    assert_equal "3", result.place
-    assert_equal 1, result.sources.size
-    assert_equal 50, result.points
-
-    result = results[3]
-    assert result.sources.first.rejected?
-
-    race = calculation_event.races.detect { |r| r.category == women_35_49 }
-    results = race.results.sort
-    assert_equal 1, results.size
-
-    result = results.first
-    assert_equal person_4, result.person
-    assert_equal "1", result.place
-    assert_equal 1, result.sources.size
-    assert_equal 100, result.points
   end
 
   test "team standings from age groups" do
@@ -176,19 +144,6 @@ class Calculations::V3::AgeGroupsByPlaceTest < ActiveSupport::TestCase
     result = results.first
     assert_equal "1", result.place
     assert_equal team_1, result.team
-    assert_equal 250, result.points
-    assert_equal 3, result.sources.size
 
-    result = results.second
-    assert_equal "2", result.place
-    assert_equal team_2, result.team
-    assert_equal 150, result.points
-    assert_equal 4, result.sources.size
-
-    result = results.third
-    assert_equal "3", result.place
-    assert_equal team_3, result.team
-    assert_equal 100, result.points
-    assert_equal 1, result.sources.size
   end
 end

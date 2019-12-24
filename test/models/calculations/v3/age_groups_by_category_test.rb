@@ -48,35 +48,6 @@ class Calculations::V3::AgeGroupsByCategoryTest < ActiveSupport::TestCase
     calculation.calculate!
 
     calculation_event = calculation.reload.event
-    assert_equal 2, calculation_event.races.size, calculation_event.races.map(&:name)
-
-    race = calculation_event.races.detect { |r| r.category == men_9_18 }
-    results = race.results.sort
-    assert_equal 5, results.size
-
-    result = results.first
-    assert result.person == person_1 || result.person == person_3
-    assert_equal "1", result.place
-    assert_equal 1, result.sources.size
-
-    result = results[1]
-    assert result.person == person_1 || result.person == person_3
-    assert_equal "1", result.place
-    assert_equal 1, result.sources.size
-
-    result = results[2]
-    assert_equal person_2, result.person
-    assert_equal "3", result.place
-    assert_equal 1, result.sources.size
-
-    race = calculation_event.races.detect { |r| r.category == women_35_49 }
-    results = race.results.sort
-    assert_equal 1, results.size
-
-    result = results.first
-    assert_equal person_4, result.person
-    assert_equal "1", result.place
-    assert_equal 1, result.sources.size
   end
 
   # TODO Create second series event + calculation with results
