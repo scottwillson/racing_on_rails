@@ -18,9 +18,9 @@ Rails.application.configure do
   config.consider_all_requests_local                        = false
   config.eager_load                                         = true
   config.i18n.fallbacks                                     = true
-  config.log_formatter = ::Logger::Formatter.new
+  config.log_formatter                                      = ::Logger::Formatter.new
   config.log_level                                          = :info
-  config.log_tags                                           = [ :request_id ]
+  config.log_tags                                           = [:request_id]
   config.logger                                             = Syslog::Logger.new("racing_on_rails", Syslog::LOG_LOCAL4)
   config.public_file_server.enabled                         = ENV["RAILS_SERVE_STATIC_FILES"].present?
   config.require_master_key                                 = true
