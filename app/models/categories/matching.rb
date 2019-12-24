@@ -187,7 +187,7 @@ module Categories
       debug "equivalent: #{equivalent_match&.name}"
       return equivalent_match if equivalent_match
 
-      if result_age && !age_group?
+      if result_age
         candidate_categories = candidate_categories.select { |category| category.ages.include?(result_age) }
       else
         candidate_categories = candidate_categories.select { |category| ages_begin.in?(category.ages) }
