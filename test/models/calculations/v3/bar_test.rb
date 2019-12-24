@@ -293,4 +293,114 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       assert_equal 0, results.size
     end
   end
+
+  test "Age-Graded BAR" do
+    Timecop.freeze(2019) do
+      age_graded_discipline = Discipline.create!(name: "Age Graded")
+      circuit_race_discipline = Discipline.create!(name: "Circuit Race")
+      criterium_discipline = Discipline.create!(name: "Criterium")
+      overall_discipline = Discipline.create!(name: "Overall")
+      road_discipline = Discipline[:road]
+
+      masters_men = ::Category.find_or_create_by(name: "Masters Men")
+      masters_men_30_34 = ::Category.find_or_create_by(name: "Masters Men 30-34")
+      masters_men_35_39 = ::Category.find_or_create_by(name: "Masters Men 35-39")
+      masters_women = ::Category.find_or_create_by(name: "Masters Women")
+      masters_women_60_plus = ::Category.find_or_create_by(name: "Masters Women 60+")
+      senior_women = ::Category.find_or_create_by(name: "Senior Women")
+
+      criterium = Calculations::V3::Calculation.create!(
+        discipline: criterium_discipline,
+        disciplines: [criterium_discipline],
+        key: "criterium_bar",
+        members_only: true,
+        name: "Criterium BAR",
+        points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        weekday_events: false
+      )
+      criterium.categories << senior_women
+      criterium.categories << masters_men
+      criterium.categories << masters_women
+
+      road = Calculations::V3::Calculation.create!(
+        discipline: road_discipline,
+        disciplines: [circuit_race_discipline, road_discipline],
+        key: "road_bar",
+        name: "Road BAR",
+        members_only: true,
+        points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        weekday_events: false
+      )
+      road.categories << senior_women
+      road.categories << masters_men
+      road.categories << masters_women
+
+      overall = Calculations::V3::Calculation.create!(
+        discipline: overall_discipline,
+        key: "overall_bar",
+        members_only: true,
+        name: "Overall BAR",
+        points_for_place: (1..300).to_a.reverse,
+        source_event_keys: %w[criterium_bar road_bar],
+        weekday_events: true
+      )
+      overall.categories << senior_women
+      overall.categories << masters_men
+      overall.categories << masters_women
+
+      age_graded = Calculations::V3::Calculation.create!(
+        discipline: age_graded_discipline,
+        group_by: :age,
+        members_only: true,
+        name: "Age-Graded BAR",
+        source_event_keys: %w[overall_bar],
+        weekday_events: true
+      )
+      age_graded.categories << masters_men_30_34
+      age_graded.categories << masters_men_35_39
+      age_graded.categories << masters_women_60_plus
+
+      source_event = FactoryBot.create(:event, date: Time.zone.local(2019, 4, 13))
+      race = source_event.races.create!(category: senior_women)
+      person = FactoryBot.create :person
+      race.results.create! place: 12, person: person
+
+      race = source_event.races.create!(category: masters_men)
+      person = FactoryBot.create :person, date_of_birth: 37.years.ago
+      race.results.create! place: 4, person: person
+
+      race = source_event.races.create!(category: masters_men)
+      person = FactoryBot.create :person, date_of_birth: 31.years.ago
+      race.results.create! place: 2, person: person
+
+      race = source_event.races.create!(category: masters_women)
+      person = FactoryBot.create :person, date_of_birth: 72.years.ago
+      race.results.create! place: 14, person: person
+
+      age_graded.calculate!
+
+      assert_equal 1, age_graded.source_events.size
+      event = age_graded.reload.event
+      assert_equal 1, event.races.count(&:rejected), event.races.select(&:rejected).map(&:name)
+      assert_equal 4, event.races.size, event.races.map(&:name)
+
+      race = event.races.detect { |r| r.category == masters_men_30_34 }
+      results = race.results.sort
+      assert_equal 1, results.size
+      assert_equal 300, results.first.points
+      assert_equal "1", results.first.place
+
+      race = event.races.detect { |r| r.category == masters_men_35_39 }
+      results = race.results.sort
+      assert_equal 1, results.size
+      assert_equal 299, results.first.points
+      assert_equal "1", results.first.place
+
+      race = event.races.detect { |r| r.category == masters_women_60_plus }
+      results = race.results.sort
+      assert_equal 1, results.size
+      assert_equal 300, results.first.points
+      assert_equal "1", results.first.place
+    end
+  end
 end

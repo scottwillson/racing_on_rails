@@ -10,6 +10,10 @@ module Calculations
           @name = name
         end
 
+        def cyclocross?
+          name == "Cyclocross"
+        end
+
         def ==(other)
           return false if other.nil?
 

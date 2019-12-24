@@ -39,6 +39,10 @@ module Calculations
         def hash
           id&.hash
         end
+
+        def to_s
+          "#<Calculations::V3::Models::Participant #{id} #{membership}>"
+        end
       end
     end
   end

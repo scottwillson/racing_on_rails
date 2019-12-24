@@ -29,18 +29,14 @@ module Calculations::V3::Calculators::Categories
   def find_or_create_event_category(source_result)
     return event_categories.first unless categories?
 
+    # Matches a calculation category
+    calculation_category = best_match_in(source_result.category, categories, source_result.racing_age)
+    return event_categories.find { |c| c.category == calculation_category } if calculation_category
+
     # Event has this category
     source_result_category = source_result.event_category.category
     event_category = event_categories.find { |c| c.category == source_result_category }
     return event_category if event_category
-
-    # Matches a calculation category
-    result_age = source_result.age
-    if result_age && source_result.event.discipline.name == "Cyclocross"
-      result_age -= 1
-    end
-    calculation_category = best_match_in(source_result.category, categories, result_age)
-    return event_categories.find { |c| c.category == calculation_category } if calculation_category
 
     # New category that doesn't match any existing category
     event_category = Calculations::V3::Models::EventCategory.new(source_result_category)
@@ -50,10 +46,11 @@ module Calculations::V3::Calculators::Categories
     event_category
   end
 
-  def in_calculation_category?(source_result)
+  def in_calculation_category?(category, result_age)
     return true unless categories?
+    return false if rules.group_by == "age" && !category.age_group?
 
-    best_match = best_match_in(source_result.category, categories, source_result.age)
+    best_match = best_match_in(category, categories, result_age)
     best_match.present?
   end
 end

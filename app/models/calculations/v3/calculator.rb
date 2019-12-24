@@ -137,8 +137,7 @@ module Calculations
 
       def map_source_results_to_results(source_results)
         source_results.each do |source_result|
-          source_result_in_calculation_category = in_calculation_category?(source_result)
-          source_result.reject("not_calculation_category") unless source_result_in_calculation_category
+          source_result.reject("not_calculation_category") unless in_calculation_category?(source_result.category, source_result.age)
 
           event_category = find_or_create_event_category(source_result)
           calculated_result = find_calculated_result(event_category, source_result.participant.id)
@@ -150,7 +149,7 @@ module Calculations
               Models::Participant.new(source_result.participant.id, membership: source_result.participant.membership),
               [source_result]
             )
-            calculated_result.reject("not_calculation_category") unless source_result_in_calculation_category
+            calculated_result.reject("not_calculation_category") unless in_calculation_category?(event_category.category, source_result.age)
 
             event_category.results << calculated_result
           end

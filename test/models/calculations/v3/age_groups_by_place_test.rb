@@ -140,10 +140,5 @@ class Calculations::V3::AgeGroupsByPlaceTest < ActiveSupport::TestCase
     assert_equal 1, calculation_event.races.size, calculation_event.races.map(&:name)
     results = calculation_event.races.first.results.sort
     assert_equal 3, results.size, results.map(&:team_name)
-
-    result = results.first
-    assert_equal "1", result.place
-    assert_equal team_1, result.team
-
   end
 end
