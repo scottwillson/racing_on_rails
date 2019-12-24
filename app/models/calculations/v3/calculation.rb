@@ -81,10 +81,10 @@ class Calculations::V3::Calculation < ApplicationRecord
   # Map results and calculation rules to calculate models
   # model calculate
   # serialize to DB
-  def calculate!
+  def calculate!(source_calculations: true)
     ActiveSupport::Notifications.instrument "calculate.calculations.#{name}.racing_on_rails" do
       transaction do
-        calculate_source_calculations
+        calculate_source_calculations if source_calculations
         add_event!
         update_event_dates
         results = results_to_models(source_results)
