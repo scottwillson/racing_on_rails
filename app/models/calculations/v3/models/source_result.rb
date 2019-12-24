@@ -63,6 +63,15 @@ module Calculations
           @points || 0
         end
 
+        # Cyclocross age are a year ahead, but need to a single age for each participant for the year
+        def racing_age
+          if age && event&.discipline&.cyclocross?
+            return age - 1
+          end
+
+          age
+        end
+
         def validate!
           raise(ArgumentError, "id must be a Numeric") if id && !id.is_a?(Numeric)
           raise(ArgumentError, "event_category is required") unless event_category
