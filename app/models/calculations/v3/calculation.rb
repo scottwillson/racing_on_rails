@@ -16,6 +16,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   GROUP_BY = %w[age category].freeze
   PLACE_BY = %w[fewest_points place points time].freeze
 
+  include ActiveSupport::Benchmarkable
   include Calculations::V3::CalculationConcerns::Cache
   include Calculations::V3::CalculationConcerns::CalculatedResults
   include Calculations::V3::CalculationConcerns::Dates
@@ -54,23 +55,25 @@ class Calculations::V3::Calculation < ApplicationRecord
   default_value_for :points_for_place, nil
 
   def add_event!
-    return if event
+    benchmark "add_event!.#{key}.calculate.calculations" do
+      return if event
 
-    if source_event
-      event = create_event!(
-        date: source_event.date,
-        discipline: source_event.discipline,
-        end_date: source_event.end_date,
-        name: event_name
-      )
-      source_event.children << event
-    else
-      self.event = create_event!(
-        date: Time.zone.local(year).beginning_of_year,
-        discipline: discipline.name,
-        end_date: Time.zone.local(year).end_of_year,
-        name: event_name
-      )
+      if source_event
+        event = create_event!(
+          date: source_event.date,
+          discipline: source_event.discipline,
+          end_date: source_event.end_date,
+          name: event_name
+        )
+        source_event.children << event
+      else
+        self.event = create_event!(
+          date: Time.zone.local(year).beginning_of_year,
+          discipline: discipline.name,
+          end_date: Time.zone.local(year).end_of_year,
+          name: event_name
+        )
+      end
     end
   end
 
@@ -93,8 +96,13 @@ class Calculations::V3::Calculation < ApplicationRecord
           source_results: results,
           year: year
         )
-        event_categories = calculator.calculate!
-        save_results event_categories
+        event_categories = nil
+        benchmark "calculate!.#{key}.calculator.calculate.calculations" do
+          event_categories = calculator.calculate!
+        end
+        benchmark "save_results.#{key}.calculate.calculations" do
+          save_results event_categories
+        end
       end
     end
 
@@ -104,7 +112,9 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def calculate_source_calculations
-    Calculations::V3::Calculation.where(key: source_event_keys, year: year).find_each(&:calculate!)
+    benchmark "calculate_source_calculations.#{key}.calculate.calculations" do
+      Calculations::V3::Calculation.where(key: source_event_keys, year: year).find_each(&:calculate!)
+    end
   end
 
   def calculated?(event)
@@ -147,10 +157,12 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def update_event_dates
-    if source_event && source_event.dates != event.dates
-      event.date = source_event.date
-      event.end_date = source_event.end_date
-      event.save!
+    benchmark "update_event_dates.#{key}.calculate.calculations" do
+      if source_event && source_event.dates != event.dates
+        event.date = source_event.date
+        event.end_date = source_event.end_date
+        event.save!
+      end
     end
   end
 end
