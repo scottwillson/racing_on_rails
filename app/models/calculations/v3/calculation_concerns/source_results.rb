@@ -37,9 +37,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
       )
 
       event.races.each do |race|
-        if race.any_results?
-          model_event.add_category(Calculations::V3::Models::Category.new(race.name))
-        end
+        model_event.add_category(Calculations::V3::Models::Category.new(race.name))
       end
 
       if event.parent_id
@@ -59,15 +57,19 @@ module Calculations::V3::CalculationConcerns::SourceResults
   end
 
   def model_calculations_events
-    @model_calculations_events ||= calculations_events
-                                   .reject { |e| e == event }
-                                   .map { |e| model_events[e.event_id] }
+    benchmark "model_calculations_events.#{key}.calculate.calculations" do
+      @model_calculations_events ||= calculations_events
+                                     .reject { |e| e == event }
+                                     .map { |e| model_events[e.event_id] }
+    end
   end
 
   def model_source_events
-    @model_source_events ||= source_events
-                             .reject { |e| e == event }
-                             .map { |event| model_events[event.id] }
+    benchmark "model_source_events.#{key}.calculate.calculations" do
+      @model_source_events ||= source_events
+                               .reject { |e| e == event }
+                               .map { |event| model_events[event.id] }
+    end
   end
 
   def multiplier(event_id)
@@ -91,46 +93,55 @@ module Calculations::V3::CalculationConcerns::SourceResults
 
   # Create event records cache: Hash by ud
   def populate_source_result_events
-    ::Event.year(year).includes(:races).each_with_object({}) do |event, events|
-      events[event.id] = event
+    benchmark "populate_source_result_events.#{key}.calculate.calculations" do
+      ::Event.year(year).includes(:races).each_with_object({}) do |event, events|
+        events[event.id] = event
+      end
     end
   end
 
   # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them
   def results_to_models(source_results)
-    source_results.map do |result|
-      category = Calculations::V3::Models::Category.new(result.race_name)
-      event = model_events[result.event_id]
-      Calculations::V3::Models::SourceResult.new(
-        age: result.racing_age,
-        date: result.date,
-        event_category: Calculations::V3::Models::EventCategory.new(category, event),
-        id: result.id,
-        participant: model_participant(result),
-        place: result.place,
-        points: result.points,
-        time: result.time
-      )
+    benchmark "results_to_models.#{key}.calculate.calculations" do
+      source_results.map do |result|
+        category = Calculations::V3::Models::Category.new(result.race_name)
+        event = nil
+        benchmark "model_events.#{key}.calculate.calculations" do
+          event = model_events[result.event_id]
+        end
+        Calculations::V3::Models::SourceResult.new(
+          age: result.racing_age,
+          date: result.date,
+          event_category: Calculations::V3::Models::EventCategory.new(category, event),
+          id: result.id,
+          participant: model_participant(result),
+          place: result.place,
+          points: result.points,
+          time: result.time
+        )
+      end
     end
   end
 
   # Consider results from these events
   def source_events
-    # Series overall like Cross Crusade, Tabor
-    if source_event
-      source_event.children
+    benchmark "source_events.#{key}.calculate.calculations" do
+      # Series overall like Cross Crusade, Tabor
+      if source_event
+        source_event.children
 
-    # BAR: Overall calculated from Criterium, Road, etc.
-    elsif source_event_keys.any?
-      Event.year(year).joins(:calculation).where("calculations.key" => source_event_keys)
+      # BAR: Overall calculated from Criterium, Road, etc.
+      elsif source_event_keys.any?
+        Event.year(year).joins(:calculation).where("calculations.key" => source_event_keys)
 
-    # Association-sponsored competition like the Oregon Cup, OWPS
-    elsif specific_events?
-      events
+      # Association-sponsored competition like the Oregon Cup, OWPS
+      elsif specific_events?
+        events
 
-    # Ironman
-    else
-      Event.year(year)
+      # Ironman
+      else
+        Event.year(year)
+      end
     end
   end
 
@@ -149,29 +160,31 @@ module Calculations::V3::CalculationConcerns::SourceResults
   end
 
   def source_results
-    # Simplify once we're 100% using Calculations and skip old Competitions
-    event_ids = events.map(&:id)
-    source_results = Result
-                     .includes(:person)
-                     .joins(race: :event)
-                     .where.not(event: event)
-                     .where(year: year)
-                     .where("events.type is null || events.type in (?) || events.id in (?)", Event::TYPES, event_ids)
+    benchmark "source_results.#{key}.calculate.calculations" do
+      # Simplify once we're 100% using Calculations and skip old Competitions
+      event_ids = events.map(&:id)
+      source_results = Result
+                       .includes(:person)
+                       .joins(race: :event)
+                       .where.not(event: event)
+                       .where(year: year)
+                       .where("events.type is null || events.type in (?) || events.id in (?)", Event::TYPES, event_ids)
 
-    if source_event
-      source_results = source_results
-                       .where("events.parent_id" => source_event)
-                       .where(competition_result: false)
+      if source_event
+        source_results = source_results
+                         .where("events.parent_id" => source_event)
+                         .where(competition_result: false)
 
-    elsif specific_events?
-      source_results = source_results.where(event: source_events)
+      elsif specific_events?
+        source_results = source_results.where(event: source_events)
+      end
+
+      if source_event_keys.any?
+        source_results = source_results.where(event_id: source_events.ids)
+      end
+
+      source_results
     end
-
-    if source_event_keys.any?
-      source_results = source_results.where(event_id: source_events.ids)
-    end
-
-    source_results
   end
 
   def team_participant(source_result)
