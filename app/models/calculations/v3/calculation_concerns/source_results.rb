@@ -105,10 +105,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
     benchmark "results_to_models.#{key}.calculate.calculations" do
       source_results.map do |result|
         category = Calculations::V3::Models::Category.new(result.race_name)
-        event = nil
-        benchmark "model_events.#{key}.calculate.calculations" do
-          event = model_events[result.event_id]
-        end
+        event = model_events[result.event_id]
         Calculations::V3::Models::SourceResult.new(
           age: result.racing_age,
           date: result.date,
