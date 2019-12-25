@@ -103,10 +103,9 @@ class Calculations::V3::Calculation < ApplicationRecord
         benchmark "save_results.#{key}.calculate.calculations" do
           save_results event_categories
         end
+        expire_cache
       end
     end
-
-    expire_cache
 
     true
   end
