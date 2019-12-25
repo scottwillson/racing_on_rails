@@ -212,8 +212,9 @@ class Result < ApplicationRecord
 
     Result.where(race_id: race_id, place: place).where.not(id: id).find_each do |result|
       next unless result.person_id && !result.person.member?(date)
+
       # bad side effect
-      update_attributes members_only_place: ""
+      update members_only_place: ""
       return false
     end
 
