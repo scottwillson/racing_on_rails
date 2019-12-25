@@ -142,6 +142,13 @@ module Calculations::V3::CalculationConcerns::SourceResults
     end
   end
 
+  def source_event_parent_keys
+    Calculations::V3::Calculation
+      .where(year: year)
+      .select { |calculation| calculation.source_event_keys.include?(key) }
+      .map(&:key)
+  end
+
   def source_result_event(id)
     event = source_result_events[id]
     return event if event

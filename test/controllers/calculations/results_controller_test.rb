@@ -10,6 +10,32 @@ module Calculations
       get :index, params: { event_id: event }
     end
 
+    test "get show by key and year no event" do
+      FactoryBot.create(:discipline)
+      Calculations::V3::Calculation.create!(key: :owps, year: 2018)
+      assert_raise(ActionController::RoutingError) { get :index, params: { key: :owps, year: 2018 } }
+    end
+
+    test "get show by key no event" do
+      FactoryBot.create(:discipline)
+      Calculations::V3::Calculation.create!(key: :owps)
+      assert_raise(ActionController::RoutingError) { get :index, params: { key: :owps } }
+    end
+
+    test "get show by key and year" do
+      FactoryBot.create(:discipline)
+      Calculations::V3::Calculation.create!(key: :owps, year: 2018).create_event!
+      get :index, params: { key: :owps, year: 2018 }
+      assert_response :redirect
+    end
+
+    test "get show by key" do
+      FactoryBot.create(:discipline)
+      Calculations::V3::Calculation.create!(key: :owps).create_event!
+      get :index, params: { key: :owps }
+      assert_response :redirect
+    end
+
     # FIXME: relevant for Calculations?
     # test "race index" do
     #   race = FactoryBot.create(:race)

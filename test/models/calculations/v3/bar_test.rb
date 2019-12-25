@@ -209,6 +209,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
 
       overall = Calculations::V3::Calculation.create!(
         discipline: overall_discipline,
+        key: "overall_bar",
         members_only: true,
         name: "Overall BAR",
         points_for_place: (1..300).to_a.reverse,
@@ -216,6 +217,8 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
         weekday_events: true
       )
       overall.categories << senior_women
+
+      assert_equal ["overall_bar"], road.source_event_parent_keys
 
       source_event = FactoryBot.create(:event, date: Time.zone.local(2019, 4, 13))
       race = source_event.races.create!(category: senior_women)

@@ -1,0 +1,21 @@
+<%- if calculation&.source_event_parent_keys.present? -%>
+  <%= tabs(calculation.key, show_one: true) do |tabs|
+    calculation.source_event_parent_keys.sort.each do |key|
+      tabs.add(
+        key.to_s.titleize,
+        calculations_key_year_event_results_path(key: key, year: calculation.year)
+      )
+    end
+  end -%>
+<%- end -%>
+
+<%- if calculation&.source_event_keys.present? -%>
+  <%= tabs do |tabs|
+    calculation.source_event_keys.sort.each do |key|
+      tabs.add(
+        key.to_s.titleize,
+        calculations_key_year_event_results_path(key: key, year: calculation.year)
+      )
+    end
+  end -%>
+<%- end -%>

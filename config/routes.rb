@@ -139,6 +139,10 @@ Rails.application.routes.draw do
     get "/bar/:year/:discipline/:category" => "competitions/bar#show", as: "bar_full"
     get "/bar(/:year(/:discipline(/:category)))" => "competitions/bar#show", as: "bar", defaults: { discipline: "overall", category: "senior_men" }
 
+    get "/calculations/events(/:key(/:year))" => "calculations/results#index",
+        as: "calculations_key_year_event_results",
+        constraints: { year: /\d{4}/ }
+
     resources :calculations do
       resource :calculate
     end

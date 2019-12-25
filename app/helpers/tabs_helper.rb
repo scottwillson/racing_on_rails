@@ -2,19 +2,20 @@
 
 # Build navigational tabs as HTML table
 module TabsHelper
-  def tabs(active_text = nil)
+  def tabs(active_text = nil, show_one: false)
     window = (3 if mobile_request?)
 
-    tabs = Tabs.new(active_text, window)
+    tabs = Tabs.new(active_text, window, show_one: show_one)
     yield tabs
     render "tabs/tabs", tabs: tabs
   end
 
   class Tabs
-    attr_reader :active_text, :tabs, :window
+    attr_reader :active_text, :show_one, :tabs, :window
 
-    def initialize(active_text, window)
+    def initialize(active_text, window, show_one: false)
       @active_text = active_text.to_s
+      @show_one = show_one
       @tabs = []
       @window = window
     end
@@ -48,6 +49,10 @@ module TabsHelper
 
     def many?
       @tabs.many?
+    end
+
+    def show_one?
+      @show_one
     end
   end
 

@@ -3,6 +3,14 @@
 module Calculations
   class ResultsController < ApplicationController
     def index
+      if params[:key]
+        year = params[:year] || Time.zone.today.year
+        calculation = Calculations::V3::Calculation.find_by!(key: params[:key], year: year)
+        raise ActionController::RoutingError.new('Not Found') unless calculation.event
+
+        return redirect_to(calculations_event_results_path(event_id: calculation.event_id))
+      end
+
       event_id = params[:event_id]
       @event = Event.find(event_id)
       @races = @event.races.includes(:category)
