@@ -1,4 +1,4 @@
-<% if tabs.many? %>
+<% if tabs.many? || tabs.show_one? %>
 <div class="pills">
   <ul class="nav nav-pills tabs">
     <% tabs.each do |tab| %>

@@ -16,7 +16,17 @@ module Competitions
         return render(:show)
       end
 
-      if @year < 2007 && discipline == Discipline[:age_graded]
+      if @year >= 2019
+        bar = ::Calculations::V3::Calculation.find_by(key: :overall_bar, year: 2019)
+        if bar&.event
+          return redirect_to calculations_event_results_path(event_id: bar.event.id)
+        elsif bar
+          return redirect_to calculation_path(bar)
+        else
+          flash.now[:warn] = "Could not find Overall BAR for #{@year}"
+          return render(:show)
+        end
+      elsif @year < 2007 && discipline == Discipline[:age_graded]
         return redirect_to("http://#{RacingAssociation.current.static_host}/bar/#{@year}/overall_by_age.html")
       elsif @year < 2006 && @year >= 2001
         return redirect_to("http://#{RacingAssociation.current.static_host}/bar/#{@year}")
