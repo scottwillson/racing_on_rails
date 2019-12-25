@@ -7,7 +7,7 @@ ENV["RAILS_ENV"] ||= "test"
 
 require_relative "../config/environment"
 require "rails/test_help"
-require "mocha/setup"
+require "mocha/minitest"
 require "authlogic/test_case"
 require "parallel_tests/test/runtime_logger" if ENV["RECORD_RUNTIME"]
 require "test/enumerable_assertions"
