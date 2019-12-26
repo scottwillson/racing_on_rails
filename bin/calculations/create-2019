@@ -142,21 +142,21 @@ def destroy_calculations
   end
 end
 
-competitions = COMPETITIONS
+# competitions = COMPETITIONS
 # competitions = {
 #   team_bar: COMPETITIONS[:team_bar]
 # }
 
 # recreate_databases
-fix_source_results
-destroy_calculations
-create_calculations competitions
-calculations(competitions).map(&:source_event).compact.each(&:update_date)
-calculations(competitions).select do |c|
-  c.key == "overall_bar" || c.key == "age_graded_bar" || c.key == "team_bar"
-end.each(&:calculate!)
+# fix_source_results
+# destroy_calculations
+# create_calculations competitions
+# calculations(competitions).map(&:source_event).compact.each(&:update_date)
+# calculations(competitions).select do |c|
+#   c.key == "overall_bar" || c.key == "age_graded_bar" || c.key == "team_bar"
+# end.each(&:calculate!)
 # calculations(competitions).reject do |c|
 #   (c.key != "overall_bar" && c.key != "age_graded_bar" && c.key["bar"]) ||
 #   (c.key != "gpcd_team" && c.key != "gpcd" && c.key["gpcd"])
 # end.each(&:calculate!)
-# calculations(competitions).each(&:calculate!)
+calculations(competitions).each(&:calculate!)
