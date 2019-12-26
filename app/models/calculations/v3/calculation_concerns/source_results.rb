@@ -14,6 +14,14 @@ module Calculations::V3::CalculationConcerns::SourceResults
     @associations_by_name
   end
 
+  def model_categories
+    @model_categories ||= Hash.new do |cache, id|
+      name = source_result_category_name(id)
+      model_category = Calculations::V3::Models::Category.new(name)
+      cache[id] = model_category
+    end
+  end
+
   def model_disciplines
     disciplines.map do |discipline|
       Calculations::V3::Models::Discipline.new(discipline.name)
@@ -37,7 +45,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
       )
 
       event.races.each do |race|
-        model_event.add_category(Calculations::V3::Models::Category.new(race.name))
+        model_event.add_category(model_categories[race.category_id])
       end
 
       if event.parent_id
@@ -66,9 +74,9 @@ module Calculations::V3::CalculationConcerns::SourceResults
 
   def model_source_events
     benchmark "model_source_events.#{key}.calculate.calculations" do
-      @model_source_events ||= source_events
-                               .reject { |e| e == event }
-                               .map { |event| model_events[event.id] }
+      @model_source_events ||= source_events.ids
+                                            .reject { |event_id| event_id == event.id }
+                                            .map { |event_id| model_events[event_id] }
     end
   end
 
@@ -104,7 +112,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
   def results_to_models(source_results)
     benchmark "results_to_models.#{key}.calculate.calculations" do
       source_results.map do |result|
-        category = Calculations::V3::Models::Category.new(result.race_name)
+        category = model_categories[result.race.category_id]
         event = model_events[result.event_id]
         Calculations::V3::Models::SourceResult.new(
           age: result.racing_age,
@@ -149,6 +157,17 @@ module Calculations::V3::CalculationConcerns::SourceResults
       .map(&:key)
   end
 
+  def source_result_category_name(id)
+    name = source_result_category_names[id]
+    return name if name
+
+    raise "Could not find source result category id: #{id}"
+  end
+
+  def source_result_category_names
+    @source_result_category_names ||= populate_source_result_category_names
+  end
+
   def source_result_event(id)
     event = source_result_events[id]
     return event if event
@@ -168,7 +187,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
       # Simplify once we're 100% using Calculations and skip old Competitions
       event_ids = events.map(&:id)
       source_results = Result
-                       .includes(:person)
+                       .includes(:person, :race)
                        .joins(race: :event)
                        .where.not(event: event)
                        .where(year: year)
@@ -180,7 +199,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
                          .where(competition_result: false)
 
       elsif specific_events?
-        source_results = source_results.where(event: source_events)
+        source_results = source_results.where(event_id: source_events.ids)
       end
 
       if source_event_keys.any?

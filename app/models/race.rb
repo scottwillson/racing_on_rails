@@ -73,7 +73,7 @@ class Race < ApplicationRecord
   end
 
   def category_name
-    category.try :name
+    category&.name
   end
 
   def category_friendly_param
