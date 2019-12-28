@@ -33,6 +33,7 @@
         <%= f.labelled_check_box :team %>
         <%= f.labelled_check_box :weekday_events %>
       </div>
+      <%= f.labelled_text_field :group %>
       <%= f.labelled_select :group_by, Calculations::V3::Calculation::GROUP_BY %>
       <%= f.labelled_text_field :maximum_events %>
       <%= f.labelled_text_field :minimum_events %>

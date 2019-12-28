@@ -1,0 +1,10 @@
+<%- if calculation.group_event_keys.present? -%>
+  <%= tabs(calculation.key) do |tabs|
+    calculation.group_event_keys.sort.each do |key|
+      tabs.add(
+        key.to_s.titleize,
+        calculations_key_year_event_results_path(key: key, year: calculation.year)
+      )
+    end
+  end -%>
+<%- end -%>
