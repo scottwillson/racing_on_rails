@@ -145,6 +145,10 @@ class Calculations::V3::Calculation < ApplicationRecord
     ApplicationController.expire_cache
   end
 
+  def group_event_keys
+    Calculations::V3::Calculation.where(group: group, year: year).pluck(:key)
+  end
+
   def set_name
     if name == "New Calculation" && source_event
       if team?
