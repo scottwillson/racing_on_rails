@@ -92,9 +92,6 @@ def create_calculation(event_id, rules, name)
   if rules[:discipline]
     attributes[:discipline] = Discipline.where(name: rules[:discipline]).first!
   end
-  if rules[:disciplines]
-    attributes[:disciplines] = Discipline.where(name: rules[:disciplines])
-  end
 
   attributes[:name] = name
   attributes[:year] = 2019
@@ -142,7 +139,7 @@ def destroy_calculations
   end
 end
 
-# competitions = COMPETITIONS
+competitions = COMPETITIONS
 # competitions = {
 #   team_bar: COMPETITIONS[:team_bar]
 # }
