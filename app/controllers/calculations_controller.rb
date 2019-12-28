@@ -30,6 +30,7 @@ class CalculationsController < ApplicationController
   def calculation_params
     params.require(:calculation).permit(
       :association_sanctioned_only,
+      :description,
       :double_points_for_last_event,
       :group,
       :group_by,
