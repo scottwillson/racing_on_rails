@@ -31,6 +31,7 @@ class CalculationsController < ApplicationController
     params.require(:calculation).permit(
       :association_sanctioned_only,
       :double_points_for_last_event,
+      :group,
       :group_by,
       :key,
       :maximum_events,
