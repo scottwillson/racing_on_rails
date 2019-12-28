@@ -4,7 +4,7 @@
   <h2><%= @event.year %> <%= @event.full_name %></h2>
   <%= render partial: "calculations/date_and_parent", locals: { event: @event } %>
   <%= render partial: "calculation", locals: { calculation: @calculation } %>
-  <%= render partial: "calculations/source_events", locals: { calculation: @calculation } %>
+  <%= render partial: "calculations/group_events", locals: { calculation: @calculation } %>
   <% if @many_races %>
     <%= render partial: "separate_races", locals: { races: @races } %>
   <% else %>
