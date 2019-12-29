@@ -141,6 +141,138 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         move_results(competition)
       end
 
+      Competitions::CrossCrusadeCallups.all.each do |competition|
+        puts "#{competition.year} #{competition.type}"
+        calculation = Calculations::V3::Calculation.create!(
+          description: "Rules before 2020 may not be accurate",
+          key: :cross_crusade_callups,
+          name: "Cross Crusade Callups",
+          year: competition.year
+        )
+
+        competition = convert_event(competition, calculation)
+        move_results(competition)
+      end
+
+      Competitions::Competition.where(type: ["Competitions::Competition", "Competitions::OregonTTCup"]).each do |competition|
+        puts "#{competition.year} #{competition.type}"
+        calculation = Calculations::V3::Calculation.create!(
+          description: "Rules before 2020 may not be accurate",
+          key: :oregon_tt_cup,
+          name: "OBRA Time Trial Cup",
+          members_only: true,
+          place_by: "time",
+          points_for_place: [20, 17, 15, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+          specific_events: true,
+          year: competition.year
+        )
+
+        create_category(calculation, "Category 3 Men")
+        create_category(calculation, "Category 3 Women")
+        create_category(calculation, "Category 4/5 Men")
+        create_category(calculation, "Category 4/5 Women")
+        create_category(calculation, "Eddy Senior Men")
+        create_category(calculation, "Eddy Senior Women")
+        create_category(calculation, "Junior Men 10-12")
+        create_category(calculation, "Junior Men 13-14")
+        create_category(calculation, "Junior Men 15-16")
+        create_category(calculation, "Junior Men 17-18")
+        create_category(calculation, "Junior Women 10-14")
+        create_category(calculation, "Junior Women 15-18")
+        create_category(calculation, "Masters Men 30-39")
+        create_category(calculation, "Masters Men 40-49")
+        create_category(calculation, "Masters Men 50-59")
+        create_category(calculation, "Masters Men 60-69")
+        create_category(calculation, "Masters Men 70+")
+        create_category(calculation, "Masters Women 30-39")
+        create_category(calculation, "Masters Women 40-49")
+        create_category(calculation, "Masters Women 50-59")
+        create_category(calculation, "Masters Women 60-69")
+        create_category(calculation, "Masters Women 70+")
+        create_category(calculation, "Senior Men Pro/1/2")
+        create_category(calculation, "Senior Women Pro/1/2")
+        create_category(calculation, "Tandem")
+
+        competition = convert_event(competition, calculation)
+        move_results(competition)
+      end
+
+      Competitions::CrossCrusadeOverall.all.each do |competition|
+        puts "#{competition.year} #{competition.type}"
+        calculation = Calculations::V3::Calculation.create!(
+          description: "Rules before 2020 may not be accurate",
+          group: :cross_crusade,
+          key: :cross_crusade_overall,
+          name: "River City Bicycles Cyclocross Crusade",
+          maximum_events: -1,
+          minimum_events: 3,
+          points_for_place: [26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+          year: competition.year
+        )
+
+        create_category(calculation, "Athena")
+        create_category(calculation, "Clydesdale")
+        create_category(calculation, "Elite Junior Men")
+        create_category(calculation, "Elite Junior Women", maximum_events: -2)
+        create_category(calculation, "Junior Men 9-12")
+        create_category(calculation, "Junior Men 13-14")
+        create_category(calculation, "Junior Men 15-16")
+        create_category(calculation, "Junior Men 17-18")
+        create_category(calculation, "Junior Men 3/4/5")
+        create_category(calculation, "Junior Men 9-12 3/4/5", reject: true)
+        create_category(calculation, "Junior Women 9-12")
+        create_category(calculation, "Junior Women 13-14")
+        create_category(calculation, "Junior Women 15-16")
+        create_category(calculation, "Junior Women 17-18")
+        create_category(calculation, "Junior Women 3/4/5")
+        create_category(calculation, "Junior Women 9-12 3/4/5", reject: true)
+        create_category(calculation, "Masters 35+ 1/2")
+        create_category(calculation, "Masters 35+ 3")
+        create_category(calculation, "Masters 35+ 4")
+        create_category(calculation, "Masters 50+")
+        create_category(calculation, "Masters 60+")
+        create_category(calculation, "Masters 70+")
+        create_category(calculation, "Masters Women 35+ 1/2", maximum_events: -2)
+        create_category(calculation, "Masters Women 35+ 3", maximum_events: -2)
+        create_category(calculation, "Masters Women 50+", maximum_events: -2)
+        create_category(calculation, "Masters Women 60+", maximum_events: -2)
+        create_category(calculation, "Men 1/2")
+        create_category(calculation, "Men 2/3")
+        create_category(calculation, "Men 4")
+        create_category(calculation, "Men 5")
+        create_category(calculation, "Singlespeed Women")
+        create_category(calculation, "Singlespeed")
+        create_category(calculation, "Women 1/2")
+        create_category(calculation, "Women 2/3", maximum_events: -2)
+        create_category(calculation, "Women 4", maximum_events: -2)
+        create_category(calculation, "Women 5", maximum_events: -2)
+
+        competition = convert_event(competition, calculation)
+        move_results(competition)
+      end
+
+      Competitions::CrossCrusadeTeamCompetition.all.each do |competition|
+        puts "#{competition.year} #{competition.type}"
+        calculation = Calculations::V3::Calculation.create!(
+          description: "Rules before 2020 may not be accurate",
+          group: :cross_crusade,
+          key: :cross_crusade_team_competition,
+          name: "River City Bicycles Cyclocross Crusade Team Competition",
+          missing_result_penalty: 100,
+          place_by: "fewest_points",
+          points_for_place: (1..100).to_a,
+          results_per_event: 10,
+          team: true,
+          year: competition.year
+        )
+
+        create_category(calculation, "Junior Men 3/4/5", reject: true)
+        create_category(calculation, "Junior Women 3/4/5", reject: true)
+
+        competition = convert_event(competition, calculation)
+        move_results(competition)
+      end
+
       # Competitions::Ironman.all.each do |competition|
       #   puts "#{competition.year} #{competition.type}"
       #   calculation = Calculations::V3::Calculation.create!(
@@ -202,7 +334,7 @@ end
     #   Competitions::BlindDateAtTheDairyMonthlyStandings,
     #   Competitions::BlindDateAtTheDairyOverall,
     #   Competitions::BlindDateAtTheDairyTeamCompetition,
-    #   Competitions::Cat4WomensRaceSeries, => OR TT Cup
+    #   Competitions::Cat4WomensRaceSeries,
     #   Competitions::Competition,
     #   Competitions::CrossCrusadeCallups,
     #   Competitions::CrossCrusadeOverall,
