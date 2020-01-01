@@ -146,7 +146,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def group_event_keys
-    Calculations::V3::Calculation.where(group: group, year: year).pluck(:key)
+    group && Calculations::V3::Calculation.where(group: group, year: year).pluck(:key)
   end
 
   def set_name
