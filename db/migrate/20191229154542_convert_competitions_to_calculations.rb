@@ -945,7 +945,9 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
     link_source_events(competition, calculation)
 
     if competition.kind_of?(Competitions::Overall)
-      event = calculation.add_event!
+      event = competition.parent
+      calculation.event = event
+      calculation.save!
       Race.where(event_id: competition.id).update_all(event_id: event.id)
       Result.where(event_id: competition.id).update_all(event_id: event.id)
       competition.destroy!
