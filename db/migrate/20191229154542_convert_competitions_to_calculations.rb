@@ -6,13 +6,14 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
     transaction do
       Competitions::Bar.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
+        discipline = Discipline.find_by(name: competition.discipline)
         calculation = Calculations::V3::Calculation.create!(
           association_sanctioned_only: true,
           description: "Rules before 2020 may not be accurate",
-          discipline: competition.discipline,
-          disciplines: [competition.discipline],
+          discipline: discipline,
+          disciplines: [discipline],
           group: :bar,
-          key: "#{competition.discipline.downcase}_bar",
+          key: "#{discipline.to_param}_bar",
           members_only: true,
           name: competition.full_name,
           points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
@@ -604,7 +605,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         calculation = Calculations::V3::Calculation.create!(
           association_sanctioned_only: true,
           description: "Rules before 2020 may not be accurate",
-          discipline: "Overall",
+          discipline: Discipline[:overall],
           group: :bar,
           key: :overall_bar,
           maximum_events: -3,
@@ -729,7 +730,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         calculation = Calculations::V3::Calculation.create!(
           description: "Rules before 2020 may not be accurate",
           group: :pdx_stxc,
-          key: "pdx_stxc_",
+          key: "pdx_stxc_#{month_name}",
           name: competition.name,
           maximum_events: -1,
           results_per_event: 10,
@@ -822,7 +823,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         calculation = Calculations::V3::Calculation.create!(
           association_sanctioned_only: true,
           description: "Rules before 2020 may not be accurate",
-          discipline: "Team",
+          discipline: Discipline[:team],
           group: :bar,
           key: :team_bar,
           members_only: true,
@@ -915,7 +916,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
 
   def link_source_events(competition, calculation)
     competition.competition_event_memberships.each do |membership|
-      calculation.calculations_events.create! event_id: membership.event_id, multiplier: membership.multiplier
+      calculation.calculations_events.create! event_id: membership.event_id, multiplier: membership.points_factor
     end
   end
 
