@@ -891,6 +891,8 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         competition = convert_event(competition, calculation)
         move_results(competition)
       end
+
+      execute "update events set type='Event' where type='CombinedTimeTrialResults'"
     end
   end
 
