@@ -14,7 +14,6 @@ module Events
                after_remove: :children_changed
 
       has_one :overall, foreign_key: "parent_id", dependent: :destroy, class_name: "Competitions::Overall"
-      has_one :combined_results, class_name: "CombinedTimeTrialResults", foreign_key: "parent_id", dependent: :destroy
       has_many :competition_event_memberships, class_name: "Competitions::CompetitionEventMembership"
       has_many :competitions, through: :competition_event_memberships, source: :competition, class_name: "Competitions::Competition"
 
