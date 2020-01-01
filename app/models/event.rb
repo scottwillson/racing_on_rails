@@ -183,7 +183,6 @@ class Event < ApplicationRecord
 
   def destroy_races
     transaction do
-      destroy_combined_results
       destroy_results
 
       # Call to destroy won't remove destroyed records from association
@@ -298,13 +297,6 @@ class Event < ApplicationRecord
   end
 
   private
-
-  def destroy_combined_results
-    if combined_results
-      combined_results.destroy_races
-      combined_results.destroy
-    end
-  end
 
   def destroy_results
     races.each do |race|

@@ -43,6 +43,51 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         move_results(competition)
       end
 
+      Competitions::AgeGradedBar.all.each do |competition|
+        puts "#{competition.year} #{competition.type}"
+        discipline = Discipline.find_by(name: competition.discipline)
+        calculation = Calculations::V3::Calculation.create!(
+          association_sanctioned_only: true,
+          description: "Rules before 2020 may not be accurate",
+          discipline: discipline,
+          group: :bar,
+          key: :age_graded_bar,
+          members_only: true,
+          name: competition.full_name,
+          source_event_keys: [:overall_bar],
+          weekday_events: false,
+          year: competition.year
+        )
+
+        create_category(calculation, "Junior Men 10-12")
+        create_category(calculation, "Junior Men 13-14")
+        create_category(calculation, "Junior Men 15-16")
+        create_category(calculation, "Junior Men 17-18")
+        create_category(calculation, "Junior Women 10-12")
+        create_category(calculation, "Junior Women 13-14")
+        create_category(calculation, "Junior Women 15-16")
+        create_category(calculation, "Junior Women 17-18")
+        create_category(calculation, "Masters Men 30-34")
+        create_category(calculation, "Masters Men 35-39")
+        create_category(calculation, "Masters Men 40-44")
+        create_category(calculation, "Masters Men 45-49")
+        create_category(calculation, "Masters Men 50-54")
+        create_category(calculation, "Masters Men 55-59")
+        create_category(calculation, "Masters Men 60-64")
+        create_category(calculation, "Masters Men 65-69")
+        create_category(calculation, "Masters Men 70+")
+        create_category(calculation, "Masters Women 30-34")
+        create_category(calculation, "Masters Women 35-39")
+        create_category(calculation, "Masters Women 40-44")
+        create_category(calculation, "Masters Women 45-49")
+        create_category(calculation, "Masters Women 50-54")
+        create_category(calculation, "Masters Women 55-59")
+        create_category(calculation, "Masters Women 60+")
+
+        competition = convert_event(competition, calculation)
+        move_results(competition)
+      end
+
       Competitions::BlindDateAtTheDairyOverall.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
@@ -903,6 +948,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       event = calculation.add_event!
       Race.where(event_id: competition.id).update_all(event_id: event.id)
       Result.where(event_id: competition.id).update_all(event_id: event.id)
+      competition.destroy!
     else
       competition.update_column :type, "Event"
       competition = Event.find(competition.id)

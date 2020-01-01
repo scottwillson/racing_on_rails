@@ -11,17 +11,17 @@ class CombinedTimeTrialResults < Event
   default_value_for :auto_combined_results, false
 
   def self.calculate!
-    ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
-      events = requires_combined_results_events
-      events.each do |e|
-        combined_results = create_combined_results(e)
-        combined_results.calculate!
-      end
-
-      (has_combined_results_events - events).each do |e|
-        destroy_combined_results e
-      end
-    end
+    # ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do
+    #   events = requires_combined_results_events
+    #   events.each do |e|
+    #     combined_results = create_combined_results(e)
+    #     combined_results.calculate!
+    #   end
+    #
+    #   (has_combined_results_events - events).each do |e|
+    #     destroy_combined_results e
+    #   end
+    # end
   end
 
   def self.requires_combined_results_events
@@ -41,11 +41,11 @@ class CombinedTimeTrialResults < Event
   end
 
   def self.destroy_combined_results(event)
-    if event.combined_results
-      event.combined_results.destroy_races
-      event.combined_results.reload.destroy
-      event.combined_results = nil
-    end
+    # if event.combined_results
+    #   event.combined_results.destroy_races
+    #   event.combined_results.reload.destroy
+    #   event.combined_results = nil
+    # end
   end
 
   def self.allows_combined_results?(event)
@@ -53,8 +53,8 @@ class CombinedTimeTrialResults < Event
   end
 
   def self.create_combined_results(event)
-    event.create_combined_results(name: "Combined") unless event.combined_results
-    event.combined_results
+    # event.create_combined_results(name: "Combined") unless event.combined_results
+    # event.combined_results
   end
 
   def default_bar_points
@@ -70,11 +70,12 @@ class CombinedTimeTrialResults < Event
   end
 
   def should_calculate?
-    parent.results_updated_at && (results_updated_at.nil? || parent.results_updated_at > results_updated_at)
+    false
+    # parent.results_updated_at && (results_updated_at.nil? || parent.results_updated_at > results_updated_at)
   end
 
   def calculate!
-    return false unless should_calculate?
+    return false
 
     transaction do
       destroy_races
