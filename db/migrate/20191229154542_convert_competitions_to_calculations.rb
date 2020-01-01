@@ -9,7 +9,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         discipline = Discipline.find_by(name: competition.discipline)
         calculation = Calculations::V3::Calculation.create!(
           association_sanctioned_only: true,
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           discipline: discipline,
           disciplines: [discipline],
           group: :bar,
@@ -48,7 +48,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         discipline = Discipline.find_by(name: competition.discipline)
         calculation = Calculations::V3::Calculation.create!(
           association_sanctioned_only: true,
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           discipline: discipline,
           group: :bar,
           key: :age_graded_bar,
@@ -91,7 +91,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::BlindDateAtTheDairyOverall.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           group: :blind_date_at_the_dairy,
           key: :blind_date_at_the_dairy,
           name: "Blind Date at the Dairy",
@@ -146,7 +146,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         puts "#{competition.year} #{month_name} #{competition.type}"
 
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           group: :blind_date_at_the_dairy,
           key: "blind_date_at_the_dairy_#{month_name.downcase}_standings",
           name: "Blind Date at the Dairy #{month_name} Standings",
@@ -200,7 +200,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         calculation = Calculations::V3::Calculation.create!(
           results_per_event: 10,
           team: true,
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           group: :blind_date_at_the_dairy,
           key: :blind_date_at_the_dairy_team_competition,
           name: "Blind Date at the Dairy Team Competition",
@@ -215,7 +215,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::Cat4WomensRaceSeries.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           key: :category_4_womens_race_series,
           name: "Cat 4 Womens Race Series",
           year: competition.year
@@ -228,7 +228,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::CrossCrusadeCallups.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           key: :cross_crusade_callups,
           name: "Cross Crusade Callups",
           year: competition.year
@@ -241,7 +241,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::Competition.where(type: ["Competitions::Competition", "Competitions::OregonTTCup"]).each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           key: :oregon_tt_cup,
           name: "OBRA Time Trial Cup",
           members_only: true,
@@ -284,7 +284,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::CrossCrusadeOverall.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           group: :cross_crusade,
           key: :cross_crusade_overall,
           name: "River City Bicycles Cyclocross Crusade",
@@ -338,7 +338,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::CrossCrusadeTeamCompetition.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           group: :cross_crusade,
           key: :cross_crusade_team_competition,
           name: "River City Bicycles Cyclocross Crusade Team Competition",
@@ -360,7 +360,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::DirtyCirclesOverall.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           key: :dirty_circles_overall,
           name: competition.full_name,
           year: competition.year
@@ -373,7 +373,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::GrandPrixBradRoss::Overall.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           group: :grand_prix,
           key: :grand_prix_overall,
           name: competition.full_name,
@@ -426,7 +426,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::GrandPrixBradRoss::TeamStandings.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           group: :grand_prix,
           key: :grand_prix_team_competition,
           name: competition.full_name,
@@ -441,7 +441,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::Ironman.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "The Ironman Competition is a 'just for fun' record of the number of events riders do. There is no prize just identification of riders who need to get a life.",
           key: :ironman,
           members_only: true,
           name: "Ironman",
@@ -456,7 +456,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::OregonCup.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: oregon_cup_notes,
           key: :oregon_cup,
           members_only: true,
           name: "Oregon Cup",
@@ -474,7 +474,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::OregonJuniorCyclocrossSeries::Overall.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           group: :ojcs,
           key: :ojcs,
           members_only: true,
@@ -513,7 +513,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::OregonJuniorCyclocrossSeries::Team.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           group: :ojcs,
           key: :ojcs_team,
           members_only: true,
@@ -543,7 +543,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::OregonJuniorMountainBikeSeries::Overall.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           discipline: Discipline[:mountain_bike],
           key: :ojmtbs_team,
           name: competition.full_name,
@@ -567,7 +567,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::OregonTTCup.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           key: :oregon_tt_cup,
           members_only: true,
           name: competition.full_name,
@@ -605,7 +605,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::OregonWomensPrestigeSeries.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           group: :owps,
           key: :owps,
           members_only: true,
@@ -626,7 +626,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::OregonWomensPrestigeTeamSeries.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           group: :owps,
           key: :owps_team,
           members_only: true,
@@ -649,7 +649,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
           association_sanctioned_only: true,
-          description: "Rules before 2020 may not be accurate",
+          event_notes: bar_event_notes,
           discipline: Discipline[:overall],
           group: :bar,
           key: :overall_bar,
@@ -690,7 +690,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         puts "#{competition.year} #{month_name} #{competition.type}"
 
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           group: :pdx_stxc,
           key: "pdx_stxc_#{month_name.downcase}_standings",
           name: "Portland Short Track Series #{month_name} Standings",
@@ -731,7 +731,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         puts "#{competition.year} #{competition.type}"
 
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           group: :pdx_stxc,
           key: "pdx_stxc_",
           name: competition.full_name,
@@ -773,7 +773,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         puts "#{competition.year} #{month_name} #{competition.type}"
 
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           group: :pdx_stxc,
           key: "pdx_stxc_#{month_name}",
           name: competition.name,
@@ -812,7 +812,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::PortlandTrophyCup.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           key: :portland_trophy_cup,
           name: competition.name,
           double_points_for_last_event: true,
@@ -842,7 +842,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::TaborOverall.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           key: :tabor,
           name: competition.name,
           double_points_for_last_event: true,
@@ -867,7 +867,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
           association_sanctioned_only: true,
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           discipline: Discipline[:team],
           group: :bar,
           key: :team_bar,
@@ -886,7 +886,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::ThrillaOverall.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           key: :thrilla_overall,
           name: competition.name,
           double_points_for_last_event: true,
@@ -925,7 +925,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       Competitions::WillametteValleyClassicsTour::Overall.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
-          description: "Rules before 2020 may not be accurate",
+          event_notes: "Rules before 2020 may not be accurate",
           key: :willamette_valley_classic,
           name: competition.name,
           double_points_for_last_event: true,
@@ -941,11 +941,38 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
     end
   end
 
+  def bar_event_notes
+    <<~HTML
+    <p>Oregon Best All-Around Rider (BAR) a year-round, multi-discipline competition open to annual members. Points and ranking will be tracked in at least the following categories: Senior Men and Women, Category 3 Men, Category 4/5 Men, Category 3 Women, Category 4/5 Women, Masters Men and Women, Junior Men and Women, Singlespeed/Fixed, Tandem, Clydesdale, Athena.</p>
+
+    <p>There are separate discipline rankings, one each for Road, Track, Criterium, Time Trial, Cyclocross, Mountain Biking (Cross-country, Downhill, SuperD), Short Track, and Gravel. Points are awarded for finishes at all OBRA races for the top-15 in each discipline: 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1.</p>
+
+    <p>State championships and national-caliber races are awarded double points. Fields with more than 75 riders are awarded 1.5 times regular BAR points.</p>
+
+    <p>Points earned in team events are split evenly across the team members. Example: the winners of a three-person team time trial will each receive five points.</p>
+
+    <p>Tandem teams earn points as a team. Tandem points do not count toward individual rider points.</p>
+
+    <p>If a rider has multiple finishes in a single event, only the best finish counts. </p>
+
+    <p>If a rider has multiple discipline rankings that would count towards the same overall category, only the best ranking counts.</p>
+
+    <p>Weeknight events will accrue points for each month of racing.</p>
+
+    <p>Points are tallied and riders are ranked in order of points in each discipline. The rider with the highest point tally in each discipline is awarded 300 "ranking" points, the rider with the second highest is awarded 299, third gets 298, etc. If a rider has points in more than five disciplines, only the top five disciplines are counted. This means that there is a total 1500 points possible.</p>
+
+    <p>These ranking numbers are then added to determine annual awards. Riders must compete in a minimum of four disciplines in order to qualify for  annual trophies.</p>
+
+    <p>The Team BAR is awarded based on the sum of the accrued points before rankings.</p>
+    HTML
+  end
+
   def convert_event(competition, calculation)
     link_source_events(competition, calculation)
 
     if competition.kind_of?(Competitions::Overall)
       event = competition.parent
+      event.notes = calculation.event_notes if event.notes.blank?
       calculation.event = event
       calculation.save!
       Race.where(event_id: competition.id).update_all(event_id: event.id)
@@ -955,6 +982,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
       competition.update_column :type, "Event"
       competition = Event.find(competition.id)
       calculation.event = competition
+      competition.notes = calculation.event_notes if competition.notes.blank?
       calculation.save!
     end
     competition
@@ -985,5 +1013,81 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         result.scores.delete_all
       end
     end
+  end
+
+  def oregon_cup_notes
+    <<~HTML
+    <p>The Oregon Cup is a year-long points series for senior men.</p>
+    <h3>Rules</h3>
+    <ul id="rules">
+      <li>Divisions: Senior 1/2 Men. </li>
+      <li>Events selected by OBRA Oregon Cup Committee based on Race Selection Criteria (below). </li>
+      <li>There is not a minimum number of races to qualify. </li>
+      <li>Cash Prize List &ndash; 5 deep. </li>
+        <ol>
+          <li>$300</li>
+          <li>$200</li>
+          <li>$150</li>
+          <li>$100</li>
+          <li>$50</li>
+        </ol>
+      <li>Prizes awarded at the annual OBRA Banquet</li>
+      <li>Leaders and champions jerseys will be awarded. </li>
+      <li>The OBRA Oregon Cup Committee will conduct ongoing outreach to potential sponsors and media. </li>
+      <li>Free entry to OR Cup events for OR Cup leaders. </li>
+      <li>Lower category riders competing in Senior Men races will receive
+      points unless their category is picked separately. Lower-category riders <b>do</b>
+      still count in individual race placings -- if a lower category rider finishes
+      ahead of a higher category rider, the higher category rider does not move up
+      in their placing.</li>
+      <li>Only yearly OBRA members are eligible for the Oregon Cup. People who only
+      purchase one-day licenses will not be counted.</li>
+      <li>Ties
+        <ul>
+          <li>The most first place finishes or, if still tied, the most second place finishes, etc., or if still tied;</li>
+          <li>The highest placing in the last race, or the race nearest the last race in which at least one of the tied riders placed.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>Points</h3>
+    <ol type="1">
+      <li>100</li>
+      <li>75</li>
+      <li>60</li>
+      <li>50</li>
+      <li>45</li>
+      <li>40</li>
+      <li>35</li>
+      <li>30</li>
+      <li>25</li>
+      <li>20</li>
+      <li>19</li>
+      <li>18</li>
+      <li>17</li>
+      <li>16</li>
+      <li>15</li>
+      <li>14</li>
+      <li>13</li>
+      <li>12</li>
+      <li>11</li>
+      <li>10</li>
+    </ol>
+
+    <h3>Race Selection Criteria</h3>
+    <ol type="1">
+      <li>No more than eight events. </li>
+      <li>Primarily road races. Criteriums will be used as needed to fill schedule. </li>
+      <li>Road Race Difficulty Balance - Balance degree of difficulty based on hills vs. flat, distance, etc. </li>
+      <li>High Profile Event - Well advertised in advance both with membership and media. High likelihood of commercial sponsorship. </li>
+      <li>Geographically Balanced - Southern, central and northwest Oregon based on membership representation. </li>
+      <li>Historically Significant - History of success over many seasons. </li>
+      <li>Demonstrated Participation - Popular event and/or venue. </li>
+      <li>Seasonally Balanced - Monthly, if possible, March through September. </li>
+      <li>Quality Venue/Promotion - Highest standards for promoters and OBRA. </li>
+    </ol>
+
+    <p>Questions? Contact <a href="mailto:srbeards@gmail.com" class="obvious">Steven Beardsley</a>.</p>
+    HTML
   end
 end

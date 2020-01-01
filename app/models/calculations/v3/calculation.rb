@@ -63,7 +63,8 @@ class Calculations::V3::Calculation < ApplicationRecord
           date: source_event.date,
           discipline: source_event.discipline,
           end_date: source_event.end_date,
-          name: event_name
+          name: event_name,
+          notes: event_notes
         )
         source_event.children << event
       else
@@ -71,7 +72,8 @@ class Calculations::V3::Calculation < ApplicationRecord
           date: Time.zone.local(year).beginning_of_year,
           discipline: discipline.name,
           end_date: Time.zone.local(year).end_of_year,
-          name: event_name
+          name: event_name,
+          notes: event_notes
         )
       end
     end
