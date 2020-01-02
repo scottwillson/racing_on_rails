@@ -10,18 +10,6 @@ module Calculations
       get :index, params: { event_id: event }
     end
 
-    test "get show by key and year no event" do
-      FactoryBot.create(:discipline)
-      Calculations::V3::Calculation.create!(key: :owps, year: 2018)
-      assert_raise(ActionController::RoutingError) { get :index, params: { key: :owps, year: 2018 } }
-    end
-
-    test "get show by key no event" do
-      FactoryBot.create(:discipline)
-      Calculations::V3::Calculation.create!(key: :owps)
-      assert_raise(ActionController::RoutingError) { get :index, params: { key: :owps } }
-    end
-
     test "get show by key and year" do
       FactoryBot.create(:discipline)
       Calculations::V3::Calculation.create!(key: :owps, year: 2018).create_event!
@@ -33,6 +21,27 @@ module Calculations
       FactoryBot.create(:discipline)
       Calculations::V3::Calculation.create!(key: :owps).create_event!
       get :index, params: { key: :owps }
+      assert_response :redirect
+    end
+
+    test "no event" do
+      FactoryBot.create(:discipline)
+      calculation = Calculations::V3::Calculation.create!(key: :oregon_cup)
+      get :index, params: { key: :oregon_cup }
+      assert_redirected_to calculation_path(calculation)
+    end
+
+    test "previous year only" do
+      FactoryBot.create(:discipline)
+      calculation = Calculations::V3::Calculation.create!(year: 3.years.ago.year, key: :oregon_cup)
+      get :index, params: { key: :oregon_cup }
+      assert_redirected_to calculation_path(calculation)
+    end
+
+    test "previous year event only" do
+      FactoryBot.create(:discipline)
+      Calculations::V3::Calculation.create!(year: 3.years.ago.year, key: :oregon_cup).create_event!
+      get :index, params: { key: :oregon_cup }
       assert_response :redirect
     end
 

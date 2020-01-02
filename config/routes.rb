@@ -135,9 +135,8 @@ Rails.application.routes.draw do
     patch "/admin/persons/update_attribute/:id" => "admin/people#update_attribute"
     get "/admin" => "admin/home#index", as: :admin_home
 
-    get "/bar" => "competitions/bar#index", as: "bar_root"
-    get "/bar/:year/:discipline/:category" => "competitions/bar#show", as: "bar_full"
-    get "/bar(/:year(/:discipline(/:category)))" => "competitions/bar#show", as: "bar", defaults: { discipline: "overall", category: "senior_men" }
+    get "/bar" => "calculations/results#index", defaults: { key: :overall_bar }
+    get "/bar(/:year(/:discipline(/:category)))" => "calculations/results#index", defaults: { key: :overall_bar }
 
     get "/calculations/events(/:key(/:year))" => "calculations/results#index",
         as: "calculations_key_year_event_results",
@@ -158,8 +157,7 @@ Rails.application.routes.draw do
       end
     end
 
-    get "/cat4_womens_race_series/:year" => "competitions/competitions#show", as: :cat4_womens_race_series, type: "cat4_womens_race_series", constraints: { year: /\d{4}/ }
-    get "/cat4_womens_race_series" => "competitions/competitions#show", type: "cat4_womens_race_series"
+    get "/cat4_womens_race_series(/:year)" => "calculations/results#index", defaults: { key: :cat4_womens_race_series }, constraints: { year: /\d{4}/ }
 
     resources :duplicate_people
 
@@ -194,24 +192,18 @@ Rails.application.routes.draw do
     resources :photos
 
     resources :races
-    get "/rider_rankings/:year" => "competitions/competitions#show", as: :rider_rankings, type: "rider_rankings", constraints: { year: /\d{4}/ }
-    get "/rider_rankings" => "competitions/competitions#show", as: :rider_rankings_root, type: "rider_rankings"
-    get "/ironman(/:year)" => "competitions/ironman#index", as: :ironman
-    get "/oregon_cup/rules" => "competitions/oregon_cup#rules"
-    get "/oregon_cup/races" => "competitions/oregon_cup#races"
-    get "/oregon_cup/:year" => "competitions/oregon_cup#index", as: :oregon_cup
-    get "/oregon_cup" => "competitions/oregon_cup#index", as: :oregon_cup_root
-    get "/oregon_tt_cup/:year" => "competitions/competitions#show", type: "oregon_tt_cup"
-    get "/oregon_tt_cup" => "competitions/competitions#show", type: "oregon_tt_cup"
-    get "/oregon_womens_prestige_series" => "competitions/competitions#show", type: "oregon_womens_prestige_series"
-    get "/owps(/:year)" => "competitions/competitions#show", type: "oregon_womens_prestige_series"
+
+    get "/ironman(/:year)" => "calculations/results#index", defaults: { key: :ironman }, constraints: { year: /\d{4}/ }
+    get "/oregon_cup(/:year)" => "calculations/results#index", defaults: { key: :oregon_cup }, constraints: { year: /\d{4}/ }
+    get "/oregon_tt_cup(/:year)" => "calculations/results#index", defaults: { key: :oregon_tt_cup }, constraints: { year: /\d{4}/ }
+    get "/oregon_womens_prestige_series(/:year)" => "calculations/results#index", defaults: { key: :oregon_womens_prestige_series }, constraints: { year: /\d{4}/ }
+    get "/owps(/:year)" => "calculations/results#index", defaults: { key: :oregon_womens_prestige_series }, constraints: { year: /\d{4}/ }
+
     get "/:slug/join" => "event_team_memberships#new"
 
     resources :password_resets
 
     resources :mailing_lists do
-      get :confirm
-      get :confirm_private_reply
       resources :posts
     end
 
@@ -283,11 +275,6 @@ Rails.application.routes.draw do
     get "/account/logout" => "person_sessions#destroy"
     get "/account/login" => "person_sessions#new"
     get "/account" => "people#account", as: :account
-
-    get "/wsba_barr" => "competitions/competitions#show", as: :wsba_barr_root, type: "wsba_barr"
-    get "/wsba_barr/:year" => "competitions/competitions#show", as: :wsba_barr, type: "wsba_barr", constraints: { year: /\d{4}/ }
-    get "/wsba_masters_barr" => "competitions/competitions#show", as: :wsba_masters_barr_root, type: "wsba_masters_barr"
-    get "/wsba_masters_barr/:year" => "competitions/competitions#show", as: :wsba_masters_barr, type: "wsba_masters_barr", constraints: { year: /\d{4}/ }
 
     get "/404" => "errors#not_found"
     get "/422" => "errors#unprocessable_entity"
