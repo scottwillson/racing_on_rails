@@ -52,7 +52,12 @@ class Calculations::V3::Calculation < ApplicationRecord
   validates :place_by, inclusion: { in: PLACE_BY }
 
   default_value_for(:discipline_id) { ::Discipline[RacingAssociation.current.default_discipline]&.id }
+  default_value_for :event_notes, ""
   default_value_for :points_for_place, nil
+
+  def self.latest(key)
+    where(key: key).order(:year).last
+  end
 
   def add_event!
     benchmark "add_event!.#{key}.calculate.calculations" do

@@ -1,4 +1,4 @@
-<%- if calculation.group_event_keys.present? -%>
+<%- if calculation&.group_event_keys.present? -%>
   <%= tabs(calculation.key) do |tabs|
     calculation.group_event_keys.sort.each do |key|
       tabs.add(

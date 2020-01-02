@@ -5,10 +5,21 @@ module Calculations
     def index
       if params[:key]
         year = params[:year] || Time.zone.today.year
-        calculation = Calculations::V3::Calculation.find_by!(key: params[:key], year: year)
-        raise ActionController::RoutingError.new('Not Found') unless calculation.event
+        calculation = Calculations::V3::Calculation.find_by(key: params[:key], year: year)
 
-        return redirect_to(calculations_event_results_path(event_id: calculation.event_id))
+        unless calculation
+          flash[:info] = "No results for #{year}"
+          calculation = Calculations::V3::Calculation.latest(params[:key])
+        end
+
+        raise(ActionController::RoutingError, "Calculation #{params[:key]} not found") unless calculation
+
+        if calculation.event
+          return redirect_to(calculations_event_results_path(event_id: calculation.event_id))
+        end
+
+        flash[:info] = "No results for #{calculation.year}"
+        return redirect_to(calculation_path(calculation))
       end
 
       event_id = params[:event_id]

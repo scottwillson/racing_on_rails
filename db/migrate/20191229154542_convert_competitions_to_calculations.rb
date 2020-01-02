@@ -606,8 +606,8 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
           event_notes: "Rules before 2020 may not be accurate",
-          group: :owps,
-          key: :owps,
+          group: :oregon_womens_prestige_series,
+          key: :oregon_womens_prestige_series,
           members_only: true,
           name: competition.full_name,
           points_for_place: [25, 21, 18, 16, 14, 12, 10, 8, 7, 6, 5, 4, 3, 2, 1],
@@ -627,8 +627,8 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         puts "#{competition.year} #{competition.type}"
         calculation = Calculations::V3::Calculation.create!(
           event_notes: "Rules before 2020 may not be accurate",
-          group: :owps,
-          key: :owps_team,
+          group: :oregon_womens_prestige_series,
+          key: :oregon_womens_prestige_team_series,
           members_only: true,
           name: competition.full_name,
           points_for_place: [25, 21, 18, 16, 14, 12, 10, 8, 7, 6, 5, 4, 3, 2, 1],
