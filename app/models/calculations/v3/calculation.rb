@@ -175,4 +175,8 @@ class Calculations::V3::Calculation < ApplicationRecord
       end
     end
   end
+
+  def years
+    Calculations::V3::Calculation.where(key: key).pluck(:year)
+  end
 end
