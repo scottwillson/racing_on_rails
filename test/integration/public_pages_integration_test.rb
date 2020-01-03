@@ -30,29 +30,6 @@ class PublicPagesIntegrationTest < RacingOnRails::IntegrationTest
     assert_select "title", /Results: #{team.name}/
   end
 
-  test "competitions" do
-    FactoryBot.create(:category, name: "Men Cat 1-2")
-    FactoryBot.create(:category, name: "Women Cat 1-2")
-    wsba = Competitions::WsbaBarr.create!(date: Date.new(2004))
-
-    get "/wsba_barr/2004"
-    assert_response :success
-    assert_equal wsba, assigns(:event), "@event"
-
-    rider_rankings = Competitions::RiderRankings.create!(date: Date.new(2004))
-
-    get "/rider_rankings/2004"
-    assert_response :success
-    assert_equal rider_rankings, assigns(:event), "@event"
-
-    Timecop.freeze(Time.zone.local(2013)) do
-      event = Competitions::OregonWomensPrestigeSeries.create!
-      get "/owps"
-      assert_response :success
-      assert_equal event, assigns(:event), "@event"
-    end
-  end
-
   test "home" do
     get "/home"
     assert_redirected_to "/"

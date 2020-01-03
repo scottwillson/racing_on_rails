@@ -6,7 +6,7 @@ module Calculations::V3::CalculationConcerns::Dates
   included do
     before_save :set_year
     validate :dates_are_same_year
-    default_value_for(:year) {Time.zone.now.year}
+    default_value_for(:year) { Time.zone.now.year }
   end
 
   def date
@@ -18,11 +18,11 @@ module Calculations::V3::CalculationConcerns::Dates
     errors.add(:end_date, "must be in year #{year}, but is #{end_date.year}") unless year == end_date.year
 
     if event && year != event.year
-      errors.add(:event, "year #{event.year} must be same as year #{year}")
+      errors.add(:event, "year #{event.year} must be same as calculation year #{year}")
     end
 
     if source_event && year != source_event.year
-      errors.add(:source_event, "year #{source_event.year} must be same as year #{year}")
+      errors.add(:source_event, "year #{source_event.year} must be same as calculation year #{year}")
     end
   end
 

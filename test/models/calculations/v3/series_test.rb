@@ -40,7 +40,8 @@ class Calculations::V3::SeriesTest < ActiveSupport::TestCase
 
     calculation = series.calculations.create!(
       double_points_for_last_event: true,
-      points_for_place: [100, 90, 75, 50, 40, 30, 20, 10]
+      points_for_place: [100, 90, 75, 50, 40, 30, 20, 10],
+      year: 2019
     )
     calculation.categories << men_a
 

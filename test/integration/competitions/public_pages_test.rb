@@ -21,57 +21,6 @@ module Competitions
       assert_response :success
     end
 
-    test "results pages" do
-      FactoryBot.create(:discipline)
-      team = FactoryBot.create(:team)
-      person = FactoryBot.create(:person, team: team)
-      event = FactoryBot.create(:event, date: Date.new(2004, 2))
-      senior_men = FactoryBot.create(:category)
-      race = event.races.create!(category: senior_men)
-      race.results.create(place: "1", person: person, team: team)
-
-      Ironman.calculate! 2004
-      event = Ironman.find_for_year(2004)
-      result = event.races.first.results.first
-      race = result.race
-      get "/events/#{event.to_param}/people/#{person.to_param}/results"
-      assert_response :success
-      assert_select "a", result.name
-      assert_select "h2", result.name
-
-      get "/events/#{event.to_param}/teams/#{team.to_param}/results/#{race.to_param}"
-      assert_response :success
-      assert_select "a", result.team_name
-      assert_select "h2", result.team_name
-
-      result = FactoryBot.create(:result)
-      get "/events/#{result.event.to_param}"
-      assert_response :success
-      assert_select ".name a", result.name
-      assert_select "h2", result.event.full_name
-
-      get "/events/#{result.event.to_param}/results"
-      assert_response :success
-      assert_select ".name a", result.name
-      assert_select "h2", result.event.full_name
-
-      get "/people/#{result.person.to_param}"
-      assert_response :success
-      assert_select "title", /Results: #{result.name}/
-
-      get "/people/#{result.person.to_param}/results"
-      assert_response :success
-      assert_select "title", /Results: #{result.name}/
-
-      get "/teams/#{team.to_param}"
-      assert_response :success
-      assert_select "title", /Results: #{team.name}/
-
-      get "/teams/#{team.to_param}/results"
-      assert_response :success
-      assert_select "title", /Results: #{team.name}/
-    end
-
     test "first aid providers" do
       person = FactoryBot.create(:person_with_login, official: true)
       https! if RacingAssociation.current.ssl?

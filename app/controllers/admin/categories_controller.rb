@@ -53,18 +53,6 @@ module Admin
       end
     end
 
-    # Calculate MbraBar only
-    def recompute_bar
-      Competitions::MbraBar.calculate!
-      redirect_to action: :index
-    end
-
-    # Calculate MbraTeamBar only
-    def recompute_team_bar
-      Competitions::MbraTeamBar.calculate!
-      redirect_to action: :index
-    end
-
     private
 
     def category_params

@@ -76,32 +76,6 @@ module Admin
         assert_equal("Road", event[:discipline], "discipline")
       end
 
-      test "update existing combined results" do
-        FactoryBot.create(:discipline)
-        FactoryBot.create(:discipline, name: "Mountain Bike")
-        FactoryBot.create(:discipline, name: "Time Trial")
-        source_event = FactoryBot.create(:time_trial_event)
-        FactoryBot.create(:result, event: source_event)
-        source_event.bar_points = 2
-        source_event.save!
-        event = CombinedTimeTrialResults.create!(parent: source_event)
-
-        post :update,
-             params: {
-               "id" => event.id,
-               "event" => {
-                 "auto_combined_results" => "1",
-                 "name" => "Portland MTB Short Track Series",
-                 "bar_points" => "0",
-                 "ironman" => "1",
-                 "discipline" => "Mountain Bike"
-                 }
-               }
-
-        assert_nil(flash[:warn], "flash[:warn] should be empty, but was: #{flash[:empty]}")
-        assert_redirected_to edit_admin_event_path(event)
-      end
-
       test "update event" do
         event = FactoryBot.create(:event)
         brad_ross = FactoryBot.create(:person, first_name: "Brad", last_name: "Ross")

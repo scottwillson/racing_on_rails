@@ -67,7 +67,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
   def model_calculations_events
     benchmark "model_calculations_events.#{key}.calculate.calculations" do
       @model_calculations_events ||= calculations_events
-                                     .reject { |e| e == event }
+                                     .reject { |e| e.event_id == event_id }
                                      .map { |e| model_events[e.event_id] }
     end
   end
@@ -75,7 +75,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
   def model_source_events
     benchmark "model_source_events.#{key}.calculate.calculations" do
       @model_source_events ||= source_events.ids
-                                            .reject { |event_id| event_id == event.id }
+                                            .reject { |source_event_id| source_event_id == event_id }
                                             .map { |event_id| model_events[event_id] }
     end
   end
