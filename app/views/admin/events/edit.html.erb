@@ -156,9 +156,6 @@
               editable: administrator? %>
         <%- end %>
 
-        <%= f.labelled_check_box(:ironman) if RacingAssociation.current.competitions.include?(:ironman) %>
-        <% end -%>
-
         <%= f.labelled_text_field :flyer, nil, editable: administrator?, class: "form-control" %>
         <% if administrator? -%>
         <%= f.labelled_check_box :flyer_approved, nil %>
