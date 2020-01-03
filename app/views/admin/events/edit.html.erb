@@ -156,11 +156,6 @@
               editable: administrator? %>
         <%- end %>
 
-        <% if administrator? -%>
-        <%- if CombinedTimeTrialResults.allows_combined_results?(@event) -%>
-        <%= f.labelled_check_box :auto_combined_results, "Auto-calc combined results" %>
-        <%- end -%>
-
         <%= f.labelled_check_box(:ironman) if RacingAssociation.current.competitions.include?(:ironman) %>
         <% end -%>
 

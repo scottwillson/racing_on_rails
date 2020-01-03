@@ -99,14 +99,6 @@ module Admin
         get :edit, params: { id: event.id }
         assert_response(:success)
       end
-
-      test "edit combined results" do
-        event = FactoryBot.create(:time_trial_event)
-        FactoryBot.create(:result, event: event)
-        combined = CombinedTimeTrialResults.create!(parent: event)
-        get :edit, params: { id: combined.to_param }
-        assert_response(:success)
-      end
     end
   end
 end

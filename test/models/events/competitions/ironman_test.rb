@@ -61,8 +61,6 @@ module Competitions
       event = FactoryBot.create(:time_trial_event)
       senior_men = FactoryBot.create(:category)
       event.races.create!(category: senior_men).results.create(place: "99", person: person)
-      combined_results = CombinedTimeTrialResults.create!(parent: event)
-      assert(!combined_results.ironman?, "CombinedTimeTrialResults event should not count towards Ironman")
 
       Ironman.calculate!
 

@@ -15,7 +15,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
           group: :bar,
           key: "#{discipline.to_param}_bar",
           members_only: true,
-          name: competition.full_name,
+          name: name(competition),
           points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
           weekday_events: false,
           year: competition.year
@@ -53,7 +53,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
           group: :bar,
           key: :age_graded_bar,
           members_only: true,
-          name: competition.full_name,
+          name: name(competition),
           source_event_keys: [:overall_bar],
           weekday_events: false,
           year: competition.year
@@ -362,7 +362,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         calculation = Calculations::V3::Calculation.create!(
           event_notes: "Rules before 2020 may not be accurate",
           key: :dirty_circles_overall,
-          name: competition.full_name,
+          name: name(competition),
           year: competition.year
         )
 
@@ -376,7 +376,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
           event_notes: "Rules before 2020 may not be accurate",
           group: :grand_prix,
           key: :grand_prix_overall,
-          name: competition.full_name,
+          name: name(competition),
           maximum_events: -1,
           minimum_events: 4,
           points_for_place: [100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
@@ -429,7 +429,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
           event_notes: "Rules before 2020 may not be accurate",
           group: :grand_prix,
           key: :grand_prix_team_competition,
-          name: competition.full_name,
+          name: name(competition),
           team: true,
           year: competition.year
         )
@@ -478,7 +478,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
           group: :ojcs,
           key: :ojcs,
           members_only: true,
-          name: competition.full_name,
+          name: name(competition),
           maximum_events: -2,
           points_for_place: [30, 28, 26, 24, 22, 20, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
           specific_events: true,
@@ -517,7 +517,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
           group: :ojcs,
           key: :ojcs_team,
           members_only: true,
-          name: competition.full_name,
+          name: name(competition),
           maximum_events: -2,
           points_for_place: (1..30).to_a.reverse,
           specific_events: true,
@@ -546,7 +546,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
           event_notes: "Rules before 2020 may not be accurate",
           discipline: Discipline[:mountain_bike],
           key: :ojmtbs_team,
-          name: competition.full_name,
+          name: name(competition),
           maximum_events: -2,
           points_for_place: [30, 28, 26, 24, 22, 20, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
           specific_events: true,
@@ -570,7 +570,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
           event_notes: "Rules before 2020 may not be accurate",
           key: :oregon_tt_cup,
           members_only: true,
-          name: competition.full_name,
+          name: name(competition),
           place_by: "time",
           points_for_place: [20, 17, 15, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
           specific_events: true,
@@ -609,7 +609,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
           group: :oregon_womens_prestige_series,
           key: :oregon_womens_prestige_series,
           members_only: true,
-          name: competition.full_name,
+          name: name(competition),
           points_for_place: [25, 21, 18, 16, 14, 12, 10, 8, 7, 6, 5, 4, 3, 2, 1],
           specific_events: true,
           year: competition.year
@@ -630,7 +630,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
           group: :oregon_womens_prestige_series,
           key: :oregon_womens_prestige_team_series,
           members_only: true,
-          name: competition.full_name,
+          name: name(competition),
           points_for_place: [25, 21, 18, 16, 14, 12, 10, 8, 7, 6, 5, 4, 3, 2, 1],
           specific_events: true,
           team: true,
@@ -655,7 +655,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
           key: :overall_bar,
           maximum_events: -3,
           members_only: true,
-          name: competition.full_name,
+          name: name(competition),
           points_for_place: (1..300).to_a.reverse,
           source_event_keys: %w[criterium_bar cyclocross_bar gravel_bar mountain_bike_bar road_bar short_track_bar time_trial_bar track_bar],
           specific_events: true,
@@ -734,7 +734,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
           event_notes: "Rules before 2020 may not be accurate",
           group: :pdx_stxc,
           key: "pdx_stxc_",
-          name: competition.full_name,
+          name: name(competition),
           maximum_events: -1,
           points_for_place: [
             100, 80, 60, 50, 45, 40, 36, 32, 29, 26, 24, 22, 20, 18, 16, 15, 14,
@@ -872,7 +872,7 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
           group: :bar,
           key: :team_bar,
           members_only: true,
-          name: competition.full_name,
+          name: name(competition),
           points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
           team: true,
           weekday_events: false,
@@ -1013,6 +1013,10 @@ class ConvertCompetitionsToCalculations < ActiveRecord::Migration[5.2]
         result.scores.delete_all
       end
     end
+  end
+
+  def name(competition)
+    competition.full_name.gsub(/20\d\d/, "").gsub("Overall BAR: ", "").squish
   end
 
   def oregon_cup_notes
