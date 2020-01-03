@@ -2,10 +2,6 @@
   jQuery('#race_<%= race.id %>_row').effect('puff', {}, 200);
 <% end %>
 
-<% if @combined_results %>
-  jQuery('#event_<%= @combined_results.id %>_row').effect('puff', {}, 200);
-<% end %>
-
 jQuery('#update_races_progress').fadeOut(100);
 jQuery("#warn").hide();
 jQuery('#notice').show();

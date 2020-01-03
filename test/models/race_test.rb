@@ -143,31 +143,6 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(non_members[2], race.results[4].person, "Result 4 person")
   end
 
-  test "calculate members only places should not trigger combined results calculation" do
-    FactoryBot.create(:discipline, name: "Time Trial")
-    event = SingleDayEvent.create!(discipline: "Time Trial")
-    senior_men = FactoryBot.create(:category)
-    race = event.races.create!(category: senior_men)
-    non_member = Person.create!
-    assert(!non_member.member?, "Person member?")
-    race.results.create!(place: "1", person: non_member, time: 100)
-
-    weaver = FactoryBot.create(:person)
-    assert(weaver.member?, "Person member?")
-    race.results.create!(place: "2", person: weaver, time: 102)
-
-    CombinedTimeTrialResults.calculate!
-
-    assert_not_nil(event.combined_results.reload, "TT event should have combined results")
-    result_id = event.combined_results.races.first.results.first.id
-
-    race.reload
-    race.calculate_members_only_places!
-    event.reload
-    result_id_after_member_place = event.combined_results.reload.races.first.results.first.id
-    assert_equal(result_id, result_id_after_member_place, "calculate_members_only_places! should not trigger combined results recalc")
-  end
-
   test "dates of birth" do
     event = SingleDayEvent.create!(date: Time.zone.today)
     senior_men = FactoryBot.create(:category)

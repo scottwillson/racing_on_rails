@@ -236,7 +236,6 @@ module Admin
           @event = Event.find(params[:id])
           # Remember races for view
           @races = @event.races.to_a.dup
-          @combined_results = @event.combined_results
           @event.destroy_races
           @races = @races.reject { |race| Race.exists?(race.id) }
           expire_cache
@@ -316,7 +315,6 @@ module Admin
         :additional_race_price,
         :all_events_discount,
         :atra_points_series,
-        :auto_combined_results,
         :bar_points,
         :beginner_friendly,
         :cancelled,

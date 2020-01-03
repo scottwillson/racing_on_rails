@@ -24,15 +24,13 @@ module Teams
       event_team = EventTeam.create!(team: team_to_keep, event: event)
       FactoryBot.create(:event_team_membership, event_team: event_team)
 
-      CombinedTimeTrialResults.calculate!
-
       assert_not_nil(Team.find_by(name: team_to_keep.name), "#{team_to_keep.name} should be in DB")
-      assert_equal(3, Result.where(team_id: team_to_keep.id).count, "Vanilla's results")
+      assert_equal(2, Result.where(team_id: team_to_keep.id).count, "Vanilla's results")
       assert_equal(1, Person.where(team_id: team_to_keep.id).count, "Vanilla's people")
       assert_equal(1, Alias.where(aliasable_id: team_to_keep.id).count, "Vanilla's aliases")
 
       assert_not_nil(Team.find_by(name: team_to_merge.name), "#{team_to_merge.name} should be in DB")
-      assert_equal(2, Result.where(team_id: team_to_merge.id).count, "Gentle Lovers's results")
+      assert_equal(1, Result.where(team_id: team_to_merge.id).count, "Gentle Lovers's results")
       assert_equal(3, Person.where(team_id: team_to_merge.id).count, "Gentle Lovers's people")
       assert_equal(1, Alias.where(aliasable_id: team_to_merge.id).count, "Gentle Lovers's aliases")
 
@@ -41,7 +39,7 @@ module Teams
       team_to_keep.merge(team_to_merge)
 
       assert_not_nil(Team.find_by(name: team_to_keep.name), "#{team_to_keep.name} should be in DB")
-      assert_equal(5, Result.where(team_id: team_to_keep.id).count, "Vanilla's results")
+      assert_equal(3, Result.where(team_id: team_to_keep.id).count, "Vanilla's results")
       assert_equal(4, Person.where(team_id: team_to_keep.id).count, "Vanilla's people")
       aliases = Alias.where(aliasable_id: team_to_keep.id)
       lovers_alias = aliases.detect { |a| a.name == "Gentle Lovers" }

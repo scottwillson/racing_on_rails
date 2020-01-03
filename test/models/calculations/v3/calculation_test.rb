@@ -184,7 +184,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     series = WeeklySeries.create!(date: date)
     source_child_event = series.children.create!
 
-    calculation = series.calculations.create!(points_for_place: [100, 50, 25, 12], year: 2018)
+    calculation = series.calculations.create!(points_for_place: [100, 50, 25, 12], year: 1.year.ago.year)
     category = Category.find_or_create_by(name: "Men A")
     calculation.categories << category
 
