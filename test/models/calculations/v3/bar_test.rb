@@ -7,7 +7,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
   setup { FactoryBot.create :discipline }
 
   test "#calculate!" do
-    Timecop.freeze(2019) do
+    Timecop.freeze(2019, 1) do
       calculation = Calculations::V3::Calculation.create!(
         disciplines: [Discipline[:road]],
         field_size_bonus: true,
@@ -67,7 +67,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
   end
 
   test "team source results" do
-    Timecop.freeze(2019) do
+    Timecop.freeze(2019, 1) do
       calculation = Calculations::V3::Calculation.create!(
         disciplines: [Discipline[:road]],
         members_only: true,
@@ -99,7 +99,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
   end
 
   test "weekly series overall" do
-    Timecop.freeze(2019) do
+    Timecop.freeze(2019, 1) do
       bar_calculation = Calculations::V3::Calculation.create!(
         disciplines: [Discipline[:road]],
         members_only: true,
@@ -170,14 +170,14 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       results = race.results
       assert_equal 1, results.size
       assert_equal 8, results.first.sources.size
-      assert_equal 6, results.first.sources.select(&:rejected?).size, results.first.sources.select(&:rejected?).map(&:source_result).map(&:race_full_name)
+      assert_equal 6, results.first.sources.count(&:rejected?), results.first.sources.select(&:rejected?).map(&:source_result).map(&:race_full_name)
       assert_equal 2, results.first.sources.reject(&:rejected?).size, results.first.sources.map(&:rejection_reason)
       assert_equal 29, results.first.points
     end
   end
 
   test "overall BAR" do
-    Timecop.freeze(2019) do
+    Timecop.freeze(2019, 1) do
       criterium_discipline = Discipline.create!(name: "Criterium")
       circuit_race_discipline = Discipline.create!(name: "Circuit Race")
       road_discipline = Discipline[:road]
@@ -298,7 +298,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
   end
 
   test "Age-Graded BAR" do
-    Timecop.freeze(2019) do
+    Timecop.freeze(2019, 1) do
       age_graded_discipline = Discipline.create!(name: "Age Graded")
       circuit_race_discipline = Discipline.create!(name: "Circuit Race")
       criterium_discipline = Discipline.create!(name: "Criterium")
