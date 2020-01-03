@@ -20,7 +20,7 @@ class ResultsTest < AcceptanceTest
       visit "/admin/events"
     end
 
-    visit "/admin/events?year=#{Time.zone.today.year - 1}" if Time.zone.today.month == 1 && Time.zone.today.day < 4
+    # visit "/admin/events?year=#{Time.zone.today.year - 1}" if Time.zone.today.month == 1 && Time.zone.today.day < 4
 
     visit_event event
 
