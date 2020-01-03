@@ -941,7 +941,7 @@ class ConvertCompetitionsToCalculations
     end
   end
 
-  def bar_event_notes
+  def self.bar_event_notes
     <<~HTML
     <p>Oregon Best All-Around Rider (BAR) a year-round, multi-discipline competition open to annual members. Points and ranking will be tracked in at least the following categories: Senior Men and Women, Category 3 Men, Category 4/5 Men, Category 3 Women, Category 4/5 Women, Masters Men and Women, Junior Men and Women, Singlespeed/Fixed, Tandem, Clydesdale, Athena.</p>
 
@@ -967,7 +967,7 @@ class ConvertCompetitionsToCalculations
     HTML
   end
 
-  def convert_event(competition, calculation)
+  def self.convert_event(competition, calculation)
     link_source_events(competition, calculation)
 
     if competition.kind_of?(Competitions::Overall)
@@ -988,17 +988,17 @@ class ConvertCompetitionsToCalculations
     competition
   end
 
-  def create_category(calculation, name, attributes = {})
+  def self.create_category(calculation, name, attributes = {})
     calculation.calculation_categories.create!(category: Category.find_or_create_by_normalized_name(name), **attributes)
   end
 
-  def link_source_events(competition, calculation)
+  def self.link_source_events(competition, calculation)
     competition.competition_event_memberships.each do |membership|
       calculation.calculations_events.create! event_id: membership.event_id, multiplier: membership.points_factor
     end
   end
 
-  def move_results(competition)
+  def self.move_results(competition)
     competition.races.each do |race|
       race.results.each do |result|
         result.scores.each do |score|
@@ -1015,11 +1015,11 @@ class ConvertCompetitionsToCalculations
     end
   end
 
-  def event_name(competition)
+  def self.event_name(competition)
     competition.full_name.gsub(/20\d\d/, "").gsub("Overall BAR: ", "").squish
   end
 
-  def oregon_cup_notes
+  def self.oregon_cup_notes
     <<~HTML
     <p>The Oregon Cup is a year-long points series for senior men.</p>
     <h3>Rules</h3>
@@ -1095,3 +1095,5 @@ class ConvertCompetitionsToCalculations
     HTML
   end
 end
+
+ConvertCompetitionsToCalculations.convert
