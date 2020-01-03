@@ -368,7 +368,6 @@ module Results
       event = SingleDayEvent.create!(discipline: "Mountain Bike")
       results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/mtb.xls", __FILE__)), event)
       results_file.import
-      assert_nil(event.combined_results, "Should not have combined results")
       assert_equal(6, event.races.reload.size, "Races after import")
     end
 

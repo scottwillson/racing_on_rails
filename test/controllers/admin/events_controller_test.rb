@@ -183,16 +183,12 @@ module Admin
     test "destroy races" do
       jack_frost = FactoryBot.create(:time_trial_event)
       jack_frost.races.create!(category: FactoryBot.create(:category)).results.create!(place: "1", person: FactoryBot.create(:person), time: 1200)
-      CombinedTimeTrialResults.calculate!
-      assert_not_nil(jack_frost.combined_results, "Event should have combined results before destroying races")
       assert_equal(1, jack_frost.races.count, "Races before destroy")
       delete :destroy_races, xhr: true, params: { id: jack_frost.id, commit: "Delete" }
       assert_not_nil(assigns(:races), "@races")
-      assert_not_nil(assigns(:combined_results), "@combined_results")
       assert_response(:success)
       jack_frost.reload
       assert_equal(0, jack_frost.races.count, "Races after destroy")
-      assert_nil(jack_frost.combined_results, "Event should have not combined results after destroying races")
     end
 
     test "events for year" do

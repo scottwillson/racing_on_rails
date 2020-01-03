@@ -7,7 +7,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
   setup { FactoryBot.create :discipline }
 
   test "simplest #calculate!" do
-    Timecop.freeze(Time.zone.local(2018)) do
+    Timecop.freeze(2018, 1) do
       series = WeeklySeries.create!(name: "Cross Crusade")
       source_child_event = series.children.create!(date: Time.zone.local(2018, 11, 21))
 
@@ -66,7 +66,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
   end
 
   test "delete event" do
-    Timecop.freeze(Time.zone.local(2018)) do
+    Timecop.freeze(2018, 1) do
       series = WeeklySeries.create!(name: "Cross Crusade")
       source_child_event = series.children.create!(date: Time.zone.local(2018, 11, 21))
 
@@ -94,7 +94,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
   end
 
   test "delete calculation" do
-    Timecop.freeze(Time.zone.local(2018)) do
+    Timecop.freeze(2018, 1) do
       series = WeeklySeries.create!(name: "Cross Crusade")
       source_child_event = series.children.create!(date: Time.zone.local(2018, 11, 21))
 
@@ -121,7 +121,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
   end
 
   test "delete source event" do
-    Timecop.freeze(Time.zone.local(2018)) do
+    Timecop.freeze(2018, 1) do
       series = WeeklySeries.create!(name: "Cross Crusade")
       source_child_event = series.children.create!(date: Time.zone.local(2018, 11, 21))
 
@@ -169,7 +169,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
   end
 
   test "no source event" do
-    Timecop.freeze(Time.zone.local(2019)) do
+    Timecop.freeze(2019, 1) do
       calculation = Calculations::V3::Calculation.create!
       assert_equal_dates "2019-01-01", calculation.date
       assert_equal_dates "2019-12-31", calculation.end_date

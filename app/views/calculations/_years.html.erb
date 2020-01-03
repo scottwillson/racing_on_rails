@@ -1,4 +1,4 @@
-<%- if calculation&.years.many? -%>
+<%- if calculation&.years&.many? -%>
   <%= tabs(calculation.year) do |tabs|
     calculation.years.sort.each do |year|
       tabs.add(

@@ -2,20 +2,6 @@
 
 <h2>Categories</h2>
 
-<%# We're small enough we can recompute competitions on demand. alp -%>
-<% if RacingAssociation.current.competitions.include?(:mbra_bar) -%>
-<div class="row">
-  <div class="col-sm-12">
-    <%= form_tag "/admin/categories/recompute_bar" do -%>
-      <%= submit_tag "Recompute MBRA BAR", id: "recompute_bar" %>
-    <% end -%>
-    <%= form_tag "/admin/categories/recompute_team_bar" do -%>
-      <%= submit_tag "Recompute MBRA BAT", id: "recompute_bar" %>
-    <% end -%>
-  </div>
-</div>
-<%- end %>
-
 <div class="row">
   <div class="col-sm-6">
     <h3><%= RacingAssociation.current.short_name %></h3>
