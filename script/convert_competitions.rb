@@ -2,8 +2,17 @@
 
 class ConvertCompetitionsToCalculations
   def self.convert
-    Calculations::V3::Calculation.reset_column_information
     Calculations::V3::Calculation.transaction do
+      Competitions::Bar.where(year: 2019).all.each do |competition|
+        competition.destroy_races
+        competition.destroy!
+      end
+
+      Competitions::Competition.where(year: 2020).all.each do |competition|
+        competition.destroy_races
+        competition.destroy!
+      end
+
       Competitions::Bar.all.each do |competition|
         puts "#{competition.year} #{competition.type}"
         discipline = Discipline.find_by(name: competition.discipline)
