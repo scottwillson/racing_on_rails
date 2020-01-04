@@ -8,7 +8,9 @@ class CalculationsController < ApplicationController
   end
 
   def index
-    @calculations = Calculations::V3::Calculation.all
+    @year = params[:year] || Time.zone.now.year
+    @years = Calculations::V3::Calculation.pluck(:year).uniq
+    @calculations = Calculations::V3::Calculation.where(year: @year)
   end
 
   def show
