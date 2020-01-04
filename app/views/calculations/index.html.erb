@@ -1,7 +1,18 @@
-<% @page_title = "Calculations" %>
+<% @page_title = "Calculations: #{@year}" %>
 
 <% cache cache_key(@calculations) do %>
-  <h2>Calculations</h2>
+  <h2><%= @year %> Calculations</h2>
+
+  <%- if @years&.many? -%>
+    <%= tabs(@year) do |tabs|
+      @years.sort.each do |year|
+        tabs.add(
+          year.to_s.titleize,
+          calculations_path(year: year)
+        )
+      end
+    end -%>
+  <%- end -%>
 
   <%= table id: "calculations", collection: @calculations, columns: 4 do %>
     <tr>
