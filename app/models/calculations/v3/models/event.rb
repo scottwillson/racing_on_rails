@@ -77,7 +77,7 @@ module Calculations
         def validate!
           raise(ArgumentError, "Discipline is nil") unless discipline
           raise(ArgumentError, "discipline must be a Models::Discipline, but is a #{discipline.class}") unless discipline.is_a?(Models::Discipline)
-          raise(ArgumentError, "end_date #{end_date} cannot be before date #{date}") if end_date && end_date < date
+          raise(ArgumentError, "end_date #{end_date} cannot be before date #{date} for event #{id}") if end_date && end_date < date
         end
 
         def zero_points?
