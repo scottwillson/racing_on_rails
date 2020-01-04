@@ -7,6 +7,7 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
     result.place_changed? ||
       result.points_changed? ||
       result.preliminary_changed? ||
+      result.rejected_changed? ||
       result.rejection_reason_changed? ||
       result.team_id_changed?
   end
