@@ -5,7 +5,7 @@
 
   <%- if @years&.many? -%>
     <%= tabs(@year) do |tabs|
-      @years.sort.each do |year|
+      @years.sort.reverse.each do |year|
         tabs.add(
           year.to_s.titleize,
           calculations_path(year: year)
