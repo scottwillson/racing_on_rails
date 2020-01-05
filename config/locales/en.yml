@@ -5,6 +5,7 @@ en:
   dnf: "DNF"
   discipline: "%{discipline} result"
   members_only: Must be an annual member
+  no_points: "No points"
   no_source_results: "No results"
   not_calculation_category: "Not a calculation category"
   rejected_category: "Not a calculation category"

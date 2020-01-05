@@ -14,7 +14,8 @@ module Calculations::V3::CalculationConcerns::ResultSources
       source_result_id: source_result_id,
       calculated_result_id: calculated_result.id,
       points: source_result.points,
-      rejection_reason: source_result.rejection_reason
+      rejection_reason: source_result.rejection_reason,
+      rejected: source_result.rejected?
     )
   end
 

@@ -67,6 +67,7 @@ module Calculations
             .calculate_step(Steps::SelectAssociationSanctioned)
             .calculate_step(Steps::SelectMembers)
             .calculate_step(Steps::RejectDnfs)
+            .calculate_step(Steps::RejectNoPoints)
             .calculate_step(Steps::RejectBelowMinimumEvents)
             .calculate_step(Steps::RejectMoreThanResultsPerEvent)
             .calculate_step(Steps::RejectCategoryWorstResults)
@@ -91,6 +92,7 @@ module Calculations
             .calculate_step(Steps::SelectAssociationSanctioned)
             .calculate_step(Steps::SelectMembers)
             .calculate_step(Steps::RejectDnfs)
+            .calculate_step(Steps::RejectNoPoints)
             .calculate_step(Steps::RejectBelowMinimumEvents)
             .calculate_step(Steps::RejectMoreThanResultsPerEvent)
             .calculate_step(Steps::RejectCategoryWorstResults)
@@ -109,18 +111,18 @@ module Calculations
 
       def calculate_step(step)
         results_count_before = results.size
-        rejections_count_before = results.select(&:rejected?).size
+        rejections_count_before = results.count(&:rejected?)
         source_results_count_before = source_results.size
-        source_result_rejections_count_before = source_results.select(&:rejected?).size
+        source_result_rejections_count_before = source_results.count(&:rejected?)
 
         time = Benchmark.measure do
           @event_categories = step.calculate!(self)
         end
 
         results_count_after = results.size
-        rejections_count_after = results.select(&:rejected?).size
+        rejections_count_after = results.count(&:rejected?)
         source_results_count_after = source_results.size
-        source_result_rejections_count_after = source_results.select(&:rejected?).size
+        source_result_rejections_count_after = source_results.count(&:rejected?)
         formatted_time = format("%.1fms", time.real)
         @logger.debug(<<~MSG
           Steps::#{step}#calculate!
