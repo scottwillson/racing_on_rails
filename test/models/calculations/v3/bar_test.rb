@@ -297,6 +297,73 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
     end
   end
 
+  test "map categories" do
+    Timecop.freeze(2019, 1) do
+      cyclocross_discipline = Discipline.create!(name: "Cyclocross")
+      overall_discipline = Discipline.create!(name: "Overall")
+      category_pro_1_2_men = ::Category.find_or_create_by(name: "Category Pro/1/2 Men")
+      category_3_men = ::Category.find_or_create_by(name: "Category 3 Men")
+      category_2_3_men = ::Category.find_or_create_by(name: "Category 2/3 Men")
+
+      cyclocross = Calculations::V3::Calculation.create!(
+        discipline: cyclocross_discipline,
+        disciplines: [cyclocross_discipline],
+        key: "cyclocross_bar",
+        members_only: true,
+        name: "Cyclocross BAR",
+        points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        weekday_events: false
+      )
+      cyclocross.categories << category_pro_1_2_men
+      cyclocross.categories << category_2_3_men
+
+      overall = Calculations::V3::Calculation.create!(
+        discipline: overall_discipline,
+        key: "overall_bar",
+        members_only: true,
+        name: "Overall BAR",
+        points_for_place: (1..300).to_a.reverse,
+        source_event_keys: %w[cyclocross_bar road_bar],
+        weekday_events: true
+      )
+      overall.categories << category_pro_1_2_men
+      calculation_category = overall.calculation_categories.create!(category: category_3_men)
+      calculation_category.matches << category_2_3_men
+
+      source_event = FactoryBot.create(:event, date: Time.zone.local(2019, 4, 13), discipline: "Cyclocross")
+      race = source_event.races.create!(category: category_2_3_men)
+      person = FactoryBot.create :person
+      race.results.create! place: 12, person: person
+
+      overall.calculate!
+
+      assert_equal 1, overall.source_events.size
+
+      event = cyclocross.reload.event
+
+      race = event.races.detect { |r| r.category == category_2_3_men }
+      assert_not_nil race
+
+      results = race.results.sort
+      assert_equal 1, results.size
+
+      event = overall.reload.event
+      assert_equal "Overall", event.discipline
+
+      assert_equal 2, event.races.size
+
+      race = event.races.detect { |r| r.category == category_pro_1_2_men }
+      assert_not_nil race
+      results = race.results.sort
+      assert_equal 0, results.size
+
+      race = event.races.detect { |r| r.category == category_3_men }
+      assert_not_nil race
+      results = race.results.sort
+      assert_equal 1, results.size
+    end
+  end
+
   test "Age-Graded BAR" do
     Timecop.freeze(2019, 1) do
       age_graded_discipline = Discipline.create!(name: "Age Graded")

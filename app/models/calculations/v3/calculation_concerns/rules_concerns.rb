@@ -10,6 +10,7 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
       category = Calculations::V3::Models::Category.new(calculation_category.category.name)
       Calculations::V3::Models::CategoryRule.new(
         category,
+        matches: calculation_category.matches.map { |c| Calculations::V3::Models::Category.new(c.name) },
         maximum_events: calculation_category.maximum_events,
         reject: calculation_category.reject?
       )

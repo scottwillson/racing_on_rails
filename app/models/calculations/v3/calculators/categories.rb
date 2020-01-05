@@ -29,12 +29,18 @@ module Calculations::V3::Calculators::Categories
   def find_or_create_event_category(source_result)
     return event_categories.first unless categories?
 
+    source_result_category = source_result.event_category.category
+
+    # Override like Men 2/3 => Men 3
+    calculation_category = rules.category_rules.detect do |category_rule|
+      source_result_category.in? category_rule.matches
+    end
+
     # Matches a calculation category
-    calculation_category = best_match_in(source_result.category, categories, source_result.racing_age)
+    calculation_category ||= best_match_in(source_result.category, categories, source_result.racing_age)
     return event_categories.find { |c| c.category == calculation_category } if calculation_category
 
     # Event has this category
-    source_result_category = source_result.event_category.category
     event_category = event_categories.find { |c| c.category == source_result_category }
     return event_category if event_category
 
