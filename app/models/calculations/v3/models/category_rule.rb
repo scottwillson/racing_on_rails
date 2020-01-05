@@ -6,11 +6,13 @@ module Calculations
     module Models
       class CategoryRule
         attr_reader :category
+        attr_reader :matches
         attr_reader :maximum_events
         attr_reader :reject
 
-        def initialize(category, maximum_events: nil, reject: false)
+        def initialize(category, matches: [], maximum_events: nil, reject: false)
           @category = category
+          @matches = matches
           @maximum_events = maximum_events
           @reject = reject
 

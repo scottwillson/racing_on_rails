@@ -91,8 +91,8 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "field_size_bonus", default: false, null: false
-    t.string "group"
     t.text "event_notes"
+    t.string "group"
     t.index ["discipline_id"], name: "index_calculations_on_discipline_id"
     t.index ["event_id"], name: "index_calculations_on_event_id"
     t.index ["key", "year"], name: "index_calculations_on_key_and_year", unique: true
@@ -109,6 +109,14 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.datetime "updated_at", null: false
     t.index ["calculation_id"], name: "index_calculations_categories_on_calculation_id"
     t.index ["category_id"], name: "index_calculations_categories_on_category_id"
+  end
+
+  create_table "calculations_categories_categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "calculation_category_id"
+    t.integer "category_id"
+    t.index ["calculation_category_id", "category_id"], name: "index_ccc_on_calculation_category_is_and_category_id"
+    t.index ["calculation_category_id"], name: "index_ccc_on_calculation_category_id"
+    t.index ["category_id"], name: "index_calculations_categories_categories_on_category_id"
   end
 
   create_table "calculations_disciplines", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -1057,6 +1065,8 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  add_foreign_key "calculations_categories_categories", "calculations_categories", column: "calculation_category_id", on_delete: :cascade
+  add_foreign_key "calculations_categories_categories", "categories", on_delete: :cascade
   add_foreign_key "categories", "categories", column: "parent_id", on_delete: :cascade
   add_foreign_key "competition_event_memberships", "events", column: "competition_id", name: "competition_event_memberships_competitions_id_fk", on_delete: :cascade
   add_foreign_key "competition_event_memberships", "events", name: "competition_event_memberships_events_id_fk", on_delete: :cascade

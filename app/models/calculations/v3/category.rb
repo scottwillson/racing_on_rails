@@ -5,6 +5,7 @@ class Calculations::V3::Category < ApplicationRecord
 
   belongs_to :calculation
   belongs_to :category, class_name: "::Category"
+  has_and_belongs_to_many :matches, class_name: "::Category" # rubocop:disable Rails/HasAndBelongsToMany
 
   delegate :name, to: :category
 end
