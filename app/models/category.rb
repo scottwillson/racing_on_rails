@@ -29,7 +29,10 @@ class Category < ApplicationRecord
 
   acts_as_list
 
-  has_and_belongs_to_many :calculation_categories, class_name: "Calculations::V3::Category" # rubocop:disable Rails/HasAndBelongsToMany
+  has_and_belongs_to_many :calculation_categories, # rubocop:disable Rails/HasAndBelongsToMany
+                          class_name: "Calculations::V3::Category",
+                          inverse_of: :matches
+
   has_and_belongs_to_many :calculations, class_name: "Calculations::V3::Calculation" # rubocop:disable Rails/HasAndBelongsToMany
   has_many :results, dependent: :restrict_with_error
   has_many :races, dependent: :restrict_with_error
