@@ -90,29 +90,27 @@ class Calculations::V3::Calculation < ApplicationRecord
   # serialize to DB
   def calculate!(source_calculations: true)
     ActiveSupport::Notifications.instrument "calculate.calculations.#{name}.racing_on_rails" do
-      transaction do
-        calculate_source_calculations if source_calculations
-        add_event!
-        update_event_dates
-        results = results_to_models(source_results)
-        calculator = Calculations::V3::Calculator.new(
-          calculations_events: model_calculations_events,
-          logger: logger,
-          rules: rules,
-          source_events: model_source_events,
-          source_results: results,
-          year: year
-        )
-        event_categories = nil
-        benchmark "calculate!.#{key}.calculator.calculate.calculations" do
-          event_categories = calculator.calculate!
-        end
-        benchmark "save_results.#{key}.calculate.calculations" do
-          save_results event_categories
-        end
-        GC.start
-        expire_cache
+      calculate_source_calculations if source_calculations
+      add_event!
+      update_event_dates
+      results = results_to_models(source_results)
+      calculator = Calculations::V3::Calculator.new(
+        calculations_events: model_calculations_events,
+        logger: logger,
+        rules: rules,
+        source_events: model_source_events,
+        source_results: results,
+        year: year
+      )
+      event_categories = nil
+      benchmark "calculate!.#{key}.calculator.calculate.calculations" do
+        event_categories = calculator.calculate!
       end
+      benchmark "save_results.#{key}.calculate.calculations" do
+        save_results event_categories
+      end
+      GC.start
+      expire_cache
     end
 
     true

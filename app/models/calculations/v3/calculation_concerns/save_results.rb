@@ -32,19 +32,21 @@ module Calculations::V3::CalculationConcerns::SaveResults
   # complicated) than wiping out all results and recreating.
   def save_results(event_categories)
     ActiveSupport::Notifications.instrument "save_results.calculations.#{name}.racing_on_rails" do
-      event.races.preload(:category)
-      delete_obsolete_races event_categories
-
       populate_people event_categories.flat_map(&:results)
       populate_teams event_categories.flat_map(&:results)
 
-      event_categories.each do |event_category|
-        race = create_race(event_category)
-        calculated_results = event_category.results
-        new_results, existing_results, obsolete_results = partition_results(calculated_results, race)
-        create_calculated_results new_results, race
-        update_calculated_results existing_results, race
-        delete_calculated_results obsolete_results, race
+      event.races.preload(:category)
+      delete_obsolete_races event_categories
+
+      transaction do
+        event_categories.each do |event_category|
+          race = create_race(event_category)
+          calculated_results = event_category.results
+          new_results, existing_results, obsolete_results = partition_results(calculated_results, race)
+          create_calculated_results new_results, race
+          update_calculated_results existing_results, race
+          delete_calculated_results obsolete_results, race
+        end
       end
     end
 
