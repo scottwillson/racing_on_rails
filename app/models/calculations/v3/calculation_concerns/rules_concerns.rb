@@ -23,7 +23,11 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
 
   def model_mapping(mapping)
     mapping_category = Calculations::V3::Models::Category.new(mapping.category.name)
-    mapping_discipline = Calculations::V3::Models::Discipline.new(mapping.discipline.name)
+
+    if mapping.discipline
+      mapping_discipline = Calculations::V3::Models::Discipline.new(mapping.discipline.name)
+    end
+
     Calculations::V3::Models::CategoryMapping.new(mapping_category, mapping_discipline)
   end
 
