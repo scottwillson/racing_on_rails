@@ -328,7 +328,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       )
       overall.categories << category_pro_1_2_men
       calculation_category = overall.calculation_categories.create!(category: category_3_men)
-      calculation_category.matches << category_2_3_men
+      calculation_category.mappings.create!(category: category_2_3_men, discipline: cyclocross_discipline)
 
       source_event = FactoryBot.create(:event, date: Time.zone.local(2019, 4, 13), discipline: "Cyclocross")
       race = source_event.races.create!(category: category_2_3_men)

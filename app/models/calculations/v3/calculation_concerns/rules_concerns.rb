@@ -6,11 +6,11 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
   # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them.
   # Categories are a subset of "rules."
   def category_rules
-    calculation_categories.includes(:matches).map do |calculation_category|
+    calculation_categories.includes(mappings: [:category, :discipline]).map do |calculation_category|
       category = Calculations::V3::Models::Category.new(calculation_category.category.name)
       Calculations::V3::Models::CategoryRule.new(
         category,
-        matches: calculation_category.matches.map { |c| Calculations::V3::Models::Category.new(c.name) },
+        mappings: calculation_category.mappings.map { |mapping| model_mapping(mapping) },
         maximum_events: calculation_category.maximum_events,
         reject: calculation_category.reject?
       )
@@ -19,6 +19,12 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
 
   def discipline?
     disciplines.any?
+  end
+
+  def model_mapping(mapping)
+    mapping_category = Calculations::V3::Models::Category.new(mapping.category.name)
+    mapping_discipline = Calculations::V3::Models::Discipline.new(mapping.discipline.name)
+    Calculations::V3::Models::CategoryMapping.new(mapping_category, mapping_discipline)
   end
 
   def rules

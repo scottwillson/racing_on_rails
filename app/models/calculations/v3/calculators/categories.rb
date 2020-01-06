@@ -33,7 +33,10 @@ module Calculations::V3::Calculators::Categories
 
     # Override like Men 2/3 => Men 3
     calculation_category = rules.category_rules.detect do |category_rule|
-      source_result_category.in? category_rule.matches
+      category_rule.mappings.any? do |mapping|
+        source_result.discipline == mapping.discipline &&
+          source_result_category == mapping.category
+      end
     end
 
     # Matches a calculation category
