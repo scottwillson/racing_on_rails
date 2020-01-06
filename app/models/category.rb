@@ -18,7 +18,7 @@ class Category < ApplicationRecord
   include Categories::Ages
   include Categories::Cleanup
   include Categories::Equipment
-  # TODO needed?
+  # TODO: needed?
   include Comparable
   include Categories::FriendlyParam
   include Categories::Gender
@@ -29,10 +29,13 @@ class Category < ApplicationRecord
 
   acts_as_list
 
-  has_and_belongs_to_many :calculation_categories, # rubocop:disable Rails/HasAndBelongsToMany
-                          class_name: "Calculations::V3::Category",
-                          inverse_of: :matches
+  has_many :calculation_category_mappings,
+           class_name: "Calculations::V3::CategoryMapping",
+           dependent: :destroy,
+           foreign_key: :category_id,
+           inverse_of: :category
 
+  has_many :calculation_categories, through: :calculation_category_mappings
   has_and_belongs_to_many :calculations, class_name: "Calculations::V3::Calculation" # rubocop:disable Rails/HasAndBelongsToMany
   has_many :results, dependent: :restrict_with_error
   has_many :races, dependent: :restrict_with_error
