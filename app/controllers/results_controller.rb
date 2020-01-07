@@ -31,18 +31,20 @@ class ResultsController < ApplicationController
     @event = Event.where(id: params[:event_id]).first
 
     case @event
-    when Competitions::AgeGradedBar, Competitions::Bar, Competitions::TeamBar
-      return redirect_to(controller: "competitions/bar", action: "show", year: @event.year, discipline: @event.discipline)
+    when Competitions::AgeGradedBar
+      return redirect_to(calculations_events_path(key: :age_graded_bar, year: @event.year))
+    when Competitions::Bar
+      return redirect_to(calculations_events_path(key: :overall_bar, year: @event.year))
+    when Competitions::TeamBar
+      return redirect_to(calculations_events_path(key: :team_bar, year: @event.year))
     when Competitions::Cat4WomensRaceSeries
-      return redirect_to(cat4_womens_race_series_path(year: @event.year))
+      return redirect_to(calculations_events_path(key: :cat4_womens_race_series, year: @event.year))
     when Competitions::OverallBar
-      return redirect_to(controller: "competitions/bar", action: "show", year: @event.year)
+      return redirect_to(calculations_events_path(key: :overall_bar, year: @event.year))
     when Competitions::Ironman
-      return redirect_to(ironman_path(year: @event.year))
+      return redirect_to(calculations_events_path(key: :ironman, year: @event.year))
     when Competitions::OregonCup
-      return redirect_to(oregon_cup_path(year: @event.year))
-    when Competitions::RiderRankings
-      return redirect_to(rider_rankings_path(year: @event.year))
+      return redirect_to(calculations_events_path(key: :oregon_cup, year: @event.year))
     when nil
       return event_not_found(params[:event_id])
     end
