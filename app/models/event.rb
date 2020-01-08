@@ -5,27 +5,19 @@
 #          Examples: Alpenrose Challenge Morning Session, Alpenrose Challenge Afternoon Session)
 # * SingleDayEvent (Most events, an event on a particular date. Appears on calendar.)
 # * MultiDayEvent (Spans more than one day. has many SingleDayEvent children)
-# * Competition (Results are calculated/derived from other events' results. Examples: Combined TT times, OBRA BAR)
 #
 # instructional: class or clinc
 # practice: training session
 #
 # Events have four similar, but distinct relationships to other Events:
 # * parent-children: A one-to-many tree. Example: stage race parent + stages children.
-#   Used for calculating competition results and schedule display. Does _not_ include
-#   Competitions, even though Competitions can have Event parents.
-#
-#   A purer children association would return all child Events and Competitions
-#  (that's how they are in the database). But we almost always want just the child Events,
-#   and not the Competitions.
-#
+##
 # * parent-child_competitions: A one-to-many tree. Example: stage race MultiDayEvent parent
-#   with GC and KOM child_competitions. Typically combined with children when we really
-#   do want all child Competitions and Events.
+#   with GC and KOM child_competitions.
 #
-# * competition_event_memberships: many-to-many from Events to Competitions. Example: Banana Belt I
+# * calculation_events: many-to-many from Events to Calculationto Events. Example: Banana Belt I
 #   can be a member of the Oregon Cup and the OBRA Road BAR. And the Oregon Cup also includes Kings Valley RR,
-#   Table Rock RR, etc. CompetitionEventMembership is a meaningul class in its own right.
+#   Table Rock RR, etc. Calculations::V3:Event is a meaningul class in its own right.
 #
 # Changes to parent Event's attributes are propogated to children, unless the children's attributes are already different.
 # See propogated_attributes
@@ -36,7 +28,6 @@ class Event < ApplicationRecord
 
   include Events::Children
   include Events::Comparison
-  include Events::Competitions
   include Events::Dates
   include Events::Defaults
   include Events::Naming

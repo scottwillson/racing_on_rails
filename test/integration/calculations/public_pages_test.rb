@@ -2,7 +2,7 @@
 
 require_relative "../racing_on_rails/integration_test"
 
-module Competitions
+module Calculations
   # :stopdoc:
   class PublicPagesTest < RacingOnRails::IntegrationTest
     test "redirect event" do

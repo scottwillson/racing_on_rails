@@ -113,7 +113,7 @@ module ResultsHelper
     end
     table.rows << Tabular::Row.new(table, points: result.points)
     table.renderer = Results::Renderers::DefaultResultRenderer
-    table.renderers[:event_full_name] = Results::Renderers::ScoreEventFullNameRenderer
+    table.renderers[:event_full_name] = Results::Renderers::ResultSourceEventFullNameRenderer
     table.renderers[:points] = Results::Renderers::PointsRenderer
     table.delete_blank_columns!
     render "results/table", table: table, css_class: "results scores"
@@ -148,7 +148,7 @@ module ResultsHelper
 
     table.rows << Tabular::Row.new(table, points: result.points)
     table.renderer = Results::Renderers::DefaultResultRenderer
-    table.renderers[:event_full_name] = Results::Renderers::ScoreEventFullNameRenderer
+    table.renderers[:event_full_name] = Results::Renderers::ResultSourceEventFullNameRenderer
     table.renderers[:points] = Results::Renderers::PointsRenderer
     table.delete_blank_columns!
     render "results/table", table: table, css_class: "results scores"

@@ -28,10 +28,6 @@
 
   <%= content_tag(:div, @event.notes.html_safe, class: notes_class(@event)) if @event.notes.present? -%>
 
-  <%- if @races.empty? && @event.is_a?(Competitions::Competition) -%>
-  <p class="event_notes">No results for <%= @event.year %></p>
-  <%- end -%>
-
   <% if @start_list.present? && (@event.updated_at.nil? || @event.updated_at < @start_list.map(&:updated_at).max) %>
   <p class="created_updated">Updated <%= @start_list.map(&:updated_at).max.to_formatted_s :long_and_friendly_date_and_time %></p>
   <% elsif @event.updated_at %>

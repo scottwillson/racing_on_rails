@@ -28,26 +28,7 @@ class ResultsController < ApplicationController
   def event
     return event_not_found(params[:event_id]) unless Event.where(id: params[:event_id]).exists?
 
-    @event = Event.where(id: params[:event_id]).first
-
-    case @event
-    when Competitions::AgeGradedBar
-      return redirect_to(calculations_events_path(key: :age_graded_bar, year: @event.year))
-    when Competitions::Bar
-      return redirect_to(calculations_events_path(key: :overall_bar, year: @event.year))
-    when Competitions::TeamBar
-      return redirect_to(calculations_events_path(key: :team_bar, year: @event.year))
-    when Competitions::Cat4WomensRaceSeries
-      return redirect_to(calculations_events_path(key: :cat4_womens_race_series, year: @event.year))
-    when Competitions::OverallBar
-      return redirect_to(calculations_events_path(key: :overall_bar, year: @event.year))
-    when Competitions::Ironman
-      return redirect_to(calculations_events_path(key: :ironman, year: @event.year))
-    when Competitions::OregonCup
-      return redirect_to(calculations_events_path(key: :oregon_cup, year: @event.year))
-    when nil
-      return event_not_found(params[:event_id])
-    end
+    @event = Event.where(id: params[:event_id]).first!
 
     respond_to do |format|
       format.html do
@@ -149,12 +130,8 @@ class ResultsController < ApplicationController
     @all_events ||= Event.find_all_with_results(@year, @discipline)
   end
 
-  def competitions
-    @competitions ||= all_events.select { |e| e.is_a?(Competitions::Competition) }
-  end
-
   def events
-    @events ||= all_events.reject { |e| e.is_a?(Competitions::Competition) || e.is_a?(WeeklySeries) }
+    @events ||= all_events.reject { |e| e.is_a?(WeeklySeries) }
   end
 
   def weekly_series

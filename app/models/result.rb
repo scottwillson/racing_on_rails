@@ -16,7 +16,6 @@ class Result < ApplicationRecord
   include Results::Caching
   include Results::Cleanup
   include Results::Comparison
-  include Results::Competitions
   include Results::CustomAttributes
   include Results::People
   include Results::Times

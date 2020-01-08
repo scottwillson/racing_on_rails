@@ -2,7 +2,7 @@
 
 require_relative "../acceptance_test"
 
-module Competitions
+module Calculations
   # :stopdoc:
   class PublicPagesAcceptanceTest < AcceptanceTest
     test "popular pages" do

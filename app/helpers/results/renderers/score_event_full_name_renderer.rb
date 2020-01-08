@@ -2,7 +2,7 @@
 
 module Results
   module Renderers
-    class ScoreEventFullNameRenderer < Results::Renderers::DefaultResultRenderer
+    class ResultSourceEventFullNameRenderer < Results::Renderers::DefaultResultRenderer
       def self.render(column, row)
         return nil unless row.source.respond_to?(:competition_result?)
 

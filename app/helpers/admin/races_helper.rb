@@ -15,16 +15,4 @@ module Admin::RacesHelper
 
     html.html_safe
   end
-
-  # BAR category or Rider Rankings category
-  def competition_category_name(race)
-    if race&.category
-      if race.category.parent
-        return race.category.parent.name
-      else
-        return race.category.name
-      end
-    end
-    ""
-  end
 end

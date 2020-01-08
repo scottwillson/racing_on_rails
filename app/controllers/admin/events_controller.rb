@@ -16,7 +16,6 @@ module Admin
     # * schedule
     # * year
     def index
-      @competitions = Event.where("type in (?)", Competitions::Competition::TYPES).year(@year)
       @schedule = Schedule::Schedule.new(@year, events_for_year(@year))
     end
 

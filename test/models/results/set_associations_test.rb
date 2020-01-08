@@ -410,41 +410,6 @@ class SetAssociationsTest < ActiveSupport::TestCase
     end
   end
 
-  test "multiple scores for same race" do
-    competition = Competitions::Competition.create!(name: "KOM")
-    cx_a = FactoryBot.create(:category)
-    competition_race = competition.races.create!(category: cx_a)
-    tonkin = FactoryBot.create(:person)
-    competition_result = competition_race.results.create!(person: tonkin, points: 5)
-
-    race = FactoryBot.create(:race)
-    tonkin = FactoryBot.create(:person)
-    source_result = race.results.create!(person: tonkin)
-
-    assert(competition_result.scores.create_if_best_result_for_race(source_result: source_result, points: 10))
-
-    jack_frost_pro_1_2 = FactoryBot.create(:race)
-    source_result = jack_frost_pro_1_2.results.build(person: tonkin)
-    assert(competition_result.scores.create_if_best_result_for_race(source_result: source_result, points: 10))
-
-    source_result = jack_frost_pro_1_2.results.build(person: tonkin)
-    assert_nil(competition_result.scores.create_if_best_result_for_race(source_result: source_result, points: 10))
-
-    # Need a lot more tests
-    expert_junior_men = FactoryBot.create(:category)
-    competition_race = competition.races.create!(category: expert_junior_men)
-    race.event.races.create!(category: expert_junior_men)
-    vanilla = FactoryBot.create(:team)
-    source_result = jack_frost_pro_1_2.results.build(team: vanilla)
-    competition_result = competition_race.results.create!(team: vanilla)
-    assert(competition_result.scores.create_if_best_result_for_race(source_result: source_result, points: 10))
-    source_result = jack_frost_pro_1_2.results.build(team: vanilla)
-    assert_not_nil(competition_result.scores.create_if_best_result_for_race(source_result: source_result, points: 2))
-    jack_frost_masters_35_plus_women = FactoryBot.create(:race)
-    source_result = jack_frost_masters_35_plus_women.results.build(team: vanilla)
-    assert(competition_result.scores.create_if_best_result_for_race(source_result: source_result, points: 4))
-  end
-
   test "do not match blank licenses" do
     Person.create!(name: "Rocket, The", license: "")
     weaver = FactoryBot.create(:person, name: "Ryan Weaver", first_name: "Ryan", last_name: "Weaver")

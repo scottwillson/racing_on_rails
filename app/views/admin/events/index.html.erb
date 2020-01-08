@@ -48,17 +48,6 @@
 </div>
 <% end -%>
 
-<% if @competitions.present? %>
-<div class="row">
-  <div class="col-sm-12">
-    <h3>Competitions</h3>
-    <% @competitions.sort_by(&:name).each do |competition| -%>
-      <%= link_to competition.name, edit_admin_event_path(competition) %><br />
-    <% end -%>
-  </div>
-</div>
-<% end %>
-
 <hr/>
 
 <div class="row">

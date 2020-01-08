@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-module Competitions
+module Calculations
   # :stopdoc:
   class BestMatchInTest < ActiveSupport::TestCase
     setup do

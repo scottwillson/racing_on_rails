@@ -511,32 +511,6 @@ class ResultTest < ActiveSupport::TestCase
     assert_not_nil(Team.find_by(name: "QuickStep"), "Should keep team that is used by person, even though it was created by a result")
   end
 
-  test "competition result" do
-    FactoryBot.create(:discipline, name: "Team")
-    senior_men = FactoryBot.create(:category, name: "Senior Men")
-    result = FactoryBot.create(:result)
-    assert !result.competition_result?, "SingleDayEvent competition_result?"
-
-    result = Competitions::Ironman.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
-    assert result.competition_result?, "Ironman competition_result?"
-
-    result = Competitions::TeamBar.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
-    assert result.competition_result?, "TeamBar competition_result?"
-  end
-
-  test "team competition result" do
-    FactoryBot.create(:discipline, name: "Team")
-    senior_men = FactoryBot.create(:category, name: "Senior Men")
-    result = FactoryBot.create(:result)
-    assert !result.team_competition_result?, "SingleDayEvent team_competition_result?"
-
-    result = Competitions::Ironman.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
-    assert !result.team_competition_result?, "Ironman team_competition_result?"
-
-    result = Competitions::TeamBar.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
-    assert result.team_competition_result?, "TeamBar competition_result?"
-  end
-
   test "custom attributes" do
     banana_belt_1 = FactoryBot.create(:event)
     senior_men = FactoryBot.create(:category)

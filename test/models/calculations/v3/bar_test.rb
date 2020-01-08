@@ -225,11 +225,6 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       person = FactoryBot.create :person
       race.results.create! place: 12, person: person
 
-      # Previous BAR version
-      event = Competitions::Bar.create!
-      race = event.races.create! category: senior_women
-      race.results.create! place: 2, person: person, competition_result: true
-
       overall.calculate!
 
       assert_equal 2, overall.source_events.size

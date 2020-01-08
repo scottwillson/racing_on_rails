@@ -230,7 +230,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     person = FactoryBot.create(:person)
     source_race.results.create!(place: 1, person: person)
 
-    # Existing Competition results should be ignored
+    # Existing Calculation results should be ignored
     overall = series.children.create!
     overall_race = overall.races.create!(category: category)
     overall_race.results.create!(place: 1, person: person, competition_result: true)

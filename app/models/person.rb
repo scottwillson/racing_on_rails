@@ -283,7 +283,7 @@ class Person < ApplicationRecord
     end
   end
 
-  # All non-Competition results
+  # All non-Calculation results
   # reload does an optimized load with joins
   def event_results(reload = true)
     if reload
