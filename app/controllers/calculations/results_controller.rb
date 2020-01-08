@@ -26,6 +26,7 @@ module Calculations
       @event = Event.find(event_id)
       @races = @event.races.includes(:category)
       @calculation = Calculations::V3::Calculation.find_by(event_id: @event.id)
+      return redirect_to(event_path(@event)) unless @calculation
       @page = params[:page]
 
       @many_races = Result.where(event_id: event_id).distinct.count(:race_id) > 1
