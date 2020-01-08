@@ -315,6 +315,7 @@ module Admin
         :additional_race_price,
         :all_events_discount,
         :atra_points_series,
+        :auto_combined_results,
         :bar_points,
         :beginner_friendly,
         :cancelled,

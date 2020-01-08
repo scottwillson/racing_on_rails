@@ -28,7 +28,7 @@ class CombinedTimeTrialResults < Event
                 .joins(:event)
                 .where("place is not null and cast(place as signed) > 0")
                 .where("results.time > 0")
-                .where(events: { discipline: "Time Trial", auto_combined_results: true })
+                .where(events: { discipline: "Time Trial" })
                 .pluck(:event_id)
                 .uniq
 
