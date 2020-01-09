@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
+# TODO: move to Calculations namespace?
 class ResultSource < ApplicationRecord
   include Calculations::V3::Rejection
 
   belongs_to :calculated_result, class_name: "Result"
   belongs_to :source_result, class_name: "Result"
+
+  validates :source_result, uniqueness: { scope: :source_result }
 
   def hash
     [
