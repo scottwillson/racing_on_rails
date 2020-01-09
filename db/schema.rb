@@ -94,7 +94,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.text "event_notes"
     t.string "group"
     t.index ["discipline_id"], name: "index_calculations_on_discipline_id"
-    t.index ["event_id"], name: "index_calculations_on_event_id"
+    t.index ["event_id"], name: "index_calculations_on_event_id", unique: true
     t.index ["key", "year"], name: "index_calculations_on_key_and_year", unique: true
     t.index ["source_event_id"], name: "index_calculations_on_source_event_id"
   end
@@ -107,6 +107,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.boolean "source_only", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["calculation_id", "category_id"], name: "index_calculations_categories_on_calculation_id_and_category_id", unique: true
     t.index ["calculation_id"], name: "index_calculations_categories_on_calculation_id"
     t.index ["category_id"], name: "index_calculations_categories_on_category_id"
   end
@@ -115,7 +116,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.bigint "calculation_category_id"
     t.integer "category_id"
     t.integer "discipline_id"
-    t.index ["calculation_category_id", "category_id"], name: "index_ccc_on_calculation_category_is_and_category_id"
+    t.index ["calculation_category_id", "category_id"], name: "index_ccc_on_calculation_category_is_and_category_id", unique: true
     t.index ["calculation_category_id"], name: "index_ccc_on_calculation_category_id"
     t.index ["category_id"], name: "index_calculations_categories_mappings_on_category_id"
     t.index ["discipline_id"], name: "fk_rails_9ae02c0dea"
@@ -137,6 +138,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.float "multiplier", default: 1.0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["calculation_id", "event_id"], name: "index_calculations_events_on_calculation_id_and_event_id", unique: true
     t.index ["calculation_id"], name: "index_calculations_events_on_calculation_id"
     t.index ["event_id"], name: "index_calculations_events_on_event_id"
   end
@@ -921,7 +923,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "rejected", default: false, null: false
-    t.index ["calculated_result_id", "source_result_id"], name: "calculated_result_id_source_result_id"
+    t.index ["calculated_result_id", "source_result_id"], name: "index_r_sources_on_calc_result_id_and_source_result_id", unique: true
     t.index ["source_result_id"], name: "fk_rails_6213531152"
   end
 
@@ -1067,6 +1069,8 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  add_foreign_key "calculations_categories_mappings", "calculations_categories", column: "calculation_category_id", on_delete: :cascade
+  add_foreign_key "calculations_categories_mappings", "categories", on_delete: :cascade
   add_foreign_key "calculations_categories_mappings", "disciplines", on_delete: :cascade
   add_foreign_key "categories", "categories", column: "parent_id", on_delete: :cascade
   add_foreign_key "competition_event_memberships", "events", column: "competition_id", name: "competition_event_memberships_competitions_id_fk", on_delete: :cascade
