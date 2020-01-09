@@ -3,4 +3,5 @@
     <%= category_rule.name %>
   </td>
   <td><%= category_rule.maximum_events %></td>
+  <td><%= category_rule.mappings.map(&:category).map(&:name).sort.join(", ") %></td>
 </tr>
