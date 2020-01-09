@@ -7,7 +7,7 @@ class ResultSource < ApplicationRecord
   belongs_to :calculated_result, class_name: "Result"
   belongs_to :source_result, class_name: "Result"
 
-  validates :source_result, uniqueness: { scope: :source_result }
+  validates :source_result, uniqueness: { scope: :calculated_result }
 
   def hash
     [
