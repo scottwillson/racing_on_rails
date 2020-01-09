@@ -116,7 +116,7 @@ ActiveRecord::Schema.define(version: 2019_09_07_150098) do
     t.bigint "calculation_category_id"
     t.integer "category_id"
     t.integer "discipline_id"
-    t.index ["calculation_category_id", "category_id"], name: "index_ccc_on_calculation_category_is_and_category_id", unique: true
+    t.index ["calculation_category_id", "category_id"], name: "index_ccc_on_calculation_category_id_and_category_id", unique: true
     t.index ["calculation_category_id"], name: "index_ccc_on_calculation_category_id"
     t.index ["category_id"], name: "index_calculations_categories_mappings_on_category_id"
     t.index ["discipline_id"], name: "fk_rails_9ae02c0dea"
