@@ -7,10 +7,11 @@
     <div class="col-sm-6">
       <% if @calculation.category_rules.reject(&:reject?).present? %>
         <h3>Categories</h3>
-        <%= table id: "category_rules", collection: @calculation.category_rules.reject(&:reject?), columns: 2 do %>
+        <%= table id: "category_rules", collection: @calculation.category_rules.reject(&:reject?), columns: 3 do %>
           <tr>
             <th>Name</th>
             <th>Maximum Events</th>
+            <th>Mapped Categories</th>
           </tr>
           <%= render partial: "category_rule", collection: @calculation.category_rules.reject(&:reject?).sort_by(&:name) %>
         <% end -%>
@@ -19,11 +20,45 @@
     <div class="col-sm-6">
       <% if @calculation.category_rules.select(&:reject?).present? %>
         <h3>Rejected Categories</h3>
-        <%= table id: "category_rules", collection: @calculation.category_rules.select(&:reject?), columns: 2 do %>
+        <%= table id: "category_rules", collection: @calculation.category_rules.select(&:reject?), columns: 1 do %>
           <tr>
             <th>Name</th>
           </tr>
           <%= render partial: "rejected_category_rule", collection: @calculation.category_rules.select(&:reject?).sort_by(&:name) %>
+        <% end -%>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6">
+      <% if @calculation.calculations_events.present? %>
+        <h3>Event Rules</h3>
+        <%= table id: "event", collection: @calculation.calculations_events, columns: 3 do %>
+          <tr>
+            <th>Date</th>
+            <th>Event</th>
+            <th>Multiplier</th>
+          </tr>
+          <%= render partial: "calculations_event", collection: @calculation.calculations_events.sort_by { |ce| ce.event.date } %>
+        <% end -%>
+      <% end %>
+    </div>
+
+    <div class="col-sm-6">
+      <% if @calculation.disciplines.present? %>
+        <h3>Disciplines</h3>
+        <%= table id: "event", collection: @calculation.disciplines, columns: 1 do %>
+          <tr>
+            <th>Name</th>
+          </tr>
+          <% @calculation.disciplines.sort_by(&:name).each do |discipline| %>
+            <tr>
+              <td class="name">
+                <%= discipline.name %>
+              </td>
+            </tr>
+          <% end -%>
         <% end -%>
       <% end %>
     </div>
