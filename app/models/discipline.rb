@@ -6,6 +6,7 @@ class Discipline < ApplicationRecord
   has_many :calculation_category_mappings, dependent: :destroy, class_name: "Calculations::V3::CategoryMapping"
   has_many :discipline_aliases
   has_and_belongs_to_many :bar_categories, class_name: "::Category", join_table: "discipline_bar_categories"
+  has_many :races, inverse_of: :discipline, dependent: :restrict_with_error
 
   @@all_aliases = nil
   @@names = nil

@@ -156,7 +156,7 @@ module Results
          number.present? &&
          !rental_number?
 
-        person.add_number number, Discipline[event.discipline], event.number_issuer, event.date.year
+        person.add_number number, discipline, event.number_issuer, event.date.year
       end
     end
 

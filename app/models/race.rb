@@ -29,6 +29,7 @@ class Race < ApplicationRecord
   before_save :symbolize_custom_columns
 
   belongs_to :category
+  belongs_to :discipline, inverse_of: :races, optional: true
   belongs_to :event, inverse_of: :races
   belongs_to :split_from, class_name: "Race", optional: true
   has_one :promoter, through: :event
@@ -66,10 +67,6 @@ class Race < ApplicationRecord
                       Category.new(name: name)
                     end
     category.try :name
-  end
-
-  def discipline
-    event&.discipline
   end
 
   def category_name

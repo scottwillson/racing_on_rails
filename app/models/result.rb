@@ -142,8 +142,12 @@ class Result < ApplicationRecord
     self[:distance] || race&.distance
   end
 
+  def discipline
+    race.discipline || Discipline[event&.discipline]
+  end
+
   def discipline_name
-    event&.discipline
+    discipline&.name
   end
 
   def event_id
@@ -222,7 +226,7 @@ class Result < ApplicationRecord
   end
 
   def rental_number?
-    RaceNumber.rental? number, Discipline[event.discipline]
+    RaceNumber.rental? number, discipline
   end
 
   def numeric_place?

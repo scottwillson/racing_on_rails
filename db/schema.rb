@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_09_185555) do
+ActiveRecord::Schema.define(version: 2020_01_17_183910) do
 
   create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
@@ -925,9 +925,11 @@ ActiveRecord::Schema.define(version: 2020_01_09_185555) do
     t.string "updated_by_name"
     t.boolean "rejected"
     t.string "rejection_reason"
+    t.integer "discipline_id"
     t.index ["bar_points"], name: "index_races_on_bar_points"
     t.index ["category_id"], name: "index_races_on_category_id"
     t.index ["created_by_id"], name: "index_races_on_created_by_id"
+    t.index ["discipline_id"], name: "index_races_on_discipline_id"
     t.index ["event_id"], name: "index_races_on_event_id"
     t.index ["updated_at"], name: "index_races_on_updated_at"
     t.index ["updated_by_id"], name: "index_races_on_updated_by_id"
@@ -1195,6 +1197,7 @@ ActiveRecord::Schema.define(version: 2020_01_09_185555) do
   add_foreign_key "race_numbers", "number_issuers", name: "race_numbers_number_issuer_id_fk"
   add_foreign_key "race_numbers", "people", name: "race_numbers_person_id", on_delete: :cascade
   add_foreign_key "races", "categories"
+  add_foreign_key "races", "disciplines"
   add_foreign_key "races", "events", name: "races_event_id_fk", on_delete: :cascade
   add_foreign_key "result_sources", "results", column: "calculated_result_id", on_delete: :cascade
   add_foreign_key "result_sources", "results", column: "source_result_id", on_delete: :cascade
