@@ -88,7 +88,7 @@ module Results
       race = event.races.detect { |r| r.category == category }
       if race
         race.results.clear
-        race.update_attributes! visible: true, custom_columns: custom_columns.to_a
+        race.update! visible: true, custom_columns: custom_columns.to_a
       else
         race = event.races.build(category: category, notes: notes(row), custom_columns: custom_columns.to_a)
       end
@@ -139,7 +139,7 @@ module Results
                                       value.strftime "%H:%M:%S"
                                     else
                                       value
-          end
+                                    end
           true
         else
           false
@@ -229,7 +229,7 @@ module Results
     end
 
     def result_method?(column_name)
-      prototype_result.respond_to?(column_name.to_sym)
+      column_name.to_sym != :discipline && prototype_result.respond_to?(column_name.to_sym)
     end
 
     def assert_columns!(table)

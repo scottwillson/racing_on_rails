@@ -6,6 +6,38 @@ require "test_helper"
 class Calculations::V3::BarTest < ActiveSupport::TestCase
   setup { FactoryBot.create :discipline }
 
+  test "category discipline" do
+    FactoryBot.create :discipline, name: "Singlespeed"
+
+    Timecop.freeze(2019, 1) do
+      singlespeed_bar = Calculations::V3::Calculation.create!(
+        disciplines: [Discipline[:singlespeed]],
+        field_size_bonus: true,
+        members_only: true,
+        name: "Singlespeed BAR",
+        points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        weekday_events: false
+      )
+      singlespeed_bar.categories << ::Category.find_or_create_by(name: "Senior Men")
+
+      event = FactoryBot.create(:event, date: Time.zone.local(2019, 6))
+      source_race = event.races.create!(
+        category: ::Category.find_or_create_by(name: "Track"),
+        discipline: ::Discipline[:singlespeed]
+      )
+      person = FactoryBot.create(:person)
+      source_race.results.create!(place: 4, person: person)
+
+      singlespeed_bar.calculate!
+
+      bar_event = singlespeed_bar.event.reload
+      results = bar_event.races.flat_map(&:results)
+      assert_equal 1, results.size
+      assert_not results.first.rejected?
+      assert_equal 12, results.first.points
+    end
+  end
+
   test "#calculate!" do
     Timecop.freeze(2019, 1) do
       calculation = Calculations::V3::Calculation.create!(

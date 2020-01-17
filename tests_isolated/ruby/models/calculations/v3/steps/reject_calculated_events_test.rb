@@ -126,6 +126,19 @@ module Calculations
           result = Models::CalculatedResult.new(participant, [source_result])
           calculator.event_categories.first.results << result
 
+          # Event category does not match
+          event = Models::Event.new(id: 1, calculated: true, discipline: Models::Discipline.new("Road"))
+
+          source_result = Models::SourceResult.new(
+            id: 1,
+            event_category: Models::EventCategory.new(category, event, discipline: Models::Discipline.new("Track")),
+            participant: participant,
+            place: 2,
+            points: 50
+          )
+          result = Models::CalculatedResult.new(participant, [source_result])
+          calculator.event_categories.first.results << result
+
           event_categories = RejectCalculatedEvents.calculate!(calculator)
 
           assert event_categories.first.results.first.source_results.empty?

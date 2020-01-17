@@ -10,12 +10,17 @@ module Calculations
         attr_reader :event
         attr_accessor :rejection_reason
 
-        def initialize(category, event = nil)
+        def initialize(category, event = nil, discipline: nil)
           @category = category
+          @discipline = discipline
           @event = event
           @rejected = false
 
           validate!
+        end
+
+        def discipline
+          @discipline || event&.discipline
         end
 
         def event_id
@@ -60,6 +65,7 @@ module Calculations
         def validate!
           raise(ArgumentError, "category is required") unless category
           raise(ArgumentError, "category must be a Models::Category, but is a #{category.class}") unless category.is_a?(Models::Category)
+          raise(ArgumentError, "discipline must be a Models::Discipline, but is a #{discipline.class}") unless discipline.nil? || discipline.is_a?(Models::Discipline)
           raise(ArgumentError, "event must be a Models::Event, but is a #{event.class}") unless event.nil? || event.is_a?(Models::Event)
         end
 
@@ -76,8 +82,6 @@ module Calculations
         def hash
           [category, event].compact.hash
         end
-
-        delegate :discipline, to: :event
       end
     end
   end

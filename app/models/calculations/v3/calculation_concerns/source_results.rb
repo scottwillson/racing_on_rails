@@ -108,6 +108,12 @@ module Calculations::V3::CalculationConcerns::SourceResults
     end
   end
 
+  def race_discipline(race)
+    if race.discipline_id.present?
+      Calculations::V3::Models::Discipline.new(race.discipline.name)
+    end
+  end
+
   # Map ActiveRecord records to Calculations::V3::Models so Calculator can calculate! them
   def results_to_models(source_results)
     benchmark "results_to_models.#{key}.calculate.calculations" do
@@ -117,7 +123,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
         Calculations::V3::Models::SourceResult.new(
           age: result.racing_age,
           date: result.date,
-          event_category: Calculations::V3::Models::EventCategory.new(category, event),
+          event_category: Calculations::V3::Models::EventCategory.new(category, event, discipline: race_discipline(result.race)),
           id: result.id,
           participant: model_participant(result),
           place: result.place,
