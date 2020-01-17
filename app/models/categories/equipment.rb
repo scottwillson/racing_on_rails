@@ -11,7 +11,7 @@ module Categories
     # Relies on normalized name
     def equipment_from_name
       # Technically different but always grouped together for BAR, etc.
-      if name[/Singlespeed/] || name[/Fix/]
+      if name[/Singlespeed/] || name[/Fix/] || name == "Track"
         "Singlespeed/Fixed"
       else
         name[/Eddy|Fat Bike|Hardtail|Merckx|Stampede|Tandem|Unicycle/]
