@@ -77,6 +77,18 @@ class Race < ApplicationRecord
     category.try :friendly_param
   end
 
+  def discipline=(value)
+    unless discipline == event.discipline
+      super
+    end
+  end
+
+  def discipline_id=(value)
+    unless discipline_id == event.discipline_id
+      super
+    end
+  end
+
   def name
     category_name
   end
