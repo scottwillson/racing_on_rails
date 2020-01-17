@@ -78,13 +78,13 @@ class Race < ApplicationRecord
   end
 
   def discipline=(value)
-    unless discipline == event.discipline
+    unless value == event&.discipline
       super
     end
   end
 
   def discipline_id=(value)
-    unless discipline_id == event.discipline_id
+    unless value == event&.discipline_id
       super
     end
   end
