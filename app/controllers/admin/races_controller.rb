@@ -113,6 +113,7 @@ module Admin
         :city,
         :custom_price,
         :distance,
+        :discipline_id,
         :event_id,
         :field_limit,
         :field_size,
