@@ -127,7 +127,7 @@ function showNewModal(type, objectName, method) {
 }
 
 function createObject(type, objectName, method) {
-  var name = jQuery('#' + objectName + '_' + method + '_select_modal_form input.name')[0].value;
+  var name = jQuery('#' + objectName + '_' + method + '_select_modal_new_' + type + ' input.name')[0].value;
 
   jQuery('#' + objectName + '_' + method + '_id').val("");
   jQuery('#' + objectName + '_' + method + '_name').val(name);
@@ -198,7 +198,7 @@ function bindSelectModal() {
       return createObject(type, objectName, method);
     });
 
-    jQuery('#show_' + objectName + '_' + method + '_new_modal').on(
+    jQuery('#' + objectName + '_' + method + '_select_modal_new_' + type).on(
       'shown.bs.modal',
       function() {
         jQuery('#' + objectName + '_' + method + '_select_modal_new_' + type + ' input.name').select();
