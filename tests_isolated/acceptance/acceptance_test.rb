@@ -435,16 +435,16 @@ class AcceptanceTest < ActiveSupport::TestCase
     wait_for ".modal.in"
     find("#show_#{field}_new_modal").click
     wait_for "##{field}_select_modal_new_person"
-    wait_for "#new_person_name"
-    fill_in "name", with: name
-    find_field("new_person_name") { |f| f.value == name }
+    wait_for "##{field}_new_person_name"
+    fill_in "#{field}_new_person_name", with: name
+    find_field("#{field}_new_person_name", wait: 4, with: name)
     find("##{field}_select_modal_new_person_create").click
   end
 
   Capybara.register_driver :selenium_chrome_headless do |app|
     options = Selenium::WebDriver::Chrome::Options.new
 
-    # options.add_argument "--headless"
+    options.add_argument "--headless"
     options.add_argument "--no-sandbox"
     options.add_argument "--disable-gpu"
     options.add_argument "--disable-popup-blocking"
@@ -480,6 +480,16 @@ class AcceptanceTest < ActiveSupport::TestCase
     profile["browser.helperApps.neverAsk.saveToDisk"] = "application/vnd.ms-excel,application/vnd.ms-excel; charset=utf-8"
 
     Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
+  end
+
+  Capybara::Screenshot.prune_strategy = :keep_last_run
+
+  Capybara::Screenshot.register_driver(:selenium_chrome_headless) do |driver, path|
+    driver.browser.save_screenshot(path)
+  end
+
+  Capybara::Screenshot.register_driver(:firefox) do |driver, path|
+    driver.browser.save_screenshot(path)
   end
 
   Capybara.current_driver = default_driver

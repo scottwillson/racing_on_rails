@@ -27,6 +27,7 @@ function selectSearchResult(event, type, objectName, method) {
   jQuery('#' + objectName + '_' + method + '_select_modal_button').removeClass('none');
   jQuery('#' + objectName + '_' + method + '_select_modal').modal('hide');
   jQuery('#' + objectName + '_' + method + '_remove_button').show();
+  jQuery('#' + objectName + '_' + method + '_id').change();
 }
 
 function searchResultRow(searchResult, type) {
@@ -136,6 +137,8 @@ function createObject(type, objectName, method) {
   jQuery('#' + objectName + '_' + method + '_select_modal_button').removeClass('none');
   jQuery('#' + objectName + '_' + method + '_select_modal_new_' + type).modal('hide');
   jQuery('#' + objectName + '_' + method + '_remove_button').show();
+
+  jQuery('#' + objectName + '_' + method + '_id').change();
 }
 
 function removeObject(type, objectName, method) {
@@ -144,6 +147,7 @@ function removeObject(type, objectName, method) {
   jQuery('#' + objectName + '_' + method + '_name_button').text('Click to select');
   jQuery('#' + objectName + '_' + method + '_remove_button').hide();
   jQuery('#' + objectName + '_' + method + '_select_modal_button').addClass('none');
+  jQuery('#' + objectName + '_' + method + '_id').change();
 }
 
 function bindSelectModal() {
