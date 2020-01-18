@@ -1,4 +1,4 @@
-<div class="modal fade select-modal" tabindex="-1" role="dialog" id="<%= object_name %>_<%= method %>_select_modal">
+<div class="modal fade select-modal" tabindex="-1" role="dialog" id="<%= target %>_select_modal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -9,6 +9,7 @@
                     "name",
                     "",
                     class: "wants_focus form-control name search",
+                    id: "#{target}_search_name",
                     placeholder: "Name",
                     autocomplete: "off"
               ) %>
