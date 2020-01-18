@@ -187,8 +187,21 @@
   </div>
 </div>
 
-<%= render partial: "modals/select", locals: { target: "event_promoter", type: "person" } %>
-<%= render partial: "modals/select", locals: { target: "event_team", type: "team" } %>
+<%= render partial: "modals/select",
+           locals: {
+                     method: "promoter",
+                     object_name: "event",
+                     target: "event_promoter",
+                     type: "person"
+                   } %>
+
+<%= render partial: "modals/select",
+           locals: {
+             method: "team",
+             object_name: "event",
+             target: "event_team",
+             type: "team"
+           } %>
 
 <%# TODO UJS %>
 <% if (!@event.promoter || @event.new_record?) && administrator? %>
