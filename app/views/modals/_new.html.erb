@@ -1,4 +1,4 @@
-<div class="modal fade" tabindex="-1" role="dialog" id="<%= target %>_select_modal_new_<%= type %>">
+<div class="modal <%= "fade" unless Rails.env.test? %>" tabindex="-1" role="dialog" id="<%= target %>_select_modal_new_<%= type %>">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-body">
@@ -10,7 +10,7 @@
                       "name",
                       "",
                       class: "wants_focus form-control col-sm-12 name",
-                      id: "new_#{type}_name",
+                      id: "#{target}_new_#{type}_name",
                       placeholder: "Enter name",
                       autocomplete: "off"
                 ) %>

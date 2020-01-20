@@ -90,8 +90,20 @@ module RacingOnRails
       %(<div class="form-group #{method}">#{label(method, (label_text || method.to_s.titleize).to_s, label_options)} <div class="col-sm-8"><p class="form-control-static" id="#{object_name}_#{method}">#{text || @object.send(method)}</p></div></div>).html_safe
     end
 
-    def select_modal(method, type)
-      @template.render "modals/button", f: self, method: method, object: @object, object_name: object_name, type: type
+    def select_modal(method, type, remove_button = true)
+      # Private ActionView methods
+      sanitized_method_name = method.to_s.sub(/\?$/, "").to_sym
+      sanitized_object_name = object_name.to_s.gsub(/\]\[|[^-a-zA-Z0-9:.]/, "_").sub(/_$/, "").to_sym
+      @template.render(
+        "modals/button",
+        f: self,
+        method: sanitized_method_name,
+        object_name: sanitized_object_name,
+        object: @object,
+        remove_button: remove_button,
+        target: "#{sanitized_object_name}_#{sanitized_method_name}",
+        type: type
+      )
     end
   end
 end

@@ -24,6 +24,7 @@ require_relative "../../test/elasticsearch_stubs"
 # and a custom Gemfile with 'gem "capybara-webkit"'.
 class AcceptanceTest < ActiveSupport::TestCase
   include Capybara::DSL
+  include Capybara::Screenshot::MiniTestPlugin
   include ElasticsearchStubs
 
   # Selenium tests start the Rails server in a separate process. If test data is wrapped in a
@@ -32,11 +33,10 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   Webdrivers.cache_time = 86_400
   Capybara.asset_host = "http://0.0.0.0:3000"
-  Capybara::Screenshot.autosave_on_failure = false
-  Capybara::Screenshot.prune_strategy = { keep: 20 }
+  Capybara::Screenshot.prune_strategy = :keep_last_run
 
   setup :clean_database, :set_capybara_driver, :configure_webmock, :stub_elasticsearch
-  teardown :reset_session
+  teardown :report_javascript_errors, :reset_session
 
   def self.javascript_driver
     if ENV["JAVASCRIPT_DRIVER"].present?
@@ -404,6 +404,42 @@ class AcceptanceTest < ActiveSupport::TestCase
     puts text if ENV["VERBOSE"].present?
   end
 
+  def report_javascript_errors
+    return unless Capybara.current_driver == :selenium_chrome_headless
+
+    errors = page.driver.browser.manage.logs.get(:browser)
+    errors.each do |error|
+      if error.level == 'WARNING'
+        STDERR.puts 'WARN: javascript warning'
+        STDERR.puts error.message
+        next
+      end
+      raise error.message
+    end
+  end
+
+  def select_existing_person(field, name, search_for = nil)
+    search_for ||= name
+    click_button "#{field}_select_modal_button"
+    wait_for ".modal.in"
+    fill_in "name", with: search_for
+
+    find("tr[data-person-name=\"#{name}\"]").click
+    assert_equal name, find("##{field}_name", visible: false).value
+    assert_equal name, find("##{field}_select_modal_button").text
+  end
+
+  def select_new_person(field, name)
+    click_button "#{field}_select_modal_button"
+    wait_for ".modal.in"
+    find("#show_#{field}_new_modal").click
+    wait_for "##{field}_select_modal_new_person"
+    wait_for "##{field}_new_person_name"
+    fill_in "#{field}_new_person_name", with: name
+    find_field("#{field}_new_person_name", wait: 4, with: name)
+    find("##{field}_select_modal_new_person_create").click
+  end
+
   Capybara.register_driver :selenium_chrome_headless do |app|
     options = Selenium::WebDriver::Chrome::Options.new
 
@@ -443,6 +479,14 @@ class AcceptanceTest < ActiveSupport::TestCase
     profile["browser.helperApps.neverAsk.saveToDisk"] = "application/vnd.ms-excel,application/vnd.ms-excel; charset=utf-8"
 
     Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
+  end
+
+  Capybara::Screenshot.register_driver(:selenium_chrome_headless) do |driver, path|
+    driver.browser.save_screenshot(path)
+  end
+
+  Capybara::Screenshot.register_driver(:firefox) do |driver, path|
+    driver.browser.save_screenshot(path)
   end
 
   Capybara.current_driver = default_driver

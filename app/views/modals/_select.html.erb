@@ -1,4 +1,4 @@
-<div class="modal fade select-modal" tabindex="-1" role="dialog" id="<%= target %>_select_modal">
+<div class="modal <%= "fade" unless Rails.env.test? %> select-modal" tabindex="-1" role="dialog" id="<%= target %>_select_modal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -9,6 +9,7 @@
                     "name",
                     "",
                     class: "wants_focus form-control name search",
+                    id: "#{target}_search_name",
                     placeholder: "Name",
                     autocomplete: "off"
               ) %>
@@ -21,7 +22,7 @@
         <input type="hidden" name="page" value="1" id="<%= target %>_page">
       </div>
       <div class="modal-body">
-        <table class="table select-modal table-hover" id="<%= type.pluralize %>">
+        <table class="table select-modal table-hover <%= type.pluralize %>">
           <tbody>
             <tr>
               <td class="empty">
@@ -39,7 +40,7 @@
           </div>
           <div class="col-sm-8">
             <button type="button" class="btn btn-default" id="show_<%= target %>_new_modal">New <%= type.titleize %></button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-default" id="cancel_<%= target %>_select_modal" data-dismiss="modal">Cancel</button>
           </div>
         </div>
       </div>
@@ -47,4 +48,10 @@
   </div>
 </div>
 
-<%= render partial: "modals/new", locals: { target: "event_promoter", type: type } %>
+<%= render partial: "modals/new",
+           locals: {
+             method: method,
+             object_name: object_name,
+             target: target,
+             type: type
+           } %>
