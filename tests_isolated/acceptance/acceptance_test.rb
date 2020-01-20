@@ -24,6 +24,7 @@ require_relative "../../test/elasticsearch_stubs"
 # and a custom Gemfile with 'gem "capybara-webkit"'.
 class AcceptanceTest < ActiveSupport::TestCase
   include Capybara::DSL
+  include Capybara::Screenshot::MiniTestPlugin
   include ElasticsearchStubs
 
   # Selenium tests start the Rails server in a separate process. If test data is wrapped in a
@@ -32,9 +33,7 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   Webdrivers.cache_time = 86_400
   Capybara.asset_host = "http://0.0.0.0:3000"
-  # Doesn't seem to work with project's default setup
-  Capybara::Screenshot.autosave_on_failure = false
-  Capybara::Screenshot.prune_strategy = { keep: 20 }
+  Capybara::Screenshot.prune_strategy = :keep_last_run
 
   setup :clean_database, :set_capybara_driver, :configure_webmock, :stub_elasticsearch
   teardown :report_javascript_errors, :reset_session
@@ -481,8 +480,6 @@ class AcceptanceTest < ActiveSupport::TestCase
 
     Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
   end
-
-  Capybara::Screenshot.prune_strategy = :keep_last_run
 
   Capybara::Screenshot.register_driver(:selenium_chrome_headless) do |driver, path|
     driver.browser.save_screenshot(path)
