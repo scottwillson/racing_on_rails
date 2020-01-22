@@ -419,25 +419,41 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def select_existing_person(field, name, search_for = nil)
+    select_existing("person", field, name, search_for)
+  end
+
+  def select_new_person(field, name)
+    select_new("person", field, name)
+  end
+
+  def select_existing_team(field, name, search_for = nil)
+    select_existing("team", field, name, search_for)
+  end
+
+  def select_new_team(field, name)
+    select_new("team", field, name)
+  end
+
+  def select_existing(type, field, name, search_for)
     search_for ||= name
     click_button "#{field}_select_modal_button"
     wait_for ".modal.in"
     fill_in "name", with: search_for
 
-    find("tr[data-person-name=\"#{name}\"]").click
+    find("tr[data-#{type}-name=\"#{name}\"]").click
     assert_equal name, find("##{field}_name", visible: false).value
     assert_equal name, find("##{field}_select_modal_button").text
   end
 
-  def select_new_person(field, name)
+  def select_new(type, field, name)
     click_button "#{field}_select_modal_button"
     wait_for ".modal.in"
     find("#show_#{field}_new_modal").click
-    wait_for "##{field}_select_modal_new_person"
-    wait_for "##{field}_new_person_name"
-    fill_in "#{field}_new_person_name", with: name
-    find_field("#{field}_new_person_name", wait: 4, with: name)
-    find("##{field}_select_modal_new_person_create").click
+    wait_for "##{field}_select_modal_new_#{type}"
+    wait_for "##{field}_new_#{type}_name"
+    fill_in "#{field}_new_#{type}_name", with: name
+    find_field("#{field}_new_#{type}_name", wait: 4, with: name)
+    find("##{field}_select_modal_new_#{type}_create").click
   end
 
   Capybara.register_driver :selenium_chrome_headless do |app|

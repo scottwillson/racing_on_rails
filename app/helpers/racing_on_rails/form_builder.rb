@@ -90,6 +90,10 @@ module RacingOnRails
       %(<div class="form-group #{method}">#{label(method, (label_text || method.to_s.titleize).to_s, label_options)} <div class="col-sm-8"><p class="form-control-static" id="#{object_name}_#{method}">#{text || @object.send(method)}</p></div></div>).html_safe
     end
 
+    def labelled_select_modal(method, type, remove_button = true)
+      %(<div class="form-group">#{label(method, method.to_s.titleize.to_s, class: "control-label col-sm-4")}<div class="col-sm-8">#{select_modal(method, type, remove_button)}</div></div>).html_safe
+    end
+
     def select_modal(method, type, remove_button = true)
       # Private ActionView methods
       sanitized_method_name = method.to_s.sub(/\?$/, "").to_sym
