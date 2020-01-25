@@ -31,6 +31,8 @@ class RacingAssociationsController < Admin::AdminController
       :always_insert_table_headers,
       :award_cat4_participation_points,
       :bmx_numbers,
+      :card_background_color,
+      :card_text_color,
       :cat4_womens_race_series_category_id,
       :cat4_womens_race_series_end_date,
       :cat4_womens_race_series_points,

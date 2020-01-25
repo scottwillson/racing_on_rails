@@ -35,11 +35,11 @@ class Card < Prawn::Document
 
       draw_text "#{RacingAssociation.current.short_name} License # #{person.license}", at: [card_left_side, card_top - 72]
 
-      fill_color "f9ba28"
+      fill_color RacingAssociation.current.card_background_color
       rectangle [card_left_side + 164, card_top + 10], 20, 84
       fill
 
-      fill_color "000000"
+      fill_color RacingAssociation.current.card_text_color
       self.font_size = 14
       year = RacingAssociation.current.effective_year.to_s
       draw_text year[0], at: [card_left_side + 171, card_top - 10]
