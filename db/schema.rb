@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_17_183910) do
+ActiveRecord::Schema.define(version: 2020_01_25_000755) do
   create_table "adjustments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "order_id"
     t.integer "person_id"
@@ -409,6 +409,7 @@ ActiveRecord::Schema.define(version: 2020_01_17_183910) do
     t.integer "additional_product_variant_id"
     t.integer "purchased_discount_code_id"
     t.integer "quantity", default: 1, null: false
+    t.integer "team_id"
     t.index ["additional_product_variant_id"], name: "index_line_items_on_additional_product_variant_id"
     t.index ["discount_code_id"], name: "index_line_items_on_discount_code_id"
     t.index ["event_id"], name: "index_line_items_on_event_id"
@@ -420,6 +421,7 @@ ActiveRecord::Schema.define(version: 2020_01_17_183910) do
     t.index ["purchased_discount_code_id"], name: "index_line_items_on_purchased_discount_code_id"
     t.index ["race_id"], name: "index_line_items_on_race_id"
     t.index ["status"], name: "index_line_items_on_status"
+    t.index ["team_id"], name: "index_line_items_on_team_id"
     t.index ["type"], name: "index_line_items_on_type"
   end
 
@@ -524,8 +526,10 @@ ActiveRecord::Schema.define(version: 2020_01_17_183910) do
     t.string "work_phone"
     t.string "cell_fax"
     t.boolean "velodrome_committee_interest", default: false, null: false
+    t.integer "team_id"
     t.index ["order_id"], name: "index_order_people_on_order_id"
     t.index ["person_id"], name: "index_order_people_on_person_id"
+    t.index ["team_id"], name: "index_order_people_on_team_id"
   end
 
   create_table "orders", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
@@ -769,6 +773,7 @@ ActiveRecord::Schema.define(version: 2020_01_17_183910) do
     t.boolean "team_name", default: false, null: false
     t.boolean "string_value", default: false
     t.string "string_value_placeholder"
+    t.boolean "team", default: false, null: false
     t.index ["event_id"], name: "index_products_on_event_id"
     t.index ["seller_id"], name: "index_products_on_seller_id"
     t.index ["type"], name: "index_products_on_type"
@@ -890,6 +895,8 @@ ActiveRecord::Schema.define(version: 2020_01_17_183910) do
     t.string "default_region_id"
     t.boolean "allow_iframes", default: false
     t.string "payment_gateway_name", default: "elavon"
+    t.string "card_background_color", default: "ffffff", null: false
+    t.string "card_text_color", default: "000000", null: false
   end
 
   create_table "refunds", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
@@ -1089,8 +1096,10 @@ ActiveRecord::Schema.define(version: 2020_01_17_183910) do
   add_foreign_key "events", "number_issuers", name: "events_number_issuers_id_fk"
   add_foreign_key "events", "people", column: "promoter_id", name: "events_promoter_id", on_delete: :nullify
   add_foreign_key "events", "velodromes", name: "events_velodrome_id_fk"
+  add_foreign_key "line_items", "teams"
   add_foreign_key "order_people", "orders", name: "order_people_ibfk_2", on_delete: :cascade
   add_foreign_key "order_people", "people", name: "order_people_ibfk_1", on_delete: :cascade
+  add_foreign_key "order_people", "teams"
   add_foreign_key "pages", "pages", column: "parent_id", name: "pages_parent_id_fk"
   add_foreign_key "people", "teams"
   add_foreign_key "people_people", "people", column: "editor_id", name: "people_people_ibfk_1", on_delete: :cascade

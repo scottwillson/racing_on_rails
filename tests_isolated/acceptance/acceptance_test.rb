@@ -424,7 +424,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     wait_for ".modal.in"
     fill_in "name", with: search_for
 
-    find("tr[data-person-name=\"#{name}\"]").click
+    find("tr[data-#{type}-name=\"#{name}\"]").click
     assert_equal name, find("##{field}_name", visible: false).value
     assert_equal name, find("##{field}_select_modal_button").text
   end

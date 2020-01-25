@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.config.assets.paths << Rails.root.join("node_modules")
-Rails.application.config.assets.version = "4.1"
+Rails.application.config.assets.version = "4.2"
 
 Rails.application.configure do
   config.assets.precompile += %w[
