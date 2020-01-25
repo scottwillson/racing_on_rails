@@ -41,10 +41,11 @@ class Card < Prawn::Document
 
       fill_color "000000"
       self.font_size = 14
-      draw_text "2", at: [card_left_side + 171, card_top - 10]
-      draw_text "0", at: [card_left_side + 171, card_top - 27]
-      draw_text "1", at: [card_left_side + 171, card_top - 44]
-      draw_text "9", at: [card_left_side + 171, card_top - 61]
+      year = RacingAssociation.current.effective_year.to_s
+      draw_text year[0], at: [card_left_side + 171, card_top - 10]
+      draw_text year[1], at: [card_left_side + 171, card_top - 27]
+      draw_text year[2], at: [card_left_side + 171, card_top - 44]
+      draw_text year[3], at: [card_left_side + 171, card_top - 61]
 
       index += 1
     end
