@@ -21,7 +21,7 @@ module Events
 
     # For select modal
     def parent_name
-      parent_event_name
+      parent&.name
     end
 
     def name_with_date

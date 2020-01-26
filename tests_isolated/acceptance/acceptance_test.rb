@@ -418,6 +418,14 @@ class AcceptanceTest < ActiveSupport::TestCase
     end
   end
 
+  def select_existing_event(field, name, search_for = nil)
+    select_existing("event", field, name, search_for)
+  end
+
+  def select_new_event(field, name)
+    select_new("event", field, name)
+  end
+
   def select_existing_person(field, name, search_for = nil)
     select_existing("person", field, name, search_for)
   end

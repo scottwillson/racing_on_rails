@@ -95,6 +95,12 @@ class Event < ApplicationRecord
     )
   }
 
+  def self.name_like(name)
+    return Event.none if name.blank?
+
+    Event.where("name like ?", "%#{name.strip}%").order(:date)
+  end
+
   def self.upcoming(weeks = 2)
     single_day_events   = upcoming_single_day_events(weeks)
     multi_day_events    = upcoming_multi_day_events(weeks)
@@ -233,6 +239,12 @@ class Event < ApplicationRecord
     end
   end
 
+  def parent_name=(value)
+    if value.present? && parent_id.blank?
+      self.parent = MultiDayEvent.new(name: value, updater: new_record? ? updater : nil)
+    end
+  end
+
   def team_name
     team&.name
   end
@@ -260,7 +272,7 @@ class Event < ApplicationRecord
 
   def as_json(_)
     super(
-      only: %i[discipline name parent_id type],
+      only: %i[date discipline id name parent_id type],
       methods: [:sorted_races],
       include: {
         sorted_races: {

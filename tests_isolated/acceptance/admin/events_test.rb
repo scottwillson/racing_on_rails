@@ -5,7 +5,6 @@ require_relative "../acceptance_test"
 # :stopdoc:
 class EventsTest < AcceptanceTest
   test "events" do
-    return true
     javascript!
 
     candi = FactoryBot.create(:administrator, name: "Candi Murray", home_phone: "(503) 555-1212", email: "admin@example.com")
@@ -42,6 +41,26 @@ class EventsTest < AcceptanceTest
     visit "/admin/events"
     assert_page_has_content "Sausalito Criterium"
     click_link "Sausalito Criterium"
+
+    select_new_event("event_parent", "California Cup")
+    click_button "Save"
+    assert_page_has_content "Sausalito Criterium"
+    parent_id = Event.find_by(name: "California Cup").id.to_s
+    assert_equal "California Cup", find("#event_parent_name", visible: false).value
+    assert_equal parent_id, find("#event_parent_id", visible: false).value
+
+    click_button "event_parent_remove_button"
+    click_button "Save"
+    assert_equal "", find("#event_parent_name", visible: false).value
+    assert_equal "", find("#event_parent_id", visible: false).value
+
+    select_existing_event("event_parent", "California Cup")
+    click_button "Save"
+    assert_equal "California Cup", find("#event_parent_name", visible: false).value
+    assert_equal parent_id, find("#event_parent_id", visible: false).value
+
+    assert_page_has_content "Sausalito Criterium"
+
     assert_match(/\d+/, find("#event_promoter_id", visible: false).value)
     assert_equal "Tom Brown", find("#event_promoter_select_modal_button").text
 

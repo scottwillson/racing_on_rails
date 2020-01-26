@@ -20,7 +20,17 @@ class EventsController < ApplicationController
   private
 
   def events_for_api(year)
-    year = RacingAssociation.current.effective_year if year.blank?
-    Event.year year.to_i
+    name = params[:name].try(:strip)
+    year = RacingAssociation.current.effective_year.to_i if year.blank?
+
+    if name.present?
+      if params[:per_page]
+        Event.year(year).name_like(name[0, 32]).paginate(page: page, per_page: params[:per_page])
+      else
+        Event.year(year).name_like(name[0, 32]).page(page)
+      end
+    else
+      Event.year(year)
+    end
   end
 end
