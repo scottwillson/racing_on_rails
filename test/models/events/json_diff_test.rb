@@ -6,9 +6,11 @@ module Events
   # :stopdoc:
   class JsonDiffTest < ActiveSupport::TestCase
     test "as_json" do
-      event = SingleDayEvent.new(name: "July Road Race", id: 1)
+      event = SingleDayEvent.new(name: "July Road Race", id: 1, date: Time.zone.local(2016, 1, 7))
       expected = {
+        "date" => Time.zone.local(2016, 1, 7).to_date,
         "discipline" => "Road",
+        "id" => 1,
         "name" => "July Road Race",
         "parent_id" => nil,
         "type" => "SingleDayEvent",
