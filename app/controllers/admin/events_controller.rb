@@ -344,6 +344,7 @@ module Admin
         :number_issuer_id,
         :override_registration_ends_at,
         :parent_id,
+        :parent_name,
         :phone,
         :postponed,
         :post_event_fees,

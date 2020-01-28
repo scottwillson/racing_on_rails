@@ -10,6 +10,8 @@ function pluralize(type) {
     return 'people';
   } else if (type === 'team') {
     return 'teams';
+  } else if (type === 'event') {
+    return 'events';
   }
 
   return type;
@@ -35,19 +37,31 @@ function searchResultRow(searchResult, type) {
     return searchResultPersonCells(searchResult);
   } else if (type === 'team') {
     return searchResultTeamCells(searchResult);
+  } else if (type === 'event') {
+    return searchResultEventCells(searchResult);
   }
+}
+
+function searchResultEventCells(event) {
+  return '<td><span class="glyphicon glyphicon-finish-line"></span></td>' +
+   '<td class="date">' + event.date + '</td>' +
+   '<td class="name">' + event.name + '</td>' +
+   '<td class="discipline">' + event.type + '</td>' +
+   '<td class="discipline">' + event.discipline + '</td>'
 }
 
 function searchResultPersonCells(person) {
   return '<td><span class="glyphicon glyphicon-user"></span></td>' +
    '<td>' + person.name + '</td>' +
    '<td class="team_name">' + person.team_name + '</td>' +
-   '<td class="city">' + city(person) + '</td>'
+   '<td class="city">' + city(person) + '</td>' +
+   '<td></td>'
 }
 
 function searchResultTeamCells(team) {
   return '<td><span class="glyphicon glyphicon-group"></span></td>' +
    '<td>' + team.name + '</td>' +
+   '<td></td>' +
    '<td></td>' +
    '<td></td>'
 }

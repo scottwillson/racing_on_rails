@@ -17,7 +17,7 @@
                   url: @event.new_record? ? admin_events_path : admin_event_path(@event),
                   html: { class: "form-horizontal", role: "form", method: form_method_for(@event) }) do |f| -%>
 
-        <%= f.hidden_field :parent_id %>
+        <%= f.labelled_select_modal :parent, "event", true %>
         <%= f.labelled_text_field :name, nil, editable: administrator?, class: "wants_focus form-control" %>
 
         <% if administrator? %>
@@ -186,6 +186,14 @@
     </div>
   </div>
 </div>
+
+<%= render partial: "modals/select",
+           locals: {
+                     method: "parent",
+                     object_name: "event",
+                     target: "event_parent",
+                     type: "event"
+                   } %>
 
 <%= render partial: "modals/select",
            locals: {

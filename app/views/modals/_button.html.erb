@@ -9,11 +9,16 @@
         data-toggle="modal"
         data-type="<%= type %>"
         id="<%= target %>_select_modal_button">
-  <% if method == :team %>
-  <span class="glyphicon glyphicon-group"></span>
-  <% else %>
-  <span class="glyphicon glyphicon-user"></span>
+
+  <% case type.to_sym %>
+  <% when :person %>
+    <span class="glyphicon glyphicon-user"></span>
+  <% when :team %>
+    <span class="glyphicon glyphicon-group"></span>
+  <% when :event %>
+  <span class="glyphicon glyphicon-finish-line"></span>
   <% end %>
+
   <span id="<%= target %>_name_button"><%= object.send(method)&.name || "Click to select" %></span>
 </button>
 

@@ -19,6 +19,11 @@ module Events
       parent.try(:name) || name
     end
 
+    # For select modal
+    def parent_name
+      parent&.name
+    end
+
     def name_with_date
       "#{name} (#{short_date})"
     end
