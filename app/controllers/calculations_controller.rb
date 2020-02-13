@@ -1,16 +1,32 @@
 # frozen_string_literal: true
 
 class CalculationsController < ApplicationController
-  before_action :require_administrator, only: :edit
+  before_action :require_administrator, except: [:index, :show]
+
+  def create
+    @calculation = Calculations::V3::Calculation.new(calculation_params)
+    if @calculation.save(calculation_params)
+      flash[:notice] = "Created #{@calculation.name}"
+      redirect_to edit_calculation_path(@calculation)
+    else
+      render :edit
+    end
+  end
 
   def edit
     @calculation = Calculations::V3::Calculation.find(params[:id])
+    @calculation.calculations_events.new
   end
 
   def index
     @year = params[:year] || Time.zone.now.year
     @years = Calculations::V3::Calculation.pluck(:year).uniq
     @calculations = Calculations::V3::Calculation.where(year: @year)
+  end
+
+  def new
+    @calculation = Calculations::V3::Calculation.new
+    render :edit
   end
 
   def show

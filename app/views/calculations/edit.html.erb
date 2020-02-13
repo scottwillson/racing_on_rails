@@ -6,21 +6,30 @@
 
 <%= form_for(@calculation,
             as: :calculation,
-            url: @calculation.new_record? ? calculation_path : calculation_path(@calculation),
+            url: @calculation.new_record? ? calculations_path : calculation_path(@calculation),
             html: { class: "form-horizontal", role: "form", method: form_method_for(@calculation) }) do |f| -%>
 
   <div class="row">
     <div class="col-sm-6">
       <h3>Categories</h3>
-      <%= table id: "category_rules", collection: @calculation.calculation_categories, columns: 2 do %>
+      <%= table id: "category_rules", collection: @calculation.calculation_categories, columns: 3 do %>
         <tr>
           <th>Name</th>
           <th>Maximum Events</th>
           <th>Reject</th>
         </tr>
-        <%#= f.fields_for :calculation_categories do |calculation_category_fields| %>
-          <%#= render partial: "editable_category_category", object: calculation_category_fields %>
-        <%# end -%>
+        <%= f.fields_for :calculation_categories do |calculation_category_fields| %>
+          <%= render partial: "editable_calculation_category", object: calculation_category_fields %>
+        <% end -%>
+      <% end %>
+      <h3>Events</h3>
+      <%= table id: "calculations_events", collection: @calculation.calculations_events, columns: 1 do %>
+        <tr>
+          <th>Name</th>
+        </tr>
+        <%= f.fields_for :calculations_events do |calculations_event_fields| %>
+          <%#= render partial: "editable_calculations_event", object: calculations_event_fields, as: :calculations_event %>
+        <% end -%>
       <% end %>
     </div>
     <div class="col-sm-6">
@@ -58,3 +67,11 @@
     </div>
   </div>
 <% end -%>
+
+<%= render partial: "modals/select",
+           locals: {
+                     method: "calculations_event",
+                     object_name: "event",
+                     target: "calculations_event_event",
+                     type: "event"
+                   } %>

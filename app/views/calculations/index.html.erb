@@ -25,3 +25,11 @@
     <%= render partial: "calculation", collection: @calculations.sort_by(&:name) %>
   <% end -%>
 <% end -%>
+
+<div class="row">
+  <div class="col-sm-12">
+    <%= link_to new_calculation_path, class: "btn btn-default", id: "new_calculation" do %>
+      <span class="glyphicon glyphicon-cup"></span> New Calculation
+    <% end %>
+  </div>
+</div>

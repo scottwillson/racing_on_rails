@@ -41,7 +41,8 @@ class Calculations::V3::Calculation < ApplicationRecord
   has_many :events, through: :calculations_events, class_name: "::Event"
   belongs_to :source_event, class_name: "::Event", optional: true
 
-  accepts_nested_attributes_for :calculation_categories
+  accepts_nested_attributes_for :calculation_categories, allow_destroy: true
+  accepts_nested_attributes_for :calculations_events, allow_destroy: true
 
   before_destroy :destroy_event
   before_save :set_name
