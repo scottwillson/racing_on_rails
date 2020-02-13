@@ -5,7 +5,7 @@ class CalculationsController < ApplicationController
 
   def create
     @calculation = Calculations::V3::Calculation.new(calculation_params)
-    if @calculation.save(calculation_params)
+    if @calculation.save
       flash[:notice] = "Created #{@calculation.name}"
       redirect_to edit_calculation_path(@calculation)
     else

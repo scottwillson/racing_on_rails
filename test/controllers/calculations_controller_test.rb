@@ -4,6 +4,8 @@ require "test_helper"
 
 class CalculationsControllerTest < ActionController::TestCase
   test "create" do
+    FactoryBot.create(:discipline)
+    create_administrator_session
     post :create, params: { calculation: { name: "OR TT Cup" } }
     calculation = Calculations::V3::Calculation.last
     assert_equal "OR TT Cup", calculation.name
@@ -16,6 +18,7 @@ class CalculationsControllerTest < ActionController::TestCase
   end
 
   test "get new" do
+    create_administrator_session
     get :new
     assert_response :success
   end
