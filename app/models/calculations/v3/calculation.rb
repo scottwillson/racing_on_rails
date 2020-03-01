@@ -48,6 +48,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   before_save :set_name
   after_save :expire_cache
 
+  validate :maximum_events_negative, unless: :blank?
   validates :event, uniqueness: { allow_nil: true }
   validates :key, uniqueness: { allow_nil: true, scope: :year }
   validates :group_by, inclusion: { in: GROUP_BY }
@@ -155,6 +156,13 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   def group_event_keys
     group && Calculations::V3::Calculation.where(group: group, year: year).pluck(:key)
+  end
+
+  def maximum_events_negative
+    # Dupe with Rules
+    if !maximum_events.is_a?(Integer) || maximum_events.to_i.positive?
+      errors.add(:maximum_events, "must be an integer < 1, but is #{maximum_events.class} #{maximum_events}")
+    end
   end
 
   def set_name
