@@ -126,8 +126,8 @@
     <%= f.labelled_text(:member, "Not current", nil, class: "not_current") if !@person.member? && !@person.renewed? -%>
 
     <div class="check-boxes">
-      <%= f.labelled_check_box(:ccx_only, "Cyclocross only?") if RacingAssociation.current.cx_memberships? %>
       <%= f.labelled_check_box :official %>
+      <%= f.labelled_check_box :fabric_road_numbers, "Needs Fabric Road Numbers?" %>
       <%= f.labelled_check_box :membership_card, "Has Card?" %>
       <%= f.labelled_check_box :print_card,
                                "Print card? #{(link_to('Print one card now', card_admin_person_path(@person, format: "pdf"),

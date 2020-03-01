@@ -20,7 +20,7 @@ class PeopleFile
     table.column_mapper = People::ColumnMapper.new
 
     table.columns.each do |column|
-      column.type = :boolean if column.key == :ccx_only
+      column.type = :boolean if column.key == :ccx_only || column.key == :fabric_road_numbers
     end
 
     table.read path

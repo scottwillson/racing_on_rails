@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_25_000755) do
+ActiveRecord::Schema.define(version: 2020_03_01_154515) do
 
   create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
@@ -765,6 +765,7 @@ ActiveRecord::Schema.define(version: 2020_01_25_000755) do
     t.string "updated_by_type"
     t.string "created_by_name"
     t.string "updated_by_name"
+    t.boolean "fabric_road_numbers", default: true, null: false
     t.index ["created_by_id"], name: "index_people_on_created_by_id"
     t.index ["crypted_password"], name: "index_people_on_crypted_password"
     t.index ["email"], name: "index_people_on_email"

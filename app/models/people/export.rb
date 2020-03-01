@@ -18,7 +18,7 @@ module People
           SELECT people.id, license, first_name, last_name, teams.name as team_name, team_id, people.notes,
                  member_from, member_to, member_usac_to,
                  (member_from IS NOT NULL AND member_to IS NOT NULL AND member_from <= NOW() AND member_to >= NOW()) as member,
-                 print_card, card_printed_at, membership_card, ccx_only, date_of_birth, occupation,
+                 print_card, card_printed_at, membership_card, date_of_birth, occupation, fabric_road_numbers,
                  street, people.city, people.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender,
                  ccx_category, road_category, track_category, mtb_category, dh_category,
                  volunteer_interest, official_interest, race_promotion_interest, team_interest, velodrome_committee_interest,

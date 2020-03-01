@@ -167,7 +167,7 @@ module Admin
                "member" => "1", "gender" => "M", "notes" => "rm", "ccx_category" => "", "team_name" => "", "road_category" => "5",
                "street" => "31153 SW Willamette Hwy W", "track_category" => "", "home_phone" => "503-582-8823",
                "first_name" => "Paul", "last_name" => "Formiller",
-               "date_of_birth(1i)" => "1969", "email" => "paul.formiller@verizon.net", "state" => "OR", "ccx_only" => "1",
+               "date_of_birth(1i)" => "1969", "email" => "paul.formiller@verizon.net", "state" => "OR", "fabric_road_numbers" => "1",
                "official" => "1",
                "race_numbers_attributes" => {
                  "0" => { "value" => "222", "id" => molly_road_number.id },
@@ -183,13 +183,13 @@ module Admin
       assert_equal(true, molly.print_card?, "print_card?")
       assert_equal_dates("2004-02-16", molly.member_from, "member_from after update")
       assert_equal_dates("2004-12-31", molly.member_to, "member_to after update")
-      assert_equal(true, molly.ccx_only?, "ccx_only?")
+      assert_equal(true, molly.fabric_road_numbers?, "fabric_road_numbers?")
 
       assert_equal 2, molly.versions.size, "versions"
       version = molly.versions.last
       assert_equal @administrator.name, version.terminator, "version user"
       changes = version.changeset
-      assert_equal 26, changes.size, "changes"
+      assert_equal 25, changes.size, "changes"
       change = changes["team_id"]
       assert_not_nil change, "Should have change for team ID"
       assert_equal vanilla.id, change.first, "Team ID before"

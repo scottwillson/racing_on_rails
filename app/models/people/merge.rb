@@ -26,6 +26,7 @@ module People
       email
       emergency_contact
       emergency_contact_phone
+      fabric_road_numbers
       gender
       home_phone
       license
