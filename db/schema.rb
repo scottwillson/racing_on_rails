@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_01_154515) do
+ActiveRecord::Schema.define(version: 2020_03_03_004002) do
 
   create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
@@ -311,7 +311,7 @@ ActiveRecord::Schema.define(version: 2020_03_01_154515) do
   end
 
   create_table "discount_codes", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "event_id", null: false
+    t.integer "event_id"
     t.string "name"
     t.string "code", null: false
     t.datetime "created_at"
