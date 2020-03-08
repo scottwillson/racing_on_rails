@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_08_011251) do
+ActiveRecord::Schema.define(version: 2020_03_08_013135) do
 
   create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
@@ -624,6 +624,7 @@ ActiveRecord::Schema.define(version: 2020_03_08_011251) do
     t.string "cell_fax"
     t.boolean "velodrome_committee_interest", default: false, null: false
     t.integer "team_id"
+    t.string "usac_license"
     t.index ["order_id"], name: "index_order_people_on_order_id"
     t.index ["person_id"], name: "index_order_people_on_person_id"
     t.index ["team_id"], name: "index_order_people_on_team_id"
