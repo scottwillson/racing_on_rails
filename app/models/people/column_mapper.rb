@@ -63,7 +63,9 @@ module People
       "Interests"                              => :notes,
       "Donation"                               => :notes,
       "Singlespeed"                            => :notes,
-      "Tandem"                                 => :notes
+      "Tandem"                                 => :notes,
+      "USAC License"                           => :usac_license,
+      "USAC Lic#"                              => :usac_license
     }.freeze
 
     def map(key)

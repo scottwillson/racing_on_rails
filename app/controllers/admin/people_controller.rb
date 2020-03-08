@@ -293,6 +293,7 @@ module Admin
         :team_interest,
         :team_name,
         :track_category,
+        :usac_license,
         :velodrome_committee_interest,
         :volunteer_interest,
         :wants_email,

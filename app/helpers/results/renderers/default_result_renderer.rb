@@ -15,7 +15,7 @@ module Results
           "Date"
         when :event_full_name
           "Event"
-        when :license
+        when :license, :usac_license
           "Lic"
         when :number
           "Num"

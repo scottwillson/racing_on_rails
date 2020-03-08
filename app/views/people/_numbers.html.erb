@@ -7,6 +7,10 @@
     <td><%= RacingAssociation.current.short_name %> License/Membership #</td>
     <td><%= @person.license %></td>
   </tr>
+  <tr>
+    <td>USAC License</td>
+    <td><%= @person.usac_license %></td>
+  </tr>
   <% end %>
 
   <% @person.race_numbers.select { |n| n.year == RacingAssociation.current.effective_year }.each do |number| -%>

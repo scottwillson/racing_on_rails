@@ -46,6 +46,7 @@ module People
       street
       team_id
       track_category
+      usac_license
       work_phone
       zip
     ].freeze

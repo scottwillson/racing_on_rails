@@ -7,6 +7,8 @@ module Results
     "cat.": :category_name,
     "club/team": :team_name,
     "license_#": :license,
+    "usac_lic_#": :usac_license,
+    "usac_license_#": :usac_license,
     "membership_#": :license,
     "rider_#": :number,
     "team/club": :team_name,
