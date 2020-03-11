@@ -16,7 +16,7 @@ module People
 
         people = Person.connection.select_all(%{
           SELECT people.id, license, first_name, last_name, teams.name as team_name, team_id, people.notes,
-                 member_from, member_to, member_usac_to,
+                 member_from, member_to, member_usac_to, usac_license,
                  (member_from IS NOT NULL AND member_to IS NOT NULL AND member_from <= NOW() AND member_to >= NOW()) as member,
                  print_card, card_printed_at, membership_card, date_of_birth, occupation, fabric_road_numbers,
                  street, people.city, people.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender,
