@@ -117,7 +117,8 @@ class Event < ApplicationRecord
   end
 
   def self.association_sanctioned_only?
-    !RacingAssociation.current.show_only_association_sanctioned_races_on_calendar? && RacingAssociation.current.default_sanctioned_by.present?
+    RacingAssociation.current.show_only_association_sanctioned_races_on_calendar? &&
+      RacingAssociation.current.default_sanctioned_by.present?
   end
 
   def self.upcoming_single_day_events(weeks)

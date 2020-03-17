@@ -10,7 +10,8 @@ class UpcomingTest < ActiveSupport::TestCase
     FactoryBot.create(:discipline, name: "Time Trial")
     FactoryBot.create(:discipline, name: "Track")
 
-    RacingAssociation.current.show_only_association_sanctioned_races_on_calendar = true
+    association = RacingAssociation.current
+    association.update! show_only_association_sanctioned_races_on_calendar: true
 
     # Tuesday
     may_day_rr = SingleDayEvent.create!(date: Date.new(2007, 5, 22), name: "May Day Road Race")
