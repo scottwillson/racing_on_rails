@@ -106,7 +106,7 @@ class Event < ApplicationRecord
     multi_day_events    = upcoming_multi_day_events(weeks)
     series_child_events = upcoming_series_child_events(weeks, multi_day_events)
 
-    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar? && single_day_events.default_sanctioned_by.present?
+    if association_sanctioned_only?
       single_day_events = single_day_events.default_sanctioned_by
       multi_day_events = multi_day_events.default_sanctioned_by
       series_child_events = series_child_events.default_sanctioned_by
@@ -114,6 +114,10 @@ class Event < ApplicationRecord
 
     # TODO: Need to make this lazy-load again
     single_day_events + multi_day_events + series_child_events
+  end
+
+  def self.association_sanctioned_only?
+    !RacingAssociation.current.show_only_association_sanctioned_races_on_calendar? && RacingAssociation.current.default_sanctioned_by.present?
   end
 
   def self.upcoming_single_day_events(weeks)
