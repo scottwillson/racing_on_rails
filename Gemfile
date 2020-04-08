@@ -3,14 +3,14 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-gem "rails", "~> 5.2"
+gem "rails", "~> 6.0.2"
 
 gem "activemerchant"
 gem "activemodel-serializers-xml"
 gem "acts_as_list"
 gem "acts_as_tree", git: "https://github.com/amerine/acts_as_tree.git"
 gem "Ascii85", require: "ascii85"
-gem "authlogic", "< 4.4"
+gem "authlogic"
 gem "bcrypt"
 gem "bootsnap", ">= 1.1.0", require: false
 gem "bootstrap-datepicker-rails"
