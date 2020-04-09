@@ -27,19 +27,23 @@ class Person < ApplicationRecord
     config.log_in_after_create false
     config.log_in_after_password_change false
     config.transition_from_crypto_providers = [Authlogic::CryptoProviders::Sha512]
-    config.validates_length_of_login_field_options within: 3..100, allow_nil: true, allow_blank: true
-    config.validates_format_of_login_field_options with: Authlogic::Regex::LOGIN,
-                                                   message: I18n.t("error_messages.login_invalid",
-                                                                   default: "should use only letters, numbers, spaces, and .-_@ please."),
-                                                   allow_nil: true,
-                                                   allow_blank: true
-
-    config.validates_uniqueness_of_login_field_options allow_blank: true, allow_nil: true, case_sensitive: false
-    config.validates_confirmation_of_password_field_options unless: proc { |user| user.password.blank? }
-    config.validates_length_of_password_field_options minimum: 4, allow_nil: true, allow_blank: true
-    config.validates_length_of_password_confirmation_field_options minimum: 4, allow_nil: true, allow_blank: true
-    config.validate_email_field false
   end
+
+  validates :login,
+            allow_blank: true,
+            format: { with: /\A\w[\w\.+\-_@ ]+\z/, message: "should use only letters, numbers, spaces, and .-_@ please" },
+            length: { in: 3..100 },
+            uniqueness: { case_sensitive: false }
+
+  validates :password,
+            allow_blank: true,
+            length: { minimum: 4 }
+
+  validates :password_confirmation,
+            allow_blank: true,
+            length: { minimum: 4 },
+            presence: true,
+            if: proc { |user| user.password.present? }
 
   before_validation :find_associated_records
   before_validation :set_membership_dates
