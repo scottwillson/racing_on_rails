@@ -4,9 +4,9 @@ module Calculations::V3::CalculationConcerns::Dates
   extend ActiveSupport::Concern
 
   included do
+    attribute :year, :integer, default: -> { Time.zone.now.year }
     before_save :set_year
     validate :dates_are_same_year
-    default_value_for(:year) { Time.zone.now.year }
   end
 
   def date
