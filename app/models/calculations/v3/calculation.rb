@@ -54,9 +54,9 @@ class Calculations::V3::Calculation < ApplicationRecord
   validates :group_by, inclusion: { in: GROUP_BY }
   validates :place_by, inclusion: { in: PLACE_BY }
 
-  default_value_for(:discipline_id) { ::Discipline[RacingAssociation.current.default_discipline]&.id }
-  default_value_for :event_notes, ""
-  default_value_for :points_for_place, nil
+  attribute :discipline_id, :integer, default: -> { ::Discipline[RacingAssociation.current.default_discipline]&.id }
+  attribute :event_notes, :text, default: -> { "" }
+  attribute :points_for_place, :integer, default: -> { nil }
 
   def self.latest(key)
     where(key: key).order(:year).last

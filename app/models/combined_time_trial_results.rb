@@ -7,7 +7,7 @@
 class CombinedTimeTrialResults < Event
   validates :parent_id, uniqueness: { message: "Event can only have one CombinedTimeTrialResults" }
 
-  default_value_for :auto_combined_results, false
+  attribute :auto_combined_results, :boolean, default: -> { false }
 
   def self.calculate!
     # ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do

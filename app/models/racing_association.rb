@@ -20,26 +20,13 @@ class RacingAssociation < ApplicationRecord
   serialize :membership_email
   serialize :sanctioning_organizations
 
-  default_value_for :administrator_tabs do
-    Set.new(%i[schedule first_aid people teams velodromes categories cat4_womens_race_series article_categories articles pages])
-  end
-
-  default_value_for :cat4_womens_race_series_category_id do
-    Category.find_or_create_by(name: "Category 4 Women").id
-  end
-
-  default_value_for :competitions do
-    Set.new(%i[age_graded_bar bar ironman overall_bar team_bar])
-  end
-
-  # String
-  default_value_for :default_sanctioned_by, &:short_name
-
-  default_value_for :membership_email, &:email
-
-  default_value_for :sanctioning_organizations do
-    ["FIAC", "CBRA", "UCI", "USA Cycling"]
-  end
+  attribute :administrator_tabs, :text, default: -> { Set.new(%i[schedule first_aid people teams velodromes categories cat4_womens_race_series article_categories articles pages]) }
+  attribute :cat4_womens_race_series_category_id, :text, default: -> { "" }
+  attribute :cat4_womens_race_series_category_id, :integer, default: -> { Category.find_or_create_by(name: "Category 4 Women").id }
+  attribute :competitions, :string, default: -> { Set.new(%i[age_graded_bar bar ironman overall_bar team_bar]) }
+  attribute :default_sanctioned_by, :string, default: -> { short_name }
+  attribute :membership_email, :text, default: -> { email }
+  attribute :sanctioning_organizations, :string, default: -> { ["FIAC", "CBRA", "UCI", "USA Cycling"] }
 
   def self.current
     @current ||= RacingAssociation.first || RacingAssociation.create

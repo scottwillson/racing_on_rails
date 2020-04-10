@@ -26,9 +26,9 @@ class RaceNumber < ApplicationRecord
   belongs_to :number_issuer
   belongs_to :person
 
-  default_value_for(:discipline_id)    { Discipline[RacingAssociation.current.default_discipline].try(:id) }
-  default_value_for(:number_issuer_id) { RacingAssociation.current.number_issuer.try(:id) }
-  default_value_for(:year)             { RacingAssociation.current.effective_year }
+  attribute :discipline_id, :integer, default: -> { Discipline[RacingAssociation.current.default_discipline].try(:id) }
+  attribute :number_issuer_id, :integer, default: -> { RacingAssociation.current.number_issuer.try(:id) }
+  attribute :year, :integer, default: -> { RacingAssociation.current.effective_year }
 
   def self.find_all_by_value_and_event(value, _event)
     return [] if _event.nil? || value.blank? || _event.number_issuer.nil?
