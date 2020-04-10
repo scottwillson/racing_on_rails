@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.config.assets.paths << Rails.root.join("node_modules")
-Rails.application.config.assets.version = "4.2"
+Rails.application.config.assets.version = "6.0"
 
 Rails.application.configure do
   config.assets.precompile += %w[
@@ -13,6 +13,5 @@ Rails.application.configure do
     racing_association.js
     registration_engine/application.js
   ]
-  config.assets.precompile << /.*\.png$/
-  config.assets.precompile << /.*\.jpg$/
+  config.assets.precompile << ["*.png", "*.jpg"]
 end
