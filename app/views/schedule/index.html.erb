@@ -56,6 +56,7 @@
                     <%- end -%>
                     <%= render_page "event", event: event %>
                   <%- end -%>
+                  <% if event.tentative? %><span class="tentative">tentative</span><% end %>
                 </div>
                 <%- end -%>
               <%- end -%>
