@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "acts_as_tree/validation"
+
 # CMS web page. Tree structure. Deprected. Versioning removed.
 # User render_page helper to look for Page before falling back on Rails templates.
 # Pages uses ERb and can execute Ruby code just like a template, so admin users can
