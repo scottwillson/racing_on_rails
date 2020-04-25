@@ -90,7 +90,7 @@ module Admin
         assert_not_equal("503-233-3636", event.promoter.home_phone, "promoter_phone")
         assert_not_equal("JMitchem@ffadesign.com", event.promoter.email, "promoter.email")
         assert_not_equal("Track", event.discipline, "discipline")
-        assert_not_equal(true, event.cancelled, "cancelled")
+        assert_not_equal(true, event.canceled, "canceled")
         assert_not_equal("WA", event.state, "state")
         norba = NumberIssuer.create!(name: "NORBA")
         assert_not_equal(norba, event.number_issuer, "number_issuer")
@@ -101,7 +101,7 @@ module Admin
                id: event.to_param,
                "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
                             "flyer" => "http://#{RacingAssociation.current.static_host}/flyers/2006/event.html", "sanctioned_by" => "UCI", "flyer_approved" => "1",
-                            "discipline" => "Track", "cancelled" => "1", "state" => "WA",
+                            "discipline" => "Track", "canceled" => "1", "state" => "WA",
                             "promoter_id" => brad_ross.to_param, "number_issuer_id" => norba.to_param
                           }
                }
@@ -116,7 +116,7 @@ module Admin
         assert_equal("UCI", event.sanctioned_by, "sanctioned_by")
         assert_equal(true, event.flyer_approved, "flyer_approved")
         assert_equal("Track", event.discipline, "discipline")
-        assert_equal(true, event.cancelled, "cancelled")
+        assert_equal(true, event.canceled, "canceled")
         assert_equal("WA", event.state, "state")
         assert_equal("Brad Ross", event.promoter_name, "promoter_name")
         assert_nil(event.promoter.home_phone, "promoter_phone")
@@ -137,7 +137,7 @@ module Admin
                  "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
                               "flyer" => "../../flyers/2006/event.html", "sanctioned_by" => "UCI",
                               "flyer_approved" => "1",
-                              "discipline" => "Track", "cancelled" => "1", "state" => "OR",
+                              "discipline" => "Track", "canceled" => "1", "state" => "OR",
                               "promoter_id" => event.promoter.to_param,
                               "number_issuer_id" => number_issuer.to_param,
                               "type" => type
@@ -163,7 +163,7 @@ module Admin
                  "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
                               "flyer" => "../../flyers/2006/event.html", "sanctioned_by" => "UCI",
                               "flyer_approved" => "1",
-                              "discipline" => "Track", "cancelled" => "1", "state" => "OR",
+                              "discipline" => "Track", "canceled" => "1", "state" => "OR",
                               "promoter_id" => event.promoter.to_param,
                               "number_issuer_id" => number_issuer.to_param,
                               "type" => "Event"
@@ -185,7 +185,7 @@ module Admin
                id: event.to_param,
                "event" => { "city" => event.city, "name" => "Mt. Hood One Day",
                             "flyer" => event.flyer, "sanctioned_by" => event.sanctioned_by, "flyer_approved" => event.flyer_approved,
-                            "discipline" => event.discipline, "cancelled" => event.cancelled, "state" => event.state,
+                            "discipline" => event.discipline, "canceled" => event.canceled, "state" => event.state,
                             "promoter_id" => event.promoter_id, "number_issuer_id" => event.number_issuer_id, "type" => "SingleDayEvent"
                           }
              }
@@ -201,7 +201,7 @@ module Admin
         assert_equal(original_attributes["sanctioned_by"], event.sanctioned_by, "sanctioned_by")
         assert_equal(original_attributes["flyer_approved"], event.flyer_approved, "flyer_approved")
         assert_equal(original_attributes["discipline"], event.discipline, "discipline")
-        assert_equal(original_attributes["cancelled"], event.cancelled, "cancelled")
+        assert_equal(original_attributes["canceled"], event.canceled, "canceled")
         assert_equal(original_attributes["state"], event.state, "state")
         assert_equal(original_attributes["promoter_id"], event.promoter_id, "promoter_id")
         assert_nil(event.number_issuer_id, "number_issuer_id")
@@ -219,7 +219,7 @@ module Admin
               id: event.to_param,
               "event" => { "city" => event.city, "name" => "Mt. Hood Series", "date" => event.date.to_date,
                            "flyer" => event.flyer, "sanctioned_by" => event.sanctioned_by, "flyer_approved" => event.flyer_approved,
-                           "discipline" => event.discipline, "cancelled" => event.cancelled, "state" => event.state,
+                           "discipline" => event.discipline, "canceled" => event.canceled, "state" => event.state,
                            "promoter_id" => event.promoter_id, "number_issuer_id" => event.number_issuer_id, "type" => "Series"
                          }
              }
@@ -233,7 +233,7 @@ module Admin
         assert_equal(original_attributes["sanctioned_by"], event.sanctioned_by, "sanctioned_by")
         assert_equal(original_attributes["flyer_approved"], event.flyer_approved, "flyer_approved")
         assert_equal(original_attributes["discipline"], event.discipline, "discipline")
-        assert_equal(original_attributes["cancelled"], event.cancelled, "cancelled")
+        assert_equal(original_attributes["canceled"], event.canceled, "canceled")
         assert_equal(original_attributes["state"], event.state, "state")
         assert_equal(original_attributes["promoter_id"], event.promoter_id, "promoter_id")
         assert_nil(event.number_issuer_id, "number_issuer_id")

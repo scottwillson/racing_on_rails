@@ -125,7 +125,7 @@ class Event < ApplicationRecord
     SingleDayEvent
       .not_child
       .where(postponed: false)
-      .where(cancelled: false)
+      .where(canceled: false)
       .where(practice: false)
       .upcoming_in_weeks(weeks)
   end
@@ -133,7 +133,7 @@ class Event < ApplicationRecord
   def self.upcoming_multi_day_events(weeks)
     MultiDayEvent
       .where(postponed: false)
-      .where(cancelled: false)
+      .where(canceled: false)
       .where(practice: false)
       .where(type: "MultiDayEvent")
       .upcoming_in_weeks(weeks)
@@ -144,7 +144,7 @@ class Event < ApplicationRecord
       .includes(parent: :parent)
       .child
       .where(postponed: false)
-      .where(cancelled: false)
+      .where(canceled: false)
       .where(practice: false)
       .where.not(parent_id: multi_day_events)
       .upcoming_in_weeks(weeks)

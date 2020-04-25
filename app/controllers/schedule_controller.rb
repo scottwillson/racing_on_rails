@@ -101,7 +101,7 @@ class ScheduleController < ApplicationController
       RiCal.Calendar do |cal|
         parent_ids = @events.map(&:parent_id).compact.uniq
         multiday_events = MultiDayEvent.where("id in (?) and type = ?", parent_ids, "MultiDayEvent")
-        events = @events.reject { |e| e.postponed? || e.cancelled? || multiday_events.include?(e.parent) } + multiday_events
+        events = @events.reject { |e| e.postponed? || e.canceled? || multiday_events.include?(e.parent) } + multiday_events
         events.each do |e|
           cal.event do |event|
             event.summary = e.full_name

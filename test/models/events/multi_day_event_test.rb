@@ -29,7 +29,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     series.children.create!(date: "2005-08-04")
 
     series.children.sort_by(&:date)[0].update! postponed: true
-    series.children.sort_by(&:date)[1].update! cancelled: true
+    series.children.sort_by(&:date)[1].update! canceled: true
 
     series.reload.children.reload
     assert_equal_dates("2005-07-12", series.start_date, "PIR series start date")
@@ -183,7 +183,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     # parent, children same except for dates
     single_event_1 = SingleDayEvent.new(date: Date.new(2007, 6, 19))
     single_event_1.name = "Elkhorn Stage Race"
-    single_event_1.cancelled = false
+    single_event_1.canceled = false
     single_event_1.city = "Baker City"
     single_event_1.discipline = "Track"
     single_event_1.email = "info@elkhornclassic.com"
@@ -202,7 +202,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     single_event_2 = SingleDayEvent.new(date: Date.new(2007, 6, 26))
     single_event_2.name = "Elkhorn Stage Race"
-    single_event_2.cancelled = false
+    single_event_2.canceled = false
     single_event_2.city = "Baker City"
     single_event_2.discipline = "Track"
     single_event_2.email = "info@elkhornclassic.com"
@@ -222,7 +222,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     # Bypass business logic and test what's really in the database
     results = Event.connection.select_one("select * from events where id=#{single_event_1.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
-    assert_equal(0, results["cancelled"], "SingleDayEvent cancelled")
+    assert_equal(0, results["canceled"], "SingleDayEvent canceled")
     assert_equal_dates("2007-06-19", results["date"], "SingleDayEvent start_date")
     assert_equal("Baker City", results["city"], "SingleDayEvent city")
     assert_equal("Track", results["discipline"], "SingleDayEvent discipline")
@@ -241,7 +241,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     results = Event.connection.select_one("select * from events where id=#{single_event_2.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
-    assert_equal(0, results["cancelled"], "SingleDayEvent cancelled")
+    assert_equal(0, results["canceled"], "SingleDayEvent canceled")
     assert_equal_dates("2007-06-26", results["date"], "SingleDayEvent start_date")
     assert_equal("Baker City", results["city"], "SingleDayEvent city")
     assert_equal("Track", results["discipline"], "SingleDayEvent discipline")
@@ -260,7 +260,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     results = Event.connection.select_one("select * from events where id=#{multi_day_event.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "MultiDayEvent name")
-    assert_equal(0, results["cancelled"], "MultiDayEvent cancelled")
+    assert_equal(0, results["canceled"], "MultiDayEvent canceled")
     assert_equal_dates("2007-06-19", results["date"], "MultiDayEvent start_date")
     assert_equal("Baker City", results["city"], "MultiDayEvent city")
     assert_equal("Track", results["discipline"], "MultiDayEvent discipline")
@@ -292,7 +292,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     multi_day_event.reload
     multi_day_event.name = "Elkhorn Stage Race"
     multi_day_event.save!
-    multi_day_event.cancelled = true
+    multi_day_event.canceled = true
     multi_day_event.city = "Boise"
     multi_day_event.state = "ID"
     multi_day_event.discipline = "Mountain Bike"
@@ -314,7 +314,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     results = Event.connection.select_one("select * from events where id=#{single_event_1.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
-    assert_equal(1, results["cancelled"], "SingleDayEvent cancelled")
+    assert_equal(1, results["canceled"], "SingleDayEvent canceled")
     assert_equal_dates("2007-06-19", results["date"], "SingleDayEvent start_date")
     assert_equal("Boise", results["city"], "SingleDayEvent city")
     assert_equal("Mountain Bike", results["discipline"], "SingleDayEvent discipline")
@@ -332,7 +332,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     results = Event.connection.select_one("select * from events where id=#{single_event_2.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
-    assert_equal(1, results["cancelled"], "SingleDayEvent cancelled")
+    assert_equal(1, results["canceled"], "SingleDayEvent canceled")
     assert_equal_dates("2007-06-26", results["date"], "SingleDayEvent start_date")
     assert_equal("Boise", results["city"], "SingleDayEvent city")
     assert_equal("Mountain Bike", results["discipline"], "SingleDayEvent discipline")
@@ -347,7 +347,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     results = Event.connection.select_one("select * from events where id=#{multi_day_event.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "MultiDayEvent name")
-    assert_equal(1, results["cancelled"], "MultiDayEvent cancelled")
+    assert_equal(1, results["canceled"], "MultiDayEvent canceled")
     assert_equal_dates("2007-06-19", results["date"], "MultiDayEvent start_date")
     assert_equal("Boise", results["city"], "MultiDayEvent city")
     assert_equal("Mountain Bike", results["discipline"], "MultiDayEvent discipline")
@@ -363,7 +363,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     # parent, children all different
     # change parent, children do not change
     single_event_1.reload
-    single_event_1.cancelled = false
+    single_event_1.canceled = false
     single_event_1.city = "Paris"
     single_event_1.state = "France"
     single_event_1.discipline = "Cyclocross"
@@ -373,10 +373,10 @@ class MultiDayEventTest < ActiveSupport::TestCase
     single_event_1.save!
 
     results = Event.connection.select_one("select * from events where id=#{single_event_1.id}")
-    assert_equal(0, results["cancelled"], "SingleDayEvent cancelled")
+    assert_equal(0, results["canceled"], "SingleDayEvent canceled")
 
     multi_day_event.reload
-    multi_day_event.cancelled = true
+    multi_day_event.canceled = true
     multi_day_event.city = "Cazenovia"
     multi_day_event.state = "CT"
     multi_day_event.discipline = "Road"
@@ -388,7 +388,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     results = Event.connection.select_one("select * from events where id=#{single_event_1.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
-    assert_equal(0, results["cancelled"], "SingleDayEvent cancelled")
+    assert_equal(0, results["canceled"], "SingleDayEvent canceled")
     assert_equal_dates("2007-06-19", results["date"], "SingleDayEvent start_date")
     assert_equal("Paris", results["city"], "SingleDayEvent city")
     assert_equal("Cyclocross", results["discipline"], "SingleDayEvent discipline")
@@ -399,7 +399,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     results = Event.connection.select_one("select * from events where id=#{multi_day_event.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "MultiDayEvent name")
-    assert_equal(1, results["cancelled"], "MultiDayEvent cancelled")
+    assert_equal(1, results["canceled"], "MultiDayEvent canceled")
     assert_equal_dates("2007-06-19", results["date"], "MultiDayEvent start_date")
     assert_equal("Cazenovia", results["city"], "MultiDayEvent city")
     assert_equal("Road", results["discipline"], "MultiDayEvent discipline")

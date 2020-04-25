@@ -58,7 +58,7 @@ module Competitions
     end
 
     def maximum_events(race)
-      # Races cancelled due to weather
+      # Races canceled due to weather
       if year == 2018 && race.name.in?([
         "Elite Junior Women",
         "Masters Women 35+ 1/2",

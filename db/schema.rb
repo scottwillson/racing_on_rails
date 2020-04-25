@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_08_013135) do
+ActiveRecord::Schema.define(version: 2020_04_25_160436) do
 
   create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
@@ -449,6 +449,7 @@ ActiveRecord::Schema.define(version: 2020_03_08_013135) do
     t.string "created_by_name"
     t.string "updated_by_name"
     t.datetime "registration_start_at"
+    t.boolean "tentative", default: false, null: false
     t.index ["bar_points"], name: "index_events_on_bar_points"
     t.index ["created_by_id"], name: "index_events_on_created_by_id"
     t.index ["date"], name: "index_events_on_date"

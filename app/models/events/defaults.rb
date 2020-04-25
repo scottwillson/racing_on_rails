@@ -39,7 +39,7 @@ module Events
     def propogated_attributes
       @propogated_attributes ||= %w[
         beginner_friendly
-        cancelled
+        canceled
         city
         discipline
         email
@@ -57,6 +57,7 @@ module Events
         sanctioned_by
         state
         team_id
+        tentative
         time
         time
         velodrome_id

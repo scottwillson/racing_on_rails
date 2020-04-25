@@ -18,7 +18,7 @@ module Admin
 
       @sort_by = params[:sort_by].presence || "date"
 
-      @events = @events.where(practice: false).where(cancelled: false).where(postponed: false)
+      @events = @events.where(practice: false).where(canceled: false).where(postponed: false)
 
       respond_to do |format|
         format.html

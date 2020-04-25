@@ -103,8 +103,12 @@ td.day div.event {
   margin-left: -16px;
 }
 
-.cancelled, .postponed {
+.canceled, .postponed {
   text-decoration: line-through;
+}
+
+.tentative {
+  font-style: italic;
 }
 
 td.day div.number {

@@ -37,7 +37,7 @@ module Export
       %w[
         id parent_id name discipline date time
         sanctioned_by type city state instructional practice
-        postponed beginner_friendly cancelled
+        postponed beginner_friendly canceled tentative
       ]
     end
   end

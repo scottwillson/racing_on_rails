@@ -29,7 +29,7 @@ class UpcomingTest < ActiveSupport::TestCase
     # Monday before all other races (to test ordering)
     saltzman_hc =     SingleDayEvent.create!(date: Date.new(2007, 5, 21), name: "Saltzman Hillclimb")
 
-    SingleDayEvent.create!(date: Date.new(2007, 5, 21), name: "Cancelled", cancelled: true)
+    SingleDayEvent.create!(date: Date.new(2007, 5, 21), name: "canceled", canceled: true)
 
     # Weekly Series
     pir = WeeklySeries.create!(date: Date.new(2007, 4, 3), name: "Tuesday PIR")
