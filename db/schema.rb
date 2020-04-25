@@ -398,7 +398,7 @@ ActiveRecord::Schema.define(version: 2020_04_25_160436) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean "flyer_approved", default: false, null: false
-    t.boolean "cancelled", default: false
+    t.boolean "canceled", default: false
     t.integer "number_issuer_id"
     t.string "first_aid_provider"
     t.float "pre_event_fees"
@@ -1180,6 +1180,8 @@ ActiveRecord::Schema.define(version: 2020_04_25_160436) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  add_foreign_key "calculations_categories_mappings", "calculations_categories", column: "calculation_category_id", on_delete: :cascade
+  add_foreign_key "calculations_categories_mappings", "categories", on_delete: :cascade
   add_foreign_key "calculations_categories_mappings", "disciplines", on_delete: :cascade
   add_foreign_key "categories", "categories", column: "parent_id", on_delete: :cascade
   add_foreign_key "competition_event_memberships", "events", column: "competition_id", name: "competition_event_memberships_competitions_id_fk", on_delete: :cascade
