@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
-# OBRA, WSBA, USA Cycling, etc …
+# OBRA, WSBA, USA Cycling, etc ...
 # Many defaults. Override in environment.rb. Stored in RacingAssociation.current constant.
 # bar_point_schedule should be stored in the database with the BAR?
 #
 # cx_memberships? Offers cyclocross memberships
 # eager_match_on_license? Trust license number in results? Use it to match People instead of name.
 class RacingAssociation < ApplicationRecord
+  ADMIN_TABS = %i[schedule first_aid people teams velodromes categories cat4_womens_race_series article_categories articles pages].freeze
+
   # TODO: bmx_numbers? Shouldn"t this be in disciplines?
 
   belongs_to :cat4_womens_race_series_category, class_name: "Category"
@@ -20,13 +22,13 @@ class RacingAssociation < ApplicationRecord
   serialize :membership_email
   serialize :sanctioning_organizations
 
-  attribute :administrator_tabs, :text, default: -> { Set.new(%i[schedule first_aid people teams velodromes categories cat4_womens_race_series article_categories articles pages]) }
+  attribute :administrator_tabs, :text, default: -> { Set.new(ADMIN_TABS) }
   attribute :cat4_womens_race_series_category_id, :text, default: -> { "" }
   attribute :cat4_womens_race_series_category_id, :integer, default: -> { Category.find_or_create_by(name: "Category 4 Women").id }
   attribute :competitions, :string, default: -> { Set.new(%i[age_graded_bar bar ironman overall_bar team_bar]) }
-  attribute :default_sanctioned_by, :string, default: -> { short_name }
-  attribute :membership_email, :text, default: -> { email }
   attribute :sanctioning_organizations, :string, default: -> { ["FIAC", "CBRA", "UCI", "USA Cycling"] }
+
+  before_save :assign_defaults
 
   def self.current
     @current ||= RacingAssociation.first || RacingAssociation.create
@@ -68,8 +70,8 @@ class RacingAssociation < ApplicationRecord
           return Time.zone.now.year
         end
       end
-    else
-      return Time.zone.now.year + 1 if Time.zone.now.month == 12 && Time.zone.now.day >= 1
+    elsif Time.zone.now.month == 12 && Time.zone.now.day >= 1
+      return Time.zone.now.year + 1
     end
 
     Time.zone.now.year
@@ -123,7 +125,7 @@ class RacingAssociation < ApplicationRecord
   end
 
   def number_issuer
-    @number_issuer ||= NumberIssuer.where(name: short_name).first
+    @number_issuer ||= NumberIssuer.find_by(name: short_name)
   end
 
   def priority_country_options
@@ -136,5 +138,12 @@ class RacingAssociation < ApplicationRecord
 
   def to_s
     "#<RacingAssociation #{short_name} #{name}>"
+  end
+
+  private
+
+  def assign_defaults
+    self.default_sanctioned_by ||= short_name
+    self.membership_email ||= email
   end
 end
