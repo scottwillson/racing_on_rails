@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "acts_as_tree/validation"
 require "categories"
 
 # Senior Men, Pro/1/2, Novice Masters 45+
