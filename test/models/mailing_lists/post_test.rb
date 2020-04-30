@@ -84,7 +84,7 @@ class PostTest < ActiveSupport::TestCase
     Post.save post, mailing_list
 
     assert !post.new_record?
-    assert_equal post.date, post.last_reply_at, "last_reply_at"
+    assert_equal_dates post.date, post.last_reply_at, "last_reply_at"
     assert_nil post.original, "no original"
     assert post.replies.empty?, "no replies"
     assert_equal 0, post.replies_count, "replies_count"
@@ -100,14 +100,14 @@ class PostTest < ActiveSupport::TestCase
 
     assert !reply.new_record?
     reply.reload
-    assert_equal reply.date, reply.last_reply_at, "last_reply_at"
+    assert_equal_dates reply.date, reply.last_reply_at, "last_reply_at"
     assert_equal original, reply.original, "original"
     assert reply.replies.empty?, "no replies"
     assert_equal 0, reply.replies_count, "replies_count"
     assert_equal 1, reply.position, "reply position"
 
     original.reload
-    assert_equal reply.date, original.last_reply_at, "last_reply_at"
+    assert_equal_dates reply.date, original.last_reply_at, "last_reply_at"
     assert_nil original.original, "no original"
     assert_equal [reply], original.replies, "should add reply"
     assert_equal 1, original.replies.reload.size, "replies_count"
