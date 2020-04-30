@@ -8,7 +8,7 @@ module Events
     test "as_json" do
       event = SingleDayEvent.new(name: "July Road Race", id: 1, date: Time.zone.local(2016, 1, 7))
       expected = {
-        "date" => Time.zone.local(2016, 1, 7).to_date,
+        "date" => "2016-01-07",
         "discipline" => "Road",
         "id" => 1,
         "name" => "July Road Race",
