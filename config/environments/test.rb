@@ -10,7 +10,7 @@ Rails.application.configure do
   config.active_storage.service                             = :test
   config.active_support.deprecation                         = :stderr
   config.active_support.test_order                          = :random
-  config.cache_classes                                      = true
+  config.cache_classes                                      = false
   config.consider_all_requests_local                        = true
   config.eager_load                                         = false
   config.mass_assignment_sanitizer                          = :strict
