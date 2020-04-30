@@ -17,7 +17,6 @@ module Categories
       discipline_bar_category = FactoryBot.create(:category)
       Discipline.create!(name: "Road", bar: true).bar_categories << discipline_bar_category
       race_category = FactoryBot.create(:race).category
-      cat4_womens_race_series_category = RacingAssociation.current.cat4_womens_race_series_category
       result_category = FactoryBot.create(:category)
       FactoryBot.create(:result, category: result_category)
 
@@ -25,7 +24,6 @@ module Categories
       assert !men_c.in_use?, "unused category should be in use"
       assert discipline_bar_category.in_use?, "Discipline BAR category should be in use"
       assert race_category.in_use?, "race category"
-      assert cat4_womens_race_series_category.in_use?, "RacingAssociation#cat4_womens_race_series_category should be in use"
       assert result_category.in_use?, "Result category should be in use"
     end
   end

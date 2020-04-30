@@ -50,7 +50,6 @@ module Categories
       Category.where(parent_id: id).exists? ||
         Discipline.joins(:bar_categories).where("discipline_bar_categories.category_id" => id).exists? ||
         Race.where(category_id: id).exists? ||
-        RacingAssociation.current.cat4_womens_race_series_category == self ||
         Result.where(category_id: id).exists?
     end
 
@@ -59,7 +58,6 @@ module Categories
       Category.where(parent_id: id).update_all(parent_id: existing_category.id)
       Discipline.connection.execute "update discipline_bar_categories set category_id = #{existing_category.id} where category_id = #{id}"
       Race.where(category_id: id).update_all(category_id: existing_category.id)
-      RacingAssociation.where(cat4_womens_race_series_category_id: id).update_all(cat4_womens_race_series_category_id: existing_category.id)
       Result.where(category_id: id).update_all(category_id: existing_category.id)
       destroy!
     end

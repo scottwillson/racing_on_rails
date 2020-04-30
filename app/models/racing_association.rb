@@ -7,24 +7,20 @@
 # cx_memberships? Offers cyclocross memberships
 # eager_match_on_license? Trust license number in results? Use it to match People instead of name.
 class RacingAssociation < ApplicationRecord
-  ADMIN_TABS = %i[schedule first_aid people teams velodromes categories cat4_womens_race_series article_categories articles pages].freeze
+  ADMIN_TABS = %i[schedule first_aid people teams velodromes categories article_categories articles pages].freeze
 
   # TODO: bmx_numbers? Shouldn"t this be in disciplines?
 
-  belongs_to :cat4_womens_race_series_category, class_name: "Category"
   belongs_to :default_region, class_name: "Region", optional: true
 
   attr_writer :person
 
   serialize :administrator_tabs
-  serialize :cat4_womens_race_series_points
   serialize :competitions
   serialize :membership_email
   serialize :sanctioning_organizations
 
   attribute :administrator_tabs, :text, default: -> { Set.new(ADMIN_TABS) }
-  attribute :cat4_womens_race_series_category_id, :text, default: -> { "" }
-  attribute :cat4_womens_race_series_category_id, :integer, default: -> { Category.find_or_create_by(name: "Category 4 Women").id }
   attribute :competitions, :string, default: -> { Set.new(%i[age_graded_bar bar ironman overall_bar team_bar]) }
   attribute :sanctioning_organizations, :string, default: -> { ["FIAC", "CBRA", "UCI", "USA Cycling"] }
 
