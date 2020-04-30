@@ -12,11 +12,11 @@ class PagesTest < AcceptanceTest
     find(:xpath, "//a[@href='/admin/pages/new']").click
 
     fill_in "page_title", with: "Schedule"
-    fill_in "page_body", with: "This year is cancelled"
+    fill_in "page_body", with: "This year is canceled"
     click_button "Save"
 
     visit "/schedule"
-    assert_page_has_content "This year is cancelled"
+    assert_page_has_content "This year is canceled"
 
     visit "/admin/pages"
 

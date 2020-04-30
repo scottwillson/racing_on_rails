@@ -155,11 +155,11 @@ class MultiDayEvent < Event
 
   def child_dates_query
     if is_a?(Competitions::Competition) || calculation.present?
-      Event.where(parent_id: id).where(cancelled: false).where(postponed: false)
+      Event.where(parent_id: id).where(canceled: false).where(postponed: false)
     else
       SingleDayEvent
         .where(parent_id: id)
-        .where(cancelled: false)
+        .where(canceled: false)
         .where(postponed: false)
     end
   end

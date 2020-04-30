@@ -27,12 +27,12 @@
         <%= event.date.strftime("%a %-m/%-d") if event.date -%>
       </td>
       <td class="beginner_friendly"><% if event.beginner_friendly? %><span class="glyphicon glyphicon-ok-circle"></span><% end %></td>
-      <%- if event.cancelled %>
-      <td><span class="cancelled"><%= event.full_name -%></span> <em>cancelled</em></td>
+      <%- if event.canceled %>
+      <td><span class="canceled"><%= event.full_name -%></span> <em>canceled</em></td>
       <%- elsif event.postponed? %>
       <td><span class="postponed"><%= event.full_name -%></span> <em>postponed</em></td>
         <%- else -%>
-      <td class="link">
+      <td class="link <%= 'tentative' if event.tentative? %>">
           <%- if event.flyer.present? && event.flyer_approved? -%>
             <a href="<%= event.flyer -%>"<%= "target='_blank'" if RacingAssociation.current.flyers_in_new_window? %>><%= event.full_name -%><%- if (!event.full_name.include?("MTB") and event.discipline == "Mountain Bike") -%>
             MTB
@@ -42,6 +42,7 @@
           <%- end -%>
         </td>
         <%- end -%>
+        <% if event.tentative? %><span class="tentative">tentative</span><% end %>
       <td><%= link_to_event_email event %></td>
       <td class="contact_phone"><%= link_to_event_phone event %></td>
       <td class="discipline"><%= event.discipline -%></td>
