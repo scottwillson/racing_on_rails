@@ -24,8 +24,8 @@ module RacingOnRails
     # HP's proxy, among others, gets this wrong
     config.action_dispatch.ip_spoofing_check = false
 
-    # require "#{config.root}/app/helpers/racing_on_rails/form_builder"
-    # config.action_view.default_form_builder = ::RacingOnRails::FormBuilder
+    require "#{config.root}/app/helpers/racing_on_rails/form_builder"
+    config.action_view.default_form_builder = ::RacingOnRails::FormBuilder
 
     # Production database config handled by Ansible
     # if !Rails.env.production? && !Rails.env.staging? && File.exist?("#{config.root}/local/config/database.yml")
