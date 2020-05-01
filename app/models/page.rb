@@ -12,7 +12,6 @@ class Page < ApplicationRecord
   include Pages::Paths
 
   before_validation :set_slug, :set_path, :set_body
-  validates :path, uniqueness: { message: "'%{value}' has already been taken" }
 
   after_create :update_parent
   after_destroy :update_parent

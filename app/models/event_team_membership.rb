@@ -7,7 +7,6 @@ class EventTeamMembership < ApplicationRecord
   validates :event_team, presence: true
   validates :person, presence: true
 
-  validates :person, uniqueness: { scope: :event_team }
   validate :uniqueness_of_event
 
   accepts_nested_attributes_for :event_team
@@ -53,6 +52,8 @@ class EventTeamMembership < ApplicationRecord
   end
 
   def uniqueness_of_event
-    errors.add :event_team, "Already on a team for #{event.name}" if person&.event_team_memberships&.reject { |m| m == self }.map(&:event).include?(event)
+    if person&.event_team_memberships&.reject { |m| m == self }&.map(&:event)&.include?(event)
+      errors.add :event_team, "Already on a team for #{event.name}"
+    end
   end
 end

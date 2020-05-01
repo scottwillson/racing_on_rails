@@ -5,6 +5,4 @@ class Calculations::V3::Event < ApplicationRecord
 
   belongs_to :calculation
   belongs_to :event, class_name: "::Event"
-
-  validates :event, uniqueness: { scope: :calculation }
 end

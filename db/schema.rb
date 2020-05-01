@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_01_151835) do
+ActiveRecord::Schema.define(version: 2020_05_01_153001) do
 
   create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
@@ -544,7 +544,9 @@ ActiveRecord::Schema.define(version: 2020_05_01_151835) do
     t.string "nameable_type"
     t.string "first_name"
     t.string "last_name"
+    t.index ["name", "year", "nameable_type", "nameable_id"], name: "index_names_on_name_and_year_and_nameable_type_and_nameable_id", unique: true
     t.index ["name"], name: "index_names_on_name"
+    t.index ["nameable_id", "year", "nameable_type"], name: "index_names_on_nameable_id_and_year_and_nameable_type", unique: true
     t.index ["nameable_id"], name: "team_id"
     t.index ["nameable_type"], name: "index_names_on_nameable_type"
     t.index ["year"], name: "index_names_on_year"
@@ -774,8 +776,8 @@ ActiveRecord::Schema.define(version: 2020_05_01_151835) do
     t.index ["email"], name: "index_people_on_email"
     t.index ["first_name"], name: "idx_first_name"
     t.index ["last_name"], name: "idx_last_name"
-    t.index ["license"], name: "index_people_on_license"
-    t.index ["login"], name: "index_people_on_login"
+    t.index ["license"], name: "index_people_on_license", unique: true
+    t.index ["login"], name: "index_people_on_login", unique: true
     t.index ["member_from"], name: "index_racers_on_member_from"
     t.index ["member_to"], name: "index_racers_on_member_to"
     t.index ["name"], name: "index_people_on_name"
@@ -1166,7 +1168,7 @@ ActiveRecord::Schema.define(version: 2020_05_01_151835) do
     t.string "website"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["name"], name: "index_velodromes_on_name"
+    t.index ["name"], name: "index_velodromes_on_name", unique: true
   end
 
   create_table "versions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|

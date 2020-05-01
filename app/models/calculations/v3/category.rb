@@ -13,7 +13,7 @@ class Calculations::V3::Category < ApplicationRecord
 
   has_many :mapped_categories, through: :mappings, class_name: "::Category"
 
-  validates :category, presence: true, uniqueness: { scope: :calculation }
+  validates :category, presence: true
 
   delegate :name, to: :category
 end

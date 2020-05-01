@@ -32,8 +32,7 @@ class Person < ApplicationRecord
   validates :login,
             allow_blank: true,
             format: { with: /\A\w[\w\.+\-_@ ]+\z/, message: "should use only letters, numbers, spaces, and .-_@ please" },
-            length: { in: 3..100 },
-            uniqueness: { case_sensitive: false }
+            length: { in: 3..100 }
 
   validates :password,
             allow_blank: true,
@@ -48,7 +47,6 @@ class Person < ApplicationRecord
   before_validation :find_associated_records
   before_validation :set_membership_dates
   before_save { |r| r.license = nil if license.blank? }
-  validates :license, uniqueness: { allow_blank: true }
   validate :membership_dates
   before_destroy :ensure_no_results
 
