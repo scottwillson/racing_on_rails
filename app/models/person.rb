@@ -32,7 +32,8 @@ class Person < ApplicationRecord
   validates :login,
             allow_blank: true,
             format: { with: /\A\w[\w\.+\-_@ ]+\z/, message: "should use only letters, numbers, spaces, and .-_@ please" },
-            length: { in: 3..100 }
+            length: { in: 3..100 },
+            uniqueness: { case_sensitive: false }
 
   validates :password,
             allow_blank: true,
