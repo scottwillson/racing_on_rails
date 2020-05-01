@@ -100,7 +100,7 @@ class PeopleFile
     add_print_card_and_label row
     person = Person.new(updater: import_file)
     person.year = year if year
-    person.update_attributes! row
+    person.update! row
     @created += 1
   end
 
@@ -117,7 +117,7 @@ class PeopleFile
 
     person.year = year if year
     person.updater = import_file
-    person.update_attributes! row
+    person.update! row
 
     @updated += 1
   end

@@ -12,7 +12,7 @@ module Competitions
       super
 
       race = races.detect { |r| r.name == "Beginner" }
-      race&.update_attributes! visible: false
+      race&.update! visible: false
 
       BlindDateAtTheDairyMonthlyStandings.calculate!
     end

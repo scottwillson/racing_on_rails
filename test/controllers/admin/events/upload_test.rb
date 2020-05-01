@@ -36,7 +36,7 @@ module Admin
       end
 
       test "upload usac" do
-        RacingAssociation.current.update_attributes! usac_results_format: true
+        RacingAssociation.current.update! usac_results_format: true
         mt_hood_1 = FactoryBot.create(:stage_race)
 
         post :upload, params: { id: mt_hood_1.to_param,

@@ -309,7 +309,7 @@ class Race < ApplicationRecord
       result = Result.find(result_id)
       start_index = _results.index(result)
       (start_index..._results.size).each do |index|
-        _results[index].update_attributes! place: _results[index].next_place if _results[index].numeric_place?
+        _results[index].update! place: _results[index].next_place if _results[index].numeric_place?
       end
 
       results.create place: result.place
