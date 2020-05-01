@@ -7,7 +7,6 @@ gem "rails", "~> 6.0.2"
 
 gem "activemerchant"
 gem "activemodel-serializers-xml"
-gem "acts_as_list"
 gem "acts_as_tree", git: "https://github.com/amerine/acts_as_tree.git"
 gem "Ascii85", require: "ascii85"
 gem "authlogic"
