@@ -2,8 +2,6 @@
 
 set -e
 
-script/local obra;
-
 if [ "$DB" = '1' ]; then
   DISABLE_SPRING=1 bundle exec rake db:migrate parallel:prepare
 fi
