@@ -238,7 +238,7 @@ class ResultsControllerTest < ActionController::TestCase
     Timecop.freeze(Time.zone.local(2015, 11)) do
       person = FactoryBot.create(:result).person
       get :person, params: { person_id: person.id }, format: :xml
-      assert_equal "application/xml", @response.content_type
+      assert_equal "application/xml; charset=utf-8", @response.content_type
       [
         "results > result",
         "result > age",
