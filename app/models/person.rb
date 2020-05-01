@@ -57,7 +57,7 @@ class Person < ApplicationRecord
   has_many :results
   belongs_to :team, optional: true
 
-  attr_accessor :year
+  attr_accessor :password_confirmation, :year
 
   CATEGORY_FIELDS = %i[bmx_category ccx_category dh_category mtb_category road_category track_category].freeze
 
@@ -270,6 +270,7 @@ class Person < ApplicationRecord
     self.city = nil
     self.state = nil
     return value if value.blank?
+
     parts = value.split(",")
     self.state = parts.last.strip if parts.size > 1
     self.city = parts.first.strip
