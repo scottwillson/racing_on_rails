@@ -16,8 +16,6 @@ class Post < ApplicationRecord
 
   scope :original, -> { where(original_id: nil) }
 
-  acts_as_list scope: :mailing_list
-
   attribute :date, :date, default: -> { Time.zone.now }
 
   # Save new or updated Post to database.

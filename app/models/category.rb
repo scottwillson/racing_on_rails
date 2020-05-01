@@ -28,8 +28,6 @@ class Category < ApplicationRecord
   include Categories::Weight
   include Export::Categories
 
-  acts_as_list
-
   has_many :calculation_category_mappings,
            class_name: "Calculations::V3::CategoryMapping",
            dependent: :destroy,

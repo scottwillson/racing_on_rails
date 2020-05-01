@@ -3,7 +3,6 @@
 # Homepage content
 class Article < ApplicationRecord
   belongs_to :article_category
-  acts_as_list scope: :article_category
 
   scope :recent_news, lambda { |weeks, category|
     where("created_at > :cutoff OR updated_at > :cutoff", cutoff: weeks)

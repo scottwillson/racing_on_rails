@@ -104,8 +104,6 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
       zeitwerk (~> 2.2)
-    acts_as_list (1.0.1)
-      activerecord (>= 4.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     afm (0.2.2)
@@ -468,7 +466,6 @@ DEPENDENCIES
   Ascii85
   activemerchant
   activemodel-serializers-xml
-  acts_as_list
   acts_as_tree!
   authlogic
   bcrypt
@@ -553,4 +550,4 @@ DEPENDENCIES
   zip-zip
 
 BUNDLED WITH
-   2.0.2
+   2.1.4
