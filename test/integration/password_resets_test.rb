@@ -9,7 +9,6 @@ class PasswordResetsTest < RacingOnRails::IntegrationTest
 
     same_email = Person.create!(login: "jane.jones", email: "member@example.com")
     same_email.password = "wolfie"
-    same_email.password_confirmation = "wolfie"
     same_email.save!
 
     no_login = Person.create!(email: "member@example.com")
