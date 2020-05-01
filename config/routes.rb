@@ -274,11 +274,6 @@ Rails.application.routes.draw do
     get "/account/login" => "person_sessions#new"
     get "/account" => "people#account", as: :account
 
-    # get "/404" => "errors#not_found"
-    # get "/422" => "errors#unprocessable_entity"
-    # get "/500" => "errors#internal_error"
-    # get "/503" => "errors#over_capacity"
-
     get "/" => "home#index", as: :root
     resource :home, controller: :home
 
