@@ -34,7 +34,7 @@ class EventsControllerTest < ActionController::TestCase
       FactoryBot.create(:event)
       get :index, format: "xml"
       assert_response :success
-      assert_equal "application/xml", @response.content_type
+      assert_equal "application/xml; charset=utf-8", @response.content_type
       [
         "single-day-event > id",
         "single-day-event > name",
