@@ -8,6 +8,7 @@ fi
 
 DISABLE_SPRING=1 bundle exec rake test:ruby
 RECORD_RUNTIME=true DISABLE_SPRING=1 bundle exec rake parallel:test
-RECORD_RUNTIME=true DISABLE_SPRING=1 bundle exec parallel_test lib/registration_engine/test/{controllers,helpers,integration,mailers,models}
+
+RECORD_RUNTIME=true DISABLE_SPRING=1 [ -d "lib/registration_engine" ] && bundle exec parallel_test lib/registration_engine/test/{controllers,helpers,integration,mailers,models}
 DISABLE_SPRING=1 bundle exec rake test:acceptance
-DISABLE_SPRING=1 RAILS_ENV=test bundle exec rake registration_engine:test:acceptance
+DISABLE_SPRING=1 RAILS_ENV=test [ -d "lib/registration_engine" ] && bundle exec rake registration_engine:test:acceptance
