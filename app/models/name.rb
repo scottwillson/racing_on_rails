@@ -15,8 +15,6 @@
 class Name < ApplicationRecord
   validates :name, presence: true
   validates :year, presence: true
-  validates :name, uniqueness: { scope: %i[year nameable_type nameable_id] }
-  validates :nameable_id, uniqueness: { scope: %i[year nameable_type] }
 
   belongs_to :nameable, polymorphic: true
 

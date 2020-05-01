@@ -49,8 +49,6 @@ class Calculations::V3::Calculation < ApplicationRecord
   after_save :expire_cache
 
   validate :maximum_events_negative, unless: :blank?
-  validates :event, uniqueness: { allow_nil: true }
-  validates :key, uniqueness: { allow_nil: true, scope: :year }
   validates :group_by, inclusion: { in: GROUP_BY }
   validates :place_by, inclusion: { in: PLACE_BY }
 
