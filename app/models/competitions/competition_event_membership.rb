@@ -6,5 +6,7 @@ module Competitions
   class CompetitionEventMembership < ApplicationRecord
     belongs_to :competition
     belongs_to :event
+
+    validates :event, uniqueness: { scope: :competition_id }
   end
 end

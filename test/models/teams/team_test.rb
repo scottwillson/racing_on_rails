@@ -61,7 +61,7 @@ module Teams
     test "create dupe" do
       FactoryBot.create(:team, name: "Vanilla")
       dupe = Team.new(name: "Vanilla")
-      assert(!dupe.valid?, "Dupe Vanilla should not be valid")
+      assert_not dupe.valid?, "Dupe Vanilla should not be valid"
     end
 
     test "member" do

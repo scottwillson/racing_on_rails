@@ -7,6 +7,7 @@ class EventTeamMembership < ApplicationRecord
   validates :event_team, presence: true
   validates :person, presence: true
 
+  validates :person, uniqueness: { scope: :event_team }
   validate :uniqueness_of_event
 
   accepts_nested_attributes_for :event_team

@@ -48,6 +48,7 @@ class Person < ApplicationRecord
   before_validation :find_associated_records
   before_validation :set_membership_dates
   before_save { |r| r.license = nil if license.blank? }
+  validates :license, uniqueness: { allow_blank: true, case_sensitive: false }
   validate :membership_dates
   before_destroy :ensure_no_results
 
