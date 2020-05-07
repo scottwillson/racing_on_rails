@@ -1140,10 +1140,10 @@ class PersonTest < ActiveSupport::TestCase
     person.name = "New Guy"
     person.save!
 
-    assert_equal "", person.login, "Login should be blank"
+    assert_nil person.login, "Login should be blank"
     another = Person.create!(login: "")
     another.reload
-    assert_equal "", another.login, "Login should be blank"
+    assert_nil another.login, "Login should be blank"
 
     person.login = "samiam@example.com"
     person.password = "secret"
