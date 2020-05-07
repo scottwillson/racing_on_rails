@@ -14,7 +14,6 @@
         <%= f.labelled_text_field :name %>
       <% end -%>
       <%= f.labelled_password_field :password %>
-      <%= f.labelled_password_field :password_confirmation, "Confirm Password" %>
       <%= hidden_field_tag "return_to", @return_to %>
       <%= hidden_field_tag "id", @person.perishable_token %>
 

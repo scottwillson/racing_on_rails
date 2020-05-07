@@ -16,7 +16,6 @@ class PasswordResetsTest < AcceptanceTest
     visit "/password_resets/#{perishable_token}/edit"
 
     fill_in "person_password", with: "new_password"
-    fill_in "person_password_confirmation", with: "new_password"
     click_button "Save"
 
     assert_page_has_content "Password changed"
@@ -44,7 +43,6 @@ class PasswordResetsTest < AcceptanceTest
     visit "/password_resets/#{perishable_token}/edit"
 
     fill_in "person_password", with: "new_password"
-    fill_in "person_password_confirmation", with: "new_password"
     click_button "Save"
 
     assert_page_has_content "Password changed"

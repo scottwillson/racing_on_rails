@@ -39,12 +39,6 @@ class Person < ApplicationRecord
             allow_blank: true,
             length: { minimum: 4 }
 
-  validates :password_confirmation,
-            allow_blank: true,
-            length: { minimum: 4 },
-            presence: true,
-            if: proc { |user| user.password.present? }
-
   before_validation :find_associated_records
   before_validation :set_membership_dates
   before_save { |r| r.login = nil if login.blank? }
@@ -60,7 +54,7 @@ class Person < ApplicationRecord
   has_many :results
   belongs_to :team, optional: true
 
-  attr_accessor :password_confirmation, :year
+  attr_accessor :year
 
   CATEGORY_FIELDS = %i[bmx_category ccx_category dh_category mtb_category road_category track_category].freeze
 

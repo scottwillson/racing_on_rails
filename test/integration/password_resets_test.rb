@@ -28,7 +28,7 @@ class PasswordResetsTest < RacingOnRails::IntegrationTest
     get edit_password_reset_path(same_email.perishable_token)
     assert_response :success
 
-    put password_reset_path(id: same_email.perishable_token, person: { password: "scouter", password_confirmation: "scouter" })
+    put password_reset_path(id: same_email.perishable_token, person: { password: "scouter" })
     assert_response :redirect
     assert_redirected_to account_path
     follow_redirect!
@@ -42,7 +42,7 @@ class PasswordResetsTest < RacingOnRails::IntegrationTest
     get edit_password_reset_path(person.perishable_token)
     assert_response :success
 
-    put password_reset_path(id: person.perishable_token, person: { password: "mamba", password_confirmation: "mamba" })
+    put password_reset_path(id: person.perishable_token, person: { password: "mamba })
     assert_response :redirect
     assert_redirected_to account_path
     follow_redirect!
