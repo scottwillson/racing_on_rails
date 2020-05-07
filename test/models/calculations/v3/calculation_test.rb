@@ -12,6 +12,7 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
       source_child_event = series.children.create!(date: Time.zone.local(2018, 11, 21))
 
       calculation = series.calculations.create!(points_for_place: [100, 50, 25, 12])
+      assert_equal [100, 50, 25, 12], calculation.reload.points_for_place
       category = Category.find_or_create_by(name: "Men A")
       calculation.categories << category
 

@@ -50,13 +50,13 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   validate :maximum_events_negative, unless: :blank?
   validates :event, uniqueness: { allow_nil: true, case_sensitive: false }
-  validates :key, uniqueness: { allow_nil: true, case_sensitive: false, scope: :year }	
+  validates :key, uniqueness: { allow_nil: true, case_sensitive: false, scope: :year }
   validates :group_by, inclusion: { in: GROUP_BY }
   validates :place_by, inclusion: { in: PLACE_BY }
 
   attribute :discipline_id, :integer, default: -> { ::Discipline[RacingAssociation.current.default_discipline]&.id }
   attribute :event_notes, :text, default: -> { "" }
-  attribute :points_for_place, :integer, default: -> { nil }
+  attribute :points_for_place, :text, default: -> { nil }
 
   def self.latest(key)
     where(key: key).order(:year).last
