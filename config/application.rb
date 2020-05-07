@@ -19,7 +19,7 @@ module RacingOnRails
 
     I18n.config.enforce_available_locales = true
 
-    # config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :team_observer unless ENV["SKIP_OBSERVERS"]
+    config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :team_observer unless ENV["SKIP_OBSERVERS"]
 
     # HP's proxy, among others, gets this wrong
     config.action_dispatch.ip_spoofing_check = false
