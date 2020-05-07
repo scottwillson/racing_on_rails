@@ -169,7 +169,7 @@ class PeopleControllerTest < ActionController::TestCase
   test "index as json" do
     get :index, params: { name: "ron" }, format: "json"
     assert_response :success
-    assert_equal "application/json", @response.content_type
+    assert_equal "application/json; charset=utf-8", @response.content_type
   end
 
   test "find by name as xml" do
