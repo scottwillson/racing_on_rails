@@ -8,14 +8,14 @@ module Competitions
     test "popular pages" do
       create_results
 
-      Calculations::V3::Calculation.create!(
+      ::Calculations::V3::Calculation.create!(
         key: :ironman,
         members_only: true,
         name: "Ironman",
         points_for_place: 1
       ).calculate!
 
-      calculation = Calculations::V3::Calculation.create!(
+      calculation = ::Calculations::V3::Calculation.create!(
         key: :oregon_cup,
         name: "Oregon Cup",
         members_only: true,
@@ -44,7 +44,7 @@ module Competitions
 
       road = FactoryBot.create(:discipline, name: "Road")
 
-      calculation = Calculations::V3::Calculation.create!(
+      calculation = ::Calculations::V3::Calculation.create!(
         disciplines: [road],
         field_size_bonus: true,
         members_only: true,
@@ -56,7 +56,7 @@ module Competitions
       )
       calculation.categories << masters_men
 
-      calculation = Calculations::V3::Calculation.create!(
+      calculation = ::Calculations::V3::Calculation.create!(
         discipline: overall_discipline,
         event_notes: "Oregon Best All-Around Rider",
         key: "overall_bar",
@@ -69,7 +69,7 @@ module Competitions
       )
       calculation.categories << masters_men
 
-      calculation = Calculations::V3::Calculation.create!(
+      calculation = ::Calculations::V3::Calculation.create!(
         discipline: age_graded,
         group_by: :age,
         members_only: true,
