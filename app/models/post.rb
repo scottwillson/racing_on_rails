@@ -122,6 +122,10 @@ class Post < ApplicationRecord
     @older ||= mailing_list.posts.original.order("position desc").where("position < ?", position).first
   end
 
+  def position
+    0
+  end
+
   # Replace a couple letters from email addresses to avoid spammers
   def from_email_obscured
     return "" if from_email.blank?
