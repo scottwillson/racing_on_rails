@@ -282,7 +282,6 @@ module Admin
         :official_interest,
         :other_people_with_same_name,
         :password,
-        :password_confirmation,
         :print_card,
         :race_promotion_interest,
         :road_category,

@@ -23,12 +23,10 @@ class PasswordResetsController < ApplicationController
 
   def update
     @person.password = params[:person][:password]
-    @person.password_confirmation = params[:person][:password_confirmation]
 
-    if @person.password.blank? || @person.password_confirmation.blank?
-      flash[:warn] = "Please provide a new password and confirmation"
+    if @person.password.blank?
+      flash[:warn] = "Please provide a new password"
       @person.errors.add(:password, "can't be blank") if @person.password.blank?
-      @person.errors.add(:password_confirmation, "can't be blank") if @person.password_confirmation.blank?
       return render(:edit)
     end
 

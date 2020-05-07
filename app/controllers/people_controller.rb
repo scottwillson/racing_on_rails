@@ -222,7 +222,6 @@ class PeopleController < ApplicationController
       :official,
       :official_interest,
       :password,
-      :password_confirmation,
       :race_promotion_interest,
       :road_category,
       :state,

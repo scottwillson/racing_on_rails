@@ -335,7 +335,6 @@ class AcceptanceTest < ActiveSupport::TestCase
   def create_new_login
     fill_in "person_login", with: "kc@iq-9.com"
     fill_in "person_password", with: "condor"
-    fill_in "person_password_confirmation", with: "condor"
     fill_in "person_name", with: "Kevin Condron"
     fill_in "person_license", with: "576"
     fill_in "person_email", with: "kc@iq-9.com"

@@ -50,7 +50,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
   test "update admin" do
     administrator = FactoryBot.create(:administrator)
     password = administrator.crypted_password
-    post :update, params: { id: administrator.perishable_token, person: { password: "my new password", password_confirmation: "my new password" } }
+    post :update, params: { id: administrator.perishable_token, person: { password: "my new password" } }
     assert_not_nil(assigns["person"], "@person")
     assert_not_nil(assigns["person_session"], "@person_session")
     updated_person = Person.find(administrator.id)
@@ -62,7 +62,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
   test "update member" do
     person = FactoryBot.create(:person_with_login, login: "bob.jones")
     password = person.crypted_password
-    post :update, params: { id: person.perishable_token, person: { password: "my new password", password_confirmation: "my new password" } }
+    post :update, params: { id: person.perishable_token, person: { password: "my new password" } }
     assert_not_nil(assigns["person"], "@person")
     assert_not_nil(assigns["person_session"], "@person_session")
     assert assigns["person"].errors.empty?, assigns["person"].errors.full_messages.join
@@ -74,23 +74,10 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_redirected_to "/account"
   end
 
-  test "invalid update" do
-    member = FactoryBot.create(:person_with_login, login: "bob.jones")
-    password = member.crypted_password
-    post :update, params: { id: member.perishable_token, person: { password: "my new password", password_confirmation: "another password that doesn't match" } }
-    assert_nil(assigns["person_session"], "@person_session")
-    assert_not_nil(assigns["person"], "@person")
-    assert_not_nil(assigns("person").errors[:password], "Should have error on password")
-    updated_person = Person.find(member.id)
-    assert(password == Person.find(updated_person.id).crypted_password, "Password should not change")
-    assert_equal "bob.jones", updated_person.login, "login"
-    assert_response :success
-  end
-
   test "blank update" do
     member = FactoryBot.create(:person_with_login)
     password = member.crypted_password
-    post :update, params: { id: member.perishable_token, person: { password: "", password_confirmation: "" } }
+    post :update, params: { id: member.perishable_token, person: { password: "" } }
     assert_nil(assigns["person_session"], "@person_session")
     assert_not_nil(assigns["person"], "@person")
     assert_not_nil(assigns("person").errors[:password], "Should have error on password")

@@ -15,7 +15,6 @@ class LoginTest < ActionController::TestCase
         person: {
           login: "racer@example.com",
           password: "secret",
-          password_confirmation: "secret",
           email: "racer@example.com",
           license: ""
         },
@@ -40,7 +39,6 @@ class LoginTest < ActionController::TestCase
         person: {
           login: "racer@example.com",
           password: "secret",
-          password_confirmation: "secret",
           email: "racer@example.com"
         },
         id: person.perishable_token
@@ -60,7 +58,6 @@ class LoginTest < ActionController::TestCase
           login: "racer@example.com",
           name: "Bike Racer",
           password: "secret",
-          password_confirmation: "secret",
           email: "racer@example.com",
           license: ""
         },
@@ -80,7 +77,6 @@ class LoginTest < ActionController::TestCase
       params: {
         person: { login: "racer@example.com",
                   password: "secret",
-                  password_confirmation: "secret",
                   email: "racer@example.com",
                   license: "123   ",
                   name: "    Speed Racer" },
@@ -103,7 +99,6 @@ class LoginTest < ActionController::TestCase
       params: {
         person: { login: "racer@example.com",
                   password: "secret",
-                  password_confirmation: "secret",
                   email: "racer@example.com",
                   license: "Speed Racer",
                   name: "" },
@@ -124,7 +119,6 @@ class LoginTest < ActionController::TestCase
       params: {
         person: { login: "racer@example.com",
                   password: "secret",
-                  password_confirmation: "secret",
                   email: "racer@example.com",
                   license: "Speed Racer",
                   name: "123" },
@@ -143,8 +137,7 @@ class LoginTest < ActionController::TestCase
     use_ssl
     post :create_login,
       params: {
-        person: { login: "racer@example.com", email: "racer@example.com", password: "secret",
-                  password_confirmation: "secret", license: "" },
+        person: { login: "racer@example.com", email: "racer@example.com", password: "secret", license: "" },
         return_to: root_path
       }
     assert_redirected_to root_path
@@ -163,7 +156,6 @@ class LoginTest < ActionController::TestCase
       params: {
         person: { login: "racer@example.com",
                   password: "secret",
-                  password_confirmation: "secret",
                   email: "" },
         return_to: root_path
       }
@@ -179,9 +171,7 @@ class LoginTest < ActionController::TestCase
     use_ssl
     post :create_login,
       params: {
-        person: { login: "bob.jones",
-                  password: "secret",
-                  password_confirmation: "secret" },
+        person: { login: "bob.jones", password: "secret" },
         return_to: root_path
       }
 
@@ -202,7 +192,6 @@ class LoginTest < ActionController::TestCase
           login: "racer@example.com",
           email: "http://example.com/",
           password: "secret",
-          password_confirmation: "secret",
           license: "111"
         },
         return_to: root_path
@@ -255,7 +244,6 @@ class LoginTest < ActionController::TestCase
           login: "",
           email: "racer@example.com",
           password: "secret",
-          password_confirmation: "secret",
           license: "",
           name: ""
         },
@@ -280,7 +268,6 @@ class LoginTest < ActionController::TestCase
           login: "",
           email: "racer@example.com",
           password: "secret",
-          password_confirmation: "secret"
         },
         return_to: root_path
       }
@@ -303,7 +290,6 @@ class LoginTest < ActionController::TestCase
           login: "",
           email: "racer@example.com",
           password: "secret",
-          password_confirmation: "secret",
           license: "",
           name: ""
         },
@@ -329,7 +315,6 @@ class LoginTest < ActionController::TestCase
           login: "racer@example.com",
           email: "racer@example.com",
           password: "secret",
-          password_confirmation: "secret",
           license: "",
           name: ""
         },
@@ -350,7 +335,6 @@ class LoginTest < ActionController::TestCase
       params: {
         person: { login: "!@#{$&}*()_+?><",
                   password: "secret",
-                  password_confirmation: "secret",
                   email: "racer@example.com",
                   license: "123",
                   name: "Speed Racer" },
@@ -372,7 +356,6 @@ class LoginTest < ActionController::TestCase
       params: {
         person: { login: "speed_racer",
                   password: "secret",
-                  password_confirmation: "secret",
                   email: "racer@example.com",
                   license: "1727",
                   name: "Speed Racer" },
@@ -396,7 +379,6 @@ class LoginTest < ActionController::TestCase
       params: {
         person: { login: "speed_racer",
                   password: "secret",
-                  password_confirmation: "secret",
                   email: "racer@example.com",
                   license: "123",
                   name: "Vitesse" },
@@ -422,7 +404,6 @@ class LoginTest < ActionController::TestCase
       params: {
         person: { login: "racer@example.com",
                   password: "secret",
-                  password_confirmation: "secret",
                   email: "racer@example.com",
                   license: "9871",
                   name: "Speed Racer" },
@@ -443,7 +424,6 @@ class LoginTest < ActionController::TestCase
         person: {
           login: "racer@example.com",
           password: "secret",
-          password_confirmation: "secret",
           email: "racer@example.com"
         },
         return_to: "/line_items/create?type=membership"
