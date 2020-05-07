@@ -50,16 +50,16 @@ blocks:
           - mv config/semaphore_database.yml config/database.yml
           - bundle exec rake db:setup
           - bundle exec rake db:test:prepare
-          - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          - chmod +x ./cc-test-reporter
-          - ./cc-test-reporter before-build
+          # - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          # - chmod +x ./cc-test-reporter
+          # - ./cc-test-reporter before-build
       jobs:
       - name: unit tests
         commands:
           - bin/test
           - bundle exec rake test
           - exitcode=$(if [ "$SEMAPHORE_JOB_RESULT" == "failed" ]; then echo 1; else echo 0; fi)
-          - ./cc-test-reporter after-build --exit-code $exitcode -t simplecov
+          # - ./cc-test-reporter after-build --exit-code $exitcode -t simplecov
       secrets:
         - name: environmental_variables
 
