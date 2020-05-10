@@ -92,7 +92,6 @@ group :test do
   gem "mocha", require: false
   gem "rails-controller-testing"
   gem "selenium-webdriver"
-  gem "simplecov"
   gem "timecop"
   gem "webdrivers", ">= 3.9.1"
   gem "webmock"
