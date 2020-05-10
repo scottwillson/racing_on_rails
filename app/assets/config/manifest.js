@@ -3,3 +3,4 @@
 
 // Don't precompile partials
 //= link application.css
+//= link registration_engine/application.css
