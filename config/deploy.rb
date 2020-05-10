@@ -40,10 +40,12 @@ namespace :deploy do
     on roles :app do
       if fetch(:application) == "obra" || fetch(:application) == "nabra"
         execute :rm, "-rf \"#{release_path}/lib/registration_engine\"" if test("[ -e \"#{release_path}/lib/registration_engine\" ]")
+        execute :rm, "-rf \"#{release_path}/registration_engine\"" if test("[ -e \"#{release_path}/registration_engine\" ]")
 
         execute :rm, "-rf \"#{release_path}/lib/registration_engine\"" if test("[ -L \"#{release_path}/lib/registration_engine\" ]")
+        execute :rm, "-rf \"#{release_path}/registration_engine\"" if test("[ -L \"#{release_path}/registration_engine\" ]")
 
-        execute :git, "clone git@github.com:scottwillson/registration_engine.git -b rails-6 #{release_path}/lib/registration_engine"
+        execute :git, "clone git@github.com:scottwillson/registration_engine.git -b rails-6 #{release_path}/registration_engine"
       end
     end
   end

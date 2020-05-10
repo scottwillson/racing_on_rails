@@ -26,8 +26,9 @@ unless association.nil?
   `ln -s ../../racing_on_rails_local/#{association}/public public/local` if Dir.exist?("../../racing_on_rails_local/#{association}/public")
 end
 
-if association == "obra" || association == "nabra"
-  `ln -s ../../registration_engine lib/registration_engine` unless File.exist?("lib/registration_engine")
-else
-  FileUtils.rm "lib/registration_engine" if File.exist?("lib/registration_engine")
-end
+# TODO: switch out Gemfile
+# if association == "obra" || association == "nabra"
+#   `ln -s ../../registration_engine registration_engine` unless File.exist?("egistration_engine")
+# else
+#   FileUtils.rm "registration_engine" if File.exist?("registration_engine")
+# end

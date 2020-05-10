@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-gem "rails", "~> 6.0.2"
+gem "rails", "~> 6.0.3"
 
 gem "activemerchant"
 gem "activemodel-serializers-xml"
@@ -38,6 +38,7 @@ gem "puma"
 gem "rails-observers"
 gem "rake"
 gem "redcarpet"
+gem "registration_engine", path: "registration_engine"
 gem "rest-client"
 gem "ri_cal"
 gem "roo", github: "scottwillson/roo"
