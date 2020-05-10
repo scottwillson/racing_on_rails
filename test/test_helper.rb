@@ -6,29 +6,19 @@ require_relative "../config/environment"
 require "rails/test_help"
 require "mocha/minitest"
 require "authlogic/test_case"
-require "parallel_tests/test/runtime_logger" if ENV["RECORD_RUNTIME"]
 require "test/enumerable_assertions"
 require "webmock/minitest"
 require_relative "./elasticsearch_stubs"
 
 class ActiveSupport::TestCase
+  parallelize(workers: :number_of_processors)
   make_my_diffs_pretty!
-
-  self.use_instantiated_fixtures = false
-  self.use_transactional_tests = false
-  self.pre_loaded_fixtures = false
 
   include Authlogic::TestCase
   include ElasticsearchStubs
   include Test::EnumerableAssertions
 
-  DatabaseCleaner.strategy = :truncation, { except: %w[ar_internal_metadata] }
-
-  setup :clean_database, :activate_authlogic, :reset_association, :reset_disciplines, :reset_person_current, :stub_elasticsearch
-
-  def clean_database
-    DatabaseCleaner.clean
-  end
+  setup :activate_authlogic, :reset_association, :reset_disciplines, :reset_person_current, :stub_elasticsearch
 
   def reset_association
     RacingAssociation.current = nil

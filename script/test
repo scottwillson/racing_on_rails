@@ -7,8 +7,8 @@ if [ "$DB" = '1' ]; then
 fi
 
 DISABLE_SPRING=1 bundle exec rake test:ruby
-RECORD_RUNTIME=true DISABLE_SPRING=1 bundle exec rake parallel:test
+bundle exec rails test --exclude=registration_engine/test/acceptance test registration_engine/test
 
-bundle exec parallel_test lib/registration_engine/test/{controllers,helpers,integration,mailers,models}
+# bundle exec parallel_test registration_engine/test/{controllers,helpers,integration,mailers,models}
 DISABLE_SPRING=1 bundle exec rake test:acceptance
 bundle exec rake registration_engine:test:acceptance
