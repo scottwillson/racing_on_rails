@@ -31,7 +31,6 @@ gem "newrelic_rpm"
 gem "nokogiri"
 gem "oj"
 gem "paper_trail"
-gem "parallel_tests"
 gem "pdf-reader", require: "pdf/reader"
 gem "prawn", git: "https://github.com/sandal/prawn.git"
 gem "puma"
@@ -86,7 +85,6 @@ end
 group :test do
   gem "capybara"
   gem "capybara-screenshot"
-  gem "database_cleaner"
   gem "factory_bot_rails"
   gem "minitest"
   gem "mocha", require: false

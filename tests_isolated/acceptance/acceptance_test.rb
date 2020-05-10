@@ -27,10 +27,6 @@ class AcceptanceTest < ActiveSupport::TestCase
   include Capybara::Screenshot::MiniTestPlugin
   include ElasticsearchStubs
 
-  # Selenium tests start the Rails server in a separate process. If test data is wrapped in a
-  # transaction, the server won't see it.
-  DatabaseCleaner.strategy = :truncation, { except: %w[ar_internal_metadata] }
-
   Webdrivers.cache_time = 86_400
   Capybara.asset_host = "http://0.0.0.0:3000"
   Capybara::Screenshot.prune_strategy = :keep_last_run
@@ -363,7 +359,6 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   def clean_database
-    DatabaseCleaner.clean
     Discipline.reset
   end
 
