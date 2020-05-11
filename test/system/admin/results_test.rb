@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
+require "application_system_test_case"
 
 # :stopdoc:
-class ResultsTest < AcceptanceTest
+class ResultsTest < ApplicationSystemTestCase
   test "results editing" do
-    javascript!
-
     FactoryBot.create(:number_issuer, name: RacingAssociation.current.short_name)
     event = FactoryBot.create(:event, name: "Copperopolis Road Race")
     race = FactoryBot.create(:race, event: event)
@@ -64,7 +62,7 @@ class ResultsTest < AcceptanceTest
 
     assert page.has_no_selector? :xpath, "//table[@id='results_table']//tr[4]"
     click_link "result_#{result.id}_add"
-    wait_for :xpath, "//table[@id='results_table']//tr[4]"
+    assert_selector :xpath, "//table[@id='results_table']//tr[4]"
     find("#result_#{result.id}_destroy").click
     wait_for_no :xpath, "//table[@id='results_table']//tr[4]"
     visit "/admin/races/#{race.id}/edit"
@@ -73,7 +71,7 @@ class ResultsTest < AcceptanceTest
 
     assert page.has_no_selector? :xpath, "//table[@id='results_table']//tr[4]"
     click_link "result__add"
-    wait_for :xpath, "//table[@id='results_table']//tr[4]"
+    assert_selector :xpath, "//table[@id='results_table']//tr[4]"
 
     visit "/admin/races/#{race.id}/edit"
     assert_page_has_content "Field Size (2)"

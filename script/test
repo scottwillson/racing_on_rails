@@ -4,6 +4,4 @@ set -e
 
 DISABLE_SPRING=1 bundle exec rake test:ruby
 bundle exec rails test test/ registration_engine/test/
-
-DISABLE_SPRING=1 bundle exec rake test:acceptance
-bundle exec rake registration_engine:test:acceptance
+bundle exec rails test test/system registration_engine/test/system

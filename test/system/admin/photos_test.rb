@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
+require "application_system_test_case"
 
 # :stopdoc:
 module Admin
-  class PhotosTest < AcceptanceTest
+  class PhotosTest < ApplicationSystemTestCase
     test "edit" do
       visit "/"
       login_as FactoryBot.create(:administrator)

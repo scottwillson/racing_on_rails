@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "../acceptance_test"
+require "application_system_test_case"
 
 # :stopdoc:
-class EventsTest < AcceptanceTest
+class EventsTest < ApplicationSystemTestCase
   test "events" do
-    javascript!
-
     candi = FactoryBot.create(:administrator, name: "Candi Murray", home_phone: "(503) 555-1212", email: "admin@example.com")
     gl = FactoryBot.create(:team, name: "Gentle Lovers")
     kings_valley = FactoryBot.create(:event, name: "Kings Valley Road Race", date: "2003-12-31")
@@ -116,7 +114,7 @@ class EventsTest < AcceptanceTest
     click_link "Sausalito Criterium"
 
     click_button "event_team_select_modal_button"
-    wait_for ".modal.in"
+    assert_selector ".modal.in"
     assert_equal "", find("input.search").value
     fill_in "name", with: "gentle"
 
@@ -149,9 +147,9 @@ class EventsTest < AcceptanceTest
     assert_equal "Wednesday, November 13, 2013", find("#event_human_date").value
     assert_equal Time.zone.local(2013, 11, 13).to_date, event.reload.date, "date should be updated in DB"
 
-    wait_for "#event_human_date_picker"
+    assert_selector "#event_human_date_picker"
     find("#event_human_date_picker").click
-    wait_for ".datepicker-days td.day.old"
+    assert_selector ".datepicker-days td.day.old"
     first(".datepicker-days td.day.old", text: "31").click
     wait_for_ajax
     assert_equal "Thursday, October 31, 2013", find("#event_human_date").value
@@ -205,23 +203,23 @@ class EventsTest < AcceptanceTest
     assert_page_has_content "Fancy New Child Event"
 
     click_link "Edit all"
-    wait_for "#races_collection_text"
+    assert_selector "#races_collection_text"
 
     fill_in "races_collection_text", with: "Men A\nMen B"
     click_button "races_collections_save"
 
-    wait_for "#edit_all"
+    assert_selector "#edit_all"
     assert page.has_css?("td.race", text: "Men A")
     assert page.has_css?("td.race", text: "Men B")
 
     click_link "Edit all"
-    wait_for "#races_collection_text"
+    assert_selector "#races_collection_text"
     assert_match(/Men A[\s]+Men B/, find("#races_collection_text").value)
 
     fill_in "races_collection_text", with: "Women"
     click_link "Cancel"
 
-    wait_for "#edit_all"
+    assert_selector "#edit_all"
     assert page.has_css?("td.race", text: "Men A")
     assert page.has_css?("td.race", text: "Men B")
     assert !page.has_css?("td.race", text: "Women")

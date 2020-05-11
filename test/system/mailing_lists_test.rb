@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
+require "application_system_test_case"
 
 # :stopdoc:
-class MailingListsTest < AcceptanceTest
+class MailingListsTest < ApplicationSystemTestCase
   test "mailing lists" do
     mailing_list = FactoryBot.create(:mailing_list, name: "obra")
     mailing_list.posts.create!(

@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
+require "application_system_test_case"
 
 # :stopdoc:
-class FirstAidProvidersTest < AcceptanceTest
-  setup :javascript!
-
+class FirstAidProvidersTest < ApplicationSystemTestCase
   test "first aid providers" do
     # FIXME: Punt!
     if Time.zone.today.month < 12
