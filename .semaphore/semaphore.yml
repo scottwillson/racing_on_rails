@@ -78,6 +78,6 @@ blocks:
           - bundle exec rake db:setup
           - bundle exec rake db:test:prepare
       jobs:
-      - name: acceptance tests
+      - name: system tests
         commands:
-          - DISABLE_SPRING=1 bundle exec rails test:system
+          - bundle exec rails test:system

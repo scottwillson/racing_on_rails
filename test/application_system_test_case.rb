@@ -6,6 +6,11 @@ require_relative "system/actions"
 require_relative "system/assertions"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
+  WebMock.disable_net_connect!(
+    allow: "chromedriver.storage.googleapis.com",
+    allow_localhost: true
+  )
+
   driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400] do |driver_option|
     driver_option.add_preference(
       :download,
@@ -15,15 +20,8 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   Capybara.server = :puma, { Silent: true }
 
-  setup :configure_webmock, :stub_elasticsearch
+  setup :stub_elasticsearch
 
   include ::Actions
   include ::Assertions
-
-  def configure_webmock
-    WebMock.disable_net_connect!(
-      allow: "chromedriver.storage.googleapis.com",
-      allow_localhost: true
-    )
-  end
 end
