@@ -64,7 +64,7 @@ class ResultsTest < ApplicationSystemTestCase
     click_link "result_#{result.id}_add"
     assert_selector :xpath, "//table[@id='results_table']//tr[4]"
     find("#result_#{result.id}_destroy").click
-    wait_for_no :xpath, "//table[@id='results_table']//tr[4]"
+    assert_no_selector :xpath, "//table[@id='results_table']//tr[4]"
     visit "/admin/races/#{race.id}/edit"
     assert_no_text "Megan Weaver"
     assert_page_has_content "DNF"

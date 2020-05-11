@@ -59,7 +59,8 @@ class PromotersTest < ApplicationSystemTestCase
     assert_download "export_link", "scoring_sheet.xls"
 
     visit "/admin/events/#{series.id}/edit"
-    click_ok_on_alert_dialog
-    click_link "propagate_races"
+    accept_confirm do
+      click_link "propagate_races"
+    end
   end
 end
