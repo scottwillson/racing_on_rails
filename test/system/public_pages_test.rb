@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
+require "application_system_test_case"
 
 # :stopdoc:
-class PublicPagesTest < AcceptanceTest
+class PublicPagesTest < ApplicationSystemTestCase
   test "popular pages" do
     create_results
 
@@ -43,8 +43,6 @@ class PublicPagesTest < AcceptanceTest
   end
 
   test "results page" do
-    javascript!
-
     create_results
 
     visit "/results/2004/road"
@@ -56,9 +54,9 @@ class PublicPagesTest < AcceptanceTest
     assert_page_has_content "Senior Women 1/2/3"
 
     if page.has_content?("Montana")
-      wait_for ".panel-default"
+      assert_selector ".panel-default"
       click_link "Senior Women 1/2/3"
-      wait_for "table.results a"
+      assert_selector "table.results a"
     end
     click_link "Pennington"
     assert find("table.results td.place").has_text?("2")
@@ -70,9 +68,9 @@ class PublicPagesTest < AcceptanceTest
     assert_page_has_content "Jack Frost"
     assert_page_has_content "January 17, 2002"
     if page.has_content?("Montana")
-      wait_for ".panel-default"
+      assert_selector ".panel-default"
       click_link "Senior Men"
-      wait_for "table.results a"
+      assert_selector "table.results a"
       assert_page_has_content "Weaver"
     else
       assert_page_has_content "Weaver"
@@ -81,8 +79,6 @@ class PublicPagesTest < AcceptanceTest
   end
 
   test "people" do
-    javascript!
-
     FactoryBot.create(:person, name: "Alice Pennington")
     visit "/people"
     assert_no_text "Pennington"

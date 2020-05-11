@@ -84,7 +84,6 @@ end
 
 group :test do
   gem "capybara"
-  gem "capybara-screenshot"
   gem "factory_bot_rails"
   gem "minitest"
   gem "mocha", require: false

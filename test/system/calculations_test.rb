@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
+require "application_system_test_case"
 
 # :stopdoc:
-class CalculationsTest < AcceptanceTest
+class CalculationsTest < ApplicationSystemTestCase
   test "calculated results" do
     FactoryBot.create :discipline
     series = Series.create!(name: "Mt. Tabor Series")

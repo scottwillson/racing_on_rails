@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
+require "application_system_test_case"
 
 # :stopdoc:
-class VelodromesTest < AcceptanceTest
+class VelodromesTest < ApplicationSystemTestCase
   test "velodromes" do
-    javascript!
-
     login_as FactoryBot.create(:administrator)
     FactoryBot.create(:velodrome, name: "Alpenrose Dairy", website: "http://www.obra.org/track/")
     t_town = FactoryBot.create(:velodrome, name: "Valley Preferred Cycling Center", website: "http://www.lvvelo.org/")

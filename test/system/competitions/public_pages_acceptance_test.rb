@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "../acceptance_test"
+require "application_system_test_case"
 
 module Competitions
   # :stopdoc:
-  class PublicPagesAcceptanceTest < AcceptanceTest
+  class PublicPagesApplicationSystemTestCase < ApplicationSystemTestCase
     test "popular pages" do
       create_results
 

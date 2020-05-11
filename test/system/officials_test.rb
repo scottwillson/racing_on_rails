@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
+require "application_system_test_case"
 
 # :stopdoc:
-class OfficialsTest < AcceptanceTest
+class OfficialsTest < ApplicationSystemTestCase
   test "view assignments" do
-    javascript!
-
     FactoryBot.create(:discipline, name: "Cyclocross")
     FactoryBot.create(:discipline, name: "Downhill")
     FactoryBot.create(:discipline, name: "Mountain Bike")

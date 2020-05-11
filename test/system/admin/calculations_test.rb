@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../acceptance_test"
+require "application_system_test_case"
 
 # :stopdoc:
-class Admin::CategoriesTest < AcceptanceTest
+class Admin::CategoriesTest < ApplicationSystemTestCase
   test "edit" do
     FactoryBot.create(:discipline)
 

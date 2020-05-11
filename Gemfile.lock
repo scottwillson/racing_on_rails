@@ -163,9 +163,6 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (~> 1.5)
       xpath (~> 3.2)
-    capybara-screenshot (1.0.24)
-      capybara (>= 1.0, < 4)
-      launchy
     carrierwave (2.1.0)
       activemodel (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -245,8 +242,6 @@ GEM
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
     json (2.3.0)
-    launchy (2.5.0)
-      addressable (~> 2.7)
     libv8 (3.16.14.19)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -482,7 +477,6 @@ DEPENDENCIES
   capistrano-rvm
   capistrano3-puma
   capybara
-  capybara-screenshot
   carrierwave
   caxlsx (>= 2.0.1)
   caxlsx_rails (>= 0.5.2)

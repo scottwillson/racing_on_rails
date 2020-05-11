@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
+require "application_system_test_case"
 
 # :stopdoc:
-class PagesTest < AcceptanceTest
+class PagesTest < ApplicationSystemTestCase
   test "pages" do
     login_as FactoryBot.create(:administrator)
 

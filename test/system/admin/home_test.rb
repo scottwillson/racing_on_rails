@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "../acceptance_test"
+require "application_system_test_case"
 
 # :stopdoc:
 module Admin
-  class HomeTest < AcceptanceTest
+  class HomeTest < ApplicationSystemTestCase
     test "edit" do
       visit "/"
       login_as FactoryBot.create(:administrator)

@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "../acceptance_test"
+require "application_system_test_case"
 
 # :stopdoc:
-class EventsTest < AcceptanceTest
+class EventsTest < ApplicationSystemTestCase
   test "events" do
-    javascript!
-
     candi = FactoryBot.create(:administrator, name: "Candi Murray", home_phone: "(503) 555-1212", email: "admin@example.com")
     gl = FactoryBot.create(:team, name: "Gentle Lovers")
     kings_valley = FactoryBot.create(:event, name: "Kings Valley Road Race", date: "2003-12-31")

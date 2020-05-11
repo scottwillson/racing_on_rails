@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
+require "application_system_test_case"
 
 # :stopdoc:
-class TeamsTest < AcceptanceTest
-  setup :javascript!
-
+class TeamsTest < ApplicationSystemTestCase
   test "edit" do
     FactoryBot.create(:team, name: "Kona")
     vanilla = FactoryBot.create(:team, name: "Vanilla")

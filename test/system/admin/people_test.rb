@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
+require "application_system_test_case"
 
 # :stopdoc:
-class PeopleTest < AcceptanceTest
-  setup :javascript!
-
+class PeopleTest < ApplicationSystemTestCase
   test "edit" do
     FactoryBot.create(:discipline)
     FactoryBot.create(:mtb_discipline)
@@ -84,7 +82,7 @@ class PeopleTest < AcceptanceTest
     visit "/admin/people/#{matson.id}/edit"
     assert_page_has_content "Mark Matson"
     if Time.zone.today.month < 12
-      wait_for "input.number[value='765']"
+      assert_selector "input.number[value='765']"
       click_link "destroy_number_#{matson.race_numbers.first.id}"
       wait_for_no "input.number[value='765']"
 
@@ -145,17 +143,17 @@ class PeopleTest < AcceptanceTest
     visit "/admin/people"
     press_return "name"
     wait_for_ajax
-    wait_for "#people_table"
+    assert_selector "#people_table"
     assert_table("people_table", 1, 2, "Molly Cameron")
     assert_table("people_table", 2, 2, "Mark Matson")
     press_return "name"
     wait_for_ajax
-    wait_for "#people_table"
+    assert_selector "#people_table"
     assert_table("people_table", 1, 2, "Molly Cameron")
     assert_table("people_table", 2, 2, "Mark Matson")
 
     fill_in_inline "#person_#{matson.id}_name", with: "Molly Cameron", assert_edit: false
-    wait_for ".ui-dialog-buttonset button:first-child"
+    assert_selector ".ui-dialog-buttonset button:first-child"
     find(".ui-dialog-buttonset button:first-child").click
 
     assert_page_has_content "Merged Mark Matson into Molly Cameron"

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
+require "application_system_test_case"
 
 # :stopdoc:
-class PasswordResetsTest < AcceptanceTest
+class PasswordResetsTest < ApplicationSystemTestCase
   test "reset not logged in" do
     FactoryBot.create(:person_with_login, email: "member@example.com")
     visit "/person_session/new"
