@@ -151,8 +151,7 @@ class EventsTest < ApplicationSystemTestCase
     find("#event_human_date_picker").click
     assert_selector ".datepicker-days td.day.old"
     first(".datepicker-days td.day.old", text: "31").click
-    assert_selector_ajax
-    assert_equal "Thursday, October 31, 2013", find("#event_human_date").value
+    assert_field "Date", with: "Thursday, October 31, 2013"
     click_button "Save"
 
     assert_equal "Thursday, October 31, 2013", find("#event_human_date").value
@@ -181,8 +180,9 @@ class EventsTest < ApplicationSystemTestCase
     visit "/admin/events?year=2003"
     visit_event kings_valley
 
-    click_ok_on_confirm_dialog
-    click_link "destroy_races"
+    accept_confirm do
+      click_link "destroy_races"
+    end
     assert_page_has_no_content "Senior Men Pro/1/2"
 
     visit "/admin/events?year=2003"
