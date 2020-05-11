@@ -38,14 +38,12 @@ module Assertions
   end
 
   def download(link_id, filename)
-    puts "download(#{link_id}, #{filename})"
     click_on link_id
     begin
       Timeout.timeout(10) do
         sleep 0.25 while Dir.glob("#{Assertions.download_directory}/#{filename}").empty?
       end
     rescue Timeout::Error
-      puts "Timeout::Error"
       files = Dir.entries(Assertions.download_directory).join(", ")
       raise(
         Timeout::Error,
@@ -55,12 +53,10 @@ module Assertions
   end
 
   def make_download_directory
-    puts "make_download_directory exists? #{Dir.exist?(Assertions.download_directory)}"
     FileUtils.mkdir_p Assertions.download_directory unless Dir.exist?(Assertions.download_directory)
   end
 
   def remove_download(filename)
-    puts "FileUtils.rm_f #{Assertions.download_directory}/#{filename}"
     FileUtils.rm_f "#{Assertions.download_directory}/#{filename}"
   end
 end

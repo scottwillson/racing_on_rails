@@ -36,7 +36,7 @@ class TeamsTest < ApplicationSystemTestCase
     assert has_checked_field?("team_member_#{vanilla.id}")
     assert has_checked_field?("team_member_#{gl.id}")
     uncheck "team_member_#{gl.id}"
-    wait_for_no :field, "team_member_#{gl.id}", checked: true
+    assert_no_selector :field, "team_member_#{gl.id}", checked: true
 
     visit "/admin/teams"
     assert !has_checked_field?("team_member_#{gl.id}")

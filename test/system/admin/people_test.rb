@@ -84,7 +84,7 @@ class PeopleTest < ApplicationSystemTestCase
     if Time.zone.today.month < 12
       assert_selector "input.number[value='765']"
       click_link "destroy_number_#{matson.race_numbers.first.id}"
-      wait_for_no "input.number[value='765']"
+      assert_no_selector "input.number[value='765']"
 
       click_button "Save"
 
@@ -111,7 +111,7 @@ class PeopleTest < ApplicationSystemTestCase
     fill_in "name", with: "a\n"
 
     find("#person_#{alice.id}").drag_to(find("#person_#{molly.id}_row"))
-    wait_for_page_content "Merged A Penn into Molly Cameron"
+    assert_content "Merged A Penn into Molly Cameron"
     assert page.has_selector?(".alert-info")
     assert page.has_no_selector?(".alert-danger")
     assert !Person.exists?(alice.id), "Alice should be merged"
@@ -142,12 +142,12 @@ class PeopleTest < ApplicationSystemTestCase
 
     visit "/admin/people"
     press_return "name"
-    wait_for_ajax
+    assert_selector_ajax
     assert_selector "#people_table"
     assert_table("people_table", 1, 2, "Molly Cameron")
     assert_table("people_table", 2, 2, "Mark Matson")
     press_return "name"
-    wait_for_ajax
+    assert_selector_ajax
     assert_selector "#people_table"
     assert_table("people_table", 1, 2, "Molly Cameron")
     assert_table("people_table", 2, 2, "Mark Matson")

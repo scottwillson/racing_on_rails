@@ -18,7 +18,7 @@ class EventsTest < ApplicationSystemTestCase
 
     fill_in "event_name", with: "Sausalito Criterium"
     click_button "Save"
-    wait_for_page_content "Created Sausalito Criterium"
+    assert_content "Created Sausalito Criterium"
 
     visit "/admin/events"
     assert_page_has_content "Sausalito Criterium"
@@ -151,7 +151,7 @@ class EventsTest < ApplicationSystemTestCase
     find("#event_human_date_picker").click
     assert_selector ".datepicker-days td.day.old"
     first(".datepicker-days td.day.old", text: "31").click
-    wait_for_ajax
+    assert_selector_ajax
     assert_equal "Thursday, October 31, 2013", find("#event_human_date").value
     click_button "Save"
 
@@ -171,7 +171,7 @@ class EventsTest < ApplicationSystemTestCase
 
     visit_event kings_valley
 
-    wait_for_page_content "Senior Men Pro/1/2"
+    assert_content "Senior Men Pro/1/2"
     assert_page_has_content "Senior Men Pro/1/2"
     assert_page_has_content "Senior Men 3"
 
