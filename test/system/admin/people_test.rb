@@ -142,12 +142,10 @@ class PeopleTest < ApplicationSystemTestCase
 
     visit "/admin/people"
     press_return "name"
-    assert_selector_ajax
     assert_selector "#people_table"
     assert_table("people_table", 1, 2, "Molly Cameron")
     assert_table("people_table", 2, 2, "Mark Matson")
     press_return "name"
-    assert_selector_ajax
     assert_selector "#people_table"
     assert_table("people_table", 1, 2, "Molly Cameron")
     assert_table("people_table", 2, 2, "Mark Matson")

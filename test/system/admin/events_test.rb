@@ -151,12 +151,7 @@ class EventsTest < ApplicationSystemTestCase
     find("#event_human_date_picker").click
     assert_selector ".datepicker-days td.day.old"
     first(".datepicker-days td.day.old", text: "31").click
-<<<<<<< HEAD
-    assert has_field?("Date", with: "Thursday, October 31, 2013")
-=======
-    assert_selector_ajax
-    assert_equal "Thursday, October 31, 2013", find("#event_human_date").value
->>>>>>> 5d647e686... Fix more system tests
+    assert_field "Date", with: "Thursday, October 31, 2013"
     click_button "Save"
 
     assert_equal "Thursday, October 31, 2013", find("#event_human_date").value
@@ -175,10 +170,6 @@ class EventsTest < ApplicationSystemTestCase
 
     visit_event kings_valley
 
-<<<<<<< HEAD
-=======
-    assert_content "Senior Men Pro/1/2"
->>>>>>> 5d647e686... Fix more system tests
     assert_page_has_content "Senior Men Pro/1/2"
     assert_page_has_content "Senior Men 3"
 

@@ -13,6 +13,8 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     )
   end
 
+  Capybara.server = :puma, { Silent: true }
+
   setup :configure_webmock, :stub_elasticsearch
 
   include ::Actions
