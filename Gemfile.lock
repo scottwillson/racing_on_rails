@@ -192,7 +192,6 @@ GEM
     crass (1.0.6)
     dalli (2.7.10)
     damerau-levenshtein (1.3.2)
-    database_cleaner (1.8.4)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     elasticsearch (6.8.2)
@@ -492,7 +491,6 @@ DEPENDENCIES
   connection_pool
   dalli
   damerau-levenshtein
-  database_cleaner
   elasticsearch (>= 6, < 7)
   elasticsearch-model (>= 6, < 7)
   elasticsearch-rails (>= 6, < 7)
