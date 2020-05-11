@@ -90,4 +90,4 @@ blocks:
       jobs:
       - name: system tests
         commands:
-          - DISABLE_SPRING=1 bundle exec rails test:system
+          - bundle exec rails test:system
