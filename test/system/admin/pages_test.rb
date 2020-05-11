@@ -22,12 +22,6 @@ class PagesTest < ApplicationSystemTestCase
 
     assert_table "pages_table", 1, 2, "Schedule"
 
-    # Create new page
-    # 404 first
-    assert_raises(ActionController::RoutingError) do
-      visit "/officials"
-    end
-
     visit "/admin/pages"
 
     find(:xpath, "//a[@href='/admin/pages/new']").click
