@@ -96,6 +96,7 @@ blocks:
           - ssh-add ~/.ssh/semaphore-github-obra
           - git clone -b rails-6 git@github.com:scottwillson/obra-local.git local
           - chmod 0600 ~/.ssh/semaphore-github-registration-engine
+          - ssh-add -d ~/.ssh/semaphore-github-obra
           - ssh-add ~/.ssh/semaphore-github-registration-engine
           - rm -rf registration_engine
           - git clone -b rails-6 git@github.com:scottwillson/registration_engine.git
