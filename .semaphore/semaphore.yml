@@ -12,80 +12,80 @@ global_job_config:
     - name: semaphore_ssh_config
 
 blocks:
-  # - name: "Bundle gems"
-  #   task:
-  #     jobs:
-  #     - name: bundle gems
-  #       commands:
-  #         - sem-version ruby 2.6.4
-  #         - checkout
-  #         - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
-  #         - sudo apt-get install -y libmysqlclient-dev
-  #         - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
-  #         - gem install bundler:2.0.1
-  #         - gem install rake
-  #         - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
-  #         - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
+  - name: "Bundle gems"
+    task:
+      jobs:
+      - name: bundle gems
+        commands:
+          - sem-version ruby 2.6.4
+          - checkout
+          - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
+          - sudo apt-get install -y libmysqlclient-dev
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
+          - gem install bundler:2.0.1
+          - gem install rake
+          - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
+          - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
 
-  # - name: "Security"
-  #   task:
-  #     prologue:
-  #       commands:
-  #         - sem-version ruby 2.6.4
-  #         - checkout
-  #         - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
-  #         - sudo apt-get install -y libmysqlclient-dev
-  #         - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
-  #         - gem install bundler:2.0.1
-  #         - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
-  #     jobs:
-  #     - name: Brakeman
-  #       commands:
-  #         - bundle exec brakeman
-  #         - bundle exec bundle-audit
-  #
-  # - name: "Unit tests"
-  #   task:
-  #     prologue:
-  #       commands:
-  #         - sem-version ruby 2.6.4
-  #         - checkout
-  #         - sudo apt-get install -y libmysqlclient-dev
-  #         - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
-  #         - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
-  #         - gem install bundler:2.0.1
-  #         - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
-  #         - sem-service start mysql 5.7
-  #         - mv config/semaphore_database.yml config/database.yml
-  #         - bundle exec rake db:setup
-  #         - bundle exec rake db:test:prepare
-  #     jobs:
-  #     - name: unit tests
-  #       commands:
-  #         - bin/test && bundle exec rails test
-  #         - exitcode=$(if [ "$SEMAPHORE_JOB_RESULT" == "failed" ]; then echo 1; else echo 0; fi)
-  #     secrets:
-  #       - name: environmental_variables
-  #
-  # - name: "System tests"
-  #   task:
-  #     prologue:
-  #       commands:
-  #         - sem-version ruby 2.6.4
-  #         - checkout
-  #         - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
-  #         - sudo apt-get install -y libmysqlclient-dev
-  #         - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
-  #         - gem install bundler:2.0.1
-  #         - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
-  #         - sem-service start mysql 5.7
-  #         - mv config/semaphore_database.yml config/database.yml
-  #         - bundle exec rake db:setup
-  #         - bundle exec rake db:test:prepare
-  #     jobs:
-  #     - name: system tests
-  #       commands:
-  #         - bundle exec rails test:system
+  - name: "Security"
+    task:
+      prologue:
+        commands:
+          - sem-version ruby 2.6.4
+          - checkout
+          - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
+          - sudo apt-get install -y libmysqlclient-dev
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
+          - gem install bundler:2.0.1
+          - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
+      jobs:
+      - name: Brakeman
+        commands:
+          - bundle exec brakeman
+          - bundle exec bundle-audit
+
+  - name: "Unit tests"
+    task:
+      prologue:
+        commands:
+          - sem-version ruby 2.6.4
+          - checkout
+          - sudo apt-get install -y libmysqlclient-dev
+          - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
+          - gem install bundler:2.0.1
+          - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
+          - sem-service start mysql 5.7
+          - mv config/semaphore_database.yml config/database.yml
+          - bundle exec rake db:setup
+          - bundle exec rake db:test:prepare
+      jobs:
+      - name: unit tests
+        commands:
+          - bin/test && bundle exec rails test
+          - exitcode=$(if [ "$SEMAPHORE_JOB_RESULT" == "failed" ]; then echo 1; else echo 0; fi)
+      secrets:
+        - name: environmental_variables
+
+  - name: "System tests"
+    task:
+      prologue:
+        commands:
+          - sem-version ruby 2.6.4
+          - checkout
+          - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
+          - sudo apt-get install -y libmysqlclient-dev
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
+          - gem install bundler:2.0.1
+          - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
+          - sem-service start mysql 5.7
+          - mv config/semaphore_database.yml config/database.yml
+          - bundle exec rake db:setup
+          - bundle exec rake db:test:prepare
+      jobs:
+      - name: system tests
+        commands:
+          - bundle exec rails test:system
 
   - name: "Registration engine security"
     task:
@@ -115,13 +115,12 @@ blocks:
         commands:
           - sem-version ruby 2.6.4
           - checkout
-          - chmod 0600 ~/.ssh/semaphore-github-obra
-          - ssh-add ~/.ssh/semaphore-github-obra
-          - git clone -b rails-6 git@github.com:scottwillson/obra-local.git local
-          - chmod 0600 ~/.ssh/semaphore-github-registration-engine
-          - ssh-add ~/.ssh/semaphore-github-registration-engine
+          - cat /home/semaphore/semaphore_ssh_config >> /home/semaphore/.ssh/config
+          - chmod 0600 /home/semaphore/.ssh/semaphore-github-obra
+          - git clone -b rails-6 git@github.com-obra:scottwillson/obra-local.git local
+          - chmod 0600 /home/semaphore/.ssh/semaphore-github-registration-engine
           - rm -rf registration_engine
-          - git clone -b rails-6 git@github.com:scottwillson/registration_engine.git
+          - git clone -b rails-6 git@github.com-registration-engine:scottwillson/registration_engine.git
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
@@ -144,13 +143,12 @@ blocks:
         commands:
           - sem-version ruby 2.6.4
           - checkout
-          - chmod 0600 ~/.ssh/semaphore-github-obra
-          - ssh-add ~/.ssh/semaphore-github-obra
-          - git clone -b rails-6 git@github.com:scottwillson/obra-local.git local
-          - chmod 0600 ~/.ssh/semaphore-github-registration-engine
-          - ssh-add ~/.ssh/semaphore-github-registration-engine
+          - cat /home/semaphore/semaphore_ssh_config >> /home/semaphore/.ssh/config
+          - chmod 0600 /home/semaphore/.ssh/semaphore-github-obra
+          - git clone -b rails-6 git@github.com-obra:scottwillson/obra-local.git local
+          - chmod 0600 /home/semaphore/.ssh/semaphore-github-registration-engine
           - rm -rf registration_engine
-          - git clone -b rails-6 git@github.com:scottwillson/registration_engine.git
+          - git clone -b rails-6 git@github.com-registration-engine:scottwillson/registration_engine.git
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
