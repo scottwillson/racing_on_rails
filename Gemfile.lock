@@ -37,10 +37,12 @@ GIT
       rubyzip (>= 1.2.1, < 2.0.0)
 
 PATH
-  remote: registration_engine
+  remote: ../registration_engine
   specs:
-    registration_engine (0.1.0)
+    registration_engine (0.2.0)
+      activemerchant
       rails (~> 6.0.3)
+      stripe
 
 GEM
   remote: https://rubygems.org/

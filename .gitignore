@@ -35,6 +35,7 @@ public/export/*.csv
 public/export/*.txt
 public/local
 public/uploads
+registration_engine
 results.csv
 tmp/*
 tmp/**/*
