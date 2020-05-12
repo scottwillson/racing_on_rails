@@ -92,8 +92,10 @@ blocks:
         commands:
           - sem-version ruby 2.6.4
           - checkout
+          - chmod 0600 ~/.ssh/semaphore-github-obra
           - ssh-add ~/.ssh/semaphore-github-obra
           - git clone -b rails-6 git@github.com:scottwillson/obra_local.git local
+          - chmod 0600 ~/.ssh/semaphore-github-registration-engine
           - ssh-add ~/.ssh/semaphore-github-registration-engine
           - git clone -b rails-6 git@github.com:scottwillson/registration_engine.git
           - sudo apt-get install -y libmysqlclient-dev
