@@ -89,9 +89,6 @@ blocks:
 
   - name: "Registration engine security"
     task:
-      secrets:
-        - name: obra-ssh-key
-        - name: registration-engine-ssh-key
       prologue:
         commands:
           - sem-version ruby 2.6.4
