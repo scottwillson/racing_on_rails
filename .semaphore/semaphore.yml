@@ -93,7 +93,7 @@ blocks:
         commands:
           - sem-version ruby 2.6.4
           - checkout
-          - cat semaphore_ssh_config >> ~/.ssh/config
+          - cat /home/semaphore/semaphore_ssh_config >> ~/.ssh/config
           - chmod 0600 ~/.ssh/semaphore-github-obra
           - ssh-add ~/.ssh/semaphore-github-obra
           - git clone -b rails-6 git@github.com-obra:scottwillson/obra-local.git local
