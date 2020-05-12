@@ -53,16 +53,12 @@ blocks:
           - mv config/semaphore_database.yml config/database.yml
           - bundle exec rake db:setup
           - bundle exec rake db:test:prepare
-          # - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          # - chmod +x ./cc-test-reporter
-          # - ./cc-test-reporter before-build
       jobs:
       - name: unit tests
         commands:
           - bin/test
           - bundle exec rails test
           - exitcode=$(if [ "$SEMAPHORE_JOB_RESULT" == "failed" ]; then echo 1; else echo 0; fi)
-          # - ./cc-test-reporter after-build --exit-code $exitcode -t simplecov
       secrets:
         - name: environmental_variables
 
@@ -85,3 +81,67 @@ blocks:
       - name: system tests
         commands:
           - bundle exec rails test:system
+
+  - name: "Registration engine security"
+    task:
+      prologue:
+        commands:
+          - sem-version ruby 2.6.4
+          - checkout
+          - git clone https://github.com/scottwillson/obra_local.git local
+          - git clone https://github.com/scottwillson/registration_engine.git registration_engine
+          - sudo apt-get install -y libmysqlclient-dev
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
+          - gem install bundler:2.0.1
+          - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
+      jobs:
+      - name: Brakeman
+        commands:
+          - bundle exec brakeman
+          - bundle exec bundle-audit
+
+  - name: "OBRA unit tests"
+    task:
+      prologue:
+        commands:
+          - sem-version ruby 2.6.4
+          - checkout
+          - sudo apt-get install -y libmysqlclient-dev
+          - git clone https://github.com/scottwillson/obra_local.git local
+          - git clone https://github.com/scottwillson/registration_engine.git registration_engine
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
+          - gem install bundler:2.0.1
+          - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
+          - sem-service start mysql 5.7
+          - mv config/semaphore_database.yml config/database.yml
+          - bundle exec rake db:setup
+          - bundle exec rake db:test:prepare
+      jobs:
+      - name: unit tests
+        commands:
+          - bin/test
+          - bundle exec rails test test/ registration_engine/test/
+          - exitcode=$(if [ "$SEMAPHORE_JOB_RESULT" == "failed" ]; then echo 1; else echo 0; fi)
+      secrets:
+        - name: environmental_variables
+
+  - name: "OBRA system tests"
+    task:
+      prologue:
+        commands:
+          - sem-version ruby 2.6.4
+          - checkout
+          - git clone https://github.com/scottwillson/obra_local.git local
+          - git clone https://github.com/scottwillson/registration_engine.git registration_engine
+          - sudo apt-get install -y libmysqlclient-dev
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
+          - gem install bundler:2.0.1
+          - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
+          - sem-service start mysql 5.7
+          - mv config/semaphore_database.yml config/database.yml
+          - bundle exec rake db:setup
+          - bundle exec rake db:test:prepare
+      jobs:
+      - name: system tests
+        commands:
+          - bundle exec rails test test/system registration_engine/test/system
