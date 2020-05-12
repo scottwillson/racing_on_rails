@@ -13,7 +13,7 @@ blocks:
         commands:
           - sem-version ruby 2.6.4
           - checkout
-          - git clone -b rails-6 https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
+          - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
