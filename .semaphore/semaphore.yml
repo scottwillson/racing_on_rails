@@ -9,6 +9,7 @@ global_job_config:
   secrets:
     - name: semaphore-github-obra
     - name: semaphore-github-registration-engine
+    - name: semaphore_ssh_config
 
 blocks:
   - name: "Bundle gems"
