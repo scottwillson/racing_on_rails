@@ -1,9 +1,5 @@
-*.bbprojectd
-*.rbc
-*.sublime-*
 *.swp
 *.tmproj
-*sublime*
 *~
 .bundle
 .capistrano
@@ -17,7 +13,6 @@
 .sass-cache
 .tm_properties
 ._*
-/.idea/
 /local
 chromedriver.log
 coverage

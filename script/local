@@ -1,5 +1,4 @@
 #! /usr/bin/env ruby
-# frozen_string_literal: true
 
 # Simple script to switch local directories for dev
 
@@ -7,13 +6,7 @@ require "fileutils"
 
 `spring stop`
 
-begin
-  `rm -rf public/local/public`
-rescue StandardError
-  nil
-end
-
-["local", "public/local"].each do |dir_name|
+["local"].each do |dir_name|
   FileUtils.rm dir_name if File.symlink?(dir_name)
 end
 
@@ -21,14 +14,14 @@ FileUtils.rm_rf "tmp/cache/assets" if Dir.exist?("tmp/cache/assets")
 
 association = ARGV[0]
 
+FileUtils.rm_f "local"
 unless association.nil?
   `ln -s ../racing_on_rails_local/#{association} local`
-  `ln -s ../../racing_on_rails_local/#{association}/public public/local` if Dir.exist?("../../racing_on_rails_local/#{association}/public")
 end
 
-# TODO: switch out Gemfile
-# if association == "obra" || association == "nabra"
-#   `ln -s ../../registration_engine registration_engine` unless File.exist?("egistration_engine")
-# else
-#   FileUtils.rm "registration_engine" if File.exist?("registration_engine")
-# end
+FileUtils.rm_f "registration_engine"
+if association == "obra" || association == "nabra"
+  `ln -s ../registration_engine registration_engine`
+else
+  `ln -s ../registration_engine_public_stub registration_engine`
+end

@@ -11,8 +11,9 @@ blocks:
       jobs:
       - name: bundle gems
         commands:
-          - sem-version ruby 2.6.2
+          - sem-version ruby 2.6.4
           - checkout
+          - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
@@ -24,8 +25,9 @@ blocks:
     task:
       prologue:
         commands:
-          - sem-version ruby 2.6.2
+          - sem-version ruby 2.6.4
           - checkout
+          - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
@@ -40,9 +42,10 @@ blocks:
     task:
       prologue:
         commands:
-          - sem-version ruby 2.6.2
+          - sem-version ruby 2.6.4
           - checkout
           - sudo apt-get install -y libmysqlclient-dev
+          - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
           - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
@@ -67,8 +70,9 @@ blocks:
     task:
       prologue:
         commands:
-          - sem-version ruby 2.6.2
+          - sem-version ruby 2.6.4
           - checkout
+          - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
