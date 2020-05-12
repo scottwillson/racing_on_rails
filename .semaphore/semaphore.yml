@@ -5,6 +5,11 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 
+global_job_config:
+  secrets:
+    - name: obra-ssh-key
+    - name: registration-engine-ssh-key
+
 blocks:
   - name: "Bundle gems"
     task:
@@ -83,9 +88,6 @@ blocks:
 
   - name: "Registration engine security"
     task:
-      secrets:
-        - name: obra-ssh-key
-        - name: registration-engine-ssh-key
       prologue:
         commands:
           - sem-version ruby 2.6.4
