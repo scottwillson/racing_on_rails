@@ -19,7 +19,7 @@ blocks:
         commands:
           - sem-version ruby 2.7.1
           - checkout
-          - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
+          - git clone -b rails-6https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
@@ -94,8 +94,8 @@ blocks:
         commands:
           - sem-version ruby 2.6.4
           - checkout
-          - git clone https://github.com/scottwillson/obra_local.git local
-          - git clone https://github.com/scottwillson/registration_engine.git registration_engine
+          - git clone -b rails-6 https://github.com/scottwillson/obra_local.git local
+          - git clone -b rails-6 https://github.com/scottwillson/registration_engine.git registration_engine
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
@@ -113,8 +113,8 @@ blocks:
           - sem-version ruby 2.6.4
           - checkout
           - sudo apt-get install -y libmysqlclient-dev
-          - git clone https://github.com/scottwillson/obra_local.git local
-          - git clone https://github.com/scottwillson/registration_engine.git registration_engine
+          - git clone -b rails-6 https://github.com/scottwillson/obra_local.git local
+          - git clone -b rails-6 https://github.com/scottwillson/registration_engine.git registration_engine
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
           - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
@@ -137,8 +137,8 @@ blocks:
         commands:
           - sem-version ruby 2.6.4
           - checkout
-          - git clone https://github.com/scottwillson/obra_local.git local
-          - git clone https://github.com/scottwillson/registration_engine.git registration_engine
+          - git clone -b rails-6 https://github.com/scottwillson/obra_local.git local
+          - git clone -b rails-6 https://github.com/scottwillson/registration_engine.git registration_engine
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
