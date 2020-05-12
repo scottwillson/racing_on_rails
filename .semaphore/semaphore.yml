@@ -94,7 +94,7 @@ blocks:
           - checkout
           - chmod 0600 ~/.ssh/semaphore-github-obra
           - ssh-add ~/.ssh/semaphore-github-obra
-          - git clone -b rails-6 git@github.com:scottwillson/obra.git local
+          - git clone -b rails-6 git@github.com:scottwillson/obra-local.git local
           - chmod 0600 ~/.ssh/semaphore-github-registration-engine
           - ssh-add ~/.ssh/semaphore-github-registration-engine
           - git clone -b rails-6 git@github.com:scottwillson/registration_engine.git
@@ -115,7 +115,7 @@ blocks:
           - sem-version ruby 2.6.4
           - checkout
           - sudo apt-get install -y libmysqlclient-dev
-          - git clone -b rails-6 git@github.com:scottwillson/obra.git local
+          - git clone -b rails-6 git@github.com:scottwillson/obra-local.git local
           - git clone -b rails-6 git@github.com:scottwillson/registration_engine.git
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
@@ -138,7 +138,7 @@ blocks:
         commands:
           - sem-version ruby 2.6.4
           - checkout
-          - git clone -b rails-6 git@github.com:scottwillson/obra.git local
+          - git clone -b rails-6 git@github.com:scottwillson/obra-local.git local
           - git clone -b rails-6 git@github.com:scottwillson/registration_engine.git
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
