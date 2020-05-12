@@ -3,5 +3,7 @@
 set -e
 
 DISABLE_SPRING=1 bundle exec rake test:ruby
-bundle exec rails test test/ registration_engine/test/
-bundle exec rails test test/system registration_engine/test/system
+bundle exec rails test
+bundle exec rails test registration_engine/test/{controllers,helpers,integration,mailers,models}/**/*_test.rb
+bundle exec rails test:system
+bundle exec rails test registration_engine/test/system
