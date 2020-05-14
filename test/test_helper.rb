@@ -8,7 +8,7 @@ require "mocha/minitest"
 require "authlogic/test_case"
 require "test/enumerable_assertions"
 require "webmock/minitest"
-require_relative "./elasticsearch_stubs"
+require "elasticsearch_stubs"
 
 class ActiveSupport::TestCase
   parallelize(workers: :number_of_processors)
