@@ -277,8 +277,6 @@ Rails.application.routes.draw do
     get "/" => "home#index", as: :root
     resource :home, controller: :home
 
-    mount RegistrationEngine::Engine, at: "/"
-
     get "*path", to: "pages#show", constraints: Pages::Constraint.new
 
     if Rails.env.test?
