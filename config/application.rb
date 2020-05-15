@@ -37,13 +37,13 @@ module RacingOnRails
 
     # require "#{config.root}/lib/registration_engine/lib/registration_engine/engine" if Dir.exist?("#{config.root}/lib/registration_engine")
 
-    # def exception_notifier
-    #   if Rails.env.production? || Rails.env.staging?
-    #     Raygun
-    #   else
-    #     require "exception_notification/logging"
-    #     ExceptionNotification::Logging
-    #   end
-    # end
+    def exception_notifier
+      if Rails.env.production? || Rails.env.staging?
+        Raygun
+      else
+        require "exception_notification/logging"
+        ExceptionNotification::Logging
+      end
+    end
   end
 end
