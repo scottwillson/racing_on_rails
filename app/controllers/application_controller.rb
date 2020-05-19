@@ -15,9 +15,13 @@ class ApplicationController < ActionController::Base
   include Mobile
   include SentientController
 
-  before_action :clear_racing_association, :toggle_tabs, :allow_iframes, :set_paper_trail_whodunnit
+  before_action :clear_racing_association, :toggle_tabs, :allow_iframes, :set_paper_trail_whodunnit, :prepend_views
 
-  protected
+  private
+
+  def prepend_views
+    prepend_view_path "#{::Rails.root}/local/app/views"
+  end
 
   def clear_racing_association
     RacingAssociation.current = nil
