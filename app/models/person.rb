@@ -6,6 +6,8 @@ require "sentient_user/sentient_user"
 #
 # Names are _not_ unique. In fact, there are many business rules about names. See Aliases and Names.
 class Person < ApplicationRecord
+  LOGIN_FORMAT = /\A\w[\w\.+\-_@ ]+\z/.freeze
+
   include Comparable
   include Export::People
   include Names::Nameable
@@ -31,7 +33,7 @@ class Person < ApplicationRecord
 
   validates :login,
             allow_blank: true,
-            format: { with: URI::MailTo::EMAIL_REGEXP, message: "should use only letters, numbers, spaces, and .-_@ please" },
+            format: { with: LOGIN_FORMAT, message: "should use only letters, numbers, spaces, and .-_@ please" },
             length: { in: 3..100 },
             uniqueness: { case_sensitive: false }
 
