@@ -87,7 +87,7 @@ GEM
     activejob (6.0.3.1)
       activesupport (= 6.0.3.1)
       globalid (>= 0.3.6)
-    activemerchant (1.107.1)
+    activemerchant (1.107.3)
       activesupport (>= 4.2)
       builder (>= 2.1.2, < 4.0.0)
       i18n (>= 0.6.9)
@@ -413,7 +413,7 @@ GEM
     sshkit (1.21.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stripe (5.21.0)
+    stripe (5.22.0)
     tabular (0.4.7)
     therubyracer (0.12.3)
       libv8 (~> 3.16.14.15)
@@ -461,7 +461,6 @@ PLATFORMS
 
 DEPENDENCIES
   Ascii85
-  activemerchant
   activemodel-serializers-xml
   acts_as_tree!
   authlogic
@@ -531,7 +530,6 @@ DEPENDENCIES
   spreadsheet
   spring
   spring-watcher-listen (~> 2.0.0)
-  stripe
   tabular (= 0.4.7)
   therubyracer
   timecop
