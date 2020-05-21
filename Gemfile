@@ -5,7 +5,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem "rails", "~> 6.0.3"
 
-gem "activemerchant"
 gem "activemodel-serializers-xml"
 gem "acts_as_tree", git: "https://github.com/amerine/acts_as_tree.git"
 gem "Ascii85", require: "ascii85"
@@ -48,7 +47,6 @@ gem "rubyzip"
 gem "sass-rails"
 gem "scrypt"
 gem "spreadsheet"
-gem "stripe"
 gem "tabular", "0.4.7"
 gem "uglifier"
 gem "will_paginate"
