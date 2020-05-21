@@ -3,25 +3,20 @@ require:
   - rubocop-rails
 
 AllCops:
+  NewCops: enable
   TargetRubyVersion: 2.6
   TargetRailsVersion: 6.0
 
 Rails:
   Enabled: true
 
-ClassLength:
-  Enabled: false
-
-Documentation:
-  Enabled: false
+Layout/LineLength:
+  Max: 160
 
 Layout/SpaceInsidePercentLiteralDelimiters:
   Enabled: false
 
-LineLength:
-  Max: 160
-
-MethodLength:
+Metrics/MethodLength:
   Enabled: false
 
 Metrics/AbcSize:
@@ -44,11 +39,14 @@ Naming/VariableNumber:
 Rails/FilePath:
   Enabled: false
 
-SingleLineBlockParams:
+Style/SingleLineBlockParams:
   Enabled: false
 
-StringLiterals:
+Style/StringLiterals:
   EnforcedStyle: double_quotes
+
+Style/Documentation:
+  Enabled: false
 
 Style/GuardClause:
   Enabled: false
