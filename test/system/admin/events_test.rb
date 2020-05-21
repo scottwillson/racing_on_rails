@@ -179,7 +179,9 @@ class EventsTest < ApplicationSystemTestCase
     visit "/admin/events?year=2003"
     visit_event kings_valley
 
-    click_link "destroy_races"
+    accept_confirm do
+      click_link "destroy_races"
+    end
     assert_page_has_no_content "Senior Men Pro/1/2"
 
     visit "/admin/events?year=2003"
