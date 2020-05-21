@@ -170,19 +170,19 @@ class EventsTest < ApplicationSystemTestCase
 
     visit_event kings_valley
 
-    assert_page_has_content "Senior Men Pro/1/2"
-    assert_page_has_content "Senior Men 3"
+    assert_content "Senior Men Pro/1/2"
+    assert_content "Senior Men 3"
 
     kings_valley = Event.find_by(name: "Kings Valley Road Race", date: "2003-12-31")
     click_link "destroy_race_#{race_1.id}"
 
     visit "/admin/events?year=2003"
     visit_event kings_valley
+    assert_no_content "Senior Men Pro/1/2"
+    assert_content "Senior Men 3"
 
-    accept_confirm do
-      click_link "destroy_races"
-    end
-    assert_page_has_no_content "Senior Men Pro/1/2"
+    click_link "destroy_races"
+    assert_no_content "Senior Men 3"
 
     visit "/admin/events?year=2003"
 

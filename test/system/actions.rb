@@ -158,5 +158,6 @@ module Actions
 
   def visit_event(event)
     click_link event.name
+    assert_selector ".edit_event"
   end
 end
