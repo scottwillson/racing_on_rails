@@ -180,7 +180,9 @@ class EventsTest < ApplicationSystemTestCase
     visit "/admin/events?year=2003"
     visit_event kings_valley
 
-    click_link "destroy_races"
+    accept_confirm do
+      click_link "destroy_races"
+    end
     assert_page_has_no_content "Senior Men Pro/1/2"
 
     visit "/admin/events?year=2003"
@@ -220,6 +222,6 @@ class EventsTest < ApplicationSystemTestCase
     assert_selector "#edit_all"
     assert page.has_css?("td.race", text: "Men A")
     assert page.has_css?("td.race", text: "Men B")
-    assert !page.has_css?("td.race", text: "Women")
+    assert page.has_no_css?("td.race", text: "Women")
   end
 end
