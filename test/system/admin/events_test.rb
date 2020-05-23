@@ -181,7 +181,9 @@ class EventsTest < ApplicationSystemTestCase
     assert_no_content "Senior Men Pro/1/2"
     assert_content "Senior Men 3"
 
-    click_link "destroy_races"
+    accept_confirm do
+      click_link "destroy_races"
+    end
     assert_no_content "Senior Men 3"
 
     visit "/admin/events?year=2003"
