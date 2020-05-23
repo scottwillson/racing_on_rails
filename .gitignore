@@ -18,14 +18,12 @@
 chromedriver.log
 coverage
 db/*.sqlite3
-db/acceptance_structure.sql
 db/production.sql
 doc/app
 doc/README_FOR_APP
 lib/registration_engine
 libpeerconnection.log
 log/*.log
-log/acceptance
 mkmf.log
 public/export
 public/export/*.csv
