@@ -28,6 +28,8 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include ::Assertions
 
   def assert_no_java_script_errors
+    return if @failures.present?
+
     logs = page.driver.browser.manage.logs.get(:browser)
     errors = logs.select { |log| log.level == "SEVERE" }
     return if errors.none?
