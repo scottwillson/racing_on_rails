@@ -11,7 +11,8 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     allow_localhost: true
   )
 
-  driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400] do |driver_option|
+  system_test_driver = ENV["SYSTEM_TEST_DRIVER"]&.to_sym || :headless_chrome
+  driven_by :selenium, using: system_test_driver, screen_size: [1400, 1400] do |driver_option|
     driver_option.add_preference(
       :download,
       default_directory: ::Assertions.download_directory
