@@ -15,6 +15,7 @@
 .ruby-version
 .rvmrc
 .sass-cache
+.semaphore_ssh_config
 .tm_properties
 ._*
 /.idea/
