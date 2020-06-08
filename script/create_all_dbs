@@ -6,7 +6,7 @@ puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists raci
 puts `mysql -u root < db/grants.sql`
 puts `DISABLE_SPRING=1 rake db:setup RAILS_ENV=test`
 puts `DISABLE_SPRING=1 rake db:setup`
-(1..7).each do |index|
+(1..16).each do |index|
   puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists racing_on_rails_test#{index}'`
 end
 
@@ -20,7 +20,7 @@ puts `DISABLE_SPRING=1 rake parallel:setup`
   puts `mysql -u root -e 'create user if not exists '#{association}_development'@'localhost';'`
   puts `mysql -u root -e 'grant all privileges on #{association}_development.* to '#{association}_development'@'localhost';'`
   puts `mysql -u root -e 'create user if not exists '#{association}_test'@'localhost';'`
-  (1..7).each do |index|
+  (1..16).each do |index|
     puts `mysql -u root -e 'set foreign_key_checks = 0; drop database if exists #{association}_test#{index}'`
   end
   puts %x(mysql -u root -e 'grant all privileges on `#{association}_test`.* to #{association}_test@localhost')
