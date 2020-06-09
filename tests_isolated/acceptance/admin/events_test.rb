@@ -153,7 +153,7 @@ class EventsTest < AcceptanceTest
     find("#event_human_date_picker").click
     assert_selector ".datepicker-days td.day.old"
     first(".datepicker-days td.day.old", text: "31").click
-    assert_field "Date", with: "Thursday, October 31, 2013"
+    assert has_field?("Date", with: "Thursday, October 31, 2013")
     click_button "Save"
 
     assert_equal "Thursday, October 31, 2013", find("#event_human_date").value
