@@ -1,6 +1,7 @@
 <% if RacingAssociation.current.show_calendar_view? && !mobile_request? -%>
   <%= tabs(calendar_tab) do |tabs|
-      tabs.add("Calendar", schedule_path)
-      tabs.add("List with race organizer contact information", schedule_list_path)
+      tabs.add("Races", schedule_path)
+      tabs.add("Races list with contact information", schedule_list_path)
+      tabs.add("Community", schedule_index_path(discipline: "community", year: RacingAssociation.current.effective_year))
   end -%>
 <% end -%>

@@ -122,6 +122,7 @@ blocks:
           - rm -rf registration_engine
           - git clone -b rails-6 git@github.com-registration-engine:scottwillson/registration_engine.git
           - sudo apt-get install -y libmysqlclient-dev
+          - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
           - gem install bundler:2.0.1
           - bundle install --deployment -j 4 --path vendor/bundle --without production,staging
