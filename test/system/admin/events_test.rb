@@ -18,7 +18,7 @@ class EventsTest < ApplicationSystemTestCase
 
     fill_in "event_name", with: "Sausalito Criterium"
     click_button "Save"
-    assert_content "Created Sausalito Criterium"
+    assert_text "Created Sausalito Criterium"
 
     visit "/admin/events"
     assert_page_has_content "Sausalito Criterium"
@@ -40,17 +40,17 @@ class EventsTest < ApplicationSystemTestCase
     assert_page_has_content "Sausalito Criterium"
     click_link "Sausalito Criterium"
 
-    select_new_event("event_parent", "California Cup")
+    select_new_event "event_parent", "California Cup"
     click_button "Save"
-    assert_page_has_content "Sausalito Criterium"
+    assert_page_has_content "Updated Sausalito Criterium"
     parent_id = Event.find_by(name: "California Cup").id.to_s
-    assert_equal "California Cup", find("#event_parent_name", visible: false).value
-    assert_equal parent_id, find("#event_parent_id", visible: false).value
+    assert_equal "California Cup", find("#event_parent_name", visible: :hidden).value
+    assert_equal parent_id, find("#event_parent_id", visible: :hidden).value
 
     click_button "event_parent_remove_button"
     click_button "Save"
-    assert_equal "", find("#event_parent_name", visible: false).value
-    assert_equal "", find("#event_parent_id", visible: false).value
+    assert_equal "", find("#event_parent_name", visible: :hidden).value
+    assert_equal "", find("#event_parent_id", visible: :hidden).value
 
     select_existing_event("event_parent", "California Cup")
     click_button "Save"
@@ -170,8 +170,8 @@ class EventsTest < ApplicationSystemTestCase
 
     visit_event kings_valley
 
-    assert_content "Senior Men Pro/1/2"
-    assert_content "Senior Men 3"
+    assert_text "Senior Men Pro/1/2"
+    assert_text "Senior Men 3"
 
     kings_valley = Event.find_by(name: "Kings Valley Road Race", date: "2003-12-31")
     click_link "destroy_race_#{race_1.id}"
@@ -179,7 +179,7 @@ class EventsTest < ApplicationSystemTestCase
     visit "/admin/events?year=2003"
     visit_event kings_valley
     assert_no_content "Senior Men Pro/1/2"
-    assert_content "Senior Men 3"
+    assert_text "Senior Men 3"
 
     accept_confirm do
       click_link "destroy_races"
@@ -194,11 +194,11 @@ class EventsTest < ApplicationSystemTestCase
 
     click_link "new_event"
     assert_page_has_content "Kings Valley Road Race"
-    assert_equal kings_valley.to_param, find("#event_parent_id", visible: false).value
+    assert_equal kings_valley.to_param, find("#event_parent_id", visible: :hidden).value
 
     fill_in "event_name", with: "Fancy New Child Event"
     click_button "Save"
-    assert_equal kings_valley.to_param, find("#event_parent_id", visible: false).value
+    assert_equal kings_valley.to_param, find("#event_parent_id", visible: :hidden).value
 
     visit "/admin/events/#{kings_valley.id}/edit"
     assert_page_has_content "Fancy New Child Event"
