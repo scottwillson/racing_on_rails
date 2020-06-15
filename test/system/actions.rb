@@ -135,17 +135,20 @@ module Actions
   end
 
   def select_existing(type, field, name, search_for)
+    assert_no_selector ".modal.in"
     search_for ||= name
     click_button "#{field}_select_modal_button"
     assert_selector ".modal.in"
     fill_in "name", with: search_for
 
     find("tr[data-#{type}-name=\"#{name}\"]").click
-    assert_equal name, find("##{field}_name", visible: false).value
+    find("##{field}_name[value=\"#{name}\"]", visible: :hidden)
     assert_equal name, find("##{field}_select_modal_button").text
+    assert_no_selector ".modal.in"
   end
 
   def select_new(type, field, name)
+    assert_no_selector ".modal.in"
     click_button "#{field}_select_modal_button"
     assert_selector ".modal.in"
     find("#show_#{field}_new_modal").click
@@ -154,6 +157,8 @@ module Actions
     fill_in "#{field}_new_#{type}_name", with: name
     find_field("#{field}_new_#{type}_name", wait: 4, with: name)
     find("##{field}_select_modal_new_#{type}_create").click
+    find("##{field}_name[value=\"#{name}\"]", visible: :hidden)
+    assert_no_selector ".modal.in"
   end
 
   def visit_event(event)
