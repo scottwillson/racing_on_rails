@@ -102,18 +102,16 @@ class Event < ApplicationRecord
   end
 
   def self.upcoming(weeks = 2)
-    single_day_events   = upcoming_single_day_events(weeks)
-    multi_day_events    = upcoming_multi_day_events(weeks)
-    series_child_events = upcoming_series_child_events(weeks, multi_day_events)
-
+    single_day_events = upcoming_single_day_events(weeks)
     if association_sanctioned_only?
       single_day_events = single_day_events.default_sanctioned_by
-      multi_day_events = multi_day_events.default_sanctioned_by
-      series_child_events = series_child_events.default_sanctioned_by
     end
 
-    # TODO: Need to make this lazy-load again
-    single_day_events + multi_day_events + series_child_events
+    multi_day_events = multi_day_events(single_day_events)
+    multi_day_event_ids = multi_day_events.ids
+    single_day_events = single_day_events.reject { |event| multi_day_event_ids.include?(event.parent_id) }
+
+    single_day_events + multi_day_events
   end
 
   def self.association_sanctioned_only?
@@ -123,31 +121,19 @@ class Event < ApplicationRecord
 
   def self.upcoming_single_day_events(weeks)
     SingleDayEvent
-      .not_child
       .where(postponed: false)
       .where(canceled: false)
       .where(practice: false)
       .upcoming_in_weeks(weeks)
   end
 
-  def self.upcoming_multi_day_events(weeks)
+  def self.multi_day_events(single_day_events)
     MultiDayEvent
       .where(postponed: false)
       .where(canceled: false)
       .where(practice: false)
       .where(type: "MultiDayEvent")
-      .upcoming_in_weeks(weeks)
-  end
-
-  def self.upcoming_series_child_events(weeks, multi_day_events)
-    SingleDayEvent
-      .includes(parent: :parent)
-      .child
-      .where(postponed: false)
-      .where(canceled: false)
-      .where(practice: false)
-      .where.not(parent_id: multi_day_events)
-      .upcoming_in_weeks(weeks)
+      .where(id: single_day_events.map(&:parent_id))
   end
 
   # Defaults state to RacingAssociation.current.state, date to today, name to Untitled
