@@ -15,6 +15,8 @@ set :deploy_to, "/var/www/rails/#{fetch(:application)}"
 
 set :repo_url, "git://github.com/scottwillson/racing_on_rails.git"
 set :site_local_repo_url, "git@github.com:scottwillson/#{fetch(:application)}-local.git"
+set :site_local_repo_url_branch, "rails-6"
+set :branch, "rails-6"
 
 set :puma_conf, "#{shared_path}/config/puma.rb"
 
@@ -67,6 +69,6 @@ task :compress_assets_7z do
 end
 
 after "deploy:normalize_assets", "compress_assets_7z"
-before "deploy:updated", "deploy:local_code"
-before "deploy:updated", "deploy:registration_engine"
+before "bundler:install", "deploy:local_code"
+before "bundler:install", "deploy:registration_engine"
 after "deploy:finished", "deploy:cache_error_pages"
