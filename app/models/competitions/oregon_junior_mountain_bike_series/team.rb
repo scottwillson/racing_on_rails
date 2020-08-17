@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Competitions
-  module OregonJuniorCyclocrossSeries
+  module OregonJuniorMountainBikeSeries
     class Team < Competition
       def point_schedule
         (1..30).to_a.reverse
