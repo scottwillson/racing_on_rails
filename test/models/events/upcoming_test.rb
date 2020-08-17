@@ -190,4 +190,256 @@ class UpcomingTest < ActiveSupport::TestCase
       assert_equal_events [estacada_tt_2, estacada_tt_3], Event.upcoming
     end
   end
+
+  test "mixed canceled states" do
+    FactoryBot.create(:discipline, name: "Road")
+
+    SingleDayEvent.create!(date: Date.new(2020, 5, 31), name: "single past")
+    single = SingleDayEvent.create!(date: Date.new(2020, 6, 1), name: "single")
+    SingleDayEvent.create!(date: Date.new(2020, 6, 16), name: "single future")
+    SingleDayEvent.create!(date: Date.new(2020, 6, 1), name: "single canceled", canceled: true)
+
+    series = Series.create!(name: "past series")
+    series.children.create!(date: Date.new(2020, 5, 24))
+    series.children.create!(date: Date.new(2020, 5, 31))
+
+    series = Series.create!(name: "past and present series")
+    series.children.create!(date: Date.new(2020, 5, 31))
+    past_series_present_child = series.children.create!(date: Date.new(2020, 6, 2))
+
+    series = Series.create!(name: "past and present series parent canceled", canceled: true)
+    series.children.create!(date: Date.new(2020, 5, 31))
+    series.children.create!(date: Date.new(2020, 6, 2))
+
+    series = Series.create!(name: "past and present series child canceled")
+    series.children.create!(date: Date.new(2020, 5, 31))
+    series.children.create!(date: Date.new(2020, 6, 2), canceled: true)
+
+    series = Series.create!(name: "present series")
+    present_series_present_child = series.children.create!(date: Date.new(2020, 6, 2), name: "present series 1")
+    present_series_present_child_2 = series.children.create!(date: Date.new(2020, 6, 9), name: "present series 2")
+
+    series = Series.create!(name: "present series parent canceled", canceled: true)
+    series.children.create!(date: Date.new(2020, 6, 2), name: "present parent canceled series 1")
+    series.children.create!(date: Date.new(2020, 6, 9), name: "present  parent canceledseries 2")
+
+    series = Series.create!(name: "present series child canceled")
+    series.children.create!(date: Date.new(2020, 6, 2), name: "present parent canceled series 1", canceled: true)
+    series.children.create!(date: Date.new(2020, 6, 9), name: "present  parent canceledseries 2", canceled: true)
+
+    series = Series.create!(name: "present and future series")
+    future_series_present_child = series.children.create!(date: Date.new(2020, 6, 2))
+    series.children.create!(date: Date.new(2020, 6, 16))
+
+    series = Series.create!(name: "present and future series parent canceled", canceled: true)
+    series.children.create!(date: Date.new(2020, 6, 2))
+    series.children.create!(date: Date.new(2020, 6, 16))
+
+    series = Series.create!(name: "present and future series child canceled")
+    series.children.create!(date: Date.new(2020, 6, 2), canceled: true)
+    series.children.create!(date: Date.new(2020, 6, 16))
+
+    series = Series.create!(name: "present and future series future child canceled")
+    series_future_child_canceled = series.children.create!(date: Date.new(2020, 6, 2))
+    series.children.create!(date: Date.new(2020, 6, 16), canceled: true)
+
+    series = Series.create!(name: "future series")
+    series.children.create!(date: Date.new(2020, 6, 16))
+    series.children.create!(date: Date.new(2020, 6, 23))
+
+    past_multi_day_event = MultiDayEvent.create!(name: "past MultiDayEvent")
+    past_multi_day_event.children.create!(date: Date.new(2020, 5, 30))
+    past_multi_day_event.children.create!(date: Date.new(2020, 5, 31))
+
+    past_and_present_multi_day_event = MultiDayEvent.create!(name: "past and present MultiDayEvent")
+    past_and_present_multi_day_event.children.create!(date: Date.new(2020, 5, 31))
+    past_and_present_multi_day_event.children.create!(date: Date.new(2020, 6, 1))
+
+    canceled_multi_day_event = MultiDayEvent.create!(name: "past and present MultiDayEvent parent canceled", canceled: true)
+    canceled_multi_day_event.children.create!(date: Date.new(2020, 5, 31))
+    canceled_multi_day_event.children.create!(date: Date.new(2020, 6, 1))
+
+    multi_day_event_past_child_canceled = MultiDayEvent.create!(name: "past and present MultiDayEvent past child canceled")
+    multi_day_event_past_child_canceled.children.create!(date: Date.new(2020, 5, 31), canceled: true)
+    multi_day_event_past_child_canceled.children.create!(date: Date.new(2020, 6, 1))
+
+    multi_day_event_present_child_canceled = MultiDayEvent.create!(name: "past and present MultiDayEvent present child canceled")
+    multi_day_event_present_child_canceled.children.create!(date: Date.new(2020, 5, 31))
+    multi_day_event_present_child_canceled.children.create!(date: Date.new(2020, 6, 1), canceled: true)
+
+    multi_day_event = MultiDayEvent.create!(name: "present MultiDayEvent")
+    multi_day_event.children.create!(date: Date.new(2020, 6, 6))
+    multi_day_event.children.create!(date: Date.new(2020, 6, 7))
+
+    canceled_multi_day_event = MultiDayEvent.create!(name: "present MultiDayEvent parent canceled", canceled: true)
+    canceled_multi_day_event.children.create!(date: Date.new(2020, 6, 6))
+    canceled_multi_day_event.children.create!(date: Date.new(2020, 6, 7))
+
+    canceled_child_multi_day_event = MultiDayEvent.create!(name: "present MultiDayEvent child canceled")
+    canceled_child_multi_day_event.children.create!(date: Date.new(2020, 6, 6))
+    canceled_child_multi_day_event.children.create!(date: Date.new(2020, 6, 7), canceled: true)
+
+    all_children_canceled_multi_day_event = MultiDayEvent.create!(name: "present MultiDayEvent all children canceled")
+    all_children_canceled_multi_day_event.children.create!(date: Date.new(2020, 6, 6), canceled: true)
+    all_children_canceled_multi_day_event.children.create!(date: Date.new(2020, 6, 7), canceled: true)
+
+    present_and_future_multi_day_event = MultiDayEvent.create!(name: "present and future MultiDayEvent")
+    present_and_future_multi_day_event.children.create!(date: Date.new(2020, 6, 15))
+    present_and_future_multi_day_event.children.create!(date: Date.new(2020, 6, 16))
+
+    canceled_multi_day_event = MultiDayEvent.create!(name: "present and future MultiDayEvent parent canceled", canceled: true)
+    canceled_multi_day_event.children.create!(date: Date.new(2020, 6, 15))
+    canceled_multi_day_event.children.create!(date: Date.new(2020, 6, 16))
+
+    canceled_future_child_multi_day_event = MultiDayEvent.create!(name: "present and future MultiDayEvent child canceled")
+    canceled_future_child_multi_day_event.children.create!(date: Date.new(2020, 6, 15))
+    canceled_future_child_multi_day_event.children.create!(date: Date.new(2020, 6, 16), canceled: true)
+
+    future_multi_day_event = MultiDayEvent.create!(name: "future MultiDayEvent")
+    future_multi_day_event.children.create!(date: Date.new(2020, 6, 16))
+    future_multi_day_event.children.create!(date: Date.new(2020, 6, 17))
+
+    Timecop.freeze(Time.zone.local(2020, 6, 1)) do
+      assert_equal_events [
+        single,
+        past_series_present_child,
+        present_series_present_child,
+        present_series_present_child_2,
+        future_series_present_child,
+        past_and_present_multi_day_event,
+        multi_day_event,
+        present_and_future_multi_day_event,
+        series_future_child_canceled,
+        multi_day_event_past_child_canceled,
+        canceled_child_multi_day_event,
+        canceled_future_child_multi_day_event
+      ], Event.upcoming
+    end
+  end
+
+  test "mixed postponed states" do
+    FactoryBot.create(:discipline, name: "Road")
+
+    SingleDayEvent.create!(date: Date.new(2020, 5, 31), name: "single past")
+    single = SingleDayEvent.create!(date: Date.new(2020, 6, 1), name: "single")
+    SingleDayEvent.create!(date: Date.new(2020, 6, 16), name: "single future")
+    SingleDayEvent.create!(date: Date.new(2020, 6, 1), name: "single postponed", postponed: true)
+
+    series = Series.create!(name: "past series")
+    series.children.create!(date: Date.new(2020, 5, 24))
+    series.children.create!(date: Date.new(2020, 5, 31))
+
+    series = Series.create!(name: "past and present series")
+    series.children.create!(date: Date.new(2020, 5, 31))
+    past_series_present_child = series.children.create!(date: Date.new(2020, 6, 2))
+
+    series = Series.create!(name: "past and present series parent postponed", postponed: true)
+    series.children.create!(date: Date.new(2020, 5, 31))
+    series.children.create!(date: Date.new(2020, 6, 2))
+
+    series = Series.create!(name: "past and present series child postponed")
+    series.children.create!(date: Date.new(2020, 5, 31))
+    series.children.create!(date: Date.new(2020, 6, 2), postponed: true)
+
+    series = Series.create!(name: "present series")
+    present_series_present_child = series.children.create!(date: Date.new(2020, 6, 2), name: "present series 1")
+    present_series_present_child_2 = series.children.create!(date: Date.new(2020, 6, 9), name: "present series 2")
+
+    series = Series.create!(name: "present series parent postponed", postponed: true)
+    series.children.create!(date: Date.new(2020, 6, 2), name: "present parent postponed series 1")
+    series.children.create!(date: Date.new(2020, 6, 9), name: "present  parent postponedseries 2")
+
+    series = Series.create!(name: "present series child postponed")
+    series.children.create!(date: Date.new(2020, 6, 2), name: "present parent postponed series 1", postponed: true)
+    series.children.create!(date: Date.new(2020, 6, 9), name: "present  parent postponedseries 2", postponed: true)
+
+    series = Series.create!(name: "present and future series")
+    future_series_present_child = series.children.create!(date: Date.new(2020, 6, 2))
+    series.children.create!(date: Date.new(2020, 6, 16))
+
+    series = Series.create!(name: "present and future series parent postponed", postponed: true)
+    series.children.create!(date: Date.new(2020, 6, 2))
+    series.children.create!(date: Date.new(2020, 6, 16))
+
+    series = Series.create!(name: "present and future series child postponed")
+    series.children.create!(date: Date.new(2020, 6, 2), postponed: true)
+    series.children.create!(date: Date.new(2020, 6, 16))
+
+    series = Series.create!(name: "present and future series future child postponed")
+    series_future_child_postponed = series.children.create!(date: Date.new(2020, 6, 2))
+    series.children.create!(date: Date.new(2020, 6, 16), postponed: true)
+
+    series = Series.create!(name: "future series")
+    series.children.create!(date: Date.new(2020, 6, 16))
+    series.children.create!(date: Date.new(2020, 6, 23))
+
+    past_multi_day_event = MultiDayEvent.create!(name: "past MultiDayEvent")
+    past_multi_day_event.children.create!(date: Date.new(2020, 5, 30))
+    past_multi_day_event.children.create!(date: Date.new(2020, 5, 31))
+
+    past_and_present_multi_day_event = MultiDayEvent.create!(name: "past and present MultiDayEvent")
+    past_and_present_multi_day_event.children.create!(date: Date.new(2020, 5, 31))
+    past_and_present_multi_day_event.children.create!(date: Date.new(2020, 6, 1))
+
+    postponed_multi_day_event = MultiDayEvent.create!(name: "past and present MultiDayEvent parent postponed", postponed: true)
+    postponed_multi_day_event.children.create!(date: Date.new(2020, 5, 31))
+    postponed_multi_day_event.children.create!(date: Date.new(2020, 6, 1))
+
+    multi_day_event_past_child_postponed = MultiDayEvent.create!(name: "past and present MultiDayEvent past child postponed")
+    multi_day_event_past_child_postponed.children.create!(date: Date.new(2020, 5, 31), postponed: true)
+    multi_day_event_past_child_postponed.children.create!(date: Date.new(2020, 6, 1))
+
+    multi_day_event_present_child_postponed = MultiDayEvent.create!(name: "past and present MultiDayEvent present child postponed")
+    multi_day_event_present_child_postponed.children.create!(date: Date.new(2020, 5, 31))
+    multi_day_event_present_child_postponed.children.create!(date: Date.new(2020, 6, 1), postponed: true)
+
+    multi_day_event = MultiDayEvent.create!(name: "present MultiDayEvent")
+    multi_day_event.children.create!(date: Date.new(2020, 6, 6))
+    multi_day_event.children.create!(date: Date.new(2020, 6, 7))
+
+    postponed_multi_day_event = MultiDayEvent.create!(name: "present MultiDayEvent parent postponed", postponed: true)
+    postponed_multi_day_event.children.create!(date: Date.new(2020, 6, 6))
+    postponed_multi_day_event.children.create!(date: Date.new(2020, 6, 7))
+
+    postponed_child_multi_day_event = MultiDayEvent.create!(name: "present MultiDayEvent child postponed")
+    postponed_child_multi_day_event.children.create!(date: Date.new(2020, 6, 6))
+    postponed_child_multi_day_event.children.create!(date: Date.new(2020, 6, 7), postponed: true)
+
+    all_children_postponed_multi_day_event = MultiDayEvent.create!(name: "present MultiDayEvent all children postponed")
+    all_children_postponed_multi_day_event.children.create!(date: Date.new(2020, 6, 6), postponed: true)
+    all_children_postponed_multi_day_event.children.create!(date: Date.new(2020, 6, 7), postponed: true)
+
+    present_and_future_multi_day_event = MultiDayEvent.create!(name: "present and future MultiDayEvent")
+    present_and_future_multi_day_event.children.create!(date: Date.new(2020, 6, 15))
+    present_and_future_multi_day_event.children.create!(date: Date.new(2020, 6, 16))
+
+    postponed_multi_day_event = MultiDayEvent.create!(name: "present and future MultiDayEvent parent postponed", postponed: true)
+    postponed_multi_day_event.children.create!(date: Date.new(2020, 6, 15))
+    postponed_multi_day_event.children.create!(date: Date.new(2020, 6, 16))
+
+    postponed_future_child_multi_day_event = MultiDayEvent.create!(name: "present and future MultiDayEvent child postponed")
+    postponed_future_child_multi_day_event.children.create!(date: Date.new(2020, 6, 15))
+    postponed_future_child_multi_day_event.children.create!(date: Date.new(2020, 6, 16), postponed: true)
+
+    future_multi_day_event = MultiDayEvent.create!(name: "future MultiDayEvent")
+    future_multi_day_event.children.create!(date: Date.new(2020, 6, 16))
+    future_multi_day_event.children.create!(date: Date.new(2020, 6, 17))
+
+    Timecop.freeze(Time.zone.local(2020, 6, 1)) do
+      assert_equal_events [
+        single,
+        past_series_present_child,
+        present_series_present_child,
+        present_series_present_child_2,
+        future_series_present_child,
+        past_and_present_multi_day_event,
+        multi_day_event,
+        present_and_future_multi_day_event,
+        series_future_child_postponed,
+        multi_day_event_past_child_postponed,
+        postponed_child_multi_day_event,
+        postponed_future_child_multi_day_event
+      ], Event.upcoming
+    end
+  end
 end
