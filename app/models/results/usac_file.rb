@@ -2,7 +2,7 @@
 
 # compares current members to USAC database for current year
 # updates member_usac_to column to 12/31/{year}
-class UsacFile
+class USACFile
   attr_accessor :members_list
 
   USAC_SITE = "www.usacycling.org"
