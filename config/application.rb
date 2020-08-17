@@ -28,9 +28,9 @@ module RacingOnRails
     config.action_view.default_form_builder = ::RacingOnRails::FormBuilder
 
     # Production database config handled by Ansible
-    # if !Rails.env.production? && !Rails.env.staging? && File.exist?("#{config.root}/local/config/database.yml")
-    #   Rails.configuration.paths["config/database"] = ["local/config/database.yml", "config/database.yml"]
-    # end
+    if !Rails.env.production? && !Rails.env.staging? && File.exist?("#{config.root}/local/config/database.yml")
+      Rails.configuration.paths["config/database"] = ["local/config/database.yml", "config/database.yml"]
+    end
 
     config.action_mailer.default_url_options = { mobile: nil }
     config.exceptions_app = routes
