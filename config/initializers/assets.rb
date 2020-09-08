@@ -5,4 +5,4 @@ Rails.application.config.assets.paths << Rails.root.join("local/app/assets/image
 Rails.application.config.assets.paths << Rails.root.join("local/app/assets/javascripts")
 Rails.application.config.assets.paths << Rails.root.join("local/app/assets/stylesheets")
 
-Rails.application.config.assets.version = "6.0"
+Rails.application.config.assets.version = "6.1"
