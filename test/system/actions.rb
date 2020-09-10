@@ -144,6 +144,7 @@ module Actions
     find("tr[data-#{type}-name=\"#{name}\"]").click
     find("##{field}_name[value=\"#{name}\"]", visible: :hidden)
     assert_equal name, find("##{field}_select_modal_button").text
+    assert_no_selector "#updating-order-dialog"
     assert_no_selector ".modal.in"
   end
 
@@ -158,6 +159,7 @@ module Actions
     find_field("#{field}_new_#{type}_name", wait: 4, with: name)
     find("##{field}_select_modal_new_#{type}_create").click
     find("##{field}_name[value=\"#{name}\"]", visible: :hidden)
+    assert_no_selector "#updating-order-dialog"
     assert_no_selector ".modal.in"
   end
 
