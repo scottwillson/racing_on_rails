@@ -87,6 +87,12 @@ blocks:
         commands:
           - bundle exec rails test:system
 
+      epilogue:
+        on_fail:
+          commands:
+            - artifact push job log/test.log
+            - artifact push job tmp/screenshots
+
   - name: "Registration engine security"
     task:
       prologue:
@@ -161,3 +167,9 @@ blocks:
       - name: system tests
         commands:
           - bundle exec rails test:system && bundle exec rails t registration_engine/test/system
+
+      epilogue:
+        on_fail:
+          commands:
+            - artifact push job log/test.log
+            - artifact push job tmp/screenshots
