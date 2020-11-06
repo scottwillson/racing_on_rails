@@ -64,9 +64,9 @@ group :development do
   gem "brakeman"
   gem "bullet"
   gem "bundler-audit", github: "rubysec/bundler-audit"
+  gem "capistrano3-puma", github: "seuros/capistrano-puma"
   gem "capistrano-rails"
   gem "capistrano-rvm"
-  gem "capistrano3-puma"
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "rubocop", require: false
   gem "rubocop-performance"
