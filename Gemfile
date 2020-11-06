@@ -96,8 +96,6 @@ group :staging, :production do
   gem "connection_pool"
   gem "dalli"
   gem "execjs"
-  gem "libv8"
   gem "logstash-logger"
   gem "raygun4ruby"
-  gem "therubyracer"
 end
