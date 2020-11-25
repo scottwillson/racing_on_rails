@@ -3,7 +3,7 @@
  *= require jquery_ujs
  *= require jquery-ui
  *= require jquery.jeditable
- *= require bootstrap
+ *= require bootstrap-sprockets
  *= require bootstrap-datepicker/core
  *= require raygun
  *= require select_modal

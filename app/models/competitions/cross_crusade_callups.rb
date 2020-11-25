@@ -2,7 +2,7 @@
 
 module Competitions
   class CrossCrusadeCallups < Competition
-    default_value_for :name, "Cross Crusade Callups"
+    attribute :name, :boolean, default: -> { "Cross Crusade Callups" }
 
     def point_schedule
       [15, 12, 10, 8, 7, 6, 5, 4, 3, 2]

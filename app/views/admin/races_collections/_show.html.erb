@@ -102,7 +102,8 @@
                       title: "Add same races to all children events"
               ) if event.races.any? && event.children.any?
           %>
-          <%= link_to("Delete All",
+          <%= link_to(
+            "Delete All",
             destroy_races_admin_event_path(event),
             class: "btn btn-sm btn-default",
             id: "destroy_races",
@@ -111,7 +112,6 @@
             method: :delete,
             data: { confirm: "Really delete all races from #{event.name}?" }
           ) if event.races.any? && administrator?
-          # Lame workaround for Safari
           %>
         </td>
       </tr>

@@ -57,34 +57,14 @@ class PostTest < ActiveSupport::TestCase
     assert post.valid?, post.errors.full_messages.to_s
   end
 
-  test "newer should get next lowest original and older should get next highest original" do
-    mailing_list = FactoryBot.create(:mailing_list)
-    original = FactoryBot.create(:post, mailing_list: mailing_list, last_reply_at: 1.day.ago, position: 3)
-    second_post = FactoryBot.create(:post, mailing_list: mailing_list, last_reply_at: 4.days.ago, position: 1)
-    reply_to_original = FactoryBot.create(:post, mailing_list: mailing_list, last_reply_at: 1.day.ago, original_id: original.id, position: 2)
-
-    original.reload
-    second_post.reload
-    reply_to_original.reload
-
-    assert_nil original.newer, "original newer"
-    assert_equal second_post, original.older, "original older"
-
-    assert_equal original, second_post.newer, "second_post newer"
-    assert_nil second_post.older, "second_post older"
-
-    assert_equal original, reply_to_original.newer, "reply_to_original newer"
-    assert_equal second_post, reply_to_original.older, "reply_to_original older"
-  end
-
   test "save with no original" do
     mailing_list = FactoryBot.build(:mailing_list)
     post = FactoryBot.build(:post, mailing_list: mailing_list)
 
     Post.save post, mailing_list
 
-    assert !post.new_record?
-    assert_equal post.date, post.last_reply_at, "last_reply_at"
+    assert_not post.new_record?
+    assert_equal_dates post.date, post.last_reply_at, "last_reply_at"
     assert_nil post.original, "no original"
     assert post.replies.empty?, "no replies"
     assert_equal 0, post.replies_count, "replies_count"
@@ -100,19 +80,17 @@ class PostTest < ActiveSupport::TestCase
 
     assert !reply.new_record?
     reply.reload
-    assert_equal reply.date, reply.last_reply_at, "last_reply_at"
+    assert_equal_dates reply.date, reply.last_reply_at, "last_reply_at"
     assert_equal original, reply.original, "original"
     assert reply.replies.empty?, "no replies"
     assert_equal 0, reply.replies_count, "replies_count"
-    assert_equal 1, reply.position, "reply position"
 
     original.reload
-    assert_equal reply.date, original.last_reply_at, "last_reply_at"
+    assert_equal_dates reply.date, original.last_reply_at, "last_reply_at"
     assert_nil original.original, "no original"
     assert_equal [reply], original.replies, "should add reply"
     assert_equal 1, original.replies.reload.size, "replies_count"
     assert_equal 1, original.replies_count, "replies_count"
-    assert_equal 2, original.position, "original position"
   end
 
   test "find original" do

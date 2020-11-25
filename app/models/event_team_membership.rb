@@ -53,6 +53,8 @@ class EventTeamMembership < ApplicationRecord
   end
 
   def uniqueness_of_event
-    errors.add :event_team, "Already on a team for #{event.name}" if person&.event_team_memberships&.reject { |m| m == self }.map(&:event).include?(event)
+    if person&.event_team_memberships&.reject { |m| m == self }&.map(&:event)&.include?(event)
+      errors.add :event_team, "Already on a team for #{event.name}"
+    end
   end
 end

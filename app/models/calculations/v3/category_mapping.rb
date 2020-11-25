@@ -8,5 +8,5 @@ class Calculations::V3::CategoryMapping < ApplicationRecord
   belongs_to :discipline, class_name: "::Discipline", inverse_of: :calculation_category_mappings
 
   validates :calculation_category, presence: true
-  validates :category, presence: true, uniqueness: { scope: :calculation_category_id }
+  validates :category, presence: true
 end

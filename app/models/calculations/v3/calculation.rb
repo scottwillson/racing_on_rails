@@ -49,14 +49,14 @@ class Calculations::V3::Calculation < ApplicationRecord
   after_save :expire_cache
 
   validate :maximum_events_negative, unless: :blank?
-  validates :event, uniqueness: { allow_nil: true }
-  validates :key, uniqueness: { allow_nil: true, scope: :year }
+  validates :event, uniqueness: { allow_nil: true, case_sensitive: false }
+  validates :key, uniqueness: { allow_nil: true, case_sensitive: false, scope: :year }
   validates :group_by, inclusion: { in: GROUP_BY }
   validates :place_by, inclusion: { in: PLACE_BY }
 
-  default_value_for(:discipline_id) { ::Discipline[RacingAssociation.current.default_discipline]&.id }
-  default_value_for :event_notes, ""
-  default_value_for :points_for_place, nil
+  attribute :discipline_id, :integer, default: -> { ::Discipline[RacingAssociation.current.default_discipline]&.id }
+  attribute :event_notes, :text, default: -> { "" }
+  attribute :points_for_place, :text, default: -> { nil }
 
   def self.latest(key)
     where(key: key).order(:year).last

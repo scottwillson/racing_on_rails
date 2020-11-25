@@ -330,19 +330,19 @@ module Admin
       vanilla = FactoryBot.create(:team, name: "Vanilla")
       result = FactoryBot.create(:result, team: vanilla)
 
-      assert_equal(true, vanilla.member, "member before update")
+      assert vanilla.member?, "member before update"
       post :toggle_member, params: { id: vanilla.to_param }
       assert_response(:success)
       assert_template("shared/_member")
       vanilla.reload
-      assert_equal(false, vanilla.member, "member after update")
-      assert_equal false, result.reload.team_member?, "Result#team_member should be updated"
+      assert_not vanilla.member?, "member after update"
+      assert_not result.reload.team_member?, "Result#team_member should be updated"
 
       post :toggle_member, params: { id: vanilla.to_param }
       assert_response(:success)
       assert_template("shared/_member")
       vanilla.reload
-      assert_equal(true, vanilla.member, "member after second update")
+      assert vanilla.member?, "member after second update"
       assert_equal true, result.reload.team_member?, "Result#team_member should be updated"
     end
 

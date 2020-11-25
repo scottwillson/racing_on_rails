@@ -15,7 +15,7 @@ class Team < ApplicationRecord
   before_destroy :ensure_no_results
 
   validates :name, presence: true
-  validates :name, uniqueness: true
+  validates :name, uniqueness: { case_sensitive: false }
 
   has_many :aliases, as: :aliasable, dependent: :destroy
   has_many :events

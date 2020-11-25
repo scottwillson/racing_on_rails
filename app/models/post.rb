@@ -16,9 +16,7 @@ class Post < ApplicationRecord
 
   scope :original, -> { where(original_id: nil) }
 
-  acts_as_list scope: :mailing_list
-
-  default_value_for(:date) { Time.zone.now }
+  attribute :date, :date, default: -> { Time.zone.now }
 
   # Save new or updated Post to database.
   #
@@ -122,6 +120,10 @@ class Post < ApplicationRecord
   # Next oldest original Post
   def older
     @older ||= mailing_list.posts.original.order("position desc").where("position < ?", position).first
+  end
+
+  def position
+    0
   end
 
   # Replace a couple letters from email addresses to avoid spammers

@@ -41,8 +41,8 @@ class Race < ApplicationRecord
   scope :include_results, -> { includes(:category, results: :team) }
   scope :year, ->(year) { where(date: Time.zone.local(year).beginning_of_year.to_date..Time.zone.local(year).end_of_year.to_date) }
 
-  default_value_for(:result_columns) { DEFAULT_RESULT_COLUMNS.dup }
-  default_value_for :custom_columns, []
+  attribute :result_columns, :string, default: -> { DEFAULT_RESULT_COLUMNS.dup }
+  attribute :custom_columns, :string, default: -> { [] }
 
   # Defaults to Event's BAR points
   def bar_points
@@ -309,7 +309,7 @@ class Race < ApplicationRecord
       result = Result.find(result_id)
       start_index = _results.index(result)
       (start_index..._results.size).each do |index|
-        _results[index].update_attributes! place: _results[index].next_place if _results[index].numeric_place?
+        _results[index].update! place: _results[index].next_place if _results[index].numeric_place?
       end
 
       results.create place: result.place

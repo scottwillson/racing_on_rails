@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "acts_as_tree/validation"
+
 # CMS web page. Tree structure. Deprected. Versioning removed.
 # User render_page helper to look for Page before falling back on Rails templates.
 # Pages uses ERb and can execute Ruby code just like a template, so admin users can
@@ -10,7 +12,7 @@ class Page < ApplicationRecord
   include Pages::Paths
 
   before_validation :set_slug, :set_path, :set_body
-  validates :path, uniqueness: { message: "'%{value}' has already been taken" }
+  validates :path, uniqueness: { case_sensitive: false, message: "'%{value}' has already been taken" }
 
   after_create :update_parent
   after_destroy :update_parent

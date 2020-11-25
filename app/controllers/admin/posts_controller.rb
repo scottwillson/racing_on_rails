@@ -34,16 +34,6 @@ module Admin
       end
     end
 
-    def receive
-      @post = MailingListMailer.receive(params[:raw].read.encode("UTF-8"))
-      if @post.valid?
-        flash[:notice] = "Created #{@post.subject}"
-        redirect_to admin_mailing_list_posts_path(@mailing_list)
-      else
-        render :edit
-      end
-    end
-
     def edit
       @post = Post.find(params[:id])
     end

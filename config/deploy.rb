@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-lock "3.12.1"
+lock "3.14.1"
 
 set :linked_dirs, %w[ log public/assets public/system public/uploads tmp/pids tmp/cache tmp/sockets vendor/bundle ]
 set :linked_files, %w[ config/database.yml config/newrelic.yml config/master.key config/puma.rb ]
@@ -15,6 +15,8 @@ set :deploy_to, "/var/www/rails/#{fetch(:application)}"
 
 set :repo_url, "git://github.com/scottwillson/racing_on_rails.git"
 set :site_local_repo_url, "git@github.com:scottwillson/#{fetch(:application)}-local.git"
+set :site_local_repo_url_branch, "rails-6"
+set :branch, "rails-6"
 
 set :puma_conf, "#{shared_path}/config/puma.rb"
 
@@ -40,10 +42,12 @@ namespace :deploy do
     on roles :app do
       if fetch(:application) == "obra" || fetch(:application) == "nabra"
         execute :rm, "-rf \"#{release_path}/lib/registration_engine\"" if test("[ -e \"#{release_path}/lib/registration_engine\" ]")
+        execute :rm, "-rf \"#{release_path}/registration_engine\"" if test("[ -e \"#{release_path}/registration_engine\" ]")
 
         execute :rm, "-rf \"#{release_path}/lib/registration_engine\"" if test("[ -L \"#{release_path}/lib/registration_engine\" ]")
+        execute :rm, "-rf \"#{release_path}/registration_engine\"" if test("[ -L \"#{release_path}/registration_engine\" ]")
 
-        execute :git, "clone git@github.com:scottwillson/registration_engine.git #{release_path}/lib/registration_engine"
+        execute :git, "clone git@github.com:scottwillson/registration_engine.git -b rails-6 #{release_path}/registration_engine"
       end
     end
   end
@@ -65,6 +69,6 @@ task :compress_assets_7z do
 end
 
 after "deploy:normalize_assets", "compress_assets_7z"
-before "deploy:updated", "deploy:local_code"
-before "deploy:updated", "deploy:registration_engine"
+before "bundler:install", "deploy:local_code"
+before "bundler:install", "deploy:registration_engine"
 after "deploy:finished", "deploy:cache_error_pages"

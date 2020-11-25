@@ -56,19 +56,6 @@ module Admin
       assert_redirected_to "/edit"
     end
 
-    test "receive" do
-      Post.expects(:save).returns(true)
-      Post.any_instance.expects(:save!).never
-
-      @request.host = "0.0.0.0"
-
-      mailing_list = FactoryBot.create(:mailing_list, name: "obra")
-      post :receive, params: { mailing_list_id: mailing_list.to_param, raw: fixture_file_upload("email/for_sale.eml") }
-      assert_not_nil assigns(:post), @post
-      assert assigns(:post).errors.empty?, assigns(:post).errors.full_messages.join(", ")
-      assert_redirected_to admin_mailing_list_posts_path(mailing_list)
-    end
-
     test "edit" do
       login_as FactoryBot.create(:administrator)
       mailing_list = FactoryBot.create(:mailing_list)

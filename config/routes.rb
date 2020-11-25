@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  mount Ckeditor::Engine => "/ckeditor"
+  # mount Ckeditor::Engine => "/ckeditor"
 
   scope "(:mobile)", mobile: /m/ do
     namespace :admin do
@@ -273,11 +273,6 @@ Rails.application.routes.draw do
     get "/account/logout" => "person_sessions#destroy"
     get "/account/login" => "person_sessions#new"
     get "/account" => "people#account", as: :account
-
-    get "/404" => "errors#not_found"
-    get "/422" => "errors#unprocessable_entity"
-    get "/500" => "errors#internal_error"
-    get "/503" => "errors#over_capacity"
 
     get "/" => "home#index", as: :root
     resource :home, controller: :home

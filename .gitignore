@@ -1,9 +1,5 @@
-*.bbprojectd
-*.rbc
-*.sublime-*
 *.swp
 *.tmproj
-*sublime*
 *~
 .bundle
 .capistrano
@@ -18,7 +14,6 @@
 .semaphore_ssh_config
 .tm_properties
 ._*
-/.idea/
 /local
 chromedriver.log
 coverage
@@ -35,6 +30,7 @@ public/export/*.csv
 public/export/*.txt
 public/local
 public/uploads
+registration_engine
 results.csv
 tmp/*
 tmp/**/*

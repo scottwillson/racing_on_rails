@@ -2,14 +2,9 @@
 
 set -e
 
-script/local obra;
-
-if [ "$DB" = '1' ]; then
-  DISABLE_SPRING=1 bundle exec rake db:migrate parallel:prepare
-fi
-
+spring stop
 DISABLE_SPRING=1 bundle exec rake test:ruby
-RECORD_RUNTIME=true DISABLE_SPRING=1 bundle exec rake parallel:test
-RECORD_RUNTIME=true DISABLE_SPRING=1 bundle exec parallel_test lib/registration_engine/test/{controllers,helpers,integration,mailers,models}
-DISABLE_SPRING=1 bundle exec rake test:acceptance
-DISABLE_SPRING=1 RAILS_ENV=test bundle exec rake registration_engine:test:acceptance
+bundle exec rails test
+bundle exec rails test registration_engine/test/{controllers,helpers,integration,mailers,models}/**/*_test.rb
+bundle exec rails test:system
+bundle exec rails test registration_engine/test/system

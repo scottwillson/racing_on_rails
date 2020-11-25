@@ -20,9 +20,6 @@ http://racingonrails.rocketsurgeryllc.com/rdoc
 Issues
 https://github.com/scottwillson/racing_on_rails/issues
 
-Parallel tests
-RECORD_RUNTIME=true DISABLE_SPRING=1 rake parallel:test[^test/{controllers,helpers,integration,lib,mailers,models,views}]
-
 Requirements
 Ruby 2.4
 MySQL 5.6

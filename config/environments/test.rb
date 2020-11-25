@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+$LOAD_PATH << "registration_engine/test"
+
 Rails.application.configure do
   config.action_controller.action_on_unpermitted_parameters = :raise
   config.action_controller.allow_forgery_protection         = false
@@ -10,10 +12,7 @@ Rails.application.configure do
   config.active_storage.service                             = :test
   config.active_support.deprecation                         = :stderr
   config.active_support.test_order                          = :random
-  config.autoload_paths                                    += %W[
-    #{config.root}/lib/test
-  ]
-  config.cache_classes                                      = true
+  config.cache_classes                                      = false
   config.consider_all_requests_local                        = true
   config.eager_load                                         = false
   config.mass_assignment_sanitizer                          = :strict

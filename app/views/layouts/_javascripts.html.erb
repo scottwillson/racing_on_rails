@@ -1,6 +1,3 @@
 <%= javascript_include_tag "application" %>
 <%= javascript_include_tag Ckeditor.cdn_url %>
-
-<% if File.exist? "lib/registration_engine/app/views/layouts/registration_engine/_javascripts.html.erb" %>
 <%= render "layouts/registration_engine/javascripts" %>
-<% end %>

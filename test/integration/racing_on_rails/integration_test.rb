@@ -11,7 +11,7 @@ module RacingOnRails
     end
 
     def login(options)
-      post person_session_path, options
+      post person_session_path, **options
       assert_response :redirect
     end
   end

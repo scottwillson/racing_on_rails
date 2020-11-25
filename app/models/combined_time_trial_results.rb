@@ -5,9 +5,7 @@
 # Destroy +combined_results+ if they exist, but should not
 # All the calculation happens synchronously, which isn't ideal. Logic overlaps heavily with Competition as well.
 class CombinedTimeTrialResults < Event
-  validates :parent_id, uniqueness: { message: "Event can only have one CombinedTimeTrialResults" }
-
-  default_value_for :auto_combined_results, false
+  attribute :auto_combined_results, :boolean, default: -> { false }
 
   def self.calculate!
     # ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do

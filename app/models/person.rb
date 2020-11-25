@@ -6,6 +6,8 @@ require "sentient_user/sentient_user"
 #
 # Names are _not_ unique. In fact, there are many business rules about names. See Aliases and Names.
 class Person < ApplicationRecord
+  LOGIN_FORMAT = /\A\w[\w\.+\-_@ ]+\z/.freeze
+
   include Comparable
   include Export::People
   include Names::Nameable
@@ -27,24 +29,23 @@ class Person < ApplicationRecord
     config.log_in_after_create false
     config.log_in_after_password_change false
     config.transition_from_crypto_providers = [Authlogic::CryptoProviders::Sha512]
-    config.validates_length_of_login_field_options within: 3..100, allow_nil: true, allow_blank: true
-    config.validates_format_of_login_field_options with: Authlogic::Regex::LOGIN,
-                                                   message: I18n.t("error_messages.login_invalid",
-                                                                   default: "should use only letters, numbers, spaces, and .-_@ please."),
-                                                   allow_nil: true,
-                                                   allow_blank: true
-
-    config.validates_uniqueness_of_login_field_options allow_blank: true, allow_nil: true, case_sensitive: false
-    config.validates_confirmation_of_password_field_options unless: proc { |user| user.password.blank? }
-    config.validates_length_of_password_field_options minimum: 4, allow_nil: true, allow_blank: true
-    config.validates_length_of_password_confirmation_field_options minimum: 4, allow_nil: true, allow_blank: true
-    config.validate_email_field false
   end
+
+  validates :login,
+            allow_blank: true,
+            format: { with: LOGIN_FORMAT, message: "should use only letters, numbers, spaces, and .-_@ please" },
+            length: { in: 3..100 },
+            uniqueness: { case_sensitive: false }
+
+  validates :password,
+            allow_blank: true,
+            length: { minimum: 4 }
 
   before_validation :find_associated_records
   before_validation :set_membership_dates
+  before_save { |r| r.login = nil if login.blank? }
   before_save { |r| r.license = nil if license.blank? }
-  validates :license, uniqueness: { allow_nil: true, allow_blank: true }
+  validates :license, uniqueness: { allow_blank: true, case_sensitive: false }
   validate :membership_dates
   before_destroy :ensure_no_results
 
@@ -268,6 +269,7 @@ class Person < ApplicationRecord
     self.city = nil
     self.state = nil
     return value if value.blank?
+
     parts = value.split(",")
     self.state = parts.last.strip if parts.size > 1
     self.city = parts.first.strip

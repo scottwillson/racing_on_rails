@@ -139,7 +139,7 @@ module Admin
     end
 
     test "create with empty password and no numbers" do
-      post :create, params: {  person: { login: "", password_confirmation: "", password: "", team_name: "",
+      post :create, params: {  person: { login: "", password: "", team_name: "",
                                first_name: "Henry", last_name: "David", license: "" }, number_issuer_id: [{ "1" => nil }]
                              }
       assert_not_nil assigns(:person), "@person"

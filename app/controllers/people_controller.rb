@@ -133,7 +133,7 @@ class PeopleController < ApplicationController
 
     @person.errors.add :email, "can't be blank" if person_params[:email].blank?
 
-    @person.errors.add :email, "must been email address" if person_params[:email].blank? || !person_params[:email][Authlogic::Regex::EMAIL]
+    @person.errors.add :email, "must be an email address" if person_params[:email].blank? || !person_params[:email][URI::MailTo::EMAIL_REGEXP]
 
     @person.errors.add :login, "can't be blank" if person_params[:login].blank?
 
@@ -222,7 +222,6 @@ class PeopleController < ApplicationController
       :official,
       :official_interest,
       :password,
-      :password_confirmation,
       :race_promotion_interest,
       :road_category,
       :state,

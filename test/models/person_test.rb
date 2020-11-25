@@ -233,10 +233,10 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "merge two logins" do
-    person_to_keep = FactoryBot.create(:person, login: "molly", password: "secret", password_confirmation: "secret")
+    person_to_keep = FactoryBot.create(:person, login: "molly", password: "secret")
     person_to_keep_old_password = person_to_keep.crypted_password
 
-    person_to_merge = FactoryBot.create(:person, login: "tonkin", password: "secret", password_confirmation: "secret")
+    person_to_merge = FactoryBot.create(:person, login: "tonkin", password: "secret")
 
     person_to_keep.reload
     person_to_merge.reload
@@ -253,13 +253,13 @@ class PersonTest < ActiveSupport::TestCase
     FactoryBot.create(:discipline, name: "Road")
     FactoryBot.create(:number_issuer)
 
-    person_to_keep = FactoryBot.create(:person, login: "molly", password: "secret", password_confirmation: "secret")
+    person_to_keep = FactoryBot.create(:person, login: "molly", password: "secret")
     FactoryBot.create(:result, person: person_to_keep)
     FactoryBot.create(:result, person: person_to_keep)
     FactoryBot.create(:result, person: person_to_keep)
     person_to_keep.aliases.create!(name: "Mollie Cameron")
 
-    person_to_merge = FactoryBot.create(:person, login: "tonkin", password: "secret", password_confirmation: "secret")
+    person_to_merge = FactoryBot.create(:person, login: "tonkin", password: "secret")
     FactoryBot.create(:result, person: person_to_merge)
     FactoryBot.create(:result, person: person_to_merge)
     person_to_merge.aliases.create!(name: "Eric Tonkin")
@@ -1054,7 +1054,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "create" do
-    Person.create!(name: "Mr. Tuxedo", password: "blackcat", password_confirmation: "blackcat", email: "tuxedo@example.com")
+    Person.create!(name: "Mr. Tuxedo", password: "blackcat", email: "tuxedo@example.com")
   end
 
   test "find by info" do
@@ -1114,14 +1114,13 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "login with periods" do
-    Person.create!(name: "Mr. Tuxedo", password: "blackcat", password_confirmation: "blackcat", login: "tuxedo.cat@example.com")
+    Person.create!(name: "Mr. Tuxedo", password: "blackcat", login: "tuxedo.cat@example.com")
   end
 
   test "long login" do
     person = Person.create!(
       name: "Mr. Tuxedo",
       password: "blackcatthebestkittyinblacktuxatonypa",
-      password_confirmation: "blackcatthebestkittyinblacktuxatonypa",
       login: "tuxedo.black.cat@subdomain123456789.example.com"
     )
     person.reload
@@ -1134,25 +1133,23 @@ class PersonTest < ActiveSupport::TestCase
 
   test "ignore blank login fields" do
     Person.create!
-    person = Person.create!(password: "", password_confirmation: "", login: "")
+    person = Person.create!(password: "", login: "")
     person.reload
     person.save!
     person.name = "New Guy"
     person.save!
 
-    assert_equal "", person.login, "Login should be blank"
+    assert_nil person.login, "Login should be blank"
     another = Person.create!(login: "")
     another.reload
-    assert_equal "", another.login, "Login should be blank"
+    assert_nil another.login, "Login should be blank"
 
     person.login = "samiam@example.com"
     person.password = "secret"
-    person.password_confirmation = "secret"
     person.save!
 
     another.login = "samiam@example.com"
     another.password = "secret"
-    another.password_confirmation = "secret"
     assert_equal false, another.save, "Should not allow dupe login"
     assert another.errors[:login], "Should have error on login"
   end

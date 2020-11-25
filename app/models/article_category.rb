@@ -2,6 +2,8 @@
 
 # Homepage Article Category
 class ArticleCategory < ApplicationRecord
+  require "acts_as_tree/validation"
+
   acts_as_tree order: "position"
   include ActsAsTree::Validation
 

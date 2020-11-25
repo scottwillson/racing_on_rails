@@ -10,25 +10,11 @@ Bundler.require(*Rails.groups)
 
 module RacingOnRails
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 5.2
-
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration can go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded after loading
-    # the framework and any gems in your application.
-  end
-end
-
-module RacingOnRails
-  class Application < Rails::Application
-    config.autoload_paths += %W[
-      #{config.root}/app/models/observers
-      #{config.root}/app/pdfs
-    ]
+    config.load_defaults 6.0
 
     config.encoding = "utf-8"
 
+    # TODO: change this
     config.time_zone = "Pacific Time (US & Canada)"
 
     I18n.config.enforce_available_locales = true
@@ -48,11 +34,6 @@ module RacingOnRails
 
     config.action_mailer.default_url_options = { mobile: nil }
     config.exceptions_app = routes
-
-    require "#{config.root}/lib/registration_engine/lib/registration_engine/engine" if Dir.exist?("#{config.root}/lib/registration_engine")
-
-    require_dependency "acts_as_tree/extensions"
-    require_dependency "acts_as_tree/validation"
 
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?
