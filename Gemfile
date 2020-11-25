@@ -13,11 +13,6 @@ gem "bcrypt"
 gem "bootsnap", ">= 1.4.2", require: false
 gem "bootstrap-datepicker-rails"
 gem "bootstrap-sass"
-gem "capistrano"
-gem "capistrano-bundler"
-gem "capistrano3-puma", github: "seuros/capistrano-puma"
-gem "capistrano-rails"
-gem "capistrano-rvm"
 gem "carrierwave"
 gem "caxlsx", ">= 2.0.1"
 gem "caxlsx_rails", ">=0.5.2"
@@ -67,6 +62,11 @@ group :development do
   gem "brakeman"
   gem "bullet"
   gem "bundler-audit", github: "rubysec/bundler-audit"
+  gem "capistrano", require: false
+  gem "capistrano3-puma", github: "seuros/capistrano-puma", require: false
+  gem "capistrano-bundler", require: false
+  gem "capistrano-rails", require: false
+  gem "capistrano-rvm", require: false
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "rubocop", require: false
   gem "rubocop-performance"
