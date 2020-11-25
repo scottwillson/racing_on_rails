@@ -489,9 +489,9 @@ DEPENDENCIES
   connection_pool
   dalli
   damerau-levenshtein
-  elasticsearch (>= 6, < 7)
-  elasticsearch-model (>= 6, < 7)
-  elasticsearch-rails (>= 6, < 7)
+  elasticsearch
+  elasticsearch-model
+  elasticsearch-rails
   execjs
   factory_bot_rails
   hashdiff (>= 1.0.0.beta1, < 2.0.0)
@@ -509,7 +509,7 @@ DEPENDENCIES
   paper_trail
   pdf-reader
   prawn!
-  puma
+  puma (> 4.3.5)
   rails (~> 6.0)
   rails-controller-testing
   rails-observers
