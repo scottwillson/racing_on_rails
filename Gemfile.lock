@@ -300,7 +300,7 @@ GEM
       ruby-rc4
       ttfunk
     public_suffix (4.0.6)
-    puma (5.0.4)
+    puma (4.3.6)
       nio4r (~> 2.0)
     rack (2.2.3)
     rack-test (1.1.0)
@@ -509,7 +509,7 @@ DEPENDENCIES
   paper_trail
   pdf-reader
   prawn!
-  puma (> 4.3.5)
+  puma (< 5)
   rails (~> 6.0)
   rails-controller-testing
   rails-observers

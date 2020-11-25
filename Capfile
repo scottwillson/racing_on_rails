@@ -17,5 +17,6 @@ require "capistrano/rails/migrations"
 require "capistrano/puma"
 install_plugin Capistrano::Puma
 install_plugin Capistrano::Puma::Workers
+install_plugin Capistrano::Puma::Daemon
 
 Dir.glob("lib/capistrano/tasks/*.rb").each { |r| import r }
