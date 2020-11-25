@@ -15,8 +15,6 @@ set :deploy_to, "/var/www/rails/#{fetch(:application)}"
 
 set :repo_url, "git://github.com/scottwillson/racing_on_rails.git"
 set :site_local_repo_url, "git@github.com:scottwillson/#{fetch(:application)}-local.git"
-set :site_local_repo_url_branch, "rails-6"
-set :branch, "rails-6"
 
 set :puma_conf, "#{shared_path}/config/puma.rb"
 
@@ -47,7 +45,7 @@ namespace :deploy do
         execute :rm, "-rf \"#{release_path}/lib/registration_engine\"" if test("[ -L \"#{release_path}/lib/registration_engine\" ]")
         execute :rm, "-rf \"#{release_path}/registration_engine\"" if test("[ -L \"#{release_path}/registration_engine\" ]")
 
-        execute :git, "clone git@github.com:scottwillson/registration_engine.git -b rails-6 #{release_path}/registration_engine"
+        execute :git, "clone git@github.com:scottwillson/registration_engine.git #{release_path}/registration_engine"
       end
     end
   end
