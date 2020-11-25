@@ -53,7 +53,7 @@ module Results
           @event.update_split_from!
         end
 
-        import_warnings = import_warnings.to_a.take(10)
+        import_warnings.to_a.take(10)
       end
 
       ActiveSupport::Notifications.instrument "warnings.import.results_file.racing_on_rails", warnings_count: import_warnings.to_a.size
