@@ -11,8 +11,8 @@ module Assertions
     assert_current_path "/person_session/new"
   end
 
-  def assert_page_has_content(text)
-    raise "Expected '#{text}' in page source" unless page.has_content?(text)
+  def assert_page_has_content(text, wait: 2)
+    raise "Expected '#{text}' in page source" unless page.has_content?(text, wait: wait)
   end
 
   def assert_page_has_no_content(text)

@@ -39,7 +39,7 @@ class TeamsTest < ApplicationSystemTestCase
     assert_no_selector :field, "team_member_#{gl.id}", checked: true
 
     visit "/admin/teams"
-    assert !has_checked_field?("team_member_#{gl.id}")
+    assert_not has_checked_field?("team_member_#{gl.id}")
 
     click_link "show_#{dfl.id}"
     assert_page_has_content "Team dFL"

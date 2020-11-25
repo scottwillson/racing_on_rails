@@ -154,7 +154,7 @@ class PeopleTest < ApplicationSystemTestCase
     assert_selector ".ui-dialog-buttonset button:first-child"
     find(".ui-dialog-buttonset button:first-child").click
 
-    assert_page_has_content "Merged Mark Matson into Molly Cameron"
+    assert_page_has_content "Merged Mark Matson into Molly Cameron", wait: 4
     assert Person.exists?(molly.id), "Should not have merged Molly"
     assert !Person.exists?(matson.id), "Should have merged Matson"
     assert molly.aliases.reload.map(&:name).include?("Mark Matson"), "Should add Matson alias"
