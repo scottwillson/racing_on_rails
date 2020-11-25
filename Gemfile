@@ -41,7 +41,7 @@ gem "paper_trail"
 gem "parallel_tests"
 gem "pdf-reader", require: "pdf/reader"
 gem "prawn", git: "https://github.com/sandal/prawn.git"
-gem "puma"
+gem "puma", "> 4.3.5"
 gem "sprockets", "< 4"
 gem "rails-observers"
 gem "rake"
@@ -67,9 +67,9 @@ gem "zip-zip"
 
 # Require after WillPaginate
 # Match deployed version
-gem "elasticsearch", ">= 6", "< 7"
-gem "elasticsearch-model", ">= 6", "< 7"
-gem "elasticsearch-rails", ">= 6", "< 7"
+gem "elasticsearch"
+gem "elasticsearch-model"
+gem "elasticsearch-rails"
 
 group :development do
   gem "brakeman"
