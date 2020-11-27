@@ -52,12 +52,6 @@ gem "will_paginate-bootstrap", git: "https://github.com/estately/will_paginate-b
 gem "yui-compressor"
 gem "zip-zip"
 
-# Require after WillPaginate
-# Match deployed version
-gem "elasticsearch", ">= 7"
-gem "elasticsearch-model", ">= 7"
-gem "elasticsearch-rails", ">= 7"
-
 group :development do
   gem "brakeman"
   gem "bullet"
@@ -96,6 +90,5 @@ group :staging, :production do
   gem "connection_pool"
   gem "dalli"
   gem "execjs"
-  gem "logstash-logger"
   gem "raygun4ruby"
 end

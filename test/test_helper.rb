@@ -8,17 +8,15 @@ require "mocha/minitest"
 require "authlogic/test_case"
 require "test/enumerable_assertions"
 require "webmock/minitest"
-require "elasticsearch_stubs"
 
 class ActiveSupport::TestCase
   parallelize(workers: :number_of_processors)
   make_my_diffs_pretty!
 
   include Authlogic::TestCase
-  include ElasticsearchStubs
   include Test::EnumerableAssertions
 
-  setup :activate_authlogic, :reset_association, :reset_disciplines, :reset_person_current, :stub_elasticsearch
+  setup :activate_authlogic, :reset_association, :reset_disciplines, :reset_person_current
 
   def reset_association
     RacingAssociation.current = nil

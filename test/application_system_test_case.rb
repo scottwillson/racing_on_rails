@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require_relative "../test/elasticsearch_stubs"
 require_relative "system/actions"
 require_relative "system/assertions"
 
@@ -21,7 +20,6 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   Capybara.server = :puma, { Silent: true }
 
-  setup :stub_elasticsearch
   teardown :assert_no_java_script_errors
 
   include ::Actions
