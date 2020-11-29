@@ -96,7 +96,11 @@ module Admin
 
     def toggle_member
       team = Team.find(params[:id])
-      team.toggle!(:member)
+      if team.member?
+        team.update! member: false
+      else
+        team.update! member: true
+      end
       expire_cache
       render partial: "shared/member", locals: { record: team }
     end

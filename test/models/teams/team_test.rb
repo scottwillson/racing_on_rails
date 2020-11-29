@@ -64,27 +64,6 @@ module Teams
       assert_not dupe.valid?, "Dupe Vanilla should not be valid"
     end
 
-    test "member" do
-      team = Team.new(name: "Team Spine")
-      assert_equal(false, team.member, "member")
-      team.save!
-      team.reload
-      assert_equal(false, team.member, "member")
-
-      team = Team.new(name: "California Road Club")
-      assert_equal(false, team.member, "member")
-      team.member = true
-      assert_equal(true, team.member, "member")
-      team.save!
-      team.reload
-      assert_equal(true, team.member, "member")
-
-      team.member = true
-      team.save!
-      team.reload
-      assert_equal(true, team.member, "member")
-    end
-
     test "delete updated by" do
       team = FactoryBot.create(:team)
       person = FactoryBot.create(:person, name: "Admin")

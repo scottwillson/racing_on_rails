@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_03_161935) do
+ActiveRecord::Schema.define(version: 2020_11_29_161456) do
 
   create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
@@ -1133,7 +1133,6 @@ ActiveRecord::Schema.define(version: 2020_06_03_161935) do
     t.string "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean "member", default: false
     t.string "website"
     t.string "sponsors", limit: 1000
     t.string "contact_name"
@@ -1146,6 +1145,8 @@ ActiveRecord::Schema.define(version: 2020_06_03_161935) do
     t.string "updated_by_type"
     t.string "created_by_name"
     t.string "updated_by_name"
+    t.integer "member_from"
+    t.integer "member_to"
     t.index ["created_by_id"], name: "index_teams_on_created_by_id"
     t.index ["name"], name: "index_teams_on_name", unique: true
     t.index ["updated_at"], name: "index_teams_on_updated_at"

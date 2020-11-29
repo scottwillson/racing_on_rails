@@ -9,6 +9,7 @@ class Team < ApplicationRecord
   include Export::Teams
   include Names::Nameable
   include RacingOnRails::PaperTrail::Versions
+  include Teams::Membership
 
   before_save :destroy_shadowed_aliases
   around_save :add_alias_for_old_name
@@ -150,7 +151,7 @@ class Team < ApplicationRecord
   end
 
   def member_in_year?(_date)
-    member
+    member?
   end
 
   def name=(value)

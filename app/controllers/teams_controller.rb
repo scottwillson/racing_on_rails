@@ -32,7 +32,7 @@ class TeamsController < ApplicationController
     @teams = if RacingAssociation.current.show_all_teams_on_public_page?
                Team.all
              else
-               Team.where(member: true).where(show_on_public_page: true)
+               Team.member.where(show_on_public_page: true)
              end
   end
 end
