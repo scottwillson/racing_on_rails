@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: https://github.com/rubysec/bundler-audit.git
-  revision: 15a1d9b8f28141cc87f5d6dbe13bdd937b317591
+  revision: c40f11a090c01e146512ce3f5087cdb446577ef3
   specs:
     bundler-audit (0.7.0.1)
       bundler (>= 1.2.0, < 3)
@@ -278,7 +278,7 @@ GEM
       ruby-rc4
       ttfunk
     public_suffix (4.0.6)
-    puma (4.3.6)
+    puma (4.3.7)
       nio4r (~> 2.0)
     rack (2.2.3)
     rack-test (1.1.0)
