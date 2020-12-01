@@ -4,11 +4,7 @@
 # Updates membership to current year. If there are no more events in the current year, updates membership to next year.
 # See http://racingonrails.rocketsurgeryllc.com/sample_import_files/ for format details and examples.
 class PeopleFile
-  attr_reader :created
-  attr_reader :duplicates
-  attr_reader :path
-  attr_reader :table
-  attr_reader :updated
+  attr_reader :created, :duplicates, :path, :table, :updated
 
   def initialize(path)
     @created = 0
@@ -33,7 +29,6 @@ class PeopleFile
     ActiveSupport::Notifications.instrument(
       "import.people_file.racing_on_rails", update_membership: update_membership, import_file: import_file, rows: table.rows.size
     ) do
-
       @update_membership = update_membership
 
       @has_print_column = table.columns.any? do |column|

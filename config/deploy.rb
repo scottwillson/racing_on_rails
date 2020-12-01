@@ -72,4 +72,4 @@ after "deploy:normalize_assets", "compress_assets_7z"
 before "bundler:install", "deploy:local_code"
 before "bundler:install", "deploy:registration_engine"
 after "deploy:finished", "deploy:cache_error_pages"
-after 'deploy:finished', 'puma:restart'
+after "deploy:finished", "puma:restart"

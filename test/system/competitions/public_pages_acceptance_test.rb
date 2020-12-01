@@ -119,9 +119,9 @@ module Competitions
       FactoryBot.create(:discipline, name: "Cyclocross")
 
       promoter = FactoryBot.create(:person, name: "Brad Ross", home_phone: "(503) 555-1212")
-      @new_event = FactoryBot.create(:event, promoter: promoter, date: Date.new(RacingAssociation.current.effective_year, 5))
+      @new_event = FactoryBot.create(:event, promoter: promoter, date: Date.new(Time.zone.now.year, 5))
       @alice = FactoryBot.create(:person, name: "Alice Pennington")
-      Timecop.freeze(Date.new(RacingAssociation.current.effective_year, 5, 2)) do
+      Timecop.freeze(Time.zone.local(Time.zone.now.year, 5, 2)) do
         FactoryBot.create(:result, event: @new_event)
       end
 

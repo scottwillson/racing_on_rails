@@ -32,11 +32,12 @@ module Admin
 
       # See http://racingonrails.rocketsurgeryllc.com/sample_import_files/ for format details and examples.
       def import
-        if params[:commit] == "Cancel"
+        case params[:commit]
+        when "Cancel"
           session[:people_file_path] = nil
           redirect_to(action: "index")
 
-        elsif params[:commit] == "Import"
+        when "Import"
           ActiveSupport::Notifications.instrument "import.people.admin.racing_on_rails", people_file_path: session[:people_file_path]
 
           Duplicate.delete_all

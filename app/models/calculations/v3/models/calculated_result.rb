@@ -7,13 +7,8 @@ module Calculations
       class CalculatedResult
         include Calculations::V3::Models::Results
 
-        attr_reader :participant
-        attr_accessor :place
-        attr_accessor :points
-        attr_accessor :rejection_reason
-        attr_accessor :tied
-        attr_reader :source_results
-        attr_reader :time
+        attr_reader :participant, :source_results, :time
+        attr_accessor :place, :points, :rejection_reason, :tied
 
         def initialize(participant, source_results)
           @participant = participant

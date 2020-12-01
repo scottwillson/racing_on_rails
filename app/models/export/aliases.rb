@@ -9,8 +9,6 @@ module Export
       Alias.export_data
     end
 
-    private
-
     def Alias.export_head
       Base.export(Alias.export_head_sql, "aliases.txt")
     end

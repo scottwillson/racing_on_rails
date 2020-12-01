@@ -9,8 +9,6 @@ module Export
       Race.export_data
     end
 
-    private
-
     def Race.export_head
       Base.export(export_head_sql, "races.txt")
     end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_case", __FILE__)
-require File.expand_path("../../../../../app/models/competitions/categories", __FILE__)
+require File.expand_path("../../test_case", __dir__)
+require File.expand_path("../../../../app/models/competitions/categories", __dir__)
 
 module Competitions
   # :stopdoc:

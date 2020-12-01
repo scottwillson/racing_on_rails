@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 FactoryBot.define do
   factory :person_alias, class: Alias do
     sequence(:name) { |n| "Person Alias #{n}" }
@@ -38,7 +39,7 @@ FactoryBot.define do
   end
 
   factory :discipline_alias do
-    sequence(:alias) { |n| n.to_s }
+    sequence(:alias, &:to_s)
     discipline
   end
 
@@ -57,10 +58,11 @@ FactoryBot.define do
       date { Time.zone.local(2005, 7, 11) }
       children do |e|
         [
-        e.association(:event, date: Time.zone.local(2005, 7, 11), parent_id: e.id),
-        e.association(:event, date: Time.zone.local(2005, 7, 12), parent_id: e.id),
-        e.association(:event, date: Time.zone.local(2005, 7, 13), parent_id: e.id)
-      ] end
+          e.association(:event, date: Time.zone.local(2005, 7, 11), parent_id: e.id),
+          e.association(:event, date: Time.zone.local(2005, 7, 12), parent_id: e.id),
+          e.association(:event, date: Time.zone.local(2005, 7, 13), parent_id: e.id)
+        ]
+      end
     end
 
     factory :weekly_series_event do
@@ -119,7 +121,7 @@ FactoryBot.define do
       sequence(:login) { |n| "person#{n}@example.com" }
       sequence(:email) { |n| "person#{n}@example.com" }
       password_salt { Authlogic::Random.hex_token }
-      crypted_password { Authlogic::CryptoProviders::Sha512.encrypt("secret" + password_salt) }
+      crypted_password { Authlogic::CryptoProviders::Sha512.encrypt("secret#{password_salt}") }
       persistence_token { Authlogic::Random.hex_token }
       single_access_token { Authlogic::Random.friendly_token }
       perishable_token { Authlogic::Random.friendly_token }

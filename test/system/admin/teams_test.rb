@@ -81,7 +81,7 @@ class TeamsTest < ApplicationSystemTestCase
 
     find("#team_#{kona.id}").drag_to(find("#team_#{vanilla.id}_row"))
     assert_page_has_content "Merged Kona into Vanilla"
-    assert !Team.exists?(kona.id), "Kona should be merged"
+    assert_not Team.exists?(kona.id), "Kona should be merged"
     assert Team.exists?(vanilla.id), "Vanilla still exists after merge"
 
     visit "/admin/teams"

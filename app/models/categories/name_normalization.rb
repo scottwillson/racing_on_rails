@@ -28,7 +28,7 @@ module Categories
           name = name.gsub(/(\d+)\s?-\s?(\d+)/, '\1-\2')
 
           # 1 / 2 => 1/2
-          name = name.gsub(/\s?\/\s?/, "/")
+          name = name.gsub(%r{\s?/\s?}, "/")
 
           # 6- race
           name = name.gsub(/\s+-\s?/, " - ")
@@ -52,15 +52,13 @@ module Categories
         end
 
         # Men30+, W4
-        name = name.gsub(/(masters|master|men|women|m|w)(\d)/i, '\1 \2')
-
-        name
+        name.gsub(/(masters|master|men|women|m|w)(\d)/i, '\1 \2')
       end
 
       def self.normalize_punctuation(name)
         if name
           # trailing punctuation
-          name = name.gsub(/[\/:.,"]\z/, "")
+          name = name.gsub(%r{[/:.,"]\z}, "")
 
           # Men (Juniors)
           name = name.gsub(/\((masters|master|juniors|junior|men|women)\)/i, '\1')
@@ -107,6 +105,7 @@ module Categories
             [" ", "\.", "-"].each do |delimiter|
               # Don't combine 1/2/3 40+
               next if name[%r{[/ ]\d#{delimiter}\d\d}]
+
               name = name.gsub(/( ?)#{cats.join(delimiter)}( ?)/, "\\1#{cats.join('/')}\\2")
             end
           end
@@ -133,9 +132,7 @@ module Categories
           name = name.gsub(%r{#{age}/#{age + 14}}, "#{age}-#{age + 14}")
         end
 
-        name = name.gsub(/\((\d\d-\d\d)\)/, '\1')
-
-        name
+        name.gsub(/\((\d\d-\d\d)\)/, '\1')
       end
 
       def self.normalize_case(name)
@@ -167,15 +164,16 @@ module Categories
       def self.replace_roman_numeral_categories(name)
         if name
           name = name.split.map do |token|
-            if token == "I"
+            case token
+            when "I"
               "1"
-            elsif token == "II"
+            when "II"
               "2"
-            elsif token == "III"
+            when "III"
               "3"
-            elsif token == "IV"
+            when "IV"
               "4"
-            elsif token == "V"
+            when "V"
               "5"
             else
               token
@@ -290,7 +288,7 @@ module Categories
       def self.normalize_category_spelling(name)
         name.gsub(/cat ?(\d)/i, 'Category \1')
             .gsub(/category(\d)/i, 'Category \1')
-            .gsub(/category (\d)\/ /i, 'Category \1 ')
+            .gsub(%r{category (\d)/ }i, 'Category \1 ')
       end
 
       # 14 and Under, 14U, 14 & U
@@ -325,13 +323,13 @@ module Categories
       def self.normalize_ability_spelling(name)
         name.gsub(%r{M P/1/2}i, "Men Pro/1/2")
             .gsub(%r{P/1/2}i, "Pro/1/2")
-            .gsub(/Pro.*1\/2/i, "Pro/1/2")
-            .gsub(/Pr([\/, ])/i, 'Pro\1')
+            .gsub(%r{Pro.*1/2}i, "Pro/1/2")
+            .gsub(%r{Pr([/, ])}i, 'Pro\1')
       end
 
       def self.normalize_mtb_spelling(name)
         name.gsub(/semi( ?)pro/i, "Semi-Pro")
-            .gsub(/exp\/pro/i, "Pro/Expert")
+            .gsub(%r{exp/pro}i, "Pro/Expert")
             .gsub(/varsity junior/i, "Junior Varsity")
             .gsub(/jr. varsity/i, "Junior Varsity")
             .gsub(/single speeds?/i, "Singlespeed")
@@ -374,7 +372,7 @@ module Categories
 
       # Men Masters => Masters Men
       def self.normalize_order(name)
-        ["Masters", "Juniors", "Beginner", "Novice", "Sport", "Expert", "Semi-Pro", "Elite", "Singlespeed"].each do |cat|
+        %w[Masters Juniors Beginner Novice Sport Expert Semi-Pro Elite Singlespeed].each do |cat|
           name = name.gsub("Men #{cat}", "#{cat} Men")
           name = name.gsub("Women #{cat}", "#{cat} Women")
         end

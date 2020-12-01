@@ -7,7 +7,7 @@ module Events
     included do
       validate :parent_is_not_self
 
-      belongs_to :parent, foreign_key: "parent_id", class_name: "Event", optional: true
+      belongs_to :parent, class_name: "Event", optional: true
       has_many :children,
                -> { order :date },
                class_name: "Event",
@@ -16,7 +16,7 @@ module Events
                after_add: :children_changed,
                after_remove: :children_changed
 
-      scope :child, -> { where("parent_id is not null") }
+      scope :child, -> { where.not(parent_id: nil) }
       # :root?
       scope :not_child, -> { where("parent_id is null") }
 

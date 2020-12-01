@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../test_helper", __FILE__)
+require File.expand_path("../test_helper", __dir__)
 
 # :stopdoc:
 class RaceNumberTest < ActiveSupport::TestCase
@@ -49,12 +49,12 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert(RaceNumber.new(person: molly, value: "999", year: 2001, number_issuer: elkhorn, discipline: road).valid?, "Different people, same value")
 
     # invalid because missing fields
-    assert(!RaceNumber.new(person: alice, year: 2001, number_issuer: elkhorn, discipline: road).valid?, "No value")
-    assert(!RaceNumber.new(person: alice, value: "", year: 2001, number_issuer: elkhorn, discipline: road).valid?, "Blank value")
+    assert_not(RaceNumber.new(person: alice, year: 2001, number_issuer: elkhorn, discipline: road).valid?, "No value")
+    assert_not(RaceNumber.new(person: alice, value: "", year: 2001, number_issuer: elkhorn, discipline: road).valid?, "Blank value")
 
     # No person ID invalid
     no_person = RaceNumber.new(value: "A103", year: 2001, number_issuer: elkhorn, discipline: road)
-    assert !no_person.valid?
+    assert_not no_person.valid?
 
     # Defaults
     race_number = RaceNumber.new(person: alice, value: "A1", number_issuer: elkhorn, discipline: road)
@@ -78,7 +78,7 @@ class RaceNumberTest < ActiveSupport::TestCase
 
     RaceNumber.create!(person: alice, value: "876", year: 2001, number_issuer: obra, discipline: cyclocross)
     number = RaceNumber.create(person: alice, value: "876", year: 2001, number_issuer: obra, discipline: cyclocross)
-    assert(!number.valid?, "Should not be able to create two of the exact same numbers")
+    assert_not(number.valid?, "Should not be able to create two of the exact same numbers")
   end
 
   test "rental" do
@@ -98,15 +98,15 @@ class RaceNumberTest < ActiveSupport::TestCase
 
     assert(RaceNumber.rental?(nil), "Nil number is rental")
     assert(RaceNumber.rental?(""), "Blank number is rental")
-    assert(!RaceNumber.rental?(" 9 "), "9 not rental")
-    assert(!RaceNumber.rental?("11"), "11 is not a rental")
+    assert_not(RaceNumber.rental?(" 9 "), "9 not rental")
+    assert_not(RaceNumber.rental?("11"), "11 is not a rental")
     assert(RaceNumber.rental?("99"), "99 is rental")
-    assert(!RaceNumber.rental?("11", Discipline[:downhill]), "11 is rental")
-    assert(!RaceNumber.rental?("99", Discipline[:mountain_bike]), "99 is rental")
-    assert(!RaceNumber.rental?("100"), "100 not rental")
-    assert(!RaceNumber.rental?("A100"), "A100 not rental")
-    assert(!RaceNumber.rental?("A50"), "A50 not rental")
-    assert(!RaceNumber.rental?("50Z"), "50Z not rental")
+    assert_not(RaceNumber.rental?("11", Discipline[:downhill]), "11 is rental")
+    assert_not(RaceNumber.rental?("99", Discipline[:mountain_bike]), "99 is rental")
+    assert_not(RaceNumber.rental?("100"), "100 not rental")
+    assert_not(RaceNumber.rental?("A100"), "A100 not rental")
+    assert_not(RaceNumber.rental?("A50"), "A50 not rental")
+    assert_not(RaceNumber.rental?("50Z"), "50Z not rental")
 
     assert(RaceNumber.new(person: alice, value: "10", year: 2001, number_issuer: elkhorn, discipline: road).valid?)
     assert(RaceNumber.new(person: alice, value: "11", year: 2001, number_issuer: elkhorn, discipline: road).valid?)
@@ -117,13 +117,13 @@ class RaceNumberTest < ActiveSupport::TestCase
 
     assert(RaceNumber.rental?(nil), "Nil number rental")
     assert(RaceNumber.rental?(""), "Blank number rental")
-    assert(!RaceNumber.rental?(" 9 "), "9 not rental")
-    assert(!RaceNumber.rental?("11"), "11 is rental")
+    assert_not(RaceNumber.rental?(" 9 "), "9 not rental")
+    assert_not(RaceNumber.rental?("11"), "11 is rental")
     assert(RaceNumber.rental?("99"), "99 is rental")
-    assert(!RaceNumber.rental?("100"), "100 not rental")
-    assert(!RaceNumber.rental?("A100"), "A100 not rental")
-    assert(!RaceNumber.rental?("A50"), "A50 not rental")
-    assert(!RaceNumber.rental?("50Z"), "50Z not rental")
+    assert_not(RaceNumber.rental?("100"), "100 not rental")
+    assert_not(RaceNumber.rental?("A100"), "A100 not rental")
+    assert_not(RaceNumber.rental?("A50"), "A50 not rental")
+    assert_not(RaceNumber.rental?("50Z"), "50Z not rental")
   end
 
   test "rental no rental numbers" do
@@ -141,17 +141,17 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert(RaceNumber.new(person: alice, value: "99", year: 2001, number_issuer: elkhorn, discipline: road).valid?)
     assert(RaceNumber.new(person: alice, value: "100", year: 2001, number_issuer: elkhorn, discipline: road).valid?)
 
-    assert(!RaceNumber.rental?(nil), "Nil number is rental")
-    assert(!RaceNumber.rental?(""), "Blank number is rental")
-    assert(!RaceNumber.rental?(" 9 "), "9 not rental")
-    assert(!RaceNumber.rental?("11"), "11 is not a rental")
-    assert(!RaceNumber.rental?("99"), "99 is rental")
-    assert(!RaceNumber.rental?("11", Discipline[:downhill]), "11 is rental")
-    assert(!RaceNumber.rental?("99", Discipline[:mountain_bike]), "99 is rental")
-    assert(!RaceNumber.rental?("100"), "100 not rental")
-    assert(!RaceNumber.rental?("A100"), "A100 not rental")
-    assert(!RaceNumber.rental?("A50"), "A50 not rental")
-    assert(!RaceNumber.rental?("50Z"), "50Z not rental")
+    assert_not(RaceNumber.rental?(nil), "Nil number is rental")
+    assert_not(RaceNumber.rental?(""), "Blank number is rental")
+    assert_not(RaceNumber.rental?(" 9 "), "9 not rental")
+    assert_not(RaceNumber.rental?("11"), "11 is not a rental")
+    assert_not(RaceNumber.rental?("99"), "99 is rental")
+    assert_not(RaceNumber.rental?("11", Discipline[:downhill]), "11 is rental")
+    assert_not(RaceNumber.rental?("99", Discipline[:mountain_bike]), "99 is rental")
+    assert_not(RaceNumber.rental?("100"), "100 not rental")
+    assert_not(RaceNumber.rental?("A100"), "A100 not rental")
+    assert_not(RaceNumber.rental?("A50"), "A50 not rental")
+    assert_not(RaceNumber.rental?("50Z"), "50Z not rental")
 
     assert(RaceNumber.new(person: alice, value: "10", year: 2001, number_issuer: elkhorn, discipline: road).valid?)
     assert(RaceNumber.new(person: alice, value: "11", year: 2001, number_issuer: elkhorn, discipline: road).valid?)
@@ -160,15 +160,15 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert(RaceNumber.new(person: alice, value: "99", year: 2001, number_issuer: elkhorn, discipline: road).valid?)
     assert(RaceNumber.new(person: alice, value: "100", year: 2001, number_issuer: elkhorn, discipline: road).valid?)
 
-    assert(!RaceNumber.rental?(nil), "Nil number not rental")
-    assert(!RaceNumber.rental?(""), "Blank number not rental")
-    assert(!RaceNumber.rental?(" 9 "), "9 not rental")
-    assert(!RaceNumber.rental?("11"), "11 is not a rental")
-    assert(!RaceNumber.rental?("99"), "99 is not a rental")
-    assert(!RaceNumber.rental?("100"), "100 not rental")
-    assert(!RaceNumber.rental?("A100"), "A100 not rental")
-    assert(!RaceNumber.rental?("A50"), "A50 not rental")
-    assert(!RaceNumber.rental?("50Z"), "50Z not rental")
+    assert_not(RaceNumber.rental?(nil), "Nil number not rental")
+    assert_not(RaceNumber.rental?(""), "Blank number not rental")
+    assert_not(RaceNumber.rental?(" 9 "), "9 not rental")
+    assert_not(RaceNumber.rental?("11"), "11 is not a rental")
+    assert_not(RaceNumber.rental?("99"), "99 is not a rental")
+    assert_not(RaceNumber.rental?("100"), "100 not rental")
+    assert_not(RaceNumber.rental?("A100"), "A100 not rental")
+    assert_not(RaceNumber.rental?("A50"), "A50 not rental")
+    assert_not(RaceNumber.rental?("50Z"), "50Z not rental")
   end
 
   test "create bmx" do
@@ -192,7 +192,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     RaceNumber.create!(person: alice, value: "A103", year: 2001, number_issuer: elkhorn)
     alice.results.clear
     alice.destroy
-    assert(!RaceNumber.exists?(person_id: alice.id, value: "A103"), "Shoud delete person")
+    assert_not(RaceNumber.exists?(person_id: alice.id, value: "A103"), "Shoud delete person")
   end
 
   test "gender" do

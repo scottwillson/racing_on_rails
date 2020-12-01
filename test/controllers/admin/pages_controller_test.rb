@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 module Admin
   # :stopdoc:
@@ -23,12 +23,12 @@ module Admin
       page = FactoryBot.create(:page)
 
       patch :update_attribute,
-        params: {
-          id: page.to_param,
-          value: "OBRA Banquet",
-          name: "title"
-        },
-        xhr: true
+            params: {
+              id: page.to_param,
+              value: "OBRA Banquet",
+              name: "title"
+            },
+            xhr: true
       assert_response(:success)
       assert_template(nil)
       assert_equal(page, assigns("page"), "@page")
@@ -62,14 +62,14 @@ module Admin
       parent_page = Page.create!(title: "Root")
       page = FactoryBot.create(:page)
       put :update,
-        params: {
-          id: page.to_param,
-          page: {
-            title: "My Awesome Bike Racing Page",
-            body: "<blink>Race</blink>",
-            parent_id: parent_page.to_param
+          params: {
+            id: page.to_param,
+            page: {
+              title: "My Awesome Bike Racing Page",
+              body: "<blink>Race</blink>",
+              parent_id: parent_page.to_param
+            }
           }
-        }
       page.reload
       assert_equal("My Awesome Bike Racing Page", page.title, "title")
       assert_equal("<blink>Race</blink>", page.body, "body")
@@ -92,12 +92,12 @@ module Admin
 
     test "create page" do
       put(:create,
-        params: {
-          page: {
-            title: "My Awesome Bike Racing Page",
-            body: "<blink>Race</blink>"
-          }
-        })
+          params: {
+            page: {
+              title: "My Awesome Bike Racing Page",
+              body: "<blink>Race</blink>"
+            }
+          })
       page = Page.find_by(title: "My Awesome Bike Racing Page")
       assert_redirected_to(edit_admin_page_path(page))
       page.reload
@@ -127,7 +127,7 @@ module Admin
       page = FactoryBot.create(:page)
       delete :destroy, params: { id: page.to_param }
       assert_redirected_to(admin_pages_path)
-      assert !Page.exists?(page.id), "Page should be deleted"
+      assert_not Page.exists?(page.id), "Page should be deleted"
     end
 
     test "delete parent page" do
@@ -136,14 +136,14 @@ module Admin
       page.reload
       delete :destroy, params: { id: page.to_param }
       assert_redirected_to(admin_pages_path)
-      assert(!Page.exists?(page.id), "Page should be deleted")
+      assert_not(Page.exists?(page.id), "Page should be deleted")
     end
 
     test "delete child page" do
       page = FactoryBot.create(:page).children.create!
       delete :destroy, params: { id: page.to_param }
       assert_redirected_to(admin_pages_path)
-      assert(!Page.exists?(page.id), "Page should be deleted")
+      assert_not(Page.exists?(page.id), "Page should be deleted")
     end
   end
 end

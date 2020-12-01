@@ -4,8 +4,7 @@ module Calculations
   module V3
     module Models
       class CategoryMapping
-        attr_reader :category
-        attr_reader :discipline
+        attr_reader :category, :discipline
 
         def initialize(category, discipline)
           @category = category

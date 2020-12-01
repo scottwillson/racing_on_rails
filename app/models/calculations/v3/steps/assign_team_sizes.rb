@@ -40,7 +40,7 @@ module Calculations
         end
 
         def self.teams(results)
-          results.group_by(&:place).values.select { |r| r.size > 1 }.size
+          results.group_by(&:place).values.count { |r| r.size > 1 }
         end
       end
     end

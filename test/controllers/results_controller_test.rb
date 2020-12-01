@@ -68,7 +68,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
 
-    assert(!assigns["events"].include?(future_national_federation_event), "Should only include association-sanctioned events")
+    assert_not(assigns["events"].include?(future_national_federation_event), "Should only include association-sanctioned events")
   end
 
   test "index only shows sanctioned events" do
@@ -79,7 +79,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
 
-    assert(!assigns["events"].include?(future_national_federation_event), "Should only include association-sanctioned events")
+    assert_not(assigns["events"].include?(future_national_federation_event), "Should only include association-sanctioned events")
   end
 
   test "index road" do
@@ -338,7 +338,7 @@ class ResultsControllerTest < ActionController::TestCase
 
     get :event, params: { event_id: result.event.to_param }
     assert_response :success
-    assert !@response.body["Kona"], "Expected no 'Kona' in #{@response.body}"
+    assert_not @response.body["Kona"], "Expected no 'Kona' in #{@response.body}"
     assert @response.body["Gentle Lovers"], "Expected 'Gentle Lovers' in #{@response.body}"
   end
 end

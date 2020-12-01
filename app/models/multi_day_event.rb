@@ -25,7 +25,7 @@ class MultiDayEvent < Event
   # TODO: Default first child event date to start date, next child to first child date + 1, additional children to next day if adjacent,
   # same day of next week if not adjacent (Series/WeeklySeries)
   has_many :children,
-           -> {
+           lambda {
              where("type is null or type = 'SingleDayEvent'")
                .order(:date)
            },
@@ -123,12 +123,10 @@ class MultiDayEvent < Event
     length = events.last.date - events.first.date
     if events.size - 1 == length
       MultiDayEvent
+    elsif (events.first.date.wday == 0) || (events.first.date.wday == 6)
+      Series
     else
-      if (events.first.date.wday == 0) || (events.first.date.wday == 6)
-        Series
-      else
-        WeeklySeries
-      end
+      WeeklySeries
     end
   end
 

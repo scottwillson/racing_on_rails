@@ -31,7 +31,6 @@ class Category < ApplicationRecord
   has_many :calculation_category_mappings,
            class_name: "Calculations::V3::CategoryMapping",
            dependent: :destroy,
-           foreign_key: :category_id,
            inverse_of: :category
 
   has_many :calculation_categories, through: :calculation_category_mappings
@@ -68,7 +67,7 @@ class Category < ApplicationRecord
 
   # All categories with no parent (except root 'association' category)
   def self.find_all_unknowns
-    Category.includes(:children).where(parent_id: nil).where("name != ?", RacingAssociation.current.short_name)
+    Category.includes(:children).where(parent_id: nil).where.not(name: RacingAssociation.current.short_name)
   end
 
   # Update ability, age, equipment, etc. from names

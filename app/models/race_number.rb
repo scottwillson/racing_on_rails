@@ -133,7 +133,7 @@ class RaceNumber < ApplicationRecord
       if existing_numbers.size > 1
         logger.warn("Race number '#{value}' found #{existing_numbers} times for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, person #{person_id}")
       end
-      return false
+      false
     end
   end
 

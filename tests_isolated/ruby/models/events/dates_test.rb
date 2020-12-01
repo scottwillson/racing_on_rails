@@ -11,8 +11,7 @@ class Events::DatesTest < Ruby::TestCase
 
     include ::Events::Dates
 
-    attr_accessor :date
-    attr_accessor :end_date
+    attr_accessor :date, :end_date
   end
 
   def test_short_date

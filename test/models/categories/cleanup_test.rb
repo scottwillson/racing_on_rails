@@ -21,7 +21,7 @@ module Categories
       FactoryBot.create(:result, category: result_category)
 
       assert senior_men.in_use?, "Category with children is in use"
-      assert !men_c.in_use?, "unused category should be in use"
+      assert_not men_c.in_use?, "unused category should be in use"
       assert discipline_bar_category.in_use?, "Discipline BAR category should be in use"
       assert race_category.in_use?, "race category"
       assert result_category.in_use?, "Result category should be in use"

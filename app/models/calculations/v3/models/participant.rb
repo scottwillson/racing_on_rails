@@ -6,8 +6,7 @@ module Calculations
   module V3
     module Models
       class Participant
-        attr_reader :id
-        attr_reader :membership
+        attr_reader :id, :membership
 
         def initialize(id, membership: nil)
           @id = id

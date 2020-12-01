@@ -18,8 +18,8 @@ module Events
       scope :most_recent_with_recent_result, lambda { |weeks|
         includes(races: %i[category results])
           .includes(:parent)
-          .where("type != ?", "Event")
-          .where("type is not null")
+          .where.not(type: "Event")
+          .where.not(type: nil)
           .where("events.date >= ?", weeks)
           .where("id in (select event_id from results where competition_result = false and team_competition_result = false)")
           .order("updated_at desc")
@@ -27,8 +27,8 @@ module Events
 
       scope :with_recent_results, lambda { |weeks|
         includes(parent: :parent)
-          .where("type != ?", "Event")
-          .where("type is not null")
+          .where.not(type: "Event")
+          .where.not(type: nil)
           .where("events.date >= ?", weeks)
           .where("id in (select event_id from results where competition_result = false and team_competition_result = false)")
           .order("updated_at desc")

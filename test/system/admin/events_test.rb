@@ -215,7 +215,7 @@ class EventsTest < ApplicationSystemTestCase
 
     click_link "Edit all"
     assert_selector "#races_collection_text"
-    assert_match(/Men A[\s]+Men B/, find("#races_collection_text").value)
+    assert_match(/Men A\s+Men B/, find("#races_collection_text").value)
 
     fill_in "races_collection_text", with: "Women"
     click_link "Cancel"

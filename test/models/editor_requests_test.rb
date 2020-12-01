@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../test_helper", __FILE__)
+require File.expand_path("../test_helper", __dir__)
 
 # :stopdoc:
 class EditorRequestsTest < ActiveSupport::TestCase
@@ -12,9 +12,9 @@ class EditorRequestsTest < ActiveSupport::TestCase
     assert_equal "hotwheels@yahoo.com", editor_request.email, "email"
     assert_equal [editor_request], person.editor_requests, "FactoryBot.create(:person).editor_requests"
     assert_equal [editor_request], editor.sent_editor_requests, "FactoryBot.create(:person).sent_editor_requests"
-    assert editor_request.expires_at > Time.now, "Should expire in future"
+    assert editor_request.expires_at > Time.zone.now, "Should expire in future"
     assert editor_request.expires_at < 2.weeks.from_now, "Should expire in less than 2 weeks"
-    assert !person.editors.include?(editor), "Should not add promoter as editor of member"
+    assert_not person.editors.include?(editor), "Should not add promoter as editor of member"
     assert ActionMailer::Base.deliveries.any?, "Should send email to account holder"
   end
 

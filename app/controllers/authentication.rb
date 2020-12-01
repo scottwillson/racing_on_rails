@@ -16,11 +16,13 @@ module Authentication
 
   def current_person_session
     return @current_person_session if defined?(@current_person_session)
+
     @current_person_session = PersonSession.find
   end
 
   def current_person
     return @current_person if defined?(@current_person)
+
     @current_person = current_person_session&.person
   end
 

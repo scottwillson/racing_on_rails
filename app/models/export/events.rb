@@ -9,8 +9,6 @@ module Export
       Event.export_data
     end
 
-    private
-
     def Event.export_head
       Base.export(export_head_sql, "events.txt")
     end

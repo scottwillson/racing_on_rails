@@ -48,7 +48,7 @@ module Competitions
       @race = @overall_bar.find_race(discipline, category)
       unless @race
         flash.now[:warn] = "Could not find results"
-        return render(:show)
+        render(:show)
       end
     end
   end

@@ -97,13 +97,11 @@ module People
             n.year == year
         end
       else
-        RaceNumber.where(
-          discipline: discipline,
-          number_issuer: issuer,
-          person: self,
-          value: value,
-          year: year
-        ).exists?
+        RaceNumber.exists?(discipline: discipline,
+                           number_issuer: issuer,
+                           person: self,
+                           value: value,
+                           year: year)
       end
     end
 

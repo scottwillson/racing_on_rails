@@ -123,7 +123,7 @@ module Competitions
             (result.person.racing_age(year) >= competition_category.ages_begin && result.person.racing_age(year) <= competition_category.ages_end)
           )
       end
-      .each { |result| create_result(race, result) }
+                     .each { |result| create_result(race, result) }
     end
 
     def split?(competition_category, result)

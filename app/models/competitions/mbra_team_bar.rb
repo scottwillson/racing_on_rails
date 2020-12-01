@@ -14,6 +14,7 @@ module Competitions
           ::Discipline.find_all_bar.each do |discipline|
             bar = MbraTeamBar.where(date: date, discipline: discipline.name).first
             next if bar
+
             MbraTeamBar.create!(
               name: "#{year} #{discipline.name} BAT",
               date: date,

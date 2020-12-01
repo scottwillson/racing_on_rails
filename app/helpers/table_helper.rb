@@ -43,7 +43,7 @@ module TableHelper
                          [_attribute].flatten
                        end
     locals[:style_class] = options[:class] || _attribute
-    locals[:title] = options[:title] || (_attribute&.titlecase)
+    locals[:title] = options[:title] || _attribute&.titlecase
     locals[:sort_params] = options[:sort_params] || {}
 
     locals[:sort_direction] = if params[:sort_by] == _attribute && params[:sort_direction] == "asc"

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Password reset instructions email
-class Notifier < ActionMailer::Base
+class Notifier < ApplicationMailer
   def password_reset_instructions(people)
     @edit_password_reset_urls = people.map { |person| edit_password_reset_url(person.perishable_token, host: RacingAssociation.current.rails_host) }
     @people = people

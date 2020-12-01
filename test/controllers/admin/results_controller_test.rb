@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 module Admin
   # :stopdoc:
@@ -397,11 +397,11 @@ module Admin
       result = FactoryBot.create(:result, person: tonkin)
 
       assert tonkin.results.include?(result)
-      assert !weaver.results.include?(result)
+      assert_not weaver.results.include?(result)
 
       post :move, params: { person_id: weaver.id, result_id: result.id }, format: "js"
 
-      assert !tonkin.results.reload.include?(result)
+      assert_not tonkin.results.reload.include?(result)
       assert weaver.results.reload.include?(result)
       assert_response :success
     end
@@ -477,7 +477,7 @@ module Admin
       assert_equal("6", matson_result.place, "Matson place after insert")
       assert_equal("20", molly_result.place, "Molly place after insert")
       assert_equal("DNF", dnf.place, "DNF place after insert")
-      assert_equal("DNF", race.results.reload.sort.last.place, "DNF place after insert")
+      assert_equal("DNF", race.results.reload.max.place, "DNF place after insert")
 
       post :create, params: { race_id: race.id }, xhr: true
       assert_response(:success)
@@ -492,7 +492,7 @@ module Admin
       assert_equal("6", matson_result.place, "Matson place after insert")
       assert_equal("20", molly_result.place, "Molly place after insert")
       assert_equal("DNF", dnf.place, "DNF place after insert")
-      assert_equal("DNF", race.results.reload.sort.last.place, "DNF place after insert")
+      assert_equal("DNF", race.results.reload.max.place, "DNF place after insert")
     end
 
     test "destroy" do

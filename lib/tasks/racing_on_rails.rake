@@ -2,12 +2,12 @@
 
 namespace :racing_on_rails do
   desc "Cold setup"
-  task :bootstrap do
+  task bootstrap: :environment do
     puts "Bootstrap task will delete your Racing on Rails development database."
     db_password = ask("MySQL root password (press return for no password): ")
     puts "Create databases"
     puts `mysql -u root #{db_password_arg(db_password)} -e 'drop database if exists racing_on_rails_development'`
-    puts `mysql -u root #{db_password_arg(db_password)} < #{File.expand_path(::Rails.root.to_s + "/db/grants.sql")}`
+    puts `mysql -u root #{db_password_arg(db_password)} < #{File.expand_path("#{::Rails.root}/db/grants.sql")}`
     puts "Populate development database"
     puts `rake db:setup`
     puts "Create test database"
@@ -26,7 +26,7 @@ end
 
 def ask(message)
   print message
-  STDIN.gets.chomp
+  $stdin.gets.chomp
 end
 
 def db_password_arg(db_password)

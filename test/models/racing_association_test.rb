@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../test_helper", __FILE__)
+require File.expand_path("../test_helper", __dir__)
 
 # :stopdoc:
 # Check we can call these methods with errors.
@@ -17,7 +17,7 @@ class RacingAssociationTest < ActiveSupport::TestCase
     RacingAssociation.current.competitions << :ironman
     begin
       assert(RacingAssociation.current.competitions.include?(:ironman), "Racing association competitions should include Ironman")
-      assert(!RacingAssociation.current.competitions.include?(:bar), "Racing association competitions should not include Bar")
+      assert_not(RacingAssociation.current.competitions.include?(:bar), "Racing association competitions should not include Bar")
       assert_equal(1, RacingAssociation.current.competitions.size, "Should only include one instance of Ironman competition")
     ensure
       RacingAssociation.current.competitions = default_competitions

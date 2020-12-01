@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 # :stopdoc:
 class EventTest < ActiveSupport::TestCase
@@ -161,7 +161,7 @@ class EventTest < ActiveSupport::TestCase
     kings_valley.races.create!(category: FactoryBot.create(:category))
     kings_valley.races.create!(category: FactoryBot.create(:category))
 
-    assert(!kings_valley.races.empty?, "Should have races")
+    assert_not(kings_valley.races.empty?, "Should have races")
     kings_valley.destroy_races
     assert(kings_valley.races.empty?, "Should not have races")
   end
@@ -169,38 +169,38 @@ class EventTest < ActiveSupport::TestCase
   test "no delete with results" do
     event = FactoryBot.create(:result).event
     event = Event.find(event.id)
-    assert(!event.destroy, "Should not be destroyed")
-    assert(!event.errors.empty?, "Should have errors")
+    assert_not(event.destroy, "Should not be destroyed")
+    assert_not(event.errors.empty?, "Should have errors")
     assert(Event.exists?(event.id), "Kings Valley should not be deleted")
   end
 
   test "multi day event children with no parent" do
     event = SingleDayEvent.create!(name: "PIR")
-    assert(!event.multi_day_event_children_with_no_parent?)
+    assert_not(event.multi_day_event_children_with_no_parent?)
     assert(event.multi_day_event_children_with_no_parent.empty?)
 
     event = FactoryBot.create(:event)
-    assert(!event.multi_day_event_children_with_no_parent?)
+    assert_not(event.multi_day_event_children_with_no_parent?)
     assert(event.multi_day_event_children_with_no_parent.empty?)
 
     MultiDayEvent.create!(name: "PIR", date: Date.new(RacingAssociation.current.year, 9, 12))
     event = SingleDayEvent.create!(name: "PIR", date: Date.new(RacingAssociation.current.year, 9, 12))
-    assert(!event.multi_day_event_children_with_no_parent?)
+    assert_not(event.multi_day_event_children_with_no_parent?)
     assert(event.multi_day_event_children_with_no_parent.empty?)
 
     series = FactoryBot.create(:series)
     3.times { series.children.create! }
-    assert(!series.multi_day_event_children_with_no_parent?)
-    assert(!series.children[0].multi_day_event_children_with_no_parent?)
-    assert(!series.children[1].multi_day_event_children_with_no_parent?)
-    assert(!series.children[2].multi_day_event_children_with_no_parent?)
+    assert_not(series.multi_day_event_children_with_no_parent?)
+    assert_not(series.children[0].multi_day_event_children_with_no_parent?)
+    assert_not(series.children[1].multi_day_event_children_with_no_parent?)
+    assert_not(series.children[2].multi_day_event_children_with_no_parent?)
 
     pir_1 = SingleDayEvent.create!(name: "PIR", date: Date.new(RacingAssociation.current.year + 1, 9, 5))
-    assert(!pir_1.multi_day_event_children_with_no_parent?)
+    assert_not(pir_1.multi_day_event_children_with_no_parent?)
     assert(pir_1.multi_day_event_children_with_no_parent.empty?)
     pir_2 = SingleDayEvent.create!(name: "PIR", date: Date.new(RacingAssociation.current.year + 2, 9, 12))
-    assert(!pir_1.multi_day_event_children_with_no_parent?)
-    assert(!pir_2.multi_day_event_children_with_no_parent?)
+    assert_not(pir_1.multi_day_event_children_with_no_parent?)
+    assert_not(pir_2.multi_day_event_children_with_no_parent?)
     assert(pir_1.multi_day_event_children_with_no_parent.empty?)
     assert(pir_2.multi_day_event_children_with_no_parent.empty?)
 
@@ -208,24 +208,24 @@ class EventTest < ActiveSupport::TestCase
     # Need to completely reset state
     pir_1 = SingleDayEvent.find(pir_1.id)
     pir_2 = SingleDayEvent.find(pir_2.id)
-    assert(!pir_1.multi_day_event_children_with_no_parent?)
+    assert_not(pir_1.multi_day_event_children_with_no_parent?)
     assert(pir_2.multi_day_event_children_with_no_parent?)
     assert(pir_3.multi_day_event_children_with_no_parent?)
     assert(pir_1.multi_day_event_children_with_no_parent.empty?)
-    assert(!pir_2.multi_day_event_children_with_no_parent.empty?)
-    assert(!pir_3.multi_day_event_children_with_no_parent.empty?)
+    assert_not(pir_2.multi_day_event_children_with_no_parent.empty?)
+    assert_not(pir_3.multi_day_event_children_with_no_parent.empty?)
 
     mt_hood = FactoryBot.create(:stage_race, name: "Mt. Hood Classic")
-    assert(!mt_hood.multi_day_event_children_with_no_parent?)
-    assert(!mt_hood.children[0].multi_day_event_children_with_no_parent?)
-    assert(!mt_hood.children[1].multi_day_event_children_with_no_parent?)
+    assert_not(mt_hood.multi_day_event_children_with_no_parent?)
+    assert_not(mt_hood.children[0].multi_day_event_children_with_no_parent?)
+    assert_not(mt_hood.children[1].multi_day_event_children_with_no_parent?)
 
     mt_hood_3 = SingleDayEvent.create(name: "Mt. Hood Classic")
-    assert(!mt_hood.multi_day_event_children_with_no_parent?)
-    assert(!mt_hood.children[0].multi_day_event_children_with_no_parent?)
-    assert(!mt_hood.children[1].multi_day_event_children_with_no_parent?)
+    assert_not(mt_hood.multi_day_event_children_with_no_parent?)
+    assert_not(mt_hood.children[0].multi_day_event_children_with_no_parent?)
+    assert_not(mt_hood.children[1].multi_day_event_children_with_no_parent?)
 
-    assert(!mt_hood_3.multi_day_event_children_with_no_parent?)
+    assert_not(mt_hood_3.multi_day_event_children_with_no_parent?)
     assert mt_hood_3.multi_day_event_children_with_no_parent.blank?
   end
 
@@ -396,8 +396,8 @@ class EventTest < ActiveSupport::TestCase
 
   test "attributes_for_duplication" do
     attributes = FactoryBot.create(:event).attributes_for_duplication
-    assert !attributes.include?("id"), "attributes_for_duplication should not include id"
-    assert !attributes.include?("updated_at"), "attributes_for_duplication should not include updated_at"
+    assert_not attributes.include?("id"), "attributes_for_duplication should not include id"
+    assert_not attributes.include?("updated_at"), "attributes_for_duplication should not include updated_at"
     assert attributes.include?("name"), "attributes_for_duplication should include name"
     assert attributes.include?("city"), "attributes_for_duplication should include city"
   end
@@ -405,7 +405,7 @@ class EventTest < ActiveSupport::TestCase
   private
 
   def assert_no_orphans(event)
-    assert(!event.missing_children?, "No missing children for #{event.name}")
+    assert_not(event.missing_children?, "No missing children for #{event.name}")
     assert_equal(0, event.missing_children.size, "#{event.name} missing children count")
   end
 

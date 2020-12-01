@@ -66,7 +66,6 @@ module People
         other_id: other_person.try(:id),
         other_name: other_person.try(:name)
       ) do
-
         unless merge?(other_person, force: force)
           ActiveSupport::Notifications.instrument(
             "failure.merge.people.admin.racing_on_rails",

@@ -4,8 +4,8 @@ module Competitions
   # Team's top ten results for each Event. Last-place points penalty if team has fewer than ten finishers.
   class CrossCrusadeTeamCompetition < Competition
     validates :parent, presence: true
-    after_create :add_source_events
     before_create :set_notes, :set_name
+    after_create :add_source_events
 
     def self.calculate!(year = Time.zone.today.year)
       ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do

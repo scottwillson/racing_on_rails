@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddOrderPeopleTeamId < ActiveRecord::Migration[5.2]
   def change
     change_table :order_people do |t|

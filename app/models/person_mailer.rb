@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PersonMailer < ActionMailer::Base
+class PersonMailer < ApplicationMailer
   def new_login_confirmation(person)
     @person = person
 

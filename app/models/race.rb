@@ -107,6 +107,7 @@ class Race < ApplicationRecord
   # Range of dates_of_birth of people in this race
   def dates_of_birth
     raise(ArgumentError, "Need category to calculate dates of birth") unless category
+
     Date.new(date.year - category.ages.end, 1, 1)..Date.new(date.year - category.ages.begin, 12, 31)
   end
 
@@ -172,7 +173,7 @@ class Race < ApplicationRecord
   def result_columns_or_default_for_editing
     columns = result_columns_or_default
     columns.map! do |column|
-      if column == "first_name" || column == "last_name"
+      if %w[first_name last_name].include?(column)
         "name"
       else
         column
@@ -244,6 +245,7 @@ class Race < ApplicationRecord
        row_hash["team.name"].blank?
       return false
     end
+
     true
   end
 
@@ -289,6 +291,7 @@ class Race < ApplicationRecord
       place_before = result.members_only_place.to_i
       result.members_only_place = ""
       next unless result.numeric_place?
+
       if result.member_result?
         # only increment if we have moved onto a new place
         last_members_only_place += 1 if result.numeric_place != last_members_only_place && result.numeric_place != last_result_place
@@ -319,7 +322,7 @@ class Race < ApplicationRecord
   end
 
   def append_result
-    results.create place: results.sort.last.next_place
+    results.create place: results.max.next_place
   end
 
   def destroy_result(result)
@@ -393,6 +396,7 @@ class Race < ApplicationRecord
   def==(other)
     return false unless other.is_a?(self.class)
     return other.id == id unless other.new_record? || new_record?
+
     category == other.category
   end
 

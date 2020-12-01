@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 module Admin
   # :stopdoc:
@@ -18,7 +18,7 @@ module Admin
       delete :destroy, params: { id: race_number.to_param }, xhr: true
       assert_response :success
 
-      assert !RaceNumber.exists?(race_number.id)
+      assert_not RaceNumber.exists?(race_number.id)
     end
   end
 end

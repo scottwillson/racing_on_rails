@@ -20,7 +20,7 @@ class FirstAidProvidersTest < ApplicationSystemTestCase
       assert_table "events_table", 2, 4, "Copperopolis"
       assert_table "events_table", 2, 5, "Brad Ross"
       assert_table "events_table", 3, 4, "Giro di SF"
-      assert !has_checked_field?("past_events")
+      assert_not has_checked_field?("past_events")
 
       find(:xpath, "//table[@id='events_table']//tr[2]//td[@class='name']//div[@class='record']//div[@class='editable']").click
       within "form.editor_field" do
@@ -37,10 +37,10 @@ class FirstAidProvidersTest < ApplicationSystemTestCase
 
         find("#past_events").click
         assert_no_text event_3.name
-        assert !has_checked_field?("past_events")
+        assert_not has_checked_field?("past_events")
       end
 
-      assert !has_checked_field?("past_events")
+      assert_not has_checked_field?("past_events")
       assert_table "events_table", 2, 4, "Copperopolis"
       assert_table "events_table", 3, 4, "Giro di SF"
 

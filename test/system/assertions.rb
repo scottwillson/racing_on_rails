@@ -22,7 +22,7 @@ module Assertions
   def assert_table(table_id, row, column, expected)
     assert page.has_table?(table_id), "Expected table with id '#{table_id}'"
     within find(:xpath, "//table[@id='#{table_id}']//tr[#{row}]/td[#{column}]") do
-      assert page.has_content?(expected), -> {
+      assert page.has_content?(expected), lambda {
         "Expected '#{expected}' in row #{row} column #{column} of table #{table_id} in table ID #{table_id}, but was #{text}"
       }
     end

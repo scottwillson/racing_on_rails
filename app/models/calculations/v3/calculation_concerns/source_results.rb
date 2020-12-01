@@ -102,9 +102,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
   # Create event records cache: Hash by ud
   def populate_source_result_events
     benchmark "populate_source_result_events.#{key}.calculate.calculations" do
-      ::Event.year(year).includes(:races).each_with_object({}) do |event, events|
-        events[event.id] = event
-      end
+      ::Event.year(year).includes(:races).index_by(&:id)
     end
   end
 

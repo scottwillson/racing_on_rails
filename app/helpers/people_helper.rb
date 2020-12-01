@@ -23,9 +23,9 @@ module PeopleHelper
                 person
               else
                 person.try :person
-    end
+              end
 
-    capture(&block) if ((attributes && (attributes.any? { |a| person[a].blank? || subject[a].blank? })) || (current_person&.can_edit?(subject))) && block
+    capture(&block) if ((attributes && (attributes.any? { |a| person[a].blank? || subject[a].blank? })) || current_person&.can_edit?(subject)) && block
   end
 
   def account_permission_return_to(person, current_person)

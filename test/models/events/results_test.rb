@@ -74,17 +74,17 @@ module Events
       child_event.races.create!(category: FactoryBot.create(:category)).results.create!
 
       assert(child_event.is_a?(Event), "Child event should be an Event")
-      assert(!child_event.is_a?(SingleDayEvent), "Child event should not be an SingleDayEvent")
+      assert_not(child_event.is_a?(SingleDayEvent), "Child event should not be an SingleDayEvent")
 
       assert_equal([series], Event.find_all_with_results, "weekly_series")
     end
 
     test "has results" do
-      assert(!Event.new.any_results?, "New Event should not have results")
+      assert_not(Event.new.any_results?, "New Event should not have results")
 
       event = SingleDayEvent.create!
       race = event.races.create!(category: FactoryBot.create(:category))
-      assert(!event.any_results?, "Event with race, but no results should not have results")
+      assert_not(event.any_results?, "Event with race, but no results should not have results")
 
       race.results.create!(place: 200, person: FactoryBot.create(:person))
       assert(event.any_results?, "Event with one result should have results")

@@ -6,7 +6,7 @@ module Competitions::Calculations::SelectResults
   # the calling Competition when it selected results from the database.
   # Only keep best +results_per_event+ results for participant (person or team).
   def select_results(results, rules)
-    results = results.select { |r| r.participant_id && ![nil, "", "DQ", "DNS"].include?(r.place) }
+    results = results.select { |r| r.participant_id && [nil, "", "DQ", "DNS"].exclude?(r.place) }
     results = reject_dnfs(results, rules)
     results = select_members(results, rules)
     results = select_in_source_events(results, rules)

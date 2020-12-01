@@ -149,9 +149,9 @@ module Admin
         alice_dupe = Duplicate.create!(new_attributes: { name: "Alice Pennington", road_category: "2" }, people: Person.where(last_name: "Pennington"))
 
         post :resolve_duplicates,
-          params: {
-            tonkin_dupe.to_param => "new", ryan_dupe.to_param => weaver_3.to_param, alice_dupe.to_param => alice_2.to_param
-          }
+             params: {
+               tonkin_dupe.to_param => "new", ryan_dupe.to_param => weaver_3.to_param, alice_dupe.to_param => alice_2.to_param
+             }
 
         assert_redirected_to admin_people_path
         assert_equal(0, Duplicate.count, "Should have no duplicates")

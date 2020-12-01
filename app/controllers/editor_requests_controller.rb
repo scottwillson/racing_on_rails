@@ -14,13 +14,11 @@ class EditorRequestsController < ApplicationController
                        else
                          "#{@editor.name} can already access #{@person.name}'s account"
                        end
+    elsif @person.email.present?
+      @person.editor_requests.create!(editor: @editor)
+      flash[:notice] = "Emailed account access request to #{@person.name}'s account"
     else
-      if @person.email.present?
-        @person.editor_requests.create!(editor: @editor)
-        flash[:notice] = "Emailed account access request to #{@person.name}'s account"
-      else
-        flash[:warn] = "Can't send access request because #{@person.name} doesn't have an email address on their account. Please ask them to login to their account and grant you access directly."
-      end
+      flash[:warn] = "Can't send access request because #{@person.name} doesn't have an email address on their account. Please ask them to login to their account and grant you access directly."
     end
 
     if params[:return_to].present?

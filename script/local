@@ -1,4 +1,5 @@
 #! /usr/bin/env ruby
+# frozen_string_literal: true
 
 # Simple script to switch local directories for dev
 
@@ -20,7 +21,7 @@ unless association.nil?
 end
 
 FileUtils.rm_f "registration_engine"
-if association == "obra" || association == "nabra"
+if %w[obra nabra].include?(association)
   `ln -s ../registration_engine registration_engine`
 else
   `ln -s ../registration_engine_public_stub registration_engine`

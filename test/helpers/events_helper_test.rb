@@ -24,7 +24,7 @@ class EventsHelperTest < ActionView::TestCase
     promoter.name = ""
     assert link_to_event_email(event), "No promoter or contact info should be blank"
     assert_match(/href="mailto:bob@velopromo.com"/, link_to_event_email(event), "Promoter email")
-    assert_match(/>bob@velopromo.com<\/a>/, link_to_event_email(event), "Promoter email")
+    assert_match(%r{>bob@velopromo.com</a>}, link_to_event_email(event), "Promoter email")
 
     event = SingleDayEvent.new(email: "copperopolis@velopromo.com")
     assert_match(/href="mailto:copperopolis@velopromo.com"/, link_to_event_email(event), "Event email and no promoter")
@@ -43,7 +43,7 @@ class EventsHelperTest < ActionView::TestCase
 
     promoter.name = ""
     assert_match(/href="mailto:copperopolis@velopromo.com"/, link_to_event_email(event), "Event email and promoter email and no promoter name")
-    assert_match(/>copperopolis@velopromo.com<\/a>/, link_to_event_email(event), "Event email and promoter email and no promoter name")
+    assert_match(%r{>copperopolis@velopromo.com</a>}, link_to_event_email(event), "Event email and promoter email and no promoter name")
   end
 
   test "link to event phone" do

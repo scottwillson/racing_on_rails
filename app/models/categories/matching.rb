@@ -65,11 +65,11 @@ module Categories
       return candidate_categories.first if one_match?(candidate_categories)
       return nil if candidate_categories.empty?
 
-      if result_age && !senior? && candidate_categories.none? { |category| ages_begin.in?(category.ages) }
-        candidate_categories = candidate_categories.select { |category| category.ages.include?(result_age) }
-      else
-        candidate_categories = candidate_categories.select { |category| ages_begin.in?(category.ages) }
-      end
+      candidate_categories = if result_age && !senior? && candidate_categories.none? { |category| ages_begin.in?(category.ages) }
+                               candidate_categories.select { |category| category.ages.include?(result_age) }
+                             else
+                               candidate_categories.select { |category| ages_begin.in?(category.ages) }
+                             end
       debug "ages: #{candidate_categories.map(&:name).join(', ')}"
       return candidate_categories.first if one_match?(candidate_categories)
       return nil if candidate_categories.empty?
@@ -187,11 +187,11 @@ module Categories
       debug "equivalent: #{equivalent_match&.name}"
       return equivalent_match if equivalent_match
 
-      if result_age
-        candidate_categories = candidate_categories.select { |category| category.ages.include?(result_age) }
-      else
-        candidate_categories = candidate_categories.select { |category| ages_begin.in?(category.ages) }
-      end
+      candidate_categories = if result_age
+                               candidate_categories.select { |category| category.ages.include?(result_age) }
+                             else
+                               candidate_categories.select { |category| ages_begin.in?(category.ages) }
+                             end
       debug "ages: #{candidate_categories.map(&:name).join(', ')}"
       return candidate_categories.first if candidate_categories.size == 1
 

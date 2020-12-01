@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../../test_helper", __FILE__)
+require File.expand_path("../../../test_helper", __dir__)
 
 # :stopdoc:
 module Admin
@@ -45,7 +45,7 @@ module Admin
         assert_template("admin/events/edit")
         assert_not_nil(assigns["event"], "Should assign event")
         assert(assigns["event"].is_a?(Event), "Should default to generic Event")
-        assert(!assigns["event"].is_a?(SingleDayEvent), "Should default to generic Event")
+        assert_not(assigns["event"].is_a?(SingleDayEvent), "Should default to generic Event")
         assert_equal(parent, assigns["event"].parent, "Parent event")
         assert_not_nil(assigns["disciplines"], "Should assign disciplines")
       end

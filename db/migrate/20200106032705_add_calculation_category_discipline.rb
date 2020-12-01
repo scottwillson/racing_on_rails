@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCalculationCategoryDiscipline < ActiveRecord::Migration[5.2]
   def change
     add_column :calculations_categories_categories, :discipline_id, :integer, default: nil, null: true

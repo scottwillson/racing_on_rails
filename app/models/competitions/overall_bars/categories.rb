@@ -19,7 +19,7 @@ module Competitions
 
         if category.nil?
           event.categories.detect { |cat| cat.friendly_param == category_friendly_param || cat.parent.friendly_param == category_friendly_param } ||
-            event.categories.sort.first
+            event.categories.min
         else
           category
         end

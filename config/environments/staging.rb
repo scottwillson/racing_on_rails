@@ -21,9 +21,9 @@ Rails.application.configure do
   config.i18n.fallbacks                                     = true
   config.log_formatter = ::Logger::Formatter.new
   config.log_level                                          = :info
-  config.log_tags                                           = [ :request_id ]
+  config.log_tags                                           = [:request_id]
   config.logger                                             = Syslog::Logger.new("racing_on_rails", Syslog::LOG_LOCAL4)
-  config.public_file_server.enabled                         = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  config.public_file_server.enabled                         = ENV["RAILS_SERVE_STATIC_FILES"].present?
   config.require_master_key                                 = true
 
   config.action_mailer.smtp_settings = {
@@ -37,7 +37,7 @@ Rails.application.configure do
   }
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger           = ActiveSupport::Logger.new($stdout)
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end

@@ -6,8 +6,7 @@ module Calculations
       # A Category with results (CalculatedResult or SourceResult?).
       # A "Race" in the older domain model.
       class EventCategory
-        attr_reader :category
-        attr_reader :event
+        attr_reader :category, :event
         attr_accessor :rejection_reason
 
         def initialize(category, event = nil, discipline: nil)

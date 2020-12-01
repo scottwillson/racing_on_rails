@@ -161,14 +161,14 @@ module Admin
       if results_file.custom_columns.present?
         flash[:notice] = flash[:notice] + "Found custom columns: #{results_file.custom_columns.map(&:to_s).map(&:humanize).join(', ')}. "
         if RacingAssociation.current.usac_results_format?
-          flash[:notice] = flash[:notice] + "(If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)"
+          flash[:notice] = "#{flash[:notice]}(If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)"
         end
       end
 
       if results_file.import_warnings.present?
-        flash[:notice] = flash[:notice] + "Import warnings: "
+        flash[:notice] = "#{flash[:notice]}Import warnings: "
         results_file.import_warnings.each do |warning|
-          flash[:notice] = flash[:notice] + warning.to_s + " "
+          flash[:notice] = "#{flash[:notice]}#{warning} "
         end
       end
 
@@ -298,7 +298,7 @@ module Admin
 
     def events_for_year(year)
       single_day_events = SingleDayEvent.year(year)
-      childless_multi_day_events = MultiDayEvent.where("id not in (?)", single_day_events.map(&:parent_id).compact).year(year)
+      childless_multi_day_events = MultiDayEvent.where.not(id: single_day_events.map(&:parent_id).compact).year(year)
       single_day_events + childless_multi_day_events
     end
 

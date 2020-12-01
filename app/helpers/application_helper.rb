@@ -80,7 +80,7 @@ module ApplicationHelper
     end
     options = options.merge(renderer: BootstrapPagination::Rails)
     options = options.merge(page_links: !mobile_request?) unless options.key?(:page_links)
-    content_tag(:div, class: "pagination") { super(*[collection_or_options, options].compact) }
+    tag.div(class: "pagination") { super(*[collection_or_options, options].compact) }
   end
 
   # Only need this helper once, it will provide an interface to convert a block into a partial.

@@ -13,14 +13,8 @@ module Calculations
         include ::Categories::Matching
         include ::Categories::Weight
 
-        attr_accessor :ability_begin
-        attr_accessor :ability_end
-        attr_accessor :ages_begin
-        attr_accessor :ages_end
-        attr_accessor :equipment
-        attr_accessor :gender
+        attr_accessor :ability_begin, :ability_end, :ages_begin, :ages_end, :equipment, :gender, :weight
         attr_reader :name
-        attr_accessor :weight
 
         @@logger = nil
 

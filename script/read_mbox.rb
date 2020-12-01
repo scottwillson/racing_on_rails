@@ -12,7 +12,7 @@ MailingList.transaction do
       message = ""
       count += 1
     else
-      message << line.sub(/^\>From/, "From")
+      message << line.sub(/^>From/, "From")
     end
   rescue StandardError => e
     puts "#{e}: #{line}"

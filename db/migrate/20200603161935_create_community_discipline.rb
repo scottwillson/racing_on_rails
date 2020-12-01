@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateCommunityDiscipline < ActiveRecord::Migration[5.2]
   def up
     Discipline.find_by(name: "Community")&.destroy!

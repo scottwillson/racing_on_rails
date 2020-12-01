@@ -36,6 +36,15 @@ Metrics/ModuleLength:
 Naming/VariableNumber:
   Enabled: false
 
+Rails/DynamicFindBy:
+  Whitelist:
+    - find_by_friendly_param
+    - find_by_name_or_alias
+    - find_by_name_or_alias_or_create
+    - find_by_normalized_path!
+    - find_by_slug
+    - find_by_sql
+
 Rails/FilePath:
   Enabled: false
 

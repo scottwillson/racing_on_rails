@@ -5,8 +5,8 @@ require "test_helper"
 # :stopdoc:
 class PersonTest < ActiveSupport::TestCase
   test "save" do
-    assert !Person.exists?(last_name: "Hampsten"), "Hampsten should not be in DB"
-    assert !Team.exists?(name: "7-11"), "7-11 should not be in DB"
+    assert_not Person.exists?(last_name: "Hampsten"), "Hampsten should not be in DB"
+    assert_not Team.exists?(name: "7-11"), "7-11 should not be in DB"
 
     person = Person.new(last_name: "Hampsten")
     team = Team.new(name: "7-11")
@@ -95,10 +95,10 @@ class PersonTest < ActiveSupport::TestCase
     person_1 = FactoryBot.create(:person, name: "Molly Cameron", other_people_with_same_name: true)
     person_2 = FactoryBot.create(:person, name: "Molly Cameron")
 
-    assert !person_1.merge(person_2)
-    assert !person_2.merge(person_1)
-    assert !person_1.merge?(person_2)
-    assert !person_2.merge?(person_1)
+    assert_not person_1.merge(person_2)
+    assert_not person_2.merge(person_1)
+    assert_not person_1.merge?(person_2)
+    assert_not person_2.merge?(person_1)
   end
 
   test "merge" do
@@ -145,7 +145,7 @@ class PersonTest < ActiveSupport::TestCase
     person_to_merge.aliases.create!(name: "Eric Tonkin")
     FactoryBot.create(:event_team_membership, person: person_to_merge, event_team: event_team_membership.event_team)
 
-    assert Person.where(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
+    assert Person.exists?(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name), "#{person_to_keep.name} should be in DB"
     assert_equal(3, Result.where(person_id: person_to_keep.id).count, "Molly's results")
     assert_equal(1, Alias.where(aliasable_id: person_to_keep.id).count, "Mollys's aliases")
     assert_equal(1, person_to_keep.race_numbers.count, "Target person's race numbers")
@@ -153,7 +153,7 @@ class PersonTest < ActiveSupport::TestCase
     association = NumberIssuer.find_by(name: RacingAssociation.current.short_name)
     assert_equal(association, person_to_keep.race_numbers.first.number_issuer, "Target person's race number issuer")
 
-    assert Person.where(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name).exists?, "#{person_to_merge.name} should be in DB"
+    assert Person.exists?(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name), "#{person_to_merge.name} should be in DB"
     assert_equal(2, Result.where(person_id: person_to_merge.id).count, "Tonkin's results")
     assert_equal(1, Alias.where(aliasable_id: person_to_merge.id).count, "Tonkin's aliases")
     assert_equal(2, person_to_merge.race_numbers.count, "Merging person's race numbers")
@@ -173,7 +173,7 @@ class PersonTest < ActiveSupport::TestCase
     person_to_keep.merge(person_to_merge)
 
     person_to_keep.reload
-    assert Person.where(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
+    assert Person.exists?(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name), "#{person_to_keep.name} should be in DB"
     assert_equal(5, Result.where(person_id: person_to_keep.id).count, "Molly's results")
     aliases = Alias.where(aliasable_id: person_to_keep.id)
     erik_alias = aliases.detect { |a| a.name == person_to_merge.name }
@@ -188,7 +188,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal("202", race_numbers[2].value, "Person's race number value")
     assert_equal(association, race_numbers[2].number_issuer, "Person's race number issuer")
 
-    assert !Person.where(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name).exists?, "#{person_to_merge.name} should not be in DB"
+    assert_not Person.exists?(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name), "#{person_to_merge.name} should not be in DB"
     assert_equal(0, Result.where(person_id: person_to_merge.id).count, "Tonkin's results")
     assert_equal(0, Alias.where(aliasable_id: person_to_merge.id).count, "Tonkin's aliases")
     assert_same_elements(promoter_events, person_to_keep.events.reload, "Should merge promoter events")
@@ -267,24 +267,24 @@ class PersonTest < ActiveSupport::TestCase
     # Same name as merged
     Person.create(name: person_to_merge.name, road_number: "YYZ")
 
-    assert Person.where(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
+    assert Person.exists?(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name), "#{person_to_keep.name} should be in DB"
     assert_equal(3, Result.where(person_id: person_to_keep.id).count, "Molly's results")
     assert_equal(1, Alias.where(aliasable_id: person_to_keep.id).count, "Mollys's aliases")
 
-    assert Person.where(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name).exists?, "#{person_to_merge.name} should be in DB"
+    assert Person.exists?(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name), "#{person_to_merge.name} should be in DB"
     assert_equal(2, Result.where(person_id: person_to_merge.id).count, "Tonkin's results")
     assert_equal(1, Alias.where(aliasable_id: person_to_merge.id).count, "Tonkin's aliases")
 
     person_to_keep.merge(person_to_merge)
 
-    assert Person.where(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name).exists?, "#{person_to_keep.name} should be in DB"
+    assert Person.exists?(first_name: person_to_keep.first_name, last_name: person_to_keep.last_name), "#{person_to_keep.name} should be in DB"
     assert_equal(5, Result.where(person_id: person_to_keep.id).count, "Molly's results")
     aliases = Alias.where(aliasable_id: person_to_keep.id)
     erik_alias = aliases.detect { |a| a.name == "Erik Tonkin" }
     assert_nil(erik_alias, "Molly should not have Erik Tonkin alias because there is another Erik Tonkin")
     assert_equal(2, Alias.where(aliasable_id: person_to_keep.id).count, "Molly's aliases")
 
-    assert Person.where(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name).exists?, "#{person_to_merge.name} should still be in DB"
+    assert Person.exists?(first_name: person_to_merge.first_name, last_name: person_to_merge.last_name), "#{person_to_merge.name} should still be in DB"
     assert_equal(0, Result.where(person_id: person_to_merge.id).count, "Tonkin's results")
     assert_equal(0, Alias.where(aliasable_id: person_to_merge.id).count, "Tonkin's aliases")
   end
@@ -580,16 +580,16 @@ class PersonTest < ActiveSupport::TestCase
 
   test "master?" do
     person = Person.new
-    assert(!person.master?, "Master?")
+    assert_not(person.master?, "Master?")
 
     person.date_of_birth = Date.new((RacingAssociation.current.masters_age - 1).years.ago.year, 1, 1)
-    assert(!person.master?, "Master?")
+    assert_not(person.master?, "Master?")
 
     person.date_of_birth = Date.new(RacingAssociation.current.masters_age.years.ago.year, 12, 31)
     assert(person.master?, "Master?")
 
     person.date_of_birth = Date.new(17.years.ago.year, 1, 1)
-    assert(!person.master?, "Master?")
+    assert_not(person.master?, "Master?")
 
     # Greater then 36 or so years in the past will give an ArgumentError on Windows
     person.date_of_birth = Date.new((RacingAssociation.current.masters_age + 1).years.ago.year, 12, 31)
@@ -598,16 +598,16 @@ class PersonTest < ActiveSupport::TestCase
 
   test "junior?" do
     person = Person.new
-    assert(!person.junior?, "Junior?")
+    assert_not(person.junior?, "Junior?")
 
     person.date_of_birth = Date.new(19.years.ago.year, 1, 1)
-    assert(!person.junior?, "Junior?")
+    assert_not(person.junior?, "Junior?")
 
     person.date_of_birth = Date.new(18.years.ago.year, 12, 31)
     assert(person.junior?, "Junior?")
 
     person.date_of_birth = Date.new(21.years.ago.year, 1, 1)
-    assert(!person.junior?, "Junior?")
+    assert_not(person.junior?, "Junior?")
 
     person.date_of_birth = Date.new(12.years.ago.year, 12, 31)
     assert(person.junior?, "Junior?")
@@ -898,8 +898,8 @@ class PersonTest < ActiveSupport::TestCase
     assert(person.valid?, "Renamed Mollie Cameron should be valid")
 
     assert Person.exists?(name: "Mollie Cameron"), "Mollie Cameron should  exist"
-    assert !Person.exists?(name: "Molly Cameron"), "Molly Cameron should not exist"
-    assert !Alias.exists?(name: "Mollie Cameron"), "Mollie Cameron alias should exist"
+    assert_not Person.exists?(name: "Molly Cameron"), "Molly Cameron should not exist"
+    assert_not Alias.exists?(name: "Mollie Cameron"), "Mollie Cameron alias should exist"
     assert Alias.exists?(name: "Molly Cameron"), "Molly Cameron alias should exist"
   end
 
@@ -968,8 +968,8 @@ class PersonTest < ActiveSupport::TestCase
     person = FactoryBot.create(:person, name: "Molly Cameron", other_people_with_same_name: true)
     person_2 = FactoryBot.create(:person, name: "Molly Cameron", other_people_with_same_name: true)
 
-    assert !person_2.merge?(person), "merge? should honor other_people_with_same_name"
-    assert !person.merge?(person_2), "merge? should honor other_people_with_same_name"
+    assert_not person_2.merge?(person), "merge? should honor other_people_with_same_name"
+    assert_not person.merge?(person_2), "merge? should honor other_people_with_same_name"
 
     assert person.merge?(person_2, force: true), "merge? should honor force argument"
   end
@@ -979,7 +979,7 @@ class PersonTest < ActiveSupport::TestCase
     downhill.destroy
     Discipline.reset
 
-    assert(!Discipline.exists?(name: "Downhill"), "Downhill should be deleted")
+    assert_not(Discipline.exists?(name: "Downhill"), "Downhill should be deleted")
     person = FactoryBot.create(:person)
     assert_nil(person.dh_number, "DH number")
   end
@@ -1099,8 +1099,8 @@ class PersonTest < ActiveSupport::TestCase
     member = FactoryBot.create(:person)
 
     assert(administrator.administrator?, "administrator administrator?")
-    assert(!promoter.administrator?, "promoter administrator?")
-    assert(!member.administrator?, "administrator administrator?")
+    assert_not(promoter.administrator?, "promoter administrator?")
+    assert_not(member.administrator?, "administrator administrator?")
   end
 
   test "promoter" do
@@ -1108,9 +1108,9 @@ class PersonTest < ActiveSupport::TestCase
     promoter = FactoryBot.create(:promoter)
     member = FactoryBot.create(:person)
 
-    assert !administrator.promoter?, "administrator promoter?"
+    assert_not administrator.promoter?, "administrator promoter?"
     assert promoter.promoter?, "promoter promoter?"
-    assert !member.promoter?, "person promoter?"
+    assert_not member.promoter?, "person promoter?"
   end
 
   test "login with periods" do
@@ -1167,7 +1167,7 @@ class PersonTest < ActiveSupport::TestCase
     person.editors << alice
     assert alice.editable_people.any?, "should be editor"
     person.destroy!
-    assert !Person.exists?(person.id)
+    assert_not Person.exists?(person.id)
     assert alice.editable_people.reload.empty?, "should remove editors"
   end
 
@@ -1238,7 +1238,7 @@ class PersonTest < ActiveSupport::TestCase
 
   test "renewed" do
     person = Person.create!
-    assert !person.renewed?, "New person"
+    assert_not person.renewed?, "New person"
 
     Timecop.freeze(Date.new(2009, 11, 30)) do
       person = Person.create!(member_from: Date.new(2009, 1, 1), member_to: Date.new(2009, 12, 31))
@@ -1247,11 +1247,11 @@ class PersonTest < ActiveSupport::TestCase
 
     person = Person.create!(member_from: Date.new(2009, 1, 1), member_to: Date.new(2009, 12, 31))
     Timecop.freeze(Time.zone.local(2009, 12, 1)) do
-      assert !person.renewed?, "On Dec 1"
+      assert_not person.renewed?, "On Dec 1"
     end
 
     Timecop.freeze(Date.new(2010, 1, 1)) do
-      assert !person.renewed?, "Next year"
+      assert_not person.renewed?, "Next year"
     end
   end
 
@@ -1260,22 +1260,22 @@ class PersonTest < ActiveSupport::TestCase
     p2 = Person.create!
     admin = FactoryBot.create(:administrator)
 
-    assert !p1.can_edit?(p2)
-    assert !p1.can_edit?(admin)
+    assert_not p1.can_edit?(p2)
+    assert_not p1.can_edit?(admin)
     assert p1.can_edit?(p1)
-    assert !p2.can_edit?(p1)
-    assert !p2.can_edit?(admin)
+    assert_not p2.can_edit?(p1)
+    assert_not p2.can_edit?(admin)
     assert p2.can_edit?(p2)
     assert admin.can_edit?(p1)
     assert admin.can_edit?(p2)
     assert admin.can_edit?(admin)
 
     p1.editors << p2
-    assert !p1.can_edit?(p2)
-    assert !p1.can_edit?(admin)
+    assert_not p1.can_edit?(p2)
+    assert_not p1.can_edit?(admin)
     assert p1.can_edit?(p1)
     assert p2.can_edit?(p1)
-    assert !p2.can_edit?(admin)
+    assert_not p2.can_edit?(admin)
     assert p2.can_edit?(p2)
     assert admin.can_edit?(p1)
     assert admin.can_edit?(p2)
@@ -1283,10 +1283,10 @@ class PersonTest < ActiveSupport::TestCase
 
     p2.editors << p1
     assert p1.can_edit?(p2)
-    assert !p1.can_edit?(admin)
+    assert_not p1.can_edit?(admin)
     assert p1.can_edit?(p1)
     assert p2.can_edit?(p1)
-    assert !p2.can_edit?(admin)
+    assert_not p2.can_edit?(admin)
     assert p2.can_edit?(p2)
     assert admin.can_edit?(p1)
     assert admin.can_edit?(p2)
@@ -1297,7 +1297,7 @@ class PersonTest < ActiveSupport::TestCase
     assert p1.can_edit?(admin)
     assert p1.can_edit?(p1)
     assert p2.can_edit?(p1)
-    assert !p2.can_edit?(admin)
+    assert_not p2.can_edit?(admin)
     assert p2.can_edit?(p2)
     assert admin.can_edit?(p1)
     assert admin.can_edit?(p2)

@@ -15,7 +15,7 @@ module Competitions
         unless expected == actual
           expected_message = pretty_to_string(expected)
           actual_message = pretty_to_string(actual)
-          flunk("Results not equal." + "\nExpected:\n" + expected_message + "Actual:\n" + actual_message)
+          flunk("Results not equal.\nExpected:\n#{expected_message}Actual:\n#{actual_message}")
         end
       end
 
@@ -27,7 +27,7 @@ module Competitions
         unless expected == actual
           expected_message = pretty_to_string_scores(expected)
           actual_message = pretty_to_string_scores(actual)
-          flunk("Scores not equal." + "\nExpected:\n" + expected_message + "Actual:\n" + actual_message)
+          flunk("Scores not equal.\nExpected:\n#{expected_message}Actual:\n#{actual_message}")
         end
       end
 

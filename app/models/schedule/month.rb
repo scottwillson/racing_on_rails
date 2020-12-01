@@ -9,7 +9,7 @@ module Schedule
     # List of Weeks
     attr_reader :weeks
 
-    attr_reader :date
+    attr_reader :date, :name_abbr
 
     def initialize(year, month)
       @year = year
@@ -25,8 +25,6 @@ module Schedule
         day += 7
       end
     end
-
-    attr_reader :name_abbr
 
     # Monday of this week's day as a number
     def monday_of_week(day)

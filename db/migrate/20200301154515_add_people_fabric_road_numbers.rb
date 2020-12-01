@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddPeopleFabricRoadNumbers < ActiveRecord::Migration[5.2]
   def change
     change_table :people do |t|

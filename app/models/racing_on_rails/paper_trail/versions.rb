@@ -9,24 +9,24 @@ module RacingOnRails::PaperTrail::Versions
     attr_accessor :updater
 
     has_paper_trail ignore: %i[
-                               created_at
-                               created_by_id
-                               created_by_name
-                               created_by_type
-                               current_login_at
-                               current_login_ip
-                               last_login_at
-                               last_login_ip
-                               login_count
-                               password_salt
-                               perishable_token
-                               persistence_token
-                               single_access_token
-                               updated_at
-                               updated_by_id
-                               updated_by_name
-                               updated_by_type
-                             ]
+      created_at
+      created_by_id
+      created_by_name
+      created_by_type
+      current_login_at
+      current_login_ip
+      last_login_at
+      last_login_ip
+      login_count
+      password_salt
+      perishable_token
+      persistence_token
+      single_access_token
+      updated_at
+      updated_by_id
+      updated_by_name
+      updated_by_type
+    ]
 
     before_save :set_created_by
     before_save :set_updated_by
@@ -63,19 +63,15 @@ module RacingOnRails::PaperTrail::Versions
   end
 
   def created_by
-    begin
-      created_by_type&.constantize&.find(created_by_id)
-    rescue ActiveRecord::RecordNotFound
-      nil
-    end
+    created_by_type&.constantize&.find(created_by_id)
+  rescue ActiveRecord::RecordNotFound
+    nil
   end
 
   def updated_by
-    begin
-      updated_by_type&.constantize&.find(updated_by_id)
-    rescue ActiveRecord::RecordNotFound
-      nil
-    end
+    updated_by_type&.constantize&.find(updated_by_id)
+  rescue ActiveRecord::RecordNotFound
+    nil
   end
 
   def created_from_result?

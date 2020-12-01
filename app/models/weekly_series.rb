@@ -9,7 +9,7 @@ class WeeklySeries < Series
     if children.empty?
       date.wday
     else
-      children.sort_by(&:date).first.date.wday
+      children.min_by(&:date).date.wday
     end
   end
 

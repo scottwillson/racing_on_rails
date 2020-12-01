@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 # Send email to mailing list. Also receives email from Mailman for archives. Old, but battle-tested, code.
-class MailingListMailer < ActionMailer::Base
+class MailingListMailer < ApplicationMailer
   # Reply just to sender of post, not the whole list
   def private_reply(reply_post, to)
     raise("'To' cannot be blank") if to.blank?
+
     mail(
       subject: reply_post.subject,
       to: to,
@@ -45,20 +46,20 @@ class MailingListMailer < ActionMailer::Base
 
       unless mailing_list
         email_to = begin
-                     email.to.first.to_s
-                   rescue StandardError
-                     nil
-                   end
+          email.to.first.to_s
+        rescue StandardError
+          nil
+        end
         email_from = begin
-                       email[:from]
-                     rescue StandardError
-                       nil
-                     end
+          email[:from]
+        rescue StandardError
+          nil
+        end
         mail_subject = begin
-                         mail.subject
-                       rescue StandardError
-                         nil
-                       end
+          mail.subject
+        rescue StandardError
+          nil
+        end
         Rails.logger.warn "No mailing list for '#{mailing_list_name}' header '#{list_post_header}' to '#{email_to}' from '#{email_from}' about '#{mail_subject}'"
         return true
       end
@@ -101,15 +102,15 @@ class MailingListMailer < ActionMailer::Base
                                               from_name: post.from_name
 
       post
-    rescue StandardError => save_error
-      Rails.logger.error "Could not save post: #{save_error}"
+    rescue StandardError => e
+      Rails.logger.error "Could not save post: #{e}"
       begin
         Rails.logger.error email
       rescue StandardError
         Rails.logger.error "Could not save email contents"
       end
       Rails.logger.error post.errors.full_messages if post&.errors.present?
-      RacingOnRails::Application.exception_notifier.track_exception save_error
+      RacingOnRails::Application.exception_notifier.track_exception e
       raise
     end
     post

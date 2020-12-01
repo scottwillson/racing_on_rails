@@ -25,7 +25,7 @@ module Competitions
     def categories!
       categories = []
       template_categories.each do |template_category|
-        template_category.save! unless Category.where(name: template_category.name).exists?
+        template_category.save! unless Category.exists?(name: template_category.name)
         categories << template_category
       end
 

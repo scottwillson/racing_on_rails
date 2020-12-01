@@ -16,8 +16,8 @@ module Competitions
   # * source_result: 3rd, Mudslinger
   # * competition_result: 200th Ironman
   class Score < ApplicationRecord
-    belongs_to :source_result, class_name: "Result", foreign_key: "source_result_id"
-    belongs_to :competition_result, class_name: "Result", foreign_key: "competition_result_id"
+    belongs_to :source_result, class_name: "Result"
+    belongs_to :competition_result, class_name: "Result"
 
     # Intentionally validate ids. validates_presence_of :association causes it to load.
     # TODO Try :inverse to fix this

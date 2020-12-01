@@ -3,8 +3,8 @@
 # HTML chunks for ArticleCategories UL tree
 module Admin::ArticleCategoriesHelper
   def display_categories(categories, parent_id)
-    ret = "<ul>".dup
-    for category in categories
+    ret = +"<ul>"
+    categories.each do |category|
       if category.parent_id.nil?
         category.parent_id = 0
       elsif category.parent_id == parent_id
@@ -16,7 +16,7 @@ module Admin::ArticleCategoriesHelper
   end
 
   def display_category(category)
-    ret = "<li>".dup
+    ret = +"<li>"
     ret << link_to(h(category.name), action: "edit", id: category)
     ret << " - " << h(category.description)
     ret << display_categories(category.children, category.id) if category.children.any?
@@ -25,7 +25,7 @@ module Admin::ArticleCategoriesHelper
   end
 
   def tree_select(categories, model, name, selected = 0, allow_root = true, level = 0, init = true)
-    html = "".dup
+    html = +""
     if init
       html << "<select class=\"form-control\" name=\"#{model}[#{name}]\" id=\"#{model}_#{name}\">\n"
       if allow_root
@@ -46,8 +46,8 @@ module Admin::ArticleCategoriesHelper
         # with article_categories it is parent_id
         if model == "article"
           html << ' selected="selected"' if cat.id == selected.article_category_id
-        else
-          html << ' selected="selected"' if cat.id == selected.parent_id
+        elsif cat.id == selected.parent_id
+          html << ' selected="selected"'
         end
         html << ">#{cat.name}</option>\n"
         html << tree_select(cat.children, model, name, selected, allow_root, level, false)

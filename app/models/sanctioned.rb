@@ -12,7 +12,7 @@ module Sanctioned
   end
 
   def inclusion_of_sanctioned_by
-    if sanctioned_by && !RacingAssociation.current.sanctioning_organizations.include?(sanctioned_by)
+    if sanctioned_by && RacingAssociation.current.sanctioning_organizations.exclude?(sanctioned_by)
       errors.add :sanctioned_by, "'#{sanctioned_by}' must be in #{RacingAssociation.current.sanctioning_organizations.join(', ')}"
     end
   end

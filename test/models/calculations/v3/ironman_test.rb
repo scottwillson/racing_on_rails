@@ -28,11 +28,11 @@ class Calculations::V3::IronmanTest < ActiveSupport::TestCase
     result = results.first
     assert_equal "1", result.place
     assert_equal 1, result.points
-    refute result.rejected?
+    assert_not result.rejected?
     assert_equal 1, result.sources.size
     source = result.sources.first!
     assert_equal 1, source.points
-    refute source.rejected?
+    assert_not source.rejected?
 
     result = results[1]
     assert_equal "", result.place

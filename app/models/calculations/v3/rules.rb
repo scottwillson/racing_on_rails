@@ -3,22 +3,7 @@
 module Calculations
   module V3
     class Rules
-      attr_reader :association
-      attr_reader :association_sanctioned_only
-      attr_reader :category_rules
-      attr_reader :disciplines
-      attr_reader :field_size_bonus
-      attr_reader :group_by
-      attr_reader :maximum_events
-      attr_reader :members_only
-      attr_reader :minimum_events
-      attr_reader :missing_result_penalty
-      attr_reader :place_by
-      attr_reader :points_for_place
-      attr_reader :results_per_event
-      attr_reader :specific_events
-      attr_reader :source_event_keys
-      attr_reader :team
+      attr_reader :association, :association_sanctioned_only, :category_rules, :disciplines, :field_size_bonus, :group_by, :maximum_events, :members_only, :minimum_events, :missing_result_penalty, :place_by, :points_for_place, :results_per_event, :specific_events, :source_event_keys, :team
 
       # If true, only include weekend events
       # If false, reject all weekday events except series overall

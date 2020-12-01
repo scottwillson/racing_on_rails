@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 # :stopdoc:
 class DayTest < ActiveSupport::TestCase
@@ -13,7 +13,7 @@ class DayTest < ActiveSupport::TestCase
 
     date = Date.new(2007, 1, 1)
     day = Schedule::Day.new(month, date)
-    assert(!day.other_month?, "#{date.to_s(:short)} should not be in other month for month #{month}")
+    assert_not(day.other_month?, "#{date.to_s(:short)} should not be in other month for month #{month}")
 
     date = Date.new(2007, 2, 1)
     day = Schedule::Day.new(month, date)

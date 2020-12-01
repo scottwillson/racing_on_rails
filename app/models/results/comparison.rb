@@ -53,7 +53,8 @@ module Results
       other_scores_by_place = other.scores.sort_by(&:source_result)
       max_results = [scores_by_place.size, other_scores_by_place.size].max
       return 0 if max_results == 0
-      for index in 0..(max_results - 1)
+
+      (0..(max_results - 1)).each do |index|
         if scores_by_place.size == index
           return 1
         elsif other_scores_by_place.size == index

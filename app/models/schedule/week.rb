@@ -11,6 +11,7 @@ module Schedule
     def initialize(month, start_date)
       @start_date = start_date
       raise(ArgumentError, "Must start on Sunday") if start_date.wday != 0
+
       @days = []
       (start_date..start_date + 6).each do |date|
         @days << Day.new(month, date)

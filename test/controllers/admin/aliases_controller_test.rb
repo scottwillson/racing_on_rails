@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 module Admin
   # :stopdoc:
@@ -16,7 +16,7 @@ module Admin
       person_alias = person.aliases.create!(name: "Alias")
       delete :destroy, params: { id: person_alias.to_param, person_id: person_alias.person.to_param, format: "js" }
       assert_response :success
-      assert !Alias.exists?(person_alias.id), "alias"
+      assert_not Alias.exists?(person_alias.id), "alias"
     end
 
     test "destroy team alias" do
@@ -24,7 +24,7 @@ module Admin
       team_alias = team.aliases.create!(name: "Alias")
       delete :destroy, params: { id: team_alias.to_param, team_id: team_alias.team.to_param, format: "js" }
       assert_response :success
-      assert !Alias.exists?(team_alias.id), "alias"
+      assert_not Alias.exists?(team_alias.id), "alias"
     end
   end
 end

@@ -10,7 +10,7 @@ namespace :test do
     Rails::TestUnit::Runner.run test_files
   end
 
-  task :ruby do
+  task ruby: :environment do
     test_files = FileList["tests_isolated/ruby/**/*_test.rb"]
     Rails::TestUnit::Runner.run test_files
   end

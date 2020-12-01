@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 module Admin
   # :stopdoc:
@@ -24,7 +24,7 @@ module Admin
       assert_response(:success)
       assert_template("admin/velodromes/index")
       assert_not_nil(assigns["velodromes"], "Should assign velodromes")
-      assert(!assigns["velodromes"].empty?, "Should have no velodromes")
+      assert_not(assigns["velodromes"].empty?, "Should have no velodromes")
     end
 
     test "new" do
@@ -62,19 +62,19 @@ module Admin
     test "destroy" do
       velodrome = FactoryBot.create(:velodrome)
       delete :destroy, params: { id: velodrome.id }
-      assert(!Velodrome.exists?(velodrome.id), "Should delete velodrome")
+      assert_not(Velodrome.exists?(velodrome.id), "Should delete velodrome")
       assert_not_nil(flash[:notice], "Should have flash :notice")
     end
 
     test "update name" do
       velodrome = FactoryBot.create(:velodrome)
       put :update_attribute,
-        params: {
-          id: velodrome.to_param,
-          value: "Paul Allen Velodrome",
-          name: "name"
-        },
-        xhr: true
+          params: {
+            id: velodrome.to_param,
+            value: "Paul Allen Velodrome",
+            name: "name"
+          },
+          xhr: true
       assert_response(:success)
       velodrome.reload
       assert_equal("Paul Allen Velodrome", velodrome.name, "Velodrome name should change after update")
@@ -83,12 +83,12 @@ module Admin
     test "update website" do
       velodrome = FactoryBot.create(:velodrome)
       put :update_attribute,
-        params: {
-          id: velodrome.to_param,
-          value: "www.raceatra.com",
-          name: "website"
-        },
-        xhr: true
+          params: {
+            id: velodrome.to_param,
+            value: "www.raceatra.com",
+            name: "website"
+          },
+          xhr: true
       assert_response(:success)
       velodrome.reload
       assert_equal("www.raceatra.com", velodrome.website, "Velodrome website should change after update")

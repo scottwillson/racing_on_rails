@@ -14,10 +14,10 @@ module Pages
 
         if path
           normalized_path = path.dup
-          normalized_path.gsub!(/^\/m/, "")
-          normalized_path.gsub!(/^\//, "")
+          normalized_path.gsub!(%r{^/m}, "")
+          normalized_path.gsub!(%r{^/}, "")
           normalized_path.gsub!(/.html$/, "")
-          normalized_path.gsub!(/\/index$/, "")
+          normalized_path.gsub!(%r{/index$}, "")
           normalized_path.gsub!(/^index$/, "")
         end
         normalized_path
@@ -31,7 +31,7 @@ module Pages
       _ancestors.delete(parent)
       _ancestors << ::Page.find(parent_id) if parent_id
 
-      self.path = (_ancestors << self).map(&:slug).join("/").gsub(/^\//, "")
+      self.path = (_ancestors << self).map(&:slug).join("/").gsub(%r{^/}, "")
     end
   end
 end

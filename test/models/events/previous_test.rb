@@ -6,13 +6,13 @@ module Events
   # :stopdoc:
   class PreviousTest < ActiveSupport::TestCase
     test "#previous and #previous?" do
-      assert !Event.new.previous?
+      assert_not Event.new.previous?
       assert_nil Event.new.previous_year
 
       promoter = FactoryBot.create(:person, name: "David Saltzman")
       copperoplis = FactoryBot.create(:event, name: "Copperopolis", date: 1.year.ago, promoter: promoter)
       event = FactoryBot.create(:event, name: "Tabor")
-      assert !event.previous?, "Did not expect previous event #{event.previous_year.try(:name)}"
+      assert_not event.previous?, "Did not expect previous event #{event.previous_year.try(:name)}"
       assert_nil event.previous_year
 
       event = FactoryBot.create(:event, name: "Copperopolis")

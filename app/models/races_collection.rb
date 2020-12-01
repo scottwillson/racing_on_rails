@@ -3,6 +3,7 @@
 class RacesCollection
   include ActiveModel::Model
   attr_accessor :event
+
   validates :event, presence: true
 
   def initialize(event)

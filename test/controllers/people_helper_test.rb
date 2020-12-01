@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../test_helper", __FILE__)
+require File.expand_path("../test_helper", __dir__)
 
 # :stopdoc:
 class PeopleHelperTest < ActionView::TestCase
   test "administrator" do
-    assert !administrator?, "administrator? with no one logged-in"
+    assert_not administrator?, "administrator? with no one logged-in"
   end
 
   test "administrator not admin" do
     @current_person = Person.new
-    assert !administrator?, "administrator? with no one logged-in"
+    assert_not administrator?, "administrator? with no one logged-in"
   end
 
   test "administrator admin" do
@@ -20,16 +20,16 @@ class PeopleHelperTest < ActionView::TestCase
 
   test "administrator promoter" do
     @current_person = FactoryBot.create(:promoter)
-    assert !administrator?, "administrator? with no one logged-in"
+    assert_not administrator?, "administrator? with no one logged-in"
   end
 
   test "promoter" do
-    assert !promoter?, "promoter? with no one logged-in"
+    assert_not promoter?, "promoter? with no one logged-in"
   end
 
   test "promoter person" do
     @current_person = Person.new
-    assert !promoter?, "promoter? with no one logged-in"
+    assert_not promoter?, "promoter? with no one logged-in"
   end
 
   test "promoter person promoter" do

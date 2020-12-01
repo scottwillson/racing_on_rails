@@ -29,7 +29,7 @@ module Categories
     # Lowercase underscore
     def to_friendly_param
       if name
-        name.underscore.gsub("+", "_plus").gsub(/[^\w]+/, "_").gsub(/^_/, "").gsub(/_$/, "").gsub(/_+/, "_")
+        name.underscore.gsub("+", "_plus").gsub(/[^\w]+/, "_").gsub(/^_/, "").gsub(/_$/, "").squeeze("_")
       else
         ""
       end

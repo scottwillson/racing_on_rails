@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../test_case", __FILE__)
-require File.expand_path("../../../../lib/array/each_row", __FILE__)
-require File.expand_path("../../../../lib/enumerable/stable_sort", __FILE__)
+require File.expand_path("../test_case", __dir__)
+require File.expand_path("../../../lib/array/each_row", __dir__)
+require File.expand_path("../../../lib/enumerable/stable_sort", __dir__)
 
 # :stopdoc:
 class EnumerableTest < Ruby::TestCase
@@ -131,8 +131,7 @@ class EnumerableTest < Ruby::TestCase
 end
 
 class Card
-  attr_accessor :value
-  attr_accessor :suit
+  attr_accessor :value, :suit
 
   include Comparable
 
@@ -141,9 +140,10 @@ class Card
     @suit = suit
   end
 
-  def <=>(value)
-    return -1 unless value
-    self.value <=> value.value
+  def <=>(other)
+    return -1 unless other
+
+    value <=> other.value
   end
 
   def to_s

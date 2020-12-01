@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Naming/UncommunicativeMethodParamName
 module Competitions::Calculations::Place
   # Set place on array of CalculatorResults
   def apply_place(results, rules)
@@ -140,4 +139,3 @@ module Competitions::Calculations::Place
     end
   end
 end
-# rubocop:enable Naming/UncommunicativeMethodParamName

@@ -27,7 +27,7 @@ module Events
       assert Event.today_and_future.include?(today_event), "today_and_future scope should include event from today"
       assert Event.today_and_future.include?(future_event), "today_and_future scope should include future event"
       assert Event.today_and_future.include?(multi_day_event), "today_and_future scope should include multi-day event that ends in future"
-      assert !Event.today_and_future.include?(past_event), "today_and_future scope should not include past event with date of #{past_event.date}"
+      assert_not Event.today_and_future.include?(past_event), "today_and_future scope should not include past event with date of #{past_event.date}"
     end
 
     test "set human date" do

@@ -15,7 +15,7 @@ module Actions
   def fill_in_inline(locator, options)
     assert_edit = options.delete(:assert_edit)
     text = options[:with]
-    options[:with] = options[:with] + "\n"
+    options[:with] = "#{options[:with]}\n"
     assert_selector locator
     find(locator).click
     fill_in_editor_field options
@@ -76,7 +76,8 @@ module Actions
   end
 
   def press_once(key, field)
-    if Capybara.current_driver == :poltergeist
+    case Capybara.current_driver
+    when :poltergeist
       case key
       when :down
         find_field(field).native.send_keys(:Down)
@@ -87,7 +88,7 @@ module Actions
       else
         find_field(field).native.send_keys(key)
       end
-    elsif Capybara.current_driver == :webkit
+    when :webkit
       keypress_script = "var e = $.Event('keypress', { keyCode: #{key_code(key)} }); $('##{field}').trigger(e);"
       page.driver.browser.execute_script(keypress_script)
     else

@@ -8,9 +8,10 @@ module People
       # Flattened, straight SQL dump for export to Excel, FinishLynx, or SportsBase.
       def self.find_all_for_export(date = Time.zone.today, include_people = "members_only")
         association_number_issuer_id = NumberIssuer.find_by(name: RacingAssociation.current.short_name).id
-        if include_people == "members_only"
+        case include_people
+        when "members_only"
           where_clause = "WHERE (people.member_to >= '#{date}')"
-        elsif include_people == "print_cards"
+        when "print_cards"
           where_clause = "WHERE  (people.member_to >= '#{date}') and print_card is true"
         end
 

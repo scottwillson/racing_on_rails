@@ -17,7 +17,7 @@ class ResultsTest < RacingOnRails::IntegrationTest
 
     post upload_admin_event_path(event),
          params: {
-           results_file: fixture_file_upload("#{ActionController::TestCase.fixture_path}/results/dh.xls", "application/vnd.ms-excel", :binary)           
+           results_file: fixture_file_upload("#{ActionController::TestCase.fixture_path}/results/dh.xls", "application/vnd.ms-excel", :binary)
          }
     assert_response :redirect
     follow_redirect!

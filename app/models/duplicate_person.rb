@@ -22,7 +22,7 @@ class DuplicatePerson
   def self.duplicate_names
     Person
       .where(other_people_with_same_name: false)
-      .where("name is not null")
+      .where.not(name: nil)
       .where("name !=''")
       .where("name !='?'")
       .group(:name)

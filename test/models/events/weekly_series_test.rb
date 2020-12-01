@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 # :stopdoc:
 class WeeklySeriesTest < ActiveSupport::TestCase
@@ -9,7 +9,7 @@ class WeeklySeriesTest < ActiveSupport::TestCase
       date: Date.new(2008, 4, 1), name: "Tuesday PIR", discipline: "Road", flyer_approved: true
     )
     assert(pir.valid?, "PIR valid?")
-    assert(!pir.new_record?, "PIR new?")
+    assert_not(pir.new_record?, "PIR new?")
     assert_equal(0, pir.children.size, "PIR events")
     assert_equal(1, pir.bar_points, "Weekly Series BAR points")
     category = FactoryBot.create(:category)
@@ -19,7 +19,7 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     Date.new(2008, 4, 1).step(Date.new(2008, 10, 21), 7) do |date|
       individual_pir = pir.children.create!(date: date, name: "Tuesday PIR", discipline: "Road", flyer_approved: true)
       assert(individual_pir.valid?, "PIR valid?")
-      assert(!individual_pir.new_record?, "PIR new?")
+      assert_not(individual_pir.new_record?, "PIR new?")
       assert_equal(pir, individual_pir.parent, "PIR parent")
       assert_equal(date, individual_pir.date, "New single day of PIR date")
       assert_equal(0, individual_pir.bar_points, "Weekly Series BAR points")
@@ -104,12 +104,12 @@ class WeeklySeriesTest < ActiveSupport::TestCase
   test "flyer settings propogate to children" do
     so_or_champs = WeeklySeries.create!(date: Date.new(2008, 4, 1), name: "So OR Champs")
     assert_nil(so_or_champs.flyer, "flyer should default to blank")
-    assert(!so_or_champs.flyer_approved?, "flyer should default to not approved")
+    assert_not(so_or_champs.flyer_approved?, "flyer should default to not approved")
 
     child = so_or_champs.children.create!
     child.reload
     assert_nil(child.flyer, "child event flyer should same as parent")
-    assert(!child.flyer_approved?, "child event flyer approval should same as parent")
+    assert_not(child.flyer_approved?, "child event flyer approval should same as parent")
 
     so_or_champs.flyer = "http://www.flyers.com"
     so_or_champs.flyer_approved = true

@@ -7,7 +7,7 @@ class BarResultsTest < RacingOnRails::IntegrationTest
   # make sure all discipline pages come up with defaults
   test "all disciplines empty results" do
     year = Time.zone.today.year
-    for discipline in Discipline.find_all_bar
+    Discipline.find_all_bar.each do |discipline|
       get "/bar"
       assert_response(:success, "/bar")
       get url_for(controller: "bar", action: "show", year: year, discipline: discipline)

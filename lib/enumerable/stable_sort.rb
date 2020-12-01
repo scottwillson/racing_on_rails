@@ -3,7 +3,8 @@
 module Enumerable
   # Sort by +method+ and preserve existing order. Ruby sort_by does not preserve order.
   def stable_sort_by(method, order = :asc)
-    if order == :asc
+    case order
+    when :asc
       merge_sort do |x, y|
         if x.send(method).nil?
           true
@@ -13,7 +14,7 @@ module Enumerable
           x.send(method) >= y.send(method)
         end
       end
-    elsif order == :desc
+    when :desc
       merge_sort do |x, y|
         if y.send(method).nil?
           true
@@ -49,12 +50,10 @@ module Enumerable
                   else
                     right.shift
                   end
+                elsif left.first <= right.first
+                  left.shift
                 else
-                  if left.first <= right.first
-                    left.shift
-                  else
-                    right.shift
-                  end
+                  right.shift
                 end
     end
     sorted.concat(left).concat(right)

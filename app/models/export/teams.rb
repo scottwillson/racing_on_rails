@@ -9,8 +9,6 @@ module Export
       Team.export_data
     end
 
-    private
-
     def Team.export_head
       Base.export(Team.export_head_sql, "teams.txt")
     end

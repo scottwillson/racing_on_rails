@@ -26,7 +26,7 @@ class ResultsController < ApplicationController
 
   # All Results for Event
   def event
-    return event_not_found(params[:event_id]) unless Event.where(id: params[:event_id]).exists?
+    return event_not_found(params[:event_id]) unless Event.exists?(id: params[:event_id])
 
     @event = Event.where(id: params[:event_id]).first
 
@@ -73,7 +73,7 @@ class ResultsController < ApplicationController
     @results = Result.person_event @person, @event
   rescue ActiveRecord::RecordNotFound
     flash[:notice] = "Could not find results for #{@event.try :name} #{@person.try :name}"
-    return redirect_to(people_path)
+    redirect_to(people_path)
   end
 
   # Single Team's Results for a single Event
@@ -83,7 +83,7 @@ class ResultsController < ApplicationController
     @results = Result.team_event(@team, @event)
   rescue ActiveRecord::RecordNotFound
     flash[:notice] = "Could not find result for #{@event.try :name} #{@team.try :name}"
-    return redirect_to(teams_path)
+    redirect_to(teams_path)
   end
 
   # Person's Results for an entire year
@@ -103,12 +103,14 @@ class ResultsController < ApplicationController
 
       format.json do
         return(render(status: :not_found, body: "")) unless @person
+
         assign_person_results @person, @year
         render json: (@event_results + @competition_results).to_json
       end
 
       format.xml do
         return(render(status: :not_found, body: "")) unless @person
+
         assign_person_results @person, @year
         render xml: (@event_results + @competition_results).to_xml
       end
@@ -131,12 +133,14 @@ class ResultsController < ApplicationController
 
       format.json do
         return(render(status: :not_found, body: "")) unless @team
+
         assign_team_results @team, @year
         render json: @event_results.to_json
       end
 
       format.xml do
         return(render(status: :not_found, body: "")) unless @team
+
         assign_team_results @team, @year
         render xml: @event_results.to_xml
       end

@@ -16,11 +16,13 @@ class Discipline < ApplicationRecord
   # Look up Discipline by name or alias. Caches Disciplines in memory
   def self.[](name)
     return nil unless name
+
     load_aliases if @@all_aliases.nil?
     if name.is_a?(Symbol)
       @@all_aliases[name]
     else
       return nil if name.blank?
+
       @@all_aliases[name.underscore.tr(" ", "_").to_sym]
     end
   end

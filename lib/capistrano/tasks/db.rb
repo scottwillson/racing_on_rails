@@ -28,7 +28,7 @@ namespace :db do
   # cap production data_refresh SAVE=true
   task :data_load do
     on roles(:db) do
-      require_relative "../../../config/environment.rb"
+      require_relative "../../../config/environment"
       db = ActiveRecord::Base.configurations
       dev_db = db[::Rails.env]["database"]
       `mysql -u #{db[::Rails.env]["username"]} -e 'drop database if exists #{dev_db}'`

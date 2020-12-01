@@ -83,7 +83,7 @@ class PersonFileTest < ActiveSupport::TestCase
     assert_not_nil quinn_jackson.updated_by_name, "Person#updated_by_name should be set"
     number = quinn_jackson.race_numbers.detect { |n| n.value == "120" }
     assert(number.updated_by_name["membership/upload.xlsx"], "updated_by_name expected to include file name but was #{number.updated_by_name}")
-    assert(!quinn_jackson.print_card?, "quinn_jackson.print_card? after import")
+    assert_not(quinn_jackson.print_card?, "quinn_jackson.print_card? after import")
 
     all_abers = Person.find_all_by_name("Brian Abers")
     assert_equal(1, all_abers.size, "Brian Abers in database after import")
@@ -100,7 +100,7 @@ class PersonFileTest < ActiveSupport::TestCase
     assert road_numbers.any? { |n| n.value == "824" }, "Should preseve Brian Abers road number"
     assert road_numbers.any? { |n| n.value == "825" }, "Should add Brian Abers new road number"
     assert_nil(brian_abers.dh_number, "Brian Abers dh_number should be removed")
-    assert(!brian_abers.print_card?, "brian_abers.print_card? after import")
+    assert_not(brian_abers.print_card?, "brian_abers.print_card? after import")
 
     all_heidi_babi = Person.find_all_by_name("heidi babi")
     assert_equal(1, all_heidi_babi.size, "Heidi Babi in database after import")
@@ -146,7 +146,7 @@ class PersonFileTest < ActiveSupport::TestCase
     assert_equal("541-389-3721", scott_seaton.home_phone, "Scott Seaton phone")
     assert_equal("firefighter", scott_seaton.occupation, "Scott Seaton occupation")
     assert_equal("Hutch's Bend", scott_seaton.team_name, "Scott Seaton team should be updated")
-    assert(!scott_seaton.print_card?, "sautter.print_card? after import")
+    assert_not(scott_seaton.print_card?, "sautter.print_card? after import")
 
     scott.race_numbers.create(value: "422", year: Time.zone.today.year - 1)
     number = RaceNumber.where(person_id: scott.id, value: "422").first

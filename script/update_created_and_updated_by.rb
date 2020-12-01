@@ -5,17 +5,17 @@ def versions_query
 
   VestalVersions::Version
     .where(versioned_type: %w[
-            DiscountCode
-            Event
-            MultidayEvent
-            Person
-            RaceNumber
-            Refund
-            Series
-            SingleDayEvent
-            Team
-            WeeklySeries
-         ])
+             DiscountCode
+             Event
+             MultidayEvent
+             Person
+             RaceNumber
+             Refund
+             Series
+             SingleDayEvent
+             Team
+             WeeklySeries
+           ])
 end
 
 puts
@@ -37,7 +37,6 @@ puts "Update created_by and updated_by PaperTrail"
     .where(id: VestalVersions::Version.pluck(:versioned_id).uniq)
     .includes(:versions)
     .find_each do |record|
-
     index += 1
     puts("#{index}/#{count}") if index % 1000 == 0
 

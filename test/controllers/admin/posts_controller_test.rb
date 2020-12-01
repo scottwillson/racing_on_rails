@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 # :stopdoc:
 module Admin
@@ -80,7 +80,7 @@ module Admin
         "date(1i)" => "2009",
         "date(2i)" => "11",
         "date(3i)" => "22"
-      }}
+      } }
       assert_not_nil assigns(:post), @post
       assert assigns(:post).errors.empty?, assigns(:post).errors.full_messages.join(", ")
       assert_equal "No More Masters Races", assigns(:post).subject, "subject"
@@ -102,7 +102,7 @@ module Admin
 
       delete :destroy, params: { mailing_list_id: mailing_list.to_param, id: reply.to_param }
       assert_redirected_to admin_mailing_list_posts_path(mailing_list)
-      assert !Post.exists?(reply.id), "Should delete Post"
+      assert_not Post.exists?(reply.id), "Should delete Post"
 
       assert_equal 0, original.reload.replies_count, "replies_count"
     end

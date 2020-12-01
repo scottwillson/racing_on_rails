@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 # :stopdoc:
 class UpcomingTest < ActiveSupport::TestCase
@@ -89,7 +89,7 @@ class UpcomingTest < ActiveSupport::TestCase
     Date.new(2006, 6, 12).step(Date.new(2006, 6, 17), 1) do |date|
       single_day_six_day = SingleDayEvent.create!(parent: six_day, date: date, name: "Alpenrose Six Day", discipline: "Track", flyer_approved: true)
       assert(single_day_six_day.valid?, "Six Day valid?")
-      assert(!single_day_six_day.new_record?, "Six Day new?")
+      assert_not(single_day_six_day.new_record?, "Six Day new?")
     end
     six_day.save!
     assert(six_day.valid?, "Six Day valid?")

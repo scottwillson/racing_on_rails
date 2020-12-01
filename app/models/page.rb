@@ -38,7 +38,7 @@ class Page < ApplicationRecord
 
   def valid_parents
     Page.all.select do |page|
-      page != self && !descendants.include?(page)
+      page != self && descendants.exclude?(page)
     end
   end
 

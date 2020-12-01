@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddEventsTentative < ActiveRecord::Migration[5.2]
   def change
     add_column :events, :tentative, :boolean, default: false, null: false

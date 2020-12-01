@@ -44,8 +44,8 @@ class Calculations::V3::Calculation < ApplicationRecord
   accepts_nested_attributes_for :calculation_categories, allow_destroy: true
   accepts_nested_attributes_for :calculations_events, allow_destroy: true
 
-  before_destroy :destroy_event
   before_save :set_name
+  before_destroy :destroy_event
   after_save :expire_cache
 
   validate :maximum_events_negative, unless: :blank?
@@ -56,7 +56,7 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   attribute :discipline_id, :integer, default: -> { ::Discipline[RacingAssociation.current.default_discipline]&.id }
   attribute :event_notes, :text, default: -> { "" }
-  attribute :points_for_place, :text, default: -> { nil }
+  attribute :points_for_place, :text, default: -> {}
 
   def self.latest(key)
     where(key: key).order(:year).last
@@ -167,11 +167,11 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   def set_name
     if name == "New Calculation" && source_event
-      if team?
-        self.name = "#{source_event.name}: Team Competition"
-      else
-        self.name = "#{source_event.name}: Overall"
-      end
+      self.name = if team?
+                    "#{source_event.name}: Team Competition"
+                  else
+                    "#{source_event.name}: Overall"
+                  end
     end
   end
 

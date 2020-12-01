@@ -89,7 +89,7 @@ class Event < ApplicationRecord
   # Actually this is effective_year
   scope :current_year, -> { where(date: RacingAssociation.current.effective_year_range) }
   scope :current_year_and_later, -> { where("date > ?", Time.zone.now.beginning_of_year) }
-  scope :upcoming_in_weeks, ->(number_of_weeks) {
+  scope :upcoming_in_weeks, lambda { |number_of_weeks|
     where(
       "(date between :today and :later) || (end_date between :today and :later)",
       today: Time.zone.today,
@@ -227,7 +227,7 @@ class Event < ApplicationRecord
   end
 
   def inclusion_of_discipline
-    if discipline.present? && Discipline.names.present? && !Discipline.names.include?(discipline)
+    if discipline.present? && Discipline.names.present? && Discipline.names.exclude?(discipline)
       errors.add :discipline, "'#{discipline}' is not in #{Discipline.names.join(', ')}"
     end
   end

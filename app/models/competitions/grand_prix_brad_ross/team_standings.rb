@@ -6,8 +6,8 @@ module Competitions
       include GrandPrixBradRoss::Common
 
       validates :parent, presence: true
-      after_create :add_source_events
       before_create :set_name
+      after_create :add_source_events
 
       def self.calculate!(year = Time.zone.today.year)
         ActiveSupport::Notifications.instrument "calculate.#{name}.competitions.racing_on_rails" do

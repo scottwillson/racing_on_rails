@@ -123,7 +123,7 @@ class Team < ApplicationRecord
 
       Team.delete team.id
 
-      if !Alias.where(name: team.name, aliasable_type: "Team").where.not(aliasable_id: nil).exists? && !Team.where(name: team.name).exists?
+      if !Alias.where(name: team.name, aliasable_type: "Team").where.not(aliasable_id: nil).exists? && !Team.exists?(name: team.name)
         aliases.create! name: team.name
       end
     end

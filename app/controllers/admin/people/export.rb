@@ -26,9 +26,10 @@ module Admin
           format.html
           format.ppl
           format.xls do
-            if params["excel_layout"] == "scoring_sheet"
+            case params["excel_layout"]
+            when "scoring_sheet"
               render "admin/people/scoring_sheet"
-            elsif params["excel_layout"] == "endicia"
+            when "endicia"
               render "admin/people/endicia"
             end
           end

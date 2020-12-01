@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCalculationCategoryMatches < ActiveRecord::Migration[5.2]
   def change
     create_table :calculations_categories_categories, force: true do |t|

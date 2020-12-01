@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 module Admin
   # :stopdoc:
@@ -20,7 +20,7 @@ module Admin
       jack_frost = FactoryBot.create(:event)
       delete :destroy, params: { id: jack_frost.to_param, commit: "Delete" }
       assert_redirected_to(admin_events_path(year: jack_frost.date.year))
-      assert(!Event.exists?(jack_frost.id), "Jack Frost should have been destroyed")
+      assert_not(Event.exists?(jack_frost.id), "Jack Frost should have been destroyed")
     end
 
     test "destroy event ajax" do
@@ -28,21 +28,21 @@ module Admin
       event.destroy_races
       delete :destroy, params: { id: event.to_param, commit: "Delete" }, xhr: true
       assert_response(:success)
-      assert(!Event.exists?(event.id), "Event should have been destroyed")
+      assert_not(Event.exists?(event.id), "Event should have been destroyed")
     end
 
     test "save no promoter" do
       assert_nil(SingleDayEvent.find_by(name: "Silverton"), "Silverton should not be in database")
       # New event, no changes, single day, no promoter
       post :create,
-          params: {
-            "commit" => "Save",
-            "same_promoter" => "true",
-            "event" => { "name" => "Silverton",
-                         "type" => "SingleDayEvent",
-                         "promoter_id" => "" }
+           params: {
+             "commit" => "Save",
+             "same_promoter" => "true",
+             "event" => { "name" => "Silverton",
+                          "type" => "SingleDayEvent",
+                          "promoter_id" => "" }
 
-          }
+           }
 
       silverton = SingleDayEvent.find_by(name: "Silverton")
       assert_not_nil(silverton, "Silverton should be in database")
@@ -55,14 +55,14 @@ module Admin
       banana_belt = FactoryBot.create(:event, promoter: promoter)
 
       post :update,
-        params: {
-          "commit" => "Save",
-          id: banana_belt.to_param,
-          "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
-                       "flyer" => "../../flyers/2006/banana_belt.html", "sanctioned_by" => "UCI", "flyer_approved" => "1",
-                       "discipline" => "Track", "canceled" => "1", "tentative" => "1", "state" => "OR", "type" => "SingleDayEvent",
-                       "promoter_id" => promoter.to_param }
-        }
+           params: {
+             "commit" => "Save",
+             id: banana_belt.to_param,
+             "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
+                          "flyer" => "../../flyers/2006/banana_belt.html", "sanctioned_by" => "UCI", "flyer_approved" => "1",
+                          "discipline" => "Track", "canceled" => "1", "tentative" => "1", "state" => "OR", "type" => "SingleDayEvent",
+                          "promoter_id" => promoter.to_param }
+           }
       assert_nil(flash[:warn], "flash[:warn]")
       assert_redirected_to edit_admin_event_path(banana_belt)
 
@@ -109,7 +109,7 @@ module Admin
 
       assert(event.multi_day_event_children_with_no_parent?, "multi_day_event_children_with_no_parent?")
       assert_not_nil(event.multi_day_event_children_with_no_parent, "multi_day_event_children_with_no_parent")
-      assert(!event.multi_day_event_children_with_no_parent.empty?, "multi_day_event_children_with_no_parent")
+      assert_not(event.multi_day_event_children_with_no_parent.empty?, "multi_day_event_children_with_no_parent")
       get :edit, params: { id: event.to_param }
       assert_response(:success)
       assert_template("admin/events/edit")
@@ -160,7 +160,7 @@ module Admin
       last_year = current_year - 1
       SingleDayEvent.create!(date: Date.new(last_year))
 
-      get :index, params: { year:current_year }
+      get :index, params: { year: current_year }
       assert_match("href=\"/admin/events?year=#{last_year}", @response.body, "Should link to #{last_year} in:\n#{@response.body}")
       assert_select(".nav a", { text: current_year.to_s }, "Should have tab for current year")
     end
@@ -177,7 +177,7 @@ module Admin
       event = FactoryBot.create(:series_event)
       event.destroy_races
       delete :destroy, params: { id: event.to_param, commit: "Delete" }
-      assert !Event.exists?(event.id), "Should have deleted Event"
+      assert_not Event.exists?(event.id), "Should have deleted Event"
     end
 
     test "destroy races" do

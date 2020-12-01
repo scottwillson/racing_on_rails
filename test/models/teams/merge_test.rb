@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 # :stopdoc:
 module Teams
@@ -83,7 +83,7 @@ module Teams
 
       team_to_keep.merge(team_to_merge)
 
-      assert(!Team.exists?(team_to_merge.id), "Should delete merged team")
+      assert_not(Team.exists?(team_to_merge.id), "Should delete merged team")
       assert_equal(1, team_to_keep.names.count, "Target team historical names")
       assert_equal(team_to_keep_last_year, team_to_keep.names.first, "Target team historical name")
 

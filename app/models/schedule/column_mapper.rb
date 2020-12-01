@@ -22,6 +22,7 @@ module Schedule
 
     def map(key)
       return nil if is_blank?(key)
+
       key = symbolize(key)
       MAP[key] || key
     end

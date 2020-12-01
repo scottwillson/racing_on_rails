@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../test_helper", __FILE__)
+require File.expand_path("../test_helper", __dir__)
 
 # :stopdoc:
 class RaceTest < ActiveSupport::TestCase
@@ -106,9 +106,9 @@ class RaceTest < ActiveSupport::TestCase
 
     race = event.races.create!(category: FactoryBot.create(:category))
     non_members = []
-    for i in 0..2
+    (0..2).each do |i|
       non_members << Person.create!(name: "Non member #{i}", member: false)
-      assert(!non_members[i].member?, "Should not be a member")
+      assert_not(non_members[i].member?, "Should not be a member")
     end
 
     weaver = FactoryBot.create(:person)
@@ -208,16 +208,16 @@ class RaceTest < ActiveSupport::TestCase
 
     mathew_braun.reload
     assert_nil mathew_braun.created_by
-    assert !mathew_braun.created_from_result?
+    assert_not mathew_braun.created_from_result?
 
     weaver.reload
     assert_nil weaver.created_by
-    assert !weaver.created_from_result?
+    assert_not weaver.created_from_result?
 
     race.reload.destroy
-    assert !Result.exists?(result.id), "Should destroy result"
-    assert !Race.exists?(race.id), "Should be destroyed. #{race.errors.full_messages}"
-    assert !Person.exists?(first_name: "Jonah", last_name: "Braun"), "New person Jonah Braun should have been deleted"
+    assert_not Result.exists?(result.id), "Should destroy result"
+    assert_not Race.exists?(race.id), "Should be destroyed. #{race.errors.full_messages}"
+    assert_not Person.exists?(first_name: "Jonah", last_name: "Braun"), "New person Jonah Braun should have been deleted"
     assert  Person.exists?(weaver.id), "Existing person Ryan Weaver should not be deleted"
     assert  Person.exists?(mathew_braun.id), "Existing person with no results Mathew Braun should not be deleted"
 

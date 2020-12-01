@@ -27,12 +27,12 @@ module Admin
         assert(mt_hood_1.races.empty?, "Should have no races before import")
 
         post :upload, params: { id: mt_hood_1.to_param,
-                      results_file: fixture_file_upload("results/pir_2006_format.xlsx", "application/vnd.ms-excel", :binary) }
+                                results_file: fixture_file_upload("results/pir_2006_format.xlsx", "application/vnd.ms-excel", :binary) }
 
         assert(flash[:warn].blank?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
         assert_redirected_to edit_admin_event_path(mt_hood_1)
         assert_not_nil flash[:notice]
-        assert(!mt_hood_1.races.reload.empty?, "Should have races after upload attempt")
+        assert_not(mt_hood_1.races.reload.empty?, "Should have races after upload attempt")
       end
 
       test "upload usac" do
@@ -40,7 +40,7 @@ module Admin
         mt_hood_1 = FactoryBot.create(:stage_race)
 
         post :upload, params: { id: mt_hood_1.to_param,
-                      results_file: fixture_file_upload("results/tt_usac.xls", "application/vnd.ms-excel", :binary) }
+                                results_file: fixture_file_upload("results/tt_usac.xls", "application/vnd.ms-excel", :binary) }
 
         assert flash[:warn].blank?, "flash[:warn] should be empty, but was: #{flash[:warn]}"
         assert_redirected_to edit_admin_event_path(mt_hood_1)
@@ -53,13 +53,13 @@ module Admin
         assert(mt_hood_1.races.empty?, "Should have no races before import")
 
         post :upload, params: { id: mt_hood_1.to_param,
-                      results_file: fixture_file_upload("results/custom_columns.xls", "application/vnd.ms-excel", :binary) }
+                                results_file: fixture_file_upload("results/custom_columns.xls", "application/vnd.ms-excel", :binary) }
         assert_redirected_to edit_admin_event_path(mt_hood_1)
 
         assert_response :redirect
         assert_not_nil flash[:notice]
         assert(flash[:warn].blank?)
-        assert(!mt_hood_1.races.reload.empty?, "Should have races after upload attempt")
+        assert_not(mt_hood_1.races.reload.empty?, "Should have races after upload attempt")
       end
 
       test "upload with many warnings" do
@@ -87,7 +87,7 @@ module Admin
         assert_response :redirect
 
         # Dupe people used to be allowed, and this would have been an error
-        assert(!mt_hood_1.races.reload.empty?, "Should have races after importing dupe people")
+        assert_not(mt_hood_1.races.reload.empty?, "Should have races after importing dupe people")
         assert(flash[:warn].blank?)
       end
 
@@ -111,7 +111,7 @@ module Admin
         Results::ResultsFile.any_instance.expects(:import).raises(Ole::Storage::FormatError, "OLE2 signature is invalid")
 
         post :upload, params: { id: mt_hood_1.to_param,
-                      results_file: fixture_file_upload("results/pir_2006_format.xlsx", "application/vnd.ms-excel", :binary) }
+                                results_file: fixture_file_upload("results/pir_2006_format.xlsx", "application/vnd.ms-excel", :binary) }
 
         assert(flash[:warn].present?, "should have flash[:warn]")
         assert_response :success

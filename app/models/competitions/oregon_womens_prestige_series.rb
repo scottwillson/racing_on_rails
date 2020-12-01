@@ -13,11 +13,12 @@ module Competitions
     end
 
     def categories_for(race)
-      if race.name == "Women 1/2"
+      case race.name
+      when "Women 1/2"
         super + [Category.find_by(name: "Pro/1/2 Women"), Category.find_by(name: "Women Category 1/2")]
-      elsif race.name == "Women 3"
+      when "Women 3"
         super + [Category.find_by(name: "Category 3 Women"), Category.find_by(name: "Women Category 3")]
-      elsif race.name == "Women 4/5"
+      when "Women 4/5"
         super + [Category.find_by(name: "Category 4/5 Women"),
                  Category.find_by(name: "Women 4"),
                  Category.find_by(name: "Women Category 4/5")]

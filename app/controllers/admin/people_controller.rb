@@ -213,7 +213,7 @@ module Admin
     end
 
     def require_administrator_or_promoter
-      unless current_person.administrator? ||
+      unless current_person&.administrator? ||
              current_person&.promoter? && params[:format] == "xls" && params[:excel_layout] == "scoring_sheet"
         redirect_to unauthorized_path
       end

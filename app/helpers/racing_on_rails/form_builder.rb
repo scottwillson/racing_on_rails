@@ -91,7 +91,7 @@ module RacingOnRails
     end
 
     def labelled_select_modal(method, type, remove_button = true)
-      %(<div class="form-group">#{label(method, method.to_s.titleize.to_s, class: "control-label col-sm-4")}<div class="col-sm-8">#{select_modal(method, type, remove_button)}</div></div>).html_safe
+      %(<div class="form-group">#{label(method, method.to_s.titleize.to_s, class: 'control-label col-sm-4')}<div class="col-sm-8">#{select_modal(method, type, remove_button)}</div></div>).html_safe
     end
 
     def select_modal(method, type, remove_button = true)

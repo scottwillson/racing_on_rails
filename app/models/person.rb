@@ -6,7 +6,7 @@ require "sentient_user/sentient_user"
 #
 # Names are _not_ unique. In fact, there are many business rules about names. See Aliases and Names.
 class Person < ApplicationRecord
-  LOGIN_FORMAT = /\A\w[\w\.+\-_@ ]+\z/.freeze
+  LOGIN_FORMAT = /\A\w[\w.+\-_@ ]+\z/.freeze
 
   include Comparable
   include Export::People
@@ -105,7 +105,7 @@ class Person < ApplicationRecord
   def self.select_by_recent_activity(people)
     results = people.map(&:results).flatten
     if results.empty?
-      people.to_a.sort_by(&:updated_at).last
+      people.to_a.max_by(&:updated_at)
     else
       results = results.sort_by(&:date)
       results.last.person
@@ -220,8 +220,8 @@ class Person < ApplicationRecord
       else
         city.to_s
       end
-    else
-      state.to_s if state.present?
+    elsif state.present?
+      state.to_s
     end
   end
 
@@ -232,12 +232,10 @@ class Person < ApplicationRecord
       else
         "#{city} #{zip}"
       end
+    elsif state.present?
+      "#{state} #{zip}"
     else
-      if state.present?
-        "#{state} #{zip}"
-      else
-        zip || ""
-      end
+      zip || ""
     end
   end
 
@@ -245,23 +243,17 @@ class Person < ApplicationRecord
     if city.blank?
       if state.blank?
         ""
+      elsif state == RacingAssociation.current.state
+        ""
       else
-        if state == RacingAssociation.current.state
-          ""
-        else
-          state
-        end
+        state
       end
+    elsif state.blank?
+      city
+    elsif state == RacingAssociation.current.state
+      city
     else
-      if state.blank?
-        city
-      else
-        if state == RacingAssociation.current.state
-          city
-        else
-          "#{city}, #{state}"
-        end
-      end
+      "#{city}, #{state}"
     end
   end
 

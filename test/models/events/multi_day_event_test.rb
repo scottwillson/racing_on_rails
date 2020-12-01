@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 # :stopdoc:
 class MultiDayEventTest < ActiveSupport::TestCase
@@ -28,7 +28,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     series.children.create!(date: "2005-07-26")
     series.children.create!(date: "2005-08-04")
 
-    series.children.sort_by(&:date)[0].update! postponed: true
+    series.children.min_by(&:date).update! postponed: true
     series.children.sort_by(&:date)[1].update! canceled: true
 
     series.reload.children.reload
@@ -151,7 +151,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
   test "destroy" do
     mt_hood = FactoryBot.create(:stage_race)
     mt_hood.destroy
-    assert(!Event.exists?(mt_hood.id), "Mt. Hood Stage Race should be deleted")
+    assert_not(Event.exists?(mt_hood.id), "Mt. Hood Stage Race should be deleted")
   end
 
   test "date range s" do
@@ -608,11 +608,11 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
   test "missing parent" do
     series_parent = Series.create!
-    assert(!series_parent.missing_parent?, "missing_parent?")
+    assert_not(series_parent.missing_parent?, "missing_parent?")
     assert_nil(series_parent.missing_parent, "missing_parent")
 
     stage_race = FactoryBot.create(:stage_race)
-    assert(!stage_race.missing_parent?, "missing_parent?")
+    assert_not(stage_race.missing_parent?, "missing_parent?")
     assert_nil(stage_race.missing_parent, "missing_parent")
   end
 
@@ -656,19 +656,19 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
   test "completed" do
     parent_event = MultiDayEvent.create!
-    assert(!parent_event.completed?, "New event should not be completed")
+    assert_not(parent_event.completed?, "New event should not be completed")
 
     parent_event.children.create!
     parent_event.children.create!
     parent_event.children.create!
 
     parent_event = Event.find(parent_event.id)
-    assert(!parent_event.completed?, "Event with all children with no results should not be completed")
+    assert_not(parent_event.completed?, "Event with all children with no results should not be completed")
 
     cat_4_women = FactoryBot.create(:category)
     parent_event.children.first.races.create!(category: cat_4_women).results.create!
     parent_event = Event.find(parent_event.id)
-    assert(!parent_event.completed?, "Event with only one child with results should not be completed")
+    assert_not(parent_event.completed?, "Event with only one child with results should not be completed")
 
     parent_event.children.each { |event| event.races.create!(category: cat_4_women).results.create! }
     parent_event = Event.find(parent_event.id)

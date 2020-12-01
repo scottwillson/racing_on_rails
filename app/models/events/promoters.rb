@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Events
   # Editors, too. Should just be has_many :promoters
   module Promoters

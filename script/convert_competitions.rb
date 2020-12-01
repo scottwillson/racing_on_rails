@@ -952,34 +952,34 @@ class ConvertCompetitionsToCalculations
 
   def self.bar_event_notes
     <<~HTML
-    <p>Oregon Best All-Around Rider (BAR) a year-round, multi-discipline competition open to annual members. Points and ranking will be tracked in at least the following categories: Senior Men and Women, Category 3 Men, Category 4/5 Men, Category 3 Women, Category 4/5 Women, Masters Men and Women, Junior Men and Women, Singlespeed/Fixed, Tandem, Clydesdale, Athena.</p>
+      <p>Oregon Best All-Around Rider (BAR) a year-round, multi-discipline competition open to annual members. Points and ranking will be tracked in at least the following categories: Senior Men and Women, Category 3 Men, Category 4/5 Men, Category 3 Women, Category 4/5 Women, Masters Men and Women, Junior Men and Women, Singlespeed/Fixed, Tandem, Clydesdale, Athena.</p>
 
-    <p>There are separate discipline rankings, one each for Road, Track, Criterium, Time Trial, Cyclocross, Mountain Biking (Cross-country, Downhill, SuperD), Short Track, and Gravel. Points are awarded for finishes at all OBRA races for the top-15 in each discipline: 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1.</p>
+      <p>There are separate discipline rankings, one each for Road, Track, Criterium, Time Trial, Cyclocross, Mountain Biking (Cross-country, Downhill, SuperD), Short Track, and Gravel. Points are awarded for finishes at all OBRA races for the top-15 in each discipline: 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1.</p>
 
-    <p>State championships and national-caliber races are awarded double points. Fields with more than 75 riders are awarded 1.5 times regular BAR points.</p>
+      <p>State championships and national-caliber races are awarded double points. Fields with more than 75 riders are awarded 1.5 times regular BAR points.</p>
 
-    <p>Points earned in team events are split evenly across the team members. Example: the winners of a three-person team time trial will each receive five points.</p>
+      <p>Points earned in team events are split evenly across the team members. Example: the winners of a three-person team time trial will each receive five points.</p>
 
-    <p>Tandem teams earn points as a team. Tandem points do not count toward individual rider points.</p>
+      <p>Tandem teams earn points as a team. Tandem points do not count toward individual rider points.</p>
 
-    <p>If a rider has multiple finishes in a single event, only the best finish counts. </p>
+      <p>If a rider has multiple finishes in a single event, only the best finish counts. </p>
 
-    <p>If a rider has multiple discipline rankings that would count towards the same overall category, only the best ranking counts.</p>
+      <p>If a rider has multiple discipline rankings that would count towards the same overall category, only the best ranking counts.</p>
 
-    <p>Weeknight events will accrue points for each month of racing.</p>
+      <p>Weeknight events will accrue points for each month of racing.</p>
 
-    <p>Points are tallied and riders are ranked in order of points in each discipline. The rider with the highest point tally in each discipline is awarded 300 "ranking" points, the rider with the second highest is awarded 299, third gets 298, etc. If a rider has points in more than five disciplines, only the top five disciplines are counted. This means that there is a total 1500 points possible.</p>
+      <p>Points are tallied and riders are ranked in order of points in each discipline. The rider with the highest point tally in each discipline is awarded 300 "ranking" points, the rider with the second highest is awarded 299, third gets 298, etc. If a rider has points in more than five disciplines, only the top five disciplines are counted. This means that there is a total 1500 points possible.</p>
 
-    <p>These ranking numbers are then added to determine annual awards. Riders must compete in a minimum of four disciplines in order to qualify for  annual trophies.</p>
+      <p>These ranking numbers are then added to determine annual awards. Riders must compete in a minimum of four disciplines in order to qualify for  annual trophies.</p>
 
-    <p>The Team BAR is awarded based on the sum of the accrued points before rankings.</p>
+      <p>The Team BAR is awarded based on the sum of the accrued points before rankings.</p>
     HTML
   end
 
   def self.convert_event(competition, calculation)
     link_source_events(competition, calculation)
 
-    if competition.kind_of?(Competitions::Overall)
+    if competition.is_a?(Competitions::Overall)
       event = competition.parent
       event.notes = calculation.event_notes if event.notes.blank?
       calculation.event = event
@@ -1030,77 +1030,77 @@ class ConvertCompetitionsToCalculations
 
   def self.oregon_cup_notes
     <<~HTML
-    <p>The Oregon Cup is a year-long points series for senior men.</p>
-    <h3>Rules</h3>
-    <ul id="rules">
-      <li>Divisions: Senior 1/2 Men. </li>
-      <li>Events selected by OBRA Oregon Cup Committee based on Race Selection Criteria (below). </li>
-      <li>There is not a minimum number of races to qualify. </li>
-      <li>Cash Prize List &ndash; 5 deep. </li>
-        <ol>
-          <li>$300</li>
-          <li>$200</li>
-          <li>$150</li>
-          <li>$100</li>
-          <li>$50</li>
-        </ol>
-      <li>Prizes awarded at the annual OBRA Banquet</li>
-      <li>Leaders and champions jerseys will be awarded. </li>
-      <li>The OBRA Oregon Cup Committee will conduct ongoing outreach to potential sponsors and media. </li>
-      <li>Free entry to OR Cup events for OR Cup leaders. </li>
-      <li>Lower category riders competing in Senior Men races will receive
-      points unless their category is picked separately. Lower-category riders <b>do</b>
-      still count in individual race placings -- if a lower category rider finishes
-      ahead of a higher category rider, the higher category rider does not move up
-      in their placing.</li>
-      <li>Only yearly OBRA members are eligible for the Oregon Cup. People who only
-      purchase one-day licenses will not be counted.</li>
-      <li>Ties
-        <ul>
-          <li>The most first place finishes or, if still tied, the most second place finishes, etc., or if still tied;</li>
-          <li>The highest placing in the last race, or the race nearest the last race in which at least one of the tied riders placed.</li>
-        </ul>
-      </li>
-    </ul>
+      <p>The Oregon Cup is a year-long points series for senior men.</p>
+      <h3>Rules</h3>
+      <ul id="rules">
+        <li>Divisions: Senior 1/2 Men. </li>
+        <li>Events selected by OBRA Oregon Cup Committee based on Race Selection Criteria (below). </li>
+        <li>There is not a minimum number of races to qualify. </li>
+        <li>Cash Prize List &ndash; 5 deep. </li>
+          <ol>
+            <li>$300</li>
+            <li>$200</li>
+            <li>$150</li>
+            <li>$100</li>
+            <li>$50</li>
+          </ol>
+        <li>Prizes awarded at the annual OBRA Banquet</li>
+        <li>Leaders and champions jerseys will be awarded. </li>
+        <li>The OBRA Oregon Cup Committee will conduct ongoing outreach to potential sponsors and media. </li>
+        <li>Free entry to OR Cup events for OR Cup leaders. </li>
+        <li>Lower category riders competing in Senior Men races will receive
+        points unless their category is picked separately. Lower-category riders <b>do</b>
+        still count in individual race placings -- if a lower category rider finishes
+        ahead of a higher category rider, the higher category rider does not move up
+        in their placing.</li>
+        <li>Only yearly OBRA members are eligible for the Oregon Cup. People who only
+        purchase one-day licenses will not be counted.</li>
+        <li>Ties
+          <ul>
+            <li>The most first place finishes or, if still tied, the most second place finishes, etc., or if still tied;</li>
+            <li>The highest placing in the last race, or the race nearest the last race in which at least one of the tied riders placed.</li>
+          </ul>
+        </li>
+      </ul>
 
-    <h3>Points</h3>
-    <ol type="1">
-      <li>100</li>
-      <li>75</li>
-      <li>60</li>
-      <li>50</li>
-      <li>45</li>
-      <li>40</li>
-      <li>35</li>
-      <li>30</li>
-      <li>25</li>
-      <li>20</li>
-      <li>19</li>
-      <li>18</li>
-      <li>17</li>
-      <li>16</li>
-      <li>15</li>
-      <li>14</li>
-      <li>13</li>
-      <li>12</li>
-      <li>11</li>
-      <li>10</li>
-    </ol>
+      <h3>Points</h3>
+      <ol type="1">
+        <li>100</li>
+        <li>75</li>
+        <li>60</li>
+        <li>50</li>
+        <li>45</li>
+        <li>40</li>
+        <li>35</li>
+        <li>30</li>
+        <li>25</li>
+        <li>20</li>
+        <li>19</li>
+        <li>18</li>
+        <li>17</li>
+        <li>16</li>
+        <li>15</li>
+        <li>14</li>
+        <li>13</li>
+        <li>12</li>
+        <li>11</li>
+        <li>10</li>
+      </ol>
 
-    <h3>Race Selection Criteria</h3>
-    <ol type="1">
-      <li>No more than eight events. </li>
-      <li>Primarily road races. Criteriums will be used as needed to fill schedule. </li>
-      <li>Road Race Difficulty Balance - Balance degree of difficulty based on hills vs. flat, distance, etc. </li>
-      <li>High Profile Event - Well advertised in advance both with membership and media. High likelihood of commercial sponsorship. </li>
-      <li>Geographically Balanced - Southern, central and northwest Oregon based on membership representation. </li>
-      <li>Historically Significant - History of success over many seasons. </li>
-      <li>Demonstrated Participation - Popular event and/or venue. </li>
-      <li>Seasonally Balanced - Monthly, if possible, March through September. </li>
-      <li>Quality Venue/Promotion - Highest standards for promoters and OBRA. </li>
-    </ol>
+      <h3>Race Selection Criteria</h3>
+      <ol type="1">
+        <li>No more than eight events. </li>
+        <li>Primarily road races. Criteriums will be used as needed to fill schedule. </li>
+        <li>Road Race Difficulty Balance - Balance degree of difficulty based on hills vs. flat, distance, etc. </li>
+        <li>High Profile Event - Well advertised in advance both with membership and media. High likelihood of commercial sponsorship. </li>
+        <li>Geographically Balanced - Southern, central and northwest Oregon based on membership representation. </li>
+        <li>Historically Significant - History of success over many seasons. </li>
+        <li>Demonstrated Participation - Popular event and/or venue. </li>
+        <li>Seasonally Balanced - Monthly, if possible, March through September. </li>
+        <li>Quality Venue/Promotion - Highest standards for promoters and OBRA. </li>
+      </ol>
 
-    <p>Questions? Contact <a href="mailto:srbeards@gmail.com" class="obvious">Steven Beardsley</a>.</p>
+      <p>Questions? Contact <a href="mailto:srbeards@gmail.com" class="obvious">Steven Beardsley</a>.</p>
     HTML
   end
 end

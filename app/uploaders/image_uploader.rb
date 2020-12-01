@@ -27,7 +27,7 @@ class ImageUploader < CarrierWave::Uploader::Base
   end
 
   def default_url
-    asset_path("fallback/" + [version_name, "default.png"].compact.join("_"))
+    asset_path("fallback/#{[version_name, 'default.png'].compact.join('_')}")
   end
 
   def extension_white_list

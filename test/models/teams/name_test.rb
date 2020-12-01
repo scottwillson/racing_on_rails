@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 module Teams
   # :stopdoc:
@@ -42,12 +42,12 @@ module Teams
 
     test "results before this year" do
       team = Team.create!(name: "Twin Peaks")
-      assert(!team.results_before_this_year?, "results_before_this_year? with no results")
+      assert_not(team.results_before_this_year?, "results_before_this_year? with no results")
 
       event = SingleDayEvent.create!(date: Time.zone.today)
       senior_men = FactoryBot.create(:category)
       result = event.races.create!(category: senior_men).results.create!(team: team)
-      assert(!team.results_before_this_year?, "results_before_this_year? with results in this year")
+      assert_not(team.results_before_this_year?, "results_before_this_year? with results in this year")
 
       result.destroy
 

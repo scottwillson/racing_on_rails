@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
     page_path = path.dup
     page_path.gsub!(/.html$/, "")
     page_path.gsub!(/index$/, "")
-    page_path.gsub!(/\/$/, "")
+    page_path.gsub!(%r{/$}, "")
 
     @page = find_mobile_page(page_path)
 
@@ -62,9 +62,6 @@ class ApplicationController < ActionController::Base
   def user_for_paper_trail
     current_person&.name_or_login
   end
-
-
-  private
 
   def redirect_back_or_default(default)
     if session[:return_to]

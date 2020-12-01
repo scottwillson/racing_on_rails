@@ -22,8 +22,7 @@ module Events
                   .gsub(/20\d\d/, "")
                   .downcase
                   .gsub(/[^a-z0-9 ]/, "")
-                  .underscore
-                  .gsub(/ +/, " ")
+                  .underscore.squeeze(" ")
                   .strip
                   .tr(" ", "_")
     end

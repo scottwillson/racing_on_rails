@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Lint/UselessComparison
 # rubocop:disable Style/NilComparison
 # rubocop:disable Style/YodaCondition
 
@@ -114,6 +113,5 @@ module EqualityAssertion
   end
 end
 
-# rubocop:enable Lint/UselessComparison
 # rubocop:enable Style/NilComparison
 # rubocop:enable Style/YodaCondition

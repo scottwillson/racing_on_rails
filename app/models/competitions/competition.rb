@@ -108,7 +108,7 @@ module Competitions
       logger.debug "Competition#create_races #{id} #{name} #{date} races: #{race_category_names.size}"
       race_category_names.each do |name|
         category = Category.where(name: name).first || Category.create!(raw_name: name)
-        unless races.where(category: category).exists?
+        unless races.exists?(category: category)
           if team?
             races.create! category: category, result_columns: %w[ place team_name points ]
           else
@@ -322,7 +322,7 @@ module Competitions
       if place_members_only?
         Race
           .includes(:event)
-          .where("events.type != ?", self.class.name.demodulize)
+          .where.not("events.type" => self.class.name.demodulize)
           .year(year)
           .where("events.updated_at > ? || races.updated_at > ?", 1.week.ago, 1.week.ago)
           .references(:events)
@@ -372,7 +372,7 @@ module Competitions
     end
 
     def completed_events
-      source_events.select(&:any_results?).size if source_events?
+      source_events.count(&:any_results?) if source_events?
     end
 
     def map_team_member_to_boolean(results)

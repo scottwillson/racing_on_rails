@@ -5,10 +5,7 @@ module Calculations
   module V3
     module Models
       class CategoryRule
-        attr_reader :category
-        attr_reader :mappings
-        attr_reader :maximum_events
-        attr_reader :reject
+        attr_reader :category, :mappings, :maximum_events, :reject
 
         def initialize(category, mappings: [], maximum_events: nil, reject: false)
           @category = category
@@ -19,12 +16,10 @@ module Calculations
           validate!
         end
 
-        def name
-          category.name
-        end
+        delegate :name, to: :category
 
         def reject?
-          @reject != nil && reject
+          !@reject.nil? && reject
         end
 
         def validate!

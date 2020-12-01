@@ -10,7 +10,7 @@ module Competitions
       Discipline
         .find_all_bar
         .reject { |discipline| [Discipline[:age_graded], Discipline[:overall], Discipline[:team]].include?(discipline) }
-        .reject { |discipline| Bar.year(year).where(discipline: discipline.name).exists? }
+        .reject { |discipline| Bar.year(year).exists?(discipline: discipline.name) }
         .each { |discipline| create_child discipline }
     end
 
@@ -117,7 +117,7 @@ module Competitions
 
       source_results.group_by { |r| r["participant_id"] }.each do |_, results|
         results.group_by { |r| r["discipline"] }.each do |_, discipline_results|
-          filtered_results << discipline_results.sort_by { |r| r["points"].to_f }.reverse.first
+          filtered_results << discipline_results.max_by { |r| r["points"].to_f }
         end
       end
 

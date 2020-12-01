@@ -43,9 +43,9 @@ module Competitions
           .select("event_teams.team_id as participant_id")
           .joins("inner join event_team_memberships on event_team_memberships.person_id = results.person_id")
           .joins("inner join event_teams on event_teams.id = event_team_memberships.event_team_id")
-          .where("member_from is not null")
+          .where.not(member_from: nil)
           .where("year(member_from) <= ?", year)
-          .where("member_to is not null")
+          .where.not(member_to: nil)
           .where("year(member_to) >= ?", year)
           .where("event_teams.id" => event_teams_with_at_least_members)
       end

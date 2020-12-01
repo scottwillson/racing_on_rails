@@ -27,13 +27,14 @@ module Calculations
       @races = @event.races.includes(:category)
       @calculation = Calculations::V3::Calculation.find_by(event_id: @event.id)
       return redirect_to(event_path(@event)) unless @calculation
+
       @page = params[:page]
 
       @many_races = Result.where(event_id: event_id).distinct.count(:race_id) > 1
       many_results = Result.where(event_id: event_id).count > 500
 
       if many_results && @many_races
-        race_id = @races.sort.first.id
+        race_id = @races.min.id
         @results = race_results(race_id).paginate(page: @page, per_page: 200).order(:numeric_place)
         render :paginated
       elsif many_results

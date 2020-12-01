@@ -21,8 +21,8 @@ module Admin::EventsHelper
 
   # Build links like Cascade Classic: Mt. Bachelor Stage
   def link_to_parents(event)
-    html = "".dup
-    event.ancestors.reverse.each do |e|
+    html = +""
+    event.ancestors.reverse_each do |e|
       if e.parent
         html << link_to(truncate(e.name, length: 40), edit_admin_event_path(e), class: "obvious")
         html << ": "

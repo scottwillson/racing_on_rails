@@ -42,7 +42,7 @@ class PostsControllerTest < ActionController::TestCase
 
   test "list" do
     obra_chat = FactoryBot.create(:mailing_list)
-    for index in 1..22
+    (1..22).each do |index|
       date = Time.zone.now.beginning_of_month + index * 3600 * 24
       Post.create!(
         mailing_list: obra_chat,
@@ -58,7 +58,7 @@ class PostsControllerTest < ActionController::TestCase
     Post.create!(
       mailing_list: obra_race,
       subject: "Only OBRA Race Message",
-      date: date,
+      date: Time.zone.now,
       from_name: "Scout",
       from_email: "scout@obra.org",
       body: "This is a test message."

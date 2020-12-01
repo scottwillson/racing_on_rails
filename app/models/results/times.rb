@@ -102,6 +102,7 @@ module Results
     # This method doesn't handle some typical edge cases very well
     def time_to_s(time)
       return "" if time == 0.0 || time.blank?
+
       positive = time >= 0
 
       time = -time unless positive

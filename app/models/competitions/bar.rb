@@ -28,6 +28,7 @@ module Competitions
           end.each do |discipline|
             bar = Bar.where(date: date, discipline: discipline.name).first
             next if bar
+
             Bar.create!(
               parent: overall_bar,
               name: "#{year} #{discipline.name} BAR",

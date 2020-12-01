@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../../test_helper", __FILE__)
+require File.expand_path("../../../test_helper", __dir__)
 
 # :stopdoc:
 module Admin
@@ -21,7 +21,7 @@ module Admin
         assert_template("admin/events/edit")
         assert_not_nil(assigns["event"], "Should assign event")
         assert_nil(assigns["race"], "Should not assign race")
-        assert(!@response.body["#&lt;Velodrome:"], "Should not have model in text field")
+        assert_not(@response.body["#&lt;Velodrome:"], "Should not have model in text field")
         assert_select "input#event_human_date"
       end
 

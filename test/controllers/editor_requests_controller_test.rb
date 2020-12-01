@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../test_helper", __FILE__)
+require File.expand_path("../test_helper", __dir__)
 
 # :stopdoc:
 class EditorRequestsControllerTest < ActionController::TestCase
@@ -34,7 +34,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
     editor_requests = EditorRequest.where(person_id: member.id).where(editor_id: promoter.id)
     assert_equal 1, editor_requests.size, "Should only have one request"
     assert existing_editor_request.token != editor_requests.first.token, "Should be different token"
-    assert !EditorRequest.exists?(existing_editor_request.id), "Should have destroyed old request"
+    assert_not EditorRequest.exists?(existing_editor_request.id), "Should have destroyed old request"
   end
 
   test "already editor" do
@@ -89,10 +89,10 @@ class EditorRequestsControllerTest < ActionController::TestCase
 
     member.editor_requests.create!(editor: promoter)
 
-    assert_raise(ActiveRecord::RecordNotFound) {
+    assert_raise(ActiveRecord::RecordNotFound) do
       get(:show, params: { person_id: member.to_param, id: "12367127836shdgadasd" })
-    }
+    end
 
-    assert !member.editors.reload.include?(promoter), "Should add editor"
+    assert_not member.editors.reload.include?(promoter), "Should add editor"
   end
 end

@@ -5,7 +5,7 @@ module Countries
   COUNTRIES = [%w[Afghanistan AF], %w[Albania AL], %w[Algeria DZ], ["American Samoa", "AS"], %w[Andorra AD], %w[Angola AO],
                %w[Anguilla AI], %w[Antarctica AQ], ["Antigua and Barbuda", "AG"], %w[Argentina AR], %w[Armenia AM], %w[Aruba AW],
                %w[Australia AU], %w[Austria AT], %w[Azerbaidjan AZ], %w[Bahamas BS], %w[Bahrain BH], %w[Banglades BD], %w[Barbados BB],
-               %w[Belarus BY], %w[Belgium BE], %w[Belize BZ], %w[Benin BJ], %w[Bermuda BM], %w[Bolivia BO], ["Bosnia-Herzegovina", "BA"],
+               %w[Belarus BY], %w[Belgium BE], %w[Belize BZ], %w[Benin BJ], %w[Bermuda BM], %w[Bolivia BO], %w[Bosnia-Herzegovina BA],
                %w[Botswana BW], ["Bouvet Island", "BV"], %w[Brazil BR], ["British Indian O. Terr.", "IO"], ["Brunei Darussalam", "BN"], %w[Bulgaria BG],
                ["Burkina Faso", "BF"], %w[Burundi BI], %w[Buthan BT], %w[Cambodia KH], %w[Cameroon CM], %w[Canada CA], ["Cape Verde", "CV"],
                ["Cayman Islands", "KY"], ["Central African Rep.", "CF"], %w[Chad TD], %w[Chile CL], %w[China CN], ["Christmas Island", "CX"],

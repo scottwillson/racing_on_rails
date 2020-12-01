@@ -34,6 +34,7 @@ module Categories
         Category.all.find_each do |category|
           normalized_name = Category.normalized_name(category.name)
           next unless category.name != normalized_name
+
           existing_category = Category.where(name: normalized_name).where.not(id: category.id).first
           if existing_category
             category.replace_with existing_category
@@ -47,10 +48,10 @@ module Categories
     end
 
     def in_use?
-      Category.where(parent_id: id).exists? ||
-        Discipline.joins(:bar_categories).where("discipline_bar_categories.category_id" => id).exists? ||
-        Race.where(category_id: id).exists? ||
-        Result.where(category_id: id).exists?
+      Category.exists?(parent_id: id) ||
+        Discipline.joins(:bar_categories).exists?("discipline_bar_categories.category_id" => id) ||
+        Race.exists?(category_id: id) ||
+        Result.exists?(category_id: id)
     end
 
     def replace_with(existing_category)

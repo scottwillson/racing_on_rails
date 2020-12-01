@@ -60,8 +60,8 @@ module Mobile
                 request.host_with_port +
                 "/m" +
                 request.fullpath
-                .gsub(/[\?&]mobile_site=1/, "")
-                .gsub(/[\?&]full_site=1/, "")) && return
+                .gsub(/[?&]mobile_site=1/, "")
+                .gsub(/[?&]full_site=1/, "")) && return
   end
 
   def redirect_to_full_site
@@ -69,7 +69,7 @@ module Mobile
                 request.host_with_port +
                 request.fullpath
                 .gsub(%r{^/m}, "")
-                .gsub(/[\?&]mobile_site=1/, "")
-                .gsub(/[\?&]full_site=1/, "")) && return
+                .gsub(/[?&]mobile_site=1/, "")
+                .gsub(/[?&]full_site=1/, "")) && return
   end
 end

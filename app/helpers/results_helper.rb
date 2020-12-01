@@ -97,12 +97,10 @@ module ResultsHelper
                          else
                            Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s notes points ])
                          end
+                       elsif mobile_request?
+                         Results::Mapper.new(%w[ place event_full_name ])
                        else
-                         if mobile_request?
-                           Results::Mapper.new(%w[ place event_full_name ])
-                         else
-                           Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s points ])
-                         end
+                         Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s points ])
                        end
 
     table.rows = result.scores.sort_by { |score| [score.source_result.date, -score.points] }.map do |score|
@@ -128,12 +126,10 @@ module ResultsHelper
                          else
                            Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s notes points ])
                          end
+                       elsif mobile_request?
+                         Results::Mapper.new(%w[ place event_full_name ])
                        else
-                         if mobile_request?
-                           Results::Mapper.new(%w[ place event_full_name ])
-                         else
-                           Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s points ])
-                         end
+                         Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s points ])
                        end
 
     table.rows = result.sources

@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../test_helper", __FILE__)
+require File.expand_path("../test_helper", __dir__)
 
 # :stopdoc:
 class TeamsControllerTest < ActionController::TestCase
   test "index" do
     nonmember = Team.create!(name: "Not Member")
-    assert(!nonmember.member?, "Team should not be member")
+    assert_not(nonmember.member?, "Team should not be member")
 
     hidden_team = Team.create!(name: "Hidden Member", member: true, show_on_public_page: false)
 
     get :index
     assert_response(:success)
     assert_not_nil(assigns(:teams), "Should assign @teams")
-    assert(!assigns(:teams).include?(nonmember), "Should only show member teams") unless RacingAssociation.current.show_all_teams_on_public_page?
-    assert(!assigns(:teams).include?(hidden_team), "Should not show hidden teams") unless RacingAssociation.current.show_all_teams_on_public_page?
+    assert_not(assigns(:teams).include?(nonmember), "Should only show member teams") unless RacingAssociation.current.show_all_teams_on_public_page?
+    assert_not(assigns(:teams).include?(hidden_team), "Should not show hidden teams") unless RacingAssociation.current.show_all_teams_on_public_page?
   end
 
   test "index.xlsx" do
@@ -25,8 +25,8 @@ class TeamsControllerTest < ActionController::TestCase
     get :index, format: :xlsx
     assert_response(:success)
     assert_not_nil(assigns(:teams), "Should assign @teams")
-    assert(!assigns(:teams).include?(nonmember), "Should only show member teams") unless RacingAssociation.current.show_all_teams_on_public_page?
-    assert(!assigns(:teams).include?(hidden_team), "Should not show hidden teams") unless RacingAssociation.current.show_all_teams_on_public_page?
+    assert_not(assigns(:teams).include?(nonmember), "Should only show member teams") unless RacingAssociation.current.show_all_teams_on_public_page?
+    assert_not(assigns(:teams).include?(hidden_team), "Should not show hidden teams") unless RacingAssociation.current.show_all_teams_on_public_page?
     assert(assigns(:teams).include?(member), "Should include member teams")
   end
 

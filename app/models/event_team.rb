@@ -30,7 +30,7 @@ class EventTeam < ApplicationRecord
 
   def team_attributes=(attrs)
     attrs[:name] = attrs[:name].try(:strip)
-    if Team.where(name: attrs[:name]).exists?
+    if Team.exists?(name: attrs[:name])
       self.team = Team.where(name: attrs[:name]).first
     else
       super

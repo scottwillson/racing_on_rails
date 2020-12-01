@@ -11,6 +11,7 @@ module Results
     class DefaultColumnRendererTest < Ruby::TestCase
       class ColumnStub
         attr_reader :key
+
         def initialize(key)
           @key = key
         end

@@ -24,7 +24,7 @@ module Results
     test "import excel" do
       current_members = Person.where("member_to >= ?", Time.zone.now)
       event = SingleDayEvent.create!(discipline: "Road", date: Date.new(2006, 1, 16))
-      source_path = File.expand_path("../../../fixtures/results/pir_2006_format.xlsx", __FILE__)
+      source_path = File.expand_path("../../fixtures/results/pir_2006_format.xlsx", __dir__)
       results_file = ResultsFile.new(File.new(source_path), event)
       assert_equal(source_path, results_file.source.path, "file path")
       results_file.import
@@ -40,7 +40,7 @@ module Results
         actual_race.results.sort.each_with_index do |result, result_index|
           expected_result = expected_race.results[result_index]
           assert_equal(expected_result.place, result.place, "place for race #{index} result #{result_index} #{expected_result.first_name} #{expected_result.last_name}")
-          if result.license&.empty? # may have found person by license
+          if result.license && result.license.empty? # may have found person by license
             if expected_result.first_name
               assert_equal(expected_result.first_name, result.first_name, "first_name for race #{index} result #{result_index}")
             else
@@ -62,19 +62,18 @@ module Results
 
           assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
           next unless result.person
+
           if RaceNumber.rental?(result.number, Discipline[event.discipline])
-            assert(!result.person.member?(race_date), "Person should not be a member because he has a rental number")
+            assert_not(result.person.member?(race_date), "Person should not be a member because he has a rental number")
+          elsif RacingAssociation.current.add_members_from_results? || current_members.include?(result.person)
+            assert(result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
+            assert_not_equal(
+              Time.zone.today,
+              result.person.member_from,
+              "#{result.name} membership date should existing date or race date, but never today (#{result.person.member_from})"
+            )
           else
-            if RacingAssociation.current.add_members_from_results? || current_members.include?(result.person)
-              assert(result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
-              assert_not_equal(
-                Time.zone.today,
-                result.person.member_from,
-                "#{result.name} membership date should existing date or race date, but never today (#{result.person.member_from})"
-              )
-            else
-              assert(!result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
-            end
+            assert_not(result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
           end
           # test result by license (some with name misspelled)
           if result.license && RacingAssociation.current.eager_match_on_license?
@@ -98,7 +97,7 @@ module Results
 
       event = SingleDayEvent.create!(discipline: "Time Trial")
 
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt.xlsx", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/tt.xlsx", __dir__)), event)
       results_file.import
 
       assert_equal(2, event.races.reload.size, "event races")
@@ -116,7 +115,7 @@ module Results
 
       assert_equal(2, Person.where(first_name: "bruce", last_name: "carter").count, "Bruce Carters after import")
 
-      assert(!event.races.empty?, "event.races should not be empty")
+      assert_not(event.races.empty?, "event.races should not be empty")
 
       # Existing people, same name, different numbers
       bruce_1300 = event.races.first.results[6].person
@@ -194,7 +193,7 @@ module Results
       expected_races << race
 
       event = SingleDayEvent.create!(discipline: "Circuit")
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/2006_v2.xls", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/2006_v2.xls", __dir__)), event)
       results_file.import
 
       assert_equal(expected_races.size, event.races.size, "event races")
@@ -264,7 +263,7 @@ module Results
       weaver = FactoryBot.create(:person)
       pro_1_2_race.results.create! place: 1, person: weaver
 
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/small_event.xls", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/small_event.xls", __dir__)), event)
       results_file.import
 
       event = Event.find(event.id)
@@ -273,7 +272,7 @@ module Results
       assert event.races.all?(&:visible?), "Uploaded races should all be visible"
       ["Pro/1/2", "Category 3", "Category 4", "Category 5", "Women 1/2"].each do |cat_name|
         assert event.races.detect { |race| race.name == cat_name }, "Should have race #{cat_name}"
-        assert_equal 1, event.races.select { |race| race.name == cat_name }.size, "Should only one of race #{cat_name}"
+        assert_equal 1, event.races.count { |race| race.name == cat_name }, "Should only one of race #{cat_name}"
       end
 
       ["Pro/1/2", "Category 3", "Women 1/2"].each do |cat_name|
@@ -283,7 +282,7 @@ module Results
 
     test "stage race" do
       event = SingleDayEvent.create!
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/stage_race.xls", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/stage_race.xls", __dir__)), event)
       results_file.import
 
       assert_equal(1, event.races.size, "event races")
@@ -353,7 +352,7 @@ module Results
     test "dh" do
       FactoryBot.create(:discipline, name: "Downhill")
       event = SingleDayEvent.create(discipline: "Downhill")
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/dh.xls", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/dh.xls", __dir__)), event)
       results_file.import
     end
 
@@ -366,7 +365,7 @@ module Results
       pro_expert_women.children.create(name: "Pro/Expert Women")
 
       event = SingleDayEvent.create!(discipline: "Mountain Bike")
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/mtb.xls", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/mtb.xls", __dir__)), event)
       results_file.import
       assert_equal(6, event.races.reload.size, "Races after import")
     end
@@ -374,7 +373,7 @@ module Results
     test "custom columns" do
       FactoryBot.create(:discipline, name: "Downhill")
       event = SingleDayEvent.create(discipline: "Downhill")
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/custom_columns.xls", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/custom_columns.xls", __dir__)), event)
       results_file.import
       assert_equal [:bogus_column_name], results_file.custom_columns.to_a, "ResultsFile Custom columns"
       assert_equal [:bogus_column_name], event.races.first.custom_columns, "Race custom_columns"
@@ -384,7 +383,7 @@ module Results
       FactoryBot.create(:discipline, name: "Downhill")
       event = SingleDayEvent.create(discipline: "Downhill")
       event.races.create!(category: Category.create!(name: "Pro/Elite Men"))
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/custom_columns.xls", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/custom_columns.xls", __dir__)), event)
       results_file.import
       assert_equal [:bogus_column_name], results_file.custom_columns.to_a, "ResultsFile Custom columns"
       assert_equal [:bogus_column_name], event.races.first.custom_columns, "Race custom_columns"
@@ -392,18 +391,18 @@ module Results
 
     test "non sequential results" do
       event = SingleDayEvent.create!
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/non_sequential_results.xls", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/non_sequential_results.xls", __dir__)), event)
       results_file.import
       assert results_file.import_warnings.present?, "Should have import warnings for non-sequential results"
 
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/no_first_place_finisher.xls", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/no_first_place_finisher.xls", __dir__)), event)
       results_file.import
       assert results_file.import_warnings.present?, "Should have import warnings for no first place finisher"
     end
 
     test "TTT results should not trigger non-sequential results warnings" do
       event = SingleDayEvent.create!
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/ttt.xls", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/ttt.xls", __dir__)), event)
       results_file.import
       assert(
         results_file.import_warnings.empty?,
@@ -413,7 +412,7 @@ module Results
 
     test "times" do
       event = FactoryBot.create(:event)
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/times.xlsx", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/times.xlsx", __dir__)), event)
       results_file.import
       results = event.races.first.results
 
@@ -457,7 +456,7 @@ module Results
                                    { place: "DNS", name: "Nicole Pressprich", time: "DNS" }
                                  ])
 
-      assert !ResultsFile.same_time?(table.rows.second)
+      assert_not ResultsFile.same_time?(table.rows.second)
     end
 
     def expected_results(_event)
@@ -518,7 +517,7 @@ module Results
 
     test "race notes" do
       event = SingleDayEvent.create!
-      results_file = ResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt.xlsx", __FILE__)), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/tt.xlsx", __dir__)), event)
       results_file.import
       assert_equal("Field Size: 40 riders, 40 Laps, Sunny, cool, 40K", event.races.reload.first.notes, "Race notes")
     end
@@ -533,7 +532,7 @@ module Results
                                  ])
 
       table.rows.each do |row|
-        assert !results_file.race?(row), "Should not be a race: #{row}"
+        assert_not results_file.race?(row), "Should not be a race: #{row}"
         assert results_file.result?(row), "Should be a result: #{row}"
       end
     end
@@ -542,7 +541,7 @@ module Results
       results_file = ResultsFile.new(nil, nil)
       source = Tabular::Table.new
       row = Tabular::Row.new(source)
-      assert !results_file.race?(row)
+      assert_not results_file.race?(row)
     end
 
     def get_expected_races
@@ -697,13 +696,13 @@ module Results
       assert_equal_dates("2003-08-03", event.date, "start_date")
       assert_equal(6, event.races.size, "children size")
       expected_races = expected_races(event)
-      for expected_race in expected_races
+      expected_races.each do |expected_race|
         actual_race = event.races[expected_races.index(expected_race)]
         assert_equal(expected_race.name, actual_race.name, "name")
         assert_equal(expected_race.city, actual_race.city, "city")
         assert_equal(expected_race.state, actual_race.state, "state")
         assert_equal(actual_race.results.size, actual_race.results.size, "results size for #{expected_race.name}")
-        for expected_result in expected_race.results
+        expected_race.results.each do |expected_result|
           result = actual_race.results[expected_race.results.index(expected_result)]
           assert_equal(expected_result.place, result.place, "Place")
           assert_equal(expected_result.first_name, result.first_name, "Person first name")

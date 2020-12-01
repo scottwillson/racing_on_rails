@@ -4,15 +4,8 @@ module Calculations
   module V3
     module Models
       class Event
-        attr_reader :children
-        attr_reader :date
-        attr_reader :discipline
-        attr_reader :event_categories
-        attr_reader :end_date
-        attr_reader :id
-        attr_reader :multiplier
+        attr_reader :children, :date, :discipline, :event_categories, :end_date, :id, :multiplier, :sanctioned_by
         attr_accessor :parent
-        attr_reader :sanctioned_by
 
         def initialize(
           id: nil,

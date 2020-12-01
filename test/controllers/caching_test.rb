@@ -4,7 +4,7 @@ require "test_helper"
 
 # :stopdoc:
 class CachingTest < ActionController::TestCase
-  class TestController < ActionController::Base
+  class TestController < ApplicationController
     include Caching
   end
 

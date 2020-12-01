@@ -17,7 +17,7 @@ module Events
       has_many :competition_event_memberships, class_name: "Competitions::CompetitionEventMembership"
       has_many :competitions, through: :competition_event_memberships, source: :competition, class_name: "Competitions::Competition"
 
-      scope :competition, -> { where("type is not null").where.not(type: %w[ Event SingleDayEvent MultiDayEvent Series WeeklySeries CombinedTimeTrialResults ]) }
+      scope :competition, -> { where.not(type: nil).where.not(type: %w[ Event SingleDayEvent MultiDayEvent Series WeeklySeries CombinedTimeTrialResults ]) }
 
       def self.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
         discipline_names = [discipline]

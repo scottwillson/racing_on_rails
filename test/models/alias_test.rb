@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../test_helper", __FILE__)
+require File.expand_path("../test_helper", __dir__)
 
 # :stopdoc:
 class AliasTest < ActiveSupport::TestCase
@@ -8,7 +8,7 @@ class AliasTest < ActiveSupport::TestCase
     person = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
     Alias.create!(name: person.name, team: FactoryBot.create(:team))
     aliases = Alias.find_all_people_by_name(person.name).to_a
-    assert !aliases.include?(nil), "Alias.find_all_people_by_name should not return any nils"
+    assert_not aliases.include?(nil), "Alias.find_all_people_by_name should not return any nils"
   end
 
   test "find all people by name" do
@@ -21,12 +21,12 @@ class AliasTest < ActiveSupport::TestCase
 
   test "alias cannot shadow team name" do
     team = FactoryBot.create(:team)
-    assert !Alias.create(name: team.name, team: team).valid?, "Alias should be invalid"
+    assert_not Alias.create(name: team.name, team: team).valid?, "Alias should be invalid"
   end
 
   test "alias cannot shadow person name" do
     person = FactoryBot.create(:person)
-    assert !Alias.create(name: person.name, person: person).valid?, "Alias should be invalid"
+    assert_not Alias.create(name: person.name, person: person).valid?, "Alias should be invalid"
   end
 
   test "no dupe teams" do

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CalculationsController < ApplicationController
-  before_action :require_administrator, except: [:index, :show]
+  before_action :require_administrator, except: %i[index show]
 
   def create
     @calculation = Calculations::V3::Calculation.new(calculation_params)

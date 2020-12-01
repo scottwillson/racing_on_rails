@@ -20,11 +20,11 @@ module Results
       "West" => "we",
       "Wisconsin" => "wisc",
       "Complete" => "all"
-    }
+    }.freeze
 
     # prefix each file with common filename hooey
     REGION_FILES.each_pair do |key, value|
-      REGION_FILES[key] = "/promoters/wp_p_uscf_" + value + ".csv"
+      REGION_FILES[key] = "/promoters/wp_p_uscf_#{value}.csv"
     end
 
     REGION_FILES.freeze
@@ -61,7 +61,7 @@ module Results
       @members_list.each do |memusac|
         # get the parameters in a nice format
         license = memusac["license#"].to_i.to_s # strips off leading zeros, consistent with our db
-        full_name = memusac["first_name"].to_s + " " + memusac["last_name"].to_s # as specified by find method used below
+        full_name = "#{memusac['first_name']} #{memusac['last_name']}" # as specified by find method used below
         status = memusac["suspension"].to_s
 
         # Look for the person. License # is most reliable (e.g. we only have short first name)
@@ -72,17 +72,15 @@ module Results
         if r.nil?
           r = Person.find_by(name: full_name)
           r ||= first_dup
-        else
+        elsif r != first_dup
           # we found someone by license.
-          if r != first_dup # the name USAC has does not match Person name or alias
-            # Let's make an alias with their name at USAC. Helps with importing results
-            begin
-              Alias.create!(name: full_name, person: r)
-            rescue StandardError
-              Rails.logger.warn("Could not create alias #{full_name} for person #{r.name} with license #{r.license}")
-            end
+          begin
+            Alias.create!(name: full_name, person: r)
+          rescue StandardError
+            Rails.logger.warn("Could not create alias #{full_name} for person #{r.name} with license #{r.license}")
+          end # the name USAC has does not match Person name or alias
+          # Let's make an alias with their name at USAC. Helps with importing results
 
-          end
         end
 
         unless r.nil? # we found somebody

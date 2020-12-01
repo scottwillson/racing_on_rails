@@ -34,6 +34,7 @@ Category.transaction do
   }.each do |old_name, new_name|
     old_category = Category.where(name: old_name).first
     next unless old_category
+
     new_category = Category.find_or_create_by(name: new_name)
     new_category.raw_name = new_name
     new_category.save!

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../../test_helper", __FILE__)
+require File.expand_path("../../../test_helper", __dir__)
 
 # :stopdoc:
 module Admin
@@ -102,9 +102,8 @@ module Admin
                "event" => { "city" => "Forest Grove", "name" => "Banana Belt One", "date" => "2006-03-12",
                             "flyer" => "http://#{RacingAssociation.current.static_host}/flyers/2006/event.html", "sanctioned_by" => "UCI", "flyer_approved" => "1",
                             "discipline" => "Track", "canceled" => "1", "state" => "WA",
-                            "promoter_id" => brad_ross.to_param, "number_issuer_id" => norba.to_param
-                          }
-               }
+                            "promoter_id" => brad_ross.to_param, "number_issuer_id" => norba.to_param }
+             }
 
         assert_redirected_to edit_admin_event_path(event)
 
@@ -127,7 +126,7 @@ module Admin
       test "update single day to multi day" do
         number_issuer = FactoryBot.create(:number_issuer)
         FactoryBot.create(:number_issuer, name: "Stage Race")
-        for type in [MultiDayEvent, Series, WeeklySeries]
+        [MultiDayEvent, Series, WeeklySeries].each do |type|
           event = FactoryBot.create(:event)
 
           post :update,
@@ -140,9 +139,8 @@ module Admin
                               "discipline" => "Track", "canceled" => "1", "state" => "OR",
                               "promoter_id" => event.promoter.to_param,
                               "number_issuer_id" => number_issuer.to_param,
-                              "type" => type
-                            }
-                }
+                              "type" => type }
+               }
           assert_redirected_to edit_admin_event_path(event)
           event = Event.find(event.id)
           assert(event.is_a?(type), "#{event.name} should be a #{type}")
@@ -166,9 +164,8 @@ module Admin
                               "discipline" => "Track", "canceled" => "1", "state" => "OR",
                               "promoter_id" => event.promoter.to_param,
                               "number_issuer_id" => number_issuer.to_param,
-                              "type" => "Event"
-                            }
-              }
+                              "type" => "Event" }
+               }
           assert_redirected_to edit_admin_event_path(event)
           event = Event.find(event.id)
           assert_equal Event, event.class, "#{event.name} should be an Event, but is a #{event.class}"
@@ -186,8 +183,7 @@ module Admin
                "event" => { "city" => event.city, "name" => "Mt. Hood One Day",
                             "flyer" => event.flyer, "sanctioned_by" => event.sanctioned_by, "flyer_approved" => event.flyer_approved,
                             "discipline" => event.discipline, "canceled" => event.canceled, "state" => event.state,
-                            "promoter_id" => event.promoter_id, "number_issuer_id" => event.number_issuer_id, "type" => "SingleDayEvent"
-                          }
+                            "promoter_id" => event.promoter_id, "number_issuer_id" => event.number_issuer_id, "type" => "SingleDayEvent" }
              }
         event = assigns(:event)
         assert_not_nil(event, "@event")
@@ -220,9 +216,8 @@ module Admin
               "event" => { "city" => event.city, "name" => "Mt. Hood Series", "date" => event.date.to_date,
                            "flyer" => event.flyer, "sanctioned_by" => event.sanctioned_by, "flyer_approved" => event.flyer_approved,
                            "discipline" => event.discipline, "canceled" => event.canceled, "state" => event.state,
-                           "promoter_id" => event.promoter_id, "number_issuer_id" => event.number_issuer_id, "type" => "Series"
-                         }
-             }
+                           "promoter_id" => event.promoter_id, "number_issuer_id" => event.number_issuer_id, "type" => "Series" }
+            }
         assert_redirected_to edit_admin_event_path(event)
         event = Event.find(event.id)
         assert(event.is_a?(Series), "Mt Hood should be a Series, but is a #{event.class}")

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../../test_helper", __FILE__)
+require File.expand_path("../../../test_helper", __dir__)
 
 # :stopdoc:
 module Admin
@@ -25,7 +25,7 @@ module Admin
                             "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
                             "discipline" => "Downhill", "canceled" => "1", "state" => "KY",
                             "promoter_id" => person.to_param, "type" => "SingleDayEvent" }
-            })
+             })
 
         skull_hollow = Event.find_by(name: "Skull Hollow Roubaix")
         assert_not_nil(skull_hollow, "Skull Hollow Roubaix should be in DB")
@@ -58,13 +58,12 @@ module Admin
                             "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
                             "discipline" => "Downhill", "canceled" => "1", "state" => "KY",
                             "parent_id" => parent.to_param,
-                            "promoter_id" => person.to_param, "type" => "Event"
-                          }
+                            "promoter_id" => person.to_param, "type" => "Event" }
              })
 
         skull_hollow = Event.find_by(name: "Skull Hollow Roubaix")
         assert_not_nil(skull_hollow, "Skull Hollow Roubaix should be in DB")
-        assert(!skull_hollow.is_a?(SingleDayEvent), "Skull Hollow should not be a SingleDayEvent")
+        assert_not(skull_hollow.is_a?(SingleDayEvent), "Skull Hollow should not be a SingleDayEvent")
         assert(skull_hollow.is_a?(Event), "Skull Hollow should be an Event")
 
         assert_redirected_to edit_admin_event_path(assigns(:event))
@@ -94,8 +93,7 @@ module Admin
                             "flyer" => "http://timplummer.org/roubaix.html", "sanctioned_by" => "USA Cycling", "flyer_approved" => "1",
                             "discipline" => "Downhill", "canceled" => "1", "state" => "KY",
                             "parent_id" => parent.to_param,
-                            "promoter_id" => person.to_param, "type" => "SingleDayEvent"
-                          }
+                            "promoter_id" => person.to_param, "type" => "SingleDayEvent" }
              })
 
         skull_hollow = Event.find_by(name: "Skull Hollow Roubaix")
@@ -169,16 +167,15 @@ module Admin
 
       test "create without promoter id" do
         post :create,
-          params: {
-          "event" => { "promoter_name" => "Tour de Nuit", "city" => "Calgary ", "name" => "Ride the Road Tour", "date(1i)" => "2010",
-                       "flyer_approved" => "0", "number_issuer_id" => "1", "sanctioned_by" => "CBRA", "date(2i)" => "6", "notes" => "",
-                       "pre_event_fees" => "", "first_aid_provider" => "", "date(3i)" => "6", "post_event_fees" => "", "flyer" => "",
-                       "beginner_friendly" => "0", "time" => "", "instructional" => "0", "postponed" => "0", "team_name" => "",
-                       "type" => "SingleDayEvent", "phone" => "", "practice" => "0", "discipline" => "", "parent_id" => "",
-                       "canceled" => "0", "flyer_ad_fee" => "", "team_id" => "", "chief_referee" => "",
-                       "email" => "gary@morepeoplecycling.ca", "promoter_id" => "", "state" => "AB"
-                      }
-                    }
+             params: {
+               "event" => { "promoter_name" => "Tour de Nuit", "city" => "Calgary ", "name" => "Ride the Road Tour", "date(1i)" => "2010",
+                            "flyer_approved" => "0", "number_issuer_id" => "1", "sanctioned_by" => "CBRA", "date(2i)" => "6", "notes" => "",
+                            "pre_event_fees" => "", "first_aid_provider" => "", "date(3i)" => "6", "post_event_fees" => "", "flyer" => "",
+                            "beginner_friendly" => "0", "time" => "", "instructional" => "0", "postponed" => "0", "team_name" => "",
+                            "type" => "SingleDayEvent", "phone" => "", "practice" => "0", "discipline" => "", "parent_id" => "",
+                            "canceled" => "0", "flyer_ad_fee" => "", "team_id" => "", "chief_referee" => "",
+                            "email" => "gary@morepeoplecycling.ca", "promoter_id" => "", "state" => "AB" }
+             }
 
         assert_not_nil assigns(:event), "@event"
         assert assigns(:event).errors.empty?, assigns(:event).errors.full_messages.join

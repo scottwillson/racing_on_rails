@@ -7,6 +7,7 @@ module Test
     # Assert two Enumerable objects contain exactly same object in any order
     def assert_same_elements(expected, actual, message = "")
       return if expected.nil? && actual.nil?
+
       if !expected.nil? && actual.nil?
         flunk "#{message}\n Expected #{expected} but was nil"
         elseif expected.nil? && !actual.nil?

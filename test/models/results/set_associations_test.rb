@@ -21,8 +21,8 @@ class SetAssociationsTest < ActiveSupport::TestCase
     result2 = race.results.create!(
       first_name: "Paulo", last_name: "Bettini", team_name: "Davitamon"
     )
-    assert(!result1.team.new_record?, "First result team should be saved")
-    assert(!result2.team.new_record?, "Second result team should be saved")
+    assert_not(result1.team.new_record?, "First result team should be saved")
+    assert_not(result2.team.new_record?, "Second result team should be saved")
     assert_equal(result1.team.id, result2.team.id, "Teams should have same ID")
   end
 

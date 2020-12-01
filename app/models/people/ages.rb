@@ -11,7 +11,7 @@ module People
                   value.gsub %r{(\d+)/(\d+)/(\d+)}, '19\3/\1/\2'
                 else
                   value.gsub(/^00/, "19")
-                       .gsub(/^(\d+\/\d+\/)(\d\d)$/, '\119\2')
+                       .gsub(%r{^(\d+/\d+/)(\d\d)$}, '\119\2')
                 end
               when Array
                 Date.new(value[0], value[1], value[2])
@@ -75,14 +75,12 @@ module People
         else
           "woman"
         end
+      elsif master?
+        "master"
+      elsif junior?
+        "boy"
       else
-        if master?
-          "master"
-        elsif junior?
-          "boy"
-        else
-          "man"
-        end
+        "man"
       end
     end
 

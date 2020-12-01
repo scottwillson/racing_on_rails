@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUniqueIndexes < ActiveRecord::Migration[6.0]
   def change
     remove_index :people, column: :license, name: :index_people_on_license
@@ -22,8 +24,8 @@ class AddUniqueIndexes < ActiveRecord::Migration[6.0]
       Name.where(year: name.year, nameable_type: name.nameable_type, nameable_id: name.nameable_id).first.destroy!
     end
 
-    add_index :names, [:name, :year, :nameable_type, :nameable_id], unique: true
-    add_index :names, [:nameable_id, :year, :nameable_type], unique: true
+    add_index :names, %i[name year nameable_type nameable_id], unique: true
+    add_index :names, %i[nameable_id year nameable_type], unique: true
     add_index :velodromes, :name, unique: true
   end
 end

@@ -73,9 +73,10 @@ module Schedule
       end
 
       if row[:sanctioned_by].nil?
-        if row[:notes] == "national"
+        case row[:notes]
+        when "national"
           row[:sanctioned_by] = "USA Cycling"
-        elsif row[:notes] == "international"
+        when "international"
           row[:sanctioned_by] = "UCI"
         end
       end
@@ -151,7 +152,7 @@ module Schedule
     def self.save(events, multi_day_events)
       events.each do |event|
         logger.debug "Save #{event.name}"
-        event.save! unless Event.where(name: event.name, date: event.date).exists?
+        event.save! unless Event.exists?(name: event.name, date: event.date)
       end
       multi_day_events.each do |event|
         logger.debug "Save #{event.name}"
@@ -167,7 +168,7 @@ module Schedule
     # params: year, sanctioning_organization, start, end, discipline, region
     def self.find(params)
       query = if RacingAssociation.current.include_multiday_events_on_schedule?
-                Event.where(parent_id: nil).where("type != ?", "Event")
+                Event.where(parent_id: nil).where.not(type: "Event")
               else
                 Event.where(type: "SingleDayEvent")
               end

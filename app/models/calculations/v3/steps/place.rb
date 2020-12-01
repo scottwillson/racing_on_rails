@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Naming/UncommunicativeMethodParamName
 module Calculations
   module V3
     module Steps
@@ -214,4 +213,3 @@ module Calculations
     end
   end
 end
-# rubocop:enable Naming/UncommunicativeMethodParamName

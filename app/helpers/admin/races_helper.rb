@@ -3,9 +3,9 @@
 module Admin::RacesHelper
   # Build links like Cascade Classic: Mt. Bachelor Stage: Senior Men
   def link_to_events(race)
-    html = "".dup
+    html = +""
 
-    race.event.ancestors.reverse.each do |e|
+    race.event.ancestors.reverse_each do |e|
       html << link_to(truncate(e.name, length: 40), edit_admin_event_path(e), class: "obvious")
       html << ": "
     end

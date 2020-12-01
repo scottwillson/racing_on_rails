@@ -7,6 +7,7 @@ class EditorRequest < ApplicationRecord
   belongs_to :person
 
   before_validation :set_email, :set_expires_at, :set_token
+  before_save :destroy_duplicates
   after_create :send_email
 
   validates :editor, presence: true
@@ -14,8 +15,6 @@ class EditorRequest < ApplicationRecord
   validates :expires_at, presence: true
   validates :person, presence: true
   validates :token, presence: true
-
-  before_save :destroy_duplicates
 
   scope :expired, -> { where("expires_at <= ?", Time.zone.now) }
 

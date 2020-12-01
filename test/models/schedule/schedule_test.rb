@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 # :stopdoc:
 class ScheduleTest < ActiveSupport::TestCase
@@ -42,7 +42,7 @@ class ScheduleTest < ActiveSupport::TestCase
 
     third_week_of_march = march.weeks[2]
     day = third_week_of_march.days[6]
-    assert(!day.other_month?, "#{day} of #{third_week_of_march}, #{day.month} is not other month")
+    assert_not(day.other_month?, "#{day} of #{third_week_of_march}, #{day.month} is not other month")
     assert_equal(17, day.day_of_month, "Last day of 3rd week of March 2007")
     # Existing event
     assert_equal(2, day.events.size, "Last day of 3rd week of March 2007 events")
@@ -68,33 +68,33 @@ class ScheduleTest < ActiveSupport::TestCase
     before_import_all = Event.count
     assert_equal(7, before_import_all, "All events count before import")
 
-    filename = File.expand_path(File.dirname(__FILE__) + "/../../fixtures/schedule/excel.xls")
+    filename = File.expand_path("#{File.dirname(__FILE__)}/../../fixtures/schedule/excel.xls")
     Schedule::Schedule.import(filename)
 
     expected = {
-      "12 Mile Endurance DH"           => 1,
-      "12/24 Hr MTN"                   => 1,
-      "Banana Belt Road Race Series"   => 3,
-      "Beaverton Grand Prix"           => 1,
-      "Cascade Cream Puff MTB"         => 1,
-      "CCX Race"                       => 1,
-      "Cherry Pie Road Race"           => 1,
-      "Collegiate Track Nationals"     => 5,
-      "Columbia Plateau Stage Race"    => 3,
-      "CoMotion Criterium"             => 1,
-      "CoMotion Tandem Stage Race"     => 5,
-      "Crawfish Criterium"             => 1,
-      "Criterium Championships"        => 1,
-      "Cross Crusade"                  => 8,
-      "Fast Twitch Fridays"            => 16,
-      "Healthnet Criterium"            => 1,
-      "High Desert Omnium"             => 3,
-      "Hood River CCX"                 => 1,
-      "Jack Frost Time Trial"          => 1,
-      "LA World Cup"                   => 3,
-      "Track Development Class"        => 16,
+      "12 Mile Endurance DH" => 1,
+      "12/24 Hr MTN" => 1,
+      "Banana Belt Road Race Series" => 3,
+      "Beaverton Grand Prix" => 1,
+      "Cascade Cream Puff MTB" => 1,
+      "CCX Race" => 1,
+      "Cherry Pie Road Race" => 1,
+      "Collegiate Track Nationals" => 5,
+      "Columbia Plateau Stage Race" => 3,
+      "CoMotion Criterium" => 1,
+      "CoMotion Tandem Stage Race" => 5,
+      "Crawfish Criterium" => 1,
+      "Criterium Championships" => 1,
+      "Cross Crusade" => 8,
+      "Fast Twitch Fridays" => 16,
+      "Healthnet Criterium" => 1,
+      "High Desert Omnium" => 3,
+      "Hood River CCX" => 1,
+      "Jack Frost Time Trial" => 1,
+      "LA World Cup" => 3,
+      "Track Development Class" => 16,
       "Vancouver Courthouse Criterium" => 1,
-      "Veloshop CCX"                   => 1
+      "Veloshop CCX" => 1
     }
 
     expected.each do |event_name, count|
@@ -108,8 +108,8 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal(77, Event.count, "All events count after import")
 
     assert(SingleDayEvent.exists?(event_before.id), "Event before schedule start")
-    assert(!SingleDayEvent.exists?(event_on.id), "Event on schedule start")
-    assert(!SingleDayEvent.exists?(event_after.id), "Event after schedule start")
+    assert_not(SingleDayEvent.exists?(event_on.id), "Event on schedule start")
+    assert_not(SingleDayEvent.exists?(event_after.id), "Event after schedule start")
 
     cream_puff = nil
     la_world_cup = nil
@@ -117,13 +117,14 @@ class ScheduleTest < ActiveSupport::TestCase
     jack_frost = nil
     Event.where("date >= ?", Date.new(2005)).each do |event|
       assert_not_nil(event.date, "#{event.name} date")
-      if event.name == "Cascade Cream Puff MTB"
+      case event.name
+      when "Cascade Cream Puff MTB"
         cream_puff = event
-      elsif event.name == "Jack Frost Time Trial"
+      when "Jack Frost Time Trial"
         jack_frost = event
-      elsif event.name.match?(/^LA World Cup/)
+      when /^LA World Cup/
         la_world_cup = event
-      elsif event.name.match?(/^Collegiate Track Nationals/)
+      when /^Collegiate Track Nationals/
         road_nationals = event
       end
     end
@@ -181,13 +182,13 @@ class ScheduleTest < ActiveSupport::TestCase
 
     assert_not_nil(la_world_cup.parent, "LA World Cup parent event")
     assert(la_world_cup.parent.instance_of?(MultiDayEvent), "LA World Cup should be MultiDayEvent")
-    assert(!la_world_cup.parent.instance_of?(Series), "Fast LA World Cup should not be Series")
-    assert(!la_world_cup.parent.instance_of?(WeeklySeries), "LA World Cup should not be WeeklySeries")
+    assert_not(la_world_cup.parent.instance_of?(Series), "Fast LA World Cup should not be Series")
+    assert_not(la_world_cup.parent.instance_of?(WeeklySeries), "LA World Cup should not be WeeklySeries")
 
     banana_belt_series = Series.find_by(name: "Banana Belt Road Race Series")
     assert(banana_belt_series.instance_of?(Series), "Banana Belt Series should be Series, but was #{banana_belt_series.class}")
-    assert(!banana_belt_series.instance_of?(MultiDayEvent), "Fast Banana Belt Series should not be MultiDayEvent")
-    assert(!banana_belt_series.instance_of?(WeeklySeries), "Banana Belt Series should not be WeeklySeries")
+    assert_not(banana_belt_series.instance_of?(MultiDayEvent), "Fast Banana Belt Series should not be MultiDayEvent")
+    assert_not(banana_belt_series.instance_of?(WeeklySeries), "Banana Belt Series should not be WeeklySeries")
 
     event = Event.find_by(name: "12 Mile Endurance DH")
     promoter = event.promoter
@@ -348,7 +349,7 @@ class ScheduleTest < ActiveSupport::TestCase
     FactoryBot.create(:discipline)
     FactoryBot.create(:discipline, name: "Criterium")
     Team.create!(id: 1_200_000, name: "Bike Team")
-    filename = File.expand_path(File.dirname(__FILE__) + "/../../fixtures/schedule/tab-delimited.txt")
+    filename = File.expand_path("#{File.dirname(__FILE__)}/../../fixtures/schedule/tab-delimited.txt")
     Schedule::Schedule.import(filename)
 
     butte_hc = Event.find_by(name: "Butte Hillclimb")
@@ -362,7 +363,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal_dates("1999-01-01", butte_hc.date, "Butte Hillclimb date")
     assert_nil(butte_hc.promoter, "Butte Hillclimb promoter")
     assert_equal(RacingAssociation.current.default_sanctioned_by, butte_hc.sanctioned_by, "Butte Hillclimb sanctioned_by")
-    assert !butte_hc.flyer_approved?, "flyer_approved?"
+    assert_not butte_hc.flyer_approved?, "flyer_approved?"
 
     valentine_ct = Event.find_by(name: "Valentine Criterium")
     assert_not_nil(valentine_ct, "Should have imported Valentine Criterium")
@@ -383,7 +384,7 @@ class ScheduleTest < ActiveSupport::TestCase
     FactoryBot.create(:discipline)
     FactoryBot.create(:discipline, name: "Criterium")
     Team.create!(id: 1_200_000, name: "Bike Team")
-    filename = File.expand_path(File.dirname(__FILE__) + "/../../fixtures/schedule/comma-delimited.csv")
+    filename = File.expand_path("#{File.dirname(__FILE__)}/../../fixtures/schedule/comma-delimited.csv")
     Schedule::Schedule.import(filename)
 
     butte_hc = Event.find_by(name: "Butte Hillclimb")
@@ -397,7 +398,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal_dates("1999-01-01", butte_hc.date, "Butte Hillclimb date")
     assert_nil(butte_hc.promoter, "Butte Hillclimb promoter")
     assert_equal(RacingAssociation.current.default_sanctioned_by, butte_hc.sanctioned_by, "Butte Hillclimb sanctioned_by")
-    assert !butte_hc.flyer_approved?, "flyer_approved?"
+    assert_not butte_hc.flyer_approved?, "flyer_approved?"
 
     valentine_ct = Event.find_by(name: "Valentine Criterium")
     assert_not_nil(valentine_ct, "Should have imported Valentine Criterium")

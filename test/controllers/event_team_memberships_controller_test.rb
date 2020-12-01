@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../test_helper", __FILE__)
+require File.expand_path("../test_helper", __dir__)
 
 # :stopdoc:
 class EventTeamMembershipsControllerTest < ActionController::TestCase
@@ -11,14 +11,14 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     login_as event_team.event.promoter
 
     post :create,
-      params: {
-        event_team_id: event_team,
-        event_team_membership: {
-          person_attributes: {
-            name: "Jane Racer"
-          }
-        }
-      }
+         params: {
+           event_team_id: event_team,
+           event_team_membership: {
+             person_attributes: {
+               name: "Jane Racer"
+             }
+           }
+         }
 
     event_team_membership = assigns(:event_team_membership)
     assert_not_nil event_team_membership
@@ -32,15 +32,15 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     login_as event_team.event.promoter
 
     post :create,
-      params: {
-         event_team_id: event_team,
-         event_team_membership: {
-           person_id: person,
-           person_attributes: {
-             name: person.name
+         params: {
+           event_team_id: event_team,
+           event_team_membership: {
+             person_id: person,
+             person_attributes: {
+               name: person.name
+             }
            }
          }
-       }
 
     event_team_membership = assigns(:event_team_membership)
     assert_not_nil event_team_membership
@@ -55,15 +55,15 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     login_as event_team.event.promoter
 
     post :create,
-      params: {
-         event_team_id: event_team,
-         event_team_membership: {
-           person_id: person,
-           person_attributes: {
-             name: person.name
+         params: {
+           event_team_id: event_team,
+           event_team_membership: {
+             person_id: person,
+             person_attributes: {
+               name: person.name
+             }
            }
          }
-       }
 
     event_team_membership = assigns(:event_team_membership)
     assert_not_nil event_team_membership
@@ -117,12 +117,12 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     event_team = FactoryBot.create(:event_team)
 
     post :create,
-        params: {
-          event_team_id: event_team,
-          event_team_membership: {
-            person_id: different_person
-          }
-        }
+         params: {
+           event_team_id: event_team,
+           event_team_membership: {
+             person_id: different_person
+           }
+         }
 
     assert_redirected_to unauthorized_path
   end
@@ -135,7 +135,7 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
     delete :destroy, params: { id: event_team_membership }
 
     assert_equal person, event_team_membership.person
-    assert !EventTeamMembership.exists?(event_team_membership.id)
+    assert_not EventTeamMembership.exists?(event_team_membership.id)
     assert_redirected_to event_event_teams_path(event_team_membership.event)
   end
 
@@ -147,7 +147,7 @@ class EventTeamMembershipsControllerTest < ActionController::TestCase
 
     delete :destroy, params: { id: event_team_membership }
 
-    assert !EventTeamMembership.exists?(event_team_membership.id)
+    assert_not EventTeamMembership.exists?(event_team_membership.id)
     assert_redirected_to event_event_teams_path(event_team_membership.event)
   end
 

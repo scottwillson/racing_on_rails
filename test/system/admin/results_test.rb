@@ -51,7 +51,7 @@ class ResultsTest < ApplicationSystemTestCase
       assert_bar_toggled result
 
       visit "/admin/races/#{race.id}/edit"
-      assert !has_checked_field?("result_#{result.id}_bar")
+      assert_not has_checked_field?("result_#{result.id}_bar")
 
       check("result_#{result.id}_bar")
       assert_bar_toggled result

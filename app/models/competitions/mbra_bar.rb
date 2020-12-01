@@ -20,6 +20,7 @@ module Competitions
           ::Discipline.find_all_bar.each do |discipline|
             bar = MbraBar.where(date: date, discipline: discipline.name).first
             next if bar
+
             MbraBar.create!(
               name: "#{year} #{discipline.name} BAR",
               date: date,
@@ -61,9 +62,9 @@ module Competitions
 
     def upgrades
       {
-        "Category 4 Men"       => "Category 5 Men",
-        "Category 3 Men"       => "Category 4 Men",
-        "Category 1/2 Men"     => "Category 3 Men",
+        "Category 4 Men" => "Category 5 Men",
+        "Category 3 Men" => "Category 4 Men",
+        "Category 1/2 Men" => "Category 3 Men",
         "Category 1/2/3 Women" => "Category 4 Women"
       }
     end

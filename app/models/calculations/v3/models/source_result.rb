@@ -9,16 +9,9 @@ module Calculations
       class SourceResult
         include Calculations::V3::Models::Results
 
-        attr_reader :id
-        attr_reader :age
-        attr_reader :date
-        attr_reader :event_category
-        attr_reader :participant
-        attr_accessor :place
+        attr_reader :id, :age, :date, :event_category, :participant, :time
+        attr_accessor :place, :rejection_reason, :team_size
         attr_writer :points
-        attr_accessor :rejection_reason
-        attr_accessor :team_size
-        attr_reader :time
 
         def initialize(id: nil, age: nil, date: nil, event_category: nil, participant: nil, place: nil, points: nil, team_size: 1, time: nil)
           @id = id

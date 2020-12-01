@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 # :stopdoc:
 class ResultTest < ActiveSupport::TestCase
@@ -87,9 +87,9 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal(result.team, result_from_db.team, "result.team")
     assert_equal("17", result_from_db.place, "result.place")
     assert_equal("H67", result_from_db.number, "result.number")
-    assert(!result_from_db.new_record?, "result_from_db.new_record")
-    assert(!result.team.new_record?, "team.new_record")
-    assert(!person_from_db.new_record?, "person_from_db.new_record")
+    assert_not(result_from_db.new_record?, "result_from_db.new_record")
+    assert_not(result.team.new_record?, "team.new_record")
+    assert_not(person_from_db.new_record?, "person_from_db.new_record")
     assert_nil person_from_db.road_number, "Should not create racing association number from result"
   end
 
@@ -175,8 +175,8 @@ class ResultTest < ActiveSupport::TestCase
     result.team = team
 
     result.save!
-    assert(!person.new_record?, "person new record")
-    assert(!team.new_record?, "team new record")
+    assert_not(person.new_record?, "person new record")
+    assert_not(team.new_record?, "team new record")
     assert_equal(team, result.team, "result team")
     assert_nil(person.team, "result team")
     sorella_forte = Team.find_by(name: "Sorella Forte")
@@ -311,7 +311,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
     road_number = result.person.reload.race_numbers.reload.detect { |number| number.year == Time.zone.today.year }
     assert_nil(road_number, "Current road number")
-    assert(!result.person.member?, "Person with rental number should not be member")
+    assert_not(result.person.member?, "Person with rental number should not be member")
   end
 
   test "save number alt" do
@@ -341,7 +341,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
     road_number = result.person.reload.race_numbers.reload.detect { |number| number.year == Time.zone.today.year }
     assert_nil(road_number, "Current road number")
-    assert(!result.person.member?, "Person with rental number should not be member")
+    assert_not(result.person.member?, "Person with rental number should not be member")
   end
 
   test "person scope" do
@@ -361,7 +361,7 @@ class ResultTest < ActiveSupport::TestCase
 
   test "last event?" do
     result = Result.new
-    assert(!result.last_event?, "New result should not be last event")
+    assert_not(result.last_event?, "New result should not be last event")
 
     event = MultiDayEvent.create!.children.create!(name: "Tabor CR")
     category = Category.find_or_create_by(name: "Senior Men Pro/1/2")
@@ -374,11 +374,11 @@ class ResultTest < ActiveSupport::TestCase
     banana_belt_1 = banana_belt_series.children.create!(date: 1.week.from_now)
     banana_belt_2 = banana_belt_series.children.create!(date: 2.weeks.from_now)
     series_result = banana_belt_series.races.create!(category: category).results.create!
-    assert(!series_result.last_event?, "Series result should not be last event")
+    assert_not(series_result.last_event?, "Series result should not be last event")
 
     # First event
     first_result = banana_belt_1.races.create!(category: category).results.create!
-    assert(!first_result.last_event?, "First result should not be last event")
+    assert_not(first_result.last_event?, "First result should not be last event")
 
     # Second (and last) event
     banana_belt_2.races.create!(category: category).results.create!
@@ -393,25 +393,25 @@ class ResultTest < ActiveSupport::TestCase
     assert(result.finished?, "'1' should be a finisher")
 
     result = race.results.create!(place: "")
-    assert(!result.finished?, "'' should not be a finisher")
+    assert_not(result.finished?, "'' should not be a finisher")
 
     result = race.results.create!(place: "1000")
     assert(result.finished?, "'1000' should be a finisher")
 
     result = race.results.create!(place: "DNF")
-    assert(!result.finished?, "'DNF' should not be a finisher")
+    assert_not(result.finished?, "'DNF' should not be a finisher")
 
     result = race.results.create!(place: "dnf")
-    assert(!result.finished?, "'dnf' should not be a finisher")
+    assert_not(result.finished?, "'dnf' should not be a finisher")
 
     result = race.results.create!(place: "DQ")
-    assert(!result.finished?, "'DNF' should not be a finisher")
+    assert_not(result.finished?, "'DNF' should not be a finisher")
 
     result = race.results.create!(place: "nanplace")
-    assert(!result.finished?, "'nanplace' should not be a finisher")
+    assert_not(result.finished?, "'nanplace' should not be a finisher")
 
     result = race.results.create!(place: "noplace9")
-    assert(!result.finished?, "'noplace9' should not be a finisher")
+    assert_not(result.finished?, "'noplace9' should not be a finisher")
 
     result = race.results.create!(place: "1st")
     assert(result.finished?, "'1st' should be a finisher")
@@ -433,7 +433,7 @@ class ResultTest < ActiveSupport::TestCase
     if RacingAssociation.current.add_members_from_results?
       assert(person.member?, "Finisher with racing association number should be member")
     else
-      assert(!person.member?, "Finisher with racing association number should be member if RacingAssociation doesn't allow this")
+      assert_not(person.member?, "Finisher with racing association number should be member if RacingAssociation doesn't allow this")
     end
   end
 
@@ -450,7 +450,7 @@ class ResultTest < ActiveSupport::TestCase
 
     person = result.person
     person.reload
-    assert(!person.member?, "Finisher with event (not racing association) number should not be a member")
+    assert_not(person.member?, "Finisher with event (not racing association) number should not be a member")
   end
 
   test "only make member if full name" do
@@ -464,10 +464,10 @@ class ResultTest < ActiveSupport::TestCase
     )
 
     result.person.reload
-    assert(!result.person.member?, "Finisher with only first_name should be not member")
+    assert_not(result.person.member?, "Finisher with only first_name should be not member")
 
     result_2.person.reload
-    assert(!result_2.person.member?, "Finisher with only last_name should be not member")
+    assert_not(result_2.person.member?, "Finisher with only last_name should be not member")
   end
 
   test "stable name on old results" do
@@ -493,7 +493,7 @@ class ResultTest < ActiveSupport::TestCase
     )
     assert(result.bar?, "By default, results should count toward BAR")
     result.bar = false
-    assert(!result.bar?, "Result bar?")
+    assert_not(result.bar?, "Result bar?")
   end
 
   test "dont delete team names if used by person" do
@@ -515,7 +515,7 @@ class ResultTest < ActiveSupport::TestCase
     FactoryBot.create(:discipline, name: "Team")
     senior_men = FactoryBot.create(:category, name: "Senior Men")
     result = FactoryBot.create(:result)
-    assert !result.competition_result?, "SingleDayEvent competition_result?"
+    assert_not result.competition_result?, "SingleDayEvent competition_result?"
 
     result = Competitions::Ironman.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
     assert result.competition_result?, "Ironman competition_result?"
@@ -528,10 +528,10 @@ class ResultTest < ActiveSupport::TestCase
     FactoryBot.create(:discipline, name: "Team")
     senior_men = FactoryBot.create(:category, name: "Senior Men")
     result = FactoryBot.create(:result)
-    assert !result.team_competition_result?, "SingleDayEvent team_competition_result?"
+    assert_not result.team_competition_result?, "SingleDayEvent team_competition_result?"
 
     result = Competitions::Ironman.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
-    assert !result.team_competition_result?, "Ironman team_competition_result?"
+    assert_not result.team_competition_result?, "Ironman team_competition_result?"
 
     result = Competitions::TeamBar.create!.races.create!(category: Category.new(name: "Team")).results.create!(category: senior_men)
     assert result.team_competition_result?, "TeamBar competition_result?"

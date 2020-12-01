@@ -35,7 +35,7 @@ module Competitions
       return Time.zone.local(year).end_of_year if all_year?
 
       if source_events.present?
-        source_events.sort.last.date
+        source_events.max.date
       elsif parent
         parent.end_date
       else

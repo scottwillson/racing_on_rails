@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 module Admin
   # :stopdoc:
@@ -90,7 +90,7 @@ module Admin
       assert_response :success
       assert_not_nil assigns(:race), "@race"
       assert_equal "New Category", assigns(:race).name, "@race name"
-      assert !assigns(:race).new_record?, "@race should be created"
+      assert_not assigns(:race).new_record?, "@race should be created"
       assert_template "admin/races/create", "template"
     end
 
@@ -101,7 +101,7 @@ module Admin
       assert_response :success
       assert_not_nil assigns(:race), "@race"
       assert_equal "New Category", assigns(:race).name, "@race name"
-      assert !assigns(:race).new_record?, "@race should be created"
+      assert_not assigns(:race).new_record?, "@race should be created"
       assert_template "admin/races/create", "template"
     end
 

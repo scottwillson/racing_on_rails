@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __dir__)
 
 module Admin
   # :stopdoc:
@@ -93,16 +93,16 @@ module Admin
       vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
       assert_raise(ActiveRecord::RecordInvalid) do
         put :update_attribute,
-          params: {
-            id: vanilla.to_param,
-            name: "name",
-            value: ""
-          },
-          xhr: true
+            params: {
+              id: vanilla.to_param,
+              name: "name",
+              value: ""
+            },
+            xhr: true
       end
       assert_template(nil)
       assert_not_nil(assigns["team"], "Should assign team")
-      assert(!assigns["team"].errors.empty?, "Attempt to assign blank name should add error")
+      assert_not(assigns["team"].errors.empty?, "Attempt to assign blank name should add error")
       assert_equal(vanilla, assigns["team"], "Team")
       vanilla.reload
       assert_equal("Vanilla Bicycles", vanilla.name, "Team name")
@@ -111,12 +111,12 @@ module Admin
     test "set name" do
       vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
       put :update_attribute,
-        params: {
-          id: vanilla.to_param,
-          name: "name",
-          value: "Vaniller"
-        },
-        xhr: true
+          params: {
+            id: vanilla.to_param,
+            name: "name",
+            value: "Vaniller"
+          },
+          xhr: true
       assert_response(:success)
       assert_not_nil(assigns["team"], "Should assign team")
       assert_equal(vanilla, assigns["team"], "Team")
@@ -129,12 +129,12 @@ module Admin
     test "set name same name" do
       vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
       put :update_attribute,
-        params: {
-          id: vanilla.to_param,
-          name: "name",
-          value: "Vanilla"
-        },
-        xhr: true
+          params: {
+            id: vanilla.to_param,
+            name: "name",
+            value: "Vanilla"
+          },
+          xhr: true
       assert_response(:success)
       assert_template(nil)
       assert_not_nil(assigns["team"], "Should assign team")
@@ -146,12 +146,12 @@ module Admin
     test "set name same name different case" do
       vanilla = FactoryBot.create(:team, name: "Vanilla Bicycles")
       put :update_attribute,
-        params: {
-          id: vanilla.to_param,
-          name: "name",
-          value: "vanilla"
-        },
-        xhr: true
+          params: {
+            id: vanilla.to_param,
+            name: "name",
+            value: "vanilla"
+          },
+          xhr: true
       assert_response(:success)
       assert_template(nil)
       assert_not_nil(assigns["team"], "Should assign team")
@@ -165,12 +165,12 @@ module Admin
       FactoryBot.create(:team, name: "Kona")
 
       put :update_attribute,
-        params: {
-          id: vanilla.to_param,
-          name: "name",
-          value: "Kona"
-        },
-        xhr: true
+          params: {
+            id: vanilla.to_param,
+            name: "name",
+            value: "Kona"
+          },
+          xhr: true
       assert_response(:success)
       assert_template("admin/teams/merge_confirm")
       assert_not_nil(assigns["team"], "Should assign team")
@@ -186,12 +186,12 @@ module Admin
       vanilla.aliases.create!(name: "Vanilla Bicycles")
 
       put :update_attribute,
-        params: {
-          id: vanilla.to_param,
-          name: "name",
-          value: "Vanilla Bicycles"
-        },
-        xhr: true
+          params: {
+            id: vanilla.to_param,
+            name: "name",
+            value: "Vanilla Bicycles"
+          },
+          xhr: true
       assert_response(:success)
       assert_not_nil(assigns["team"], "Should assign team")
       assert assigns["team"].errors.empty?, assigns["team"].errors.full_messages.join
@@ -212,12 +212,12 @@ module Admin
 
       vanilla = vanilla
       put :update_attribute,
-        params: {
-          id: vanilla.to_param,
-          name: "name",
-          value: "vanilla bicycles"
-        },
-        xhr: true
+          params: {
+            id: vanilla.to_param,
+            name: "name",
+            value: "vanilla bicycles"
+          },
+          xhr: true
       assert_response(:success)
       assert_template(nil)
       assert_not_nil(assigns["team"], "Should assign team")
@@ -285,14 +285,14 @@ module Admin
       csc = Team.create!(name: "CSC")
       delete :destroy, params: { id: csc.id }
       assert_redirected_to(admin_teams_path)
-      assert(!Team.exists?(csc.id), "CSC should have been destroyed")
+      assert_not(Team.exists?(csc.id), "CSC should have been destroyed")
     end
 
     test "destroy team with results should not cause hard errors" do
       team = FactoryBot.create(:result).team
       delete :destroy, params: { id: team.id }
       assert(Team.exists?(team.id), "Team should not have been destroyed")
-      assert(!assigns(:team).errors.empty?, "Team should have error")
+      assert_not(assigns(:team).errors.empty?, "Team should have error")
       assert_response(:success)
     end
 
@@ -390,9 +390,8 @@ module Admin
                      contact_name: "Sacha White",
                      contact_email: "sacha@speedvagen.net",
                      contact_phone: "14115555",
-                     member: true
-                   }
-                 }
+                     member: true }
+           }
       assert_redirected_to(edit_admin_team_path(team))
       team.reload
       assert_equal("Speedvagen", team.name, "Name should be updated")
@@ -409,7 +408,7 @@ module Admin
       post :update, params: { id: team.to_param, team: { name: "" } }
       assert_response :success
       assert_not_nil assigns(:team), "@team"
-      assert !assigns(:team).errors.empty?, "@team should have errors"
+      assert_not assigns(:team).errors.empty?, "@team should have errors"
     end
   end
 end

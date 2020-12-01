@@ -94,6 +94,7 @@ class Result < ApplicationRecord
   # Destroy Team that only exist because they were created by importing results
   def destroy_teams
     return unless team
+
     team.destroy if team.no_results? && team.no_people? && team.created_from_result? && team.never_updated?
   end
 
@@ -118,6 +119,7 @@ class Result < ApplicationRecord
   def finished?
     return false if place.blank?
     return false if %w[DNF DNS DQ].include?(place)
+
     numeric_place?
   end
 
@@ -163,7 +165,7 @@ class Result < ApplicationRecord
   end
 
   def laps
-    self[:laps] || (race&.laps)
+    self[:laps] || race&.laps
   end
 
   def place=(value)
@@ -234,11 +236,11 @@ class Result < ApplicationRecord
   end
 
   def set_numeric_place(value)
-    if value && value.to_i != 0
-      self.numeric_place = value.to_i
-    else
-      self.numeric_place = UNPLACED.to_i
-    end
+    self.numeric_place = if value && value.to_i != 0
+                           value.to_i
+                         else
+                           UNPLACED.to_i
+                         end
   end
 
   def next_place

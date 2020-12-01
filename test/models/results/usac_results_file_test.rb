@@ -7,14 +7,14 @@ module Results
   class USACResultsFileTest < ActiveSupport::TestCase
     test "non sequential results" do
       event = SingleDayEvent.create!
-      results_file = USACResultsFile.new(File.new(File.expand_path("../../../fixtures/results/non_sequential_usac_results.xls", __FILE__)), event)
+      results_file = USACResultsFile.new(File.new(File.expand_path("../../fixtures/results/non_sequential_usac_results.xls", __dir__)), event)
       results_file.import
       assert results_file.import_warnings.present?, "Should have import warnings for non-sequential usac results"
     end
 
     test "import excel" do
       event = SingleDayEvent.create!(discipline: "Road", date: Date.new(2008, 5, 11))
-      source_path = File.expand_path("../../../fixtures/results/tt_usac.xls", __FILE__)
+      source_path = File.expand_path("../../fixtures/results/tt_usac.xls", __dir__)
       results_file = USACResultsFile.new(File.new(source_path), event)
       assert_equal(source_path, results_file.source.path, "file path")
       results_file.import
@@ -30,7 +30,7 @@ module Results
         actual_race.results.sort.each_with_index do |result, result_index|
           expected_result = expected_race.results[result_index]
           assert_equal(expected_result.place, result.place, "place for race #{index} result #{result_index} #{expected_result.first_name} #{expected_result.last_name}")
-          if result.license&.empty? # may have found person by license
+          if result.license && result.license.empty? # may have found person by license
             assert_equal(expected_result.first_name, result.first_name, "first_name for race #{index} result #{result_index}")
             assert_equal(expected_result.last_name, result.last_name, "last_name for race #{index} result #{result_index}")
           end
@@ -41,7 +41,7 @@ module Results
 
     test "race notes" do
       event = SingleDayEvent.create!
-      results_file = USACResultsFile.new(File.new(File.expand_path("../../../fixtures/results/tt_usac.xls", __FILE__)), event)
+      results_file = USACResultsFile.new(File.new(File.expand_path("../../fixtures/results/tt_usac.xls", __dir__)), event)
       results_file.import
       assert_equal("USCF, 2008, 563, 2012-05-11, Stage Race", event.races.reload.first.notes, "Race notes")
     end

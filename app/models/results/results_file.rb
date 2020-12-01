@@ -10,10 +10,7 @@ module Results
   #
   # Set DEBUG_RESULTS to Toggle expensive debug logging. E.g., DEBUG_RESULTS=yes ./script/server
   class ResultsFile
-    attr_accessor :event
-    attr_accessor :source
-    attr_accessor :custom_columns
-    attr_accessor :import_warnings
+    attr_accessor :event, :source, :custom_columns, :import_warnings
 
     def self.same_time?(row)
       return false unless row.previous
@@ -72,6 +69,7 @@ module Results
 
     def race?(row)
       return false if row.last?
+
       # Won't correctly detect races that only have DQs or DNSs
       row.next &&
         category_name_from_row(row).present? &&
@@ -104,6 +102,7 @@ module Results
       return false unless row
       return true if row[:place].present? || row[:number].present? || row[:license].present? || row[:team_name].present?
       return true unless row[:first_name].blank? && row[:last_name].blank? && row[:name].blank?
+
       false
     end
 
@@ -215,11 +214,7 @@ module Results
                  .underscore
                  .tr(" ", "_")
 
-      if COLUMN_MAP[cell]
-        COLUMN_MAP[cell]
-      else
-        cell
-      end
+      COLUMN_MAP[cell] || cell
     end
 
     def add_custom_columns(table)

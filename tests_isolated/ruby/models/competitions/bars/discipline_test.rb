@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../../test_case", __FILE__)
-require File.expand_path("../../../../../../app/models/competitions/bars/discipline", __FILE__)
+require File.expand_path("../../../test_case", __dir__)
+require File.expand_path("../../../../../app/models/competitions/bars/discipline", __dir__)
 
 module Competitions
   module Bars
@@ -15,7 +15,7 @@ module Competitions
 
       def test_discipline_for_road_race
         race = stub("race", discipline: "Road")
-        assert_equal ["Road", "Circuit"].sort, @bar.disciplines_for(race).sort, "disciplines"
+        assert_equal %w[Road Circuit].sort, @bar.disciplines_for(race).sort, "disciplines"
       end
 
       def test_discipline_for_track

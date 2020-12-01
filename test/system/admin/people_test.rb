@@ -93,7 +93,7 @@ class PeopleTest < ApplicationSystemTestCase
       assert_no_text "Couldn't find RaceNumber"
     end
 
-    assert !page.has_css?("input.number[value='878']")
+    assert_not page.has_css?("input.number[value='878']")
     select "2009", from: "number_year"
     assert page.has_css?("input.number[value='878']")
 
@@ -114,7 +114,7 @@ class PeopleTest < ApplicationSystemTestCase
     assert_content "Merged A Penn into Molly Cameron"
     assert page.has_selector?(".alert-info")
     assert page.has_no_selector?(".alert-danger")
-    assert !Person.exists?(alice.id), "Alice should be merged"
+    assert_not Person.exists?(alice.id), "Alice should be merged"
     assert Person.exists?(molly.id), "Molly still exist after merge"
   end
 
@@ -138,7 +138,7 @@ class PeopleTest < ApplicationSystemTestCase
 
     assert Person.exists?(molly.id), "Should not have merged Molly"
     assert Person.exists?(matson.id), "Should not have merged Matson"
-    assert !molly.aliases.reload.map(&:name).include?("Mark Matson"), "Should not add Matson alias"
+    assert_not molly.aliases.reload.map(&:name).include?("Mark Matson"), "Should not add Matson alias"
 
     visit "/admin/people"
     press_return "name"
@@ -156,7 +156,7 @@ class PeopleTest < ApplicationSystemTestCase
 
     assert_page_has_content "Merged Mark Matson into Molly Cameron", wait: 4
     assert Person.exists?(molly.id), "Should not have merged Molly"
-    assert !Person.exists?(matson.id), "Should have merged Matson"
+    assert_not Person.exists?(matson.id), "Should have merged Matson"
     assert molly.aliases.reload.map(&:name).include?("Mark Matson"), "Should add Matson alias"
   end
 

@@ -13,7 +13,7 @@ module People
       # "Jane Doe" or "Jane", "Doe" or name: "Jane Doe" or first_name: "Jane", last_name: "Doe"
       def self.find_all_by_name_or_alias(*args)
         options = args.extract_options!
-        options.keys.each { |key| raise(ArgumentError, "'#{key}' is not a valid key") unless %i[name first_name last_name].include?(key) }
+        options.each_key { |key| raise(ArgumentError, "'#{key}' is not a valid key") unless %i[name first_name last_name].include?(key) }
 
         name = args.join(" ") if options.empty?
 

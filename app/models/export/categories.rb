@@ -9,8 +9,6 @@ module Export
       Category.export_data
     end
 
-    private
-
     def Category.export_head
       Base.export(export_head_sql, "categories.txt")
     end

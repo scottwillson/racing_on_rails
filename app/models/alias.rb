@@ -42,7 +42,7 @@ class Alias < ApplicationRecord
   private
 
   def cannot_shadow
-    if aliasable_id && aliasable_type.safe_constantize.where(name: name).exists?
+    if aliasable_id && aliasable_type.safe_constantize.exists?(name: name)
       errors.add :name, "#{aliasable_type} named '#{name}' already exists. Cannot create alias that shadows a real name."
     end
   end

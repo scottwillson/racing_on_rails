@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class EditorRequestMailer < ActionMailer::Base
+class EditorRequestMailer < ApplicationMailer
   def notification(editor_request)
     @editor_request = editor_request
     @edit_url = edit_person_url(editor_request.person, host: RacingAssociation.current.rails_host)

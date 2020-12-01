@@ -11,7 +11,7 @@ class CategoryTest < ActiveSupport::TestCase
     unknowns = Category.find_all_unknowns
     assert_not_nil(unknowns, "Orphans should not be nil")
     assert(unknowns.include?(unknown), "Orphans should include 'Canine' category")
-    assert(!unknowns.include?(assoc_category), "Orphans should not include '#{RacingAssociation.current.short_name}' category")
+    assert_not(unknowns.include?(assoc_category), "Orphans should not include '#{RacingAssociation.current.short_name}' category")
   end
 
   # Relies on ActiveRecord ==
@@ -33,13 +33,13 @@ class CategoryTest < ActiveSupport::TestCase
   test "no circular parents" do
     category = FactoryBot.build(:category, name: "Senior Men", id: 1)
     category.parent = category
-    assert !category.valid?
+    assert_not category.valid?
   end
 
   test "no circular parents <<" do
     category = FactoryBot.build(:category, name: "Senior Men", id: 1)
     category.children << category
-    assert !category.valid?
+    assert_not category.valid?
   end
 
   test "ages default" do

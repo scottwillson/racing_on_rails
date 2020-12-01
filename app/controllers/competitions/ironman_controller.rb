@@ -9,10 +9,10 @@ module Competitions
       @years = @ironman.years(@year)
 
       page = begin
-               params[:page].to_i
-             rescue StandardError
-               1
-             end
+        params[:page].to_i
+      rescue StandardError
+        1
+      end
       page = 1 if page < 1
       @results = Result
                  .where(event_id: @ironman.id)

@@ -32,7 +32,7 @@ class PostsController < ApplicationController
     @post = Post.includes(:replies).includes(:original).includes(:mailing_list).where(id: params["id"]).first
     unless @post
       flash[:notice] = "Could not find post with ID #{params[:id]}"
-      return redirect_to(mailing_lists_path)
+      redirect_to(mailing_lists_path)
     end
   end
 

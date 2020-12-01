@@ -54,7 +54,7 @@ class Post < ApplicationRecord
         original.last_reply_at = if original.replies_count == 0
                                    original.date
                                  else
-                                   original.replies.reject { |r| r == post }.sort_by(&:date).last.date
+                                   original.replies.reject { |r| r == post }.max_by(&:date).date
                                  end
 
         original.save
@@ -73,7 +73,7 @@ class Post < ApplicationRecord
   def self.find_original(post)
     subject = normalize_subject(post.subject, post.mailing_list.subject_line_prefix)
     posts = post.mailing_list.posts.where(subject: subject).original.order(:position)
-    posts = posts.where("id != ?", post.id) unless post.new_record?
+    posts = posts.where.not(id: post.id) unless post.new_record?
     posts.first
   end
 
@@ -84,6 +84,7 @@ class Post < ApplicationRecord
 
   def self.remove_list_prefix(subject, subject_line_prefix)
     return "" unless subject
+
     subject.gsub(/\[#{subject_line_prefix}\]\s*/, "").strip
   end
 
@@ -108,7 +109,7 @@ class Post < ApplicationRecord
   # Move Post into position in list based on last_reply_at. In practice, most new Posts
   # move to the top of the list (highest position).
   def reposition!
-    new_position = Post.where("last_reply_at <= ?", last_reply_at).order("position desc").pluck(:position).first
+    new_position = Post.where("last_reply_at <= ?", last_reply_at).order("position desc").pick(:position)
     insert_at new_position if new_position && new_position != position
   end
 
@@ -134,9 +135,9 @@ class Post < ApplicationRecord
     if sender_parts.size > 1
       person_name = sender_parts.first
       if person_name.length > 2
-        return person_name[0..(person_name.length - 3)] + "..@" + sender_parts.last
+        return "#{person_name[0..(person_name.length - 3)]}..@#{sender_parts.last}"
       else
-        return "..@" + sender_parts.last
+        return "..@#{sender_parts.last}"
       end
     end
 

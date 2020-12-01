@@ -50,6 +50,6 @@ class Calculations::V3::AgeGroupsByCategoryTest < ActiveSupport::TestCase
     calculation_event = calculation.reload.event
   end
 
-  # TODO Create second series event + calculation with results
+  # TODO: Create second series event + calculation with results
   # TODO Create calculation that uses series child calculations
 end

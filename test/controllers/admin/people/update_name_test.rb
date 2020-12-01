@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../../../test_helper", __FILE__)
+require File.expand_path("../../../test_helper", __dir__)
 
 # :stopdoc:
 module Admin
@@ -90,12 +90,12 @@ module Admin
         tonkin.aliases.create!(name: "Eric Tonkin")
 
         put :update_attribute,
-          params: {
-            id: tonkin.to_param,
-            name: "name",
-            value: "Eric Tonkin"
-          },
-          xhr: true
+            params: {
+              id: tonkin.to_param,
+              name: "name",
+              value: "Eric Tonkin"
+            },
+            xhr: true
         assert_response :success
         assert_not_nil(assigns["person"], "Should assign person")
         assert_equal(tonkin, assigns["person"], "Person")
@@ -111,15 +111,15 @@ module Admin
       test "update to existing alias different case" do
         molly = FactoryBot.create(:person, first_name: "Molly", last_name: "Cameron")
         molly.aliases.create!(name: "Mollie Cameron")
-        assert !Alias.exists?(name: "Molly Cameron")
+        assert_not Alias.exists?(name: "Molly Cameron")
 
         put :update_attribute,
-          params: {
-            id: molly.to_param,
-            name: "name",
-            value: "mollie cameron"
-          },
-          xhr: true
+            params: {
+              id: molly.to_param,
+              name: "name",
+              value: "mollie cameron"
+            },
+            xhr: true
         assert_response :success
         assert_not_nil(assigns["person"], "Should assign person")
         assert_equal(molly, assigns["person"], "Person")
@@ -138,20 +138,20 @@ module Admin
         molly.aliases.create!(name: "Mollie Cameron")
 
         put :update_attribute,
-          params: {
-            id: tonkin.to_param,
-            name: "name",
-            value: "Mollie Cameron"
-          },
-          xhr: true
+            params: {
+              id: tonkin.to_param,
+              name: "name",
+              value: "Mollie Cameron"
+            },
+            xhr: true
         assert_response :success
         assert_template("admin/people/merge_confirm")
         assert_not_nil(assigns["person"], "Should assign person")
         assert_equal(tonkin, assigns["person"], "Person")
         assert_equal([molly], assigns["other_people"], "other_people")
-        assert(!Alias.find_all_people_by_name("Mollie Cameron").empty?, "Mollie still in database")
-        assert(!Person.find_all_by_name("Molly Cameron").empty?, "Molly still in database")
-        assert(!Person.find_all_by_name("Erik Tonkin").empty?, "Erik Tonkin still in database")
+        assert_not(Alias.find_all_people_by_name("Mollie Cameron").empty?, "Mollie still in database")
+        assert_not(Person.find_all_by_name("Molly Cameron").empty?, "Molly still in database")
+        assert_not(Person.find_all_by_name("Erik Tonkin").empty?, "Erik Tonkin still in database")
       end
 
       test "update to other person existing alias and duplicate names" do
@@ -170,12 +170,12 @@ module Admin
         assert_equal 1, Alias.where(name: "Mollie Cameron").count, "Mollie aliases in database"
 
         put :update_attribute,
-          params: {
-            id: tonkin.to_param,
-            name: "name",
-            value: "Mollie Cameron"
-          },
-          xhr: true
+            params: {
+              id: tonkin.to_param,
+              name: "name",
+              value: "Mollie Cameron"
+            },
+            xhr: true
         assert_response :success
         assert_template("admin/people/merge_confirm")
         assert_not_nil(assigns["person"], "Should assign person")

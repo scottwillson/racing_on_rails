@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 xlsx_package.workbook.add_worksheet(name: "schedule.xlsx") do |sheet|
-  sheet.add_row %w( id parent_id date name discipline flyer city state promoter_name promoter_phone promoter_email )
+  sheet.add_row %w[ id parent_id date name discipline flyer city state promoter_name promoter_phone promoter_email ]
   @events.each do |event|
     sheet.add_row [
       event.id,

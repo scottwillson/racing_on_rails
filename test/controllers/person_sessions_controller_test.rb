@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../test_helper", __FILE__)
+require File.expand_path("../test_helper", __dir__)
 
 # :stopdoc:
 class PersonSessionsControllerTest < ActionController::TestCase
@@ -33,7 +33,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     FactoryBot.create(:administrator)
     post :create, params: { person_session: { login: "admin@example.com", password: "bad password" } }
     assert_not_nil(assigns["person_session"], "@person_session")
-    assert(!assigns["person_session"].errors.empty?, "@person_session should have errors")
+    assert_not(assigns["person_session"].errors.empty?, "@person_session should have errors")
     assert_response :success
     assert_nil session[:person_credentials], "Should not have :person_credentials in session"
     assert_nil cookies["person_credentials"], "person_credentials cookie"
@@ -53,7 +53,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     Person.create!
     post :create, params: { person_session: { email: "", password: "" }, login: "Login" }
     assert_not_nil(assigns["person_session"], "@person_session")
-    assert(!assigns["person_session"].errors.empty?, "@person_session should have errors")
+    assert_not(assigns["person_session"].errors.empty?, "@person_session should have errors")
     assert_response :success
     assert_nil cookies["person_credentials"], "person_credentials cookie"
     assert_nil session[:person_credentials], "Authlogic should not put :person_credentials in session"

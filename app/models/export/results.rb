@@ -9,8 +9,6 @@ module Export
       Result.export_data
     end
 
-    private
-
     def Result.export_head
       Base.export(Result.export_head_sql, "results.txt")
     end
@@ -38,10 +36,10 @@ module Export
       if fully_qualified
         columns = []
         Result.export_columns_for_results.each do |column|
-          columns << "results." + column
+          columns << "results.#{column}"
         end
         Result.export_columns_for_people.each do |column|
-          columns << "people." + column
+          columns << "people.#{column}"
         end
         columns
       else

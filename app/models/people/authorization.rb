@@ -15,7 +15,7 @@ module People
       if new_record?
         false
       else
-        Event.where(promoter_id: id).exists? || editable_events.present?
+        Event.exists?(promoter_id: id) || editable_events.present?
       end
     end
 

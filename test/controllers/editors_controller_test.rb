@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../test_helper", __FILE__)
+require File.expand_path("../test_helper", __dir__)
 
 # :stopdoc:
 class EditorsControllerTest < ActionController::TestCase
@@ -58,7 +58,7 @@ class EditorsControllerTest < ActionController::TestCase
     post :create, params: { id: member.to_param, editor_id: promoter.to_param }
     assert_redirected_to unauthorized_path
 
-    assert !member.editors.include?(promoter), "Should not add promoter as editor of member"
+    assert_not member.editors.include?(promoter), "Should not add promoter as editor of member"
   end
 
   test "already exists" do
@@ -110,7 +110,7 @@ class EditorsControllerTest < ActionController::TestCase
     delete :destroy, params: { id: member.to_param, editor_id: promoter.to_param }
     assert_redirected_to edit_person_path(member)
 
-    assert !member.editors.include?(promoter), "Should remove promoter as editor of member"
+    assert_not member.editors.include?(promoter), "Should remove promoter as editor of member"
   end
 
   test "deny access by get" do
@@ -123,6 +123,6 @@ class EditorsControllerTest < ActionController::TestCase
     get :destroy, params: { id: member.to_param, editor_id: promoter.to_param }
     assert_redirected_to edit_person_path(member)
 
-    assert !member.editors.include?(promoter), "Should remove promoter as editor of member"
+    assert_not member.editors.include?(promoter), "Should remove promoter as editor of member"
   end
 end

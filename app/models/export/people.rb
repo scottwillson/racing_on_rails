@@ -9,8 +9,6 @@ module Export
       Person.export_data
     end
 
-    private
-
     def Person.export_data
       basename = "people.csv"
       path = Base.tmp_path basename

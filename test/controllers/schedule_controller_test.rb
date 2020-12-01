@@ -36,7 +36,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert(html["Banana Belt I"], "'Banana Belt I' should be in HTML")
     assert(html["Mudslinger"], "'Mudslinger' should be in HTML")
     assert(html["banana_belt.html"], "Schedule should include Banana Belt flyer URL")
-    assert(!html["mud_slinger.html"], "Schedule should not include Mudslinger flyer URL")
+    assert_not(html["mud_slinger.html"], "Schedule should not include Mudslinger flyer URL")
   end
 
   test "index only shows visible events" do
@@ -115,7 +115,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     get :index, params: { year: year, discipline: "Road" }
 
     html = @response.body
-    assert(!html["Mudslinger"], "Road events should not include MTB")
+    assert_not(html["Mudslinger"], "Road events should not include MTB")
     assert(html["banana_belt.html"], "Schedule should include Banana Belt flyer URL")
   end
 
@@ -147,7 +147,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
     html = @response.body
     assert(html["Mudslinger"], "Road events should include MTB")
-    assert(!html["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
+    assert_not(html["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
   end
 
   test "filter by sanctioning organization" do
@@ -181,8 +181,8 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       get :index, params: { sanctioning_organization: "FIAC" }
       html = @response.body
       assert html["FIAC Event"], "Should include FIAC event"
-      assert !html["UCI Event"], "Should not include UCI event"
-      assert !html["CBRA Event"], "Should not include CBRA event"
+      assert_not html["UCI Event"], "Should not include UCI event"
+      assert_not html["CBRA Event"], "Should not include CBRA event"
     end
   end
 
@@ -202,7 +202,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       get :index, params: { region: "washington" }
       html = @response.body
       assert html["WA Event"], "Should include Washington event"
-      assert !html["OR Event"], "Should not include Oregon event"
+      assert_not html["OR Event"], "Should not include Oregon event"
     end
   end
 
@@ -235,7 +235,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
     html = @response.body
     assert(html["Mudslinger"], "mountain_bike should show MTB races")
-    assert(!html["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
+    assert_not(html["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
   end
 
   test "list" do
@@ -271,7 +271,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
     html = @response.body
     assert(html["Mudslinger"], "Road events should include MTB")
-    assert(!html["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
+    assert_not(html["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
   end
 
   test "list excel discipline" do
@@ -317,7 +317,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
     json = @response.body
     assert(json["Mudslinger"], "Calendar should include MTB event")
-    assert(!json["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
+    assert_not(json["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
   end
 
   test "mtb calendar as json" do
@@ -345,6 +345,6 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
 
     json = @response.body
     assert(json["Mudslinger"], "Calendar should include MTB event")
-    assert(!json["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
+    assert_not(json["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
   end
 end

@@ -44,7 +44,7 @@ class PostTest < ActiveSupport::TestCase
     post = Post.new
     assert_nil post.from_name, "from_name"
     assert_nil post.from_email, "from_email"
-    assert !post.valid?
+    assert_not post.valid?
 
     post = Post.new(from_email: "cmurray@obra.org")
     assert_equal "cmurray@obra.org", post.from_email, "from_email"
@@ -78,7 +78,7 @@ class PostTest < ActiveSupport::TestCase
     ApplicationController.expects :expire_cache
     Post.save reply, mailing_list
 
-    assert !reply.new_record?
+    assert_not reply.new_record?
     reply.reload
     assert_equal_dates reply.date, reply.last_reply_at, "last_reply_at"
     assert_equal original, reply.original, "original"
@@ -114,7 +114,7 @@ class PostTest < ActiveSupport::TestCase
 
   test "require valid email" do
     post = FactoryBot.build(:post, from_email: "silversuitesresidences.com/?id=167")
-    assert !post.valid?
+    assert_not post.valid?
     assert post.errors[:from_email], "Expected error on :from_email. Had: #{post.errors.full_messages}"
   end
 
@@ -126,6 +126,6 @@ class PostTest < ActiveSupport::TestCase
     private_post = FactoryBot.create(:post, mailing_list: private_list)
 
     assert Post.recent.include?(public_post)
-    assert !Post.recent.include?(private_post)
+    assert_not Post.recent.include?(private_post)
   end
 end
