@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "active_support/core_ext/enumerable"
+
 require_relative "../../../app/models/categories"
 require_relative "../../../app/models/categories/ability"
 require_relative "../../../app/models/categories/ages"
