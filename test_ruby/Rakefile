@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+
+require "rake/testtask"
+
+Rake::TestTask.new do |t|
+  t.test_files = FileList["test_ruby/**/*_test.rb"]
+end
+desc "Run Ruby tests (no Rails)"
+
+task default: :test
