@@ -8,26 +8,19 @@ module Results
 
     USAC_SITE = "www.usacycling.org"
     REGION_FILES = {
-      "Central" => "ct",
-      "Mid-Atlantic" => "ma",
-      "Mountain" => "mt",
-      "North Atlantic" => "na",
-      "North Central" => "nc",
-      "North West" => "nw",
-      "South Central" => "sc",
-      "South East" => "se",
-      "South West" => "sw",
-      "West" => "we",
-      "Wisconsin" => "wisc",
-      "Complete" => "all"
+      "Central" => "/promoters/wp_p_uscf_ct.csv",
+      "Mid-Atlantic" => "/promoters/wp_p_uscf_ma.csv",
+      "Mountain" => "/promoters/wp_p_uscf_mt.csv",
+      "North Atlantic" => "/promoters/wp_p_uscf_na.csv",
+      "North Central" => "/promoters/wp_p_uscf_nc.csv",
+      "North West" => "/promoters/wp_p_uscf_nw.csv",
+      "South Central" => "/promoters/wp_p_uscf_sc.csv",
+      "South East" => "/promoters/wp_p_uscf_se.csv",
+      "South West" => "/promoters/wp_p_uscf_sw.csv",
+      "West" => "/promoters/wp_p_uscf_we.csv",
+      "Wisconsin" => "/promoters/wp_p_uscf_wisc.csv",
+      "Complete" => "/promoters/wp_p_uscf_all.csv"
     }.freeze
-
-    # prefix each file with common filename hooey
-    REGION_FILES.each_pair do |key, value|
-      REGION_FILES[key] = "/promoters/wp_p_uscf_#{value}.csv"
-    end
-
-    REGION_FILES.freeze
 
     def initialize(person = "promo", pword = "races")
       Net::HTTP.start(USAC_SITE) do |http|
