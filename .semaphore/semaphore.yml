@@ -62,7 +62,7 @@ blocks:
       jobs:
       - name: unit tests
         commands:
-          - bin/test && bundle exec rails test
+          - bin/test_ruby && bundle exec rails test
           - exitcode=$(if [ "$SEMAPHORE_JOB_RESULT" == "failed" ]; then echo 1; else echo 0; fi)
       secrets:
         - name: environmental_variables
@@ -138,7 +138,7 @@ blocks:
       jobs:
       - name: unit tests
         commands:
-          - bin/test && bundle exec rails test && bundle exec rails t registration_engine/test/{controllers,helpers,integration,mailers,models}/**/*_test.rb
+          - bin/test_ruby && bundle exec rails test && bundle exec rails t registration_engine/test/{controllers,helpers,integration,mailers,models}/**/*_test.rb
           - exitcode=$(if [ "$SEMAPHORE_JOB_RESULT" == "failed" ]; then echo 1; else echo 0; fi)
       secrets:
         - name: environmental_variables
