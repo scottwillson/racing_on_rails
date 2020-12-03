@@ -38,9 +38,9 @@ GIT
 
 GIT
   remote: https://github.com/seuros/capistrano-puma.git
-  revision: f8093ad3e68e67390d0ffeb5f50830b1587973f9
+  revision: 2e9d9b62b2135fd3e72241173c4ac4e064e6a2b1
   specs:
-    capistrano3-puma (5.0.0.beta1)
+    capistrano3-puma (5.0.1)
       capistrano (~> 3.7)
       capistrano-bundler
       puma (>= 4.0, < 6.0)
@@ -349,7 +349,7 @@ GEM
       rubocop-ast (>= 1.1.1)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 2.0)
-    rubocop-ast (1.2.0)
+    rubocop-ast (1.3.0)
       parser (>= 2.7.1.5)
     rubocop-performance (1.9.1)
       rubocop (>= 0.90.0, < 2.0)
