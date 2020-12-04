@@ -17,6 +17,10 @@ class ApplicationController < ActionController::Base
 
   before_action :clear_racing_association, :toggle_tabs, :allow_iframes, :set_paper_trail_whodunnit, :prepend_views
 
+  before_action do
+    Rack::MiniProfiler.authorize_request if administrator?
+  end
+
   private
 
   def prepend_views
