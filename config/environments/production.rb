@@ -43,7 +43,7 @@ Rails.application.configure do
 
   config.middleware.use(
     StackProf::Middleware,
-    enabled: true,
+    enabled: false,
     mode: :object,
     interval: 1000,
     save_every: 5
