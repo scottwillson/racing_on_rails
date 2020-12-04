@@ -37,6 +37,7 @@ module RacingOnRails
 
     Rack::MiniProfiler.config.storage = Rack::MiniProfiler::MemcacheStore
     Rack::MiniProfiler.config.enable_advanced_debugging_tools = true
+    Rack::MiniProfiler.config.authorization_mode = :allow_all
 
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?
