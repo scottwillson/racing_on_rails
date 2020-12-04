@@ -3,9 +3,6 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-gem "rack-mini-profiler"
-gem "memory_profiler"
-
 gem "rails", "~> 6.0"
 
 gem "activemodel-serializers-xml"
@@ -95,3 +92,6 @@ group :staging, :production do
   gem "execjs"
   gem "raygun4ruby"
 end
+
+gem "rack-mini-profiler"
+gem "memory_profiler"
