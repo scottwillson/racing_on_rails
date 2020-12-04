@@ -35,7 +35,6 @@ module RacingOnRails
     config.action_mailer.default_url_options = { mobile: nil }
     config.exceptions_app = routes
 
-    Rack::MiniProfiler.config.snapshot_every_n_requests = 100
     Rack::MiniProfiler.config.storage = Rack::MiniProfiler::MemcacheStore
 
     def exception_notifier
