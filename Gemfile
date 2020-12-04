@@ -3,6 +3,9 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
+gem "rack-mini-profiler"
+gem "memory_profiler"
+
 gem "rails", "~> 6.0"
 
 gem "activemodel-serializers-xml"
@@ -51,7 +54,6 @@ gem "will_paginate"
 gem "will_paginate-bootstrap", git: "https://github.com/estately/will_paginate-bootstrap.git"
 gem "yui-compressor"
 gem "zip-zip"
-gem "stackprof"
 
 group :development do
   gem "brakeman"

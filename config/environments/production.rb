@@ -40,12 +40,4 @@ Rails.application.configure do
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
-
-  config.middleware.use(
-    StackProf::Middleware,
-    enabled: false,
-    mode: :object,
-    interval: 1000,
-    save_every: 5
-  )
 end
