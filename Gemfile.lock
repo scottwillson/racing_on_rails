@@ -396,6 +396,7 @@ GEM
     sshkit (1.21.1)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
+    stackprof (0.2.16)
     stripe (5.28.0)
     tabular (0.4.7)
     thor (1.0.1)
@@ -505,6 +506,7 @@ DEPENDENCIES
   spreadsheet
   spring
   spring-watcher-listen (~> 2.0.0)
+  stackprof
   tabular (= 0.4.7)
   timecop
   uglifier

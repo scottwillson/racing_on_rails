@@ -51,6 +51,7 @@ gem "will_paginate"
 gem "will_paginate-bootstrap", git: "https://github.com/estately/will_paginate-bootstrap.git"
 gem "yui-compressor"
 gem "zip-zip"
+gem "stackprof"
 
 group :development do
   gem "brakeman"
