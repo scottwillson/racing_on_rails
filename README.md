@@ -21,8 +21,8 @@ Issues
 https://github.com/scottwillson/racing_on_rails/issues
 
 Requirements
-Ruby 2.4
-MySQL 5.6
+Ruby 2.7
+MySQL 5.7
 
 [![Build Status](https://semaphoreci.com/api/v1/rocket_surgery/racing_on_rails/branches/master/badge.svg)](https://semaphoreci.com/rocket_surgery/racing_on_rails)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a73ba298894ee91b4618/maintainability)](https://api.codeclimate.com/v1/badges/a73ba298894ee91b4618/maintainability)
