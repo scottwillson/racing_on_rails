@@ -36,8 +36,7 @@ module RacingOnRails
     config.exceptions_app = routes
 
     Rack::MiniProfiler.config.storage = Rack::MiniProfiler::MemcacheStore
-    Rack::MiniProfiler.config.enable_advanced_debugging_tools = true
-    Rack::MiniProfiler.config.authorization_mode = :allow_all
+    Rack::MiniProfiler.config.snapshot_every_n_requests = 10_000
 
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?
