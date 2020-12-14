@@ -2,8 +2,6 @@
 
 require File.expand_path("../test_helper", __dir__)
 
-ActionController::Base.prepend_view_path "#{Rails.root}/test/fixtures/views"
-
 # :stopdoc:
 class FakeController < ApplicationController
   def index
@@ -49,7 +47,7 @@ class PagesActionControllerIntegrationTest < ActionController::TestCase
 
   test "raise exception for missing partial" do
     # Would prefer MissingTemplate
-    assert_raise(ActionView::TemplateError) { get(:missing_partial) }
+    assert_raise(ActionView::Template::Error) { get(:missing_partial) }
   end
 
   test "work as a partial and all partials itself" do

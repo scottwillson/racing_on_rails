@@ -4,7 +4,7 @@ module Mobile
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_mobile_preferences, :redirect_to_mobile_if_applicable, :prepend_view_path_if_mobile
+    before_action :set_mobile_preferences, :redirect_to_mobile_if_applicable
 
     helper_method :mobile_browser?
     helper_method :mobile_request?
@@ -16,10 +16,6 @@ module Mobile
   end
 
   private
-
-  def prepend_view_path_if_mobile
-    prepend_view_path "app/views/mobile" if mobile_request?
-  end
 
   def find_mobile_page(page_path)
     Page.find_by(path: "mobile/#{page_path}") if mobile_request?

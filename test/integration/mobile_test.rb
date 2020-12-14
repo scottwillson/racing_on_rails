@@ -112,7 +112,7 @@ class MobileTest < RacingOnRails::IntegrationTest
     get "/m/people"
     assert_response :success
     assert_template "people/index"
-    assert_select "th.license", 0
+    assert_select "th.license", 1
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
 

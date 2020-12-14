@@ -15,17 +15,20 @@ class ApplicationController < ActionController::Base
   include Mobile
   include SentientController
 
-  before_action :clear_racing_association, :toggle_tabs, :allow_iframes, :set_paper_trail_whodunnit, :prepend_views
+  prepend_view_path "#{::Rails.root}/registration_engine/app/views"
+  prepend_view_path "#{::Rails.root}/local/app/views"
+
+  if Rails.env.test?
+    prepend_view_path "#{Rails.root}/test/fixtures/views"
+  end
+
+  before_action :clear_racing_association, :toggle_tabs, :allow_iframes, :set_paper_trail_whodunnit
 
   before_action do
     Rack::MiniProfiler.authorize_request if administrator?
   end
 
   private
-
-  def prepend_views
-    prepend_view_path "#{::Rails.root}/local/app/views"
-  end
 
   def clear_racing_association
     RacingAssociation.current = nil
