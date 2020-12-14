@@ -6,6 +6,7 @@ require_relative "racing_on_rails/integration_test"
 class PeopleTest < RacingOnRails::IntegrationTest
   test "index" do
     FactoryBot.create(:person, first_name: "Ryan", last_name: "Weaver")
+    pp Rack::MiniProfiler.config.storage
     get "/people"
     assert_response :success
 
