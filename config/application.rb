@@ -35,7 +35,7 @@ module RacingOnRails
     config.action_mailer.default_url_options = { mobile: nil }
     config.exceptions_app = routes
 
-    Rack::MiniProfiler.config.storage = Rack::MiniProfiler::MemcacheStore
+    Rack::MiniProfiler.config.storage = Rack::MiniProfiler::FileStore
     Rack::MiniProfiler.config.enable_advanced_debugging_tools = true
     Rack::MiniProfiler.config.snapshot_every_n_requests = 10_000
 
