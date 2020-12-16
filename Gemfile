@@ -92,6 +92,3 @@ group :staging, :production do
   gem "execjs"
   gem "raygun4ruby"
 end
-
-gem "rack-mini-profiler"
-gem "memory_profiler"

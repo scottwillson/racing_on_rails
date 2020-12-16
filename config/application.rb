@@ -35,11 +35,6 @@ module RacingOnRails
     config.action_mailer.default_url_options = { mobile: nil }
     config.exceptions_app = routes
 
-
-    Rails.application.config.to_prepare do
-      Rack::MiniProfiler.config.enable_advanced_debugging_tools = true
-    end
-
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?
         Raygun
