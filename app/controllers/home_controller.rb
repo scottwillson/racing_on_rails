@@ -50,6 +50,6 @@ class HomeController < ApplicationController
   end
 
   def home_params
-    params_without_mobile.require(:home).permit(:photo_id, :weeks_of_recent_results, :weeks_of_upcoming_events)
+    params.require(:home).permit(:photo_id, :weeks_of_recent_results, :weeks_of_upcoming_events)
   end
 end

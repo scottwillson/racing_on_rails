@@ -32,7 +32,6 @@ module RacingOnRails
       Rails.configuration.paths["config/database"] = ["local/config/database.yml", "config/database.yml"]
     end
 
-    config.action_mailer.default_url_options = { mobile: nil }
     config.exceptions_app = routes
 
     def exception_notifier

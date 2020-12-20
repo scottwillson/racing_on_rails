@@ -311,7 +311,7 @@ module Admin
     end
 
     def event_params
-      _params = params_without_mobile.require(:event).permit(
+      _params = params.require(:event).permit(
         :additional_race_price,
         :all_events_discount,
         :atra_points_series,

@@ -239,7 +239,7 @@ module Admin
     end
 
     def person_params
-      params_without_mobile.require(:person).permit(
+      params.require(:person).permit(
         :administrator,
         :billing_city,
         :billing_country_code,

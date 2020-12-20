@@ -4,10 +4,6 @@ require File.expand_path("../test_helper", __dir__)
 
 # :stopdoc:
 class ResultsHelperTest < ActionView::TestCase
-  setup do
-    stubs(mobile_request?: false)
-  end
-
   test "results table" do
     race = Race.new(results: [Result.new(place: "1")])
     table = Nokogiri::HTML(results_table(Event.new, race))
@@ -44,19 +40,5 @@ class ResultsHelperTest < ActionView::TestCase
   test "scores table" do
     table = Nokogiri::HTML(scores_table(Result.new(place: "1")))
     assert table.css("table.results.scores").present?
-  end
-
-  test "results table for mobile" do
-    stubs(mobile_request?: true)
-
-    race = Race.new(results: [Result.new(place: "1", name: "Molly Cameron", team_name: "Veloshop", time: 1000, laps: 4)])
-
-    table = Nokogiri::HTML(results_table(Event.new, race))
-    assert table.css("table th.place").present?
-    assert table.css("table th.name").present?
-    assert table.css("table th.team_name").empty?, "only show mobile columns"
-    assert table.css("table th.points").empty?
-    assert table.css("table th.time").present?
-    assert table.css("table th.laps").empty?, "only show mobile columns"
   end
 end

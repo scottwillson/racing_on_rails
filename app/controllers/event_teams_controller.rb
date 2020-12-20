@@ -33,7 +33,7 @@ class EventTeamsController < ApplicationController
   private
 
   def event_team_params
-    params_without_mobile.require(:event_team).permit(
+    params.require(:event_team).permit(
       :event_id,
       team_attributes: [:name]
     )

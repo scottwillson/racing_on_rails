@@ -50,7 +50,7 @@ module Admin
     end
 
     def races_collection_params
-      params_without_mobile.require(:races_collection).permit(:text)
+      params.require(:races_collection).permit(:text)
     end
   end
 end

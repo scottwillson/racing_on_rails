@@ -73,7 +73,7 @@ module Admin
     private
 
     def article_params
-      params_without_mobile.require(:article).permit(:article_category_id, :body, :display, :position, :title)
+      params.require(:article).permit(:article_category_id, :body, :display, :position, :title)
     end
   end
 end

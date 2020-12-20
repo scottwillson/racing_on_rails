@@ -1,0 +1,15 @@
+<%= tag.li class: tabs.active.css_class(true), role: "presentation" do %>
+  <%= link_to(
+        tabs.active.text,
+        tabs.active.path,
+        "aria-haspopup": "true",
+        "aria-expanded": "false",
+        class: "dropdown-toggle",
+        data: { toggle: "dropdown" },
+        id: tabs.active.text.underscore.gsub(" ", "_"),
+        role: "button"
+  ) %>
+  <ul class="dropdown-menu">
+    <%= render collection: tabs.inactives, partial: "tabs/tab" %>
+  </ul>
+<% end %>

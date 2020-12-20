@@ -13,7 +13,7 @@
   <% end %>
   <%= render partial: "notes", locals: { event: @event } %>
   <p class="created_updated">Updated <%= @event.updated_at.to_formatted_s :long_and_friendly_date_and_time %></p>
-  <%= will_paginate @results, page_links: !mobile_request? %>
+  <%= will_paginate @results %>
   <%= render partial: "paginated_results", locals: { event: @event, race: @races.first, results: @results } %>
-  <%= will_paginate @results, page_links: !mobile_request? %>
+  <%= will_paginate @results %>
 <% end %>

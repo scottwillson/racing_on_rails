@@ -9,10 +9,8 @@
   <%= table id: "teams", collection: @teams, columns: 4 do %>
     <tr>
       <th>Name</th>
-      <% unless mobile_request? %>
       <th>Sponsors</th>
       <th>Contact</th>
-      <% end %>
       <th>Results</th>
     </tr>
     <%= render partial: "team", collection: @teams.sort_by(&:downcased_name) %>

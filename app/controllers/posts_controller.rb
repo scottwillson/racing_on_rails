@@ -103,6 +103,6 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params_without_mobile.require(:post).permit(:body, :from_name, :from_email, :subject)
+    params.require(:post).permit(:body, :from_name, :from_email, :subject)
   end
 end

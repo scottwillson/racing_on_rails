@@ -114,7 +114,7 @@ module Admin
     private
 
     def team_params
-      params_without_mobile.require(:team).permit(
+      params.require(:team).permit(
         :contact_email,
         :contact_name,
         :contact_phone,

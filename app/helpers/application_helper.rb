@@ -79,7 +79,6 @@ module ApplicationHelper
       collection_or_options = nil
     end
     options = options.merge(renderer: BootstrapPagination::Rails)
-    options = options.merge(page_links: !mobile_request?) unless options.key?(:page_links)
     tag.div(class: "pagination") { super(*[collection_or_options, options].compact) }
   end
 
@@ -101,6 +100,6 @@ module ApplicationHelper
   end
 
   def cache_key_prefix
-    [RacingAssociation.current.short_name, RacingAssociation.current.updated_at.try(:to_s, :number), mobile_request?]
+    [RacingAssociation.current.short_name, RacingAssociation.current.updated_at.try(:to_s, :number)]
   end
 end

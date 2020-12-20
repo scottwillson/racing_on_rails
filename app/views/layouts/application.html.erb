@@ -37,13 +37,15 @@
       <%= yield %>
     </div>
   </div>
-  <div class="container page-nav">
-    <footer>
-      <ul>
-        <li><%= link_to "Account", account_path, class: "account_link" %></li><li><%=
-          link_to "Login", new_person_session_path, class: "login_link" %></li>
-      </ul>
-    </footer>
+
+  <div class="container">
+    <nav class="navbar navbar-inverse footer">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav">
+          <li><%= link_to "Account", account_path, class: "account_link" %> <%= link_to "Login", new_person_session_path, class: "login_link" %></li>
+        </ul>
+      </div>
+    </nav>
   </div>
 
   <div class="container">

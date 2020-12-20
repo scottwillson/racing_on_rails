@@ -58,7 +58,7 @@ module Admin
     private
 
     def article_category_params
-      params_without_mobile.require(:article_category).permit(:description, :name, :parent_id, :position)
+      params.require(:article_category).permit(:description, :name, :parent_id, :position)
     end
   end
 end

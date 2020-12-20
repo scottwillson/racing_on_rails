@@ -36,6 +36,6 @@ class PersonSessionsController < ApplicationController
   private
 
   def person_session_params
-    params_without_mobile.require(:person_session).permit(:email, :login, :password)
+    params.require(:person_session).permit(:email, :login, :password)
   end
 end

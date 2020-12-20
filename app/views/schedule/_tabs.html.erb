@@ -1,4 +1,4 @@
-<% if RacingAssociation.current.show_calendar_view? && !mobile_request? -%>
+<% if RacingAssociation.current.show_calendar_view? -%>
   <%= tabs(calendar_tab) do |tabs|
       tabs.add("Races", schedule_path)
       tabs.add("Races list with contact information", schedule_list_path)

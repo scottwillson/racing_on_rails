@@ -18,13 +18,6 @@ class PagesTest < RacingOnRails::IntegrationTest
     assert_select "p", text: "This is a plain page"
   end
 
-  test "finds mobile versions" do
-    FactoryBot.create(:page)
-    get "/m/plain"
-    assert_response :success
-    assert_select "p", text: "This is a plain page"
-  end
-
   test "render 404 correctly for missing pages" do
     FactoryBot.create(:page)
     assert_raise(ActionController::RoutingError) { get "/some_missing_page" }

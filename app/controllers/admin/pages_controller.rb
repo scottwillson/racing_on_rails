@@ -74,7 +74,7 @@ module Admin
     private
 
     def page_params
-      params_without_mobile.require(:page).permit(:body, :parent_id, :path, :slug, :title)
+      params.require(:page).permit(:body, :parent_id, :path, :slug, :title)
     end
   end
 end

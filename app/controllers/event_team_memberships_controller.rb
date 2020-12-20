@@ -70,7 +70,7 @@ class EventTeamMembershipsController < ApplicationController
   end
 
   def event_team_membership_params
-    params_without_mobile
+    params
       .require(:event_team_membership).permit(
         :person_id,
         person_attributes: :name

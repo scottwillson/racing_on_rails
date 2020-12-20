@@ -12,7 +12,6 @@ class ApplicationController < ActionController::Base
   include Authorization
   include Caching
   include Dates
-  include Mobile
   include SentientController
 
   prepend_view_path "#{::Rails.root}/registration_engine/app/views"
@@ -48,8 +47,6 @@ class ApplicationController < ActionController::Base
     page_path.gsub!(/.html$/, "")
     page_path.gsub!(/index$/, "")
     page_path.gsub!(%r{/$}, "")
-
-    @page = find_mobile_page(page_path)
 
     @page ||= Page.find_by(path: page_path)
 

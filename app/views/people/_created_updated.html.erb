@@ -1,4 +1,4 @@
-<% unless @person.new_record? || mobile_request? %>
+<% unless @person.new_record? %>
   <%= link_to(person_versions_path(@person), class: "btn btn-link") do %>
     <% if @person.created_at.present? %>Created <%= time_ago_in_words(@person.created_at, include_seconds: true) + " ago" %><% end %>
     <% if @person.created_by_name %>by <%= truncate_from_end(@person.created_by_name) %><% end %>

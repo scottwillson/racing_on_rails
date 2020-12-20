@@ -20,7 +20,7 @@
   <div class="col-sm-6">
     <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
     <%= link_to("Delete", admin_velodrome_path(@velodrome), method: :delete, class: 'btn', id: 'delete') unless @velodrome.new_record? %>
-    <div class="pull-right created_updated"><%= "Updated: " + time_ago_in_words(@velodrome.updated_at, include_seconds: true) + " ago" unless @velodrome.updated_at.nil? || mobile_request? %></div>
+    <div class="pull-right created_updated"><%= "Updated: " + time_ago_in_words(@velodrome.updated_at, include_seconds: true) + " ago" unless @velodrome.updated_at.nil? %></div>
   </div>
 </div>
 <% end -%>

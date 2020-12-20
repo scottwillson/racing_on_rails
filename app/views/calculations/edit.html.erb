@@ -58,12 +58,10 @@
       <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
       <%= link_to("Delete", calculation_path(@calculation), method: :delete, class: "btn btn-default", id: 'delete') unless @calculation.new_record? %>
       <%= link_to("Calculate", calculation_calculate_path(@calculation), method: :post, class: "btn btn-default", id: 'calculate') unless @calculation.new_record? %>
-      <% unless mobile_request? %>
-        <div class="pull-right created_updated">
-          <% unless @calculation.updated_at.nil? %>Updated: <%= time_ago_in_words(@calculation.updated_at, include_seconds: true) %> ago<% end %>
-          <%= "New" if @calculation.new_record? %>
-        </div>
-      <% end %>
+      <div class="pull-right created_updated">
+        <% unless @calculation.updated_at.nil? %>Updated: <%= time_ago_in_words(@calculation.updated_at, include_seconds: true) %> ago<% end %>
+        <%= "New" if @calculation.new_record? %>
+      </div>
     </div>
   </div>
 <% end -%>

@@ -1,15 +1,19 @@
-<div class="container page-nav">
-  <nav>
-    <div class="row">
-      <div class="col-sm-12">
-        <h1><%= link_to RacingAssociation.current.short_name, root_path %></h1>
-        <ul class="pull-right">
-          <li><%=
-            link_to "Schedule", schedule_path, class: "schedule_link" %></li><li><%=
-            link_to "Results", results_path, class: "results_link" %></li><%
-            if mobile_browser? %><li><%=
-              link_to "Mobile", mobile_site: "1" %></li><%
-            end %>
+<div class="container">
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <%= link_to RacingAssociation.current.short_name, root_path, class: "navbar-brand" %>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="visible-xs"><%= link_to "Home", root_path %></li>
+          <li><%= link_to "Schedule", schedule_path, class: "schedule_link" %></li>
         </ul>
       </div>
     </div>

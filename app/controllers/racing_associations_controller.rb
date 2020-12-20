@@ -24,7 +24,7 @@ class RacingAssociationsController < Admin::AdminController
   private
 
   def racing_association_params
-    params_without_mobile.require(:racing_association).permit(
+    params.require(:racing_association).permit(
       :add_members_from_results,
       :administrator_tabs,
       :allow_iframes,
@@ -50,7 +50,6 @@ class RacingAssociationsController < Admin::AdminController
       :include_multiday_events_on_schedule,
       :masters_age,
       :membership_email,
-      :mobile_site,
       :name,
       :next_year_start_at,
       :rails_host,

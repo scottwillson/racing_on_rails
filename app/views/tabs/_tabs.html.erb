@@ -1,13 +1,14 @@
-<% if tabs.many? || tabs.show_one? %>
-<div class="pills">
-  <ul class="nav nav-pills tabs">
-    <% tabs.each do |tab| %>
-      <% if tab.active? %>
-    <li class="active"><a href="<%= tab.path %>" id="<%= tab.text.underscore.gsub(" ", "_") %>_tab"><%= tab.text %></a></li>
-      <% else %>
-    <li><a href="<%= tab.path %>" id="<%= tab.text.underscore.gsub(" ", "_") %>_tab"><%= tab.text %></a></li>
-      <% end %>
-    <% end %>
-  </ul>
-</div>
+<%# Use +tabs_array+ to distinguish from helper %>
+<% if tabs_array.many? || tabs_array.show_one? %>
+  <div class="visible-xs">
+    <ul class="nav nav-pills nav-stacked">
+      <%= render "tabs/dropdown_tabs", tabs: tabs_array %>
+    </ul>
+  </div>
+
+  <div class="hidden-xs">
+    <ul class="nav nav-pills">
+      <%= render collection: tabs_array, partial: "tabs/tab" %>
+    </ul>
+  </div>
 <% end %>

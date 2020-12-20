@@ -11,16 +11,16 @@ module Results
         return text unless result.team_id
 
         if result.calculation_result?
-          "<a href=\"#{path_prefix(row)}/calculations/results/#{result.id}\">#{text}</a>"
+          "<a href=\"/calculations/results/#{result.id}\">#{text}</a>"
 
         elsif result.team_competition_result?
-          "<a href=\"#{path_prefix(row)}/events/#{result.event_id}/teams/#{result.team_id}/results##{result.race_id}\">#{text}</a>"
+          "<a href=\"/events/#{result.event_id}/teams/#{result.team_id}/results##{result.race_id}\">#{text}</a>"
 
         elsif racing_association.unregistered_teams_in_results? ||
               result.team_member? ||
               result.year < racing_association.year
 
-          "<a href=\"#{path_prefix(row)}/teams/#{result.team_id}/#{result.year}\">#{text}</a>"
+          "<a href=\"/teams/#{result.team_id}/#{result.year}\">#{text}</a>"
         end
       end
 

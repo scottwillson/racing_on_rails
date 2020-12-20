@@ -30,7 +30,7 @@
 <div class="row">
   <div class="col-sm-12">
     <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
-    <div class="pull-right created_updated"><%= "Updated: #{time_ago_in_words(@category.updated_at, include_seconds: true)} ago" unless @category.updated_at.nil? || mobile_request? %></div>
+    <div class="pull-right created_updated"><%= "Updated: #{time_ago_in_words(@category.updated_at, include_seconds: true)} ago" unless @category.updated_at.nil? %></div>
   </div>
 </div>
 <% end -%>

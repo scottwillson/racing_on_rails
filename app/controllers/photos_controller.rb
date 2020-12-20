@@ -48,6 +48,6 @@ class PhotosController < Admin::AdminController
   private
 
   def photo_params
-    params_without_mobile.require(:photo).permit(:caption, :height, :image, :image_cache, :link, :title, :width)
+    params.require(:photo).permit(:caption, :height, :image, :image_cache, :link, :title, :width)
   end
 end

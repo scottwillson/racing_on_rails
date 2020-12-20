@@ -30,21 +30,6 @@ module Results
         assert_equal "Candi Murray", link.text, "text"
       end
 
-      def test_mobile
-        column = stub("column", key: :name)
-        row = stub(
-          "row",
-          :[] => "Candi Murray",
-          metadata: { mobile_request: true },
-          source: stub("result", person_id: 18, competition_result?: false, year: 2010, preliminary?: false, calculation_result?: false)
-        )
-
-        html = NameRenderer.render(column, row)
-        link = Nokogiri::HTML.fragment(html).search("a").first
-        assert_equal "/m/people/18/2010", link["href"], "href"
-        assert_equal "Candi Murray", link.text, "text"
-      end
-
       def test_competition_result
         column = stub("column", key: :name)
         row = stub("row",

@@ -56,7 +56,7 @@ module Admin
     private
 
     def category_params
-      params_without_mobile.require(:category).permit(:parent_id, :position, :raw_name)
+      params.require(:category).permit(:parent_id, :position, :raw_name)
     end
   end
 end

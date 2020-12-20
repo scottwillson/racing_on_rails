@@ -76,10 +76,6 @@ module Results
           column
         end
       end
-
-      def self.path_prefix(row)
-        "/m" if row.metadata[:mobile_request]
-      end
     end
   end
 end

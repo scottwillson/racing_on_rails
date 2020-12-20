@@ -32,9 +32,9 @@ module PeopleHelper
     if person.new_record?
       nil
     elsif current_person.administrator?
-      edit_admin_person_path person, mobile: params[:mobile]
+      edit_admin_person_path person
     else
-      edit_person_path person, mobile: params[:mobile]
+      edit_person_path person
     end
   end
 

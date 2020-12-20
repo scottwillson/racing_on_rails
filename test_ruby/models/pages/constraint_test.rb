@@ -118,13 +118,5 @@ module Pages
       Page.paths << "foo/bar"
       assert Pages::Constraint.new.matches?(request), "request for child index"
     end
-
-    def test_mobile
-      request = stub("request", path: "/m/foo")
-      Page.paths << ""
-      Page.paths << "foo"
-      Page.paths << "foo/bar"
-      assert Pages::Constraint.new.matches?(request), "request for /foo"
-    end
   end
 end

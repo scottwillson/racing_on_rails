@@ -32,7 +32,6 @@
       <span class="glyphicon glyphicon-print"></span> Print Cards
     <% end %>
   </div>
-  <% unless mobile_request? %>
   <div class="col-sm-8 pull-right">
     <%= form_tag({}, { class: "form-inline pull-right", id: "export_form" }) do %>
       <select name="include" class="form-control" id="include">
@@ -51,12 +50,10 @@
       <% end %>
     <% end %>
   </div>
-  <% end %>
 </div>
 
 <hr/>
 
-<% unless mobile_request? %>
 <div class="row">
   <div class="col-sm-12">
     <%= form_tag preview_import_admin_people_path, multipart: true, role: "form", id: "import_form" do %>
@@ -65,6 +62,5 @@
     <% end -%>
   </div>
 </div>
-<% end %>
 
 <%= will_paginate(@people) if @people.many? %>

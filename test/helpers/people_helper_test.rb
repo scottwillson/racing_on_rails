@@ -3,13 +3,12 @@
 require_relative "../test_helper"
 
 # :stopdoc:
-# Helper tests need explicit mobile param
 class PeopleHelperTest < ActionView::TestCase
   test "person editing own account" do
     person = FactoryBot.create(:person)
     current_person = person
     assert_equal(
-      edit_person_path(person, mobile: nil),
+      edit_person_path(person),
       account_permission_return_to(person, current_person)
     )
   end
@@ -18,7 +17,7 @@ class PeopleHelperTest < ActionView::TestCase
     person = FactoryBot.create(:person)
     current_person = FactoryBot.create(:person)
     assert_equal(
-      edit_person_path(person, mobile: nil),
+      edit_person_path(person),
       account_permission_return_to(person, current_person)
     )
   end
@@ -27,7 +26,7 @@ class PeopleHelperTest < ActionView::TestCase
     person = FactoryBot.create(:person)
     current_person = FactoryBot.create(:administrator)
     assert_equal(
-      edit_admin_person_path(person, mobile: nil),
+      edit_admin_person_path(person),
       account_permission_return_to(person, current_person)
     )
   end
@@ -36,7 +35,7 @@ class PeopleHelperTest < ActionView::TestCase
     person = FactoryBot.create(:administrator)
     current_person = person
     assert_equal(
-      edit_admin_person_path(person, mobile: nil),
+      edit_admin_person_path(person),
       account_permission_return_to(person, current_person)
     )
   end

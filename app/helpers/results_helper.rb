@@ -17,21 +17,12 @@ module ResultsHelper
     return "" unless race
 
     table = Tabular::Table.new
-    table.metadata[:mobile_request] = mobile_request?
 
-    table.row_mapper = if mobile_request?
-                         if event.respond_to?(:team?) && event.team?
-                           Results::Mapper.new(%w[ place team_name points])
-                         else
-                           Results::Mapper.new(%w[ place name points time])
-                         end
-                       else
-                         Results::Mapper.new(
+    table.row_mapper = Results::Mapper.new(
                            %w[ place number name team_name ],
                            race.try(:custom_columns),
                            RESULT_COLUMNS - %w[ place name team_name ]
                          )
-                       end
 
     table.rows = if results
                    results.sort
@@ -66,17 +57,11 @@ module ResultsHelper
 
     case participant
     when Person
-      table.row_mapper = if mobile_request?
-                           Results::Mapper.new(%w[ place event_full_name ])
-                         else
-                           Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s ])
-                         end
+      table.row_mapper = Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s ])
+
     when Team
-      table.row_mapper = if mobile_request?
-                           Results::Mapper.new(%w[ place event_full_name name ])
-                         else
-                           Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s ])
-                         end
+      table.row_mapper = Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s ])
+
     else
       raise ArgumentError, "participant must be a Person or Team but was #{participant.class}"
     end
@@ -92,13 +77,7 @@ module ResultsHelper
     table = Tabular::Table.new
 
     table.row_mapper = if result.team_competition_result?
-                         if mobile_request?
-                           Results::Mapper.new(%w[ place event_full_name name ])
-                         else
-                           Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s notes points ])
-                         end
-                       elsif mobile_request?
-                         Results::Mapper.new(%w[ place event_full_name ])
+                         Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s notes points ])
                        else
                          Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s points ])
                        end
@@ -121,13 +100,7 @@ module ResultsHelper
     table = Tabular::Table.new
 
     table.row_mapper = if result.team_competition_result?
-                         if mobile_request?
-                           Results::Mapper.new(%w[ place event_full_name name ])
-                         else
-                           Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s notes points ])
-                         end
-                       elsif mobile_request?
-                         Results::Mapper.new(%w[ place event_full_name ])
+                         Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s notes points ])
                        else
                          Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s points ])
                        end

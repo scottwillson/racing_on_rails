@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_29_161456) do
+ActiveRecord::Schema.define(version: 2020_12_19_173227) do
 
   create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
@@ -991,7 +991,6 @@ ActiveRecord::Schema.define(version: 2020_11_29_161456) do
     t.date "cat4_womens_race_series_end_date"
     t.boolean "unregistered_teams_in_results", default: true, null: false
     t.date "next_year_start_at"
-    t.boolean "mobile_site", default: false, null: false
     t.date "cat4_womens_race_series_start_date"
     t.boolean "filter_schedule_by_sanctioning_organization", default: false, null: false
     t.string "result_questions_url"
