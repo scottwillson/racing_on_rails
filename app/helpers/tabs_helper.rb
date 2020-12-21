@@ -19,12 +19,12 @@ module TabsHelper
       @tabs = []
     end
 
-    def active
-      @active ||= tabs.detect(&:active?)
-    end
-
     def add(text, path)
       tabs << Tab.new(text.to_s, path, active_text)
+    end
+
+    def dropdown
+      @dropdown ||= (tabs.detect(&:active?) || tabs.first)
     end
 
     def each(&block)

@@ -20,12 +20,8 @@ class PromotersTest < ApplicationSystemTestCase
     series.children << event
     login_as promoter
 
-    if page.has_content?("Montana")
-      visit "/admin/events/#{series.id}/edit"
-    else
-      click_link "events_tab"
-      click_link "Cross Crusade Series"
-    end
+    click_link "events_tab"
+    click_link "Cross Crusade Series"
     click_button "Save"
 
     click_link "create_race", match: :first

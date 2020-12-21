@@ -1,12 +1,12 @@
-<%= tag.li class: tabs.active.css_class(true), role: "presentation" do %>
+<%= tag.li class: "dropdown", role: "presentation" do %>
   <%= link_to(
-        tabs.active.text,
-        tabs.active.path,
+        tabs.dropdown.text,
+        tabs.dropdown.path,
         "aria-haspopup": "true",
         "aria-expanded": "false",
         class: "dropdown-toggle",
         data: { toggle: "dropdown" },
-        id: tabs.active.text.underscore.gsub(" ", "_"),
+        id: "#{tabs.dropdown.text.underscore.gsub(" ", "_")}",
         role: "button"
   ) %>
   <ul class="dropdown-menu">
