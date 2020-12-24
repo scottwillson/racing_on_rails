@@ -53,11 +53,14 @@ module Results
         when :race_name
           "category"
         when :event_date_range_s
-          "date hidden-xs"
+          "date"
         when /time/
           "time"
-        else
+        # team_name should be for team results only
+        when :name, :place, :points, :team_name
           key(column).to_s
+        else
+          "#{key(column)}"
         end
       end
 

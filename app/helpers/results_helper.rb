@@ -49,11 +49,19 @@ module ResultsHelper
     table.renderers[:points_penalty] = Results::Renderers::PointsRenderer
     table.renderers[:points_total] = Results::Renderers::PointsRenderer
     table.renderers[:rejection_reason] = Results::Renderers::RejectionReasonRenderer
-    render "results/table", table: table, css_class: "results"
+
+    css_class = "results individual"
+    column_keys = table.columns.map(&:key)
+    if (event.respond_to?(:team?) && event.team?) || (column_keys.include?(:team_name) && !column_keys.include?(:name))
+      css_class = "results team"
+    end
+
+    render "results/table", table: table, css_class: css_class
   end
 
   def participant_event_results_table(participant, event_results)
     table = Tabular::Table.new
+    css_class = "results individual"
 
     case participant
     when Person
@@ -61,6 +69,7 @@ module ResultsHelper
 
     when Team
       table.row_mapper = Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s ])
+      css_class = "results team"
 
     else
       raise ArgumentError, "participant must be a Person or Team but was #{participant.class}"
@@ -70,17 +79,19 @@ module ResultsHelper
     table.renderer = Results::Renderers::DefaultResultRenderer
     table.renderers[:event_full_name] = Results::Renderers::EventFullNameRenderer
     table.renderers[:points] = Results::Renderers::PointsRenderer
-    render "results/table", table: table, css_class: "results"
+    render "results/table", table: table, css_class: css_class
   end
 
   def scores_table(result)
     table = Tabular::Table.new
+    css_class = "individual results scores"
 
-    table.row_mapper = if result.team_competition_result?
-                         Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s notes points ])
-                       else
-                         Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s points ])
-                       end
+    if result.team_competition_result?
+      css_class = "team results scores"
+      table.row_mapper = Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s notes points ])
+    else
+      table.row_mapper = Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s points ])
+    end
 
     table.rows = result.scores.sort_by { |score| [score.source_result.date, -score.points] }.map do |score|
       source_result = score.source_result
@@ -93,17 +104,19 @@ module ResultsHelper
     table.renderers[:event_full_name] = Results::Renderers::ScoreEventFullNameRenderer
     table.renderers[:points] = Results::Renderers::PointsRenderer
     table.delete_blank_columns!
-    render "results/table", table: table, css_class: "results scores"
+    render "results/table", table: table, css_class: css_class
   end
 
   def sources_table(result)
     table = Tabular::Table.new
+    css_class = "individual results scores"
 
-    table.row_mapper = if result.team_competition_result?
-                         Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s notes points ])
-                       else
-                         Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s points ])
-                       end
+    if result.team_competition_result?
+      css_class = "team results scores"
+      table.row_mapper = Results::Mapper.new(%w[ place event_full_name race_name name event_date_range_s notes points ])
+    else
+      table.row_mapper = Results::Mapper.new(%w[ place event_full_name race_name event_date_range_s points ])
+    end
 
     table.rows = result.sources
                        .reject(&:rejected?)
@@ -120,7 +133,7 @@ module ResultsHelper
     table.renderers[:event_full_name] = Results::Renderers::ScoreEventFullNameRenderer
     table.renderers[:points] = Results::Renderers::PointsRenderer
     table.delete_blank_columns!
-    render "results/table", table: table, css_class: "results scores"
+    render "results/table", table: table, css_class: css_class
   end
 
   def edit_results_table(race)

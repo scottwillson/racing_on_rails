@@ -442,6 +442,32 @@ table.child_single_day_events td.child a {
   }
 }
 
+@media (max-width: 767px) {
+  .results th, .results td {
+    display: none !important;
+  }
+
+  .results.individual {
+    .event_full_name,
+    .name,
+    .place,
+    .points,
+    .time {
+      display: table-cell !important;
+    }
+  }
+
+  .results.team {
+    .event_full_name,
+    .event,
+    .place,
+    .points,
+    .team_name {
+      display: table-cell !important;
+    }
+  }
+}
+
 // Event first aid providers
 table.first_aid_providers td.date {
   white-space: nowrap;

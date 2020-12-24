@@ -1,12 +1,12 @@
 <%# Use +tabs_array+ to distinguish from helper %>
 <% if tabs_array.many? || tabs_array.show_one? %>
-  <div class="visible-xs">
+  <div class="visible-xs pills">
     <ul class="nav nav-pills nav-stacked">
       <%= render "tabs/dropdown_tabs", tabs: tabs_array %>
     </ul>
   </div>
 
-  <div class="hidden-xs">
+  <div class="hidden-xs pills">
     <ul class="nav nav-pills">
       <%= render collection: tabs_array, partial: "tabs/tab" %>
     </ul>

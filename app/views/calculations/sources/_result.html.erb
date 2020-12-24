@@ -15,7 +15,7 @@
       %></h3>
   <%- end -%>
 <%- end -%>
-<table class="base table table-striped results">
+<table class="base table table-striped results <%- if race.event.calculation.team? -%>team<%- end -%>">
   <thead>
     <tr>
       <th class="place"></th>
