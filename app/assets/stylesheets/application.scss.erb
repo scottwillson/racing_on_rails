@@ -93,7 +93,7 @@ body {
   padding-right: 0;
 }
 
-body nav a:hover, body footer a:hover, body a:hover, a:hover, .nav > li > a:hover, .btn-link:hover {
+body nav a:hover, body a:hover, a:hover, .nav > li > a:hover, .btn-link:hover {
   background-color: $highlight-color;
   color: $link-color-hover;
   text-decoration: underline;
@@ -135,18 +135,57 @@ h2 a:hover, h3 a:hover {
 
 a.navbar-brand {
   font-weight: 700;
+  height: auto;
+  line-height: $line-height-computed * 1.5;
+  padding-bottom: 0;
+  padding-top: 0;
 }
 
-.footer .navbar-nav, .nav-pills:not(.nav-stacked) {
-    float:none;
-    margin: 0 auto;
-    display: table;
-    table-layout: fixed;
+@media (max-width: 767px) {
+  a.navbar-brand {
+    line-height: 36px;
+  }
 }
 
-.footer .nav > li > a {
-  display: inline-block;
-  padding-top: 15px
+.navbar {
+  min-height: $line-height-computed;
+}
+
+.navbar-toggle {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.navbar-nav > li > a {
+  border-right: 1px solid $nav-font-color;
+  line-height: $line-height-computed;
+  margin-bottom: $line-height-computed / 4;
+  margin-top: $line-height-computed / 4;
+  padding-left: $line-height-computed / 2;
+  padding-right: $line-height-computed / 2;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.navbar-nav > li:last-child > a {
+  border-right: none;
+}
+
+nav li {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.footer .navbar-nav {
+  margin-bottom: $line-height-computed;
+  float: none;
+  margin: 0 auto;
+  display: table;
+  table-layout: fixed;
+}
+
+.footer .navbar-nav li {
+  float: left;
 }
 
 .page-nav, .footer {
@@ -154,8 +193,14 @@ a.navbar-brand {
 }
 
 .page-nav, .social {
-  height: 18px;
-  padding-left: $line-height-computed / 2;
+  border-left: 0;
+  border-right: 0;
+  height: $line-height-computed;
+}
+
+.navbar-nav > li > a.social {
+  border-right: 0;
+  padding-right: $line-height-computed / 4;
 }
 
 @media (max-width: 767px) {
