@@ -1,0 +1,3 @@
+<%= tag.li class: dropdown_tab.css_class do %>
+  <%= link_to dropdown_tab.text, dropdown_tab.path, id: "#{dropdown_tab.text.underscore.gsub(" ", "_")}_tab" %>
+<% end %>

@@ -1,4 +1,4 @@
-<%= tag.li class: "dropdown", role: "presentation" do %>
+<%= tag.li class: "dropdown active", role: "presentation" do %>
   <%= link_to(
         tabs.dropdown.text,
         tabs.dropdown.path,
@@ -10,6 +10,6 @@
         role: "button"
   ) %>
   <ul class="dropdown-menu">
-    <%= render collection: tabs.inactives, partial: "tabs/tab" %>
+    <%= render collection: tabs.inactives, partial: "tabs/dropdown_tab" %>
   </ul>
 <% end %>
