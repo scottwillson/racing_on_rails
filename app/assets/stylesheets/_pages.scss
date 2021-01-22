@@ -448,6 +448,7 @@ table.child_single_day_events td.child a {
   }
 
   .results.individual {
+    .event,
     .event_full_name,
     .name,
     .place,
@@ -458,8 +459,8 @@ table.child_single_day_events td.child a {
   }
 
   .results.team {
-    .event_full_name,
     .event,
+    .event_full_name,
     .place,
     .points,
     .team_name {
