@@ -1,6 +1,6 @@
 <%# Use +tabs_array+ to distinguish from helper %>
 <% if tabs_array.many? || tabs_array.show_one? %>
-  <div class="visible-xs">
+  <div class="visible-xs pills">
     <ul class="nav nav-pills">
       <%= render "tabs/dropdown_tabs", tabs: tabs_array %>
     </ul>
