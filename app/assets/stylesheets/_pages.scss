@@ -467,6 +467,14 @@ table.child_single_day_events td.child a {
       display: table-cell !important;
     }
   }
+
+  .results {
+    .event,
+    .place,
+    .points {
+      display: table-cell !important;
+    }
+  }
 }
 
 // Event first aid providers
