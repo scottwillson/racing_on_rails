@@ -400,7 +400,7 @@ GEM
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     stripe (5.29.0)
-    tabular (0.4.7)
+    tabular (0.4.8)
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -508,7 +508,7 @@ DEPENDENCIES
   spreadsheet
   spring
   spring-watcher-listen (~> 2.0.0)
-  tabular (= 0.4.7)
+  tabular (>= 0.4.7)
   timecop
   uglifier
   web-console (>= 3.3.0)
