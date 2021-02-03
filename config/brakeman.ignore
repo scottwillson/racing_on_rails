@@ -263,6 +263,36 @@
     },
     {
       "warning_type": "Cross-Site Scripting",
+      "warning_code": 4,
+      "fingerprint": "56d3dea2e8c9d75d5d10f8aafef0e33f80e7e537e846f18965c3799e1b182d6e",
+      "check_name": "LinkToHref",
+      "message": "Potentially unsafe model attribute in `link_to` href",
+      "file": "registration_engine/app/views/orders/suggestions/_suggestion.html.erb",
+      "line": 11,
+      "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
+      "code": "link_to((Unresolved Model).new.link_text, (Unresolved Model).new.url, :class => \"add obvious\")",
+      "render_path": [
+        {
+          "type": "template",
+          "name": "orders/suggestions/show",
+          "line": 5,
+          "file": "registration_engine/app/views/orders/suggestions/show.html.erb",
+          "rendered": {
+            "name": "orders/suggestions/_suggestion",
+            "file": "registration_engine/app/views/orders/suggestions/_suggestion.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "orders/suggestions/_suggestion"
+      },
+      "user_input": "(Unresolved Model).new.url",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "5b5a0f4a09118eda4ddb0f3890110b73f79a51f045b821a06d4739d7aed3cff6",
       "check_name": "CrossSiteScripting",
@@ -276,7 +306,7 @@
           "type": "controller",
           "class": "Calculations::ResultsController",
           "method": "index",
-          "line": 38,
+          "line": 39,
           "file": "app/controllers/calculations/results_controller.rb",
           "rendered": {
             "name": "calculations/results/paginated",
@@ -340,6 +370,36 @@
       },
       "user_input": "params[:results_file].original_filename",
       "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 4,
+      "fingerprint": "6f8309c8420ce22a3d74bce80fae6b8e8ad1bd71726b22d4ba91feaad32745f2",
+      "check_name": "LinkToHref",
+      "message": "Potentially unsafe model attribute in `link_to` href",
+      "file": "registration_engine/app/views/stores/_product.html.erb",
+      "line": 7,
+      "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
+      "code": "link_to(\"View\", (Unresolved Model).new.image_url, :class => \"obvious view\", :id => (\"view_product_#{(Unresolved Model).new.id}\"), :target => \"_blank\")",
+      "render_path": [
+        {
+          "type": "template",
+          "name": "stores/show",
+          "line": 18,
+          "file": "registration_engine/app/views/stores/show.html.erb",
+          "rendered": {
+            "name": "stores/_product",
+            "file": "registration_engine/app/views/stores/_product.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "stores/_product"
+      },
+      "user_input": "(Unresolved Model).new.image_url",
+      "confidence": "Weak",
       "note": ""
     },
     {
@@ -629,7 +689,7 @@
         {
           "type": "template",
           "name": "teams/index",
-          "line": 18,
+          "line": 16,
           "file": "app/views/teams/index.html.erb",
           "rendered": {
             "name": "teams/_team",
@@ -710,7 +770,7 @@
         {
           "type": "template",
           "name": "teams/index",
-          "line": 18,
+          "line": 16,
           "file": "app/views/teams/index.html.erb",
           "rendered": {
             "name": "teams/_team",
@@ -787,6 +847,26 @@
       "note": ""
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "f7cb2abf16b266145b2c54ba7ed61a8633c18cc16ab8c09c4b1cb47eea0bcc3e",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "registration_engine/app/models/line_items/registration.rb",
+      "line": 120,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "LineItem.includes(:order => ([:order_people, :person])).includes(:event, :race, :person, :product).purchased.where(\"(line_items.event_id in (?) and line_items.type = 'LineItems::Registration') or (product_id in (?) and line_items.type = 'LineItem')\", ((event.descendants.map(&:id) + event.ancestors.map(&:id)) + [event.id]).uniq, event.products.not_dependent.map(&:id)).order(\"#{((((\"people_line_items.last_name, people_line_items.first_name\" or \"races.id\") or \"line_items.event_id, line_items.race_id\") or \"member_from\") or sort_by)} #{(options.extract_options![:sort_direction] or \"asc\")}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "LineItems::Registration",
+        "method": "LineItems::Registration.paginate_for_event"
+      },
+      "user_input": "sort_by",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "Dangerous Send",
       "warning_code": 23,
       "fingerprint": "f907513144575431cf0ee3f3445bace0ac08f86943a71e64e3b13f9cf6436977",
@@ -813,7 +893,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/people/export.rb",
-      "line": 25,
+      "line": 26,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Person.connection.select_all(\"\\n          SELECT people.id, license, first_name, last_name, teams.name as team_name, team_id, people.notes,\\n                 people.member_from, people.member_to, member_usac_to, usac_license,\\n                 (people.member_from IS NOT NULL AND people.member_to IS NOT NULL AND people.member_from <= NOW() AND people.member_to >= NOW()) as member,\\n                 print_card, card_printed_at, membership_card, date_of_birth, occupation, fabric_road_numbers,\\n                 street, people.city, people.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender,\\n                 ccx_category, road_category, track_category, mtb_category, dh_category,\\n                 volunteer_interest, official_interest, race_promotion_interest, team_interest, velodrome_committee_interest,\\n                 CEILING(#{date.year} - YEAR(date_of_birth)) as racing_age,\\n                 ccx_numbers.value as ccx_number, dh_numbers.value as dh_number, road_numbers.value as road_number,\\n                 singlespeed_numbers.value as singlespeed_number, xc_numbers.value as xc_number,\\n                 people.created_at, people.updated_at,\\n                 CEILING((#{date.year} - YEAR(date_of_birth)) + 1) as ccx_age\\n          FROM people\\n          LEFT OUTER JOIN teams ON teams.id = people.team_id\\n          LEFT OUTER JOIN race_numbers as ccx_numbers ON ccx_numbers.person_id = people.id\\n                          and ccx_numbers.number_issuer_id = #{NumberIssuer.find_by(:name => RacingAssociation.current.short_name).id}\\n                          and ccx_numbers.year = #{date.year}\\n                          and ccx_numbers.discipline_id = #{Discipline[:cyclocross].id}\\n          LEFT OUTER JOIN race_numbers as dh_numbers ON dh_numbers.person_id = people.id\\n                          and dh_numbers.number_issuer_id = #{NumberIssuer.find_by(:name => RacingAssociation.current.short_name).id}\\n                          and dh_numbers.year = #{date.year}\\n                          and dh_numbers.discipline_id = #{Discipline[:downhill].id}\\n          LEFT OUTER JOIN race_numbers as road_numbers ON road_numbers.person_id = people.id\\n                          and road_numbers.number_issuer_id = #{NumberIssuer.find_by(:name => RacingAssociation.current.short_name).id}\\n                          and road_numbers.year = #{date.year}\\n                          and road_numbers.discipline_id = #{Discipline[:road].id}\\n          LEFT OUTER JOIN race_numbers as singlespeed_numbers ON singlespeed_numbers.person_id = people.id\\n                          and singlespeed_numbers.number_issuer_id = #{NumberIssuer.find_by(:name => RacingAssociation.current.short_name).id}\\n                          and singlespeed_numbers.year = #{date.year}\\n                          and singlespeed_numbers.discipline_id = #{Discipline[:singlespeed].id}\\n          LEFT OUTER JOIN race_numbers as track_numbers ON track_numbers.person_id = people.id\\n                          and track_numbers.number_issuer_id = #{NumberIssuer.find_by(:name => RacingAssociation.current.short_name).id}\\n                          and track_numbers.year = #{date.year}\\n                          and track_numbers.discipline_id = #{Discipline[:track].id}\\n          LEFT OUTER JOIN race_numbers as xc_numbers ON xc_numbers.person_id = people.id\\n                          and xc_numbers.number_issuer_id = #{NumberIssuer.find_by(:name => RacingAssociation.current.short_name).id}\\n                          and xc_numbers.year = #{date.year}\\n                          and xc_numbers.discipline_id = #{Discipline[:mountain_bike].id}\\n          #{(\"WHERE (people.member_to >= '#{date}')\" or \"WHERE  (people.member_to >= '#{date}') and print_card is true\")}\\n          ORDER BY last_name, first_name, people.id\\n        \")",
       "render_path": null,
@@ -827,6 +907,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-11-29 09:34:43 -0800",
-  "brakeman_version": "4.10.0"
+  "updated": "2021-02-03 13:47:02 -0800",
+  "brakeman_version": "5.0.0"
 }
