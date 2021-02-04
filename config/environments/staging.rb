@@ -17,9 +17,8 @@ Rails.application.configure do
   config.cache_store                                        = :mem_cache_store, { pool_size: 5 }
   config.consider_all_requests_local                        = false
   config.eager_load                                         = true
-  config.force_ssl                                          = true
   config.i18n.fallbacks                                     = true
-  config.log_formatter = ::Logger::Formatter.new
+  config.log_formatter                                      = ::Logger::Formatter.new
   config.log_level                                          = :info
   config.log_tags                                           = [:request_id]
   config.logger                                             = Syslog::Logger.new("racing_on_rails", Syslog::LOG_LOCAL4)
