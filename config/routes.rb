@@ -116,6 +116,12 @@ Rails.application.routes.draw do
     resources :weekly_series
   end
 
+  match "/401", to: "errors#unauthorized", via: :all
+  match "/404", to: "errors#not_found", via: :all
+  match "/422", to: "errors#unprocessable_entity", via: :all
+  match "/500", to: "errors#internal_server_error", via: :all
+  match "/503", to: "errors#over_capacity", via: :all
+
   resources :articles
   resources :article_categories
   resources :categories do

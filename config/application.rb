@@ -32,7 +32,7 @@ module RacingOnRails
       Rails.configuration.paths["config/database"] = ["local/config/database.yml", "config/database.yml"]
     end
 
-    config.exceptions_app = routes
+    config.exceptions_app = self.routes
 
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?
