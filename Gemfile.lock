@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: https://github.com/rubysec/bundler-audit.git
-  revision: 63c5586cb672f2ceb031a4e7fc4d1d4de0fbc163
+  revision: 2eb783bcab18bd5732c6a6792b9880758f007872
   specs:
     bundler-audit (0.8.0.rc1)
       bundler (>= 1.2.0, < 3)
@@ -221,7 +221,7 @@ GEM
     httparty (0.18.1)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
-    i18n (1.8.8)
+    i18n (1.8.9)
       concurrent-ruby (~> 1.0)
     image_processing (1.12.1)
       mini_magick (>= 4.9.5, < 5)
@@ -247,7 +247,7 @@ GEM
     method_source (1.0.0)
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2020.1104)
+    mime-types-data (3.2021.0212)
     mimemagic (0.3.5)
     mini_magick (4.11.0)
     mini_mime (1.0.2)
@@ -321,7 +321,7 @@ GEM
       thor (>= 0.20.3, < 2.0)
     rainbow (3.0.0)
     rake (13.0.3)
-    raygun4ruby (3.2.3)
+    raygun4ruby (3.2.4)
       concurrent-ruby
       httparty (> 0.13.7)
       json
@@ -344,7 +344,7 @@ GEM
       nokogiri
       roo (>= 2.0.0, < 3)
       spreadsheet (> 0.9.0)
-    rubocop (1.9.1)
+    rubocop (1.10.0)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -401,7 +401,7 @@ GEM
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     ssrf_filter (1.0.7)
-    stripe (5.29.1)
+    stripe (5.30.0)
     tabular (0.4.8)
     thor (1.1.0)
     thread_safe (0.3.6)
