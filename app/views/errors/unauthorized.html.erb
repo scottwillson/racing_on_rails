@@ -16,16 +16,5 @@
         <p class="text-center"><small>Photo: <a href="http://cheryljwillson.com/gallery/main.php">Cheryl J. Willson</a></small></p>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col-sm-12">
-        <p class="text-center">
-          <%= "You are logged-in as #{current_person.login}." if current_person %>
-          <%= "You are not logged-in." unless current_person %>
-          <%= link_to("Login", new_person_session_path, class: "obvious") unless current_person %><br/>
-          <%= link_to("Logout and try a different login", logout_path) if current_person %><br/>
-        </p>
-      </div>
-    </div>
   </div>
 </div>
