@@ -15,7 +15,7 @@ Rails.application.configure do
   config.assets.debug                                       = true
   config.assets.quiet                                       = true
   config.cache_classes                                      = ENV["CACHE_CLASSES"] || false
-  config.consider_all_requests_local                        = false
+  config.consider_all_requests_local                        = true
   config.eager_load                                         = ENV["EAGER_LOAD"] || false
   config.file_watcher                                       = ActiveSupport::EventedFileUpdateChecker
 
