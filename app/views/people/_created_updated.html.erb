@@ -1,10 +1,13 @@
 <% unless @person.new_record? %>
-  <%= link_to(person_versions_path(@person), class: "btn btn-link") do %>
+  <%= link_to(person_versions_path(@person), class: "btn btn-link hidden-xs") do %>
     <% if @person.created_at.present? %>Created <%= time_ago_in_words(@person.created_at, include_seconds: true) + " ago" %><% end %>
     <% if @person.created_by_name %>by <%= truncate_from_end(@person.created_by_name) %><% end %>
   <% end -%>
-  <%= link_to(person_versions_path(@person), class: "btn btn-link") do %>
+  <%= link_to(person_versions_path(@person), class: "btn btn-link hidden-xs") do %>
     <% if @person.updated_at %>Updated <%= time_ago_in_words(@person.updated_at, include_seconds: true) + " ago" %><% end %>
     <% if @person.updated_by_name.present? %>by <%= truncate_from_end(@person.updated_by_name) %><% end %>
+  <% end -%>
+  <%= link_to(person_versions_path(@person), class: "btn btn-link visible-xs") do %>
+    <% if @person.updated_at %>Updated <%= @person.updated_at.to_s(:short) %><% end %>
   <% end -%>
 <% end %>

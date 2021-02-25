@@ -84,13 +84,16 @@
       <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
       <%= link_to("Delete", admin_team_path(@team), method: :delete, class: "btn btn-default", id: 'delete') unless @team.new_record? %>
       <%= link_to("Results", team_path(@team), class: "btn btn-link") unless @team.new_record? %>
-      <div class="pull-right created_updated">
+      <div class="pull-right created_updated hidden-xs">
         <span class="created_at">
-          <% if @team.created_at %>Created <%= time_ago_in_words(@team.created_at, include_seconds: true) + " ago" %><% end %>
+          <% if @team.created_at %>Created <%= time_ago_in_words(@team.created_at, include_seconds: true)%> ago<% end %>
           <% if @team.created_by_name %>by <%= truncate_from_end(@team.created_by_name) %><% end %>
         </span>
-        <% if @team.updated_at %>Updated <%= time_ago_in_words(@team.updated_at, include_seconds: true) + " ago" %><% end %>
+        <% if @team.updated_at %>Updated <%= time_ago_in_words(@team.updated_at, include_seconds: true)%> ago<% end %>
         <% if @team.updated_by_name %>by <%= truncate_from_end(@team.updated_by_name) %><% end %>
+      </div>
+      <div class="pull-right created_updated visible-xs">
+        <% if @team.updated_at %>Updated <%= @team.updated_at.to_s(:short) %><% end %>
       </div>
     </div>
   </div>
