@@ -32,7 +32,7 @@
       <span class="glyphicon glyphicon-print"></span> Print Cards
     <% end %>
   </div>
-  <div class="col-sm-8 pull-right">
+  <div class="col-sm-8 pull-right hidden-xs">
     <%= form_tag({}, { class: "form-inline pull-right", id: "export_form" }) do %>
       <select name="include" class="form-control" id="include">
         <option value="all">All</option>
@@ -54,7 +54,7 @@
 
 <hr/>
 
-<div class="row">
+<div class="row hidden-xs">
   <div class="col-sm-12">
     <%= form_tag preview_import_admin_people_path, multipart: true, role: "form", id: "import_form" do %>
       <label class="control-label">Import</label>
