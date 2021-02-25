@@ -45,7 +45,7 @@
       <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
       <% if @race.updated_at.present? %>
       <div class="created_updated pull-right visible-xs"><%= "Updated: #{time_ago_in_words(@race.updated_at, include_seconds: true)} ago" %></div>
-      <div class="created_updated pull-right hidden-xs"><%= "Updated #{@race.updated_at.to_s(:short)}" %></div>
+      <div class="created_updated pull-right hidden-xs"><%= "Updated #{@race.updated_at.to_s(:mdy)}" %></div>
       <% end %>
     </div>
   </div>

@@ -93,7 +93,7 @@
         <% if @team.updated_by_name %>by <%= truncate_from_end(@team.updated_by_name) %><% end %>
       </div>
       <div class="pull-right created_updated visible-xs">
-        <% if @team.updated_at %>Updated <%= @team.updated_at.to_s(:short) %><% end %>
+        <% if @team.updated_at %>Updated <%= @team.updated_at.to_s(:mdy) %><% end %>
       </div>
     </div>
   </div>

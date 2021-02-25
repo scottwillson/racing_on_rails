@@ -181,7 +181,7 @@
             Updated: <%= time_ago_in_words(@event.updated_at, include_seconds: true) %> ago
           </div>
           <div class="pull-right created_updated visible-xs">
-            <% @event.updated_at.nil? %>Updated <%= @event.updated_at.to_s(:short) %>
+            <% @event.updated_at.nil? %>Updated <%= @event.updated_at.to_s(:mdy) %>
           </div>
           <% end -%>
         </div>

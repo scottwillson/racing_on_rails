@@ -31,7 +31,7 @@
   <div class="col-sm-12">
     <%= submit_tag "Save", class: "btn btn-default", id: "save" %>
     <div class="pull-right created_updated hidden-xs"><%= "Updated: #{time_ago_in_words(@category.updated_at, include_seconds: true)} ago" unless @category.updated_at.nil? %></div>
-    <div class="pull-right created_updated visible-xs"><%= "Updated #{@category.updated_at.to_s(:short)}" unless @category.updated_at.nil? %></div>
+    <div class="pull-right created_updated visible-xs"><%= "Updated #{@category.updated_at.to_s(:mdy)}" unless @category.updated_at.nil? %></div>
   </div>
 </div>
 <% end -%>

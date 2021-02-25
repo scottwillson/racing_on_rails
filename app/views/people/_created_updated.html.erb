@@ -8,6 +8,6 @@
     <% if @person.updated_by_name.present? %>by <%= truncate_from_end(@person.updated_by_name) %><% end %>
   <% end -%>
   <%= link_to(person_versions_path(@person), class: "btn btn-link visible-xs") do %>
-    <% if @person.updated_at %>Updated <%= @person.updated_at.to_s(:short) %><% end %>
+    <% if @person.updated_at %>Updated <%= @person.updated_at.to_s(:mdy) %><% end %>
   <% end -%>
 <% end %>
