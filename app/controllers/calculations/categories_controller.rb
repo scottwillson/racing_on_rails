@@ -8,6 +8,8 @@ module Calculations
                .where(id: params[:event_id])
                .first!
 
+      return redirect_to(event_results_path(@event)) unless @event.calculation
+
       @source_result_events = @event.source_result_events
       event_ids = Result.year(@event.year).pluck(:event_id).uniq
       @rejected_events = @event.calculation.source_events.where(id: event_ids).includes(parent: :parent) - @source_result_events
