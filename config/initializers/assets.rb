@@ -4,6 +4,6 @@ Rails.application.config.assets.paths << Rails.root.join("node_modules")
 Rails.application.config.assets.paths << Rails.root.join("local/app/assets/images")
 Rails.application.config.assets.paths << Rails.root.join("local/app/assets/javascripts")
 Rails.application.config.assets.paths << Rails.root.join("local/app/assets/stylesheets")
-Rails.application.config.assets.paths << Rails.root.join("local/app/assets/fonts")
+Rails.application.config.assets.paths << Rails.root.join("app/assets/fonts")
 
 Rails.application.config.assets.version = "6.1"
