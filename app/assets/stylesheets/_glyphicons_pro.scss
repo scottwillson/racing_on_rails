@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'GLYPHICONS Basic Set Regular';
-  src: asset-url('glyphicons-regular.eot');
-  src: asset-url('glyphicons-regular.eot?#iefix') format('embedded-opentype'),
-       asset-url('glyphicons-regular.woff') format('woff'),
-       asset-url('glyphicons-regular.ttf') format('truetype'),
-       asset-url('glyphicons-regular.svg#open_sans') format('svg');
+  src: font-url('glyphicons-regular.eot');
+  src: font-url('glyphicons-regular.eot?#iefix') format('embedded-opentype'),
+       font-url('glyphicons-regular.woff') format('woff'),
+       font-url('glyphicons-regular.ttf') format('truetype'),
+       font-url('glyphicons-regular.svg#open_sans') format('svg');
 }
 
 .glyphicon {
