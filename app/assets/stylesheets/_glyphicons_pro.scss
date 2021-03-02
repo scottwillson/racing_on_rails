@@ -1,3 +1,16 @@
+@font-face {
+  font-family: 'GLYPHICONS Basic Set Regular';
+  src: font-url('glyphicons-regular.eot');
+  src: font-url('glyphicons-regular.eot?#iefix') format('embedded-opentype'),
+       font-url('glyphicons-regular.woff') format('woff'),
+       font-url('glyphicons-regular.ttf') format('truetype'),
+       font-url('glyphicons-regular.svg#open_sans') format('svg');
+}
+
+.glyphicon {
+  font-family: 'GLYPHICONS Basic Set Regular' !important;
+}
+
 .glyphicon-user:before {
   content: '\e004';
 }
