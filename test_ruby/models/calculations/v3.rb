@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_support/core_ext/enumerable"
+require "active_support/core_ext/module/delegation"
 
 require_relative "../../../app/models/categories"
 require_relative "../../../app/models/categories/ability"
