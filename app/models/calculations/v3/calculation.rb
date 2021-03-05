@@ -56,7 +56,6 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   attribute :discipline_id, :integer, default: -> { ::Discipline[RacingAssociation.current.default_discipline]&.id }
   attribute :event_notes, :text, default: -> { "" }
-  attribute :points_for_place, :text, default: -> {}
 
   def self.latest(key)
     where(key: key).order(:year).last
@@ -163,6 +162,10 @@ class Calculations::V3::Calculation < ApplicationRecord
     if !maximum_events.is_a?(Integer) || maximum_events.to_i.positive?
       errors.add(:maximum_events, "must be an integer < 1, but is #{maximum_events.class} #{maximum_events}")
     end
+  end
+
+  def points_for_place
+    self[:points_for_place] ||= {}
   end
 
   def set_name
