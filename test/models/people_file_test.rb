@@ -59,7 +59,7 @@ class PersonFileTest < ActiveSupport::TestCase
       first_name: "Scott"
     )
 
-    path = "#{Rails.root}/test/fixtures/membership/upload.xlsx"
+    path = "#{Rails.root}/test/fixtures/files/membership/upload.xlsx"
     people = PeopleFile.new(path).import(true)
 
     assert_equal([2, 3], people, "Number of people created and updated")
@@ -158,7 +158,7 @@ class PersonFileTest < ActiveSupport::TestCase
     existing_person_with_login = FactoryBot.create(:person_with_login, name: "Erik Tonkin")
     existing_person = FactoryBot.create(:person, name: "Erik Tonkin")
 
-    file = File.new("#{Rails.root}/test/fixtures/membership/duplicates.xlsx")
+    file = File.new("#{Rails.root}/test/fixtures/files/membership/duplicates.xlsx")
     people_file = PeopleFile.new(file)
 
     people_file.import(true)

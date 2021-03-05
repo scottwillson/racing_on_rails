@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   prepend_view_path "#{::Rails.root}/local/app/views"
 
   if Rails.env.test?
-    prepend_view_path "#{Rails.root}/test/fixtures/views"
+    prepend_view_path "#{Rails.root}/test/fixtures/files/views"
   end
 
   before_action :clear_racing_association, :toggle_tabs, :allow_iframes, :set_paper_trail_whodunnit

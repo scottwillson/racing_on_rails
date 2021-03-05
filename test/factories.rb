@@ -143,7 +143,7 @@ FactoryBot.define do
 
   factory :photo do
     caption { "Photo Caption" }
-    image { File.new("#{Rails.root}/test/fixtures/photo.jpg") }
+    image { File.new("#{Rails.root}/test/fixtures/files/photo.jpg") }
     title { "Photo title" }
     height { 100 }
     width { 137 }
