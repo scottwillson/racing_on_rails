@@ -27,6 +27,7 @@ class Race < ApplicationRecord
   before_validation :find_associated_records
 
   before_save :symbolize_custom_columns
+  before_save :normalize_result_columns
 
   belongs_to :category
   belongs_to :discipline, inverse_of: :races, optional: true
@@ -144,6 +145,21 @@ class Race < ApplicationRecord
     return DEFAULT_RESULT_COLUMNS.dup if self[:result_columns].empty?
 
     super
+  end
+
+  def normalize_result_columns
+    return if result_columns.empty? || result_columns == DEFAULT_RESULT_COLUMNS
+
+    if result_columns.include?("name")
+      name_index = result_columns.index("name")
+      result_columns[name_index] = "first_name"
+      result_columns.insert(name_index + 1, "last_name")
+    end
+
+    if result_columns&.include?("place") && result_columns.first != "place"
+      result_columns.delete("place")
+      result_columns.insert(0, "place")
+    end
   end
 
   def symbolize_custom_columns
