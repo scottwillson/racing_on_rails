@@ -38,9 +38,9 @@ GIT
 
 GIT
   remote: https://github.com/seuros/capistrano-puma.git
-  revision: 133aa8e0a0d891114a818a5413a97c6ccea0eeb3
+  revision: 186826736ac83c550fd6129728284584b8c9c782
   specs:
-    capistrano3-puma (5.0.3)
+    capistrano3-puma (5.0.4)
       capistrano (~> 3.7)
       capistrano-bundler
       puma (>= 4.0, < 6.0)
