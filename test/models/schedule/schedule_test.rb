@@ -68,8 +68,7 @@ class ScheduleTest < ActiveSupport::TestCase
     before_import_all = Event.count
     assert_equal(7, before_import_all, "All events count before import")
 
-    filename = File.expand_path("#{File.dirname(__FILE__)}/../../fixtures/schedule/excel.xls")
-    Schedule::Schedule.import(filename)
+    Schedule::Schedule.import(file_fixture("schedule/excel.xls"))
 
     expected = {
       "12 Mile Endurance DH" => 1,
@@ -349,8 +348,7 @@ class ScheduleTest < ActiveSupport::TestCase
     FactoryBot.create(:discipline)
     FactoryBot.create(:discipline, name: "Criterium")
     Team.create!(id: 1_200_000, name: "Bike Team")
-    filename = File.expand_path("#{File.dirname(__FILE__)}/../../fixtures/schedule/tab-delimited.txt")
-    Schedule::Schedule.import(filename)
+    Schedule::Schedule.import(file_fixture("schedule/tab-delimited.txt"))
 
     butte_hc = Event.find_by(name: "Butte Hillclimb")
     assert_not_nil(butte_hc, "Should have imported Butte Hillclimb")
@@ -384,8 +382,7 @@ class ScheduleTest < ActiveSupport::TestCase
     FactoryBot.create(:discipline)
     FactoryBot.create(:discipline, name: "Criterium")
     Team.create!(id: 1_200_000, name: "Bike Team")
-    filename = File.expand_path("#{File.dirname(__FILE__)}/../../fixtures/schedule/comma-delimited.csv")
-    Schedule::Schedule.import(filename)
+    Schedule::Schedule.import(file_fixture("schedule/comma-delimited.csv"))
 
     butte_hc = Event.find_by(name: "Butte Hillclimb")
     assert_not_nil(butte_hc, "Should have imported Butte Hillclimb")
