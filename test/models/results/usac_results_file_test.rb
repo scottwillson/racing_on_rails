@@ -14,7 +14,7 @@ module Results
 
     test "import excel" do
       event = SingleDayEvent.create!(discipline: "Road", date: Date.new(2008, 5, 11))
-      source_path = file_fixture("results/tt_usac.xls")
+      source_path = file_fixture("results/tt_usac.xls").to_s
       results_file = USACResultsFile.new(File.new(source_path), event)
       assert_equal(source_path, results_file.source.path, "file path")
       results_file.import
