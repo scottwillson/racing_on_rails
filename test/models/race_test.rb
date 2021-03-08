@@ -21,23 +21,23 @@ class RaceTest < ActiveSupport::TestCase
   test "result columns" do
     event = SingleDayEvent.create!
     race = Race.create!(category_name: "Masters Women", event: event)
-    assert_equal(Race::DEFAULT_RESULT_COLUMNS, race.result_columns_or_default, "race result_columns")
+    assert_equal(Race::DEFAULT_RESULT_COLUMNS, race.result_columns, "race result_columns")
     race.save!
     race.reload
-    assert_equal(Race::DEFAULT_RESULT_COLUMNS, race.result_columns_or_default, "race result_columns after save")
+    assert_equal(Race::DEFAULT_RESULT_COLUMNS, race.result_columns, "race result_columns after save")
 
     result_columns = %w[place first_name last_name category]
     race.result_columns = result_columns
     race.save!
     race.reload
-    assert_equal(result_columns, race.result_columns_or_default, "race result_columns after save")
+    assert_equal(result_columns, race.result_columns, "race result_columns after save")
 
     event = SingleDayEvent.create!
     race = Race.create!(category_name: "Masters Women 50+", event: event, result_columns: result_columns)
-    assert_equal(result_columns, race.result_columns_or_default, "race result_columns")
+    assert_equal(result_columns, race.result_columns, "race result_columns")
     race.save!
     race.reload
-    assert_equal(result_columns, race.result_columns_or_default, "race result_columns after save")
+    assert_equal(result_columns, race.result_columns, "race result_columns after save")
   end
 
   test "custom result column" do

@@ -52,7 +52,7 @@ module Admin
         existing_duplicate.save!
 
         fixture_file_upload "membership/upload.xlsx", "application/vnd.ms-excel"
-        @request.session[:people_file_path] = File.expand_path("#{::Rails.root}/test/fixtures/membership/upload.xlsx")
+        @request.session[:people_file_path] = File.expand_path("#{::Rails.root}/test/fixtures/files/membership/upload.xlsx")
         post :import, params: { commit: "Import", update_membership: "true" }
 
         assert_nil session[:people_file_path], "Should remove temp file path from session"
@@ -73,7 +73,7 @@ module Admin
         people_before_import = Person.count
 
         fixture_file_upload("membership/upload.xlsx", "application/vnd.ms-excel", :binary)
-        @request.session[:people_file_path] = File.expand_path("#{::Rails.root}/test/fixtures/membership/upload.xlsx")
+        @request.session[:people_file_path] = File.expand_path("#{::Rails.root}/test/fixtures/files/membership/upload.xlsx")
         next_year = Time.zone.today.year + 1
         post :import, params: { commit: "Import", update_membership: "true", year: next_year }
 
@@ -108,7 +108,7 @@ module Admin
         people_before_import = Person.count
 
         fixture_file_upload("membership/duplicates.xlsx", "application/vnd.ms-excel", :binary)
-        @request.session[:people_file_path] = "#{::Rails.root}/test/fixtures/membership/duplicates.xlsx"
+        @request.session[:people_file_path] = "#{::Rails.root}/test/fixtures/files/membership/duplicates.xlsx"
         post :import, params: { commit: "Import", update_membership: "true" }
 
         assert(flash[:warn].present?, "flash[:warn] should not be empty")

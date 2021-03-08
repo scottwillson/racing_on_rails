@@ -27,6 +27,7 @@ class Race < ApplicationRecord
   before_validation :find_associated_records
 
   before_save :symbolize_custom_columns
+  before_save :normalize_result_columns
 
   belongs_to :category
   belongs_to :discipline, inverse_of: :races, optional: true
@@ -40,9 +41,6 @@ class Race < ApplicationRecord
 
   scope :include_results, -> { includes(:category, results: :team) }
   scope :year, ->(year) { where(date: Time.zone.local(year).beginning_of_year.to_date..Time.zone.local(year).end_of_year.to_date) }
-
-  attribute :result_columns, :string, default: -> { DEFAULT_RESULT_COLUMNS.dup }
-  attribute :custom_columns, :string, default: -> { [] }
 
   # Defaults to Event's BAR points
   def bar_points
@@ -143,53 +141,29 @@ class Race < ApplicationRecord
     columns.compact.map(&:to_s).uniq.sort
   end
 
-  def set_result_columns!
-    self.result_columns = present_columns
-    save!
+  def result_columns
+    return DEFAULT_RESULT_COLUMNS.dup if self[:result_columns].empty?
+
+    super
   end
 
-  def result_columns=(value)
-    _result_columns = value.dup
+  def normalize_result_columns
+    return if result_columns.empty? || result_columns == DEFAULT_RESULT_COLUMNS
 
-    if _result_columns&.include?("name")
-      name_index = _result_columns.index("name")
-      _result_columns[name_index] = "first_name"
-      _result_columns.insert(name_index + 1, "last_name")
+    if result_columns.include?("name")
+      name_index = result_columns.index("name")
+      result_columns[name_index] = "first_name"
+      result_columns.insert(name_index + 1, "last_name")
     end
 
-    if _result_columns&.include?("place") && _result_columns.first != "place"
-      _result_columns.delete("place")
-      _result_columns.insert(0, "place")
+    if result_columns&.include?("place") && result_columns.first != "place"
+      result_columns.delete("place")
+      result_columns.insert(0, "place")
     end
-    self[:result_columns] = _result_columns
-  end
-
-  # Default columns if empty
-  def result_columns_or_default
-    self.result_columns ||= DEFAULT_RESULT_COLUMNS.dup
-  end
-
-  # Ugh. Better here than a controller or helper, I guess.
-  def result_columns_or_default_for_editing
-    columns = result_columns_or_default
-    columns.map! do |column|
-      if %w[first_name last_name].include?(column)
-        "name"
-      else
-        column
-      end
-    end
-    columns << "bar"
-    columns.uniq!
-    columns
-  end
-
-  def custom_columns
-    self[:custom_columns] ||= []
   end
 
   def symbolize_custom_columns
-    custom_columns.map! { |col| col.to_s.to_sym }
+    custom_columns&.map! { |col| col.to_s.to_sym }
   end
 
   def update_split_from!

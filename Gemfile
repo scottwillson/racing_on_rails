@@ -3,12 +3,12 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-gem "rails", "~> 6.0"
+gem "rails", "~> 6.1"
 
 gem "activemodel-serializers-xml"
 gem "acts_as_tree", git: "https://github.com/amerine/acts_as_tree.git"
 gem "Ascii85", require: "ascii85"
-gem "authlogic"
+gem "authlogic", github: "sudara/authlogic", branch: "rails6-1"
 gem "bcrypt"
 gem "bootsnap", ">= 1.4.2", require: false
 gem "bootstrap-datepicker-rails"
@@ -54,7 +54,6 @@ gem "zip-zip"
 
 group :development do
   gem "brakeman"
-  gem "bullet"
   gem "bundler-audit", github: "rubysec/bundler-audit"
   gem "capistrano", require: false
   gem "capistrano3-puma", github: "seuros/capistrano-puma", require: false

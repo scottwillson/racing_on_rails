@@ -10,7 +10,7 @@ module Admin
       login_as FactoryBot.create(:administrator)
 
       visit "/photos/new"
-      attach_file "photo_image", "#{Rails.root}/test/fixtures/photo.jpg"
+      attach_file "photo_image", "#{Rails.root}/test/fixtures/files/photo.jpg"
       fill_in "Caption", with: "Bike racer wins the bike race"
       click_button "Save"
 

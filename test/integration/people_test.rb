@@ -32,10 +32,7 @@ class PeopleTest < RacingOnRails::IntegrationTest
     goto_login_page_and_login_as FactoryBot.create(:administrator)
     post "/admin/people/preview_import",
          params: {
-           people_file: fixture_file_upload(
-             "#{ActionController::TestCase.fixture_path}membership/upload.xlsx",
-             "application/vnd.ms-excel"
-           )
+           people_file: fixture_file_upload("membership/upload.xlsx",  "application/vnd.ms-excel")
          }
     assert_response :success
 

@@ -24,7 +24,7 @@ module Results
     test "import excel" do
       current_members = Person.where("member_to >= ?", Time.zone.now)
       event = SingleDayEvent.create!(discipline: "Road", date: Date.new(2006, 1, 16))
-      source_path = File.expand_path("../../fixtures/results/pir_2006_format.xlsx", __dir__)
+      source_path = file_fixture("results/pir_2006_format.xlsx").to_s
       results_file = ResultsFile.new(File.new(source_path), event)
       assert_equal(source_path, results_file.source.path, "file path")
       results_file.import
@@ -97,7 +97,7 @@ module Results
 
       event = SingleDayEvent.create!(discipline: "Time Trial")
 
-      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/tt.xlsx", __dir__)), event)
+      results_file = ResultsFile.new(File.new(file_fixture("results/tt.xlsx")), event)
       results_file.import
 
       assert_equal(2, event.races.reload.size, "event races")
@@ -193,7 +193,7 @@ module Results
       expected_races << race
 
       event = SingleDayEvent.create!(discipline: "Circuit")
-      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/2006_v2.xls", __dir__)), event)
+      results_file = ResultsFile.new(File.new(file_fixture("results/2006_v2.xls")), event)
       results_file.import
 
       assert_equal(expected_races.size, event.races.size, "event races")
@@ -263,7 +263,7 @@ module Results
       weaver = FactoryBot.create(:person)
       pro_1_2_race.results.create! place: 1, person: weaver
 
-      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/small_event.xls", __dir__)), event)
+      results_file = ResultsFile.new(File.new(file_fixture("results/small_event.xls")), event)
       results_file.import
 
       event = Event.find(event.id)
@@ -282,7 +282,7 @@ module Results
 
     test "stage race" do
       event = SingleDayEvent.create!
-      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/stage_race.xls", __dir__)), event)
+      results_file = ResultsFile.new(File.new(file_fixture("results/stage_race.xls")), event)
       results_file.import
 
       assert_equal(1, event.races.size, "event races")
@@ -352,7 +352,7 @@ module Results
     test "dh" do
       FactoryBot.create(:discipline, name: "Downhill")
       event = SingleDayEvent.create(discipline: "Downhill")
-      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/dh.xls", __dir__)), event)
+      results_file = ResultsFile.new(File.new(file_fixture("results/dh.xls")), event)
       results_file.import
     end
 
@@ -365,7 +365,7 @@ module Results
       pro_expert_women.children.create(name: "Pro/Expert Women")
 
       event = SingleDayEvent.create!(discipline: "Mountain Bike")
-      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/mtb.xls", __dir__)), event)
+      results_file = ResultsFile.new(File.new(file_fixture("results/mtb.xls")), event)
       results_file.import
       assert_equal(6, event.races.reload.size, "Races after import")
     end
@@ -373,7 +373,7 @@ module Results
     test "custom columns" do
       FactoryBot.create(:discipline, name: "Downhill")
       event = SingleDayEvent.create(discipline: "Downhill")
-      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/custom_columns.xls", __dir__)), event)
+      results_file = ResultsFile.new(File.new(file_fixture("results/custom_columns.xls")), event)
       results_file.import
       assert_equal [:bogus_column_name], results_file.custom_columns.to_a, "ResultsFile Custom columns"
       assert_equal [:bogus_column_name], event.races.first.custom_columns, "Race custom_columns"
@@ -383,7 +383,7 @@ module Results
       FactoryBot.create(:discipline, name: "Downhill")
       event = SingleDayEvent.create(discipline: "Downhill")
       event.races.create!(category: Category.create!(name: "Pro/Elite Men"))
-      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/custom_columns.xls", __dir__)), event)
+      results_file = ResultsFile.new(File.new(file_fixture("results/custom_columns.xls")), event)
       results_file.import
       assert_equal [:bogus_column_name], results_file.custom_columns.to_a, "ResultsFile Custom columns"
       assert_equal [:bogus_column_name], event.races.first.custom_columns, "Race custom_columns"
@@ -391,18 +391,18 @@ module Results
 
     test "non sequential results" do
       event = SingleDayEvent.create!
-      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/non_sequential_results.xls", __dir__)), event)
+      results_file = ResultsFile.new(File.new(file_fixture("results/non_sequential_results.xls")), event)
       results_file.import
       assert results_file.import_warnings.present?, "Should have import warnings for non-sequential results"
 
-      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/no_first_place_finisher.xls", __dir__)), event)
+      results_file = ResultsFile.new(File.new(file_fixture("results/no_first_place_finisher.xls")), event)
       results_file.import
       assert results_file.import_warnings.present?, "Should have import warnings for no first place finisher"
     end
 
     test "TTT results should not trigger non-sequential results warnings" do
       event = SingleDayEvent.create!
-      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/ttt.xls", __dir__)), event)
+      results_file = ResultsFile.new(File.new(file_fixture("results/ttt.xls")), event)
       results_file.import
       assert(
         results_file.import_warnings.empty?,
@@ -412,7 +412,7 @@ module Results
 
     test "times" do
       event = FactoryBot.create(:event)
-      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/times.xlsx", __dir__)), event)
+      results_file = ResultsFile.new(File.new(file_fixture("results/times.xlsx")), event)
       results_file.import
       results = event.races.first.results
 
@@ -517,7 +517,7 @@ module Results
 
     test "race notes" do
       event = SingleDayEvent.create!
-      results_file = ResultsFile.new(File.new(File.expand_path("../../fixtures/results/tt.xlsx", __dir__)), event)
+      results_file = ResultsFile.new(File.new(file_fixture("results/tt.xlsx")), event)
       results_file.import
       assert_equal("Field Size: 40 riders, 40 Laps, Sunny, cool, 40K", event.races.reload.first.notes, "Race notes")
     end

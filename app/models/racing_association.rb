@@ -20,10 +20,6 @@ class RacingAssociation < ApplicationRecord
   serialize :membership_email
   serialize :sanctioning_organizations
 
-  attribute :administrator_tabs, :text, default: -> { Set.new(ADMIN_TABS) }
-  attribute :competitions, :string, default: -> { Set.new(%i[age_graded_bar bar ironman overall_bar team_bar]) }
-  attribute :sanctioning_organizations, :string, default: -> { ["FIAC", "CBRA", "UCI", "USA Cycling"] }
-
   before_save :assign_defaults
 
   def self.current
@@ -32,6 +28,18 @@ class RacingAssociation < ApplicationRecord
 
   class << self
     attr_writer :current
+  end
+
+  def administrator_tabs
+    self[:administrator_tabs] ||= Set.new(ADMIN_TABS)
+  end
+
+  def competitions
+    self[:competitions] ||= Set.new(%i[age_graded_bar bar ironman overall_bar team_bar])
+  end
+
+  def sanctioning_organizations
+    self[:sanctioning_organizations] ||= ["FIAC", "CBRA", "UCI", "USA Cycling"]
   end
 
   # Person record for RacingAssociation

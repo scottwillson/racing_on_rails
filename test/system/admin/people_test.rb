@@ -211,6 +211,6 @@ class PeopleTest < ApplicationSystemTestCase
   test "import" do
     login_as FactoryBot.create(:administrator)
     visit "/admin/people"
-    attach_file "people_file", "#{Rails.root}/test/fixtures/membership/upload.xlsx"
+    attach_file "people_file", "#{Rails.root}/test/fixtures/files/membership/upload.xlsx"
   end
 end

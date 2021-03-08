@@ -56,7 +56,6 @@ class Calculations::V3::Calculation < ApplicationRecord
 
   attribute :discipline_id, :integer, default: -> { ::Discipline[RacingAssociation.current.default_discipline]&.id }
   attribute :event_notes, :text, default: -> { "" }
-  attribute :points_for_place, :text, default: -> {}
 
   def self.latest(key)
     where(key: key).order(:year).last
