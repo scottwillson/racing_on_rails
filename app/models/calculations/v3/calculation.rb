@@ -164,10 +164,6 @@ class Calculations::V3::Calculation < ApplicationRecord
     end
   end
 
-  def points_for_place
-    self[:points_for_place] ||= {}
-  end
-
   def set_name
     if name == "New Calculation" && source_event
       self.name = if team?
