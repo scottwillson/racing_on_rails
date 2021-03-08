@@ -10,7 +10,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method                      = :test
   config.action_mailer.perform_caching                      = false
   config.active_storage.service                             = :test
-  config.active_support.deprecation                         = :stderr
+  config.active_support.deprecation                         = :raise
   config.active_support.test_order                          = :random
   config.cache_classes                                      = false
   config.consider_all_requests_local                        = true
