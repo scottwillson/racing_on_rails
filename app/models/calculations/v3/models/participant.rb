@@ -18,7 +18,7 @@ module Calculations
         def member?(year)
           return false unless membership
 
-          membership.include? Date.new(year, 12, 31)
+          membership.cover? Date.new(year, 12, 31)
         end
 
         def validate!
