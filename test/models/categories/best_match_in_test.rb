@@ -34,6 +34,20 @@ module Competitions
       @singlespeed_women = Category.find_or_create_by_normalized_name("Singlespeed Women")
     end
 
+    test "Cross Crusade juniors" do
+      event = FactoryBot.create(:event)
+      event.races.create!(category: @junior_men_3_4_5)
+      junior_men_9_12 = Category.find_or_create_by_normalized_name("Junior Men 9-12")
+      event.races.create!(category: junior_men_9_12)
+      junior_men_13_14 = Category.find_or_create_by_normalized_name("Junior Men 13-14")
+      event.races.create!(category: junior_men_13_14)
+      elite_junior_men = Category.find_or_create_by_normalized_name("Elite Junior Men")
+      event.races.create!(category: elite_junior_men)
+      u10_junior = Category.find_or_create_by_normalized_name("Junior U10")
+
+      assert_best_match_in [u10_junior, junior_men_9_12], junior_men_9_12, event, 10
+    end
+
     test "ability only" do
       event = FactoryBot.create(:event)
       event.races.create!(category: @cat_1)
@@ -45,8 +59,7 @@ module Competitions
       assert_best_match_in [@cat_2], @cat_2, event
       assert_best_match_in [@cat_3, @cat_3_4], @cat_3, event
       assert_best_match_in [@cat_4, @cat_4_women, @cat_4_5_women], @cat_4, event
-      # FIXME
-      # assert_best_match_in [@junior_women], nil, event, 15
+      assert_best_match_in [@cat_1, @cat_1_2, @cat_1_2_3, @junior_women], @cat_1, event, 15
     end
 
     test "cyclocross categories" do

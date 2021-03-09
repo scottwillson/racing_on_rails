@@ -163,6 +163,20 @@ module Categories
         return candidate_categories.first if one_match?(candidate_categories)
       end
 
+      # Choose narrowest age if multiple Juniors categories
+      if junior?
+        ranges = candidate_categories.select(&:junior?).map do |category|
+          category.ages_end - category.ages_begin
+        end
+
+        minimum_range = ranges.min
+        candidate_categories = candidate_categories.select do |category|
+          (category.ages_end - category.ages_begin) == minimum_range
+        end
+
+        return candidate_categories.first if one_match?(candidate_categories)
+      end
+
       candidate_categories = candidate_categories.reject { |category| gender == "F" && category.gender == "M" }
       debug "exact gender: #{candidate_categories.map(&:name).join(', ')}"
       return candidate_categories.first if one_match?(candidate_categories)
