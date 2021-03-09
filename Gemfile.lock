@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: https://github.com/rubysec/bundler-audit.git
-  revision: c24eb671d14b6e9f12fa852e1b2cbccb4557e29a
+  revision: 5a2915e98f7b4db4dc38e883604098abbb74b74d
   specs:
     bundler-audit (0.8.0.rc2)
       bundler (>= 1.2.0, < 3)
@@ -213,7 +213,7 @@ GEM
     factory_bot_rails (6.1.0)
       factory_bot (~> 6.1.0)
       railties (>= 5.0.0)
-    ffi (1.14.2)
+    ffi (1.15.0)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
@@ -372,8 +372,8 @@ GEM
     ruby-ole (1.2.12.2)
     ruby-progressbar (1.11.0)
     ruby-rc4 (0.1.5)
-    ruby-vips (2.0.17)
-      ffi (~> 1.9)
+    ruby-vips (2.1.0)
+      ffi (~> 1.12)
     ruby_dep (1.5.0)
     rubyzip (1.3.0)
     sass-rails (6.0.0)
@@ -431,7 +431,7 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (>= 1.3.0)
       selenium-webdriver (>= 3.0, < 4.0)
-    webmock (3.12.0)
+    webmock (3.12.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)

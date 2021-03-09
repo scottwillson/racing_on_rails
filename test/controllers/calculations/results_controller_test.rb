@@ -10,6 +10,21 @@ module Calculations
     test "event index" do
       event = FactoryBot.create(:event)
       get :index, params: { event_id: event }
+      assert_response :redirect
+    end
+
+    test "paginated" do
+      FactoryBot.create_list(:result, 11)
+
+      calculation = Calculations::V3::Calculation.create!(
+        key: "ironman",
+        members_only: true,
+        name: "Ironman",
+        points_for_place: 1
+      )
+      calculation.calculate!
+
+      get :index, params: { key: "ironman", page_size: 10 }
     end
 
     test "get show by key and year" do

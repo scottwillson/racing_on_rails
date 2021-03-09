@@ -31,7 +31,7 @@ module Calculations
       @page = params[:page]
 
       @many_races = Result.where(event_id: event_id).distinct.count(:race_id) > 1
-      many_results = Result.where(event_id: event_id).count > 500
+      many_results = Result.where(event_id: event_id).count > page_size
 
       if many_results && @many_races
         race_id = @races.min.id
@@ -76,6 +76,11 @@ module Calculations
         .where.not(place: "")
         .where.not(place: nil)
         .includes(race: :event)
+    end
+
+    # Intended for testing
+    def page_size
+      params[:page_size]&.to_i || 500
     end
 
     def race_results(race_id)
