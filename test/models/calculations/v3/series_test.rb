@@ -61,6 +61,7 @@ class Calculations::V3::SeriesTest < ActiveSupport::TestCase
     assert_equal_dates Date.new(2019, 3, 18), overall.end_date
     assert series.children.reload.include?(overall), "should add overall as child event"
     assert overall.series_overall?
+    assert_not_equal series, overall
 
     assert_equal 2, overall.races.size, overall.races.map(&:name)
     men_a_overall_race = overall.races.detect { |r| r.category == men_a }
