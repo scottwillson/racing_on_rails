@@ -239,4 +239,14 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     calculation = series.calculations.create!(source_event: series, year: 2011)
     assert_equal 1, calculation.source_results.size
   end
+
+  test "calculation event cannot be its own source" do
+    series = WeeklySeries.create!
+    calculation = series.calculations.create!
+    assert_nil calculation.reload.event
+    assert calculation.valid?
+
+    calculation.event = series
+    assert !calculation.valid?
+  end
 end

@@ -12,6 +12,19 @@
 # results and do all selection and rejection in Ruby. For both performance and
 # clarity, some results are filtered early by SQL. For example, no one expects
 # criterium and track results to show in the Road BAR.
+#
+# Calculated series overall results have sometimes been added directly to the
+# source series event: for example, the Cross Crusade overall. To reduce
+# complexity, this is no longer allowed. The model is now:
+# Cross Crusade series
+#  * Alpenrose source event
+#    * source results
+#  * Barton Park source event
+#    * source results
+#  * Overall event
+#    * calculated results
+#
+#  series -> calculation -> overall event (child of series)
 class Calculations::V3::Calculation < ApplicationRecord
   GROUP_BY = %w[age category].freeze
   PLACE_BY = %w[fewest_points place points time].freeze
@@ -48,6 +61,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   before_destroy :destroy_event
   after_save :expire_cache
 
+  validate :event_is_not_source_event
   validate :maximum_events_negative, unless: :blank?
   validates :event, uniqueness: { allow_nil: true, case_sensitive: false }
   validates :key, uniqueness: { allow_nil: true, case_sensitive: false, scope: :year }
@@ -171,6 +185,14 @@ class Calculations::V3::Calculation < ApplicationRecord
                   else
                     "#{source_event.name}: Overall"
                   end
+    end
+  end
+
+  def event_is_not_source_event
+    return unless event.present?
+
+    if event == source_event || events.include?(event) || events.map(&:parent).include?(event)
+      errors.add(:event, "cannot be source event")
     end
   end
 
