@@ -29,8 +29,7 @@ namespace :db do
   task :data_load do
     on roles(:db) do
       require_relative "../../../config/environment"
-      db = ActiveRecord::Base.configurations
-      dev_db = db[::Rails.env]["database"]
+      dev_db = Rails.application.config_for("database")["database"]
       `mysql -u #{db[::Rails.env]["username"]} -e 'drop database if exists #{dev_db}'`
       `mysql -u #{db[::Rails.env]["username"]} -e 'create database #{dev_db}'`
       if File.exist?("tmp/db/#{fetch(:stage)}.sql.bz2")
