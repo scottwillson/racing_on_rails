@@ -29,7 +29,7 @@ namespace :db do
   task :data_load do
     on roles(:db) do
       require_relative "../../../config/environment"
-      db_config = Rails.application.config_for("database")
+      db_config = Rails.application.config.database_configuration["development"]
       dev_db = db_config["database"]
       `mysql -u #{db_config["username"]} -e 'drop database if exists #{dev_db}'`
       `mysql -u #{db_config["username"]} -e 'create database #{dev_db}'`
