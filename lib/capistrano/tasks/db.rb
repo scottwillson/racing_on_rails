@@ -29,14 +29,15 @@ namespace :db do
   task :data_load do
     on roles(:db) do
       require_relative "../../../config/environment"
-      dev_db = Rails.application.config_for("database")["database"]
-      `mysql -u #{db[::Rails.env]["username"]} -e 'drop database if exists #{dev_db}'`
-      `mysql -u #{db[::Rails.env]["username"]} -e 'create database #{dev_db}'`
+      db_config = Rails.application.config_for("database")
+      dev_db = db_config["database"]
+      `mysql -u #{db_config["username"]} -e 'drop database if exists #{dev_db}'`
+      `mysql -u #{db_config["username"]} -e 'create database #{dev_db}'`
       if File.exist?("tmp/db/#{fetch(:stage)}.sql.bz2")
         system "rm -f tmp/db/#{fetch(:stage)}.sql" if File.exist?("tmp/db/#{fetch(:stage)}.sql")
         system "bzip2 -d tmp/db/#{fetch(:stage)}.sql.bz2"
       end
-      `mysql -u #{db[::Rails.env]["username"]} #{dev_db} < tmp/db/#{fetch(:stage)}.sql`
+      `mysql -u #{db_config["username"]} #{dev_db} < tmp/db/#{fetch(:stage)}.sql`
       system("rm tmp/db/#{fetch(:stage)}.sql") if File.exist?("tmp/db/#{fetch(:stage)}.sql") && ENV["SAVE"].nil?
     end
   end

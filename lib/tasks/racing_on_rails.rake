@@ -19,8 +19,8 @@ namespace :racing_on_rails do
 
   task database_dump: :environment do
     db = Rails.application.config_for("database")
-    puts `mysqldump -u #{db["username"]} -p#{db["password"]} -h #{db["host"]} --compress --single-transaction --ignore-table=#{db["database"]}.posts #{db["database"]} > db/#{Rails.env}.sql`
-    puts `mysqldump -u #{db["username"]} -p#{db["password"]} -h #{db["host"]} --compress --single-transaction --no-data #{db["database"]} posts >> db/#{Rails.env}.sql`
+    puts `mysqldump -u #{db["username"]} -p#{db["password"]} -h #{db["host"]} --compress --single-transaction --no-tablespaces --ignore-table=#{db["database"]}.posts #{db["database"]} > db/#{Rails.env}.sql`
+    puts `mysqldump -u #{db["username"]} -p#{db["password"]} -h #{db["host"]} --compress --single-transaction --no-tablespaces --no-data #{db["database"]} posts >> db/#{Rails.env}.sql`
   end
 end
 
