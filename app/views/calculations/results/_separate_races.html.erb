@@ -1,8 +1,8 @@
-<% if races.select(&:visible?).many? %>
+<% if races.many? %>
 <div class="event_info">
   <table class="event_races">
     <tbody>
-      <%- races.select(&:visible?).reject(&:rejected?).sort.each_row do |first_race, second_race| -%>
+      <%- races.sort.each_row do |first_race, second_race| -%>
       <tr>
         <%= tag.td class: (first_race&.rejected? ? %w( race rejected ) : :race) do %>
           <%= link_to first_race.name, calculations_race_path(first_race) %>

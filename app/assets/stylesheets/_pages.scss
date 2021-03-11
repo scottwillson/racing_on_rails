@@ -788,3 +788,7 @@ ul.calculations  {
 ul.calculations li {
   list-style-type: none;
 }
+
+.show_source_results {
+  margin-top: $line-height-computed * -1.5;
+}

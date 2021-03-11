@@ -24,13 +24,14 @@ module Calculations
 
       event_id = params[:event_id]
       @event = Event.find(event_id)
-      @races = @event.races.includes(:category)
       @calculation = Calculations::V3::Calculation.find_by(event_id: @event.id)
       return redirect_to(event_path(@event)) unless @calculation
 
       @page = params[:page]
 
-      @many_races = Result.where(event_id: event_id).distinct.count(:race_id) > 1
+      race_ids = Result.where(event_id: event_id).distinct.pluck(:race_id)
+      @races = @event.races.includes(:category).find(race_ids)
+      @many_races = race_ids.many?
       many_results = Result.where(event_id: event_id).count > page_size
 
       if many_results && @many_races
