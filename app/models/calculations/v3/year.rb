@@ -8,8 +8,8 @@ class Calculations::V3::Year
     raise(ArgumentError, "key must be present") if key.blank?
     return if Calculations::V3::Calculation.exists?(key: key, year: year)
 
-    previous_calculation = Calculations::V3::Calculation.(key: key, year: year - 1)
-    raise(ActiveRecord::NotFound, "No previous Calculation with key '#{key}'") unless previous_calculation
+    previous_calculation = Calculations::V3::Calculation.latest(key)
+    raise(ActiveRecord::RecordNotFound, "No previous Calculation with key '#{key}'") unless previous_calculation
 
     Calculations::V3::Calculation.transaction do
       previous_calculation.source_event_keys.each do |source_event_key|
