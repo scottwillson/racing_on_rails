@@ -90,16 +90,16 @@ end
 #   end
 # end
 
-puts "Events with source results"
-Event.find(with.to_a).sort.each do |event|
-  puts "#{event.id} #{event.date} #{event.full_name} #{event.calculation.name}"
-end
-
-puts
-puts "Events without source results"
-Event.find(without.to_a).sort.each do |event|
-  puts "#{event.id} #{event.date} #{event.full_name} calc: #{event.calculation&.name}"
-end
+# puts "Events with source results"
+# Event.find(with.to_a).sort.each do |event|
+#   puts "#{event.id} #{event.date} #{event.full_name} #{event.calculation.name}"
+# end
+#
+# puts
+# puts "Events without source results"
+# Event.find(without.to_a).sort.each do |event|
+#   puts "#{event.id} #{event.date} #{event.full_name} calc: #{event.calculation&.name}"
+# end
 
 # Fix
 Calculations::V3::Calculation.transaction do
