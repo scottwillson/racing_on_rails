@@ -2,113 +2,113 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_11_164253) do
+ActiveRecord::Schema.define(version: 2021_03_12_171017) do
 
-  create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_00026E8B_4_Group_1a"
   end
 
-  create_table "#Tableau_01_sid_0004055D_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_0004055D_4_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 11
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_0004055D_4_Group_1a", length: 5
   end
 
-  create_table "#Tableau_01_sid_000405D7_10_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_000405D7_10_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_10_Group_1a"
   end
 
-  create_table "#Tableau_01_sid_000405D7_11_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_000405D7_11_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_11_Group_1a"
   end
 
-  create_table "#Tableau_01_sid_000405D7_12_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_000405D7_12_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_12_Group_1a"
   end
 
-  create_table "#Tableau_01_sid_000405D7_13_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_000405D7_13_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_13_Group_1a"
   end
 
-  create_table "#Tableau_01_sid_000405D7_14_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_000405D7_14_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_14_Group_1a"
   end
 
-  create_table "#Tableau_01_sid_000405D7_1_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_000405D7_1_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 11
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_1_Group_1a", length: 5
   end
 
-  create_table "#Tableau_01_sid_000405D7_2_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_000405D7_2_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_2_Group_1a"
   end
 
-  create_table "#Tableau_01_sid_000405D7_3_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_000405D7_3_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_3_Group_1a"
   end
 
-  create_table "#Tableau_01_sid_000405D7_4_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_000405D7_4_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_4_Group_1a"
   end
 
-  create_table "#Tableau_01_sid_000405D7_5_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_000405D7_5_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_5_Group_1a"
   end
 
-  create_table "#Tableau_01_sid_000405D7_6_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_000405D7_6_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_6_Group_1a"
   end
 
-  create_table "#Tableau_01_sid_000405D7_7_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_000405D7_7_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_7_Group_1a"
   end
 
-  create_table "#Tableau_01_sid_000405D7_8_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_000405D7_8_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_8_Group_1a"
   end
 
-  create_table "#Tableau_01_sid_000405D7_9_Group", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "#Tableau_01_sid_000405D7_9_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
     t.integer "age"
     t.index ["Age (group)"], name: "_tidx_#Tableau_01_sid_000405D7_9_Group_1a"
   end
 
-  create_table "adjustments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "adjustments", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "order_id"
     t.integer "person_id"
     t.datetime "date"
@@ -118,7 +118,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.datetime "updated_at"
   end
 
-  create_table "aliases", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "aliases", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -130,7 +130,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["name"], name: "index_aliases_on_name"
   end
 
-  create_table "article_categories", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "article_categories", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.integer "parent_id", default: 0
     t.integer "position", default: 0
@@ -140,7 +140,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["updated_at"], name: "index_article_categories_on_updated_at"
   end
 
-  create_table "articles", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "articles", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "title"
     t.string "heading"
     t.string "description"
@@ -154,7 +154,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["updated_at"], name: "index_articles_on_updated_at"
   end
 
-  create_table "bids", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "bids", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
     t.string "phone", null: false
@@ -164,7 +164,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.datetime "updated_at"
   end
 
-  create_table "calculations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "calculations", charset: "utf8", force: :cascade do |t|
     t.bigint "discipline_id"
     t.bigint "event_id"
     t.bigint "source_event_id"
@@ -196,7 +196,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["source_event_id"], name: "index_calculations_on_source_event_id"
   end
 
-  create_table "calculations_categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "calculations_categories", charset: "utf8", force: :cascade do |t|
     t.bigint "calculation_id"
     t.bigint "category_id"
     t.integer "maximum_events"
@@ -209,7 +209,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["category_id"], name: "index_calculations_categories_on_category_id"
   end
 
-  create_table "calculations_categories_mappings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "calculations_categories_mappings", charset: "utf8", force: :cascade do |t|
     t.bigint "calculation_category_id"
     t.integer "category_id"
     t.integer "discipline_id"
@@ -219,7 +219,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["discipline_id"], name: "fk_rails_9ae02c0dea"
   end
 
-  create_table "calculations_disciplines", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "calculations_disciplines", charset: "utf8", force: :cascade do |t|
     t.bigint "calculation_id"
     t.bigint "discipline_id"
     t.datetime "created_at", null: false
@@ -229,7 +229,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["discipline_id"], name: "index_calculations_disciplines_on_discipline_id"
   end
 
-  create_table "calculations_events", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "calculations_events", charset: "utf8", force: :cascade do |t|
     t.bigint "calculation_id"
     t.bigint "event_id"
     t.float "multiplier", default: 1.0, null: false
@@ -240,7 +240,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["event_id"], name: "index_calculations_events_on_event_id"
   end
 
-  create_table "categories", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "categories", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "position", default: 0, null: false
     t.string "name", limit: 64, default: "", null: false
     t.datetime "created_at"
@@ -264,7 +264,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["weight"], name: "index_categories_on_weight"
   end
 
-  create_table "ckeditor_assets", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "ckeditor_assets", charset: "latin1", force: :cascade do |t|
     t.string "data_file_name", null: false
     t.string "data_content_type"
     t.integer "data_file_size"
@@ -276,7 +276,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["type"], name: "index_ckeditor_assets_on_type"
   end
 
-  create_table "competition_event_memberships", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "competition_event_memberships", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "competition_id", null: false
     t.integer "event_id", null: false
     t.float "points_factor", default: 1.0
@@ -285,7 +285,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["event_id"], name: "index_competition_event_memberships_on_event_id"
   end
 
-  create_table "discipline_aliases", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "discipline_aliases", id: false, charset: "utf8", force: :cascade do |t|
     t.integer "discipline_id", default: 0, null: false
     t.string "alias", limit: 64, default: "", null: false
     t.datetime "created_at"
@@ -294,14 +294,14 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["discipline_id"], name: "index_discipline_aliases_on_discipline_id"
   end
 
-  create_table "discipline_bar_categories", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "discipline_bar_categories", id: false, charset: "utf8", force: :cascade do |t|
     t.integer "category_id", default: 0, null: false
     t.integer "discipline_id", default: 0, null: false
     t.index ["category_id", "discipline_id"], name: "discipline_bar_categories_category_id_index", unique: true
     t.index ["discipline_id"], name: "index_discipline_bar_categories_on_discipline_id"
   end
 
-  create_table "disciplines", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "disciplines", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "name", limit: 64, default: "", null: false
     t.boolean "bar"
     t.datetime "created_at"
@@ -310,7 +310,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["name"], name: "index_disciplines_on_name", unique: true
   end
 
-  create_table "discount_codes", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "discount_codes", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "event_id"
     t.string "name"
     t.string "code", null: false
@@ -330,11 +330,11 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["updated_by_id"], name: "index_discount_codes_on_updated_by_id"
   end
 
-  create_table "duplicates", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "duplicates", id: :integer, charset: "utf8", force: :cascade do |t|
     t.text "new_attributes"
   end
 
-  create_table "duplicates_people", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "duplicates_people", id: false, charset: "utf8", force: :cascade do |t|
     t.integer "person_id"
     t.integer "duplicate_id"
     t.index ["duplicate_id"], name: "index_duplicates_racers_on_duplicate_id"
@@ -342,7 +342,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["person_id"], name: "index_duplicates_racers_on_racer_id"
   end
 
-  create_table "editor_requests", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "editor_requests", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "person_id", null: false
     t.integer "editor_id", null: false
     t.datetime "expires_at", null: false
@@ -357,14 +357,14 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["token"], name: "index_editor_requests_on_token"
   end
 
-  create_table "editors_events", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "editors_events", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "event_id", null: false
     t.integer "editor_id", null: false
     t.index ["editor_id"], name: "index_editors_events_on_editor_id"
     t.index ["event_id"], name: "index_editors_events_on_event_id"
   end
 
-  create_table "event_team_memberships", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "event_team_memberships", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "event_team_id", null: false
     t.integer "person_id", null: false
     t.datetime "created_at"
@@ -374,7 +374,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["person_id"], name: "index_event_team_memberships_on_person_id"
   end
 
-  create_table "event_teams", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "event_teams", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "event_id", null: false
     t.integer "team_id", null: false
     t.datetime "created_at"
@@ -384,7 +384,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["team_id"], name: "index_event_teams_on_team_id"
   end
 
-  create_table "events", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "events", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "parent_id"
     t.string "city", limit: 128
     t.date "date"
@@ -469,7 +469,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["year"], name: "index_events_on_year"
   end
 
-  create_table "homes", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "homes", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "photo_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -478,13 +478,13 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["updated_at"], name: "index_homes_on_updated_at"
   end
 
-  create_table "import_files", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "import_files", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "line_items", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "line_items", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "order_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -523,7 +523,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["type"], name: "index_line_items_on_type"
   end
 
-  create_table "mailing_lists", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "mailing_lists", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "friendly_name", default: "", null: false
     t.string "subject_line_prefix", default: "", null: false
@@ -535,7 +535,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["updated_at"], name: "index_mailing_lists_on_updated_at"
   end
 
-  create_table "names", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "names", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "nameable_id", null: false
     t.string "name", null: false
     t.integer "year", null: false
@@ -552,7 +552,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["year"], name: "index_names_on_year"
   end
 
-  create_table "non_member_results", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "non_member_results", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.boolean "visible", default: true
     t.integer "person_id"
     t.integer "size", default: 0
@@ -561,26 +561,26 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.datetime "updated_at"
   end
 
-  create_table "non_member_results_people", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "non_member_results_people", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "non_member_result_id"
     t.integer "person_id"
   end
 
-  create_table "number_issuers", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "number_issuers", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["name"], name: "number_issuers_name_index", unique: true
   end
 
-  create_table "offline_single_event_licenses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "offline_single_event_licenses", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "event_id"
     t.integer "person_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "order_people", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "order_people", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "person_id"
     t.integer "order_id"
     t.boolean "owner", default: false, null: false
@@ -633,7 +633,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["team_id"], name: "index_order_people_on_team_id"
   end
 
-  create_table "orders", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "orders", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.decimal "purchase_price", precision: 10, scale: 2
     t.string "notes", limit: 2000
     t.datetime "created_at"
@@ -653,7 +653,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["updated_at"], name: "index_orders_on_updated_at"
   end
 
-  create_table "pages", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "pages", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "parent_id"
     t.text "body", null: false
     t.string "path", default: "", null: false
@@ -673,7 +673,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["updated_by_paper_trail_id"], name: "index_pages_on_updated_by_paper_trail_id"
   end
 
-  create_table "payment_gateway_transactions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "payment_gateway_transactions", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "order_id"
     t.string "action"
     t.integer "amount"
@@ -689,7 +689,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["order_id"], name: "index_order_transactions_on_order_id"
   end
 
-  create_table "people", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "people", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "first_name", limit: 64
     t.string "last_name"
     t.string "city", limit: 128
@@ -792,7 +792,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["usac_license"], name: "index_people_on_usac_license"
   end
 
-  create_table "people_people", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "people_people", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "person_id", null: false
     t.integer "editor_id", null: false
     t.index ["editor_id", "person_id"], name: "index_people_people_on_editor_id_and_person_id", unique: true
@@ -800,7 +800,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["person_id"], name: "index_people_people_on_person_id"
   end
 
-  create_table "photos", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "photos", id: :integer, charset: "utf8", force: :cascade do |t|
     t.text "caption"
     t.string "title"
     t.string "image"
@@ -812,7 +812,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["updated_at"], name: "index_photos_on_updated_at"
   end
 
-  create_table "posts", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "posts", id: :integer, charset: "utf8", force: :cascade do |t|
     t.text "body", null: false
     t.datetime "date", null: false
     t.string "subject", default: "", null: false
@@ -838,7 +838,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["updated_at"], name: "index_posts_on_updated_at"
   end
 
-  create_table "product_variants", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "product_variants", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "product_id", null: false
     t.string "name"
     t.datetime "created_at"
@@ -852,7 +852,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["product_id"], name: "index_product_variants_on_product_id"
   end
 
-  create_table "products", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "products", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.string "description"
     t.decimal "price", precision: 10
@@ -883,7 +883,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["type"], name: "index_products_on_type"
   end
 
-  create_table "race_numbers", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "race_numbers", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "person_id", default: 0, null: false
     t.integer "discipline_id", default: 0, null: false
     t.integer "number_issuer_id", default: 0, null: false
@@ -906,7 +906,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["year"], name: "index_race_numbers_on_year"
   end
 
-  create_table "races", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "races", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "category_id", null: false
     t.string "city", limit: 128
     t.decimal "distance", precision: 10, scale: 2
@@ -947,7 +947,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["updated_by_id"], name: "index_races_on_updated_by_id"
   end
 
-  create_table "racing_associations", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "racing_associations", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.boolean "add_members_from_results", default: true, null: false
     t.boolean "always_insert_table_headers", default: true, null: false
     t.boolean "award_cat4_participation_points", default: true, null: false
@@ -1002,7 +1002,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.string "card_text_color", default: "ffffff", null: false
   end
 
-  create_table "refunds", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "refunds", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.decimal "amount", precision: 10, scale: 2
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -1018,7 +1018,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["updated_by_id"], name: "index_refunds_on_updated_by_id"
   end
 
-  create_table "regions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "regions", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "name", null: false
     t.string "friendly_param", null: false
     t.datetime "created_at", null: false
@@ -1027,7 +1027,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["name"], name: "index_regions_on_name", unique: true
   end
 
-  create_table "result_sources", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "result_sources", charset: "utf8", force: :cascade do |t|
     t.integer "calculated_result_id", null: false
     t.decimal "points", precision: 10, default: "0", null: false
     t.string "rejection_reason"
@@ -1039,7 +1039,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["source_result_id"], name: "fk_rails_6213531152"
   end
 
-  create_table "results", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "results", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "category_id"
     t.integer "person_id"
     t.integer "race_id", null: false
@@ -1111,7 +1111,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["year"], name: "index_results_on_year"
   end
 
-  create_table "scores", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "scores", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "competition_result_id"
     t.integer "source_result_id"
     t.float "points"
@@ -1125,7 +1125,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["source_result_id"], name: "scores_source_result_id_index"
   end
 
-  create_table "teams", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "teams", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "city", limit: 128
     t.string "state", limit: 64
@@ -1152,7 +1152,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["updated_by_id"], name: "index_teams_on_updated_by_id"
   end
 
-  create_table "update_requests", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "update_requests", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "order_person_id", null: false
     t.datetime "expires_at", null: false
     t.string "token", null: false
@@ -1163,7 +1163,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["token"], name: "index_update_requests_on_token"
   end
 
-  create_table "velodromes", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "velodromes", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "name"
     t.string "website"
     t.datetime "created_at"
@@ -1171,7 +1171,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_164253) do
     t.index ["name"], name: "index_velodromes_on_name", unique: true
   end
 
-  create_table "versions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "versions", id: :integer, charset: "utf8mb4", force: :cascade do |t|
     t.string "item_type", limit: 191, null: false
     t.integer "item_id", null: false
     t.string "event", null: false
