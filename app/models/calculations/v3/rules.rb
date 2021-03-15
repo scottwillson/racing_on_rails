@@ -3,7 +3,23 @@
 module Calculations
   module V3
     class Rules
-      attr_reader :association, :association_sanctioned_only, :category_rules, :disciplines, :field_size_bonus, :group_by, :maximum_events, :members_only, :minimum_events, :missing_result_penalty, :place_by, :points_for_place, :results_per_event, :specific_events, :source_event_keys, :team
+      attr_reader :association,
+                  :association_sanctioned_only,
+                  :category_rules,
+                  :disciplines,
+                  :field_size_bonus,
+                  :group_by,
+                  :maximum_events,
+                  :members_only,
+                  :minimum_events,
+                  :missing_result_penalty,
+                  :place_by,
+                  :points_for_place,
+                  :results_per_event,
+                  :show_zero_point_source_results,
+                  :specific_events,
+                  :source_event_keys,
+                  :team
 
       # If true, only include weekend events
       # If false, reject all weekday events except series overall
@@ -24,6 +40,7 @@ module Calculations
         place_by: "points",
         points_for_place: nil,
         results_per_event: nil,
+        show_zero_point_source_results: true,
         specific_events: false,
         source_event_keys: [],
         team: false,
@@ -44,6 +61,7 @@ module Calculations
         @place_by = place_by
         @points_for_place = points_for_place
         @results_per_event = results_per_event
+        @show_zero_point_source_results = show_zero_point_source_results
         @source_event_keys = source_event_keys
         @specific_events = specific_events
         @team = team
@@ -82,6 +100,12 @@ module Calculations
 
       def missing_result_penalty?
         missing_result_penalty
+      end
+
+      # For calculations that aggregate other calculations like the Overall BAR.
+      # Don't show non-scoring Gravel BAR, etc. results in the Overall BAR.
+      def show_zero_point_source_results?
+        show_zero_point_source_results
       end
 
       def specific_events?

@@ -45,6 +45,7 @@ class Calculations::V3::Year
       place_by: previous_calculation.place_by,
       points_for_place: previous_calculation.points_for_place,
       results_per_event: previous_calculation.results_per_event,
+      show_zero_point_source_results: previous_calculation.show_zero_point_source_results,
       source_event_keys: previous_calculation.source_event_keys,
       specific_events: previous_calculation.specific_events?,
       team: previous_calculation.team?,

@@ -47,6 +47,7 @@ module Calculations::V3::CalculationConcerns::RulesConcerns
       place_by: place_by,
       points_for_place: points_for_place,
       results_per_event: results_per_event,
+      show_zero_point_source_results: show_zero_point_source_results?,
       source_event_keys: source_event_keys,
       specific_events: specific_events?,
       team: team?,

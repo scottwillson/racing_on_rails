@@ -27,7 +27,7 @@ module Calculations
         # Use the source points. E.g., Age-graded BAR.
         def test_with_source_events
           category = Models::Category.new("Women")
-          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)], source_event_keys: [:road_bar])
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)], source_event_keys: [:road_bar], show_zero_point_source_results: false)
           calculator = Calculator.new(rules: rules, source_results: [])
           event_category = calculator.event_categories.first
 
@@ -39,7 +39,7 @@ module Calculations
           event_categories = RejectNoSourceEventPoints.calculate!(calculator)
 
           assert_equal 1, event_categories.first.results.size
-          assert !event_categories.first.results.first.source_results.first.rejected?
+          assert event_categories.first.results.first.source_results.empty?
         end
 
         # E.g., BAR, Cross Crusade
@@ -63,7 +63,7 @@ module Calculations
         # For calcs like the overall BAR, don't count zero-point results from discipline BARs
         def test_with_source_events_points_for_place
           category = Models::Category.new("Women")
-          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)], source_event_keys: [:road_bar], points_for_place: [1, 2, 3])
+          rules = Rules.new(category_rules: [Models::CategoryRule.new(category)], source_event_keys: [:road_bar], points_for_place: [1, 2, 3], show_zero_point_source_results: false)
           calculator = Calculator.new(rules: rules, source_results: [])
           event_category = calculator.event_categories.first
 

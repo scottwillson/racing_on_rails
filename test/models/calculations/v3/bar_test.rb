@@ -73,6 +73,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
         members_only: true,
         name: "Road BAR",
         points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        show_zero_point_source_results: false,
         weekday_events: false
       )
 
@@ -213,6 +214,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
         members_only: true,
         name: "Overall BAR",
         points_for_place: (1..300).to_a.reverse,
+        show_zero_point_source_results: false,
         source_event_keys: %w[criterium_bar road_bar],
         weekday_events: true
       )
@@ -330,6 +332,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
         members_only: true,
         name: "Overall BAR",
         points_for_place: (1..300).to_a.reverse,
+        show_zero_point_source_results: false,
         source_event_keys: %w[cyclocross_bar road_bar],
         weekday_events: true
       )
@@ -418,6 +421,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
         members_only: true,
         name: "Overall BAR",
         points_for_place: (1..300).to_a.reverse,
+        show_zero_point_source_results: false,
         source_event_keys: %w[criterium_bar road_bar],
         weekday_events: true
       )
@@ -430,6 +434,7 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
         group_by: :age,
         members_only: true,
         name: "Age-Graded BAR",
+        show_zero_point_source_results: false,
         source_event_keys: %w[overall_bar],
         weekday_events: true
       )
@@ -458,8 +463,8 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
 
       assert_equal 1, age_graded.source_events.size
       event = age_graded.reload.event
-      assert_equal 1, event.races.count(&:rejected), event.races.select(&:rejected).map(&:name)
-      assert_equal 4, event.races.size, event.races.map(&:name)
+      assert_equal 0, event.races.count(&:rejected), event.races.select(&:rejected).map(&:name)
+      assert_equal 3, event.races.size, event.races.map(&:name)
 
       race = event.races.detect { |r| r.category == masters_men_30_34 }
       results = race.results.sort
