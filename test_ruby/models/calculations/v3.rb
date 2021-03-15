@@ -44,6 +44,7 @@ require_relative "../../../app/models/calculations/v3/steps/reject_more_than_res
 require_relative "../../../app/models/calculations/v3/steps/reject_more_than_maximum_events"
 require_relative "../../../app/models/calculations/v3/steps/reject_no_participant"
 require_relative "../../../app/models/calculations/v3/steps/reject_no_points"
+require_relative "../../../app/models/calculations/v3/steps/reject_no_source_event_points"
 require_relative "../../../app/models/calculations/v3/steps/reject_weekday_events"
 require_relative "../../../app/models/calculations/v3/steps/select_in_discipline"
 require_relative "../../../app/models/calculations/v3/steps/select_members"

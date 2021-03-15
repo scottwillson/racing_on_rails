@@ -224,6 +224,8 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       race = source_event.races.create!(category: senior_women)
       person = FactoryBot.create :person
       race.results.create! place: 12, person: person
+      # No points
+      race.results.create! place: 16, person: FactoryBot.create(:person)
 
       # Previous BAR version
       event = Competitions::Bar.create!
@@ -250,12 +252,17 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
       assert_not_nil race
 
       results = race.results.sort
-      assert_equal 1, results.size
+      assert_equal 2, results.size
 
       assert_equal 1, results.first.source_results.size
       assert_nil results.first.sources.first.rejection_reason
       assert_equal 4, results.first.points
       assert_equal "1", results.first.place
+
+      assert_equal 1, results.second.source_results.size
+      assert_nil results.second.sources.first.rejection_reason
+      assert_equal 0, results.second.points
+      assert_equal "", results.second.place
 
       event = overall.reload.event
       assert_equal "Overall", event.discipline

@@ -3,6 +3,7 @@
 module Calculations
   module V3
     module Steps
+      # Calculations that pass-through/reuse the source results points
       module RejectNoPoints
         def self.calculate!(calculator)
           return calculator.event_categories if calculator.rules.points_for_place
