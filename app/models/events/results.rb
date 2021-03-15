@@ -8,11 +8,11 @@ module Events
       before_destroy :validate_no_results
 
       scope :include_results, lambda {
-        includes races: [:category, { results: :team }]
+        includes(races: [:category, { results: :team }])
       }
 
       scope :include_child_results, lambda {
-        includes children: { races: [:category, { results: :team }] }
+        includes(children: { races: [:category, { results: :team }] })
       }
 
       scope :most_recent_with_recent_result, lambda { |weeks|

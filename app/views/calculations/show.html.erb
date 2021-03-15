@@ -159,6 +159,15 @@
         </td>
       </tr>
       <tr>
+        <td>Show zero-point results</td>
+        <td>
+          <% if @calculation.rules.show_zero_point_source_results? %>
+          Show results that don't earn points
+          <% else %>
+          Hide results that don't earn points
+          <% end %>
+      </td>
+      <tr>
         <td>Specific events</td>
         <td>
           <% if @calculation.rules.specific_events? %>

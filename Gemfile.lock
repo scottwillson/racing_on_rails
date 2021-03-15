@@ -14,9 +14,9 @@ GIT
 
 GIT
   remote: https://github.com/rubysec/bundler-audit.git
-  revision: 5a2915e98f7b4db4dc38e883604098abbb74b74d
+  revision: 9def635f9db5c7d9ecde7aa85cabdf316bbf8371
   specs:
-    bundler-audit (0.8.0.rc2)
+    bundler-audit (0.8.0)
       bundler (>= 1.2.0, < 3)
       thor (~> 1.0)
 
@@ -270,10 +270,10 @@ GEM
     netrc (0.11.0)
     newrelic_rpm (6.15.0)
     nio4r (2.5.7)
-    nokogiri (1.11.1)
+    nokogiri (1.11.2)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
-    oj (3.11.2)
+    oj (3.11.3)
     orm_adapter (0.5.0)
     paper_trail (11.1.0)
       activerecord (>= 5.2)

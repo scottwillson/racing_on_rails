@@ -1,10 +1,13 @@
 <%- if !event.all_year? || event.parent -%>
   <div class="row event_info">
     <%- unless event.all_year? -%>
+      <% if event.city_state.present? %>
+        <%= event.city_state %>.
+      <%- end -%>
       <%- if event.multiple_days? -%>
         <%= event.date_range_long_s %>
       <%- else -%>
-        <%= event.date.to_formatted_s(:long) %>
+        <%= event.date.to_s(:long) %>
       <%- end -%>
     <%- end -%>
 

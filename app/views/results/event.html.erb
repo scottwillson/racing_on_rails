@@ -1,23 +1,17 @@
 <% @page_title = "Results: #{@event.date.year}: #{@event.full_name}" %>
 
 <% cache cache_key(@event) do %>
-  <h2><%= public_link_to_flyer @event %></h2>
+  <%- if @event.all_year? || @event.calculation -%>
+    <h2><%= @event.year %> <%= @event.full_name %></h2>
+  <%- else -%>
+    <h2><%= public_link_to_flyer @event %></h2>
+  <%- end -%>
 
-  <div class="row event_info">
-    <%= @event.city_state %><br/>
-    <%- if @event.multiple_days? -%>
-      <%= @event.date_range_long_s %>
-    <%- else -%>
-      <%= @event.date.to_formatted_s(:long) %>
-    <%- end -%>
-
-    <%- if @event.parent -%>
-    <p>Part of the <%= link_to @event.parent.name, event_results_path(@event.parent) %></p>
-    <%- end -%>
-  </div>
-
+  <%= render partial: "results/date_and_parent", locals: { event: @event } %>
   <%= render partial: "results/source_events", locals: { source_events: @source_events } %>
   <%= render partial: "results/calculation", locals: { calculation: @event.calculation } %>
+  <%= render partial: "calculations/years", locals: { calculation: @event.calculation } %>
+  <%= render partial: "calculations/group_events", locals: { calculation: @event.calculation } %>
   <%= render partial: "results/event_teams", locals: { event: @event } %>
   <%= render partial: "results/single_day_event_children", locals: { single_day_event_children: @single_day_event_children } %>
   <%= render partial: "results/races", locals: { races: @races } %>

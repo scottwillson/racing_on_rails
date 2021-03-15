@@ -2,7 +2,7 @@
 
 <% cache cache_key(@race) do %>
   <h2><%= link_to @race.event.name, calculations_event_results_path(event_id: @race.event) %>: <%= @race.name %></h2>
-  <%= render partial: "calculations/date_and_parent", locals: { event: @event } %>
+  <%= render partial: "results/date_and_parent", locals: { event: @event } %>
   <%= render partial: "calculations/results/calculation", locals: { calculation: @calculation } %>
   <p class="created_updated hidden-xs">Updated <%= @race.updated_at.to_formatted_s :long_and_friendly_date_and_time %></p>
   <p class="created_updated visible-xs">Updated <%= @race.updated_at.to_s :short %></p>

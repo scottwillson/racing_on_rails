@@ -2,7 +2,7 @@
 
 <% cache cache_key(@event, @page, @races) do %>
   <h2><%= @event.year %> <%= @event.full_name %></h2>
-  <%= render partial: "calculations/date_and_parent", locals: { event: @event } %>
+  <%= render partial: "results/date_and_parent", locals: { event: @event } %>
   <%= render partial: "calculation", locals: { calculation: @calculation } %>
   <%= render partial: "calculations/years", locals: { calculation: @calculation } %>
   <%= render partial: "calculations/group_events", locals: { calculation: @calculation } %>
@@ -12,8 +12,7 @@
     <%= render partial: "races", locals: { races: @races } %>
   <% end %>
   <%= render partial: "notes", locals: { event: @event } %>
-  <p class="created_updated hidden-xs">Updated <%= @event.updated_at.to_formatted_s :long_and_friendly_date_and_time %></p>
-  <p class="created_updated visible-xs">Updated <%= @event.updated_at.to_s :short %></p>
+  <p class="created_updated">Updated <%= @event.updated_at.to_formatted_s :long_and_friendly_date_and_time %></p>
   <%= will_paginate @results, class: "pagination hidden-xs" %>
   <%= will_paginate @results, class: "pagination visible-xs", inner_window: 0 %>
   <%= render partial: "paginated_results", locals: { event: @event, race: @races.first, results: @results } %>
