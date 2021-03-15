@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_12_171017) do
+ActiveRecord::Schema.define(version: 2021_03_15_224418) do
 
   create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
@@ -190,6 +190,7 @@ ActiveRecord::Schema.define(version: 2021_03_12_171017) do
     t.boolean "field_size_bonus", default: false, null: false
     t.text "event_notes"
     t.string "group"
+    t.boolean "show_zero_point_source_results", default: true, null: false
     t.index ["discipline_id"], name: "index_calculations_on_discipline_id"
     t.index ["event_id"], name: "index_calculations_on_event_id", unique: true
     t.index ["key", "year"], name: "index_calculations_on_key_and_year", unique: true
