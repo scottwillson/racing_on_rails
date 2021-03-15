@@ -61,6 +61,7 @@ class CalculationsController < ApplicationController
       :place_by,
       :points_for_place,
       :results_per_event,
+      :show_zero_point_source_results,
       :source_event_keys,
       :specific_events,
       :team,
