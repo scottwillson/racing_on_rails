@@ -362,6 +362,8 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.4.1)
       parser (>= 2.7.1.5)
+    rubocop-minitest (0.10.3)
+      rubocop (>= 0.87, < 2.0)
     rubocop-performance (1.10.1)
       rubocop (>= 0.90.0, < 2.0)
       rubocop-ast (>= 0.4.0)
@@ -369,6 +371,8 @@ GEM
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 0.90.0, < 2.0)
+    rubocop-rake (0.5.1)
+      rubocop
     ruby-ole (1.2.12.2)
     ruby-progressbar (1.11.0)
     ruby-rc4 (0.1.5)
@@ -504,8 +508,10 @@ DEPENDENCIES
   roo!
   roo-xls
   rubocop
+  rubocop-minitest
   rubocop-performance
   rubocop-rails
+  rubocop-rake
   ruby-ole
   rubyzip
   sass-rails
