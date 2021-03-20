@@ -19,6 +19,12 @@ module Events
       FactoryBot.create(:event, date: Date.new(2003))
       FactoryBot.create(:race)
 
+      # Calculation event results
+      event = FactoryBot.create(:event, date: Date.new(2003), type: "Event")
+      race = FactoryBot.create(:race, event: event)
+      FactoryBot.create(:result, race: race, competition_result: true)
+      FactoryBot.create(:result, race: race, team_competition_result: true)
+
       assert_equal([event_with_results], Event.find_all_with_results(2003), "events")
 
       event_with_results = FactoryBot.create(:event, date: Date.new(2004))

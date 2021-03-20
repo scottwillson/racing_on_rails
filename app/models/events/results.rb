@@ -49,7 +49,13 @@ module Events
         # Maybe this should be its own class, since it has knowledge of Event and Result?
 
         # Faster to load IDs and pass to second query than to use join or subselect
-        event_ids = Result.where(year: year).pluck(:event_id).uniq
+        event_ids = Result
+                    .where(year: year)
+                    .where(competition_result: false)
+                    .where(team_competition_result: false)
+                    .pluck(:event_id)
+                    .uniq
+
         events = Event
                  .includes(parent: :parent)
                  .where(id: event_ids)
