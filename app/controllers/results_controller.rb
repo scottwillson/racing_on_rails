@@ -13,7 +13,7 @@ class ResultsController < ApplicationController
   def index
     @discipline = Discipline[params["discipline"]]
     @discipline_names = Discipline.names
-    @calculations = Calculations::V3::Calculation.where(year: @year).includes(:event)
+    @calculations = Calculations::V3::Calculation.with_results(@year)
 
     respond_to do |format|
       format.html

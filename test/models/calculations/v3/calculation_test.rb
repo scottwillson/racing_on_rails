@@ -247,6 +247,25 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
     assert calculation.valid?
 
     calculation.event = series
-    assert !calculation.valid?
+    assert_not calculation.valid?
+  end
+
+  test ".with_results" do
+    Calculations::V3::Calculation.create!
+    assert Calculations::V3::Calculation.with_results.empty?
+
+    FactoryBot.create(:result, person: FactoryBot.create(:person))
+    FactoryBot.create(:result, place: 40)
+
+    calculation = Calculations::V3::Calculation.create!(
+      members_only: true,
+      name: "Ironman",
+      points_for_place: 1
+    )
+    calculation.calculate!
+
+    assert_equal [calculation], Calculations::V3::Calculation.with_results
+    assert_equal [calculation], Calculations::V3::Calculation.with_results(calculation.year)
+    assert Calculations::V3::Calculation.with_results(1999).empty?
   end
 end

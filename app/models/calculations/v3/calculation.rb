@@ -71,6 +71,16 @@ class Calculations::V3::Calculation < ApplicationRecord
   attribute :discipline_id, :integer, default: -> { ::Discipline[RacingAssociation.current.default_discipline]&.id }
   attribute :event_notes, :text, default: -> { "" }
 
+  def self.with_results(year = RacingAssociation.current.effective_year)
+    event_ids = Result
+                .where(year: year)
+                .where("competition_result is true or team_competition_result is true")
+                .pluck(:event_id)
+                .uniq
+
+    Calculations::V3::Calculation.where(event_id: event_ids).distinct
+  end
+
   def self.latest(key)
     where(key: key).order(:year).last
   end
@@ -189,7 +199,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   end
 
   def event_is_not_source_event
-    return unless event.present?
+    return if event.blank?
 
     if event == source_event || events.include?(event) || events.map(&:parent).include?(event)
       errors.add(:event, "cannot be source event")
