@@ -16,7 +16,7 @@
         <%= t race.rejection_reason, category: race.category_name %>
       </p>
       <% end -%>
-    <%= results_table event, race %>
+    <%= results_table event, race, results %>
     <p class="show_source_results"><%= link_to "Show source results", calculations_race_sources_path(race), class: "obvious" %></p>
   <% end -%>
 <% end -%>
