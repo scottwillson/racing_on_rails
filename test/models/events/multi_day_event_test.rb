@@ -631,29 +631,6 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal(WeeklySeries, MultiDayEvent.guess_type([pir, pir_2]), "WeeklySeries")
   end
 
-  test "children_with_results" do
-    event = MultiDayEvent.create!
-    assert_equal(0, event.children_with_results.size, "events_with_results: no child")
-
-    event.children.create!
-    assert_equal(0, event.children_with_results.size, "children_with_results: child with no results")
-
-    cat_4_women = FactoryBot.create(:category)
-    event.children.create!.races.create!(category: cat_4_women).results.create!
-    assert_equal(1, event.children_with_results.size, "cached: events_with_results: 1 children with results")
-    event = Event.find(event.id)
-    assert_equal(1, event.children_with_results.size, "refresh cache: children_with_results: 1 children with results")
-
-    event.children.create!.races.create!(category: cat_4_women).results.create!
-    event = Event.find(event.id)
-    assert_equal(2, event.children_with_results.size, "refresh cache: children_with_results: 2 children with results")
-
-    overall = event.create_overall
-    overall.races.create!(category: cat_4_women).results.create!
-    event = Event.find(event.id)
-    assert_equal(2, event.children_with_results.size, "refresh cache: children_with_results: 2 children with results + overall")
-  end
-
   test "completed" do
     parent_event = MultiDayEvent.create!
     assert_not(parent_event.completed?, "New event should not be completed")

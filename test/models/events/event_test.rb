@@ -311,33 +311,6 @@ class EventTest < ActiveSupport::TestCase
     end
   end
 
-  test "competition and event associations" do
-    series = Series.create!
-    child_event = series.children.create!
-    overall = series.create_overall
-
-    assert(series.valid?, series.errors.full_messages.join(", "))
-    assert(child_event.valid?, series.errors.full_messages.join(", "))
-    assert(overall.valid?, series.errors.full_messages.join(", "))
-
-    assert_equal_events([child_event], series.children.reload, "series.children should not include competitions")
-    assert_equal_events([overall], series.child_competitions.reload, "series.child_competitions should only include competitions")
-    assert_equal(overall, series.overall.reload, "series.overall")
-    assert_equal(0, series.competition_event_memberships.size, "series.competition_event_memberships")
-    assert_equal_events([], series.competitions.reload, "series.competitions")
-
-    assert_equal_events([], child_event.children.reload, "child_event.children")
-    assert_equal_events([], child_event.child_competitions.reload, "child_event.child_competitions")
-    assert_nil(child_event.overall, "child_event.overall")
-    assert_equal(1, child_event.competition_event_memberships.reload.size, "child_event.competition_event_memberships")
-    competition_event_membership = child_event.competition_event_memberships.first
-    assert_equal(child_event, competition_event_membership.event, "competition_event_membership.event")
-    assert_equal(overall, competition_event_membership.competition, "competition_event_membership.competition")
-
-    assert_equal_events([overall], child_event.competitions.reload, "competitions should only include competitions")
-    assert_equal_events([], child_event.children_with_results, "children_with_results")
-  end
-
   test "single day event categories" do
     event = SingleDayEvent.create!
     assert_equal [], event.categories, "categories for event with no races"
