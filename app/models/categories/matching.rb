@@ -6,16 +6,9 @@ module Categories
   module Matching
     extend ActiveSupport::Concern
 
-    # Find best matching competition race for category. Iterate through traits (weight, equipment, ages, gender, abilities) until there is a
-    # single match (or none).
-    def best_match_in_event(event)
-      debug "Category#best_match_in_event for #{name} in #{event.name} id: #{event.id}"
-      best_match_in event_categories
-    end
-
-    # Find best matching competition race for category. Iterate through traits (weight, equipment, ages, gender, abilities) until there is a
-    # single match (or none).
-    # Some times, a category's results need to be split into multiple categories based on the participant's age
+    # Find best matching competition race for category.
+    # Iterate through traits (weight, equipment, ages, gender, abilities) until there is a single match (or none).
+    # Sometimes, a category's results need to be split into multiple categories based on the participant's age
     def best_match_in(event_categories, result_age = nil)
       debug "Category#best_match_in for #{name} in #{event_categories.map(&:name).join(', ')}"
 
@@ -67,6 +60,8 @@ module Categories
 
       candidate_categories = if result_age && !senior? && candidate_categories.none? { |category| ages_begin.in?(category.ages) }
                                candidate_categories.select { |category| category.ages.include?(result_age) }
+                             elsif junior? && ages_begin == 0
+                               candidate_categories.select { |category| ages_end.in?(category.ages) }
                              else
                                candidate_categories.select { |category| ages_begin.in?(category.ages) }
                              end
