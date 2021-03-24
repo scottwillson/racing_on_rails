@@ -13,7 +13,6 @@ module Events
                after_add: :children_changed,
                after_remove: :children_changed
 
-      has_one :overall, foreign_key: "parent_id", dependent: :destroy, class_name: "Competitions::Overall"
       has_many :competition_event_memberships, class_name: "Competitions::CompetitionEventMembership"
       has_many :competitions, through: :competition_event_memberships, source: :competition, class_name: "Competitions::Competition"
 
@@ -27,8 +26,12 @@ module Events
       end
     end
 
+    def overall
+      children.detect { |child| child.calculation && child.name["Overall"] }
+    end
+
     def series_overall?
-      is_a?(WeeklySeries) || calculation.present?
+      is_a?(Series) || calculation.present?
     end
 
     # Set point value/factor for this Competition. Convenience method to hide CompetitionEventMembership complexity.
