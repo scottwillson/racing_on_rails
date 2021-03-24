@@ -41,8 +41,6 @@ module Calculations
       elsif many_results
         @results = event_results(event_id).paginate(page: @page, per_page: 200).order(:numeric_place)
         render :paginated
-      else
-        @results = event_results(event_id)
       end
     end
 

@@ -36,14 +36,22 @@
   <% ActiveSupport::Notifications.instrument "@event.results.racing_on_rails", event_id: @event.id, event_name: @event.name do %>
     <% @races.select(&:any_results?).select(&:visible?).reject(&:rejected?).sort.each do |race| %>
       <h3 class="race" id="race_<%= race.id %>"><%= link_to race.name, category_races_path(race.category) %><% if race.distance.present? && race.distance > 0 %> (<%= race.distance %> miles)<% end %></h3>
-      <%= results_table @event, race %>
+      <%- if @event.calculation -%>
+        <%= results_table @event, race, race.results.select(&:finished?) %>
+      <%- else -%>
+        <%= results_table @event, race %>
+      <%- end -%>
     <% end -%>
 
     <% if @races.none?(&:any_results?) && @event.overall.present? && @event.overall.races_with_results.present? %>
     <%= render partial: "races", locals: { races: @event.overall.races_with_results } %>
       <% @event.overall.races_with_results.select(&:visible?).reject(&:rejected?).sort.each do |race| %>
       <h3 class="race" id="race_<%= race.id %>"><%= link_to race.name, category_races_path(race.category) %></h3>
-      <%= results_table @event, race %>
+      <%- if @event.calculation -%>
+        <%= results_table @event, race, race.results.select(&:finished?) %>
+      <%- else -%>
+        <%= results_table @event, race %>
+      <%- end -%>
       <% end %>
     <% end %>
   <%- end -%>

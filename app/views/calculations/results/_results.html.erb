@@ -1,4 +1,4 @@
-<%- if results.empty? -%>
+<%- if results && results.empty? -%>
 <p class="event_notes">No results for <%= event.year %></p>
 <%- end -%>
 
@@ -16,7 +16,11 @@
         <%= t race.rejection_reason, category: race.category_name %>
       </p>
       <% end -%>
-    <%= results_table event, race, results %>
+      <%- if results -%>
+        <%= results_table event, race, results %>
+      <%- else -%>
+        <%= results_table event, race, results %>
+      <%- end -%>
     <p class="show_source_results"><%= link_to "Show source results", calculations_race_sources_path(race), class: "obvious" %></p>
   <% end -%>
 <% end -%>
