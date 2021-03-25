@@ -8,7 +8,7 @@ module Events
       before_destroy :validate_no_results
 
       scope :include_results, lambda {
-        includes(races: [:category, { results: :team }])
+        includes(races: [:category, { results: [:team] }])
       }
 
       scope :include_child_results, lambda {
