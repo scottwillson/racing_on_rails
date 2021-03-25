@@ -1,7 +1,7 @@
-<% @page_title = "Results: #{@event.date.year}: #{@event.full_name}: #{@race.name}: #{@result.name}" %>
+<% @page_title = "Results: #{@event.date.year}: #{@race.full_name}: #{@result.name}" %>
 
 <% cache cache_key(@result, @race) do %>
-  <h2><%= link_to @race.event.name, calculations_event_results_path(event_id: @race.event) %>: <%= @race.name %></h2>
+  <h2><%= link_to "#{@event.date.year} #{@race.full_name}", calculations_event_results_path(event_id: @race.event) %></h2>
   <% ActiveSupport::Notifications.instrument "@results.calculations.racing_on_rails", race_id: @race.id, race_name: @race.full_name do %>
     <%= render partial: "calculations/sources/result", locals: { calculation: @calculation, race: @race, result: @result } %>
   <%- end -%>
