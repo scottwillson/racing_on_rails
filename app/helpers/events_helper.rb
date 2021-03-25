@@ -23,15 +23,12 @@ module EventsHelper
     email
   end
 
-  # FIXME: Move to Event?
-  # TODO rename to event_phone
-  def link_to_event_phone(event)
+  def event_phone(event)
     return event.phone if event.phone.present?
 
     event.promoter.home_phone if event.promoter&.home_phone.present?
   end
 
-  # FIXME: move to event?
   # Only show link if flyer approved
   def public_link_to_flyer(event, text = nil)
     return unless event.respond_to?(:flyer)

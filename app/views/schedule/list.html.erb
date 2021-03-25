@@ -44,7 +44,7 @@
         <%- end -%>
         <% if event.tentative? %><span class="tentative">tentative</span><% end %>
       <td><%= link_to_event_email event %></td>
-      <td class="contact_phone"><%= link_to_event_phone event %></td>
+      <td class="contact_phone"><%= event_phone event %></td>
       <td class="discipline"><%= event.discipline -%></td>
       <td><%= event.city -%></td>
     </tr>

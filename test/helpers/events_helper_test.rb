@@ -48,22 +48,22 @@ class EventsHelperTest < ActionView::TestCase
 
   test "link to event phone" do
     event = SingleDayEvent.new
-    link_to_event_phone event
+    event_phone event
 
     promoter = Person.new
     event.promoter = promoter
-    assert link_to_event_phone(event).blank?, "No promoter or contact info should be blank"
+    assert event_phone(event).blank?, "No promoter or contact info should be blank"
 
     event.promoter.home_phone = "717 655-0000"
-    assert_equal "717 655-0000", link_to_event_phone(event), "Promoter home phone"
+    assert_equal "717 655-0000", event_phone(event), "Promoter home phone"
 
     event.phone = "212 333-1010"
-    assert_equal "212 333-1010", link_to_event_phone(event), "Event phone"
+    assert_equal "212 333-1010", event_phone(event), "Event phone"
 
     event.promoter.home_phone = nil
-    assert_equal "212 333-1010", link_to_event_phone(event), "Event phone"
+    assert_equal "212 333-1010", event_phone(event), "Event phone"
 
     event.promoter = nil
-    assert_equal "212 333-1010", link_to_event_phone(event), "Event phone"
+    assert_equal "212 333-1010", event_phone(event), "Event phone"
   end
 end

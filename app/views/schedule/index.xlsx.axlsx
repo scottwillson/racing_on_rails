@@ -13,7 +13,7 @@ xlsx_package.workbook.add_worksheet(name: "schedule.xlsx") do |sheet|
       event.city,
       event.state,
       event.promoter_name,
-      link_to_event_phone(event),
+      event_phone(event),
       event_email(event)
     ]
   end
