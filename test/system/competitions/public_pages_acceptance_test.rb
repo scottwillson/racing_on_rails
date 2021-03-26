@@ -37,7 +37,6 @@ module Competitions
     test "bar" do
       overall_discipline = FactoryBot.create(:discipline, name: "Overall")
       FactoryBot.create(:discipline, name: "Mountain Bike")
-      age_graded = FactoryBot.create(:discipline, name: "Age Graded")
       masters_men = FactoryBot.create(:category, name: "Masters Men")
       masters_30_34 = FactoryBot.create(:category, name: "Masters Men 30-34", ages: 30..34, parent: masters_men)
       FactoryBot.create(:category, name: "Masters Men 35-39", ages: 35..39, parent: masters_men)
@@ -70,7 +69,8 @@ module Competitions
       calculation.categories << masters_men
 
       calculation = ::Calculations::V3::Calculation.create!(
-        discipline: age_graded,
+        discipline: overall_discipline,
+        key: "age_graded_bar",
         group_by: :age,
         members_only: true,
         name: "Age-Graded BAR",
