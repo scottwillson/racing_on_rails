@@ -15,7 +15,7 @@ module Calculations
         raise(ActionController::RoutingError, "Calculation #{params[:key]} not found") unless calculation
 
         if calculation.event
-          return redirect_to(calculations_event_results_path(event_id: calculation.event_id))
+          return redirect_to(friendly_calculation_path(event_id: calculation.event_id))
         end
 
         flash[:info] = "No results for #{calculation.year}"

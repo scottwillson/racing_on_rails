@@ -100,14 +100,11 @@ module Competitions
       visit "/bar/2009"
       page.has_css?("title", text: /BAR/)
 
-      visit "/bar/2009/age_graded"
+      visit "/age_graded_bar/2009"
       assert_page_has_content "Masters Men"
 
       visit "/bar/#{Time.zone.today.year}"
       assert_page_has_content "Overall"
-
-      visit "/bar/#{Time.zone.today.year}/age_graded"
-      page.has_css?("title", text: /Age Graded/)
     end
 
     private

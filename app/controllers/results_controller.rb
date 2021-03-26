@@ -26,27 +26,26 @@ class ResultsController < ApplicationController
 
   # All Results for Event
   def event
-    return event_not_found(params[:event_id]) unless Event.exists?(id: params[:event_id])
+    if params[:key]
+      year = params[:year] || RacingAssociation.current.effective_year
+      calculation = Calculations::V3::Calculation.find_by(key: params[:key], year: year)
 
-    @event = Event.where(id: params[:event_id]).first
+      unless calculation
+        flash[:info] = "No results for #{year}"
+        calculation = Calculations::V3::Calculation.latest(params[:key])
+      end
 
-    case @event
-    when Competitions::AgeGradedBar
-      return redirect_to(calculations_events_path(key: :age_graded_bar, year: @event.year))
-    when Competitions::Bar
-      return redirect_to(calculations_events_path(key: :overall_bar, year: @event.year))
-    when Competitions::TeamBar
-      return redirect_to(calculations_events_path(key: :team_bar, year: @event.year))
-    when Competitions::Cat4WomensRaceSeries
-      return redirect_to(calculations_events_path(key: :cat4_womens_race_series, year: @event.year))
-    when Competitions::OverallBar
-      return redirect_to(calculations_events_path(key: :overall_bar, year: @event.year))
-    when Competitions::Ironman
-      return redirect_to(calculations_events_path(key: :ironman, year: @event.year))
-    when Competitions::OregonCup
-      return redirect_to(calculations_events_path(key: :oregon_cup, year: @event.year))
-    when nil
-      return event_not_found(params[:event_id])
+      raise(ActionController::RoutingError, "Calculation #{params[:key]} not found") unless calculation
+
+      if calculation.event
+        @event = calculation.event
+      else
+        flash[:info] = "No results for #{calculation.year}"
+        return redirect_to(calculation_path(calculation))
+      end
+    else
+      @event = Event.find_by(id: params[:event_id])
+      return redirect_to(schedule_path) unless @event
     end
 
     respond_to do |format|
@@ -153,10 +152,6 @@ class ResultsController < ApplicationController
     @all_events ||= Event.find_all_with_results(@year, @discipline)
   end
 
-  def competitions
-    @competitions ||= all_events.select { |e| e.is_a?(Competitions::Competition) }
-  end
-
   def events
     @events ||= all_events.reject { |e| e.is_a?(Competitions::Competition) || e.is_a?(WeeklySeries) }
   end
@@ -205,10 +200,5 @@ class ResultsController < ApplicationController
     @races = Race.where(event_id: @event.id).include_results
     @single_day_event_children = SingleDayEvent.where(parent_id: @event.id).include_child_results
     @children = Event.where(parent_id: @event.id).not_single_day_event.include_child_results
-  end
-
-  def event_not_found(id)
-    flash[:notice] = "Could not find event #{id}"
-    redirect_to schedule_path
   end
 end

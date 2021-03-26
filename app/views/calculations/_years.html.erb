@@ -3,7 +3,7 @@
     calculation.years.sort.reverse.each do |year|
       tabs.add(
         year.to_s.titleize,
-        calculations_key_year_event_results_path(key: calculation.key, year: year)
+        friendly_calculation_path(calculation.key, year)
       )
     end
   end -%>

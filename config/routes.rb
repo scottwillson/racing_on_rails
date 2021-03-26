@@ -136,9 +136,6 @@ Rails.application.routes.draw do
   patch "/admin/persons/update_attribute/:id" => "admin/people#update_attribute"
   get "/admin" => "admin/home#index", as: :admin_home
 
-  get "/bar" => "calculations/results#index", defaults: { key: :overall_bar }
-  get "/bar(/:year(/:discipline(/:category)))" => "calculations/results#index", defaults: { key: :overall_bar }
-
   get "/calculations/events(/:key(/:year))" => "calculations/results#index",
       as: "calculations_key_year_event_results",
       constraints: { year: /\d{4}/ }
@@ -157,8 +154,6 @@ Rails.application.routes.draw do
       resources :sources
     end
   end
-
-  get "/cat4_womens_race_series(/:year)" => "calculations/results#index", defaults: { key: :cat4_womens_race_series }, constraints: { year: /\d{4}/ }
 
   resources :duplicate_people
 
@@ -193,12 +188,6 @@ Rails.application.routes.draw do
   resources :photos
 
   resources :races
-
-  get "/ironman(/:year)" => "calculations/results#index", defaults: { key: :ironman }, constraints: { year: /\d{4}/ }
-  get "/oregon_cup(/:year)" => "calculations/results#index", defaults: { key: :oregon_cup }, constraints: { year: /\d{4}/ }
-  get "/oregon_tt_cup(/:year)" => "calculations/results#index", defaults: { key: :oregon_tt_cup }, constraints: { year: /\d{4}/ }
-  get "/oregon_womens_prestige_series(/:year)" => "calculations/results#index", defaults: { key: :oregon_womens_prestige_series }, constraints: { year: /\d{4}/ }
-  get "/owps(/:year)" => "calculations/results#index", defaults: { key: :oregon_womens_prestige_series }, constraints: { year: /\d{4}/ }
 
   get "/:slug/join" => "event_team_memberships#new"
 
@@ -281,6 +270,9 @@ Rails.application.routes.draw do
   resource :home, controller: :home
 
   get "*path", to: "pages#show", constraints: Pages::Constraint.new
+
+  get "/bar(/:year)" => "results#event", constraints: { year: /\d{4}/ }, defaults: { key: :overall_bar }
+  get "/:key(/:year)" => "results#event", constraints: Calculations::V3::Constraint.new, as: :friendly_calculation
 
   if Rails.env.test?
     resources :fake do

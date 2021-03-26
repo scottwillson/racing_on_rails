@@ -54,7 +54,6 @@ gem "zip-zip"
 
 group :development do
   gem "brakeman"
-  gem "bullet"
   gem "bundler-audit", github: "rubysec/bundler-audit"
   gem "capistrano", require: false
   gem "capistrano3-puma", github: "seuros/capistrano-puma", require: false
