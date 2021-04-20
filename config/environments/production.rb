@@ -14,7 +14,6 @@ Rails.application.configure do
   config.assets.compile                                     = false
   config.assets.js_compressor                               = Uglifier.new
   config.cache_classes                                      = true
-  config.cache_store                                        = :mem_cache_store, { pool_size: 5 }
   config.consider_all_requests_local                        = false
   config.eager_load                                         = true
   config.i18n.fallbacks                                     = true

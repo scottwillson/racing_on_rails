@@ -21,6 +21,7 @@ set :site_local_repo_url, "git@github.com:scottwillson/#{fetch(:application)}-lo
 set :puma_conf, "#{shared_path}/config/puma.rb"
 
 set :user, "app"
+set :puma_service_unit_user, "app"
 
 namespace :deploy do
   desc "Deploy association-specific customizations"
@@ -73,3 +74,4 @@ before "bundler:install", "deploy:local_code"
 before "bundler:install", "deploy:registration_engine"
 after "deploy:finished", "deploy:cache_error_pages"
 after "deploy:finished", "puma:restart"
+after "deploy:finished", "sidekiq:restart"

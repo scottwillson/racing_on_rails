@@ -221,6 +221,7 @@ GEM
       activesupport (>= 4.2.0)
     hashdiff (1.0.1)
     hashery (2.1.2)
+    hiredis (0.6.3)
     htmlentities (4.3.4)
     http-accept (1.7.0)
     http-cookie (1.0.3)
@@ -335,6 +336,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redcarpet (3.5.1)
+    redis (4.2.5)
     regexp_parser (2.1.1)
     request_store (1.5.0)
       rack (>= 1.4)
@@ -394,6 +396,10 @@ GEM
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
+    sidekiq (6.2.1)
+      connection_pool (>= 2.2.2)
+      rack (~> 2.0)
+      redis (>= 4.2.0)
     spreadsheet (1.2.8)
       ruby-ole
     spring (2.1.1)
@@ -481,6 +487,7 @@ DEPENDENCIES
   execjs
   factory_bot_rails
   hashdiff (>= 1.0.0.beta1, < 2.0.0)
+  hiredis
   jquery-rails
   jquery-ui-rails
   listen (>= 3.0.5, < 3.2)
@@ -517,6 +524,7 @@ DEPENDENCIES
   scrypt
   sd_notify
   selenium-webdriver
+  sidekiq
   spreadsheet
   spring
   spring-watcher-listen (~> 2.0.0)
