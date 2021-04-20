@@ -32,7 +32,9 @@ module RacingOnRails
       Rails.configuration.paths["config/database"] = ["local/config/database.yml", "config/database.yml"]
     end
 
-    config.exceptions_app = self.routes
+    config.exceptions_app = routes
+
+    config.active_job.queue_adapter = :sidekiq
 
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?
