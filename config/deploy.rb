@@ -9,6 +9,7 @@ set :branch, "main"
 
 set :bundle_jobs, 4
 set :bundle_without, %w[ development test ]
+set :bundle_binstubs, nil
 
 load "local/config/deploy.rb" if File.exist?("local/config/deploy.rb")
 load "local/config/deploy/#{fetch(:stage)}.rb" if File.exist?("local/config/deploy/#{fetch(:stage)}.rb")
@@ -69,9 +70,16 @@ task :compress_assets_7z do
   end
 end
 
+namespace :sidekiq do
+  task :restart do
+    on roles :app do
+      execute :sudo, "/bin/systemctl", "restart", "sidekiq"
+    end
+  end
+end
+
 after "deploy:normalize_assets", "compress_assets_7z"
 before "bundler:install", "deploy:local_code"
 before "bundler:install", "deploy:registration_engine"
 after "deploy:finished", "deploy:cache_error_pages"
-after "deploy:finished", "puma:restart"
 after "deploy:finished", "sidekiq:restart"
