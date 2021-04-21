@@ -31,8 +31,10 @@ module PageHelper
   private
 
   def find_page(path)
-    Thread.current[:pages] = Hash.new { |hash, key| hash[key] = Page.find_by(path: key) } if Thread.current[:pages].nil?
+    unless RequestLocals.exist?(:pages)
+      RequestLocals.store[:pages] = Hash.new { |hash, key| hash[key] = Page.find_by(path: key) }
+    end
 
-    Thread.current[:pages][path]
+    RequestLocals.fetch(:pages)[path] { nil }
   end
 end
