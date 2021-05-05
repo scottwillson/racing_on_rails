@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_15_224418) do
+ActiveRecord::Schema.define(version: 2021_04_25_005305) do
 
   create_table "#Tableau_01_sid_00026E8B_4_Group", id: false, charset: "utf8", force: :cascade do |t|
     t.string "Age (group)", limit: 21
@@ -879,6 +879,7 @@ ActiveRecord::Schema.define(version: 2021_03_15_224418) do
     t.boolean "string_value", default: false
     t.string "string_value_placeholder"
     t.boolean "team", default: false, null: false
+    t.string "after_purchase_job"
     t.index ["event_id"], name: "index_products_on_event_id"
     t.index ["seller_id"], name: "index_products_on_seller_id"
     t.index ["type"], name: "index_products_on_type"

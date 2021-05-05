@@ -6,6 +6,7 @@ require_relative "../config/environment"
 require "rails/test_help"
 require "mocha/minitest"
 require "authlogic/test_case"
+require "sidekiq/testing"
 require "test/enumerable_assertions"
 require "webmock/minitest"
 
@@ -15,6 +16,8 @@ class ActiveSupport::TestCase
 
   include Authlogic::TestCase
   include Test::EnumerableAssertions
+
+  Sidekiq::Testing.inline!
 
   setup :activate_authlogic, :reset_association, :reset_disciplines, :reset_person_current
 

@@ -19,6 +19,7 @@ gem "caxlsx_rails", ">=0.5.2"
 gem "chronic"
 gem "ckeditor"
 gem "damerau-levenshtein"
+gem "faraday"
 gem "hashdiff", [">= 1.0.0.beta1", "< 2.0.0"]
 gem "hiredis"
 gem "jquery-rails"
