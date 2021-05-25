@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: https://github.com/rubysec/bundler-audit.git
-  revision: 1cde5a13482892da487946de48554265f7023823
+  revision: 5514c6d87b0f05558515a4d215293fbae9b3849c
   specs:
     bundler-audit (0.8.0)
       bundler (>= 1.2.0, < 3)
@@ -142,8 +142,8 @@ GEM
     airbrussh (1.4.0)
       sshkit (>= 1.6.1, != 1.7.0)
     ast (2.4.2)
-    autoprefixer-rails (10.2.4.0)
-      execjs
+    autoprefixer-rails (10.2.5.1)
+      execjs (> 0)
     bcrypt (3.1.16)
     bindex (0.8.1)
     bootsnap (1.7.5)
@@ -207,13 +207,13 @@ GEM
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     erubi (1.10.0)
-    execjs (2.7.0)
+    execjs (2.8.1)
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
-    ffi (1.15.0)
+    ffi (1.15.1)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
@@ -269,7 +269,7 @@ GEM
     netrc (0.11.0)
     newrelic_rpm (7.0.0)
     nio4r (2.5.7)
-    nokogiri (1.11.3)
+    nokogiri (1.11.5)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     oj (3.11.5)
@@ -287,7 +287,7 @@ GEM
       ruby-rc4
       ttfunk
     public_suffix (4.0.6)
-    puma (5.3.0)
+    puma (5.3.2)
       nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
@@ -353,7 +353,7 @@ GEM
       nokogiri
       roo (>= 2.0.0, < 3)
       spreadsheet (> 0.9.0)
-    rubocop (1.14.0)
+    rubocop (1.15.0)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -402,7 +402,7 @@ GEM
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
-    spreadsheet (1.2.8)
+    spreadsheet (1.2.9)
       ruby-ole
     spring (2.1.1)
     spring-watcher-listen (2.0.1)
@@ -419,7 +419,7 @@ GEM
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     ssrf_filter (1.0.7)
-    stripe (5.32.1)
+    stripe (5.33.0)
     tabular (0.4.8)
     thor (1.1.0)
     tilt (2.0.10)
@@ -442,11 +442,11 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (>= 1.3.0)
       selenium-webdriver (>= 3.0, < 4.0)
-    webmock (3.12.2)
+    webmock (3.13.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    websocket-driver (0.7.3)
+    websocket-driver (0.7.4)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     will_paginate (3.3.0)
