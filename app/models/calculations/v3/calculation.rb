@@ -75,7 +75,6 @@ class Calculations::V3::Calculation < ApplicationRecord
     year = RacingAssociation.current.effective_year
     source_event_keys = Calculations::V3::Calculation.where(year: year).pluck(:source_event_keys).flatten.uniq
     Calculations::V3::Calculation.where(year: year).where.not(key: source_event_keys).each(&:calculate!)
-    ApplicationController.expire_cache
   end
 
   def self.with_results(year = RacingAssociation.current.effective_year)
@@ -142,6 +141,7 @@ class Calculations::V3::Calculation < ApplicationRecord
       benchmark "save_results.#{key}.calculate.calculations" do
         save_results event_categories
       end
+      touch
       GC.start
       expire_cache
     end
