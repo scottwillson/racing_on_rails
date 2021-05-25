@@ -53,7 +53,7 @@ module Calculations::V3::CalculationConcerns::Cache
 
   def result_team(result)
     if team?
-      return result.participant
+      return @teams[result.participant_id]
     end
 
     @people[result.participant_id].team
