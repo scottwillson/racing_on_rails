@@ -141,7 +141,7 @@ class Calculations::V3::Calculation < ApplicationRecord
       benchmark "save_results.#{key}.calculate.calculations" do
         save_results event_categories
       end
-      touch
+      event.touch
       GC.start
       expire_cache
     end
