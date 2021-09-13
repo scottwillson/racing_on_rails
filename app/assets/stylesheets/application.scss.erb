@@ -240,31 +240,6 @@ h4 {
   }
 }
 
-.table th, .table td {
-  padding-bottom: 7px;
-}
-
-.table-striped td {
-  border-bottom: 1px solid $table-border;
-  border-top: none;
-}
-
-.table-striped tbody tr:first-child td {
-  border-top: 2px solid $table-border;
-}
-
-.table-striped tbody tr:last-child td {
-  border-bottom: 2px solid $table-border;
-}
-
-.table-striped tbody tr:nth-child(even) td, .table-striped tbody tr:nth-child(even) td:hover {
-  background-color: lighten($warm-gray, 4);
-}
-
-.table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) td:hover {
-  background-color: $warm-gray;
-}
-
 .table > thead > tr > th {
   border-bottom: none;
 }
@@ -284,9 +259,33 @@ h4 {
   color: $near-black;
 }
 
+.table>thead>tr>th, .table>thead>tr>td, .table>tbody>tr>th, .table>tbody>tr>td, .table>tfoot>tr>th, .table>tfoot>tr>td {
+  padding: 12px 8px;
+}
+
+.table-striped td {
+  border-bottom: none;
+}
+
+.table-striped tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table-striped tbody tr:last-child td {
+  border-bottom: 2px solid $table-border;
+}
+
+.table-striped tbody tr:nth-child(even) td, .table-striped tbody tr:nth-child(even) td:hover {
+  background-color: lighten($warm-gray, 4);
+}
+
+.table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) td:hover {
+  background-color: $warm-gray;
+}
+
 .table-striped.table th {
-  padding-bottom: 3px;
-  padding-top: 4px;
+  padding: 12px 8px;
+  font-size: 16px;
 }
 
 .table-striped td.icon {
