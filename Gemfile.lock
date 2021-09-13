@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/amerine/acts_as_tree.git
-  revision: da799a211d3d8145763966f8ca64c5bcfe6a2c1a
+  revision: 7880fd2f70e9e7640518d15b4ac120c29e0f26ba
   specs:
     acts_as_tree (2.9.1)
       activerecord (>= 3.0.0)
@@ -14,9 +14,9 @@ GIT
 
 GIT
   remote: https://github.com/rubysec/bundler-audit.git
-  revision: 05d7c4979e3ccdd17ae731b8ac29337dd747e653
+  revision: ebfca35b2e47eae7aaba42f0e37d61bb3e26049e
   specs:
-    bundler-audit (0.9.0)
+    bundler-audit (0.9.0.1)
       bundler (>= 1.2.0, < 3)
       thor (~> 1.0)
 
@@ -38,9 +38,9 @@ GIT
 
 GIT
   remote: https://github.com/seuros/capistrano-puma.git
-  revision: 285b45f51d0662e760cc5e75f15614589a2be170
+  revision: f9801f6762d152c5d9da18ce726c7561cc4f9a8b
   specs:
-    capistrano3-puma (5.0.4)
+    capistrano3-puma (5.2.0)
       capistrano (~> 3.7)
       capistrano-bundler
       puma (>= 4.0, < 6.0)
@@ -142,7 +142,7 @@ GEM
     airbrussh (1.4.0)
       sshkit (>= 1.6.1, != 1.7.0)
     ast (2.4.2)
-    autoprefixer-rails (10.3.1.0)
+    autoprefixer-rails (10.3.3.0)
       execjs (~> 2)
     bcrypt (3.1.16)
     bindex (0.8.1)
@@ -213,7 +213,7 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
-    ffi (1.15.3)
+    ffi (1.15.4)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
@@ -226,7 +226,7 @@ GEM
     http-accept (1.7.0)
     http-cookie (1.0.4)
       domain_name (~> 0.5)
-    httparty (0.18.1)
+    httparty (0.19.0)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
     i18n (1.8.10)
@@ -254,7 +254,7 @@ GEM
     method_source (1.0.0)
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2021.0704)
+    mime-types-data (3.2021.0901)
     mini_magick (4.11.0)
     mini_mime (1.1.1)
     mini_portile2 (2.6.1)
@@ -269,15 +269,15 @@ GEM
     netrc (0.11.0)
     newrelic_rpm (7.2.0)
     nio4r (2.5.8)
-    nokogiri (1.12.3)
+    nokogiri (1.12.4)
       mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
-    oj (3.13.2)
+    oj (3.13.6)
     orm_adapter (0.5.0)
-    paper_trail (12.0.0)
+    paper_trail (12.1.0)
       activerecord (>= 5.2)
       request_store (~> 1.1)
-    parallel (1.20.1)
+    parallel (1.21.0)
     parser (3.0.2.0)
       ast (~> 2.4.1)
     pdf-reader (2.5.0)
@@ -353,7 +353,7 @@ GEM
       nokogiri
       roo (>= 2.0.0, < 3)
       spreadsheet (> 0.9.0)
-    rubocop (1.20.0)
+    rubocop (1.21.0)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -369,7 +369,7 @@ GEM
     rubocop-performance (1.11.5)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
-    rubocop-rails (2.11.3)
+    rubocop-rails (2.12.2)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.7.0, < 2.0)
