@@ -4,7 +4,7 @@ module Categories
   module NameNormalization
     extend ActiveSupport::Concern
 
-    RACING_ASSOCIATIONS = %( ABA ATRA CBRA GBRA MBRA NABRA OBRA WSBA )
+    RACING_ASSOCIATIONS = %w[ ABA ATRA CBRA GBRA MBRA NABRA OBRA WSBA ].freeze
 
     included do
       def self.find_or_create_by_normalized_name(name)
@@ -151,7 +151,9 @@ module Categories
               token.gsub(/tt/i, "TT")
             elsif token[/\Attt-?\w*/i] || token[/\A-?ttt\w*/i]
               token.gsub(/ttt/i, "TTT")
-            elsif token.in?(RACING_ASSOCIATIONS) || token.in?(%w[ MTB SS TT TTT ]) || token[/\A[A-Z][a-z]/]
+            elsif token.in?(%w[ MTB SS TT TTT ]) || token[/\A[A-Z][a-z]/]
+              token
+            elsif token.in?(RACING_ASSOCIATIONS) || RACING_ASSOCIATIONS.any? { |association| association.in?(token) }
               token
             else
               token.downcase.gsub(/\A[a-z]/) { $&.upcase }.gsub(/[[:punct:]][a-z]/) { $&.upcase }
