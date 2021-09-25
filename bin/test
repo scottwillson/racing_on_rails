@@ -2,8 +2,6 @@
 
 set -e
 
-spring stop
-
 bin/test_ruby
 bundle exec rails test
 bundle exec rails test registration_engine/test/{controllers,helpers,integration,mailers,models}/**/*_test.rb
