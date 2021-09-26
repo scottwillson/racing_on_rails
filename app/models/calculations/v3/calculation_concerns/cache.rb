@@ -4,6 +4,12 @@
 module Calculations::V3::CalculationConcerns::Cache
   extend ActiveSupport::Concern
 
+  def clear_cache
+    @category_names = nil
+    @people = nil
+    @teams = nil
+  end
+
   def populate_source_result_category_names
     @category_names = {}
     ::Category.pluck(:id, :name).each do |id, name|

@@ -48,6 +48,19 @@ module Competitions
       assert_best_match_in [u10_junior, junior_men_9_12], junior_men_9_12, event, 10
     end
 
+    test "OJCS 2021" do
+      event = FactoryBot.create(:event)
+      junior_open_123 = Category.find_or_create_by_normalized_name("Junior Open 1/2/3")
+      event.races.create!(category: junior_open_123)
+      junior_open_345_9_12 = Category.find_or_create_by_normalized_name("Junior Open 3/4/5 9-12")
+      event.races.create!(category: junior_open_345_9_12)
+
+      junior_open_345_11_12 = Category.find_or_create_by_normalized_name("Junior Open 3/4/5 11-12")
+
+      assert_best_match_in [junior_open_345_9_12, junior_open_345_11_12], junior_open_345_9_12, event
+      assert_best_match_in [junior_open_345_9_12, junior_open_345_11_12], junior_open_345_9_12, event, 11
+    end
+
     test "ability only" do
       event = FactoryBot.create(:event)
       event.races.create!(category: @cat_1)

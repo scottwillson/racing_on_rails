@@ -118,17 +118,20 @@ module Categories
         return ability_category if ability_category.include?(self)
       end
 
+      # Edge case for next two matchers: don't choose Junior Open 1/2/3 over Junior Open 3/4/5 9-12 for Junior Open 3/4/5 11-12,
+      # but still match Junior Women with Category 1
+
       # Choose highest ability category
       highest_ability = candidate_categories.map(&:ability_begin).min
-      if candidate_categories.one? { |category| category.ability_begin == highest_ability }
-        highest_ability_category = candidate_categories.detect { |category| category.ability_begin == highest_ability }
+      if candidate_categories.one? { |category| category.ability_begin == highest_ability && (!category.junior? || category.ages.size <= ages.size) }
+        highest_ability_category = candidate_categories.detect { |category| category.ability_begin == highest_ability && (!category.junior? || category.ages.size <= ages.size) }
         debug "highest ability: #{highest_ability_category.name}"
         return highest_ability_category if highest_ability_category.include?(self)
       end
 
       # Choose highest ability by gender
-      if candidate_categories.one? { |category| category.ability_begin == highest_ability && category.gender == gender }
-        highest_ability_category = candidate_categories.detect { |category| category.ability_begin == highest_ability && category.gender == gender }
+      if candidate_categories.one? { |category| category.ability_begin == highest_ability && category.gender == gender && (!category.junior? || category.ages.size <= ages.size) }
+        highest_ability_category = candidate_categories.detect { |category| category.ability_begin == highest_ability && category.gender == gender && (!category.junior? || category.ages.size <= ages.size) }
         debug "highest ability for gender: #{highest_ability_category.name}"
         return highest_ability_category if highest_ability_category.include?(self)
       end
@@ -169,6 +172,7 @@ module Categories
           (category.ages_end - category.ages_begin) == minimum_range
         end
 
+        debug "narrow junior ages: #{candidate_categories.map(&:name).join(', ')}"
         return candidate_categories.first if one_match?(candidate_categories)
       end
 

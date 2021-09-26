@@ -122,6 +122,8 @@ class Calculations::V3::Calculation < ApplicationRecord
   # serialize to DB
   def calculate!(source_calculations: true)
     ActiveSupport::Notifications.instrument "calculate.calculations.#{name}.racing_on_rails" do
+      clear_cache
+      clear_source_results_cache
       calculate_source_calculations if source_calculations
       add_event!
       update_event_dates

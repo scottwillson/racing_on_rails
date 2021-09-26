@@ -14,6 +14,16 @@ module Calculations::V3::CalculationConcerns::SourceResults
     @associations_by_name
   end
 
+  def clear_source_results_cache
+    @associations_by_name = nil
+    @model_calculations_events = nil
+    @model_categories = nil
+    @model_events = nil
+    @model_source_events = nil
+    @source_result_category_names = nil
+    @source_result_events = nil
+  end
+
   def model_categories
     @model_categories ||= Hash.new do |cache, id|
       name = source_result_category_name(id)
