@@ -126,48 +126,49 @@ h2 a:hover, h3 a:hover {
   background-color: $highlight-color;
 }
 
-.navbar-header {
-  align-items: center;
-  display: flex;
-  padding-left: 15px;
-  padding-right: 15px;
+.navbar li {
+  text-transform: uppercase;
 }
 
-.navbar-brand {
-  height: 67px;
-  flex: auto;
-  padding-bottom: 0px;
-  padding-left: 34px;
-  padding-right: 0px;
-  padding-top: 0px;
+.navbar li .dropdown-menu li {
+  text-transform: none;
 }
 
-.navbar-brand a {
-}
+@media (max-width: 767px) {
+  .navbar-header {
+    align-items: center;
+    display: flex;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
 
-.navbar-brand img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  height: 67px;
-  line-height: 67px;
-}
+  .navbar-brand {
+    height: 67px;
+    flex: auto;
+    padding-bottom: 0px;
+    padding-left: 34px;
+    padding-right: 0px;
+    padding-top: 0px;
+  }
 
-.navbar-toggle {
-  flex: none;
-  margin-right: 0px;
-  padding-right: 0px;
-  text-align: right;
+  .navbar-brand img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 67px;
+    line-height: 67px;
+  }
+
+  .navbar-toggle {
+    flex: none;
+    margin-right: 0px;
+    padding-right: 0px;
+    text-align: right;
+  }
 }
 
 .icon-bar {
   background-color: black;
-}
-
-@media (max-width: 767px) {
-  a.navbar-brand {
-    line-height: 36px;
-  }
 }
 
 .navbar {
