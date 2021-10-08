@@ -92,6 +92,11 @@ class Team < ApplicationRecord
     end
   end
 
+  # Callback
+  def before_merge(_other_person)
+    true
+  end
+
   # Moves another Team's aliases, results, and people to this Team,
   # and delete the other Team.
   # Also adds the other Team's name as a new alias
