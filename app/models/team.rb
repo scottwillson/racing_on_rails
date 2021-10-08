@@ -101,6 +101,9 @@ class Team < ApplicationRecord
 
     Team.transaction do
       reload
+      team = Team.includes(:aliases, :people, :results).find(team.id)
+      before_merge team
+
       team.reload
       results.reload
       team.results.reload
