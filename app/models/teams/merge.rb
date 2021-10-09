@@ -20,7 +20,9 @@ module Teams
         team = Team.includes(:aliases, :people, :results).find(team.id)
         before_merge team
 
-        team.create_team_for_historical_results!
+        create_names_for_historical_results!(team)
+        self.member_from = team.member_from if member_from.nil? || (team.member_from && team.member_from < member_from)
+        self.member_to = team.member_to if member_to.nil? || (team.member_to && team.member_to > member_to)
 
         team.event_teams.each do |event_team|
           event_team.event_team_memberships.each do |event_team_membership|
@@ -33,8 +35,10 @@ module Teams
 
         aliases << team.aliases
         events << team.events
+        names << team.names
         results << team.results
         people << team.people
+        versions << team.versions
 
         Team.delete team.id
 
@@ -44,23 +48,15 @@ module Teams
       end
     end
 
-    # Preserve team names in old results by creating a new Team for them, and moving the results.
-    #
-    # Results are preserved by creating a new Team from the most recent Name. If a Team
-    # already exists with the Name's name, results will move to existing Team.
-    # This may be unxpected, can't think of a better way to handle it in this model.
-    def create_team_for_historical_results!
-      name = names.sort_by(&:year).reverse!.first
-
-      if name
-        team = Team.find_or_create_by(name: name.name)
-        results.each do |r|
-          team.results << r if r.date.year <= name.year
-        end
-
-        name.destroy
-        names.each do |n|
-          team.names << n unless name == n
+    # Preserve team names in old results
+    def create_names_for_historical_results!(other_team)
+      other_team.results.pluck(:year).uniq
+                .reject { |year| year == RacingAssociation.current.year }
+                .each do |year|
+        year_name = names.find_by(year: year)&.name
+        other_team_year_name = other_team.names.find_by(year: year)&.name
+        if other_team_year_name != name && !year_name
+          names.create!(name: other_team_year_name, year: year)
         end
       end
     end

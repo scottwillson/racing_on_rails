@@ -87,15 +87,46 @@ module Teams
       assert_equal(1, team_to_keep.names.count, "Target team historical names")
       assert_equal(team_to_keep_last_year, team_to_keep.names.first, "Target team historical name")
 
-      # If the merged team has historical names, those need to become teams with results from those years
-      team_to_merge_last_year = Team.find_by(name: "Team o IRCB")
-      assert_not_nil(team_to_merge_last_year, "Merged team's historical name should become a new team")
-      assert_equal(1, team_to_merge_last_year.results.count, "Merged team's historical name results")
-      assert_equal(team_to_merge_last_year_result, team_to_merge_last_year.results.first, "Merged team's historical name results")
-      assert_equal(0, team_to_merge_last_year.names.count, "Merged team's historical name historical names")
+      # Ensure old results have proper team name
+      assert_equal("Team o IRCB", team_to_merge_last_year_result.team_name)
 
-      assert_equal(3, team_to_keep.results.count, "Target team's results")
+      assert_equal(4, team_to_keep.results.count, "Target team's results")
       assert_equal(1, team_to_keep.names.count, "Target team's historical names")
+      assert_equal(1, team_to_keep.aliases.count, "Target team's aliases")
+    end
+
+    test "merge with names no historical name" do
+      current_year = Time.zone.today.year
+      last_year = current_year - 1
+
+      team_to_keep = Team.create!(name: "Team Oregon/River City Bicycles")
+
+      event = SingleDayEvent.create!
+      senior_men = FactoryBot.create(:category)
+      event.races.create!(category: senior_men).results.create!(place: "10", team: team_to_keep)
+
+      event = SingleDayEvent.create!(date: Date.new(last_year))
+      event.races.create!(category: senior_men).results.create!(place: "2", team: team_to_keep)
+
+      team_to_merge = Team.create!(name: "Team O/RCB")
+      team_to_merge.names.create!(name: "Team o IRCB", year: last_year)
+
+      event = SingleDayEvent.create!
+      event.races.create!(category: senior_men).results.create!(place: "4", team: team_to_merge)
+
+      event = SingleDayEvent.create!(date: Date.new(last_year))
+      team_to_merge_last_year_result = event.races.create!(category: senior_men).results.create!(place: "19", team: team_to_merge)
+
+      team_to_keep.merge(team_to_merge)
+
+      assert_not(Team.exists?(team_to_merge.id), "Should delete merged team")
+      assert_equal(1, team_to_keep.names.count, "Target team historical names")
+      assert_equal("Team o IRCB", team_to_keep.names.first.name, "Target team historical name")
+
+      # Ensure old results have proper team name
+      assert_equal("Team o IRCB", team_to_merge_last_year_result.team_name)
+
+      assert_equal(4, team_to_keep.results.count, "Target team's results")
       assert_equal(1, team_to_keep.aliases.count, "Target team's aliases")
     end
 
