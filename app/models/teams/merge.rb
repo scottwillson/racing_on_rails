@@ -54,8 +54,8 @@ module Teams
                 .reject { |year| year == RacingAssociation.current.year }
                 .each do |year|
         year_name = names.find_by(year: year)&.name
-        other_team_year_name = other_team.names.find_by(year: year)&.name
-        if other_team_year_name != name && !year_name
+        other_team_year_name = other_team.name(year)
+        if other_team_year_name != name && !year_name && other_team_year_name.present?
           names.create!(name: other_team_year_name, year: year)
         end
       end
