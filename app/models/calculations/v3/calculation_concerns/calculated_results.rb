@@ -73,6 +73,7 @@ module Calculations::V3::CalculationConcerns::CalculatedResults
     # to_s important. Otherwise, a change from 3 to "3" triggers a DB update.
     existing_result.place = result.place.to_s
     existing_result.points = result.points
+    existing_result.rejected = result.rejected?
     existing_result.rejection_reason = result.rejection_reason
     existing_result.team_id = result_team_id(result)
 
