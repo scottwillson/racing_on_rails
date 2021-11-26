@@ -147,7 +147,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
     benchmark "source_events.#{key}.calculate.calculations" do
       # Series overall like Cross Crusade, Tabor
       if source_event
-        source_event.children
+        source_event.children.where(type: SingleDayEvent)
 
       # BAR: Overall calculated from Criterium, Road, etc.
       elsif source_event_keys.any?
