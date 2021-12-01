@@ -251,21 +251,23 @@ class Calculations::V3::CalculationTest < ActiveSupport::TestCase
   end
 
   test ".with_results" do
-    Calculations::V3::Calculation.create!
-    assert Calculations::V3::Calculation.with_results.empty?
+    Timecop.freeze(2021, 11) do
+      Calculations::V3::Calculation.create!
+      assert Calculations::V3::Calculation.with_results.empty?
 
-    FactoryBot.create(:result, person: FactoryBot.create(:person))
-    FactoryBot.create(:result, place: 40)
+      FactoryBot.create(:result, person: FactoryBot.create(:person))
+      FactoryBot.create(:result, place: 40)
 
-    calculation = Calculations::V3::Calculation.create!(
-      members_only: true,
-      name: "Ironman",
-      points_for_place: 1
-    )
-    calculation.calculate!
+      calculation = Calculations::V3::Calculation.create!(
+        members_only: true,
+        name: "Ironman",
+        points_for_place: 1
+      )
+      calculation.calculate!
 
-    assert_equal [calculation], Calculations::V3::Calculation.with_results
-    assert_equal [calculation], Calculations::V3::Calculation.with_results(calculation.year)
-    assert Calculations::V3::Calculation.with_results(1999).empty?
+      assert_equal [calculation], Calculations::V3::Calculation.with_results
+      assert_equal [calculation], Calculations::V3::Calculation.with_results(calculation.year)
+      assert Calculations::V3::Calculation.with_results(1999).empty?
+    end
   end
 end
