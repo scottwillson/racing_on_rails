@@ -63,6 +63,11 @@ module People
       date_of_birth >= Date.new(21.years.ago.year, 1, 1) if date_of_birth
     end
 
+    # 23 years old or under (U23)
+    def under_23?
+      date_of_birth >= Date.new(23.years.ago.year, 1, 1) if date_of_birth
+    end
+
     # Over 18 years old
     def senior?
       date_of_birth < Date.new(18.years.ago.year, 1, 1) if date_of_birth
