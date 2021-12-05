@@ -1,9 +1,10 @@
 <tr>
   <td class="date">
-    <%= calculations_event.event.date_range_s %>
+    <%= f.object.event&.date_range_s %>
   </td>
   <td class="name">
-    <%= calculations_event.event.name %>
+    <%= f.object.event&.name %>
   </td>
-  <td><%= calculations_event.multiplier %></td>
+  <td><%= f.object.multiplier %></td>
 </tr>
+<%# TOOD: Remove safe nav. Why is there a calc event without an event? %>

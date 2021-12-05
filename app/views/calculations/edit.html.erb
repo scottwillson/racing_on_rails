@@ -18,17 +18,23 @@
           <th>Maximum Events</th>
           <th>Reject</th>
         </tr>
-        <%= f.fields_for :calculation_categories do |calculation_category_fields| %>
-          <%#= render partial: "editable_calculation_category", object: calculation_category_fields %>
+        <%= f.fields_for :calculation_categories, @calculation.calculation_categories.sort_by(&:name) do |calculation_category_fields| %>
+          <%= render(
+                partial: "editable_calculation_category",
+                object: calculation_category_fields,
+                as: :f
+          ) %>
         <% end -%>
       <% end %>
       <h3>Events</h3>
       <%= table id: "calculations_events", collection: @calculation.calculations_events, columns: 1 do %>
         <tr>
+          <th class="date">Date</th>
           <th>Name</th>
+          <th>Multiplier</th>
         </tr>
-        <%= f.fields_for :calculations_events do |calculations_event_fields| %>
-          <%#= render partial: "editable_calculations_event", object: calculations_event_fields, as: :calculations_event %>
+        <%= f.fields_for :calculations_events, @calculation.calculations_events.sort_by(&:date) do |calculations_event_fields| %>
+          <%= render partial: "editable_calculations_event", object: calculations_event_fields, as: :f %>
         <% end -%>
       <% end %>
     </div>
