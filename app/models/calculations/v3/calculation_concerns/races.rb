@@ -28,8 +28,8 @@ module Calculations::V3::CalculationConcerns::Races
 
       if obsolete_races.any?
         race_ids = obsolete_races.map(&:id)
-        ::ResultSource.where("calculated_result_id in (select id from results where race_id in (?))", race_ids).delete_all
-        ::Result.where("race_id in (?)", race_ids).delete_all
+        ::ResultSource.where("calculated_result_id in (select id from results where race_id in (?) and competition_result is true)", race_ids).delete_all
+        ::Result.where(race_id: race_ids, competition_result: true).delete_all
       end
       obsolete_races.each { |race| event.races.delete(race) }
     end
