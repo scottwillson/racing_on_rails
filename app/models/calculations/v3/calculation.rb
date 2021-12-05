@@ -71,8 +71,7 @@ class Calculations::V3::Calculation < ApplicationRecord
   attribute :discipline_id, :integer, default: -> { ::Discipline[RacingAssociation.current.default_discipline]&.id }
   attribute :event_notes, :text, default: -> { "" }
 
-  def self.calculate!
-    year = RacingAssociation.current.effective_year
+  def self.calculate!(year: RacingAssociation.current.effective_year)
     source_event_keys = Calculations::V3::Calculation.where(year: year).pluck(:source_event_keys).flatten.uniq
     Calculations::V3::Calculation.where(year: year).where.not(key: source_event_keys).each(&:calculate!)
   end
