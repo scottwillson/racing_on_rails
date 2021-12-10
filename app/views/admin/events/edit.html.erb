@@ -143,20 +143,6 @@
         <%= f.labelled_check_box :atra_points_series, "ATRA National Championship Series (NCS)" if RacingAssociation.current.competitions.include?(:atra_points_series) %>
         <% end -%>
 
-        <% if RacingAssociation.current.competitions.include?(:bar) -%>
-        <%= f.labelled_select :bar_points,
-              bar_points_and_labels,
-              label: { text: "BAR Points", class: "control-label col-sm-4" },
-              editable: administrator? %>
-        <%- end %>
-
-        <% if RacingAssociation.current.competitions.include?(:rider_rankings) -%>
-        <%= f.labelled_select :bar_points,
-              bar_points_and_labels,
-              label: { text: "Rankings Pts", class: "control-label col-sm-4" },
-              editable: administrator? %>
-        <%- end %>
-
         <%= f.labelled_text_field :flyer, nil, editable: administrator?, class: "form-control" %>
         <% if administrator? -%>
         <%= f.labelled_check_box :flyer_approved, nil %>

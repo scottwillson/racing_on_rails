@@ -23,21 +23,19 @@ module Admin
         event = FactoryBot.create(:event)
 
         assert_not_equal("Banana Belt One", event.name, "name")
-        assert_not_equal(2, event.bar_points, "bar_points")
         assert_not_equal("Cyclocross", event.discipline, "discipline")
 
         post :update,
              params: {
                "commit" => "Save",
                id: event.to_param,
-               "event" => { "bar_points" => "2", "name" => "Banana Belt One", "discipline" => "Cyclocross" }
+               "event" => { "name" => "Banana Belt One", "discipline" => "Cyclocross" }
              }
         assert_redirected_to edit_admin_event_path(event)
 
         event.reload
         assert_equal("Banana Belt One", event.name, "name")
         assert_equal("Cyclocross", event.discipline, "discipline")
-        assert_equal(2, event.bar_points, "bar_points")
       end
 
       test "update nil disciplines" do
@@ -50,7 +48,7 @@ module Admin
              params: {
                "commit" => "Save",
                id: event.to_param,
-               "event" => { "bar_points" => "2", "name" => "Banana Belt One", "discipline" => "Road" }
+               "event" => { "name" => "Banana Belt One", "discipline" => "Road" }
              }
         assert_redirected_to edit_admin_event_path(event)
 
@@ -68,7 +66,7 @@ module Admin
              params: {
                "commit" => "Save",
                id: event.to_param,
-               "event" => { "bar_points" => "2", "name" => "Banana Belt One", "discipline" => "Road" }
+               "event" => { "name" => "Banana Belt One", "discipline" => "Road" }
              }
         assert_redirected_to edit_admin_event_path(event)
 
