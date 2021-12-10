@@ -10,22 +10,6 @@
       <%= f.hidden_field :event_id %>
       <%= f.labelled_text_field :category_name, nil, class: @race.new_record? ? "wants_focus col-sm-12 form-control" : "col-sm-12 form-control" %>
 
-      <% if RacingAssociation.current.competitions.include?(:bar) -%>
-      <%= f.labelled_text :bar_category, competition_category_name(@race), "BAR Category" %><br/><br/>
-      <%= f.labelled_select :bar_points,
-            bar_points_and_labels,
-            label: { text: "BAR Points", class: "control-label col-sm-4" },
-            editable: administrator? %>
-      <%- end %>
-
-      <% if RacingAssociation.current.competitions.include?(:rider_rankings) -%>
-      <%= f.labelled_text :bar_category, competition_category_name(@race), "Rankings Cat" %><br/><br/>
-      <%= f.labelled_select :bar_points,
-            bar_points_and_labels,
-            label: { text: "Ranking Points", class: "control-label col-sm-4" },
-            editable: administrator? %>
-      <%- end %>
-
       <% if RacingAssociation.current.sanctioning_organizations.many? -%>
       <%= f.labelled_select :sanctioned_by, RacingAssociation.current.sanctioning_organizations %>
       <%- end %>

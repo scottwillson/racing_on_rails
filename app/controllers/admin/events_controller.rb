@@ -335,7 +335,6 @@ module Admin
         :human_registration_ends_on,
         :human_registration_ends_at_time,
         :instructional,
-        :ironman,
         :junior_price,
         :membership_required,
         :name,
