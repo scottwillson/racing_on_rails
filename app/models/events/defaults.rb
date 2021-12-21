@@ -65,19 +65,22 @@ module Events
     end
 
     def attributes_for_duplication
-      _attributes = attributes.dup
-      _attributes.delete "created_at"
-      _attributes.delete "id"
-      _attributes.delete "slug"
-      _attributes.delete "updated_at"
-      _attributes.delete "year"
-      _attributes.delete "created_by_id"
-      _attributes.delete "created_by_name"
-      _attributes.delete "created_by_type"
-      _attributes.delete "updated_by_id"
-      _attributes.delete "updated_by_name"
-      _attributes.delete "updated_by_type"
-      _attributes
+      allowed_attributes = attributes.dup
+      allowed_attributes.delete "atra_points_series"
+      allowed_attributes.delete "bar_points"
+      allowed_attributes.delete "created_at"
+      allowed_attributes.delete "created_by_id"
+      allowed_attributes.delete "created_by_name"
+      allowed_attributes.delete "created_by_type"
+      allowed_attributes.delete "id"
+      allowed_attributes.delete "ironman"
+      allowed_attributes.delete "slug"
+      allowed_attributes.delete "updated_at"
+      allowed_attributes.delete "updated_by_id"
+      allowed_attributes.delete "updated_by_name"
+      allowed_attributes.delete "updated_by_type"
+      allowed_attributes.delete "year"
+      allowed_attributes
     end
 
     def default_bar_points
