@@ -201,7 +201,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
       # Simplify once we're 100% using Calculations and skip old Competitions
       event_ids = events.map(&:id)
       source_results = Result
-                       .includes(:person, :race)
+                       .includes(:person, :race, :team)
                        .joins(race: :event)
                        .where.not(event: event)
                        .where(year: year)
@@ -228,7 +228,7 @@ module Calculations::V3::CalculationConcerns::SourceResults
     membership = nil
 
     if source_result.team&.member?
-      membership = (Time.zone.now.beginning_of_year)..(Time.zone.now.end_of_year)
+      membership = (Time.zone.local(year).beginning_of_year)..(Time.zone.local(year).end_of_year)
     end
 
     Calculations::V3::Models::Participant.new(
