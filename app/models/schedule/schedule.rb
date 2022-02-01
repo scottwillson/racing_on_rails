@@ -191,7 +191,11 @@ module Schedule
       end
       query = query.where("date between ? and ?", start_date, end_date)
 
-      query = query.where(discipline: params[:discipline].name) if params[:discipline].present?
+      if params[:discipline].present?
+        query = query.where(discipline: params[:discipline].name)
+      else
+        query = query.where.not(discipline: "Community") 
+      end
 
       if RacingAssociation.current.filter_schedule_by_region?
         query = query.where(region_id: params[:region].id) if params[:region].present?
