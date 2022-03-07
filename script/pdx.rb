@@ -14,7 +14,7 @@ CSV.open("results.csv", "wb") do |csv|
   csv << ["date", "name", "city", "state", "results"]
   event_ids.each do |event_id|
     event = Event.find(event_id)
-    results = Result.where(event_id: event_id).count
+    results = Result.where.not(person_id: nil).where(event_id: event_id).distinct(:person_id).count
     csv << [event.date, event.full_name, event.city, event.state, results]
   end
 end
