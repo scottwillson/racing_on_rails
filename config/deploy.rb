@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-lock "3.16.0"
+lock "3.17.0"
 
 set :linked_dirs, %w[ log public/assets public/system public/uploads tmp/pids tmp/cache tmp/sockets vendor/bundle ]
 set :linked_files, %w[ config/database.yml config/newrelic.yml config/master.key config/puma.rb ]
@@ -16,7 +16,7 @@ load "local/config/deploy/#{fetch(:stage)}.rb" if File.exist?("local/config/depl
 
 set :deploy_to, "/var/www/rails/#{fetch(:application)}"
 
-set :repo_url, "git://github.com/scottwillson/racing_on_rails.git"
+set :repo_url, "git@github.com:scottwillson/racing_on_rails.git"
 set :site_local_repo_url, "git@github.com:scottwillson/#{fetch(:application)}-local.git"
 
 set :puma_conf, "#{shared_path}/config/puma.rb"
