@@ -6,6 +6,8 @@ $line-height-base: 1.2308;
 $line-height-computed: 16px;
 
 $headings-font-weight: 900px;
+$font-family-serif: 'Open Sans', sans-serif;
+$font-family-sans-serif: 'Open Sans', sans-serif;
 
 $icon-font-path: "/fonts/";
 $icon-font-name: "glyphicons-regular";
@@ -24,7 +26,7 @@ $green-yellow: rgb(208, 250, 48);
 $white: rgb(255, 255, 255);
 
 $highlight-color: $green-yellow;
-$brand-primary: $green-yellow;
+$brand-primary: black;
 $font-color-light: $gray;
 $font-color: $gray-darker;
 $form-color: $font-color;
@@ -32,8 +34,8 @@ $form-color: $font-color;
 $link-color: $font-color;
 $link-color-hover: $black;
 
-$nav-background-color: $gray-darker;
-$nav-font-color: $light-gray;
+$nav-background-color: $white;
+$nav-font-color: $black;
 
 $body-background-color: $warm-gray;
 $content-background-color: $warm-gray-light;
@@ -84,11 +86,16 @@ body {
   padding-right: 0;
 }
 
-body nav a:hover, body a:hover, a:hover, .nav > li > a:hover, .btn-link:hover {
+body nav a:hover, body a:hover, a:hover, .btn-link:hover {
   background-color: $highlight-color;
   color: $link-color-hover;
   text-decoration: underline;
   text-shadow: none;
+}
+
+.nav-pills > li > a:hover, {
+  background-color: $highlight-color;
+  color: white;
 }
 
 .btn-link, a.obvious {
@@ -124,18 +131,49 @@ h2 a:hover, h3 a:hover {
   background-color: $highlight-color;
 }
 
-a.navbar-brand {
-  font-weight: 700;
-  height: auto;
-  line-height: $line-height-computed * 1.5;
-  padding-bottom: 0;
-  padding-top: 0;
+.navbar li {
+  text-transform: uppercase;
+}
+
+.navbar li .dropdown-menu li {
+  text-transform: none;
 }
 
 @media (max-width: 767px) {
-  a.navbar-brand {
-    line-height: 36px;
+  .navbar-header {
+    align-items: center;
+    display: flex;
+    padding-left: 15px;
+    padding-right: 15px;
   }
+
+  .navbar-brand {
+    height: 67px;
+    flex: auto;
+    padding-bottom: 0px;
+    padding-left: 34px;
+    padding-right: 0px;
+    padding-top: 0px;
+  }
+
+  .navbar-brand img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 67px;
+    line-height: 67px;
+  }
+
+  .navbar-toggle {
+    flex: none;
+    margin-right: 0px;
+    padding-right: 0px;
+    text-align: right;
+  }
+}
+
+.icon-bar {
+  background-color: black;
 }
 
 .navbar {
@@ -156,6 +194,11 @@ a.navbar-brand {
   padding-right: $line-height-computed / 2;
   padding-bottom: 0;
   padding-top: 0;
+}
+
+.navbar .links {
+  font-size: 18px;
+  text-align: center;
 }
 
 @media (max-width: 767px) {
@@ -240,31 +283,6 @@ h4 {
   }
 }
 
-.table th, .table td {
-  padding-bottom: 7px;
-}
-
-.table-striped td {
-  border-bottom: 1px solid $table-border;
-  border-top: none;
-}
-
-.table-striped tbody tr:first-child td {
-  border-top: 2px solid $table-border;
-}
-
-.table-striped tbody tr:last-child td {
-  border-bottom: 2px solid $table-border;
-}
-
-.table-striped tbody tr:nth-child(even) td, .table-striped tbody tr:nth-child(even) td:hover {
-  background-color: lighten($warm-gray, 4);
-}
-
-.table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) td:hover {
-  background-color: $warm-gray;
-}
-
 .table > thead > tr > th {
   border-bottom: none;
 }
@@ -284,9 +302,29 @@ h4 {
   color: $near-black;
 }
 
+.table>thead>tr>th, .table>thead>tr>td, .table>tbody>tr>th, .table>tbody>tr>td, .table>tfoot>tr>th, .table>tfoot>tr>td {
+  padding: 12px 8px;
+}
+
+.table-striped td {
+  border-bottom: none;
+}
+
+.table-striped tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table-striped tbody tr:nth-child(even) td, .table-striped tbody tr:nth-child(even) td:hover {
+  background-color: lighten($warm-gray, 4);
+}
+
+.table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) td:hover {
+  background-color: $warm-gray;
+}
+
 .table-striped.table th {
-  padding-bottom: 3px;
-  padding-top: 4px;
+  padding: 12px 8px;
+  font-size: 16px;
 }
 
 .table-striped td.icon {

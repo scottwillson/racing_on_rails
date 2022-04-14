@@ -22,14 +22,13 @@
   }
 }
 
-.hero-photo-caption p {
-  text-align: center;
+.hero-photo-caption a {
+  text-decoration: none;
 }
 
-.hero-photo-caption a {
+.hero-photo-caption a:hover {
   text-decoration: underline;
 }
-
 
 th.name {
   white-space: nowrap;
@@ -271,7 +270,7 @@ table.results td.result .event {
   width: 100%;
   height: 340px;
   font-size: 10px;
-  font-family: Monaco, "Lucida Console", Monospace, "Bitstream Vera Sans Mono", "Courier New", Courier, monospaced;
+  font-family: 'Open Sans', sans-serif;
 }
 
 #page_parent_id {
