@@ -7,4 +7,6 @@ class Calculations::V3::Event < ApplicationRecord
   belongs_to :event, class_name: "::Event"
 
   validates :event, uniqueness: { scope: :calculation }
+
+  delegate :date, to: :event
 end

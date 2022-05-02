@@ -15,7 +15,6 @@ class CalculationsController < ApplicationController
 
   def edit
     @calculation = Calculations::V3::Calculation.find(params[:id])
-    @calculation.calculations_events.new
   end
 
   def index

@@ -70,6 +70,10 @@ class Event < ApplicationRecord
            foreign_key: :source_event_id,
            inverse_of: :source_event
 
+  has_many :calculation_events,
+           class_name: "Calculations::V3::Event",
+           dependent: :destroy
+
   has_many :event_teams, dependent: :destroy
   has_many :event_team_memberships, through: :event_teams
   belongs_to :number_issuer, optional: true
