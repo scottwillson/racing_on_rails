@@ -117,5 +117,8 @@ class Calculations::V3::SeriesTest < ActiveSupport::TestCase
     assert_difference "Result.count", 0 do
       calculation.reload.calculate!
     end
+
+    assert_equal 0, calculation.events.size
+    assert_equal 3, calculation.source_events.size
   end
 end
