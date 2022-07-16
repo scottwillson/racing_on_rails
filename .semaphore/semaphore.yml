@@ -56,6 +56,7 @@ blocks:
         commands:
           - sem-version ruby 2.7.4
           - checkout
+          - mkdir local/app/assets/images
           - sudo apt-get install -y libmysqlclient-dev
           - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-main-
