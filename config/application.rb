@@ -36,7 +36,7 @@ module RacingOnRails
 
     config.active_job.queue_adapter = :sidekiq
 
-    config.active_record.yaml_column_permitted_classes = [Date, DateTime, Set, Symbol]
+    config.active_record.yaml_column_permitted_classes = [Date, DateTime, Set, Symbol, Time]
 
     def exception_notifier
       if Rails.env.production? || Rails.env.staging?
