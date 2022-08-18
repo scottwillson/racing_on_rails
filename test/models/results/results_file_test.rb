@@ -23,7 +23,7 @@ module Results
 
     test "import excel" do
       current_members = Person.where("member_to >= ?", Time.zone.now)
-      event = SingleDayEvent.create!(discipline: "Road", date: Date.new(2006, 1, 16))
+      event = SingleDayEvent.create!(discipline: "Road", date: Date.new(2006, 1, 16), updated_at: 2.weeks.ago)
       source_path = file_fixture("results/pir_2006_format.xlsx").to_s
       results_file = ResultsFile.new(File.new(source_path), event)
       assert_equal(source_path, results_file.source.path, "file path")
@@ -82,6 +82,7 @@ module Results
           end
         end
       end
+      assert_in_delta Time.current, event.reload.updated_at, 1.minute
     end
 
     test "import time trial people with same name" do
