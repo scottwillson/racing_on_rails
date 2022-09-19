@@ -38,3 +38,4 @@ vendor/plugins/selenium-on-rails/log/
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+.tool-versions
