@@ -12,7 +12,12 @@ module Results
     def custom_attributes=(hash)
       if hash
         symbolized_hash = {}
-        hash.each { |key, value| symbolized_hash[key.to_s.to_sym] = value }
+        hash.each do |key, value|
+          if key.to_s[/lap_/]
+            value = time_value(value)
+          end
+          symbolized_hash[key.to_s.to_sym] = value
+        end
       end
       self[:custom_attributes] = symbolized_hash
     end

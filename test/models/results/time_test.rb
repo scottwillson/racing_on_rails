@@ -131,20 +131,18 @@ class ResultTest < ActiveSupport::TestCase
     assert_in_delta(-10.0, result.time_bonus_penalty, 0.0001, "time_bonus_penalty")
   end
 
-  test "set time value" do
+  test "time_value" do
     result = Result.new
     time = Time.zone.local(2007, 11, 20, 19, 45, 50, 678)
-    result.set_time_value(:time, time)
-    assert_equal(71_156.78, result.time)
+    assert_equal(71_156.78, result.time_value(time))
 
     result = Result.new
     time = DateTime.new(2007, 11, 20, 19, 45, 50)
-    result.set_time_value(:time, time)
-    assert_equal(71_150.0, result.time)
+    assert_equal(71_150.0, result.time_value(time))
 
+    # this was an old Excel/parser edge case
     result = Result.new
     time = DateTime.new(1899, 12, 31, 1, 39, 19)
-    result.set_time_value(:time, time)
-    assert_equal(92_359.0, result.time)
+    assert_equal(5_959.0, result.time_value(time))
   end
 end

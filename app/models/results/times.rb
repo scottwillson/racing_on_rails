@@ -5,52 +5,46 @@ module Results
     extend ActiveSupport::Concern
 
     def time=(value)
-      set_time_value(:time, value)
+      self[:time] = time_value(value)
     end
 
     def time_bonus_penalty=(value)
-      set_time_value(:time_bonus_penalty, value)
+      self[:time_bonus_penalty] = time_value(value)
     end
 
     def time_gap_to_leader=(value)
-      set_time_value(:time_gap_to_leader, value)
+      self[:time_gap_to_leader] = time_value(value)
     end
 
     def time_total=(value)
-      set_time_value(:time_total, value)
+      self[:time_total] = time_value(value)
     end
 
     def time_gap_to_previous=(value)
-      set_time_value(:time_gap_to_previous, value)
+      self[:time_gap_to_previous] = time_value(value)
     end
 
     def time_gap_to_winner=(value)
-      set_time_value(:time_gap_to_winner, value)
+      self[:time_gap_to_winner] = time_value(value)
     end
 
     def time_total=(value)
-      set_time_value(:time_total, value)
+      self[:time_total] = time_value(value)
     end
 
-    def set_time_value(attribute, value)
+    def time_value(value)
       case value
-      when DateTime
-        self[attribute] = if value.year == 1899 && value.month == 12 && value.day == 31
-                            (24 + value.hour) * 3600 + value.min * 60 + value.sec
-                          else
-                            value.hour * 3600 + value.min * 60 + value.sec
-                          end
-      when ::Time
-        self[attribute] = value.hour * 3600 + value.min * 60 + value.sec + (value.usec / 100.0)
+      when DateTime, ::Time
+        value = value.hour * 3600 + value.min * 60 + value.sec + (value.usec / 100.0)
       when Numeric, NilClass
-        self[attribute] = value
+        value
       else
-        self[attribute] = s_to_time(value)
+        value = s_to_time(value)
       end
 
-      self[attribute] = self[attribute].round(3) if self[attribute]
+      value = value.round(3) if value
 
-      self[attribute]
+      value
     end
 
     # Time in hh:mm:ss.00 format. E.g., 1:20:59.75

@@ -65,7 +65,7 @@ module Results
       end
 
       def self.render(column, row)
-        if key(column) && key(column)["time"]
+        if key(column) && (key(column)["time"] || key(column)["lap_"])
           TimeRenderer.render column, row
         else
           super
