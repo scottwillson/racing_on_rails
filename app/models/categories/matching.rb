@@ -14,9 +14,15 @@ module Categories
 
       candidate_categories = event_categories.dup
 
-      equivalent_match = candidate_categories.detect { |category| equivalent?(category) }
-      debug "equivalent: #{equivalent_match&.name}"
-      return equivalent_match if equivalent_match
+      equivalent_matches = candidate_categories.select { |category| equivalent?(category) }
+      debug "equivalent: #{equivalent_matches.map(&:name).join(', ')}"
+      return equivalent_matches.first if one_match?(equivalent_matches)
+
+      # Sometimes categories like Beginner and Cat 4 are equivalent but need to
+      # be separated if both categories exist
+      exact_equivalent = equivalent_matches.detect { |category| category.name == name }
+      debug "exact equivalent: #{exact_equivalent}"
+      return exact_equivalent if exact_equivalent
 
       # If no weight match, ignore weight and match on age and gender
       if candidate_categories.any? { |category| weight == category.weight }

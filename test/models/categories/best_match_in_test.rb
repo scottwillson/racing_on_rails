@@ -91,6 +91,23 @@ module Competitions
       assert_best_match_in [cat_5], cat_5, event
     end
 
+    test "beginners and Cat 4s" do
+      event = FactoryBot.create(:event)
+      cat_2_3 = Category.find_or_create_by_normalized_name("Category 2/3 Open")
+      cat_4 = Category.find_or_create_by_normalized_name("Category 4 Open")
+      beginner_open = Category.find_or_create_by_normalized_name("Beginner Open")
+
+      event.races.create!(category: @cat_1_2)
+      event.races.create!(category: cat_2_3)
+      event.races.create!(category: cat_4)
+      event.races.create!(category: beginner_open)
+
+      assert_best_match_in [@cat_1_2], @cat_1_2, event
+      assert_best_match_in [cat_2_3,], cat_2_3, event
+      assert_best_match_in [cat_4], cat_4, event
+      assert_best_match_in [beginner_open], beginner_open, event
+    end
+
     test "ability + gender" do
       event = FactoryBot.create(:event)
       event.races.create!(category: @cat_1)
