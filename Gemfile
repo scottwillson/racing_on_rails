@@ -59,7 +59,7 @@ group :development do
   gem "brakeman"
   gem "bundler-audit", github: "rubysec/bundler-audit"
   gem "capistrano", require: false
-  gem "capistrano3-puma", github: "seuros/capistrano-puma", require: false
+  gem "capistrano3-puma"
   gem "capistrano-bundler", require: false
   gem "capistrano-rails", require: false
   gem "capistrano-rvm", require: false

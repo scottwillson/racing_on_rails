@@ -37,15 +37,6 @@ GIT
       rubyzip (>= 1.2.1, < 2.0.0)
 
 GIT
-  remote: https://github.com/seuros/capistrano-puma.git
-  revision: 2cc11846540489edda10d83e026c9bea04e6fab1
-  specs:
-    capistrano3-puma (6.0.0.beta.1)
-      capistrano (~> 3.7)
-      capistrano-bundler
-      puma (>= 5.1, < 7.0)
-
-GIT
   remote: https://github.com/sudara/authlogic.git
   revision: 564bcc0b113024844d159e7e6e96b7a9f3b15b9d
   branch: rails6-1
@@ -169,6 +160,10 @@ GEM
     capistrano-rvm (0.1.2)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
+    capistrano3-puma (5.2.0)
+      capistrano (~> 3.7)
+      capistrano-bundler
+      puma (>= 4.0, < 6.0)
     capybara (3.38.0)
       addressable
       matrix
@@ -290,7 +285,7 @@ GEM
       ruby-rc4
       ttfunk
     public_suffix (5.0.0)
-    puma (6.0.0)
+    puma (5.6.5)
       nio4r (~> 2.0)
     racc (1.6.0)
     rack (2.2.4)
@@ -482,7 +477,7 @@ DEPENDENCIES
   capistrano-bundler
   capistrano-rails
   capistrano-rvm
-  capistrano3-puma!
+  capistrano3-puma
   capybara
   carrierwave
   caxlsx (>= 2.0.1)
