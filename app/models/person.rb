@@ -143,6 +143,8 @@ class Person < ApplicationRecord
   def gender_pronoun
     if female?
       "herself"
+    elsif non_binary?
+      "themself"
     else
       "himself"
     end
@@ -151,6 +153,8 @@ class Person < ApplicationRecord
   def possessive_pronoun
     if female?
       "her"
+    elsif non_binary?
+      "their"
     else
       "his"
     end
@@ -159,6 +163,8 @@ class Person < ApplicationRecord
   def third_person_pronoun
     if female?
       "her"
+    elsif non_binary?
+      "them"
     else
       "him"
     end
@@ -179,6 +185,8 @@ class Person < ApplicationRecord
         self[:gender] = "M"
       when "F", "FEMALE", "GIRL"
         self[:gender] = "F"
+      when "NB", "NON-BINARY", "NONBINARY"
+        self[:gender] = "NB"
       else
         self[:gender] = "M"
       end

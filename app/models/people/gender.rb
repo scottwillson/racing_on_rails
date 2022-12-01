@@ -11,5 +11,9 @@ module People
     def male?
       gender == "M"
     end
+
+    def non_binary?
+      gender == "NB"
+    end
   end
 end

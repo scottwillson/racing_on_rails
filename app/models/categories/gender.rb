@@ -21,6 +21,10 @@ module Categories
       gender == "M"
     end
 
+    def non_binary?
+      gender == "NB"
+    end
+
     def women?
       gender == "F"
     end
