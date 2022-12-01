@@ -9,7 +9,7 @@ class PublicPagesTest < ApplicationSystemTestCase
 
     visit "/"
     unless page.has_content?("ATRA") || page.has_content?("WSBA")
-      assert_page_has_content("Schedule")
+      assert_page_has_content("SCHEDULE")
       assert_page_has_content("Results")
     end
 
@@ -21,10 +21,10 @@ class PublicPagesTest < ApplicationSystemTestCase
     assert_page_has_content("(503) 555-1212")
 
     visit "/schedule/cyclocross"
-    assert_page_has_content("Schedule") unless page.has_content?("Calendar")
+    assert_page_has_content("SCHEDULE") unless page.has_content?("Calendar")
 
     visit "/schedule/list/cyclocross"
-    assert_page_has_content("Schedule") unless page.has_content?("Calendar")
+    assert_page_has_content("SCHEDULE") unless page.has_content?("Calendar")
 
     visit "/results"
     assert_page_has_content RacingAssociation.current.effective_year.to_s
