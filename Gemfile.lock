@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: https://github.com/rubysec/bundler-audit.git
-  revision: 1c9ece212370f937dae9491452b4da6647f39667
+  revision: 6f2e0f55bda004b5ec09349cbb3a8535672f6a47
   specs:
     bundler-audit (0.9.1)
       bundler (>= 1.2.0, < 3)
@@ -203,7 +203,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    dalli (3.2.2)
+    dalli (3.2.3)
     damerau-levenshtein (1.3.3)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
