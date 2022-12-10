@@ -5,6 +5,11 @@ module Calculations
     module Steps
       module AssignTeamSizes
         def self.calculate!(calculator)
+          # Discipline BARs with few source events look like team results because
+          # they have many people with the same place. Don't apply a team size for
+          # them when calculating the Overall BAR.
+          return calculator.event_categories if calculator.rules.source_event_keys.any?
+
           # Use event_category and place as a key: Array of calculator and place_id
           results_by_category_and_place = {}
 
