@@ -306,6 +306,89 @@ class Calculations::V3::BarTest < ActiveSupport::TestCase
     end
   end
 
+  test "Overall BAR many disciplines" do
+    Timecop.freeze(2019, 1) do
+      cyclocross_discipline = Discipline.create!(name: "Cyclocross")
+      mtb_discipline = Discipline.create!(name: "Mountain Bike")
+      overall_discipline = Discipline.create!(name: "Overall")
+      road_discipline = Discipline.find_by!(name: "Road")
+      short_track_discipline = Discipline.create!(name: "Short Track")
+      time_trial_discipline = Discipline.create!(name: "Time Trial")
+
+      masters_men = Category.create!(name: "Masters Men")
+
+      [
+        cyclocross_discipline,
+        mtb_discipline,
+        road_discipline,
+        short_track_discipline,
+        time_trial_discipline
+      ].each do |discipline|
+        calculation = Calculations::V3::Calculation.create!(
+          discipline: discipline,
+          disciplines: [discipline],
+          key: "#{discipline.to_param}_bar",
+          members_only: true,
+          name: "#{discipline.name} BAR",
+          points_for_place: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+          weekday_events: false
+        )
+        calculation.categories << masters_men
+      end
+
+      overall = Calculations::V3::Calculation.create!(
+        discipline: overall_discipline,
+        key: "overall_bar",
+        members_only: true,
+        name: "Overall BAR",
+        points_for_place: (1..300).to_a.reverse,
+        show_zero_point_source_results: false,
+        source_event_keys: %w[cyclocross_bar mountain_bike_bar road_bar short_track_bar time_trial_bar],
+        weekday_events: true
+      )
+      overall.categories << masters_men
+
+      source_event = FactoryBot.create(:event, discipline: cyclocross_discipline.name, date: Time.zone.local(2019, 4, 13))
+      race = source_event.races.create!(category: masters_men)
+      person = FactoryBot.create :person
+      race.results.create! place: 1, person: person
+
+      source_event = FactoryBot.create(:event, discipline: mtb_discipline.name, date: Time.zone.local(2019, 4, 13))
+      race = source_event.races.create!(category: masters_men)
+      race.results.create! place: 1, person: person
+
+      source_event = FactoryBot.create(:event, discipline: road_discipline.name, date: Time.zone.local(2019, 4, 13))
+      race = source_event.races.create!(category: masters_men)
+      race.results.create! place: 1, person: person
+
+      source_event = FactoryBot.create(:event, discipline: short_track_discipline.name, date: Time.zone.local(2019, 4, 13))
+      race = source_event.races.create!(category: masters_men)
+      race.results.create! place: 1, person: person
+
+      source_event = FactoryBot.create(:event, discipline: time_trial_discipline.name, date: Time.zone.local(2019, 4, 13))
+      race = source_event.races.create!(category: masters_men)
+      race.results.create! place: 1, person: person
+
+      overall.calculate!
+
+      assert_equal 5, overall.source_events.size
+
+      event = overall.reload.event
+      assert_equal "Overall", event.discipline
+
+      assert_equal 1, event.races.size
+      race = event.races.detect { |r| r.category == masters_men }
+      assert_not_nil race
+
+      results = race.results.sort
+      assert_equal 1, results.size
+
+      assert_equal 5, results.first.source_results.size
+      assert_equal 1500, results.first.points
+      assert_equal "1", results.first.place
+    end
+  end
+
   test "map categories" do
     Timecop.freeze(2019, 1) do
       cyclocross_discipline = Discipline.create!(name: "Cyclocross")

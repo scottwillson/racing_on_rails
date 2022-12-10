@@ -17,7 +17,7 @@ module Calculations
           team_categories = team_categories(calculator.source_results)
 
           calculator.source_results.each do |result|
-            unless team_categories.include?(result.event_category)
+            if team_categories.include?(result.event_category)
               result.team_size = results_by_category_and_place[[result.event_category, result.place]]
             end
           end
@@ -26,13 +26,15 @@ module Calculations
         end
 
         def self.team_categories(results)
-          results.group_by(&:event_category).select do |_, race_results|
+          results.group_by(&:event_category).select do |category, race_results|
             team_race? race_results
           end.keys
         end
 
         def self.team_race?(results)
-          teams(results) / unique_places(results) < 0.5
+          teams = teams(results)
+          ratio = teams / unique_places(results)
+          teams > 0 && ratio > 0.5
         end
 
         def self.unique_places(results)
