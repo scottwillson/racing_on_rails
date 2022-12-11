@@ -526,7 +526,7 @@ DEPENDENCIES
   scrypt
   sd_notify
   selenium-webdriver
-  sidekiq (< 7)
+  sidekiq
   spreadsheet
   tabular (>= 0.4.9)
   timecop
