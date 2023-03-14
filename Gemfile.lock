@@ -50,7 +50,7 @@ GIT
 PATH
   remote: registration_engine
   specs:
-    registration_engine (0.2.0)
+    registration_engine (0.2.1)
       activemerchant (= 1.118.0)
       rails (~> 6.1)
       stripe
@@ -428,7 +428,7 @@ GEM
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     ssrf_filter (1.1.1)
-    stripe (8.0.0)
+    stripe (8.3.0)
     tabular (0.4.9)
     thor (1.2.1)
     tilt (2.0.11)

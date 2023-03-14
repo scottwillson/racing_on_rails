@@ -17,7 +17,7 @@ blocks:
       jobs:
       - name: bundle gems
         commands:
-          - sem-version ruby 2.7.4
+          - sem-version ruby 2.7.7
           - checkout
           - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
           - sudo apt-get install -y libmysqlclient-dev
@@ -34,7 +34,7 @@ blocks:
     task:
       prologue:
         commands:
-          - sem-version ruby 2.7.4
+          - sem-version ruby 2.7.7
           - checkout
           - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
           - sudo apt-get install -y libmysqlclient-dev
@@ -54,7 +54,7 @@ blocks:
     task:
       prologue:
         commands:
-          - sem-version ruby 2.7.4
+          - sem-version ruby 2.7.7
           - checkout
           - mkdir -p local/app/assets/images
           - sudo apt-get install -y libmysqlclient-dev
@@ -81,7 +81,7 @@ blocks:
     task:
       prologue:
         commands:
-          - sem-version ruby 2.7.4
+          - sem-version ruby 2.7.7
           - checkout
           - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
           - sudo apt-get install -y libmysqlclient-dev
@@ -110,7 +110,7 @@ blocks:
     task:
       prologue:
         commands:
-          - sem-version ruby 2.7.4
+          - sem-version ruby 2.7.7
           - checkout
           - cat /home/semaphore/semaphore_ssh_config >> /home/semaphore/.ssh/config
           - chmod 0600 /home/semaphore/.ssh/semaphore-github-obra
@@ -135,7 +135,7 @@ blocks:
     task:
       prologue:
         commands:
-          - sem-version ruby 2.7.4
+          - sem-version ruby 2.7.7
           - checkout
           - cat /home/semaphore/semaphore_ssh_config >> /home/semaphore/.ssh/config
           - chmod 0600 /home/semaphore/.ssh/semaphore-github-obra
@@ -166,7 +166,7 @@ blocks:
     task:
       prologue:
         commands:
-          - sem-version ruby 2.7.4
+          - sem-version ruby 2.7.7
           - checkout
           - cat /home/semaphore/semaphore_ssh_config >> /home/semaphore/.ssh/config
           - chmod 0600 /home/semaphore/.ssh/semaphore-github-obra
