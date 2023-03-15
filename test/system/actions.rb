@@ -12,13 +12,18 @@ module Actions
     click_button "Save"
   end
 
-  def fill_in_inline(locator, options)
-    assert_edit = options.delete(:assert_edit)
-    text = options[:with]
-    options[:with] = "#{options[:with]}\n"
+  def fill_in_inline(locator = nil, with:, currently_with: nil, fill_options: {}, **find_options)
+    assert_edit = find_options.delete(:assert_edit)
+    text = with
+    with = "#{with}\n"
     assert_selector locator
     find(locator).click
-    fill_in_editor_field options
+    fill_in_editor_field(
+      with: with,
+      currently_with: currently_with,
+      fill_options: fill_options,
+      **find_options
+    )
     assert_no_selector ".editing"
     assert_no_selector ".saving"
     if assert_edit
@@ -28,13 +33,19 @@ module Actions
     end
   end
 
-  def fill_in_editor_field(options)
+  def fill_in_editor_field(with:, currently_with: nil, fill_options: {}, **find_options)
     retries = 0
     3.times do
       assert_selector "form.editor_field"
       within "form.editor_field" do
         assert_selector "input[name='value']"
-        fill_in "value", options
+        fill_in(
+          "value",
+          with: with,
+          currently_with: currently_with,
+          fill_options: fill_options,
+          **find_options
+        )
       end
       return true
     rescue Capybara::ElementNotFound, RuntimeError
@@ -43,7 +54,7 @@ module Actions
         sleep 0.1
         retry
       else
-        raise "#{Regexp.last_match(1)} for fill_in_editor_field(#{options}) after #{retries} tries"
+        raise "#{Regexp.last_match(1)} for fill_in_editor_field(#{find_options}) after #{retries} tries"
       end
     end
   end

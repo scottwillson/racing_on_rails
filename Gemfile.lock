@@ -50,7 +50,7 @@ GIT
 PATH
   remote: registration_engine
   specs:
-    registration_engine (0.2.1)
+    registration_engine (0.2.2)
       activemerchant (= 1.118.0)
       rails (~> 6.1)
       stripe
@@ -237,10 +237,9 @@ GEM
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
     json (2.6.3)
-    listen (3.1.5)
+    listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
-      ruby_dep (~> 1.2)
     loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -257,7 +256,6 @@ GEM
     mime-types-data (3.2023.0218.1)
     mini_magick (4.12.0)
     mini_mime (1.1.2)
-    mini_portile2 (2.8.1)
     minitest (5.18.0)
     mocha (2.0.2)
       ruby2_keywords (>= 0.0.5)
@@ -279,8 +277,7 @@ GEM
     netrc (0.11.0)
     newrelic_rpm (9.0.0)
     nio4r (2.5.8)
-    nokogiri (1.14.2)
-      mini_portile2 (~> 2.8.0)
+    nokogiri (1.14.2-arm64-darwin)
       racc (~> 1.4)
     oj (3.14.2)
     orm_adapter (0.5.0)
@@ -392,7 +389,6 @@ GEM
     ruby-vips (2.1.4)
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
-    ruby_dep (1.5.0)
     rubyzip (1.3.0)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
@@ -469,7 +465,7 @@ GEM
       rubyzip (>= 1.0.0)
 
 PLATFORMS
-  ruby
+  arm64-darwin-22
 
 DEPENDENCIES
   Ascii85
@@ -552,4 +548,4 @@ DEPENDENCIES
   zip-zip
 
 BUNDLED WITH
-   2.1.4
+   2.4.6

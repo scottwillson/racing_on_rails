@@ -3,6 +3,7 @@
 class WeeklySeries < Series
   # TODO: Is this duplicated from Ruby core and standard lib?
   DAYS_OF_WEEK = %w[Su M Tu W Th F Sa].freeze unless defined?(DAYS_OF_WEEK)
+  LONG_DAYS_OF_WEEK = %w[Sun Mon Tue Wed Thu Fri Sat].freeze unless defined?(LONG_DAYS_OF_WEEK)
 
   # 0-based. Doesn't handle multiple days of the week. Method names here are confusing.
   def day_of_week
@@ -25,7 +26,7 @@ class WeeklySeries < Series
     when 0
       ""
     when 1
-      Time::RFC2822_DAY_NAME[days_of_week(false).first]
+      LONG_DAYS_OF_WEEK[days_of_week(false).first]
     else
       days_of_week(false).collect { |day| DAYS_OF_WEEK[day] }.join("/")
     end
