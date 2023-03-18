@@ -144,7 +144,7 @@ blocks:
           - bundle config set deployment 'true'
           - bundle config set path 'vendor/bundle'
           - bundle config set without 'production,staging'
-          - gem install bundler:2.2.13
+          - gem install bundler:2.4.7
           - bundle install -j 4
           - sem-service start mysql 5.7
           - mv config/semaphore_database.yml local/config/database.yml
