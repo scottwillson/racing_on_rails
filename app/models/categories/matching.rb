@@ -108,7 +108,7 @@ module Categories
 
       # E.g., if Cat 3 matches Senior Men and Cat 3, use Cat 3
       # Could check size of range and use narrowest if there is a single one more narrow than the others
-      unless candidate_categories.all?(&:all_abilities?) || all_abilities?
+      unless junior? || candidate_categories.all?(&:all_abilities?) || all_abilities?
         candidate_categories = candidate_categories.reject(&:all_abilities?)
       end
       debug "reject wildcards: #{candidate_categories.map(&:name).join(', ')}"
