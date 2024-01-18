@@ -40,6 +40,7 @@ module Categories
       assert_equal 9..18, category.ages_from_name("Men 9-18")
       assert_equal 9..9, category.ages_from_name("Junior Men 9")
       assert_equal 9..18, category.ages_from_name("Junior Men 3/4/5")
+      assert_equal 0..999, category.ages_from_name("Athena 160+")
     end
 
     def test_age_group

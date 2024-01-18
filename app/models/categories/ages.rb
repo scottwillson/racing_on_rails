@@ -77,7 +77,7 @@ module Categories
         ages_end = ((age_range_match[2].to_i + 1) / team_size(name)) - 1
         ages_begin..ages_end
       elsif name[/\d{3}\+/]
-        if name["Clyde"]
+        if name["Clyde"] || name["Athena"]
           ALL
         else
           ages_begin = name[/(\d{3})\+/]

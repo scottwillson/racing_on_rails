@@ -23,6 +23,12 @@ module Categories
 
       category.name = "Athena"
       assert_equal "Athena", category.weight_from_name, "Athena"
+
+      category.name = "Athenas"
+      assert_equal "Athena", category.weight_from_name, "Athena"
+
+      category.name = "Athena 160+"
+      assert_equal "Athena", category.weight_from_name, "Athena"
     end
   end
 end

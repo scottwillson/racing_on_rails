@@ -251,6 +251,19 @@ module Competitions
       assert_best_match_in [], athena, event, 35
     end
 
+    test "athena 160+" do
+      athena = ::Category.find_or_create_by_normalized_name("Athena")
+      athena_160 = ::Category.find_or_create_by_normalized_name("Athena 160+")
+      men_9_18 = ::Category.find_or_create_by_normalized_name("Men 9-18")
+
+      event = FactoryBot.create(:event)
+      event.races.create!(category: men_9_18)
+      event.races.create!(category: athena)
+
+      assert_best_match_in [athena, athena_160], athena, event
+      assert_best_match_in [athena, athena_160], athena, event, 35
+    end
+
     test "gender over ability" do
       women_1_2_3 = Category.find_or_create_by_normalized_name("Women 1/2/3")
 
