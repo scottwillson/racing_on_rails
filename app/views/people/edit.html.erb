@@ -3,6 +3,12 @@
 
 <%= render "shared/errors", object: @person %>
 
+<% if @person.member? %>
+  <div class="row text-center margin-4">
+    <%= link_to "Renew Membership", '/line_items/create?type=membership', class: "btn btn-link" %>
+  </div>
+<% end %>
+
 <h2><%= @person.name %></h2>
 
   <%= form_for @person, html: { class: "form-horizontal", role: "form" } do |f| -%>
