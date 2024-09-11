@@ -3,9 +3,10 @@
 
 <%= render "shared/errors", object: @person %>
 
-<% if @person.member? %>
+<% unless @person.member? %>
   <div class="row text-center margin-4">
-    <%= link_to "Renew Membership", '/line_items/create?type=membership', class: "btn btn-link" %>
+    <p>It looks like your membership needs to be renewed.</p>
+    <%= link_to "Renew My Membership", '/line_items/create?type=membership', class: "btn btn-default" %>
   </div>
 <% end %>
 
