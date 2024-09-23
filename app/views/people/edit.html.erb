@@ -3,6 +3,13 @@
 
 <%= render "shared/errors", object: @person %>
 
+<% unless @person.member? %>
+  <div class="row text-center margin-4">
+    <p>It looks like your membership needs to be renewed.</p>
+    <%= link_to "Renew My Membership", '/line_items/create?type=membership', class: "btn btn-default" %>
+  </div>
+<% end %>
+
 <h2><%= @person.name %></h2>
 
   <%= form_for @person, html: { class: "form-horizontal", role: "form" } do |f| -%>
