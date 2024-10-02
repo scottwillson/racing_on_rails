@@ -351,6 +351,12 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redcarpet (3.6.0)
+    redis (5.3.0)
+      redis-client (>= 0.22.0)
+    redis-client (0.22.2)
+      connection_pool
+    redis-semaphore (0.3.1)
+      redis
     regexp_parser (2.7.0)
     request_store (1.5.1)
       rack (>= 1.4)
@@ -522,6 +528,7 @@ DEPENDENCIES
   rake
   raygun4ruby
   redcarpet (>= 3.5.1)
+  redis-semaphore
   registration_engine!
   request_store_rails
   rest-client
@@ -552,4 +559,4 @@ DEPENDENCIES
   zip-zip
 
 BUNDLED WITH
-   2.4.7
+   2.5.17
