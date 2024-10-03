@@ -23,6 +23,7 @@ blocks:
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-main-
           - gem install rake
+          - bundle config set frozen false
           - bundle config set deployment 'true'
           - bundle config set path 'vendor/bundle'
           - bundle config set without 'production,staging'
