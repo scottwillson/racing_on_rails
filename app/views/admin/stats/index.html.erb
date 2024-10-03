@@ -1,0 +1,19 @@
+<div id="racer-days-by-discipline" style="width:100%; height:800px;"></div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  Highcharts.chart('racer-days-by-discipline', {
+    title: {
+      text: 'By Discipline'
+    },
+    xAxis: {
+      categories: <%= @years %>
+    },
+    yAxis: {
+      title: {
+        text: 'Racer Days'
+      }
+    },
+    series: <%= raw @chart_data.to_json %>
+  });
+});
+</script>
