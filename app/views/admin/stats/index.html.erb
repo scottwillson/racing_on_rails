@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
       text: 'By Discipline'
     },
     xAxis: {
-      categories: <%= @years %>
+      categories: <%= raw @years %>
     },
     yAxis: {
       title: {
