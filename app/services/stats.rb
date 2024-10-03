@@ -20,6 +20,11 @@ module Stats
         end
       end
     end
+    chart_data.each do |data|
+      if data[:data].sum.zero?
+        chart_data.delete(data)
+      end
+    end
     Rails.cache.write("racer_days_by_discipline", chart_data, expires_in: 12.hours)
     chart_data
   end
