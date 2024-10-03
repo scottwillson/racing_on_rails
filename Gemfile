@@ -20,6 +20,7 @@ gem "chronic"
 gem "ckeditor"
 gem "damerau-levenshtein"
 gem "hashdiff", [">= 1.0.0.beta1", "< 2.0.0"]
+gem "highcharts-rails"
 gem "hiredis"
 gem "jquery-rails"
 gem "jquery-ui-rails"

@@ -96,7 +96,7 @@ Rails.application.routes.draw do
 
     resources :series
     resources :single_day_events
-
+    resources :stats
     resources :teams do
       resources :aliases
       member do

@@ -3,7 +3,7 @@
 require "test_helper"
 
 # :stopdoc:
-class PersonTest < ActiveSupport::TestCase
+class PersonTest < ActiveSupport::TestCase # rubocop:disable Metrics/ClassLength
   test "save" do
     assert_not Person.exists?(last_name: "Hampsten"), "Hampsten should not be in DB"
     assert_not Team.exists?(name: "7-11"), "7-11 should not be in DB"
@@ -314,7 +314,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal "Dario", Person.new(name: "Dario").name_or_login
   end
 
-  test "member" do
+  test "member" do #rubocop:disable Metrics/BlockLength
     person = Person.new(first_name: "Dario", last_name: "Frederick")
     assert_equal(false, person.member?, "member")
     assert_nil(person.member_from, "Member from")
