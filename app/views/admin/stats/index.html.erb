@@ -1,19 +1,34 @@
-<div id="racer-days-by-discipline" style="width:100%; height:800px;"></div>
+<div id="racer-days-by-discipline" class="stats-chart"></div>
+<div id="total-racer-days" class="stats-chart"></div>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  Highcharts.chart('racer-days-by-discipline', {
-    title: {
-      text: 'By Discipline'
-    },
-    xAxis: {
-      categories: <%= raw @years %>
-    },
-    yAxis: {
+  document.addEventListener('DOMContentLoaded', function() {
+    Highcharts.chart('racer-days-by-discipline', {
       title: {
-        text: 'Racer Days'
-      }
-    },
-    series: <%= raw @chart_data.to_json %>
+        text: 'By Discipline'
+      },
+      xAxis: {
+        categories: <%= raw @years %>
+      },
+      yAxis: {
+        title: {
+          text: 'Racer Days'
+        }
+      },
+      series: <%= raw @racer_days_by_discipline.to_json %>
+    });
+    Highcharts.chart('total-racer-days', {
+      title: {
+        text: 'Total Racer Days'
+      },
+      xAxis: {
+        categories: <%= raw @years %>
+      },
+      yAxis: {
+        title: {
+          text: 'Racer Days'
+        }
+      },
+      series: <%= raw @total_racer_days.to_json %>
+    });
   });
-});
 </script>
