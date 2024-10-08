@@ -118,7 +118,7 @@
             }
         }
       },
-      series: <%= raw @total_juniors.to_json %>
+      series: <%= raw @racers_by_gender.to_json %>
     });
   }
   document.addEventListener('DOMContentLoaded', loadCharts);
