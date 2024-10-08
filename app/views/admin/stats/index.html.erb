@@ -1,7 +1,10 @@
 <div id="racer-days-by-discipline" class="stats-chart"></div>
 <div id="total-racer-days" class="stats-chart"></div>
+<div id="racers-by-discipline" class="stats-chart"></div>
+<div id="annual-memberships" class="stats-chart"></div>
+<div id="total-juniors" class="stats-chart"></div>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  function loadCharts() {
     Highcharts.chart('racer-days-by-discipline', {
       title: {
         text: 'By Discipline'
@@ -12,6 +15,11 @@
       yAxis: {
         title: {
           text: 'Racer Days'
+        },
+        labels: {
+            formatter: () => {
+                return Highcharts.numberFormat(this.value, 0, '.', ',');
+            }
         }
       },
       series: <%= raw @racer_days_by_discipline.to_json %>
@@ -26,9 +34,72 @@
       yAxis: {
         title: {
           text: 'Racer Days'
+        },
+        labels: {
+            formatter: () => {
+                return Highcharts.numberFormat(this.value, 0, '.', ',');
+            }
         }
       },
       series: <%= raw @total_racer_days.to_json %>
     });
-  });
+    Highcharts.chart('racers-by-discipline', {
+      title: {
+        text: 'Racers By Discipline'
+      },
+      xAxis: {
+        categories: <%= raw @years %>
+      },
+      yAxis: {
+        title: {
+          text: 'Racers'
+        },
+        labels: {
+            formatter: () => {
+                return Highcharts.numberFormat(this.value, 0, '.', ',');
+            }
+        }
+      },
+      series: <%= raw @racers_by_discipline.to_json %>
+    });
+    Highcharts.chart('annual-memberships', {
+      title: {
+        text: 'Annual Memberships'
+      },
+      xAxis: {
+        categories: <%= raw @years %>
+      },
+      yAxis: {
+        title: {
+          text: 'Memberships'
+        },
+        labels: {
+            formatter: () => {
+                return Highcharts.numberFormat(this.value, 0, '.', ',');
+            }
+        }
+      },
+      series: <%= raw @memberships.to_json %>
+    });
+    Highcharts.chart('total-juniors', {
+      title: {
+        text: 'Junior Racers'
+      },
+      xAxis: {
+        categories: <%= raw @years %>
+      },
+      yAxis: {
+        title: {
+          text: 'Junior Racers'
+        },
+        labels: {
+            formatter: () => {
+                return Highcharts.numberFormat(this.value, 0, '.', ',');
+            }
+        }
+      },
+      series: <%= raw @total_juniors.to_json %>
+    });
+  }
+  document.addEventListener('DOMContentLoaded', loadCharts);
 </script>
