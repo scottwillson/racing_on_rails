@@ -3,6 +3,7 @@
 <div id="racers-by-discipline" class="stats-chart"></div>
 <div id="annual-memberships" class="stats-chart"></div>
 <div id="total-juniors" class="stats-chart"></div>
+<div id="racers-by-gender" class="stats-chart"></div>
 <script>
   function loadCharts() {
     Highcharts.chart('racer-days-by-discipline', {
@@ -91,6 +92,25 @@
       yAxis: {
         title: {
           text: 'Junior Racers'
+        },
+        labels: {
+            formatter: () => {
+                return Highcharts.numberFormat(this.value, 0, '.', ',');
+            }
+        }
+      },
+      series: <%= raw @total_juniors.to_json %>
+    });
+    Highcharts.chart('racers-by-gender', {
+      title: {
+        text: 'Racers by Gender'
+      },
+      xAxis: {
+        categories: <%= raw @years %>
+      },
+      yAxis: {
+        title: {
+          text: 'Racers'
         },
         labels: {
             formatter: () => {
