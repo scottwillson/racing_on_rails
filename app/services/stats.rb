@@ -6,12 +6,17 @@ module Stats
   end
 
   def self.racer_days_by_discipline
-    return Rails.cache.read("racer_days_by_discipline") if Rails.cache.read("racer_days_by_discipline").present?
-
-    chart_data = []
-    Discipline.pluck(:name).each do |discipline|
-      chart_data.push({ name: discipline, data: [] })
+    if Rails.cache.read("racer_days_by_discipline").present?
+      return Rails.cache.read("racer_days_by_discipline")
     end
+
+    chart_data = racer_days_by_discipline_query
+    Rails.cache.write("racer_days_by_discipline", chart_data, expires_in: 12.hours)
+    chart_data
+  end
+
+  def self.racer_days_by_discipline_query
+    chart_data = Discipline.all.map { |discipline| { name: discipline.name, data: [] } }
     years.each do |year|
       res = Result.joins(:event).where(events: { year: year, type: "SingleDayEvent" })
                   .where(competition_result: false, team_competition_result: false)
@@ -29,7 +34,51 @@ module Stats
         chart_data.delete(data)
       end
     end
-    Rails.cache.write("racer_days_by_discipline", chart_data, expires_in: 12.hours)
+    chart_data
+  end
+
+  def self.racers_by_discipline
+    if Rails.cache.read("racers_by_discipline").present?
+      return Rails.cache.read("racers_by_discipline")
+    end
+
+    chart_data = racers_by_discipline_query
+    Rails.cache.write("racers_by_discipline", chart_data, expires_in: 12.hours)
+    chart_data
+  end
+
+  def self.racers_by_discipline_query
+    chart_data = Discipline.all.map { |discipline| { name: discipline.name, data: [] } }
+    years.each do |year|
+      res = Result.joins(:event).where(events: { year: year, type: "SingleDayEvent" })
+                  .where(competition_result: false, team_competition_result: false)
+                  .where.not(person_id: nil).group(:discipline).distinct
+                  .count(:person_id)
+      chart_data.each do |data|
+        if res[data[:name]].nil?
+          data[:data].push(0)
+        else
+          data[:data].push(res[data[:name]])
+        end
+      end
+    end
+    chart_data.each do |data|
+      if data[:data].sum.zero?
+        chart_data.delete(data)
+      end
+    end
+    chart_data
+  end
+
+  def self.memberships
+    return Rails.cache.read("memberships") if Rails.cache.read("memberships").present?
+
+    chart_data = [{ name: "Memberships", data: [] }]
+    years.each do |year|
+      res = LineItem.where(year: year, type: "LineItems::Membership").count
+      chart_data[0][:data].push(res)
+    end
+    Rails.cache.write("memberships", chart_data, expires_in: 12.hours)
     chart_data
   end
 
@@ -44,6 +93,36 @@ module Stats
       chart_data[0][:data].push(res)
     end
     Rails.cache.write("total_racer_days", chart_data, expires_in: 12.hours)
+    chart_data
+  end
+
+  def self.total_racers
+    return Rails.cache.read("total_racers") if Rails.cache.read("total_racers").present?
+
+    chart_data = [{ name: "Total Racer Days", data: [] }]
+    years.each do |year|
+      res = Result.joins(:event).where(events: { year: year, type: "SingleDayEvent" })
+                  .where(competition_result: false, team_competition_result: false)
+                  .where.not(person_id: nil).distinct
+                  .count(:person_id)
+      chart_data[0][:data].push(res)
+    end
+    Rails.cache.write("total_racers", chart_data, expires_in: 12.hours)
+    chart_data
+  end
+
+  def self.total_juniors
+    return Rails.cache.read("total_juniors") if Rails.cache.read("total_juniors").present?
+
+    chart_data = [{ name: "Total Racer Days", data: [] }]
+    years.each do |year|
+      res = Result.joins(:event).where(events: { year: year, type: "SingleDayEvent" })
+                  .where(competition_result: false, team_competition_result: false)
+                  .where.not(person_id: nil).distinct
+                  .count(:person_id)
+      chart_data[0][:data].push(res)
+    end
+    Rails.cache.write("total_juniors", chart_data, expires_in: 12.hours)
     chart_data
   end
 end
