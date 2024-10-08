@@ -1,21 +1,17 @@
 # frozen_string_literal: true
 
 module Stats
-  def self.years
-    %w[2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024]
-  end
-
-  def self.racer_days_by_discipline
+  def self.racer_days_by_discipline(years)
     if Rails.cache.read("racer_days_by_discipline").present?
       return Rails.cache.read("racer_days_by_discipline")
     end
 
-    chart_data = racer_days_by_discipline_query
+    chart_data = racer_days_by_discipline_query(years)
     Rails.cache.write("racer_days_by_discipline", chart_data, expires_in: 12.hours)
     chart_data
   end
 
-  def self.racer_days_by_discipline_query
+  def self.racer_days_by_discipline_query(years)
     chart_data = Discipline.all.map { |discipline| { name: discipline.name, data: [] } }
     years.each do |year|
       res = Result.joins(:event).where(events: { year: year, type: "SingleDayEvent" })
@@ -37,17 +33,17 @@ module Stats
     chart_data
   end
 
-  def self.racers_by_discipline
+  def self.racers_by_discipline(years)
     if Rails.cache.read("racers_by_discipline").present?
       return Rails.cache.read("racers_by_discipline")
     end
 
-    chart_data = racers_by_discipline_query
+    chart_data = racers_by_discipline_query(years)
     Rails.cache.write("racers_by_discipline", chart_data, expires_in: 12.hours)
     chart_data
   end
 
-  def self.racers_by_discipline_query
+  def self.racers_by_discipline_query(years)
     chart_data = Discipline.all.map { |discipline| { name: discipline.name, data: [] } }
     years.each do |year|
       res = Result.joins(:event).where(events: { year: year, type: "SingleDayEvent" })
@@ -70,7 +66,7 @@ module Stats
     chart_data
   end
 
-  def self.memberships
+  def self.memberships(years)
     return Rails.cache.read("memberships") if Rails.cache.read("memberships").present?
 
     chart_data = [{ name: "Memberships", data: [] }]
@@ -82,7 +78,7 @@ module Stats
     chart_data
   end
 
-  def self.total_racer_days
+  def self.total_racer_days(years)
     return Rails.cache.read("total_racer_days") if Rails.cache.read("total_racer_days").present?
 
     chart_data = [{ name: "Total Racer Days", data: [] }]
@@ -96,10 +92,10 @@ module Stats
     chart_data
   end
 
-  def self.total_racers
+  def self.total_racers(years)
     return Rails.cache.read("total_racers") if Rails.cache.read("total_racers").present?
 
-    chart_data = [{ name: "Total Racer Days", data: [] }]
+    chart_data = [{ name: "Racers", data: [] }]
     years.each do |year|
       res = Result.joins(:event).where(events: { year: year, type: "SingleDayEvent" })
                   .where(competition_result: false, team_competition_result: false)
@@ -111,10 +107,32 @@ module Stats
     chart_data
   end
 
-  def self.total_juniors
+  def self.racers_by_gender(years)
+    return Rails.cache.read("racers_by_gender") if Rails.cache.read("racers_by_gender").present?
+
+    chart_data = [
+      { name: "Not Specified", data: [] },
+      { name: "Female", data: [] },
+      { name: "Male", data: [] },
+      { name: "NB", data: [] }
+    ]
+    years.each do |year|
+      res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
+                  .where(competition_result: false, team_competition_result: false)
+                  .where.not(person_id: nil).group("people.gender").count
+      chart_data[0][:data].push(res[nil] || 0)
+      chart_data[1][:data].push(res["F"] || 0)
+      chart_data[2][:data].push(res["M"] || 0)
+      chart_data[3][:data].push(res["NB"] || 0)
+    end
+    Rails.cache.write("racers_by_gender", chart_data, expires_in: 12.hours)
+    chart_data
+  end
+
+  def self.total_juniors(years)
     return Rails.cache.read("total_juniors") if Rails.cache.read("total_juniors").present?
 
-    chart_data = [{ name: "Total Racer Days", data: [] }]
+    chart_data = [{ name: "Juniors", data: [] }]
     years.each do |year|
       res = Result.joins(:event).where(events: { year: year, type: "SingleDayEvent" })
                   .where(competition_result: false, team_competition_result: false)
