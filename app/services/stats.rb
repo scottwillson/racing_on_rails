@@ -48,8 +48,7 @@ module Stats
     years.each do |year|
       res = Result.joins(:event).where(events: { year: year, type: "SingleDayEvent" })
                   .where(competition_result: false, team_competition_result: false)
-                  .where.not(person_id: nil).group(:discipline).distinct
-                  .count(:person_id)
+                  .where.not(person_id: nil).group(:discipline).distinct.count(:person_id)
       chart_data.each do |data|
         if res[data[:name]].nil?
           data[:data].push(0)
@@ -107,6 +106,28 @@ module Stats
     chart_data
   end
 
+  def self.racer_days_by_gender(years)
+    return Rails.cache.read("racer_days_by_gender") if Rails.cache.read("racer_days_by_gender").present?
+
+    chart_data = [
+      { name: "Not Specified", data: [] },
+      { name: "Female", data: [] },
+      { name: "Male", data: [] },
+      { name: "NB", data: [] }
+    ]
+    years.each do |year|
+      res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
+                  .where(competition_result: false, team_competition_result: false)
+                  .where.not(person_id: nil).group("people.gender").count
+      chart_data[0][:data].push(res[nil] || 0)
+      chart_data[1][:data].push(res["F"] || 0)
+      chart_data[2][:data].push(res["M"] || 0)
+      chart_data[3][:data].push(res["NB"] || 0)
+    end
+    Rails.cache.write("racer_days_by_gender", chart_data, expires_in: 12.hours)
+    chart_data
+  end
+
   def self.racers_by_gender(years)
     return Rails.cache.read("racers_by_gender") if Rails.cache.read("racers_by_gender").present?
 
@@ -119,7 +140,7 @@ module Stats
     years.each do |year|
       res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
                   .where(competition_result: false, team_competition_result: false)
-                  .where.not(person_id: nil).group("people.gender").count
+                  .where.not(person_id: nil).group("people.gender").distinct.count(:person_id)
       chart_data[0][:data].push(res[nil] || 0)
       chart_data[1][:data].push(res["F"] || 0)
       chart_data[2][:data].push(res["M"] || 0)
