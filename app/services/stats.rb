@@ -150,6 +150,54 @@ module Stats
     chart_data
   end
 
+  def self.gender_percentage(years)
+    return Rails.cache.read("gender_percentage") if Rails.cache.read("gender_percentage").present?
+
+    chart_data = [
+      { name: "Not Specified", data: [] },
+      { name: "Female", data: [] },
+      { name: "Male", data: [] },
+      { name: "NB", data: [] }
+    ]
+    years.each do |year|
+      res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
+                  .where(competition_result: false, team_competition_result: false)
+                  .where.not(person_id: nil).group("people.gender").distinct.count(:person_id)
+      counts = [res[nil] || 0, res["F"] || 0, res["M"] || 0, res["NB"] || 0]
+      total = counts.sum.to_f
+      chart_data[0][:data].push(counts[0] / total)
+      chart_data[1][:data].push(counts[1] / total)
+      chart_data[2][:data].push(counts[2] / total)
+      chart_data[3][:data].push(counts[3] / total)
+    end
+    Rails.cache.write("gender_percentage", chart_data, expires_in: 12.hours)
+    chart_data
+  end
+
+  def self.racer_days_gender_percentage(years)
+    return Rails.cache.read("racer_days_gender_percentage") if Rails.cache.read("racer_days_gender_percentage").present?
+
+    chart_data = [
+      { name: "Not Specified", data: [] },
+      { name: "Female", data: [] },
+      { name: "Male", data: [] },
+      { name: "NB", data: [] }
+    ]
+    years.each do |year|
+      res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
+                  .where(competition_result: false, team_competition_result: false)
+                  .where.not(person_id: nil).group("people.gender").count
+      counts = [res[nil] || 0, res["F"] || 0, res["M"] || 0, res["NB"] || 0]
+      total = counts.sum.to_f
+      chart_data[0][:data].push(counts[0] / total)
+      chart_data[1][:data].push(counts[1] / total)
+      chart_data[2][:data].push(counts[2] / total)
+      chart_data[3][:data].push(counts[3] / total)
+    end
+    Rails.cache.write("racer_days_gender_percentage", chart_data, expires_in: 12.hours)
+    chart_data
+  end
+
   def self.total_juniors(years)
     return Rails.cache.read("total_juniors") if Rails.cache.read("total_juniors").present?
 

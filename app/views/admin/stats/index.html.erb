@@ -5,6 +5,8 @@
 <div id="total-juniors" class="stats-chart"></div>
 <div id="racer-days-by-gender" class="stats-chart"></div>
 <div id="racers-by-gender" class="stats-chart"></div>
+<div id="racers-gender-percentage" class="stats-chart"></div>
+<div id="racer-days-gender-percentage" class="stats-chart"></div>
 <script>
   function loadCharts() {
     Highcharts.chart('racer-days-by-discipline', {
@@ -104,6 +106,34 @@
         }
       },
       series: <%= raw @racers_by_gender.to_json %>
+    });
+    Highcharts.chart('racers-gender-percentage', {
+      title: {
+        text: 'Gender Percentage'
+      },
+      xAxis: {
+        categories: <%= raw @years %>
+      },
+      yAxis: {
+        title: {
+          text: 'Gender Percentage'
+        }
+      },
+      series: <%= raw @gender_percentage.to_json %>
+    });
+    Highcharts.chart('racer-days-gender-percentage', {
+      title: {
+        text: 'Gender Percentage of Racer Days'
+      },
+      xAxis: {
+        categories: <%= raw @years %>
+      },
+      yAxis: {
+        title: {
+          text: 'Gender Percentage'
+        }
+      },
+      series: <%= raw @racer_days_gender_percentage.to_json %>
     });
   }
   document.addEventListener('DOMContentLoaded', loadCharts);
