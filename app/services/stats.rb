@@ -171,7 +171,7 @@ module Stats
   def self.total_juniors(years)
     chart_data = [{ name: "Juniors", data: [] }]
     years.each do |year|
-      beginning = Date.new(year, 1, 1).beginning_of_year
+      beginning = Date.new(year.to_i, 1, 1).beginning_of_year
       res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
                   .where(people: { date_of_birth: beginning - 18.years..beginning })
                   .where(competition_result: false, team_competition_result: false)
@@ -185,6 +185,7 @@ module Stats
   def self.junior_racer_days(years)
     chart_data = [{ name: "Juniors", data: [] }]
     years.each do |year|
+      beginning = Date.new(year.to_i, 1, 1).beginning_of_year
       res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
                   .where(people: { date_of_birth: beginning - 18.years..beginning })
                   .where(competition_result: false, team_competition_result: false)
