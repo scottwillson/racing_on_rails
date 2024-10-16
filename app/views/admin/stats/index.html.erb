@@ -5,8 +5,8 @@
 <div id="total-juniors" class="stats-chart"></div>
 <div id="racer-days-by-gender" class="stats-chart"></div>
 <div id="racers-by-gender" class="stats-chart"></div>
-<div id="racers-gender-percentage" class="stats-chart"></div>
-<div id="racer-days-gender-percentage" class="stats-chart"></div>
+<div id="racers-gender-ratio" class="stats-chart"></div>
+<div id="racer-days-gender-ratio" class="stats-chart"></div>
 <script>
   function loadCharts() {
     Highcharts.chart('racer-days-by-discipline', {
@@ -107,33 +107,33 @@
       },
       series: <%= raw @racers_by_gender.to_json %>
     });
-    Highcharts.chart('racers-gender-percentage', {
+    Highcharts.chart('racers-gender-ratio', {
       title: {
-        text: 'Gender Percentage'
+        text: 'Gender Ratio'
       },
       xAxis: {
         categories: <%= raw @years %>
       },
       yAxis: {
         title: {
-          text: 'Percentage'
+          text: 'Ratio'
         }
       },
-      series: <%= raw @gender_percentage.to_json %>
+      series: <%= raw @gender_ratio.to_json %>
     });
-    Highcharts.chart('racer-days-gender-percentage', {
+    Highcharts.chart('racer-days-gender-ratio', {
       title: {
-        text: 'Gender Percentage of Racer Days'
+        text: 'Racer Days Gender Ratio'
       },
       xAxis: {
         categories: <%= raw @years %>
       },
       yAxis: {
         title: {
-          text: 'Percentage'
+          text: 'Ratio'
         }
       },
-      series: <%= raw @racer_days_gender_percentage.to_json %>
+      series: <%= raw @racer_days_gender_ratio.to_json %>
     });
   }
   document.addEventListener('DOMContentLoaded', loadCharts);
