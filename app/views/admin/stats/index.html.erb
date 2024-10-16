@@ -1,14 +1,21 @@
 <div id="racer-days-by-discipline" class="stats-chart"></div>
 <div id="total-racer-days" class="stats-chart"></div>
 <div id="racers-by-discipline" class="stats-chart"></div>
+<div id="total-racers" class="stats-chart"></div>
 <div id="annual-memberships" class="stats-chart"></div>
 <div id="total-juniors" class="stats-chart"></div>
+<div id="junior-racer-days" class="stats-chart"></div>
 <div id="racer-days-by-gender" class="stats-chart"></div>
 <div id="racers-by-gender" class="stats-chart"></div>
 <div id="racers-gender-ratio" class="stats-chart"></div>
 <div id="racer-days-gender-ratio" class="stats-chart"></div>
 <script>
   function loadCharts() {
+    Highcharts.setOptions({
+      lang: {
+        thousandsSep: ','
+      }
+    });
     Highcharts.chart('racer-days-by-discipline', {
       title: {
         text: 'Racer Days by Discipline'
@@ -51,6 +58,20 @@
       },
       series: <%= raw @racers_by_discipline.to_json %>
     });
+    Highcharts.chart('total-racers', {
+      title: {
+        text: 'Racers'
+      },
+      xAxis: {
+        categories: <%= raw @years %>
+      },
+      yAxis: {
+        title: {
+          text: 'Racers'
+        }
+      },
+      series: <%= raw @total_racers.to_json %>
+    });
     Highcharts.chart('annual-memberships', {
       title: {
         text: 'Annual Memberships'
@@ -78,6 +99,20 @@
         }
       },
       series: <%= raw @total_juniors.to_json %>
+    });
+    Highcharts.chart('junior-racer-days', {
+      title: {
+        text: 'Junior Racer Days'
+      },
+      xAxis: {
+        categories: <%= raw @years %>
+      },
+      yAxis: {
+        title: {
+          text: 'Junior Racer Days'
+        }
+      },
+      series: <%= raw @junior_racer_days.to_json %>
     });
     Highcharts.chart('racer-days-by-gender', {
       title: {
