@@ -158,7 +158,7 @@ module Stats
       res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
                   .where(competition_result: false, team_competition_result: false)
                   .where.not(person_id: nil).group("people.gender").count
-      counts = [Random.rand(1..100), Random.rand(1..100), Random.rand(1..100), Random.rand(1..100)]
+      counts = [res[nil] || 0, res["F"] || 0, res["M"] || 0, res["NB"] || 0]
       total = counts.sum.to_f
       chart_data[0][:data].push((counts[0] / total).round(4))
       chart_data[1][:data].push((counts[1] / total).round(4))
@@ -186,7 +186,6 @@ module Stats
     years.each do |year|
       res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
                   .where(category_id: Category.where("ages_begin > ? AND ages_begin < ?", 0, 19).select(:id))
-                  .where(people: { date_of_birth: beginning - 18.years..beginning })
                   .where(competition_result: false, team_competition_result: false)
                   .where.not(person_id: nil)
       chart_data[0][:data].push(res)
