@@ -4,7 +4,7 @@ module Stats
   def self.cache_and_query(method, years)
     cache_key = "#{method} #{years}"
     if Rails.cache.read(cache_key).present?
-      # return Rails.cache.read(cache_key)
+      return Rails.cache.read(cache_key)
     end
 
     chart_data = send(method, years)
