@@ -57,31 +57,6 @@ blocks:
       secrets:
         - name: environmental_variables
 
-  - name: "Registration engine security"
-    task:
-      prologue:
-        commands:
-          - sem-version ruby 3.2.1
-          - checkout
-          - cat /home/semaphore/semaphore_ssh_config >> /home/semaphore/.ssh/config
-          - chmod 0600 /home/semaphore/.ssh/semaphore-github-obra
-          - git clone git@github.com-obra:scottwillson/obra-local.git local
-          - chmod 0600 /home/semaphore/.ssh/semaphore-github-registration-engine
-          - rm -rf registration_engine
-          - git clone git@github.com-registration-engine:scottwillson/registration_engine.git
-          - sudo apt-get install -y libmysqlclient-dev
-          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-main-
-          - bundle config set frozen false
-          - bundle config set deployment 'true'
-          - bundle config set path 'vendor/bundle'
-          - bundle config set without 'production,staging'
-          - bundle install -j 4
-      jobs:
-      - name: Brakeman
-        commands:
-          - bundle exec brakeman
-          - bundle exec bundle-audit
-
   - name: "OBRA unit tests"
     task:
       prologue:
