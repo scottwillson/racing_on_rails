@@ -2,13 +2,13 @@
 
 module Stats
   def self.cache_and_query(method, years)
-    cache_key = "#{method} #{years}"
+    cache_key = "#{method} #{years} 10162421"
     if Rails.cache.read(cache_key).present?
       return Rails.cache.read(cache_key)
     end
 
     chart_data = send(method, years)
-    Rails.cache.write(cache_key, chart_data, expires_in: 12.hours)
+    Rails.cache.write(cache_key, chart_data, expires_in: 24.hours)
     chart_data
   end
 
@@ -171,10 +171,9 @@ module Stats
   def self.total_juniors(years)
     chart_data = [{ name: "Juniors", data: [] }]
     years.each do |year|
-      beginning = Date.new(year.to_i, 1, 1).beginning_of_year
       res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
-                  .where(people: { date_of_birth: beginning - 18.years..beginning })
                   .where(competition_result: false, team_competition_result: false)
+                  .where(category_id: Category.where("ages_begin > ? AND ages_begin < ?", 0, 19).select(:id))
                   .where.not(person_id: nil).distinct
                   .count(:person_id)
       chart_data[0][:data].push(res)
@@ -185,9 +184,8 @@ module Stats
   def self.junior_racer_days(years)
     chart_data = [{ name: "Juniors", data: [] }]
     years.each do |year|
-      beginning = Date.new(year.to_i, 1, 1).beginning_of_year
       res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
-                  .where(people: { date_of_birth: beginning - 18.years..beginning })
+                  .where(category_id: Category.where("ages_begin > ? AND ages_begin < ?", 0, 19).select(:id))
                   .where(competition_result: false, team_competition_result: false)
                   .where.not(person_id: nil)
       chart_data[0][:data].push(res)
