@@ -173,7 +173,7 @@ module Stats
     years.each do |year|
       res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
                   .where(competition_result: false, team_competition_result: false)
-                  .where(category_id: Category.where(ages_begin: 1..18).select(:id))
+                  .where(category_id: Category.where("ages_begin < ?", 19).select(:id))
                   .where.not(person_id: nil).distinct
                   .count(:person_id)
       chart_data[0][:data].push(res)
@@ -185,7 +185,7 @@ module Stats
     chart_data = [{ name: "Juniors", data: [] }]
     years.each do |year|
       res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
-                  .where(category_id: Category.where(ages_begin: 1..18).select(:id))
+                  .where(category_id: Category.where("ages_begin < ?", 19).select(:id))
                   .where(competition_result: false, team_competition_result: false)
                   .where.not(person_id: nil).count
       chart_data[0][:data].push(res)
