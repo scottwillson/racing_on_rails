@@ -2,7 +2,7 @@
 
 module Stats
   def self.cache_and_query(method, years)
-    cache_key = "#{method} #{years} 02012025"
+    cache_key = "#{method} #{years} 0201202515"
     if Rails.cache.read(cache_key).present?
       return Rails.cache.read(cache_key)
     end
@@ -173,7 +173,7 @@ module Stats
     years.each do |year|
       res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
                   .where(competition_result: false, team_competition_result: false)
-                  .where(category_id: Category.where("ages_begin < ?", 19).select(:id))
+                  .where("people.date_of_birth < ?", Date.today - 18.years)
                   .where.not(person_id: nil).distinct
                   .count(:person_id)
       chart_data[0][:data].push(res)
@@ -185,7 +185,7 @@ module Stats
     chart_data = [{ name: "Juniors", data: [] }]
     years.each do |year|
       res = Result.joins(:event, :person).where(events: { year: year, type: "SingleDayEvent" })
-                  .where(category_id: Category.where("ages_begin < ?", 19).select(:id))
+                  .where("people.date_of_birth < ?", Date.today - 18.years)
                   .where(competition_result: false, team_competition_result: false)
                   .where.not(person_id: nil).count
       chart_data[0][:data].push(res)
