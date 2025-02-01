@@ -2,7 +2,7 @@
 
 module Stats
   def self.cache_and_query(method, years)
-    cache_key = "#{method} #{years} 10162421"
+    cache_key = "#{method} #{years} 02012025"
     if Rails.cache.read(cache_key).present?
       return Rails.cache.read(cache_key)
     end
