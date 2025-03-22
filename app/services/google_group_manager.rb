@@ -2,10 +2,11 @@ require "google/apis/admin_directory_v1"
 require "json"
 
 class GoogleGroupManager
-  def initialize(key_path, admin_email)
+  def initialize
+    key_path = Rails.root.join('lib', "project-obra-chat-47a9a587c276.json")
     @service = Google::Apis::AdminDirectoryV1::DirectoryService.new
     @key_data = JSON.parse(File.read(key_path))
-    @service.authorization = authorize_service(admin_email)
+    @service.authorization = authorize_service("shillson@obra.org")
   end
 
   def add_member(group, member_email)
@@ -90,6 +91,3 @@ class GoogleGroupManager
     auth_client
   end
 end
-
-# Usage
-# manager = GoogleGroupManager.new("project-obra-chat-3a59b8e24f78.json", "shillson@obra.org")
