@@ -19,6 +19,8 @@ gem "caxlsx_rails", ">=0.5.2"
 gem "chronic"
 gem "ckeditor"
 gem "damerau-levenshtein"
+gem "google-api-client"
+gem "googleauth"
 gem "hashdiff", [">= 1.0.0.beta1", "< 2.0.0"]
 gem "highcharts-rails"
 gem "hiredis"
@@ -43,7 +45,6 @@ gem "ri_cal"
 gem "roo", github: "scottwillson/roo"
 gem "roo-xls"
 gem "ruby-ole"
-# Security update
 gem "rubyzip"
 gem "sass-rails"
 gem "scrypt"
@@ -54,13 +55,13 @@ gem "will_paginate"
 gem "will_paginate-bootstrap", git: "https://github.com/estately/will_paginate-bootstrap.git"
 gem "yui-compressor"
 gem "zip-zip"
-gem 'bcrypt_pbkdf', '~> 1.0', require: false, platforms: [:mri, :mingw, :x64_mingw]
+gem "bcrypt_pbkdf", "~> 1.0", require: false, platforms: [:mri, :mingw, :x64_mingw]
 gem 'ed25519', '~> 1.2', require: false, platforms: [:mri, :mingw, :x64_mingw]
 gem 'capistrano', '~> 3.17'
 gem 'capistrano-rails', '~> 1.6'
 gem 'capistrano-bundler', '~> 2.1'
 gem 'capistrano-rvm', '~> 0.1'
-gem 'capistrano3-puma', '~> 5.2'  # Note: the gem name is capistrano3-puma, not capistrano-puma
+gem "capistrano3-puma", "~> 5.2"
 
 group :development do
   gem "brakeman"
