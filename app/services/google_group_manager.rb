@@ -71,7 +71,7 @@ class GoogleGroupManager
     Person.where(member_to: Date.today..).where.not(email: [nil, ""]).each do |new|
       added += 1
       puts "added #{new.email}"
-      # add_member("obra-chat@obra.org", new.email)
+      add_member("obra-chat@obra.org", new.email)
     end
     pp added
   end
