@@ -23,6 +23,8 @@ gem 'faraday', '2.0.1'
 gem 'faraday-net_http', '2.0.3'
 gem "google-api-client"
 gem "googleauth"
+gem 'google-cloud-core', '< 1.6.0'
+gem 'google-cloud-storage', '< 1.38.0'
 gem "hashdiff", [">= 1.0.0.beta1", "< 2.0.0"]
 gem "highcharts-rails"
 gem "hiredis"
