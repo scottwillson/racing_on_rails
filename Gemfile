@@ -19,6 +19,7 @@ gem "caxlsx_rails", ">=0.5.2"
 gem "chronic"
 gem "ckeditor"
 gem "damerau-levenshtein"
+gem "google/apis/admin_directory_v1"
 gem "hashdiff", [">= 1.0.0.beta1", "< 2.0.0"]
 gem "highcharts-rails"
 gem "hiredis"
