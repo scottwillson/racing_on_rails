@@ -5,6 +5,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem "rails", "~> 6.1"
 
+gem "pg"
+
 gem "activemodel-serializers-xml"
 gem "acts_as_tree", git: "https://github.com/amerine/acts_as_tree.git"
 gem "Ascii85", require: "ascii85"
@@ -19,12 +21,6 @@ gem "caxlsx_rails", ">=0.5.2"
 gem "chronic"
 gem "ckeditor"
 gem "damerau-levenshtein"
-gem 'faraday', '2.0.1'
-gem 'faraday-net_http', '2.0.3'
-gem "google-api-client"
-gem "googleauth"
-gem 'google-cloud-core', '< 1.6.0'
-gem 'google-cloud-storage', '< 1.38.0'
 gem "hashdiff", [">= 1.0.0.beta1", "< 2.0.0"]
 gem "highcharts-rails"
 gem "hiredis"
@@ -76,6 +72,7 @@ group :development do
   gem "rubocop-rails"
   gem "rubocop-rake"
   gem "web-console", ">= 3.3.0"
+  gem 'bcrypt_pbkdf', '~> 1.0'
 end
 
 group :development, :test do
