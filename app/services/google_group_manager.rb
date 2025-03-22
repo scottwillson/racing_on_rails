@@ -3,7 +3,7 @@ require "json"
 
 class GoogleGroupManager
   def initialize
-    key_path = Rails.root.join('lib', "project-obra-chat-47a9a587c276.json")
+    key_path = "/var/www//rails/project-obra-chat-47a9a587c276.json"
     @service = Google::Apis::AdminDirectoryV1::DirectoryService.new
     @key_data = JSON.parse(File.read(key_path))
     @service.authorization = authorize_service("shillson@obra.org")
