@@ -519,7 +519,7 @@ DEPENDENCIES
   pdf-reader
   prawn!
   puma (< 6)
-  rails (~> 6.1)
+  rails (~> 6.0)
   rails-controller-testing
   rails-observers
   rake
