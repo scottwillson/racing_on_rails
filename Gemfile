@@ -19,6 +19,8 @@ gem "caxlsx_rails", ">=0.5.2"
 gem "chronic"
 gem "ckeditor"
 gem "damerau-levenshtein"
+gem 'faraday', '2.0.1'
+gem 'faraday-net_http', '2.0.3'
 gem "google-api-client"
 gem "googleauth"
 gem "hashdiff", [">= 1.0.0.beta1", "< 2.0.0"]
