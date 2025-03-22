@@ -1,3 +1,5 @@
+require "google/apis/admin_directory_v1"
+
 class GoogleGroupManager
   def initialize(key_path, admin_email)
     @service = Google::Apis::AdminDirectoryV1::DirectoryService.new
