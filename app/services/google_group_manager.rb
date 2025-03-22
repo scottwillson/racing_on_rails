@@ -1,6 +1,3 @@
-require "google/apis/admin_directory_v1"
-require "json"
-
 class GoogleGroupManager
   def initialize(key_path, admin_email, emails)
     @service = Google::Apis::AdminDirectoryV1::DirectoryService.new
@@ -57,7 +54,7 @@ class GoogleGroupManager
     emails = group_emails("obra-chat@obra.org")
     accounted = []
     emails.each do |email|
-      if @member_emails.include?(email)
+      if Person.where(email: email, member_to: Date.today..).any?
         puts "good #{email}"
         good += 1
         accounted << email
@@ -68,12 +65,10 @@ class GoogleGroupManager
       end
     end
     pp "good #{good} bad #{bad} of #{emails.count}"
-    news = @member_emails - accounted
-    news.each do |new|
-      next unless new.length > 3 && new.include?("@")
-
+    Person.where(member_to: Date.today..).where.not(email: [nil, ""]).each do |new|
       added += 1
-      # add_member("obra-chat@obra.org", new)
+      puts "added #{new.email}"
+      # add_member("obra-chat@obra.org", new.email)
     end
     pp added
   end
@@ -95,4 +90,4 @@ class GoogleGroupManager
 end
 
 # Usage
-manager = GoogleGroupManager.new("project-obra-chat-3a59b8e24f78.json", "shillson@obra.org", ["put the current member emails here"])
+# manager = GoogleGroupManager.new("project-obra-chat-3a59b8e24f78.json", "shillson@obra.org", ["put the current member emails here"])
