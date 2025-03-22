@@ -1,9 +1,8 @@
 class GoogleGroupManager
-  def initialize(key_path, admin_email, emails)
+  def initialize(key_path, admin_email)
     @service = Google::Apis::AdminDirectoryV1::DirectoryService.new
     @key_data = JSON.parse(File.read(key_path))
     @service.authorization = authorize_service(admin_email)
-    @member_emails = emails
   end
 
   def add_member(group, member_email)
@@ -90,4 +89,4 @@ class GoogleGroupManager
 end
 
 # Usage
-# manager = GoogleGroupManager.new("project-obra-chat-3a59b8e24f78.json", "shillson@obra.org", ["put the current member emails here"])
+# manager = GoogleGroupManager.new("project-obra-chat-3a59b8e24f78.json", "shillson@obra.org")
