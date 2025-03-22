@@ -5,8 +5,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem "rails", "~> 6.1"
 
-gem "pg"
-
 gem "activemodel-serializers-xml"
 gem "acts_as_tree", git: "https://github.com/amerine/acts_as_tree.git"
 gem "Ascii85", require: "ascii85"
@@ -56,15 +54,17 @@ gem "will_paginate"
 gem "will_paginate-bootstrap", git: "https://github.com/estately/will_paginate-bootstrap.git"
 gem "yui-compressor"
 gem "zip-zip"
+gem 'bcrypt_pbkdf', '~> 1.0', require: false, platforms: [:mri, :mingw, :x64_mingw]
+gem 'ed25519', '~> 1.2', require: false, platforms: [:mri, :mingw, :x64_mingw]
+gem 'capistrano', '~> 3.17'
+gem 'capistrano-rails', '~> 1.6'
+gem 'capistrano-bundler', '~> 2.1'
+gem 'capistrano-rvm', '~> 0.1'
+gem 'capistrano3-puma', '~> 5.2'  # Note: the gem name is capistrano3-puma, not capistrano-puma
 
 group :development do
   gem "brakeman"
   gem "bundler-audit", github: "rubysec/bundler-audit"
-  gem "capistrano", require: false
-  gem "capistrano3-puma"
-  gem "capistrano-bundler", require: false
-  gem "capistrano-rails", require: false
-  gem "capistrano-rvm", require: false
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "rubocop", require: false
   gem "rubocop-minitest"
@@ -72,8 +72,6 @@ group :development do
   gem "rubocop-rails"
   gem "rubocop-rake"
   gem "web-console", ">= 3.3.0"
-  gem 'ed25519', '~> 1.2'
-  gem 'bcrypt_pbkdf', '~> 1.0'
 end
 
 group :development, :test do
