@@ -72,6 +72,7 @@ group :development do
   gem "rubocop-rails"
   gem "rubocop-rake"
   gem "web-console", ">= 3.3.0"
+  gem 'ed25519', '~> 1.2'
   gem 'bcrypt_pbkdf', '~> 1.0'
 end
 
