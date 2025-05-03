@@ -28,8 +28,8 @@ Rails.application.configure do
     address: "smtp.gmail.com",
     port: 587,
     domain: "obra.org",
-    user_name: "help@obra.org",
-    password: "oskb tuck mthb ydxd",
+    user_name: "noreply@obra.org",
+    password: Rails.application.credentials.smtp_password,
     authentication: "plain",
     enable_starttls_auto: true
   }
