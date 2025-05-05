@@ -3,7 +3,7 @@ class GoogleGroupManager
     key_path = "/var/www//rails/project-obra-chat-47a9a587c276.json"
     @service = Google::Apis::AdminDirectoryV1::DirectoryService.new
     @key_data = JSON.parse(File.read(key_path))
-    @service.authorization = authorize_service("shillson@obra.org")
+    @service.authorization = authorize_service
   end
 
   def add_member(group, member_email)
@@ -75,14 +75,14 @@ class GoogleGroupManager
 
   private
 
-  def authorize_service(admin_email)
+  def authorize_service
     auth_client = Signet::OAuth2::Client.new(
       token_credential_uri: "https://oauth2.googleapis.com/token",
       audience: "https://oauth2.googleapis.com/token",
       scope: "https://www.googleapis.com/auth/admin.directory.group",
       issuer: @key_data["client_email"],
       signing_key: OpenSSL::PKey::RSA.new(@key_data["private_key"]),
-      sub: admin_email # Using workspace admin email
+      sub: "shillson@obra.org"
     )
     auth_client.fetch_access_token!
     auth_client
