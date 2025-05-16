@@ -269,7 +269,9 @@ Rails.application.routes.draw do
   get "/" => "home#index", as: :root
   resource :home, controller: :home
   
-  get '/board', to: redirect('https://www2.obra.org/about/obra-board/')
+  get '/board', to: redirect('https://www2.obra.org/about/obra-board')
+  get '/contact', to: redirect('https://www2.obra.org/about/contact')
+  get '/upgrades', to: redirect('https://www2.obra.org/obra-upgrade-policies')
 
   get "*path", to: "pages#show", constraints: Pages::Constraint.new
 
