@@ -70,6 +70,19 @@ module Competitions
         [::Category.find_or_create_by(name: "Category 3 Women")]
       when "Category 5 Women"
         [::Category.find_or_create_by(name: "Category 4 Women"), ::Category.find_or_create_by(name: "Category 5 Women")]
+      when "Singlespeed"
+        # For 2025+, map the old combined category to the new men's category
+        # and include the old category for historical data
+        categories = [race.category]
+        old_singlespeed = ::Category.find_by(name: "Singlespeed/Fixed")
+        categories << old_singlespeed if old_singlespeed
+        categories
+      when "Singlespeed Women"
+        # For 2025+, map to women's category and include old category for historical data
+        categories = [race.category]
+        old_singlespeed = ::Category.find_by(name: "Singlespeed/Fixed")
+        categories << old_singlespeed if old_singlespeed
+        categories
       else
         [race.category]
       end
@@ -93,8 +106,8 @@ module Competitions
         "Masters Women",
         "Senior Men",
         "Senior Women",
-        "Singlespeed/Fixed",
-        "Tandem"
+        "Singlespeed",
+        "Singlespeed Women"
       ]
     end
 
