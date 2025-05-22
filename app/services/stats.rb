@@ -192,4 +192,13 @@ module Stats
     end
     chart_data
   end
+  
+  def self.one_days
+    res = "" # don't forget about the product id as well
+    LineItem.where(type: 'LineItems::SingleEventLicense').each do |li|
+      if li.order.purchase_time
+        res += "#{li.order.purchase_time},#{li.order.person.first_name},#{li.order.person.last_name},#{li.order.person.date_of_birth},#{li.order.person.email}\n"
+      end
+    end
+  end
 end
