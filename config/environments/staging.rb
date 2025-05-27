@@ -29,7 +29,7 @@ Rails.application.configure do
     port: 587,
     domain: "obra.org",
     user_name: "noreply@obra.org",
-    password: Rails.application.credentials.smtp_password,
+    password: "cauu pdne yoay elgy",
     authentication: "plain",
     enable_starttls_auto: true
   }
