@@ -314,7 +314,7 @@ class PersonTest < ActiveSupport::TestCase # rubocop:disable Metrics/ClassLength
     assert_equal "Dario", Person.new(name: "Dario").name_or_login
   end
 
-  test "member" do #rubocop:disable Metrics/BlockLength
+  test "member" do # rubocop:disable Metrics/BlockLength
     person = Person.new(first_name: "Dario", last_name: "Frederick")
     assert_equal(false, person.member?, "member")
     assert_nil(person.member_from, "Member from")
@@ -1326,7 +1326,8 @@ class PersonTest < ActiveSupport::TestCase # rubocop:disable Metrics/ClassLength
 
   test "blank licenses" do
     Person.create!(license: "")
-    Person.create!(license: "")
+    person = Person.create!(license: "")
+    assert person.valid?, "Should be valid"
   end
 
   def assert_renew(now, member_from, member_to, expected_member_from, expected_member_to)

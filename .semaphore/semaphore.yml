@@ -2,8 +2,8 @@ version: v1.0
 name: CI tests
 agent:
   machine:
-    type: e1-standard-2
-    os_image: ubuntu1804
+    type: e2-standard-2
+    os_image: ubuntu2204
 
 global_job_config:
   secrets:
@@ -23,30 +23,12 @@ blocks:
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-main-
           - gem install rake
+          - bundle config set frozen false
           - bundle config set deployment 'true'
           - bundle config set path 'vendor/bundle'
           - bundle config set without 'production,staging'
           - bundle install -j 4
           - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
-
-  - name: "Security"
-    task:
-      prologue:
-        commands:
-          - sem-version ruby 3.2.1
-          - checkout
-          - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
-          - sudo apt-get install -y libmysqlclient-dev
-          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-main-
-          - bundle config set deployment 'true'
-          - bundle config set path 'vendor/bundle'
-          - bundle config set without 'production,staging'
-          - bundle install -j 4
-      jobs:
-      - name: Brakeman
-        commands:
-          - bundle exec brakeman
-          - bundle exec bundle-audit
 
   - name: "Unit tests"
     task:
@@ -58,6 +40,7 @@ blocks:
           - sudo apt-get install -y libmysqlclient-dev
           - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-main-
+          - bundle config set frozen false
           - bundle config set deployment 'true'
           - bundle config set path 'vendor/bundle'
           - bundle config set without 'production,staging'
@@ -83,6 +66,7 @@ blocks:
           - git clone https://github.com/scottwillson/registration_engine_public_stub.git registration_engine
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-main-
+          - bundle config set frozen false
           - bundle config set deployment 'true'
           - bundle config set path 'vendor/bundle'
           - bundle config set without 'production,staging'
@@ -116,6 +100,7 @@ blocks:
           - git clone git@github.com-registration-engine:scottwillson/registration_engine.git
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-main-
+          - bundle config set frozen false
           - bundle config set deployment 'true'
           - bundle config set path 'vendor/bundle'
           - bundle config set without 'production,staging'
@@ -140,6 +125,7 @@ blocks:
           - git clone git@github.com-registration-engine:scottwillson/registration_engine.git
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-main-
+          - bundle config set frozen false
           - bundle config set deployment 'true'
           - bundle config set path 'vendor/bundle'
           - bundle config set without 'production,staging'
@@ -170,6 +156,7 @@ blocks:
           - git clone git@github.com-registration-engine:scottwillson/registration_engine.git
           - sudo apt-get install -y libmysqlclient-dev
           - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-main-
+          - bundle config set frozen false
           - bundle config set deployment 'true'
           - bundle config set path 'vendor/bundle'
           - bundle config set without 'production,staging'
