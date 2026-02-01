@@ -61,13 +61,13 @@ class GoogleGroupManager
       else
         puts "bad #{email}"
         bad += 1
-        # remove_member("obra-chat@obra.org", email)
+        remove_member("obra-chat@obra.org", email)
       end
     end
     Person.where(member_to: Date.today..).where.not(email: [nil, ""]).each do |new|
       added += 1
       puts "added #{new.email}"
-      # add_member("obra-chat@obra.org", new.email)
+      add_member("obra-chat@obra.org", new.email)
     end
     pp added
     pp "good #{good} bad #{bad} of #{emails.count}"
