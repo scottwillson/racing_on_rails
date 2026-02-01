@@ -19,6 +19,7 @@ gem "caxlsx_rails", ">=0.5.2"
 gem "chronic"
 gem "ckeditor"
 gem "damerau-levenshtein"
+gem "google-apis-admin_directory_v1"
 gem "hashdiff", [">= 1.0.0.beta1", "< 2.0.0"]
 gem "highcharts-rails"
 gem "hiredis"
@@ -56,13 +57,15 @@ gem "yui-compressor"
 gem "zip-zip"
 
 group :development do
+  gem "bcrypt_pbkdf"
   gem "brakeman"
   gem "bundler-audit", github: "rubysec/bundler-audit"
-  gem "capistrano", require: false
+  gem "capistrano", "3.19.2", require: false
   gem "capistrano3-puma"
   gem "capistrano-bundler", require: false
   gem "capistrano-rails", require: false
   gem "capistrano-rvm", require: false
+  gem "ed25519"
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "rubocop", require: false
   gem "rubocop-minitest"
