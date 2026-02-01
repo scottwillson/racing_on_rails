@@ -1,19 +1,19 @@
 class GoogleGroupManager
   def initialize
     key_path = "/var/www//rails/project-obra-chat-47a9a587c276.json"
-    @service = Google::Apis::AdminDirectoryV1::DirectoryService.new
+    @service = ::Google::Apis::AdminDirectoryV1::DirectoryService.new
     @key_data = JSON.parse(File.read(key_path))
     @service.authorization = authorize_service
   end
 
   def add_member(group, member_email)
-    member = Google::Apis::AdminDirectoryV1::Member.new(
+    member = ::Google::Apis::AdminDirectoryV1::Member.new(
       email: member_email,
       role: "MEMBER"
     )
     @service.insert_member(group, member)
     puts "Added #{member_email} to #{group}"
-  rescue Google::Apis::Error => e
+  rescue ::Google::Apis::Error => e
     puts "Error: #{e.message}"
     puts "Error details: #{e.body}" if e.respond_to?(:body)
   end
@@ -21,7 +21,7 @@ class GoogleGroupManager
   def remove_member(group, member_email)
     @service.delete_member(group, member_email)
     puts "Removed #{member_email} from #{group}"
-  rescue Google::Apis::Error => e
+  rescue ::Google::Apis::Error => e
     puts "Error: #{e.message}"
     puts "Error details: #{e.body}" if e.respond_to?(:body)
   end
@@ -41,7 +41,7 @@ class GoogleGroupManager
       page_token = response.next_page_token
     end while page_token
     emails
-  rescue Google::Apis::Error => e
+  rescue ::Google::Apis::Error => e
     puts "Error: #{e.message}"
     puts "Error details: #{e.body}" if e.respond_to?(:body)
     []
@@ -68,7 +68,7 @@ class GoogleGroupManager
     Person.where(member_to: Date.today..).where.not(email: [nil, ""]).each do |new|
       added += 1
       puts "added #{new.email}"
-      add_member("obra-chat@obra.org", new.email)
+      # add_member("obra-chat@obra.org", new.email)
     end
     pp added
   end
