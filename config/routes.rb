@@ -272,6 +272,7 @@ Rails.application.routes.draw do
   get '/board', to: redirect('https://www2.obra.org/about/obra-board')
   get '/contact', to: redirect('https://www2.obra.org/about/contact')
   get '/upgrades', to: redirect('https://www2.obra.org/obra-upgrade-policies')
+  get '/junior_cyclocross_series/', to: redirect('https://www2.obra.org/racers/juniors')
 
   get "*path", to: "pages#show", constraints: Pages::Constraint.new
 
