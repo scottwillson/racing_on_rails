@@ -58,6 +58,7 @@ class GoogleGroupManager
         puts "good #{email}"
         good += 1
         accounted << email
+      elsif email == 'mike.murray@obra.org' # previous executive
       else
         puts "bad #{email}"
         bad += 1
