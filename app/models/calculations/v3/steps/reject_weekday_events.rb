@@ -5,8 +5,8 @@ module Calculations
     module Steps
       module RejectWeekdayEvents
         def self.calculate!(calculator)
-          return calculator.event_categories if calculator.rules.weekday_events?
-
+          return calculator.event_categories # put any weekday logic here
+          # return calculator.event_categories if calculator.rules.weekday_events? # this conditional includes weekday event logic
           calculator.unrejected_source_results.each do |source_result|
             next if !weekday?(source_result.event) ||
                     (calculator.calculations_events.include?(source_result.event) && source_result.event.points?) ||
