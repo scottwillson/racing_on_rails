@@ -271,8 +271,25 @@ Rails.application.routes.draw do
   
   get '/board', to: redirect('https://www2.obra.org/about/obra-board')
   get '/contact', to: redirect('https://www2.obra.org/about/contact')
+  get '/contact.html', to: redirect('https://www2.obra.org/about/contact')
   get '/upgrades', to: redirect('https://www2.obra.org/obra-upgrade-policies')
   get '/junior_cyclocross_series/', to: redirect('https://www2.obra.org/racers/juniors')
+  get '/old/public/track/entry_forms/avc.txt', to: redirect('https://www2.obra.org')
+  get '/forms/', to: redirect('https://www2.obra.org')
+  get '/pdfs/stayingvisible.pdf', to: redirect('https://www2.obra.org')
+  get '/pdfs/insurance_app.pdf', to: redirect('https://www2.obra.org')
+  get '/pdfs/club_membership_app.pdf', to: redirect('https://www2.obra.org')
+  get '/pdfs/Advertising_rates_2014.pdf', to: redirect('https://www2.obra.org')
+
+  constraints host: 'industry.obra.org' do
+    get '/', to: redirect('https://www2.obra.org')
+    get '*path', to: redirect('https://www2.obra.org')
+  end
+
+  constraints host: 'officials.obra.org' do
+    get '/', to: redirect('https://www2.obra.org')
+    get '*path', to: redirect('https://www2.obra.org')
+  end
 
   get "*path", to: "pages#show", constraints: Pages::Constraint.new
 
