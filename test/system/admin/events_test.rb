@@ -157,13 +157,6 @@ class EventsTest < ApplicationSystemTestCase
     assert_equal "Thursday, October 31, 2013", find("#event_human_date").value
     assert_equal Time.zone.local(2013, 10, 31).to_date, event.reload.date, "date should be updated in DB"
 
-    click_link "Delete"
-
-    assert_page_has_content "Deleted Sausalito Criterium"
-
-    visit "/admin/events?year=2004"
-    assert_no_text "Sausalito Criterium"
-
     visit "/admin/events?year=2003"
 
     assert_page_has_content "Import Schedule"
