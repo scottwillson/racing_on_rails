@@ -10,6 +10,15 @@ class PasswordResetsController < ApplicationController
     end
 
     @email = params[:email].strip
+
+    if PasswordResetThrottle.throttled?(@email, request.remote_ip)
+      flash[:notice] = "Too many password reset requests. Please try again tomorrow, or contact " \
+                       "#{RacingAssociation.current.email} for help."
+      return render(:new)
+    end
+
+    PasswordResetThrottle.record @email, request.remote_ip
+
     @people = Person.where(email: @email).where("login is not null and login != ''")
     if @people.any?
       Person.deliver_password_reset_instructions!(@people)
