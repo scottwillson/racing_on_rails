@@ -158,11 +158,12 @@ puts moved.zero? ? "No matches change." : "#{moved} matches change."
 puts
 
 # The Overall BAR (no disciplines) takes the discipline BARs' Category 5 results, so it gets
-# Category 5 too. MTB categories are separate, so leave MTB BARs alone. Only BARs: other
+# Category 5 too. MTB categories are separate, so leave MTB BARs alone. Skip BARs grouped by
+# age like the Age-Graded BAR: they have no ability categories. Only BARs: other
 # calculations (series, cups) choose their own categories.
 missing_cat_5 = Hash.new { |hash, key| hash[key] = Set.new }
 
-calculations.select { |calculation| calculation.name.end_with?("BAR") && !calculation.team? }.each do |calculation|
+calculations.select { |calculation| calculation.name.end_with?("BAR") && !calculation.team? && calculation.group_by != "age" }.each do |calculation|
   discipline_names = calculation.disciplines.map(&:name)
   next if (discipline_names & MTB_DISCIPLINES).any?
 
