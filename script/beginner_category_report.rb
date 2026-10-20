@@ -4,7 +4,7 @@
 # Show where beginner (Cat 5) and Novice categories score in each calculation before and after
 # these Categories changes:
 #   * "Beginner" is Cat 5, not 4. Beginner and Cat 5 are the same in road and cross.
-#   * "Novice" is Cat 3, not 5. Novice is the MTB name for Cat 3.
+#   * "Novice" stays Cat 5. Road uses it for Cat 5 (e.g. "Novice Women (Category 5 Ages 14 and Up)").
 #   * Cat 4/5 fields are beginner fields, so they match Cat 5 when the calculation has one.
 #
 # Run after deploying those changes. "before" swaps the old behavior back in for comparison.
@@ -164,7 +164,7 @@ missing_cat_5 = Hash.new { |hash, key| hash[key] = Set.new }
 
 calculations.select { |calculation| calculation.name.end_with?("BAR") && !calculation.team? }.each do |calculation|
   discipline_names = calculation.disciplines.map(&:name)
-  next if discipline_names.intersect?(MTB_DISCIPLINES)
+  next if (discipline_names & MTB_DISCIPLINES).any?
 
   existing = calculation.calculation_categories.map(&:name)
   categories_for(calculation, by_discipline.except(*MTB_DISCIPLINES)).select { |category| beginner_field?(category) }.each do |category|

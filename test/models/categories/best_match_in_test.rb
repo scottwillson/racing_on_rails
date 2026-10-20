@@ -115,14 +115,18 @@ module Competitions
       cat_5_women = Category.find_or_create_by_normalized_name("Category 5 Women")
       beginner_open = Category.find_or_create_by_normalized_name("Beginner Open")
       beginner_women = Category.find_or_create_by_normalized_name("Beginner Women")
+      novice_open = Category.find_or_create_by_normalized_name("Novice Open")
+      novices_open = Category.find_or_create_by_normalized_name("Novices Open")
 
+      event.races.create!(category: @cat_1_2)
       event.races.create!(category: cat_4_men)
       event.races.create!(category: @cat_4_women)
       event.races.create!(category: cat_5_men)
       event.races.create!(category: cat_5_women)
 
+      assert_best_match_in [@cat_1_2], @cat_1_2, event
       assert_best_match_in [cat_4_men], cat_4_men, event
-      assert_best_match_in [cat_5_men, beginner_open], cat_5_men, event
+      assert_best_match_in [cat_5_men, beginner_open, novice_open, novices_open], cat_5_men, event
       assert_best_match_in [cat_5_women, beginner_women], cat_5_women, event
     end
 

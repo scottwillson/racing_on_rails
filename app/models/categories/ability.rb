@@ -15,7 +15,7 @@ module Categories
       "C" => 3,
       "Amateur" => 3,
       "Beginner" => 5,
-      "Novice" => 3
+      "Novice" => 5
     }.freeze
 
     # Cat 4/5 fields are beginner fields. Match them to Cat 5 when there is one.
@@ -61,8 +61,10 @@ module Categories
 
     # Pro/1/2 => [ 0, 1, 2 ]
     def values_from_names(name_token)
+      # Plurals like Novices or Beginners, but not single letters like As
       values = NAME_ABILITIES.select do |ability_name, _value|
-        name_token[/\b#{ability_name}\b/]
+        plural = ability_name.size > 1 ? "s?" : ""
+        name_token[/\b#{ability_name}#{plural}\b/]
       end.values
       values << single_ability(name_token) if single_ability(name_token)
       values
@@ -80,7 +82,7 @@ module Categories
     # Ignore tokens like A Group or Race 2 that include category tokens
     def strip_descriptive_tokens
       stripped_name = name.dup
-      # Novice is an MTB name for Category 3. If the name also has a Category, trust that instead.
+      # Novice is Category 3 in MTB but 5 everywhere else
       stripped_name = stripped_name.gsub("Novice", "") if stripped_name["Novice"] && stripped_name["Category"]
 
       stripped_name
