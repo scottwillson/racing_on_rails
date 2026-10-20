@@ -83,8 +83,17 @@ calculations = calculations.to_a.reject { |calculation| calculation.calculation_
 
 affected = {}
 
+source_disciplines = source_categories.index_with { |category| disciplines_for(category, YEAR) }
+
 calculations.sort_by(&:name).each do |calculation|
+  # Every calculation category becomes a race, even with no results, so only add categories
+  # to calculations that can actually receive these results. A calculation with no
+  # disciplines (Overall BAR) takes everything.
+  calculation_disciplines = calculation.disciplines.map(&:name)
+
   matches = source_categories.filter_map do |source_category|
+    next if calculation_disciplines.any? && (calculation_disciplines & source_disciplines[source_category]).empty?
+
     match = current_match(calculation, source_category.name)
     [source_category, match] if match
   end
