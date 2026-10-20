@@ -40,6 +40,42 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_equal 0, ActionMailer::Base.deliveries.count, "Should send one email"
   end
 
+  test "throttle repeated resets for the same email" do
+    ActionMailer::Base.deliveries.clear
+    FactoryBot.create(:administrator)
+
+    with_cache do
+      PasswordResetThrottle::EMAIL_LIMIT.times do
+        post :create, params: { email: "admin@example.com" }
+        assert_response :redirect
+      end
+      assert_equal PasswordResetThrottle::EMAIL_LIMIT, ActionMailer::Base.deliveries.count, "Should send one email per request under the limit"
+
+      post :create, params: { email: "admin@example.com" }
+      assert_response :success
+      assert_match(/too many/i, flash[:notice], "Should explain the throttle")
+      assert_equal PasswordResetThrottle::EMAIL_LIMIT, ActionMailer::Base.deliveries.count, "Should not send email over the limit"
+    end
+  end
+
+  test "throttle many emails from the same IP" do
+    ActionMailer::Base.deliveries.clear
+    FactoryBot.create(:administrator)
+
+    with_cache do
+      PasswordResetThrottle::IP_LIMIT.times do |index|
+        post :create, params: { email: "noperson.#{index}@example.com" }
+        assert_response :success
+      end
+      assert_equal 0, ActionMailer::Base.deliveries.count, "Unknown emails should not send email"
+
+      post :create, params: { email: "admin@example.com" }
+      assert_response :success
+      assert_match(/too many/i, flash[:notice], "Should explain the throttle")
+      assert_equal 0, ActionMailer::Base.deliveries.count, "Should not send email once the IP is throttled"
+    end
+  end
+
   test "edit" do
     member = FactoryBot.create(:person_with_login)
     get :edit, params: { id: member.perishable_token }

@@ -102,6 +102,15 @@ class ActiveSupport::TestCase
     PersonSession.create(@administrator)
   end
 
+  # The test environment uses a :null_store. Swap in a real cache for code that depends on it.
+  def with_cache
+    original_cache = Rails.cache
+    Rails.cache = ActiveSupport::Cache::MemoryStore.new
+    yield
+  ensure
+    Rails.cache = original_cache
+  end
+
   def use_ssl
     (@request.env["HTTPS"] = "on") if RacingAssociation.current.ssl?
   end

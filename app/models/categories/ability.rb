@@ -14,8 +14,8 @@ module Categories
       "Sport" => 2,
       "C" => 3,
       "Amateur" => 3,
-      "Beginner" => 4,
-      "Novice" => 5
+      "Beginner" => 5,
+      "Novice" => 3
     }.freeze
 
     # Pro/1/2 => 0..2
@@ -76,7 +76,7 @@ module Categories
     # Ignore tokens like A Group or Race 2 that include category tokens
     def strip_descriptive_tokens
       stripped_name = name.dup
-      # Novice is Category 3 in MTB but 5 everywhere else
+      # Novice is an MTB name for Category 3. If the name also has a Category, trust that instead.
       stripped_name = stripped_name.gsub("Novice", "") if stripped_name["Novice"] && stripped_name["Category"]
 
       stripped_name

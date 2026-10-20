@@ -21,7 +21,7 @@ module Competitions
       @pro_elite_men = Category.find_or_create_by_normalized_name("Pro Elite Men")
       @pro_cat_1 = Category.find_or_create_by_normalized_name("Pro/Category 1")
       @masters_men = Category.find_or_create_by_normalized_name("Masters Men")
-      @masters_novice = Category.find_or_create_by_normalized_name("Masters Novice")
+      @masters_beginner = Category.find_or_create_by_normalized_name("Masters Beginner")
       @masters_men_4_5 = Category.find_or_create_by_normalized_name("Masters Men 4/5")
       @senior_women = Category.find_or_create_by_normalized_name("Senior Women")
       @junior_men = Category.find_or_create_by_normalized_name("Junior Men")
@@ -108,6 +108,24 @@ module Competitions
       assert_best_match_in [beginner_open], beginner_open, event
     end
 
+    test "beginners are Cat 5" do
+      event = FactoryBot.create(:event)
+      cat_4_men = Category.find_or_create_by_normalized_name("Category 4 Men")
+      cat_5_men = Category.find_or_create_by_normalized_name("Category 5 Men")
+      cat_5_women = Category.find_or_create_by_normalized_name("Category 5 Women")
+      beginner_open = Category.find_or_create_by_normalized_name("Beginner Open")
+      beginner_women = Category.find_or_create_by_normalized_name("Beginner Women")
+
+      event.races.create!(category: cat_4_men)
+      event.races.create!(category: @cat_4_women)
+      event.races.create!(category: cat_5_men)
+      event.races.create!(category: cat_5_women)
+
+      assert_best_match_in [cat_4_men], cat_4_men, event
+      assert_best_match_in [cat_5_men, beginner_open], cat_5_men, event
+      assert_best_match_in [cat_5_women, beginner_women], cat_5_women, event
+    end
+
     test "ability + gender" do
       event = FactoryBot.create(:event)
       event.races.create!(category: @cat_1)
@@ -140,7 +158,7 @@ module Competitions
       assert_best_match_in [@cat_4], @cat_4, event
       assert_best_match_in [@cat_4_women, @cat_4_5_women], @cat_4_women, event
       assert_best_match_in [@masters_men], @masters_men, event
-      assert_best_match_in [@masters_men_4_5, @masters_novice], @masters_men_4_5, event
+      assert_best_match_in [@masters_men_4_5, @masters_beginner], @masters_men_4_5, event
       assert_best_match_in [@junior_men, @junior_men_10_14, @junior_men_15_plus, @junior_men_3_4_5], @junior_men, event
       assert_best_match_in [@junior_women], @junior_women, event
     end
