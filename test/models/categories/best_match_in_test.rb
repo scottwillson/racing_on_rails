@@ -149,6 +149,26 @@ module Competitions
       assert_best_match_in [@junior_men, junior_men_4_5], @junior_men, event
     end
 
+    test "Tracklocross is its own equipment" do
+      event = FactoryBot.create(:event)
+      pro_1_2_men = Category.find_or_create_by_normalized_name("Category Pro/1/2 Men")
+      tracklocross = Category.find_or_create_by_normalized_name("Tracklocross")
+      tracklocross_open = Category.find_or_create_by_normalized_name("Tracklocross Open")
+      tracklocross_women = Category.find_or_create_by_normalized_name("Tracklocross Women")
+      tracklocross_men_1_2 = Category.find_or_create_by_normalized_name("Tracklocross Men 1/2")
+      open_men = Category.find_or_create_by_normalized_name("Mountain Bike Open Men - Long Course")
+
+      event.races.create!(category: pro_1_2_men)
+      event.races.create!(category: tracklocross)
+      event.races.create!(category: tracklocross_open)
+      event.races.create!(category: tracklocross_women)
+
+      assert_best_match_in [pro_1_2_men, @senior_men, open_men], pro_1_2_men, event
+      assert_best_match_in [tracklocross, tracklocross_men_1_2], tracklocross, event
+      assert_best_match_in [tracklocross_open], tracklocross_open, event
+      assert_best_match_in [tracklocross_women], tracklocross_women, event
+    end
+
     test "Cat 4/5 without a Cat 5 is Cat 4" do
       event = FactoryBot.create(:event)
       cat_4_men = Category.find_or_create_by_normalized_name("Category 4 Men")

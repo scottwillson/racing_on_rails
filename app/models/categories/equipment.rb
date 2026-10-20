@@ -14,7 +14,7 @@ module Categories
       if name[/Singlespeed/] || name[/Fix/] || name == "Track"
         "Singlespeed/Fixed"
       else
-        name[/Eddy|Fat Bike|Hardtail|Merckx|Stampede|Tandem|Unicycle/]
+        name[/Eddy|Fat Bike|Hardtail|Merckx|Stampede|Tandem|Tracklocross|Unicycle/]
       end
     end
 

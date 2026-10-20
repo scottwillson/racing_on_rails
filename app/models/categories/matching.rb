@@ -57,6 +57,11 @@ module Categories
         end
         debug "equipment and gender: #{equipment_categories.map(&:name).join(', ')}"
         return equipment_categories.first if equipment_categories.one?
+
+        # E.g., Tracklocross Men 1/2 with Tracklocross and Tracklocross Open: use plain Tracklocross
+        plain_equipment_category = equipment_categories.detect { |category| category.name == equipment }
+        debug "plain equipment: #{plain_equipment_category&.name}"
+        return plain_equipment_category if plain_equipment_category
       end
 
       candidate_categories = candidate_categories.reject { |category| gender == "M" && category.gender == "F" }
