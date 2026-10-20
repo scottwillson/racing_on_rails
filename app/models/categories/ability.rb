@@ -18,6 +18,10 @@ module Categories
       "Novice" => 3
     }.freeze
 
+    # Cat 4/5 fields are beginner fields. Match them to Cat 5 when there is one.
+    BEGINNER_ABILITIES = (4..5).freeze
+    BEGINNER_ABILITY = 5
+
     # Pro/1/2 => 0..2
     def set_abilities_from_name
       abilities = abilities_from_name
@@ -110,7 +114,14 @@ module Categories
     end
 
     def abilities_include?(other)
-      abilities.cover?(other.abilities) || other.ability_begin.in?(abilities) || other.all_abilities?
+      abilities.cover?(other.abilities) ||
+        other.ability_begin.in?(abilities) ||
+        other.all_abilities? ||
+        (other.beginner_abilities? && BEGINNER_ABILITY.in?(abilities))
+    end
+
+    def beginner_abilities?
+      abilities == BEGINNER_ABILITIES
     end
 
     def all_abilities?

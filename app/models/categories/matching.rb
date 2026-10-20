@@ -76,7 +76,7 @@ module Categories
       return nil if candidate_categories.empty?
 
       unless all_abilities?
-        candidate_categories = candidate_categories.select { |category| ability_begin.in?(category.abilities) }
+        candidate_categories = ability_candidates(candidate_categories)
         debug "ability: #{candidate_categories.map(&:name).join(', ')}"
         return candidate_categories.first if one_match?(candidate_categories)
         return nil if candidate_categories.empty?
@@ -258,6 +258,22 @@ module Categories
         equipment == other.equipment &&
         (men? || other.women?) &&
         (!weight? || weight == other.weight)
+    end
+
+    # Cat 4/5 is a beginner field: prefer a Cat 5 category of the same gender if there is one,
+    # otherwise match on the lowest ability like any other category
+    def ability_candidates(candidate_categories)
+      if beginner_abilities?
+        # Keep all-abilities categories like Junior Men so later steps can still prefer them
+        beginner_categories = candidate_categories.select do |category|
+          Ability::BEGINNER_ABILITY.in?(category.abilities) &&
+            category.gender == gender &&
+            category.ages_include?(self)
+        end
+        return beginner_categories if beginner_categories.any? { |category| !category.all_abilities? }
+      end
+
+      candidate_categories.select { |category| ability_begin.in?(category.abilities) }
     end
 
     # Some Calculations only have one category, and some categories shoould bever match.

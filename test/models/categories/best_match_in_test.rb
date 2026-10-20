@@ -126,6 +126,37 @@ module Competitions
       assert_best_match_in [cat_5_women, beginner_women], cat_5_women, event
     end
 
+    test "Cat 4/5 is a beginner field" do
+      event = FactoryBot.create(:event)
+      cat_4_men = Category.find_or_create_by_normalized_name("Category 4 Men")
+      cat_5_men = Category.find_or_create_by_normalized_name("Category 5 Men")
+      cat_5_women = Category.find_or_create_by_normalized_name("Category 5 Women")
+      open_4_5 = Category.find_or_create_by_normalized_name("Open Category 4/5 (Beginners)")
+      junior_men_4_5 = Category.find_or_create_by_normalized_name("Junior Men 4/5")
+
+      event.races.create!(category: cat_4_men)
+      event.races.create!(category: @cat_4_women)
+      event.races.create!(category: cat_5_men)
+      event.races.create!(category: cat_5_women)
+      event.races.create!(category: @junior_men)
+
+      assert_best_match_in [cat_5_men, open_4_5], cat_5_men, event
+      assert_best_match_in [cat_5_women, @cat_4_5_women], cat_5_women, event
+      assert_best_match_in [@junior_men, junior_men_4_5], @junior_men, event
+    end
+
+    test "Cat 4/5 without a Cat 5 is Cat 4" do
+      event = FactoryBot.create(:event)
+      cat_4_men = Category.find_or_create_by_normalized_name("Category 4 Men")
+      open_4_5 = Category.find_or_create_by_normalized_name("Open Category 4/5 (Beginners)")
+
+      event.races.create!(category: cat_4_men)
+      event.races.create!(category: @cat_4_women)
+
+      assert_best_match_in [cat_4_men, open_4_5], cat_4_men, event
+      assert_best_match_in [@cat_4_women, @cat_4_5_women], @cat_4_women, event
+    end
+
     test "ability + gender" do
       event = FactoryBot.create(:event)
       event.races.create!(category: @cat_1)

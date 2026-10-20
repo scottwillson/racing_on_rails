@@ -1,24 +1,27 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Show where Beginner and Novice categories score in each BAR before and after
-# Categories::Ability changed "Beginner" from 4 to 5 (Beginner is Cat 5 in road and cross) and
-# "Novice" from 5 to 3 (Novice is the MTB name for Cat 3).
+# Show where beginner (Cat 5) and Novice categories score in each calculation before and after
+# these Categories changes:
+#   * "Beginner" is Cat 5, not 4. Beginner and Cat 5 are the same in road and cross.
+#   * "Novice" is Cat 3, not 5. Novice is the MTB name for Cat 3.
+#   * Cat 4/5 fields are beginner fields, so they match Cat 5 when the calculation has one.
 #
-# Run after deploying that change. "before" swaps the old values back in for comparison.
-# Calculations::V3 parses category names on every calculate!, so BARs pick up the new values
-# when they are recalculated.
+# Run after deploying those changes. "before" swaps the old behavior back in for comparison.
+# Calculations::V3 parses category names on every calculate!, so calculations pick up the
+# changes when they are recalculated.
 #
-# Beginner results need a Category 5 in the BAR to land in. Without one they match nothing and
-# are rejected, so APPLY adds Category 5 Men/Women to non-MTB BARs that have Beginner results
-# but no Category 5.
+# Beginner results need a Category 5 to land in. Without one, Beginner and Cat 5 results match
+# nothing and are rejected, and Cat 4/5 results stay in Cat 4. So APPLY adds Category 5
+# Men/Women to non-MTB BARs that have these results but no Category 5. Other calculations are
+# reported but not changed.
 #
 # Reports only, changes nothing:
-#   bin/rails runner script/beginner_novice_ability_report.rb
+#   bin/rails runner script/beginner_category_report.rb
 #
 # Add the missing Category 5s, and update the ability_begin and ability_end columns stored on
-# Beginner/Novice Category rows (used by the older Competitions code, not by the BARs):
-#   APPLY=true bin/rails runner script/beginner_novice_ability_report.rb
+# Beginner/Novice Category rows (used by the older Competitions code, not by Calculations):
+#   APPLY=true bin/rails runner script/beginner_category_report.rb
 #
 # Options:
 #   YEAR=2026        calculations to check (default: current year)
@@ -29,20 +32,34 @@ YEAR = (ENV["YEAR"] || Time.zone.today.year).to_i
 ALL = ENV["ALL"] == "true"
 
 MTB_DISCIPLINES = ["Mountain Bike", "Downhill", "Super D", "Short Track"].freeze
-OLD_NAME_ABILITIES =Categories::Ability::NAME_ABILITIES.merge("Beginner" => 4, "Novice" => 5).freeze
-NEW_NAME_ABILITIES = Categories::Ability::NAME_ABILITIES
+CAT_5_NAMES = { "M" => "Category 5 Men", "F" => "Category 5 Women" }.freeze
 
-def with_name_abilities(abilities)
-  Categories::Ability.send(:remove_const, :NAME_ABILITIES)
-  Categories::Ability.const_set(:NAME_ABILITIES, abilities)
+NEW_CONSTANTS = {
+  NAME_ABILITIES: Categories::Ability::NAME_ABILITIES,
+  BEGINNER_ABILITIES: Categories::Ability::BEGINNER_ABILITIES
+}.freeze
+
+# No category has abilities -1..-1, so this turns off the Cat 4/5 => Cat 5 preference
+OLD_CONSTANTS = {
+  NAME_ABILITIES: Categories::Ability::NAME_ABILITIES.merge("Beginner" => 4, "Novice" => 5).freeze,
+  BEGINNER_ABILITIES: (-1..-1)
+}.freeze
+
+def with_constants(constants)
+  constants.each do |name, value|
+    Categories::Ability.send(:remove_const, name)
+    Categories::Ability.const_set(name, value)
+  end
   yield
 ensure
-  Categories::Ability.send(:remove_const, :NAME_ABILITIES)
-  Categories::Ability.const_set(:NAME_ABILITIES, NEW_NAME_ABILITIES)
+  NEW_CONSTANTS.each do |name, value|
+    Categories::Ability.send(:remove_const, name)
+    Categories::Ability.const_set(name, value)
+  end
 end
 
 # Reproduce the matcher the calculator uses, without running a full calculation. Reload the
-# calculation so its rules parse category names with the current abilities.
+# calculation so its rules parse category names with the current constants.
 def match(calculation_id, category_name)
   calculation = Calculations::V3::Calculation.find(calculation_id)
   model = Calculations::V3::Models::Category.new(category_name)
@@ -56,14 +73,24 @@ rescue StandardError => e
   "(error: #{e.message})"
 end
 
-# Race discipline wins over event discipline, same as
+# Cat 5 or Cat 4/5, not junior or masters. These belong in Category 5.
+def beginner_field?(category)
+  model = Calculations::V3::Models::Category.new(category.name)
+  (model.abilities == (5..5) || model.beginner_abilities?) && !(model.age_group? && !model.senior?)
+end
+
+# Beginner, Novice, Cat 5 and Cat 4/5 categories raced in +year+, by discipline. Race discipline
+# wins over event discipline, same as
 # Calculations::V3::CalculationConcerns::SourceResults#race_discipline.
 def categories_by_discipline(year)
   Race
     .joins(:event, :category)
     .includes(:discipline, :event, :category)
     .merge(Event.year(year))
-    .where("categories.name like ? or categories.name like ?", "%Beginner%", "%Novice%")
+    .where(
+      "categories.name like ? or categories.name like ? or (categories.ability_begin in (4, 5) and categories.ability_end = 5)",
+      "%Beginner%", "%Novice%"
+    )
     .each_with_object(Hash.new { |hash, key| hash[key] = Set.new }) do |race, categories|
       categories[race.discipline&.name || race.event.discipline] << race.category
     end
@@ -72,11 +99,11 @@ end
 by_discipline = categories_by_discipline(YEAR)
 
 if by_discipline.empty?
-  puts "No #{YEAR} races in Beginner or Novice categories."
+  puts "No #{YEAR} races in Beginner, Novice, Cat 5 or Cat 4/5 categories."
   exit
 end
 
-puts "#{YEAR} Beginner and Novice categories by discipline:"
+puts "#{YEAR} Beginner, Novice, Cat 5 and Cat 4/5 categories by discipline:"
 by_discipline.sort.each do |discipline, categories|
   puts "  #{discipline}: #{categories.map(&:name).sort.join(', ')}"
 end
@@ -88,20 +115,24 @@ calculations = Calculations::V3::Calculation
                .reject { |calculation| calculation.calculation_categories.empty? }
                .sort_by(&:name)
 
+def categories_for(calculation, by_discipline)
+  discipline_names = calculation.disciplines.map(&:name)
+  if discipline_names.any?
+    by_discipline.slice(*discipline_names).values.reduce(Set.new, :|)
+  else
+    by_discipline.values.reduce(Set.new, :|)
+  end
+end
+
 moved = 0
 affected = Set.new
 
 calculations.each do |calculation|
-  discipline_names = calculation.disciplines.map(&:name)
-  categories = if discipline_names.any?
-                 by_discipline.slice(*discipline_names).values.reduce(Set.new, :|)
-               else
-                 by_discipline.values.reduce(Set.new, :|)
-               end
+  categories = categories_for(calculation, by_discipline)
   next if categories.empty?
 
   rows = categories.sort_by(&:name).filter_map do |category|
-    before = with_name_abilities(OLD_NAME_ABILITIES) { match(calculation.id, category.name) }
+    before = with_constants(OLD_CONSTANTS) { match(calculation.id, category.name) }
     after = match(calculation.id, category.name)
     next if before == after && !ALL
 
@@ -109,10 +140,12 @@ calculations.each do |calculation|
   end
   next if rows.empty?
 
-  puts "#{calculation.name} (id #{calculation.id}, disciplines: #{discipline_names.join(', ').presence || 'all'})"
+  puts "#{calculation.name} (id #{calculation.id}, disciplines: #{calculation.disciplines.map(&:name).join(', ').presence || 'all'})"
   rows.each do |name, before, after|
-    flag = before == after ? "   " : "-> "
-    if before != after
+    if before == after
+      flag = "   "
+    else
+      flag = "-> "
       moved += 1
       affected << calculation
     end
@@ -121,35 +154,29 @@ calculations.each do |calculation|
   puts
 end
 
-puts moved.zero? ? "No BAR matches change." : "#{moved} BAR matches change. Recalculate those BARs after deploying."
+puts moved.zero? ? "No matches change." : "#{moved} matches change."
 puts
 
-# Beginner is Cat 5. A BAR without a Category 5 rejects Beginner results, so add Category 5
-# Men/Women where they're missing. The Overall BAR (no disciplines) takes the discipline BARs'
-# Category 5 results, so it gets them too. MTB categories are separate, so leave MTB BARs alone.
-# Junior and masters Beginner categories belong with the age-group categories.
-cat_5_names = { "M" => "Category 5 Men", "F" => "Category 5 Women" }
+# The Overall BAR (no disciplines) takes the discipline BARs' Category 5 results, so it gets
+# Category 5 too. MTB categories are separate, so leave MTB BARs alone. Only BARs: other
+# calculations (series, cups) choose their own categories.
 missing_cat_5 = Hash.new { |hash, key| hash[key] = Set.new }
 
-calculations.each do |calculation|
+calculations.select { |calculation| calculation.name.end_with?("BAR") && !calculation.team? }.each do |calculation|
   discipline_names = calculation.disciplines.map(&:name)
   next if discipline_names.intersect?(MTB_DISCIPLINES)
 
   existing = calculation.calculation_categories.map(&:name)
-  beginners = (discipline_names.any? ? by_discipline.slice(*discipline_names).values : by_discipline.except(*MTB_DISCIPLINES).values)
-              .reduce(Set.new, :|)
-              .select { |category| category.name["Beginner"] && !(category.age_group? && !category.senior?) }
-
-  beginners.each do |category|
-    name = cat_5_names[category.women? ? "F" : "M"]
+  categories_for(calculation, by_discipline.except(*MTB_DISCIPLINES)).select { |category| beginner_field?(category) }.each do |category|
+    name = CAT_5_NAMES[category.women? ? "F" : "M"]
     missing_cat_5[calculation] << name unless existing.include?(name)
   end
 end
 
 if missing_cat_5.empty?
-  puts "Every BAR with Beginner results already has Category 5."
+  puts "Every BAR with beginner results already has Category 5."
 else
-  puts "BARs missing Category 5 for Beginner results:"
+  puts "BARs missing Category 5 for beginner results:"
   missing_cat_5.each { |calculation, names| puts "  #{calculation.name} (id #{calculation.id}): #{names.to_a.sort.join(', ')}" }
 end
 puts
@@ -164,6 +191,7 @@ puts
 
 unless APPLY
   puts "Dry run. Re-run with APPLY=true to add the Category 5s above and update stale Category rows." if missing_cat_5.any? || stale.any?
+  puts "Matches above don't have the missing Category 5s yet. Re-run this after APPLY to see where those results land." if missing_cat_5.any?
   exit
 end
 
@@ -184,7 +212,7 @@ Calculations::V3::Calculation.transaction do
 end
 
 puts
-puts "Done. Recalculate the discipline BARs, then the Overall BAR last:"
+puts "Done. Recalculate the discipline calculations, then the Overall BAR last:"
 (affected | missing_cat_5.keys).sort_by { |calculation| [calculation.disciplines.empty? ? 1 : 0, calculation.name] }.each do |calculation|
   puts "  Calculations::V3::Calculation.find(#{calculation.id}).calculate!  # #{calculation.name}"
 end
